@@ -1,30 +1,46 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-Vue.use(VueRouter);
+import store from '@/store'
+
+import authRoutes from '@/modules/auth/auth.routes'
+import adminRoutes from '@/modules/admin/admin.routes'
+import profileRoutes from '@/modules/profile/profile.routes'
+
+import serverNotAvailablePage from '@/modules/common/pages/error'
+
+Vue.use(VueRouter)
 
 const routes = [
+  ...authRoutes,
+  ...adminRoutes,
+  ...profileRoutes,
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: '/error',
+    name: 'serverNotAvailable',
+    component: serverNotAvailablePage,
   },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
-];
+]
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   routes,
-});
+})
 
-export default router;
+router.beforeEach((to, from, next) => {
+  if (
+    to.matched.some(
+      (record) => record.meta.authRequired && !store.getters.isLoggedIn
+    )
+  ) {
+    next({
+      path: '/auth/login',
+      query: { redirect: to.fullPath },
+    })
+  } else {
+    next()
+  }
+})
+
+export default router
