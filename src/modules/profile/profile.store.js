@@ -1,4 +1,5 @@
 import CompanyService from './services/company.service'
+import UserService from '@/modules/auth/services/user.service'
 
 export default {
   state: {
@@ -84,6 +85,18 @@ export default {
         commit('setLoading', true)
         const newEmpl = await CompanyService.addEmployee(newEmployee, companyId)
         commit('addEmployee', { companyId, newEmployee: newEmpl })
+        commit('setLoading', false)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.response?.data?.message)
+      }
+    },
+
+    async configProfile({ commit }, payload) {
+      try {
+        commit('setLoading', true)
+        await UserService.configProfile(payload)
+        commit('updateUser', payload)
         commit('setLoading', false)
       } catch (e) {
         commit('setLoading', false)

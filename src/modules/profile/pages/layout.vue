@@ -30,6 +30,7 @@ export default {
   },
   data: () => ({
     navButtons: [
+      { text: 'Настройки профиля', icon: 'mdi-cog', link: '/profile/settings' },
       { text: 'Компании', icon: 'mdi-factory', link: '/profile/companies' },
       {
         text: 'Создать адрес',

@@ -15,6 +15,9 @@ export default {
     setUser(state, payload) {
       state.user = payload
     },
+    updateUser(state, payload) {
+      state.user = { ...state.user, ...payload }
+    },
     logOut(state) {
       state.token = null
       state.user = null
@@ -75,5 +78,6 @@ export default {
     isLoggedIn: ({ token }) => !!token,
     token: ({ token }) => token,
     user: ({ user }) => user,
+    directoriesProfile: ({ user }) => user?.directoriesProfile,
   },
 }

@@ -32,6 +32,17 @@
           @input="delayTouch($v.form.inn)"
           @blur="$v.form.inn.$touch()"
         />
+        <v-checkbox
+          label="У компании есть свои справочники"
+          v-model="form.hasOwnDirectories"
+        />
+        <v-alert type="info" outlined>
+          <p>ИНН - Должен быть уникален</p>
+          <p>
+            Пользователь может работать со справочниками только одной компании.
+            Если компания не основная, рекомендуем отключить опцию
+          </p>
+        </v-alert>
       </v-card-text>
     </form>
   </v-card>
@@ -50,6 +61,7 @@ export default {
         name: '',
         fullName: '',
         inn: '',
+        hasOwnDirectories: true,
       },
     }
   },
