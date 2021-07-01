@@ -2,6 +2,9 @@
   <v-container>
     <v-row v-if="panelType === 'form'">
       <v-col cols="auto">
+        <v-btn @click="$emit('cancel')">Отмена</v-btn>
+      </v-col>
+      <v-col cols="auto">
         <v-btn
           @click="$emit('submit')"
           :disabled="disabledSubmit"
@@ -9,9 +12,6 @@
         >
           Сохранить
         </v-btn>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn @click="$emit('cancel')">Отмена</v-btn>
       </v-col>
     </v-row>
     <v-row v-else-if="panelType === 'list'">

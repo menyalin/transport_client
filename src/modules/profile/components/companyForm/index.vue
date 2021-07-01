@@ -27,9 +27,9 @@
         <v-text-field
           type="text"
           label="ИНН"
-          v-model.trim="$v.form.inn.$model"
+          v-model="form.inn"
           :error-messages="innErrors"
-          @input="$v.form.inn.$touch()"
+          @input="delayTouch($v.form.inn)"
           @blur="$v.form.inn.$touch()"
         />
       </v-card-text>
@@ -39,6 +39,8 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { mapActions } from 'vuex'
+const touchMap = new WeakMap()
 
 export default {
   name: 'companyForm',
@@ -55,18 +57,35 @@ export default {
     AppButtonsPanel,
   },
   methods: {
+    ...mapActions(['isExistInn']),
     cancel() {
       this.$emit('cancel')
     },
     submit() {
       this.$emit('submit', Object.assign({}, this.$v.form.$model))
     },
+    delayTouch($v) {
+      $v.$reset()
+      if (touchMap.has($v)) {
+        clearTimeout(touchMap.get($v))
+      }
+      touchMap.set($v, setTimeout($v.$touch, 500))
+    },
   },
   validations: {
     form: {
       name: { required },
       fullName: { required },
-      inn: { required },
+      inn: {
+        required,
+        existInn(val) {
+          if (val === '') return true
+          return new Promise(async (resolve) => {
+            const res = await this.isExistInn(val)
+            resolve(!res)
+          })
+        },
+      },
     },
   },
   computed: {
@@ -88,6 +107,8 @@ export default {
       const errors = []
       if (!this.$v.form.inn.$dirty) return errors
       !this.$v.form.inn.required && errors.push('ИНН не может быть пустым')
+      !this.$v.form.inn.existInn &&
+        errors.push('ИНН уже зарегистрирован в системе')
       return errors
     },
   },

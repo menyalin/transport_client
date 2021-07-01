@@ -13,7 +13,12 @@
       <v-col>
         <v-list>
           <v-subheader>Мои компании</v-subheader>
-          <v-list-item two-line link v-for="item in companies" :key="item._id">
+          <v-list-item
+            two-line
+            :to="{ name: 'companyDetails', params: { id: item._id } }"
+            v-for="item in myCompanies"
+            :key="item._id"
+          >
             <v-list-item-content>
               <v-list-item-title>{{ item.name }}</v-list-item-title>
               <v-list-item-subtitle>
@@ -28,7 +33,7 @@
 </template>
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'CompanyList',
@@ -36,9 +41,7 @@ export default {
     AppButtonsPanel,
   },
   computed: {
-    ...mapState({
-      companies: (state) => state.ProfileModule.myCompanies,
-    }),
+    ...mapGetters(['myCompanies']),
   },
   methods: {
     ...mapActions(['getMyCompanies']),

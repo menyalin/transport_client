@@ -1,10 +1,18 @@
 <template>
   <v-container>
-    <app-company-form @cancel="cancel" />
+    <v-row>
+      <v-col></v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <app-company-form @cancel="cancel" @submit="submitForm" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
 import AppCompanyForm from '@/modules/profile/components/companyForm'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'CompanyEdit',
@@ -12,8 +20,14 @@ export default {
     AppCompanyForm,
   },
   methods: {
+    ...mapActions(['createCompany']),
     cancel() {
       this.$router.push({ name: 'companyList' })
+    },
+    submitForm(newCompany) {
+      this.createCompany(newCompany).then(() => {
+        this.$router.push({ name: 'companyList' })
+      })
     },
   },
 }

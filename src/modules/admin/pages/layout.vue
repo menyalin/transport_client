@@ -12,18 +12,21 @@
           </v-col>
         </v-row>
       </v-container>
+      <app-snackbar />
     </v-main>
   </v-app>
 </template>
 <script>
 import AppAdminBar from '@/modules/common/components/appBar'
 import AppLeftNav from '@/modules/common/components/leftNav'
+import AppSnackbar from '@/modules/common/components/appSnackbar'
 
 export default {
   name: 'adminLayout',
   components: {
     AppAdminBar,
     AppLeftNav,
+    AppSnackbar,
   },
   data: () => ({
     navButtons: [
