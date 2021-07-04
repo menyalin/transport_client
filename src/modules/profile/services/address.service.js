@@ -1,7 +1,17 @@
 import api from '@/api'
+import socket from '@/socket'
+import store from '@/store'
 const BASE_PATH = '/addresses'
 
 class AddressService {
+  constructor() {
+    socket.on('address:created', (data) => {
+      if (data?.geo?.coordinates && Array.isArray(data.geo.coordinates))
+        data.geo = this._convertGeoToStr(data.geo.coordinates)
+      store.commit('addAddress', data)
+    })
+  }
+
   _convertGeoToStr(arr) {
     return arr.reverse().join(', ')
   }

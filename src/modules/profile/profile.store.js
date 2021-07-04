@@ -48,8 +48,10 @@ export default {
     setAddresses(state, payload) {
       state.addresses = payload
     },
-    addAddress(state, payload) {
-      state.addresses.push(payload)
+    addAddress({ addresses }, payload) {
+      if (addresses.findIndex((item) => item._id === payload._id) === -1) {
+        addresses.push(payload)
+      }
     },
   },
   actions: {
@@ -160,6 +162,7 @@ export default {
     myCompanies: (state) => state.myCompanies,
     staffRoles: ({ staffRoles }) => staffRoles,
     tasks: ({ tasks }) => tasks,
-    addresses: ({ addresses }) => addresses,
+    addresses: ({ addresses }, { directoriesProfile }) =>
+      addresses.filter((item) => item.company === directoriesProfile),
   },
 }
