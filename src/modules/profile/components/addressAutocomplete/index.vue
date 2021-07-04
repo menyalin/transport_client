@@ -40,7 +40,7 @@ export default {
   },
   watch: {
     async search(val) {
-      if (!val?.trim()) {
+      if (!val || !val?.trim()) {
         this.model = null
         this.items = []
         return
@@ -48,9 +48,14 @@ export default {
       if (this.isLoading) return
       if (this.timeout) clearTimeout(this.timeout)
       this.timeout = setTimeout(async () => {
-        this.isLoading = true
-        this.items = await AddressService.getSuggestions(val)
-        this.isLoading = false
+        try {
+          this.isLoading = true
+          this.items = await AddressService.getSuggestions(val)
+          this.isLoading = false
+        } catch (e) {
+          this.isLoading = false
+          this.$store.commit('setError', e.message)
+        }
       }, 500)
     },
   },

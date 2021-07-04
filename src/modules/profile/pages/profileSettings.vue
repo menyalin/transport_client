@@ -5,11 +5,13 @@
         <div>
           Использовать справочники компании:
           <v-select
+            class="ma-4"
             solo
             :value="directoriesProfile"
             :items="companies"
             @change="changeDirectoriesProfile"
             clearable
+            label="Выбор профиля справочников"
           />
         </div>
       </v-col>

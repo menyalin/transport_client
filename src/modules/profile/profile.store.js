@@ -1,9 +1,11 @@
 import CompanyService from './services/company.service'
 import UserService from '@/modules/auth/services/user.service'
+import AddressService from '@/modules/profile/services/address.service'
 
 export default {
   state: {
     myCompanies: [],
+    addresses: [],
     tasks: [],
     staffRoles: [
       { text: 'Администратор', value: 'admin' },
@@ -14,6 +16,9 @@ export default {
   mutations: {
     setMyCompanies(state, companies) {
       state.myCompanies = companies
+    },
+    clearDirectories(state) {
+      state.addresses = []
     },
     addCompany(state, company) {
       state.myCompanies.push(company)
@@ -40,6 +45,12 @@ export default {
       )
       state.myCompanies.push(company)
     },
+    setAddresses(state, payload) {
+      state.addresses = payload
+    },
+    addAddress(state, payload) {
+      state.addresses.push(payload)
+    },
   },
   actions: {
     async getMyCompanies({ commit, dispatch }) {
@@ -53,6 +64,7 @@ export default {
         commit('setError', e.message)
       }
     },
+
     async createCompany({ commit }, payload) {
       try {
         commit('setLoading', true)
@@ -64,6 +76,7 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
+
     async isExistInn({ commit }, inn) {
       try {
         const tmp = await CompanyService.isExistInn(inn)
@@ -72,6 +85,7 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
+
     async userByEmail({ commit }, email) {
       try {
         const tmp = await CompanyService.userByEmail(email)
@@ -80,6 +94,7 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
+
     async addEmployee({ commit }, { newEmployee, companyId }) {
       try {
         commit('setLoading', true)
@@ -95,8 +110,45 @@ export default {
     async configProfile({ commit }, payload) {
       try {
         commit('setLoading', true)
+        commit('clearDirectories')
         await UserService.configProfile(payload)
         commit('updateUser', payload)
+        commit('setLoading', false)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.response?.data?.message)
+      }
+    },
+
+    createAddress({ commit }, payload) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          commit('setLoading', true)
+          const newAddress = await AddressService.create(payload)
+          commit('addAddress', newAddress)
+          commit('setLoading', false)
+          resolve(newAddress)
+        } catch (e) {
+          commit('setLoading', false)
+          commit('setError', e)
+          reject(e)
+        }
+      })
+    },
+
+    async getAddresses({ commit, getters }, directiveUpdate) {
+      try {
+        commit('setLoading', true)
+        if (
+          directiveUpdate ||
+          (getters.addresses.length === 0 && getters.directoriesProfile)
+        ) {
+          commit('setAddresses', [])
+          const addressList = await AddressService.getByDerictoriesProfile(
+            getters.directoriesProfile
+          )
+          commit('setAddresses', addressList)
+        }
         commit('setLoading', false)
       } catch (e) {
         commit('setLoading', false)
@@ -108,5 +160,6 @@ export default {
     myCompanies: (state) => state.myCompanies,
     staffRoles: ({ staffRoles }) => staffRoles,
     tasks: ({ tasks }) => tasks,
+    addresses: ({ addresses }) => addresses,
   },
 }

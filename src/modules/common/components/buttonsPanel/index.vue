@@ -16,7 +16,9 @@
     </v-row>
     <v-row v-else-if="panelType === 'list'">
       <v-col cols="auto">
-        <v-btn @click="$emit('refresh')">Обновить</v-btn>
+        <v-btn @click="$emit('refresh')" :disabled="disabledRefresh">
+          Обновить
+        </v-btn>
       </v-col>
       <v-col cols="auto">
         <v-btn
@@ -32,9 +34,12 @@
 </template>
 <script>
 export default {
-  name: 'buttonsPanel',
   props: {
     disabledSubmit: {
+      type: Boolean,
+      default: false,
+    },
+    disabledRefresh: {
       type: Boolean,
       default: false,
     },

@@ -4,6 +4,7 @@ import CompanyEdit from './pages/companyEdit'
 import CompanyDetails from './pages/companyDetails'
 import TaskList from './pages/taskList'
 import AddressCreate from './pages/addressCreate'
+import AddressList from './pages/addressList'
 import ProfileSettings from './pages/profileSettings'
 
 export default [
@@ -27,6 +28,12 @@ export default [
         props: true,
       },
       { path: 'tasks', name: 'taskList', component: TaskList },
+
+      {
+        path: 'address',
+        name: 'AddressList',
+        component: AddressList,
+      },
       {
         path: 'address/create',
         name: 'createAddress',

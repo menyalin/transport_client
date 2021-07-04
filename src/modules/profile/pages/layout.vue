@@ -33,9 +33,9 @@ export default {
       { text: 'Настройки профиля', icon: 'mdi-cog', link: '/profile/settings' },
       { text: 'Компании', icon: 'mdi-factory', link: '/profile/companies' },
       {
-        text: 'Создать адрес',
+        text: 'Адреса',
         icon: 'mdi-domain',
-        link: '/profile/address/create',
+        link: '/profile/address',
       },
       {
         text: 'Задачи',
