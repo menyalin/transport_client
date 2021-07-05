@@ -38,6 +38,11 @@ export default {
         link: '/profile/address',
       },
       {
+        text: 'Водители',
+        icon: 'mdi-card-account-details',
+        link: '/profile/drivers',
+      },
+      {
         text: 'Задачи',
         icon: 'mdi-message-reply-text',
         link: '/profile/tasks',

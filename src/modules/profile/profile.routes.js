@@ -3,8 +3,15 @@ import Companies from './pages/companyList'
 import CompanyEdit from './pages/companyEdit'
 import CompanyDetails from './pages/companyDetails'
 import TaskList from './pages/taskList'
-import AddressCreate from './pages/addressCreate'
-import AddressList from './pages/addressList'
+
+import AddressCreate from './pages/address/addressCreate'
+import AddressList from './pages/address/addressList'
+import AddressDetails from './pages/address/addressDetails'
+
+import DriverCreate from './pages/driver/driverCreate'
+import DriverList from './pages/driver/driverList'
+import DriverDetails from './pages/driver/driverDetails'
+
 import ProfileSettings from './pages/profileSettings'
 
 export default [
@@ -39,6 +46,31 @@ export default [
         name: 'createAddress',
         component: AddressCreate,
       },
+      {
+        path: 'address/:id',
+        name: 'addressDetails',
+        component: AddressDetails,
+        props: true,
+      },
+      /// Driver
+      {
+        path: 'drivers',
+        name: 'DriverList',
+        component: DriverList,
+      },
+      {
+        path: 'drivers/create',
+        name: 'DriverCreate',
+        component: DriverCreate,
+      },
+      {
+        path: 'drivers/:id',
+        name: 'DriverDetails',
+        component: DriverDetails,
+        props: true,
+      },
+
+      /// Настройки профиля
       {
         path: 'settings',
         name: 'profileSettings',

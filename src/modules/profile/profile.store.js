@@ -1,11 +1,13 @@
 import CompanyService from './services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 import AddressService from '@/modules/profile/services/address.service'
+import DriverService from '@/modules/profile/services/driver.service'
 
 export default {
   state: {
     myCompanies: [],
     addresses: [],
+    drivers: [],
     tasks: [],
     staffRoles: [
       { text: 'Администратор', value: 'admin' },
@@ -52,6 +54,31 @@ export default {
       if (addresses.findIndex((item) => item._id === payload._id) === -1) {
         addresses.push(payload)
       }
+    },
+    updateAddress(state, payload) {
+      state.addresses = state.addresses.filter(
+        (item) => item._id !== payload._id
+      )
+      state.addresses.push(payload)
+    },
+    deleteAddress(state, id) {
+      state.addresses = state.addresses.filter((item) => item._id !== id)
+    },
+
+    setDrivers(state, payload) {
+      state.drivers = payload
+    },
+    addDriver({ drivers }, payload) {
+      if (drivers.findIndex((item) => item._id === payload._id) === -1) {
+        drivers.push(payload)
+      }
+    },
+    updateDriver(state, payload) {
+      state.drivers = state.drivers.filter((item) => item._id !== payload._id)
+      state.drivers.push(payload)
+    },
+    deleteDriver(state, id) {
+      state.drivers = state.drivers.filter((item) => item._id !== id)
     },
   },
   actions: {
@@ -157,6 +184,42 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
+
+    driverCreate({ commit }, payload) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          commit('setLoading', true)
+          const data = await DriverService.create(payload)
+          commit('addDriver', data)
+          commit('setLoading', false)
+          resolve(data)
+        } catch (e) {
+          commit('setLoading', false)
+          commit('setError', e)
+          reject(e)
+        }
+      })
+    },
+
+    async getDrivers({ commit, getters }, directiveUpdate) {
+      try {
+        commit('setLoading', true)
+        if (
+          directiveUpdate ||
+          (getters.drivers.length === 0 && getters.directoriesProfile)
+        ) {
+          commit('setDrivers', [])
+          const data = await DriverService.getByDerictoriesProfile(
+            getters.directoriesProfile
+          )
+          commit('setDrivers', data)
+        }
+        commit('setLoading', false)
+      } catch (e) {
+        commit('setLoading', false)
+        commit('setError', e.response?.data?.message)
+      }
+    },
   },
   getters: {
     myCompanies: (state) => state.myCompanies,
@@ -164,5 +227,8 @@ export default {
     tasks: ({ tasks }) => tasks,
     addresses: ({ addresses }, { directoriesProfile }) =>
       addresses.filter((item) => item.company === directoriesProfile),
+
+    drivers: ({ drivers }, { directoriesProfile }) =>
+      drivers.filter((item) => item.company === directoriesProfile),
   },
 }
