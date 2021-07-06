@@ -47,16 +47,16 @@ export default {
         api
           .get('/auth')
           .then((res) => {
-            if (res.data.data) {
-              commit('setUser', res.data.data)
+            if (res.data.user) {
+              commit('setUser', res.data.user)
+              dispatch('setDirectories', res.data)
             } else dispatch('logOut')
-            socket.auth = { userId: res.data.data._id }
+            socket.auth = { userId: res.data.user._id }
             socket.connect()
             resolve(res)
           })
           .catch((e) => {
             if (e.response?.status === 401) dispatch('logOut')
-            console.log(e)
             reject(e)
           })
       })

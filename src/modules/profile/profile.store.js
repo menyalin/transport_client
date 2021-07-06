@@ -82,7 +82,7 @@ export default {
     },
   },
   actions: {
-    async getMyCompanies({ commit, dispatch }) {
+    async getMyCompanies({ commit }) {
       try {
         commit('setLoading', true)
         const companies = await CompanyService.getMyCompanies()
@@ -92,6 +92,12 @@ export default {
         commit('setLoading', false)
         commit('setError', e.message)
       }
+    },
+
+    setDirectories({ commit }, { companies, addresses, drivers }) {
+      if (companies?.length) commit('setMyCompanies', companies)
+      if (addresses?.length) commit('setAddresses', addresses)
+      if (drivers?.length) commit('setDrivers', drivers)
     },
 
     async createCompany({ commit }, payload) {

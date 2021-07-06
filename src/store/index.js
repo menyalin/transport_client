@@ -10,7 +10,6 @@ const initPlugin = (store) => {
     store.state.appLoading = true
     Promise.all([
       store.dispatch('getUserData'),
-      store.dispatch('getMyCompanies'),
     ])
       .catch((e) => {
         router.push({
