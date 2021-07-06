@@ -8,6 +8,7 @@ import adminRoutes from '@/modules/admin/admin.routes'
 import profileRoutes from '@/modules/profile/profile.routes'
 
 import serverNotAvailablePage from '@/modules/common/pages/error'
+import HomeLayout from '@/modules/common/pages/layout'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
   ...authRoutes,
   ...adminRoutes,
   ...profileRoutes,
+  {
+    path: '/',
+    name: 'Home',
+    component: HomeLayout,
+  },
   {
     path: '/error',
     name: 'serverNotAvailable',

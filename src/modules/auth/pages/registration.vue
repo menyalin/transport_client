@@ -1,8 +1,8 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="6">
-        <v-card class="elevation-12">
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="elevation-4">
           <v-toolbar color="primary" dark flat>
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -15,7 +15,7 @@
                 </v-alert>
               </transition>
               <v-text-field
-                label="Name"
+                label="Имя"
                 prepend-icon="mdi-account"
                 type="text"
                 required
@@ -37,7 +37,7 @@
               <v-text-field
                 id="password"
                 v-model="$v.form.password.$model"
-                label="Password"
+                label="Пароль"
                 prepend-icon="mdi-lock"
                 type="password"
                 :error-messages="passwordErrors"
@@ -48,7 +48,7 @@
               <v-text-field
                 id="password"
                 v-model="$v.form.confirmPassword.$model"
-                label="Confirm password"
+                label="Повторите пароль"
                 prepend-icon="mdi-lock"
                 type="password"
                 :error-messages="confirmPasswordErrors"
@@ -59,7 +59,7 @@
             </v-card-text>
             <v-card-actions>
               <router-link to="/auth/login">
-                <small>Already registered?</small>
+                <small>Уже зарегистрирован</small>
               </router-link>
               <v-spacer></v-spacer>
               <v-btn
@@ -68,7 +68,7 @@
                 :loading="loading"
                 :disabled="$v.form.$invalid"
               >
-                Registration
+                Зарегистрироваться
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -82,7 +82,7 @@ import { mapActions } from 'vuex'
 import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
 export default {
   data: () => ({
-    formTitle: 'Registration form',
+    formTitle: 'Форма регистрации',
     loading: false,
     form: {
       email: '',

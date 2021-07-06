@@ -1,8 +1,8 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="6">
-        <v-card class="elevation-12">
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="elevation-4">
           <v-toolbar color="primary" dark flat>
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -23,7 +23,7 @@
               <v-text-field
                 id="password"
                 v-model="password"
-                label="Password"
+                label="Пароль"
                 name="password"
                 prepend-icon="mdi-lock"
                 type="password"
@@ -31,7 +31,7 @@
             </v-card-text>
             <v-card-actions>
               <router-link to="/auth/registration">
-                <small>Register now</small>
+                <small>Зарегистрироваться</small>
               </router-link>
               <v-spacer></v-spacer>
               <v-btn
@@ -40,7 +40,7 @@
                 :loading="loading"
                 :disabled="!isFormValid && loading"
               >
-                Submit
+                Войти
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -53,7 +53,7 @@
 import { mapActions } from 'vuex'
 export default {
   data: () => ({
-    formTitle: 'Login form',
+    formTitle: 'Войти в систему',
     loading: false,
     email: '',
     password: '',
