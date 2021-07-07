@@ -19,7 +19,27 @@
               </div>
               <v-divider />
               <div>
-                <v-btn @click="createError">Ошибка</v-btn>
+                входные данные: {{ dateStr }}
+                <app-date-time-input
+                  v-model="dateStr"
+                  label="Обычная строка даты"
+                  class="mb-4"
+                />
+                <v-divider></v-divider>
+                входные данные: {{ dateFromServer }}
+                <app-date-time-input
+                  v-model="dateFromServer"
+                  label="Дата с временем с сервера"
+                  class="mb-4"
+                />
+                <v-divider></v-divider>
+                входные данные: {{ dateFromServer2 }}
+                <app-date-time-input
+                  v-model="dateFromServer2"
+                  label="Дата без времени с сервера"
+                  class="mb-4"
+                />
+                <v-divider></v-divider>
               </div>
             </div>
             <div v-else class="text-center text-h3 ma-6">
@@ -35,13 +55,20 @@
 <script>
 import AppAdminBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
+import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'profileLayout',
+  data: () => ({
+    dateStr: '2021-07-06 ',
+    dateFromServer: '2021-06-12T14:21:45.075Z',
+    dateFromServer2: '2021-06-01T00:00:00.000Z',
+  }),
   components: {
     AppAdminBar,
     AppSnackbar,
+    AppDateTimeInput,
   },
   computed: {
     ...mapGetters(['isLoggedIn', 'user']),
