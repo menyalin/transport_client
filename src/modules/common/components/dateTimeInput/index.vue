@@ -13,16 +13,18 @@
         <v-text-field
           hint="Введите дату в формате ДД.ММ.ГГГГ"
           prepend-icon="mdi-calendar"
-          :value="date"
+          :value="dateValue"
           v-bind="attrs"
           v-on="on"
         ></v-text-field>
       </template>
-      <v-date-picker v-model="date" no-title @input="menu = false" />
+      <v-date-picker v-model="dateValue" no-title @input="menu = false" />
     </v-menu>
   </div>
 </template>
 <script>
+import moment from 'moment'
+
 export default {
   name: 'DateTimeInput',
   model: {
@@ -39,16 +41,21 @@ export default {
   },
   data: () => ({
     menu: false,
-    date: null,
+    dateValue: null,
   }),
   watch: {
     value: {
       immediate: true,
       handler: function (val) {
-        if (val) {
-          this.date = val
-        }
+        if (val && moment(val).isValid()) {
+          this.dateValue = moment(val)
+        } else this.dateValue = null
       },
+    },
+  },
+  methods: {
+    parseDate(str) {
+      return moment(str)
     },
   },
 }
