@@ -24,6 +24,7 @@
                   v-model="dateStr"
                   label="Обычная строка даты"
                   class="mb-4"
+                  hideTimeInput
                 />
                 <v-divider></v-divider>
                 входные данные: {{ dateFromServer }}
@@ -40,6 +41,12 @@
                   class="mb-4"
                 />
                 <v-divider></v-divider>
+                входные данные: {{ dateFromServer3 }}
+                <app-date-time-input
+                  v-model="dateFromServer3"
+                  label="Дата без времени с сервера"
+                  class="mb-4"
+                />
               </div>
             </div>
             <div v-else class="text-center text-h3 ma-6">
@@ -64,6 +71,7 @@ export default {
     dateStr: '2021-07-06 ',
     dateFromServer: '2021-06-12T14:21:45.075Z',
     dateFromServer2: '2021-06-01T00:00:00.000Z',
+    dateFromServer3: '2021-07-08T16:57:01+03:00',
   }),
   components: {
     AppAdminBar,
