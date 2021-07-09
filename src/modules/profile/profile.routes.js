@@ -12,6 +12,10 @@ import DriverCreate from './pages/driver/driverCreate'
 import DriverList from './pages/driver/driverList'
 import DriverDetails from './pages/driver/driverDetails'
 
+import TruckCreate from './pages/truck/truckCreate'
+import TruckList from './pages/truck/truckList'
+import TruckDetails from './pages/truck/truckDetails'
+
 import ProfileSettings from './pages/profileSettings'
 
 export default [
@@ -67,6 +71,23 @@ export default [
         path: 'drivers/:id',
         name: 'DriverDetails',
         component: DriverDetails,
+        props: true,
+      },
+      /// TRUCK
+      {
+        path: 'trucks',
+        name: 'TruckList',
+        component: TruckList,
+      },
+      {
+        path: 'trucks/create',
+        name: 'TruckCreate',
+        component: TruckCreate,
+      },
+      {
+        path: 'trucks/:id',
+        name: 'TruckDetails',
+        component: TruckDetails,
         props: true,
       },
 

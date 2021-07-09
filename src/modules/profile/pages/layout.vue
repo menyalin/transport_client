@@ -38,6 +38,11 @@ export default {
         link: '/profile/address',
       },
       {
+        text: 'Транспорт',
+        icon: 'mdi-truck',
+        link: '/profile/trucks',
+      },
+      {
         text: 'Водители',
         icon: 'mdi-card-account-details',
         link: '/profile/drivers',
