@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class="text-caption">{{ label }}</div>
-    <div v-if="dateValue" class="text-h6">
-      {{ dateValue.format('YYYY-MM-DD HH:mm') }}
-    </div>
     <div class="input_wrapper">
       <v-text-field
         type="date"
+        :label="label"
         :value="dateStr"
-        class="date-input"
-        prepend-icon="mdi-arrow-right"
+        class="date-input pt-0 mt-0"
+        :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
         @click:prepend="setDate"
         @change="changeDate"
+        :error-messages="errorMessages"
+        outlined
+        dense
       />
       <v-text-field
         v-if="!hideTimeInput"
@@ -20,6 +20,8 @@
         class="time-input"
         :disabled="timeInputDisabled"
         @change="changeTime"
+        dense
+        outlined
       />
     </div>
   </div>
@@ -31,7 +33,7 @@ export default {
   name: 'DateTimeInput',
   model: {
     prop: 'value',
-    emit: 'change',
+    event: 'change',
   },
 
   props: {
@@ -44,6 +46,13 @@ export default {
     hideTimeInput: {
       type: Boolean,
       default: false,
+    },
+    hidePrependIcon: {
+      type: Boolean,
+      default: false,
+    },
+    errorMessages: {
+      type: Array,
     },
   },
   data: () => ({
@@ -63,6 +72,7 @@ export default {
       else return null
     },
     timeInputDisabled() {
+      if (!this.dateValue) return true
       return !this.dateValue?.isValid()
     },
   },
@@ -74,8 +84,7 @@ export default {
           this.dateValue = moment(val.trim())
         } else {
           this.dateValue = null
-          if (val.trim()) {
-            console.log('Не корректный формат даты')
+          if (val?.trim()) {
             this.$store.commit('setError', 'Не корректный формат даты')
           }
         }
@@ -85,26 +94,36 @@ export default {
   methods: {
     setDate() {
       this.dateValue = moment()
+      this.emitValue()
+    },
+    emitValue() {
+      this.$emit(
+        'change',
+        this.hideTimeInput
+          ? this.dateValue?.format('YYYY-MM-DD')
+          : this.dateValue?.format()
+      )
     },
     changeDate(dateStr) {
-      if (dateStr) {
+      if (dateStr && moment(dateStr).isValid()) {
         this.fullTimeStr = this.dateValue?.format().split('T')[1]
         if (this.fullTimeStr)
           this.dateValue = moment(dateStr + 'T' + this.fullTimeStr)
         else this.dateValue = moment(dateStr)
+        this.emitValue()
       } else {
         this.dateValue = null
-        this.fullTimeStr = '00:00'
+        this.fullTimeStr = null
+        this.emitValue()
       }
     },
     changeTime(timeStr) {
       let dateStr = this.dateValue.format(this.dateFormat)
-      if (timeStr) {
-        this.dateValue = moment(
-          dateStr + 'T' + timeStr,
-          moment.HTML5_FMT.DATETIME_LOCAL
-        )
-      }
+      this.dateValue = moment(
+        dateStr + 'T' + timeStr || '00:00',
+        moment.HTML5_FMT.DATETIME_LOCAL
+      )
+      this.emitValue()
     },
   },
 }

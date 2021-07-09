@@ -31,7 +31,11 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
-    headers: [{ value: 'name', text: 'Имя' }],
+    headers: [
+      { value: 'name', text: 'Имя' },
+      { value: 'phone', text: 'Телефон' },
+      { value: 'birthday', text: 'Дата рождения' },
+    ],
   }),
   methods: {
     createDriver() {

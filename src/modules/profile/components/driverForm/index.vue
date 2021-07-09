@@ -20,7 +20,19 @@
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
     />
-
+    <app-date-time-input
+      v-model="$v.form.birthday.$model"
+      label="Дата рождения"
+      hideTimeInput
+      hidePrependIcon
+      :errorMessages="birthdayErrors"
+    />
+    <v-text-field
+      outlined
+      label="Телефон"
+      dense
+      v-model.trim="$v.form.phone.$model"
+    />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
       Удалить</v-btn
@@ -31,12 +43,14 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
+import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 
 export default {
   name: 'DriverForm',
   components: {
     AppButtonsPanel,
+    AppDateTimeInput,
   },
   props: {
     driver: {
@@ -61,12 +75,16 @@ export default {
       nameHint: 'Имя',
       form: {
         name: null,
+        birthday: null,
+        phone: null,
       },
     }
   },
   validations: {
     form: {
       name: { required },
+      birthday: { required },
+      phone: {},
     },
   },
   computed: {
@@ -87,6 +105,12 @@ export default {
         errors.push('Имя не может быть пустым')
       return errors
     },
+    birthdayErrors() {
+      const errors = []
+      if (this.$v.form.birthday.$dirty && this.$v.form.birthday.$invalid)
+        errors.push('Необходимо заполнить дату рождения')
+      return errors
+    },
   },
   methods: {
     submit() {
@@ -100,9 +124,13 @@ export default {
     },
     setFormFields(val) {
       this.form.name = val.name
+      this.form.birthday = val.birthday
+      this.form.phone = val.phone
     },
     resetForm() {
       this.form.name = null
+      this.form.birthday = null
+      this.form.phone = null
     },
   },
 }
