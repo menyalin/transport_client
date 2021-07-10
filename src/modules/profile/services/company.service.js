@@ -5,22 +5,11 @@ const BASE_PATH = '/companies'
 
 class CompanyService {
   constructor() {
-    socket.on('tasks:added', (data) => {
-      store.commit('addTask', data)
-    })
-    socket.on('tasks:complete', (taskId) => {
-      store.commit('completeTask', taskId)
-    })
     socket.on('company:updateCompany', (payload) => {
       store.commit('updateCompany', payload)
     })
     socket.on('company:deleteEmployeeById', (payload) => {
       store.commit('deleteEmployee', payload)
-    })
-    socket.once('tasks:getAllActive', (tasks) => {
-      tasks.forEach((item) => {
-        store.commit('addTask', item)
-      })
     })
   }
 

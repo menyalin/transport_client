@@ -12,8 +12,22 @@
               <pre>{{ task.content }}</pre>
             </v-card-text>
             <v-card-actions>
-              <v-btn text color="primary" small>Принять</v-btn>
-              <v-btn text color="error" small>Отказать</v-btn>
+              <v-btn
+                text
+                color="primary"
+                small
+                @click="accept(task._id, 'accepted')"
+              >
+                Принять
+              </v-btn>
+              <v-btn
+                text
+                color="error"
+                small
+                @click="accept(task._id, 'denied')"
+              >
+                Отказать
+              </v-btn>
             </v-card-actions>
           </v-card>
         </div>
@@ -23,10 +37,17 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import TaskService from '../services/task.service'
+
 export default {
   name: 'taskList',
   computed: {
     ...mapGetters(['tasks']),
+  },
+  methods: {
+    async accept(id, result) {
+      await TaskService.confirmTask(id, result)
+    },
   },
 }
 </script>
