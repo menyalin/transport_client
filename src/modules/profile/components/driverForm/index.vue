@@ -12,31 +12,139 @@
     <div v-else class="ma-3 text-caption">
       Профиль настроек: {{ directoriesProfileName }}
     </div>
+    <v-text-field
+      outlined
+      label="ТК"
+      dense
+      v-model.trim="$v.form.tkName.$model"
+    />
+    <div class="row-input">
+      <v-text-field
+        outlined
+        label="Фамилия"
+        dense
+        v-model.trim="$v.form.surname.$model"
+        :error-messages="surnameErrors"
+      />
+      <v-text-field
+        outlined
+        label="Имя"
+        dense
+        v-model.trim="$v.form.name.$model"
+        :error-messages="nameErrors"
+      />
+      <v-text-field
+        outlined
+        label="Отчество"
+        dense
+        v-model.trim="$v.form.patronymic.$model"
+        :error-messages="nameErrors"
+      />
+      <app-date-time-input
+        v-model="$v.form.birthday.$model"
+        label="Дата рождения"
+        hideTimeInput
+        hidePrependIcon
+      />
+    </div>
 
-    <v-text-field
-      outlined
-      label="Имя водителя"
-      dense
-      v-model.trim="$v.form.name.$model"
-      :error-messages="nameErrors"
-    />
-    <app-date-time-input
-      v-model="$v.form.birthday.$model"
-      label="Дата рождения"
-      hideTimeInput
-      hidePrependIcon
-      :errorMessages="birthdayErrors"
-    />
-    <v-text-field
-      outlined
-      label="Телефон"
-      dense
-      v-model.trim="$v.form.phone.$model"
-    />
+    <div class="row-input">
+      <v-text-field
+        outlined
+        label="Серия и номер паспорта"
+        dense
+        v-model.trim="$v.form.passportId.$model"
+      />
+      <v-text-field
+        outlined
+        label="Паспорт выдан"
+        dense
+        v-model.trim="$v.form.passportIssued.$model"
+      />
+      <app-date-time-input
+        v-model="$v.form.passportDate.$model"
+        label="Дата выдачи паспорта"
+        hideTimeInput
+        hidePrependIcon
+      />
+    </div>
+
+    <div class="row-input">
+      <v-text-field
+        outlined
+        label="Номер ВУ"
+        dense
+        v-model.trim="$v.form.licenseId.$model"
+      />
+      <app-date-time-input
+        v-model="$v.form.licenseDate.$model"
+        label="Дата выдачи ВУ"
+        hideTimeInput
+        hidePrependIcon
+      />
+      <v-text-field
+        outlined
+        label="Кагории ВУ"
+        dense
+        v-model.trim="$v.form.licenseCategory.$model"
+      />
+    </div>
+
+    <div class="row-input">
+      <v-text-field
+        outlined
+        label="Карта водителя"
+        dense
+        v-model.trim="$v.form.driverCardId.$model"
+      />
+      <app-date-time-input
+        v-model="$v.form.driverCardPeriod.$model"
+        label="КВ действительна до"
+        hideTimeInput
+        hidePrependIcon
+      />
+    </div>
+
+    <div class="row-input">
+      <v-text-field
+        outlined
+        label="Телефон"
+        dense
+        v-model.trim="$v.form.phone.$model"
+      />
+      <v-text-field
+        outlined
+        label="Телефон 2"
+        dense
+        v-model.trim="$v.form.phone2.$model"
+      />
+    </div>
+
+    <div class="row-input">
+      <app-date-time-input
+        v-model="$v.form.employmentDate.$model"
+        label="Дата приема на работу"
+        hideTimeInput
+      />
+
+      <app-date-time-input
+        v-model="$v.form.dismissalDate.$model"
+        label="Дата увольнения"
+        hideTimeInput
+      />
+      <v-text-field
+        outlined
+        label="Кто рекомедовал"
+        dense
+        v-model.trim="$v.form.recommender.$model"
+      />
+    </div>
+
+    <v-checkbox label="Есть сканы документов" v-model="form.hasScans" dense />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
-      Удалить</v-btn
-    >
+      Удалить
+    </v-btn>
   </div>
 </template>
 <script>
@@ -65,26 +173,57 @@ export default {
     driver: {
       immediate: true,
       handler: function (val) {
-        if (!!val) this.setFormFields(val)
+        if (val) this.setFormFields(val)
       },
     },
   },
   data() {
     return {
       loading: false,
-      nameHint: 'Имя',
       form: {
+        tkName: null,
+        surname: null,
         name: null,
-        birthday: null,
+        patronymic: null,
+        passportId: null,
+        passportIssued: null,
+        passportDate: null,
+        licenseId: null,
+        licenseDate: null,
+        licenseCategory: null,
+        driverCardId: null,
+        driverCardPeriod: null,
+        hasScans: null,
         phone: null,
+        phone2: null,
+        employmentDate: null,
+        dismissalDate: null,
+        recommender: null,
+        birthday: null,
       },
     }
   },
   validations: {
     form: {
+      tkName: {},
+      surname: { required },
       name: { required },
-      birthday: { required },
+      patronymic: {},
+      passportId: {},
+      passportIssued: {},
+      passportDate: {},
+      licenseId: {},
+      licenseDate: {},
+      licenseCategory: {},
+      driverCardId: {},
+      driverCardPeriod: {},
+      hasScans: {},
       phone: {},
+      phone2: {},
+      employmentDate: {},
+      dismissalDate: {},
+      recommender: {},
+      birthday: {},
     },
   },
   computed: {
@@ -105,10 +244,10 @@ export default {
         errors.push('Имя не может быть пустым')
       return errors
     },
-    birthdayErrors() {
+    surnameErrors() {
       const errors = []
-      if (this.$v.form.birthday.$dirty && this.$v.form.birthday.$invalid)
-        errors.push('Необходимо заполнить дату рождения')
+      if (this.$v.form.surname.$dirty && this.$v.form.surname.$invalid)
+        errors.push('Имя не может быть пустым')
       return errors
     },
   },
@@ -116,23 +255,30 @@ export default {
     submit() {
       const driver = { ...this.form, company: this.directoriesProfile }
       this.$emit('submit', driver)
-      // this.resetForm()
+      this.resetForm()
     },
     cancel() {
       this.resetForm()
       this.$emit('cancel')
     },
     setFormFields(val) {
-      this.form.name = val.name
-      this.form.birthday = val.birthday
-      this.form.phone = val.phone
+      const keys = Object.keys(this.form)
+      keys.forEach((key) => {
+        this.form[key] = val[key]
+      })
     },
     resetForm() {
-      this.form.name = null
-      this.form.birthday = null
-      this.form.phone = null
+      const keys = Object.keys(this.form)
+      keys.forEach((key) => {
+        this.form[key] = null
+      })
     },
   },
 }
 </script>
-<style></style>
+<style>
+.row-input {
+  display: flex;
+  flex-direction: row;
+}
+</style>

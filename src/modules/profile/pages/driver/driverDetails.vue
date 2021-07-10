@@ -19,7 +19,7 @@
 import AppDriverForm from '@/modules/profile/components/driverForm'
 import driverService from '../../services/driver.service'
 export default {
-  name: 'AddressDetails',
+  name: 'DriverDetails',
   components: {
     AppDriverForm,
   },

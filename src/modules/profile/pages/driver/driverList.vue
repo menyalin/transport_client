@@ -32,9 +32,10 @@ export default {
   },
   data: () => ({
     headers: [
+      { value: 'tkName', text: 'ТК' },
+      { value: 'surname', text: 'Фамилия' },
       { value: 'name', text: 'Имя' },
       { value: 'phone', text: 'Телефон' },
-      { value: 'birthday', text: 'Дата рождения' },
     ],
   }),
   methods: {

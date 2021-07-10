@@ -133,7 +133,8 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 12rem;
+  max-width: 14rem;
+  min-width: 12rem;
 }
 
 .time-input {
