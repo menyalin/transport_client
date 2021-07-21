@@ -79,9 +79,9 @@ export default {
         drivers.push(payload)
       }
     },
-    updateDriver(state, payload) {
-      state.drivers = state.drivers.filter((item) => item._id !== payload._id)
-      state.drivers.push(payload)
+    updateDriver({ drivers }, payload) {
+      const ind = drivers.findIndex((item) => item._id === payload._id)
+      if (ind !== -1) drivers.splice(ind, 1, payload)
     },
     deleteDriver(state, id) {
       state.drivers = state.drivers.filter((item) => item._id !== id)

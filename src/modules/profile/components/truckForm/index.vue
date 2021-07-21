@@ -22,9 +22,34 @@
     />
     <v-text-field
       outlined
+      label="Марка"
+      dense
+      v-model.trim="$v.form.brand.$model"
+      :error-messages="nameErrors"
+    />
+    <v-text-field
+      outlined
       label="Модель"
       dense
       v-model.trim="$v.form.model.$model"
+    />
+    <v-text-field
+      outlined
+      label="Год выпуска"
+      dense
+      v-model.trim="$v.form.issueYear.$model"
+    />
+    <app-date-time-input
+      v-model="$v.form.startServiceDate.$model"
+      label="Дата ввода в эксплуатацию"
+      hideTimeInput
+      hidePrependIcon
+    />
+    <app-date-time-input
+      v-model="$v.form.endServiceDate.$model"
+      label="Дата вывода из эксплуатации"
+      hideTimeInput
+      hidePrependIcon
     />
     <v-select
       outlined
@@ -35,9 +60,21 @@
     />
     <v-text-field
       outlined
+      label="ТК"
+      dense
+      v-model.trim="$v.form.tkName.$model"
+    />
+    <v-text-field
+      outlined
       label="Гос.номер"
       dense
       v-model.trim="$v.form.regNum.$model"
+    />
+    <v-text-field
+      outlined
+      label="WIN"
+      dense
+      v-model.trim="$v.form.win.$model"
     />
     <v-text-field
       outlined
@@ -45,11 +82,23 @@
       dense
       v-model.trim="$v.form.sts.$model"
     />
+     <app-date-time-input
+      v-model="$v.form.stsDate.$model"
+      label="Дата СТС"
+      hideTimeInput
+      hidePrependIcon
+    />
     <v-text-field
       outlined
       label="ПТС"
       dense
       v-model.trim="$v.form.pts.$model"
+    />
+    <v-text-field
+      outlined
+      label="Собственник"
+      dense
+      v-model.trim="$v.form.owner.$model"
     />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
@@ -62,11 +111,13 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 export default {
   name: 'TruckForm',
   components: {
     AppButtonsPanel,
+    AppDateTimeInput,
   },
   props: {
     truck: {
@@ -91,22 +142,38 @@ export default {
       nameHint: 'Имя',
       form: {
         name: null,
+        brand: null,
         model: null,
+        issueYear: null,
+        startServiceDate: null,
+        endServiceDate: null,
+        tkName: null,
         type: null,
         regNum: null,
+        win: null,
         sts: null,
+        stsDate: null,
         pts: null,
+        owner: null,
       },
     }
   },
   validations: {
     form: {
       name: { required },
+      brand: {},
       model: {},
+      issueYear: {},
+      startServiceDate: {},
+      endServiceDate: {},
+      tkName: {},
       type: { required },
       regNum: {},
+      win: {},
       sts: {},
+      stsDate: {},
       pts: {},
+      owner: {},
     },
   },
   computed: {
@@ -119,7 +186,7 @@ export default {
       if (!this.directoriesProfile) return null
       return this.myCompanies.find(
         (item) => item._id === this.directoriesProfile
-      ).name
+      )?.name
     },
     nameErrors() {
       const errors = []
@@ -139,20 +206,16 @@ export default {
       this.$emit('cancel')
     },
     setFormFields(val) {
-      this.form.name = val.name
-      this.form.model = val.model
-      this.form.type = val.type
-      this.form.regNum = val.regNum
-      this.form.sts = val.sts
-      this.form.pts = val.pts
+      const keys = Object.keys(this.form)
+      keys.forEach((key) => {
+        this.form[key] = val[key]
+      })
     },
     resetForm() {
-      this.form.name = null
-      this.form.model = null
-      this.form.type = null
-      this.form.regNum = null
-      this.form.sts = null
-      this.form.pts = null
+      const keys = Object.keys(this.form)
+      keys.forEach((key) => {
+        this.form[key] = null
+      })
     },
   },
 }
