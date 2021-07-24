@@ -116,10 +116,11 @@ export default {
       }
     },
 
-    setDirectories({ commit }, { companies, addresses, drivers }) {
+    setDirectories({ commit }, { companies, addresses, drivers, trucks }) {
       if (companies?.length) commit('setMyCompanies', companies)
       if (addresses?.length) commit('setAddresses', addresses)
       if (drivers?.length) commit('setDrivers', drivers)
+      if (trucks?.length) commit('setTrucks', trucks)
     },
 
     async createCompany({ commit }, payload) {
