@@ -25,7 +25,6 @@
       label="Марка"
       dense
       v-model.trim="$v.form.brand.$model"
-      :error-messages="nameErrors"
     />
     <v-text-field
       outlined
@@ -57,6 +56,7 @@
       dense
       :items="truckTypes"
       v-model="$v.form.type.$model"
+      :error-messages="typeErrors"
     />
     <v-text-field
       outlined
@@ -69,6 +69,7 @@
       label="Гос.номер"
       dense
       v-model.trim="$v.form.regNum.$model"
+      :error-messages="regNumErrors"
     />
     <v-text-field
       outlined
@@ -82,7 +83,7 @@
       dense
       v-model.trim="$v.form.sts.$model"
     />
-     <app-date-time-input
+    <app-date-time-input
       v-model="$v.form.stsDate.$model"
       label="Дата СТС"
       hideTimeInput
@@ -100,6 +101,40 @@
       dense
       v-model.trim="$v.form.owner.$model"
     />
+    <v-text-field
+      outlined
+      label="Объем топливного бака"
+      dense
+      type="number"
+      v-model.number="$v.form.volumeFuel.$model"
+    />
+    <v-text-field
+      outlined
+      label="Объем бака рефа"
+      dense
+      type="number"
+      v-model.number="$v.form.volumeRef.$model"
+    />
+    <v-text-field
+      outlined
+      label="Грузоподъемность ТС в кг"
+      dense
+      type="number"
+      v-model.number="$v.form.liftCapacity.$model"
+    />
+    <v-text-field
+      outlined
+      label="Макс.кол-во плт"
+      dense
+      type="number"
+      v-model.number="$v.form.pltCount.$model"
+    />
+    <v-text-field
+      outlined
+      label="Примечание"
+      dense
+      v-model.trim="$v.form.note.$model"
+    />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
       Удалить</v-btn
@@ -108,7 +143,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { required, numeric } from 'vuelidate/lib/validators'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
@@ -139,7 +174,6 @@ export default {
   data() {
     return {
       loading: false,
-      nameHint: 'Имя',
       form: {
         name: null,
         brand: null,
@@ -155,6 +189,11 @@ export default {
         stsDate: null,
         pts: null,
         owner: null,
+        volumeFuel: null,
+        volumeRef: null,
+        liftCapacity: null,
+        pltCount: null,
+        note: null,
       },
     }
   },
@@ -168,12 +207,17 @@ export default {
       endServiceDate: {},
       tkName: {},
       type: { required },
-      regNum: {},
+      regNum: { required },
       win: {},
       sts: {},
       stsDate: {},
       pts: {},
       owner: {},
+      volumeFuel: { numeric },
+      volumeRef: { numeric },
+      liftCapacity: { numeric },
+      pltCount: { numeric },
+      note: {},
     },
   },
   computed: {
@@ -190,8 +234,32 @@ export default {
     },
     nameErrors() {
       const errors = []
-      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
+      if (
+        this.$v.form.name.$dirty &&
+        this.$v.form.name.$invalid &&
+        !this.loading
+      )
         errors.push('Имя не может быть пустым')
+      return errors
+    },
+    regNumErrors() {
+      const errors = []
+      if (
+        this.$v.form.regNum.$dirty &&
+        this.$v.form.regNum.$invalid &&
+        !this.loading
+      )
+        errors.push('Гос.номер должен быть заполнен')
+      return errors
+    },
+    typeErrors() {
+      const errors = []
+      if (
+        this.$v.form.type.$dirty &&
+        this.$v.form.type.$invalid &&
+        !this.loading
+      )
+        errors.push('Тип должен быть заполнен')
       return errors
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col>
         <div v-if="loading">Загружаю...</div>
@@ -38,10 +38,15 @@ export default {
 
   methods: {
     async submit(val) {
-      this.loading = true
-      this.truck = await service.updateOne(this.id, val)
-      this.loading = false
-      this.$router.go(-1)
+      try {
+        this.loading = true
+        this.truck = await service.updateOne(this.id, val)
+        this.loading = false
+        this.$router.go(-1)
+      } catch (e) {
+        this.loading = false
+        this.$store.commit('setError', e.message)
+      }
     },
     cancel() {
       this.$router.push({ name: 'TruckList' })

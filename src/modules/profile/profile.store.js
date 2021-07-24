@@ -95,9 +95,9 @@ export default {
         trucks.push(payload)
       }
     },
-    updateTruck(state, payload) {
-      state.trucks = state.trucks.filter((item) => item._id !== payload._id)
-      state.trucks.push(payload)
+    updateTruck({ trucks }, payload) {
+      const ind = trucks.findIndex((item) => item._id === payload._id)
+      if (ind !== -1) trucks.splice(ind, 1, payload)
     },
     deleteTruck(state, id) {
       state.trucks = state.trucks.filter((item) => item._id !== id)
@@ -297,5 +297,11 @@ export default {
 
     trucks: ({ trucks }, { directoriesProfile }) =>
       trucks.filter((item) => item.company === directoriesProfile),
+
+    truckTypesHash: ({ truckTypes }) =>
+      truckTypes.reduce((hash, item) => {
+        hash[item.value] = item.text
+        return hash
+      }, {}),
   },
 }

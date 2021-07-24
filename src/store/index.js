@@ -8,9 +8,7 @@ import router from '../router'
 const initPlugin = (store) => {
   if (store.getters.token) {
     store.state.appLoading = true
-    Promise.all([
-      store.dispatch('getUserData'),
-    ])
+    Promise.all([store.dispatch('getUserData')])
       .catch((e) => {
         router.push({
           name: 'serverNotAvailable',
@@ -40,7 +38,9 @@ export default new Vuex.Store({
       state.loading = payload
     },
     setError(state, payload) {
-      state.error = payload
+      if (payload?.response?.data?.message)
+        state.error = payload.response.data.message
+      else state.error = payload
     },
     clearError(state) {
       state.error = null

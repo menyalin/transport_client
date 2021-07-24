@@ -5,7 +5,7 @@ module.exports = {
     node: true,
   },
 
-  extends: ['plugin:vue/essential'],
+  extends: ['plugin:vue/recommended'],
 
   parserOptions: {
     parser: 'babel-eslint',
@@ -17,5 +17,6 @@ module.exports = {
     'arrow-spacing': 'error',
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
+    'vue/valid-v-slot': 'off',
   },
 }

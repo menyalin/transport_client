@@ -1,23 +1,27 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col>
         <app-buttons-panel
-          panelType="list"
+          panel-type="list"
+          :disabled-refresh="!directoriesProfile"
           @submit="create"
           @refresh="refresh"
-          :disabledRefresh="!directoriesProfile"
         />
         <v-data-table
           :headers="headers"
-          :items="trucks"
-          :loading="loading"
-          @dblclick:row="dblClickRow"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-        />
+          :items="trucks"
+          :loading="loading"
+          @dblclick:row="dblClickRow" 
+        >
+          <template v-slot:item.type="{ item }">
+            <span>{{ truckTypesHash[item.type] }}</span>
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -33,8 +37,12 @@ export default {
   data: () => ({
     headers: [
       { value: 'name', text: 'Имя' },
-      { value: 'model', text: 'model' },
       { value: 'type', text: 'Тип' },
+      { value: 'regNum', text: 'Гос.номер' },
+      { value: 'brand', text: 'Марка' },
+      { value: 'model', text: 'Модель' },
+      { value: 'tkName', text: 'ТК' },
+      { value: 'owner', text: 'Собственник' },
     ],
   }),
   methods: {
@@ -49,7 +57,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['trucks', 'loading', 'directoriesProfile']),
+    ...mapGetters([
+      'trucks',
+      'loading',
+      'directoriesProfile',
+      'truckTypesHash',
+    ]),
   },
   created() {
     this.$store.dispatch('getTrucks')

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row v-if="panelType === 'form'">
       <v-col cols="auto">
         <v-btn @click="$emit('cancel')">Отмена</v-btn>
