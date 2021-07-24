@@ -3,20 +3,20 @@
     <v-row>
       <v-col>
         <app-buttons-panel
-          panelType="list"
+          panel-type="list"
+          :disabled-refresh="!directoriesProfile"
           @submit="createDriver"
           @refresh="refresh"
-          :disabledRefresh="!directoriesProfile"
         />
         <v-data-table
           :headers="headers"
           :items="drivers"
           :loading="loading"
-          @dblclick:row="dblClickRow"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
+          @dblclick:row="dblClickRow"
         />
       </v-col>
     </v-row>
@@ -38,6 +38,12 @@ export default {
       { value: 'phone', text: 'Телефон' },
     ],
   }),
+  computed: {
+    ...mapGetters(['drivers', 'loading', 'directoriesProfile']),
+  },
+  created() {
+    this.$store.dispatch('getDrivers')
+  },
   methods: {
     createDriver() {
       this.$router.push({ name: 'DriverCreate' })
@@ -48,12 +54,6 @@ export default {
     dblClickRow(_, { item }) {
       this.$router.push(`drivers/${item._id}`)
     },
-  },
-  computed: {
-    ...mapGetters(['drivers', 'loading', 'directoriesProfile']),
-  },
-  created() {
-    this.$store.dispatch('getDrivers')
   },
 }
 </script>

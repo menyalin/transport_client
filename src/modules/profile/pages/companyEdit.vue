@@ -1,11 +1,14 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col></v-col>
+      <v-col />
     </v-row>
     <v-row>
       <v-col>
-        <app-company-form @cancel="cancel" @submit="submitForm" />
+        <app-company-form
+          @cancel="cancel"
+          @submit="submitForm"
+        />
       </v-col>
     </v-row>
   </v-container>

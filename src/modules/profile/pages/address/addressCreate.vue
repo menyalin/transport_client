@@ -2,7 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-address-form @submit="submit" @cancel="cancel" />
+        <app-address-form
+          @submit="submit"
+          @cancel="cancel"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -12,13 +15,13 @@ import AppAddressForm from '@/modules/profile/components/addressForm'
 
 export default {
   name: 'AddressCreate',
+  components: {
+    AppAddressForm,
+  },
   data() {
     return {
       loading: false,
     }
-  },
-  components: {
-    AppAddressForm,
   },
   methods: {
     submit(address) {

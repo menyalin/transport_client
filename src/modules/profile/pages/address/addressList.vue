@@ -3,20 +3,20 @@
     <v-row>
       <v-col>
         <app-buttons-panel
-          panelType="list"
+          panel-type="list"
+          :disabled-refresh="!directoriesProfile"
           @submit="createAddress"
           @refresh="refresh"
-          :disabledRefresh="!directoriesProfile"
         />
         <v-data-table
           :headers="headers"
           :items="addresses"
           :loading="loading"
-          @dblclick:row="dblClickRow"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
+          @dblclick:row="dblClickRow"
         />
       </v-col>
     </v-row>
@@ -41,6 +41,12 @@ export default {
       { value: 'geo', text: 'Координаты' },
     ],
   }),
+  computed: {
+    ...mapGetters(['addresses', 'loading', 'directoriesProfile']),
+  },
+  created() {
+    this.$store.dispatch('getAddresses')
+  },
   methods: {
     createAddress() {
       this.$router.push({ name: 'createAddress' })
@@ -51,12 +57,6 @@ export default {
     dblClickRow(_, { item }) {
       this.$router.push(`address/${item._id}`)
     },
-  },
-  computed: {
-    ...mapGetters(['addresses', 'loading', 'directoriesProfile']),
-  },
-  created() {
-    this.$store.dispatch('getAddresses')
   },
 }
 </script>

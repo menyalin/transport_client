@@ -16,9 +16,9 @@
           }"
           :items="trucks"
           :loading="loading"
-          @dblclick:row="dblClickRow" 
+          @dblclick:row="dblClickRow"
         >
-          <template v-slot:item.type="{ item }">
+          <template v-slot:[`item.type`]="{ item }">
             <span>{{ truckTypesHash[item.type] }}</span>
           </template>
         </v-data-table>
@@ -45,17 +45,6 @@ export default {
       { value: 'owner', text: 'Собственник' },
     ],
   }),
-  methods: {
-    create() {
-      this.$router.push({ name: 'TruckCreate' })
-    },
-    refresh() {
-      this.$store.dispatch('getTrucks', true)
-    },
-    dblClickRow(_, { item }) {
-      this.$router.push(`trucks/${item._id}`)
-    },
-  },
   computed: {
     ...mapGetters([
       'trucks',
@@ -66,6 +55,17 @@ export default {
   },
   created() {
     this.$store.dispatch('getTrucks')
+  },
+  methods: {
+    create() {
+      this.$router.push({ name: 'TruckCreate' })
+    },
+    refresh() {
+      this.$store.dispatch('getTrucks', true)
+    },
+    dblClickRow(_, { item }) {
+      this.$router.push(`trucks/${item._id}`)
+    },
   },
 }
 </script>

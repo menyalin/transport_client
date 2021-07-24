@@ -2,13 +2,15 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div v-if="loading">Загружаю...</div>
+        <div v-if="loading">
+          Загружаю...
+        </div>
         <app-driver-form
           v-else
-          @cancel="cancel"
           :truck="truck"
+          display-delete-btn
+          @cancel="cancel"
           @submit="submit"
-          displayDeleteBtn
           @delete="deleteHandler"
         />
       </v-col>
@@ -19,7 +21,7 @@
 import AppDriverForm from '@/modules/profile/components/truckForm'
 import service from '../../services/truck.service'
 export default {
-  name: 'truckDetails',
+  name: 'TruckDetails',
   components: {
     AppDriverForm,
   },
@@ -34,6 +36,11 @@ export default {
       loading: false,
       truck: null,
     }
+  },
+  async created() {
+    this.loading = true
+    this.truck = await service.getById(this.id)
+    this.loading = false
   },
 
   methods: {
@@ -57,11 +64,6 @@ export default {
       this.loading = false
       this.$router.go(-1)
     },
-  },
-  async created() {
-    this.loading = true
-    this.truck = await service.getById(this.id)
-    this.loading = false
   },
 }
 </script>

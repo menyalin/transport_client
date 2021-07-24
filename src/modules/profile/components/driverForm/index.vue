@@ -1,122 +1,130 @@
 <template>
   <div>
     <app-buttons-panel
-      panelType="form"
+      panel-type="form"
+      :disabled-submit="isInvalidForm || loading"
       @cancel="cancel"
-      :disabledSubmit="isInvalidForm || loading"
       @submit="submit"
     />
-    <v-alert outlined class="ma-3 mb-5" type="error" v-if="!directoriesProfile">
+    <v-alert
+      v-if="!directoriesProfile"
+      outlined
+      class="ma-3 mb-5"
+      type="error"
+    >
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
-    <div v-else class="ma-3 text-caption">
+    <div
+      v-else
+      class="ma-3 text-caption"
+    >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
     <v-text-field
+      v-model.trim="$v.form.tkName.$model"
       outlined
       label="ТК"
       dense
-      v-model.trim="$v.form.tkName.$model"
     />
     <div class="row-input">
       <v-text-field
+        v-model.trim="$v.form.surname.$model"
         outlined
         label="Фамилия"
         dense
-        v-model.trim="$v.form.surname.$model"
         :error-messages="surnameErrors"
       />
       <v-text-field
+        v-model.trim="$v.form.name.$model"
         outlined
         label="Имя"
         dense
-        v-model.trim="$v.form.name.$model"
         :error-messages="nameErrors"
       />
       <v-text-field
+        v-model.trim="$v.form.patronymic.$model"
         outlined
         label="Отчество"
         dense
-        v-model.trim="$v.form.patronymic.$model"
         :error-messages="nameErrors"
       />
       <app-date-time-input
         v-model="$v.form.birthday.$model"
         label="Дата рождения"
-        hideTimeInput
-        hidePrependIcon
+        hide-time-input
+        hide-prepend-icon
       />
     </div>
 
     <div class="row-input">
       <v-text-field
+        v-model.trim="$v.form.passportId.$model"
         outlined
         label="Серия и номер паспорта"
         dense
-        v-model.trim="$v.form.passportId.$model"
       />
       <v-text-field
+        v-model.trim="$v.form.passportIssued.$model"
         outlined
         label="Паспорт выдан"
         dense
-        v-model.trim="$v.form.passportIssued.$model"
       />
       <app-date-time-input
         v-model="$v.form.passportDate.$model"
         label="Дата выдачи паспорта"
-        hideTimeInput
-        hidePrependIcon
+        hide-time-input
+        hide-prepend-icon
       />
     </div>
 
     <div class="row-input">
       <v-text-field
+        v-model.trim="$v.form.licenseId.$model"
         outlined
         label="Номер ВУ"
         dense
-        v-model.trim="$v.form.licenseId.$model"
       />
       <app-date-time-input
         v-model="$v.form.licenseDate.$model"
         label="Дата выдачи ВУ"
-        hideTimeInput
-        hidePrependIcon
+        hide-time-input
+        hide-prepend-icon
       />
       <v-text-field
+        v-model.trim="$v.form.licenseCategory.$model"
         outlined
         label="Кагории ВУ"
         dense
-        v-model.trim="$v.form.licenseCategory.$model"
       />
     </div>
 
     <div class="row-input">
       <v-text-field
+        v-model.trim="$v.form.driverCardId.$model"
         outlined
         label="Карта водителя"
         dense
-        v-model.trim="$v.form.driverCardId.$model"
       />
       <app-date-time-input
         v-model="$v.form.driverCardPeriod.$model"
         label="КВ действительна до"
-        hideTimeInput
-        hidePrependIcon
+        hide-time-input
+        hide-prepend-icon
       />
     </div>
 
     <div class="row-input">
       <v-text-field
+        v-model.trim="$v.form.phone.$model"
         outlined
         label="Телефон"
         dense
-        v-model.trim="$v.form.phone.$model"
       />
       <v-text-field
+        v-model.trim="$v.form.phone2.$model"
         outlined
         label="Телефон 2"
         dense
-        v-model.trim="$v.form.phone2.$model"
       />
     </div>
 
@@ -124,25 +132,38 @@
       <app-date-time-input
         v-model="$v.form.employmentDate.$model"
         label="Дата приема на работу"
-        hideTimeInput
+        hide-time-input
       />
 
       <app-date-time-input
         v-model="$v.form.dismissalDate.$model"
         label="Дата увольнения"
-        hideTimeInput
+        hide-time-input
       />
       <v-text-field
+        v-model.trim="$v.form.recommender.$model"
         outlined
         label="Кто рекомедовал"
         dense
-        v-model.trim="$v.form.recommender.$model"
       />
     </div>
 
-    <v-checkbox label="Есть сканы документов" v-model="form.hasScans" dense />
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+    <v-checkbox
+      v-model="form.hasScans"
+      label="Есть сканы документов"
+      dense
+    />
+    <v-btn
+      v-if="displayDeleteBtn"
+      color="error"
+      @click="$emit('delete')"
+    >
+      <v-icon
+        left
+        dark
+      >
+        mdi-delete
+      </v-icon>
       Удалить
     </v-btn>
   </div>
@@ -167,14 +188,6 @@ export default {
     displayDeleteBtn: {
       type: Boolean,
       default: false,
-    },
-  },
-  watch: {
-    driver: {
-      immediate: true,
-      handler: function (val) {
-        if (val) this.setFormFields(val)
-      },
     },
   },
   data() {
@@ -203,29 +216,6 @@ export default {
       },
     }
   },
-  validations: {
-    form: {
-      tkName: {},
-      surname: { required },
-      name: { required },
-      patronymic: {},
-      passportId: {},
-      passportIssued: {},
-      passportDate: {},
-      licenseId: {},
-      licenseDate: {},
-      licenseCategory: {},
-      driverCardId: {},
-      driverCardPeriod: {},
-      hasScans: {},
-      phone: {},
-      phone2: {},
-      employmentDate: {},
-      dismissalDate: {},
-      recommender: {},
-      birthday: {},
-    },
-  },
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
@@ -251,6 +241,38 @@ export default {
       return errors
     },
   },
+  watch: {
+    driver: {
+      immediate: true,
+      handler: function (val) {
+        if (val) this.setFormFields(val)
+      },
+    },
+  },
+  validations: {
+    form: {
+      tkName: {},
+      surname: { required },
+      name: { required },
+      patronymic: {},
+      passportId: {},
+      passportIssued: {},
+      passportDate: {},
+      licenseId: {},
+      licenseDate: {},
+      licenseCategory: {},
+      driverCardId: {},
+      driverCardPeriod: {},
+      hasScans: {},
+      phone: {},
+      phone2: {},
+      employmentDate: {},
+      dismissalDate: {},
+      recommender: {},
+      birthday: {},
+    },
+  },
+
   methods: {
     submit() {
       const driver = { ...this.form, company: this.directoriesProfile }

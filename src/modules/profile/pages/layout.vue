@@ -22,7 +22,7 @@ import AppLeftNav from '@/modules/common/components/leftNav'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
 
 export default {
-  name: 'profileLayout',
+  name: 'ProfileLayout',
   components: {
     AppAdminBar,
     AppLeftNav,

@@ -2,41 +2,44 @@
   <v-card>
     <form>
       <app-buttons-panel
-        panelType="form"
+        panel-type="form"
+        :disabled-submit="$v.form.$invalid"
         @cancel="cancel"
         @submit="submit"
-        :disabledSubmit="$v.form.$invalid"
       />
       <v-card-text>
         <v-text-field
+          v-model.trim="$v.form.name.$model"
           type="text"
           label="Сокращенное название"
-          v-model.trim="$v.form.name.$model"
           :error-messages="nameErrors"
           @input="$v.form.name.$touch()"
           @blur="$v.form.name.$touch()"
         />
         <v-text-field
+          v-model.trim="$v.form.fullName.$model"
           type="text"
           label="Полное название"
-          v-model.trim="$v.form.fullName.$model"
           :error-messages="fullNameErrors"
           @input="$v.form.fullName.$touch()"
           @blur="$v.form.fullName.$touch()"
         />
         <v-text-field
+          v-model="form.inn"
           type="text"
           label="ИНН"
-          v-model="form.inn"
           :error-messages="innErrors"
           @input="delayTouch($v.form.inn)"
           @blur="$v.form.inn.$touch()"
         />
         <v-checkbox
-          label="У компании есть свои справочники"
           v-model="form.hasOwnDirectories"
+          label="У компании есть свои справочники"
         />
-        <v-alert type="info" outlined>
+        <v-alert
+          type="info"
+          outlined
+        >
           <p>ИНН - Должен быть уникален</p>
           <p>
             Пользователь может работать со справочниками только одной компании.
@@ -54,7 +57,10 @@ import { mapActions } from 'vuex'
 const touchMap = new WeakMap()
 
 export default {
-  name: 'companyForm',
+  name: 'CompanyForm',
+  components: {
+    AppButtonsPanel,
+  },
   data() {
     return {
       form: {
@@ -65,8 +71,29 @@ export default {
       },
     }
   },
-  components: {
-    AppButtonsPanel,
+  computed: {
+    nameErrors() {
+      const errors = []
+      if (!this.$v.form.name.$dirty) return errors
+      !this.$v.form.name.required &&
+        errors.push('Название не может быть пустым')
+      return errors
+    },
+    fullNameErrors() {
+      const errors = []
+      if (!this.$v.form.fullName.$dirty) return errors
+      !this.$v.form.fullName.required &&
+        errors.push('Полное название не может быть пустым')
+      return errors
+    },
+    innErrors() {
+      const errors = []
+      if (!this.$v.form.inn.$dirty) return errors
+      !this.$v.form.inn.required && errors.push('ИНН не может быть пустым')
+      !this.$v.form.inn.existInn &&
+        errors.push('ИНН уже зарегистрирован в системе')
+      return errors
+    },
   },
   methods: {
     ...mapActions(['isExistInn']),
@@ -98,30 +125,6 @@ export default {
           })
         },
       },
-    },
-  },
-  computed: {
-    nameErrors() {
-      const errors = []
-      if (!this.$v.form.name.$dirty) return errors
-      !this.$v.form.name.required &&
-        errors.push('Название не может быть пустым')
-      return errors
-    },
-    fullNameErrors() {
-      const errors = []
-      if (!this.$v.form.fullName.$dirty) return errors
-      !this.$v.form.fullName.required &&
-        errors.push('Полное название не может быть пустым')
-      return errors
-    },
-    innErrors() {
-      const errors = []
-      if (!this.$v.form.inn.$dirty) return errors
-      !this.$v.form.inn.required && errors.push('ИНН не может быть пустым')
-      !this.$v.form.inn.existInn &&
-        errors.push('ИНН уже зарегистрирован в системе')
-      return errors
     },
   },
 }

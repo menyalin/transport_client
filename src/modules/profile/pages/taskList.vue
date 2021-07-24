@@ -2,11 +2,18 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div v-if="!tasks.length" class="text-center text-h5">
+        <div
+          v-if="!tasks.length"
+          class="text-center text-h5"
+        >
           Активных задач не найдено
         </div>
         <div v-else>
-          <v-card v-for="task in tasks" :key="task._id" class="ma-2">
+          <v-card
+            v-for="task in tasks"
+            :key="task._id"
+            class="ma-2"
+          >
             <v-card-title> {{ task.title }} </v-card-title>
             <v-card-text>
               <pre>{{ task.content }}</pre>
@@ -40,7 +47,7 @@ import { mapGetters } from 'vuex'
 import TaskService from '../services/task.service'
 
 export default {
-  name: 'taskList',
+  name: 'TaskList',
   computed: {
     ...mapGetters(['tasks']),
   },

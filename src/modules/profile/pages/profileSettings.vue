@@ -9,9 +9,9 @@
             solo
             :value="directoriesProfile"
             :items="companies"
-            @change="changeDirectoriesProfile"
             clearable
             label="Выбор профиля справочников"
+            @change="changeDirectoriesProfile"
           />
         </div>
       </v-col>

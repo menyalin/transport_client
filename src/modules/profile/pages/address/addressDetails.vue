@@ -2,13 +2,15 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div v-if="loading">Загружаю адрес...</div>
+        <div v-if="loading">
+          Загружаю адрес...
+        </div>
         <app-address-form
           v-else
-          @cancel="cancel"
           :address="address"
+          display-delete-btn
+          @cancel="cancel"
           @submit="submit"
-          displayDeleteBtn
           @delete="deleteHandler"
         />
       </v-col>
@@ -35,6 +37,11 @@ export default {
       address: null,
     }
   },
+  async created() {
+    this.loading = true
+    this.address = await addressService.getById(this.id)
+    this.loading = false
+  },
 
   methods: {
     async submit(val) {
@@ -52,11 +59,6 @@ export default {
       this.loading = false
       this.$router.go(-1)
     },
-  },
-  async created() {
-    this.loading = true
-    this.address = await addressService.getById(this.id)
-    this.loading = false
   },
 }
 </script>

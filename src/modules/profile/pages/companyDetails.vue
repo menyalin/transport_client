@@ -4,11 +4,15 @@
       <v-col>
         <div class="text-h4">
           {{ company.name }}
-          
         </div>
-        <div class="text-caption">ИНН: {{ company.inn }}</div>
+        <div class="text-caption">
+          ИНН: {{ company.inn }}
+        </div>
         <v-divider />
-        <app-company-staff :staff="company.staff"  :companyId="company._id"/>
+        <app-company-staff
+          :staff="company.staff"
+          :company-id="company._id"
+        />
       </v-col>
     </v-row>
   </v-container>

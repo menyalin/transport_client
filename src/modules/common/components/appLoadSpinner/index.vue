@@ -1,8 +1,14 @@
 <template>
   <v-app>
     <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
+      <v-container
+        class="fill-height"
+        fluid
+      >
+        <v-row
+          align="center"
+          justify="center"
+        >
           <v-col cols="auto">
             <v-progress-circular
               :size="90"

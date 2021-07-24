@@ -17,6 +17,7 @@ module.exports = {
     'arrow-spacing': 'error',
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
+    'vue/require-default-prop': 'off',
     'vue/valid-v-slot': 'off',
   },
 }

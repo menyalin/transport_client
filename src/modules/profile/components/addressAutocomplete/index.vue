@@ -4,7 +4,6 @@
     auto-select-first
     solo
     :value="model"
-    @change="change"
     :items="items"
     :loading="isLoading"
     :search-input.sync="search"
@@ -14,6 +13,7 @@
     placeholder="Начните вводить адрес для поиска"
     prepend-icon="mdi-database-search"
     return-object
+    @change="change"
   />
 </template>
 <script>
@@ -29,14 +29,6 @@ export default {
       items: [],
       timeout: null,
     }
-  },
-  methods: {
-    addressCompare() {
-      return true
-    },
-    change(val) {
-      this.$emit('change', val)
-    },
   },
   watch: {
     async search(val) {
@@ -57,6 +49,14 @@ export default {
           this.$store.commit('setError', e.message)
         }
       }, 500)
+    },
+  },
+  methods: {
+    addressCompare() {
+      return true
+    },
+    change(val) {
+      this.$emit('change', val)
     },
   },
 }

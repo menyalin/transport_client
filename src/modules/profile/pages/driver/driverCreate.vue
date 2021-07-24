@@ -2,7 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-driver-form @submit="submit" @cancel="cancel" />
+        <app-driver-form
+          @submit="submit"
+          @cancel="cancel"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -11,14 +14,14 @@
 import AppDriverForm from '@/modules/profile/components/driverForm'
 
 export default {
-  name: 'driverCreate',
+  name: 'DriverCreate',
+  components: {
+    AppDriverForm,
+  },
   data() {
     return {
       loading: false,
     }
-  },
-  components: {
-    AppDriverForm,
   },
   methods: {
     submit(driver) {

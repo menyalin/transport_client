@@ -1,14 +1,27 @@
 <template>
-  <v-app-bar app color="primary" dense dark>
-    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+  <v-app-bar
+    app
+    color="primary"
+    dense
+    dark
+  >
+    <v-app-bar-nav-icon />
     <v-toolbar-title>{{ title }}</v-toolbar-title>
     <v-spacer />
 
-    <v-btn v-if="!isLoggedIn" icon to="/auth/login">
+    <v-btn
+      v-if="!isLoggedIn"
+      icon
+      to="/auth/login"
+    >
       <v-icon>mdi-import</v-icon>
     </v-btn>
 
-    <v-btn v-else icon @click="logoutClick">
+    <v-btn
+      v-else
+      icon
+      @click="logoutClick"
+    >
       <v-icon>mdi-export</v-icon>
     </v-btn>
   </v-app-bar>

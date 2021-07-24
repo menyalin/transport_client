@@ -11,13 +11,20 @@
               </div>
               <v-divider />
               <div class="ma-3">
-                <router-link to="/profile">Профиль пользователя</router-link>
+                <router-link to="/profile">
+                  Профиль пользователя
+                </router-link>
               </div>
               <div class="ma-3">
-                <router-link to="/admin">Админка</router-link>
+                <router-link to="/admin">
+                  Админка
+                </router-link>
               </div>
             </div>
-            <div v-else class="text-center text-h3 ma-6">
+            <div
+              v-else
+              class="text-center text-h3 ma-6"
+            >
               Необходима авторизация
             </div>
           </v-col>
@@ -33,12 +40,12 @@ import AppSnackbar from '@/modules/common/components/appSnackbar'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'profileLayout',
-  data: () => ({}),
+  name: 'ProfileLayout',
   components: {
     AppAdminBar,
     AppSnackbar,
   },
+  data: () => ({}),
   computed: {
     ...mapGetters(['isLoggedIn', 'user']),
   },

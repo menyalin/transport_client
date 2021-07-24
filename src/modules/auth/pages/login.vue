@@ -1,24 +1,42 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="6" lg="4">
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-row
+      align="center"
+      justify="center"
+    >
+      <v-col
+        cols="12"
+        sm="8"
+        md="6"
+        lg="4"
+      >
         <v-card class="elevation-4">
-          <v-toolbar color="primary" dark flat>
+          <v-toolbar
+            color="primary"
+            dark
+            flat
+          >
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer />
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
               <transition name="fade">
-                <v-alert :type="messageType" v-if="!!message">
+                <v-alert
+                  v-if="!!message"
+                  :type="messageType"
+                >
                   {{ message }}
                 </v-alert>
               </transition>
               <v-text-field
+                v-model="email"
                 label="Email"
                 prepend-icon="mdi-at"
                 type="email"
-                v-model="email"
               />
               <v-text-field
                 id="password"
@@ -33,7 +51,7 @@
               <router-link to="/auth/registration">
                 <small>Зарегистрироваться</small>
               </router-link>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="primary"
                 type="submit"

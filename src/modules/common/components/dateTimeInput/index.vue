@@ -7,11 +7,11 @@
         :value="dateStr"
         class="date-input pt-0 mt-0"
         :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
-        @click:prepend="setDate"
-        @change="changeDate"
         :error-messages="errorMessages"
         outlined
         dense
+        @click:prepend="setDate"
+        @change="changeDate"
       />
       <v-text-field
         v-if="!hideTimeInput"
@@ -19,9 +19,9 @@
         :value="timeStr"
         class="time-input"
         :disabled="timeInputDisabled"
-        @change="changeTime"
         dense
         outlined
+        @change="changeTime"
       />
     </div>
   </div>

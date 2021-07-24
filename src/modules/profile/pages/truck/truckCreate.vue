@@ -2,7 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-truck-form @submit="submit" @cancel="cancel" />
+        <app-truck-form
+          @submit="submit"
+          @cancel="cancel"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -11,14 +14,14 @@
 import AppTruckForm from '@/modules/profile/components/truckForm'
 
 export default {
-  name: 'truckCreate',
+  name: 'TruckCreate',
+  components: {
+    AppTruckForm,
+  },
   data() {
     return {
       loading: false,
     }
-  },
-  components: {
-    AppTruckForm,
   },
   methods: {
     submit(truck) {

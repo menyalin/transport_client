@@ -1,144 +1,180 @@
 <template>
   <div>
     <app-buttons-panel
-      panelType="form"
+      :disabled-submit="isInvalidForm || loading"
+      panel-type="form"
       @cancel="cancel"
-      :disabledSubmit="isInvalidForm || loading"
       @submit="submit"
     />
-    <v-alert outlined class="ma-3 mb-5" type="error" v-if="!directoriesProfile">
+    <v-alert
+      v-if="!directoriesProfile"
+      outlined
+      class="ma-3 mb-5"
+      type="error"
+    >
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
-    <div v-else class="ma-3 text-caption">
+    <div
+      v-else
+      class="ma-3 text-caption"
+    >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
 
-    <v-text-field
-      outlined
-      label="Заголовок ТС"
-      dense
-      v-model.trim="$v.form.name.$model"
-      :error-messages="nameErrors"
-    />
-    <v-text-field
-      outlined
-      label="Марка"
-      dense
-      v-model.trim="$v.form.brand.$model"
-    />
-    <v-text-field
-      outlined
-      label="Модель"
-      dense
-      v-model.trim="$v.form.model.$model"
-    />
-    <v-text-field
-      outlined
-      label="Год выпуска"
-      dense
-      v-model.trim="$v.form.issueYear.$model"
-    />
-    <app-date-time-input
-      v-model="$v.form.startServiceDate.$model"
-      label="Дата ввода в эксплуатацию"
-      hideTimeInput
-      hidePrependIcon
-    />
-    <app-date-time-input
-      v-model="$v.form.endServiceDate.$model"
-      label="Дата вывода из эксплуатации"
-      hideTimeInput
-      hidePrependIcon
-    />
-    <v-select
-      outlined
-      label="Тип ТС"
-      dense
-      :items="truckTypes"
-      v-model="$v.form.type.$model"
-      :error-messages="typeErrors"
-    />
-    <v-text-field
-      outlined
-      label="ТК"
-      dense
-      v-model.trim="$v.form.tkName.$model"
-    />
-    <v-text-field
-      outlined
-      label="Гос.номер"
-      dense
-      v-model.trim="$v.form.regNum.$model"
-      :error-messages="regNumErrors"
-    />
-    <v-text-field
-      outlined
-      label="WIN"
-      dense
-      v-model.trim="$v.form.win.$model"
-    />
-    <v-text-field
-      outlined
-      label="СТС"
-      dense
-      v-model.trim="$v.form.sts.$model"
-    />
-    <app-date-time-input
-      v-model="$v.form.stsDate.$model"
-      label="Дата СТС"
-      hideTimeInput
-      hidePrependIcon
-    />
-    <v-text-field
-      outlined
-      label="ПТС"
-      dense
-      v-model.trim="$v.form.pts.$model"
-    />
-    <v-text-field
-      outlined
-      label="Собственник"
-      dense
-      v-model.trim="$v.form.owner.$model"
-    />
-    <v-text-field
-      outlined
-      label="Объем топливного бака"
-      dense
-      type="number"
-      v-model.number="$v.form.volumeFuel.$model"
-    />
-    <v-text-field
-      outlined
-      label="Объем бака рефа"
-      dense
-      type="number"
-      v-model.number="$v.form.volumeRef.$model"
-    />
-    <v-text-field
-      outlined
-      label="Грузоподъемность ТС в кг"
-      dense
-      type="number"
-      v-model.number="$v.form.liftCapacity.$model"
-    />
-    <v-text-field
-      outlined
-      label="Макс.кол-во плт"
-      dense
-      type="number"
-      v-model.number="$v.form.pltCount.$model"
-    />
-    <v-text-field
-      outlined
-      label="Примечание"
-      dense
-      v-model.trim="$v.form.note.$model"
-    />
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
-      Удалить</v-btn
+    <v-container fluid>
+      <!-- название марка модель -->
+      <v-row>
+        <v-text-field
+          v-model.trim="$v.form.name.$model"
+          outlined
+          label="Заголовок ТС"
+          dense
+          :error-messages="nameErrors"
+        />
+
+        <v-text-field
+          v-model.trim="$v.form.brand.$model"
+          outlined
+          label="Марка"
+          dense
+        />
+
+        <v-text-field
+          v-model.trim="$v.form.model.$model"
+          outlined
+          label="Модель"
+          dense
+        />
+      </v-row>
+      <v-row>
+        <v-select
+          v-model="$v.form.type.$model"
+          outlined
+          label="Тип ТС"
+          dense
+          :items="truckTypes"
+          :error-messages="typeErrors"
+        />
+        <v-text-field
+          v-model.trim="$v.form.tkName.$model"
+          outlined
+          label="ТК"
+          dense
+        />
+        <v-text-field
+          v-model.trim="$v.form.issueYear.$model"
+          outlined
+          label="Год выпуска"
+          dense
+        />
+
+        <app-date-time-input
+          v-model="$v.form.startServiceDate.$model"
+          label="Дата ввода в эксплуатацию"
+          hide-time-input
+          hide-prepend-icon
+        />
+
+        <app-date-time-input
+          v-model="$v.form.endServiceDate.$model"
+          label="Дата вывода из эксплуатации"
+          hide-time-input
+          hide-prepend-icon
+        />
+        <v-text-field
+          v-model.trim="$v.form.win.$model"
+          outlined
+          label="WIN"
+          dense
+        />
+      </v-row>
+      <v-row>
+        <v-text-field
+          v-model.trim="$v.form.regNum.$model"
+          outlined
+          label="Гос.номер"
+          dense
+          :error-messages="regNumErrors"
+        />
+
+        <v-text-field
+          v-model.trim="$v.form.sts.$model"
+          outlined
+          label="СТС"
+          dense
+        />
+        <app-date-time-input
+          v-model="$v.form.stsDate.$model"
+          label="Дата СТС"
+          hide-time-input
+          hide-prepend-icon
+        />
+        <v-text-field
+          v-model.trim="$v.form.pts.$model"
+          outlined
+          label="ПТС"
+          dense
+        />
+        <v-text-field
+          v-model.trim="$v.form.owner.$model"
+          outlined
+          label="Собственник"
+          dense
+        />
+      </v-row>
+      <v-row>
+        <v-text-field
+          v-model.number="$v.form.volumeFuel.$model"
+          outlined
+          label="Объем топливного бака"
+          dense
+          type="number"
+        />
+        <v-text-field
+          v-model.number="$v.form.volumeRef.$model"
+          outlined
+          label="Объем бака рефа"
+          dense
+          type="number"
+        />
+        <v-text-field
+          v-model.number="$v.form.liftCapacity.$model"
+          outlined
+          label="Грузоподъемность ТС в кг"
+          dense
+          type="number"
+        />
+        <v-text-field
+          v-model.number="$v.form.pltCount.$model"
+          outlined
+          label="Макс.кол-во плт"
+          dense
+          type="number"
+        />
+      </v-row>
+      <v-row>
+        <v-text-field
+          v-model.trim="$v.form.note.$model"
+          outlined
+          label="Примечание"
+          dense
+        />
+      </v-row>
+    </v-container>
+
+    <v-btn
+      v-if="displayDeleteBtn"
+      color="error"
+      @click="$emit('delete')"
     >
+      <v-icon
+        left
+        dark
+      >
+        mdi-delete
+      </v-icon>
+      Удалить
+    </v-btn>
   </div>
 </template>
 <script>
@@ -161,14 +197,6 @@ export default {
     displayDeleteBtn: {
       type: Boolean,
       default: false,
-    },
-  },
-  watch: {
-    truck: {
-      immediate: true,
-      handler: function (val) {
-        if (!!val) this.setFormFields(val)
-      },
     },
   },
   data() {
@@ -196,29 +224,6 @@ export default {
         note: null,
       },
     }
-  },
-  validations: {
-    form: {
-      name: { required },
-      brand: {},
-      model: {},
-      issueYear: {},
-      startServiceDate: {},
-      endServiceDate: {},
-      tkName: {},
-      type: { required },
-      regNum: { required },
-      win: {},
-      sts: {},
-      stsDate: {},
-      pts: {},
-      owner: {},
-      volumeFuel: { numeric },
-      volumeRef: { numeric },
-      liftCapacity: { numeric },
-      pltCount: { numeric },
-      note: {},
-    },
   },
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile', 'truckTypes']),
@@ -263,6 +268,38 @@ export default {
       return errors
     },
   },
+  watch: {
+    truck: {
+      immediate: true,
+      handler: function (val) {
+        if (!!val) this.setFormFields(val)
+      },
+    },
+  },
+  validations: {
+    form: {
+      name: { required },
+      brand: {},
+      model: {},
+      issueYear: {},
+      startServiceDate: {},
+      endServiceDate: {},
+      tkName: {},
+      type: { required },
+      regNum: { required },
+      win: {},
+      sts: {},
+      stsDate: {},
+      pts: {},
+      owner: {},
+      volumeFuel: { numeric },
+      volumeRef: { numeric },
+      liftCapacity: { numeric },
+      pltCount: { numeric },
+      note: {},
+    },
+  },
+
   methods: {
     submit() {
       const truck = { ...this.form, company: this.directoriesProfile }

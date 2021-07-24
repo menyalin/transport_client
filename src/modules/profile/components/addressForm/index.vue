@@ -1,62 +1,90 @@
 <template>
   <div>
     <app-buttons-panel
-      panelType="form"
+      panel-type="form"
+      :disabled-submit="isInvalidForm || loading"
       @cancel="cancel"
-      :disabledSubmit="isInvalidForm || loading"
       @submit="submit"
     />
-    <v-alert outlined class="ma-3 mb-5" type="error" v-if="!directoriesProfile">
+    <v-alert
+      v-if="!directoriesProfile"
+      outlined
+      class="ma-3 mb-5"
+      type="error"
+    >
       Профиль справочников не выбран, сохранение адреса не возможно
     </v-alert>
-    <div v-else class="ma-3 text-caption">
+    <div
+      v-else
+      class="ma-3 text-caption"
+    >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <app-address-autocomplete @change="getParsedAddress" class="mt-3" />
+    <app-address-autocomplete
+      class="mt-3"
+      @change="getParsedAddress"
+    />
 
     <v-text-field
+      v-model.trim="$v.form.name.$model"
       outlined
       label="Наименование"
       dense
-      v-model.trim="$v.form.name.$model"
       :hint="addressNameHint"
       :error-messages="nameErrors"
     />
     <v-text-field
+      v-model="$v.form.shortName.$model"
       outlined
       dense
       label="Сокращенное наименование адреса"
-      v-model="$v.form.shortName.$model"
       :hint="addressShortNameHint"
     />
     <v-text-field
+      v-model="$v.form.note.$model"
       outlined
       dense
       label="Примечание к адресу"
-      v-model="$v.form.note.$model"
       :hint="addressShortNameHint"
     />
     <v-text-field
+      v-model="$v.form.geo.$model"
       outlined
       dense
       label="Координаты"
-      v-model="$v.form.geo.$model"
       :hint="addressGeoHint"
       :error-messages="geoErrors"
     />
     <v-text-field
+      v-model="$v.form.label.$model"
       outlined
       dense
       label="Метки для поиска"
-      v-model="$v.form.label.$model"
       :hint="addressLabelHint"
     />
-    <v-checkbox label="Место погрузки" v-model="form.isShipmentPlace" dense />
-    <v-checkbox label="Место разгрузки" v-model="form.isDeliveryPlace" dense />
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
-      Удалить</v-btn
+    <v-checkbox
+      v-model="form.isShipmentPlace"
+      label="Место погрузки"
+      dense
+    />
+    <v-checkbox
+      v-model="form.isDeliveryPlace"
+      label="Место разгрузки"
+      dense
+    />
+    <v-btn
+      v-if="displayDeleteBtn"
+      color="error"
+      @click="$emit('delete')"
     >
+      <v-icon
+        left
+        dark
+      >
+        mdi-delete
+      </v-icon>
+      Удалить
+    </v-btn>
   </div>
 </template>
 <script>
@@ -93,14 +121,6 @@ export default {
       default: false,
     },
   },
-  watch: {
-    address: {
-      immediate: true,
-      handler: function (val) {
-        if (!!val) this.setFormFields(val)
-      },
-    },
-  },
   data() {
     return {
       loading: false,
@@ -120,18 +140,6 @@ export default {
         isDeliveryPlace: false,
       },
     }
-  },
-  validations: {
-    form: {
-      name: { required },
-      label: {},
-      geo: {
-        required,
-        validCoordinates,
-      },
-      shortName: {},
-      note: {},
-    },
   },
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
@@ -158,6 +166,27 @@ export default {
       return errors
     },
   },
+  watch: {
+    address: {
+      immediate: true,
+      handler: function (val) {
+        if (!!val) this.setFormFields(val)
+      },
+    },
+  },
+  validations: {
+    form: {
+      name: { required },
+      label: {},
+      geo: {
+        required,
+        validCoordinates,
+      },
+      shortName: {},
+      note: {},
+    },
+  },
+
   methods: {
     submit() {
       const address = { ...this.form, company: this.directoriesProfile }

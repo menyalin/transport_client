@@ -1,34 +1,52 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="6" lg="4">
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-row
+      align="center"
+      justify="center"
+    >
+      <v-col
+        cols="12"
+        sm="8"
+        md="6"
+        lg="4"
+      >
         <v-card class="elevation-4">
-          <v-toolbar color="primary" dark flat>
+          <v-toolbar
+            color="primary"
+            dark
+            flat
+          >
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer />
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
               <transition name="fade">
-                <v-alert :type="messageType" v-if="!!message">
+                <v-alert
+                  v-if="!!message"
+                  :type="messageType"
+                >
                   {{ message }}
                 </v-alert>
               </transition>
               <v-text-field
+                v-model.trim="$v.form.name.$model"
                 label="Имя"
                 prepend-icon="mdi-account"
                 type="text"
                 required
-                v-model.trim="$v.form.name.$model"
                 :error-messages="nameErrors"
                 @input="$v.form.name.$touch()"
                 @blur="$v.form.name.$touch()"
               />
               <v-text-field
+                v-model.trim="$v.form.email.$model"
                 label="Email"
                 prepend-icon="mdi-at"
                 type="email"
-                v-model.trim="$v.form.email.$model"
                 :error-messages="emailErrors"
                 required
                 @input="$v.form.email.$touch()"
@@ -61,7 +79,7 @@
               <router-link to="/auth/login">
                 <small>Уже зарегистрирован</small>
               </router-link>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="primary"
                 type="submit"

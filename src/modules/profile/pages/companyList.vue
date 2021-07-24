@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <app-buttons-panel
-          panelType="list"
+          panel-type="list"
           @refresh="refresh"
           @submit="create"
         />
@@ -14,10 +14,10 @@
         <v-list>
           <v-subheader>Мои компании</v-subheader>
           <v-list-item
-            two-line
-            :to="{ name: 'companyDetails', params: { id: item._id } }"
             v-for="item in myCompanies"
             :key="item._id"
+            two-line
+            :to="{ name: 'companyDetails', params: { id: item._id } }"
           >
             <v-list-item-content>
               <v-list-item-title>{{ item.name }}</v-list-item-title>

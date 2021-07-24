@@ -11,11 +11,11 @@ import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 
 export default {
   name: 'App',
-  computed: {
-    ...mapGetters(['appLoading']),
-  },
   components: {
     AppLoadSpinner,
+  },
+  computed: {
+    ...mapGetters(['appLoading']),
   },
 }
 </script>
