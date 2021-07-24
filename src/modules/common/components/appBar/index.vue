@@ -2,13 +2,34 @@
   <v-app-bar
     app
     color="primary"
-    dense
     dark
+    dense
   >
     <v-app-bar-nav-icon />
-    <v-toolbar-title>{{ title }}</v-toolbar-title>
+    <v-toolbar-title
+      class="app-title"
+      @click="toHomePage"
+    >
+      s4log
+    </v-toolbar-title>
     <v-spacer />
-
+    <v-btn
+      v-if="isLoggedIn"
+      to="/profile"
+      text
+    >
+      <v-icon left>
+        mdi-account-outline
+      </v-icon>
+      Профиль
+    </v-btn>
+    <v-btn
+      v-if="isLoggedIn"
+      to="/admin"
+      text
+    >
+      Админка
+    </v-btn>
     <v-btn
       v-if="!isLoggedIn"
       icon
@@ -44,6 +65,14 @@ export default {
     logoutClick() {
       this.logOut()
     },
+    toHomePage() {
+      if (this.$route.path !== '/') this.$router.push('/')
+    },
   },
 }
 </script>
+<style scoped>
+.app-title {
+  cursor: pointer;
+}
+</style>

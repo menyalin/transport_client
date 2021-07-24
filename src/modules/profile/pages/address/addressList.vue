@@ -17,7 +17,30 @@
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
-        />
+        >
+          <template v-slot:[`item.isShipmentPlace`]="{ item }">
+            <v-icon
+              v-if="item.isShipmentPlace"
+              color="green"
+            >
+              mdi-check
+            </v-icon>
+            <v-icon v-else>
+              mdi-minus
+            </v-icon>
+          </template>
+          <template v-slot:[`item.isDeliveryPlace`]="{ item }">
+            <v-icon
+              v-if="item.isDeliveryPlace"
+              color="green"
+            >
+              mdi-check
+            </v-icon>
+            <v-icon v-else>
+              mdi-minus
+            </v-icon>
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -36,8 +59,18 @@ export default {
       { value: 'name', text: 'Адрес' },
       { value: 'note', text: 'Примечание' },
       { value: 'label', text: 'Метки' },
-      { value: 'isShipmentPlace', text: 'Погрузка' },
-      { value: 'isDeliveryPlace', text: 'Разгрузка' },
+      {
+        value: 'isShipmentPlace',
+        text: 'Погрузка',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        value: 'isDeliveryPlace',
+        text: 'Разгрузка',
+        align: 'center',
+        sortable: false,
+      },
       { value: 'geo', text: 'Координаты' },
     ],
   }),

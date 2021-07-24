@@ -25,8 +25,10 @@ export default {
     setMyCompanies(state, companies) {
       state.myCompanies = companies
     },
-    clearDirectories(state) {
-      state.addresses = []
+    clearDirectories({ addresses, drivers, trucks }) {
+      addresses = []
+      drivers = []
+      trucks = []
     },
     addCompany(state, company) {
       state.myCompanies.push(company)
@@ -61,11 +63,9 @@ export default {
         addresses.push(payload)
       }
     },
-    updateAddress(state, payload) {
-      state.addresses = state.addresses.filter(
-        (item) => item._id !== payload._id
-      )
-      state.addresses.push(payload)
+    updateAddress({ addresses }, payload) {
+      const ind = addresses.findIndex((item) => item._id === payload._id)
+      if (ind !== -1) addresses.splice(ind, 1, payload)
     },
     deleteAddress(state, id) {
       state.addresses = state.addresses.filter((item) => item._id !== id)
