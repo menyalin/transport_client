@@ -11,7 +11,7 @@ export default {
     myCompanies: [],
     addresses: [],
     drivers: [],
-
+    cacheDirectories: new Map(),
     tasks: [],
     staffRoles: [
       { text: 'Администратор', value: 'admin' },
@@ -20,6 +20,20 @@ export default {
     ],
   },
   mutations: {
+    addArrayToCache(state, items) {
+      items.forEach((item) => {
+        state.cacheDirectories.set(item._id, item)
+      })
+    },
+    addToCache(state, item) {
+      state.cacheDirectories.set(item._id, item)
+    },
+    deleteFromCache(state, id) {
+      state.cacheDirectories.delete(id)
+    },
+    clearCache(state) {
+      state.cacheDirectories.clear()
+    },
     setMyCompanies(state, companies) {
       state.myCompanies = companies
     },
@@ -150,7 +164,7 @@ export default {
       try {
         commit('setLoading', true)
         commit('clearDirectories')
-        // commit('clearRouteSheets')
+        commit('clearCache')
         await UserService.configProfile(payload)
         commit('updateUser', payload)
         commit('setLoading', false)
@@ -232,7 +246,10 @@ export default {
     },
   },
   getters: {
+    cacheDirectories: ({ cacheDirectories }) => cacheDirectories,
+
     myCompanies: (state) => state.myCompanies,
+
     staffRoles: ({ staffRoles }) => staffRoles,
 
     tasks: ({ tasks }) => tasks,
@@ -242,6 +259,7 @@ export default {
     drivers: ({ drivers }, { directoriesProfile }) =>
       drivers.filter((item) => item.company === directoriesProfile),
   },
+
   modules: {
     RouteSheetModule,
     TruckModule,
