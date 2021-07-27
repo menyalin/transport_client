@@ -1,34 +1,31 @@
-import CompanyService from './services/company.service'
+import RouteSheetModule from './routeSheet'
+import TruckModule from './truck'
+
+import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 import AddressService from '@/modules/profile/services/address.service'
 import DriverService from '@/modules/profile/services/driver.service'
-import TruckService from '@/modules/profile/services/truck.service'
 
 export default {
   state: {
     myCompanies: [],
     addresses: [],
     drivers: [],
-    trucks: [],
+
     tasks: [],
     staffRoles: [
       { text: 'Администратор', value: 'admin' },
       { text: 'Менеджер', value: 'manager' },
       { text: 'Диспетчер', value: 'dispatcher' },
     ],
-    truckTypes: [
-      { text: 'Грузовик', value: 'truck' },
-      { text: 'Прицеп (П/П)', value: 'trailer' },
-    ],
   },
   mutations: {
     setMyCompanies(state, companies) {
       state.myCompanies = companies
     },
-    clearDirectories({ addresses, drivers, trucks }) {
+    clearDirectories({ addresses, drivers }) {
       addresses = []
       drivers = []
-      trucks = []
     },
     addCompany(state, company) {
       state.myCompanies.push(company)
@@ -85,22 +82,6 @@ export default {
     },
     deleteDriver(state, id) {
       state.drivers = state.drivers.filter((item) => item._id !== id)
-    },
-
-    setTrucks(state, payload) {
-      state.trucks = payload
-    },
-    addTruck({ trucks }, payload) {
-      if (trucks.findIndex((item) => item._id === payload._id) === -1) {
-        trucks.push(payload)
-      }
-    },
-    updateTruck({ trucks }, payload) {
-      const ind = trucks.findIndex((item) => item._id === payload._id)
-      if (ind !== -1) trucks.splice(ind, 1, payload)
-    },
-    deleteTruck(state, id) {
-      state.trucks = state.trucks.filter((item) => item._id !== id)
     },
   },
   actions: {
@@ -169,6 +150,7 @@ export default {
       try {
         commit('setLoading', true)
         commit('clearDirectories')
+        // commit('clearRouteSheets')
         await UserService.configProfile(payload)
         commit('updateUser', payload)
         commit('setLoading', false)
@@ -248,61 +230,20 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
-
-    truckCreate({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const data = await TruckService.create(payload)
-          commit('addTruck', data)
-          commit('setLoading', false)
-          resolve(data)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
-      })
-    },
-
-    async getTrucks({ commit, getters }, directiveUpdate) {
-      try {
-        commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.trucks.length === 0 && getters.directoriesProfile)
-        ) {
-          commit('setTrucks', [])
-          const data = await TruckService.getByDerictoriesProfile(
-            getters.directoriesProfile
-          )
-          commit('setTrucks', data)
-        }
-        commit('setLoading', false)
-      } catch (e) {
-        commit('setLoading', false)
-        commit('setError', e.response?.data?.message)
-      }
-    },
   },
   getters: {
     myCompanies: (state) => state.myCompanies,
     staffRoles: ({ staffRoles }) => staffRoles,
-    truckTypes: ({ truckTypes }) => truckTypes,
+
     tasks: ({ tasks }) => tasks,
     addresses: ({ addresses }, { directoriesProfile }) =>
       addresses.filter((item) => item.company === directoriesProfile),
 
     drivers: ({ drivers }, { directoriesProfile }) =>
       drivers.filter((item) => item.company === directoriesProfile),
-
-    trucks: ({ trucks }, { directoriesProfile }) =>
-      trucks.filter((item) => item.company === directoriesProfile),
-
-    truckTypesHash: ({ truckTypes }) =>
-      truckTypes.reduce((hash, item) => {
-        hash[item.value] = item.text
-        return hash
-      }, {}),
+  },
+  modules: {
+    RouteSheetModule,
+    TruckModule,
   },
 }

@@ -34,6 +34,13 @@ class DriverService {
     return data
   }
 
+  async search(str, profile) {
+    let params = { querySearch: str }
+    if (profile) params.profile = profile
+    const { data } = await api.get(BASE_PATH + '/search', { params })
+    return data
+  }
+
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
     return data

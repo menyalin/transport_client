@@ -38,6 +38,11 @@ export default {
         link: '/profile/address',
       },
       {
+        text: 'Маршрутные листы',
+        icon: 'mdi-cow',
+        link: '/profile/routeSheets',
+      },
+      {
         text: 'Транспорт',
         icon: 'mdi-truck',
         link: '/profile/trucks',

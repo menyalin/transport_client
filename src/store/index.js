@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthModule from '@/modules/auth/auth.store'
 import AdminModule from '@/modules/admin/admin.store'
-import ProfileModule from '@/modules/profile/profile.store'
+import ProfileModule from '@/modules/profile/profile.store/index.js'
 import router from '../router'
 
 const initPlugin = (store) => {

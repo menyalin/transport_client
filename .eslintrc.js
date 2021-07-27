@@ -19,5 +19,6 @@ module.exports = {
     quotes: ['error', 'single'],
     'vue/require-default-prop': 'off',
     'vue/valid-v-slot': 'off',
+    'vue/attribute-hyphenation': 'off',
   },
 }

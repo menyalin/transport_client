@@ -1,18 +1,18 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-const BASE_PATH = '/trucks'
+const BASE_PATH = '/routeSheets'
 
-class TruckService {
+class RouteSheetService {
   constructor() {
-    socket.on('truck:created', (data) => {
-      store.commit('addTruck', data)
+    socket.on('routeSheet:created', (data) => {
+      store.commit('addRouteSheet', data)
     })
-    socket.on('truck:updated', (data) => {
-      store.commit('updateTruck', data)
+    socket.on('routeSheet:updated', (data) => {
+      store.commit('updateRouteSheet', data)
     })
-    socket.on('truck:deleted', (id) => {
-      store.commit('deleteTruck', id)
+    socket.on('routeSheet:deleted', (id) => {
+      store.commit('deleteRouteSheet', id)
     })
   }
 
@@ -33,22 +33,8 @@ class TruckService {
     return data
   }
 
-  async search(str, type, profile) {
-    let params = { querySearch: str }
-    if (type) params.type = type
-    if (profile) params.profile = profile
-    const { data } = await api.get(BASE_PATH + '/search', { params })
-
-    if (type === 'truck')
-      data.forEach((item) => {
-        store.commit('addAllowUseTrailer', item)
-      })
-    return data
-  }
-
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
-    if (data.type === 'truck') store.commit('addAllowUseTrailer', data)
     return data
   }
 
@@ -58,4 +44,4 @@ class TruckService {
   }
 }
 
-export default new TruckService()
+export default new RouteSheetService()

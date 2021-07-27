@@ -1,29 +1,28 @@
 <template>
-  <div>
-    <div class="input_wrapper">
-      <v-text-field
-        type="date"
-        :label="label"
-        :value="dateStr"
-        class="date-input pt-0 mt-0"
-        :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
-        :error-messages="errorMessages"
-        outlined
-        dense
-        @click:prepend="setDate"
-        @change="changeDate"
-      />
-      <v-text-field
-        v-if="!hideTimeInput"
-        type="time"
-        :value="timeStr"
-        class="time-input"
-        :disabled="timeInputDisabled"
-        dense
-        outlined
-        @change="changeTime"
-      />
-    </div>
+  <div class="input_wrapper_row">
+    <v-text-field
+      type="date"
+      :label="label"
+      :value="dateStr"
+      class="date-input pt-0 mt-0"
+      :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
+      outlined
+      :disabled="disabled"
+      dense
+      :error-messages="errorMessages"
+      @click:prepend="setDate"
+      @change="changeDate"
+    />
+    <v-text-field
+      v-if="!hideTimeInput"
+      type="time"
+      :value="timeStr"
+      class="time-input"
+      :disabled="timeInputDisabled || disabled"
+      dense
+      outlined
+      @change="changeTime"
+    />
   </div>
 </template>
 <script>
@@ -53,6 +52,10 @@ export default {
     },
     errorMessages: {
       type: Array,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
@@ -129,12 +132,13 @@ export default {
 }
 </script>
 <style scoped>
-.input_wrapper {
+.input_wrapper_row {
+  max-width: 18rem;
+  min-width: 13rem;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 14rem;
-  min-width: 12rem;
+  width: 100%;
 }
 
 .time-input {

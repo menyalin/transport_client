@@ -160,6 +160,13 @@
           dense
         />
       </v-row>
+      <v-row v-if="form.type === 'truck'">
+        <v-checkbox
+          v-model="form.allowUseTrailer"
+          label="Разрешено использование прицепа"
+          dense
+        />
+      </v-row>
     </v-container>
 
     <v-btn
@@ -222,9 +229,11 @@ export default {
         liftCapacity: null,
         pltCount: null,
         note: null,
+        allowUseTrailer: false,
       },
     }
   },
+
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile', 'truckTypes']),
     isInvalidForm() {
@@ -274,6 +283,10 @@ export default {
       handler: function (val) {
         if (!!val) this.setFormFields(val)
       },
+    },
+    ['form.type'](val) {
+      if (val === 'truck') this.form.allowUseTrailer = true
+      else this.form.allowUseTrailer = false
     },
   },
   validations: {
