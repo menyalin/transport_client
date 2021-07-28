@@ -9,6 +9,7 @@
           @refresh="refresh"
         />
         <v-data-table
+          :search="search"
           :headers="headers"
           dense
           :footer-props="{
@@ -20,6 +21,15 @@
         >
           <template v-slot:[`item.type`]="{ item }">
             <span>{{ truckTypesHash[item.type] }}</span>
+          </template>
+          <template v-slot:top>
+            <v-text-field
+              v-model="search"
+              outlined
+              hide-details
+              dense
+              label="Быстрый поиск"
+            />
           </template>
         </v-data-table>
       </v-col>
@@ -35,6 +45,7 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
+    search: null,
     headers: [
       { value: 'name', text: 'Имя' },
       { value: 'type', text: 'Тип' },

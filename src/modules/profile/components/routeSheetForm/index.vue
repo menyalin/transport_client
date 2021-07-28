@@ -63,7 +63,18 @@
       outlined
       dense
     />
-
+    <div
+      v-if="routesheet && routesheet.manager"
+      class="pb-4 text-caption"
+    >
+      Отв.пользователь: {{ routesheet.manager.name }},
+      {{ routesheet.manager.email }}
+      <br>
+      Создан: {{ new Date(routesheet.createdAt).toLocaleString() }}
+      <span v-if="routesheet.updatedAt">
+        Обновлен: {{ new Date(routesheet.updatedAt).toLocaleString() }}
+      </span>
+    </div>
     <v-btn
       v-if="displayDeleteBtn"
       color="error"

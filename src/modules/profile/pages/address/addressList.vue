@@ -9,6 +9,7 @@
           @refresh="refresh"
         />
         <v-data-table
+          :search="search"
           :headers="headers"
           :items="addresses"
           :loading="loading"
@@ -40,6 +41,15 @@
               mdi-minus
             </v-icon>
           </template>
+          <template v-slot:top>
+            <v-text-field
+              v-model="search"
+              outlined
+              hide-details
+              dense
+              label="Быстрый поиск"
+            />
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -54,6 +64,7 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
+    search: null,
     headers: [
       { value: 'shortName', text: 'Сокращенный адрес' },
       { value: 'name', text: 'Адрес' },
