@@ -33,14 +33,19 @@ export default {
       { text: 'Настройки профиля', icon: 'mdi-cog', link: '/profile/settings' },
       { text: 'Компании', icon: 'mdi-factory', link: '/profile/companies' },
       {
+        text: 'Перевозчики',
+        icon: 'mdi-alien',
+        link: '/profile/tk_names',
+      },
+      {
         text: 'Адреса',
         icon: 'mdi-domain',
         link: '/profile/address',
       },
       {
-        text: 'Маршрутные листы',
+        text: 'Экипажи',
         icon: 'mdi-cow',
-        link: '/profile/routeSheets',
+        link: '/profile/crews',
       },
       {
         text: 'Транспорт',

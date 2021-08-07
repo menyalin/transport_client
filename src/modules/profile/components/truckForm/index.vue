@@ -24,6 +24,15 @@
     <v-container fluid>
       <!-- название марка модель -->
       <v-row>
+        <v-select
+          v-model.trim="$v.form.tkName.$model"
+          :items="tkNames"
+          item-text="name"
+          item-value="_id"
+          label="ТК"
+          dense
+          outlined
+        />
         <v-text-field
           v-model.trim="$v.form.name.$model"
           outlined
@@ -55,12 +64,7 @@
           :items="truckTypes"
           :error-messages="typeErrors"
         />
-        <v-text-field
-          v-model.trim="$v.form.tkName.$model"
-          outlined
-          label="ТК"
-          dense
-        />
+
         <v-text-field
           v-model.trim="$v.form.issueYear.$model"
           outlined
@@ -158,6 +162,7 @@
           outlined
           label="Примечание"
           dense
+          hide-details
         />
       </v-row>
       <v-row v-if="form.type === 'truck'">
@@ -167,6 +172,15 @@
           dense
         />
       </v-row>
+      <v-row v-if="!!form.tkName && form.type === 'truck'">
+        <app-allowed-drivers
+          v-model="$v.form.allowedDrivers.$model"
+          :tkName="
+            typeof form.tkName === 'Object' ? form.tkName._id : form.tkName
+          "
+        />
+      </v-row>
+      <v-divider />
     </v-container>
 
     <v-btn
@@ -190,12 +204,14 @@ import { required, numeric } from 'vuelidate/lib/validators'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import AppAllowedDrivers from './allowedDrivers.vue'
 
 export default {
   name: 'TruckForm',
   components: {
     AppButtonsPanel,
     AppDateTimeInput,
+    AppAllowedDrivers,
   },
   props: {
     truck: {
@@ -230,12 +246,18 @@ export default {
         pltCount: null,
         note: null,
         allowUseTrailer: false,
+        allowedDrivers: null,
       },
     }
   },
 
   computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile', 'truckTypes']),
+    ...mapGetters([
+      'myCompanies',
+      'directoriesProfile',
+      'truckTypes',
+      'tkNames',
+    ]),
     isInvalidForm() {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
@@ -297,7 +319,7 @@ export default {
       issueYear: {},
       startServiceDate: {},
       endServiceDate: {},
-      tkName: {},
+      tkName: { required },
       type: { required },
       regNum: { required },
       win: {},
@@ -310,6 +332,7 @@ export default {
       liftCapacity: { numeric },
       pltCount: { numeric },
       note: {},
+      allowedDrivers: {},
     },
   },
 
@@ -328,6 +351,7 @@ export default {
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
+      if (val.tkName?._id) this.form.tkName = val.tkName?._id
     },
     resetForm() {
       const keys = Object.keys(this.form)

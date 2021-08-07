@@ -5,9 +5,9 @@
         <div v-if="loading">
           Загружаю...
         </div>
-        <app-route-sheet-form
+        <app-tkname-form
           v-else
-          :routesheet="routeSheet"
+          :tkName="tkName"
           display-delete-btn
           @cancel="cancel"
           @submit="submit"
@@ -18,13 +18,12 @@
   </v-container>
 </template>
 <script>
-import AppRouteSheetForm from '@/modules/profile/components/routeSheetForm'
-import RouteSheetService from '../../services/routeSheet.service'
-
+import AppTknameForm from '@/modules/profile/components/tkNameForm'
+import service from '../../services/tkName.service'
 export default {
-  name: 'RouteSheetDetails',
+  name: 'TkNameDetails',
   components: {
-    AppRouteSheetForm,
+    AppTknameForm,
   },
   props: {
     id: {
@@ -35,28 +34,28 @@ export default {
   data() {
     return {
       loading: false,
-      routeSheet: null,
+      tkName: null,
     }
   },
   async created() {
     this.loading = true
-    this.routeSheet = await RouteSheetService.getById(this.id)
+    this.tkName = await service.getById(this.id)
     this.loading = false
   },
 
   methods: {
     async submit(val) {
       this.loading = true
-      this.routeSheet = await RouteSheetService.updateOne(this.id, val)
+      this.tkName = await service.updateOne(this.id, val)
       this.loading = false
       this.$router.go(-1)
     },
     cancel() {
-      this.$router.push({ name: 'RouteSheetList' })
+      this.$router.push({ name: 'TkNameList' })
     },
     async deleteHandler() {
       this.loading = true
-      await RouteSheetService.deleteById(this.id)
+      await service.deleteById(this.id)
       this.loading = false
       this.$router.go(-1)
     },

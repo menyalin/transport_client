@@ -44,7 +44,7 @@ export default {
   data: () => ({
     search: null,
     headers: [
-      { value: 'tkName', text: 'ТК' },
+      { value: 'tkName.name', text: 'ТК' },
       { value: 'surname', text: 'Фамилия' },
       { value: 'name', text: 'Имя' },
       { value: 'phone', text: 'Телефон' },

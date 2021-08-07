@@ -10,7 +10,7 @@
         />
         <v-data-table
           :headers="headers"
-          :items="routeSheets"
+          :items="crews"
           :loading="loading"
           dense
           :footer-props="{ 'items-per-page-options': [50, 100, 200] }"
@@ -42,14 +42,6 @@
               {{ new Date(item.startDate).toLocaleString() }}
             </span>
           </template>
-          <template v-slot:[`item.endDate`]="{ item }">
-            <span v-if="item.endDate">
-              {{ new Date(item.endDate).toLocaleString() }}
-            </span>
-            <v-icon v-else>
-              mdi-minus
-            </v-icon>
-          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -59,36 +51,36 @@
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'RouteSheetList',
+  name: 'CrewList',
   components: {
     AppButtonsPanel,
   },
   data: () => ({
     headers: [
+      { value: 'tkName.name', text: 'ТК' },
       { value: 'truckName', text: 'Грузовик' },
       { value: 'trailerName', text: 'Прицеп' },
       { value: 'driverName', text: 'Водитель' },
       { value: 'driver2Name', text: 'Водитель 2' },
       { value: 'startDate', text: 'Дата начала' },
-      { value: 'endDate', text: 'Дата окончания' },
       { value: 'note', text: 'Примечание' },
     ],
   }),
   computed: {
-    ...mapGetters(['routeSheets', 'loading', 'directoriesProfile']),
+    ...mapGetters(['crews', 'loading', 'directoriesProfile']),
   },
   created() {
-    this.$store.dispatch('getRouteSheets')
+    this.$store.dispatch('getCrews')
   },
   methods: {
     create() {
-      this.$router.push({ name: 'RouteSheetCreate' })
+      this.$router.push({ name: 'CrewCreate' })
     },
     refresh() {
-      this.$store.dispatch('getRouteSheets', true)
+      this.$store.dispatch('getCrews', true)
     },
     dblClickRow(_, { item }) {
-      this.$router.push(`routeSheets/${item._id}`)
+      this.$router.push(`crews/${item._id}`)
     },
   },
 }

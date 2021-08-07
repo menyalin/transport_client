@@ -2,7 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-route-sheet-form
+        <app-crew-form
+          :loading="loading"
           @submit="submit"
           @cancel="cancel"
         />
@@ -11,12 +12,12 @@
   </v-container>
 </template>
 <script>
-import AppRouteSheetForm from '@/modules/profile/components/routeSheetForm'
+import AppCrewForm from '@/modules/profile/components/crewForm'
 
 export default {
-  name: 'RouteSheetCreate',
+  name: 'CrewCreate',
   components: {
-    AppRouteSheetForm,
+    AppCrewForm,
   },
   data() {
     return {
@@ -24,13 +25,13 @@ export default {
     }
   },
   methods: {
-    submit(routeSheet) {
+    submit(item) {
       this.loading = true
       this.$store
-        .dispatch('createRouteSheet', routeSheet)
+        .dispatch('createCrew', item)
         .then(() => {
           this.loading = false
-          this.$router.push({ name: 'RouteSheetList' })
+          this.$router.push({ name: 'CrewList' })
         })
         .catch((e) => {
           this.loading = false

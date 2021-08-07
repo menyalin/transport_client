@@ -1,5 +1,6 @@
-import RouteSheetModule from './routeSheet'
+import CrewModule from './crew'
 import TruckModule from './truck'
+import TkNameModule from './tkName'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
@@ -111,11 +112,15 @@ export default {
       }
     },
 
-    setDirectories({ commit }, { companies, addresses, drivers, trucks }) {
+    setDirectories(
+      { commit },
+      { companies, addresses, drivers, trucks, tkNames }
+    ) {
       if (companies?.length) commit('setMyCompanies', companies)
       if (addresses?.length) commit('setAddresses', addresses)
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
+      if (tkNames?.length) commit('setTkNames', tkNames)
     },
 
     async createCompany({ commit }, payload) {
@@ -258,10 +263,30 @@ export default {
 
     drivers: ({ drivers }, { directoriesProfile }) =>
       drivers.filter((item) => item.company === directoriesProfile),
+
+    driversMap: ({ drivers }) => {
+      let map = new Map()
+      drivers.forEach((item) => {
+        map.set(item._id, item)
+      })
+      return map
+    },
+
+    driversForSelect:
+      ({ drivers }) =>
+      ({ tkName }) =>
+        drivers
+          .filter((item) => item.dismissalDate === null)
+          .filter((item) => item.tkName._id === tkName)
+          .sort((a, b) => {
+            if (a.fullName < b.fullName) return -1
+            if (a.fullName > b.fullName) return 1
+          }),
   },
 
   modules: {
-    RouteSheetModule,
+    CrewModule,
     TruckModule,
+    TkNameModule,
   },
 }

@@ -1,18 +1,18 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-const BASE_PATH = '/routeSheets'
+const BASE_PATH = '/crews'
 
-class RouteSheetService {
+class CrewService {
   constructor() {
-    socket.on('routeSheet:created', (data) => {
-      store.commit('addRouteSheet', data)
+    socket.on('crew:created', (data) => {
+      store.commit('addCrew', data)
     })
-    socket.on('routeSheet:updated', (data) => {
-      store.commit('updateRouteSheet', data)
+    socket.on('crew:updated', (data) => {
+      store.commit('updateCrew', data)
     })
-    socket.on('routeSheet:deleted', (id) => {
-      store.commit('deleteRouteSheet', id)
+    socket.on('crew:deleted', (id) => {
+      store.commit('deleteCrew', id)
     })
   }
 
@@ -44,4 +44,4 @@ class RouteSheetService {
   }
 }
 
-export default new RouteSheetService()
+export default new CrewService()

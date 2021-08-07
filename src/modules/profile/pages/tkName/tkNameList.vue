@@ -9,19 +9,16 @@
           @refresh="refresh"
         />
         <v-data-table
-          :search="search"
           :headers="headers"
+          :items="tkNames"
+          :search="search"
+          :loading="loading"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :items="trucks"
-          :loading="loading"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.type`]="{ item }">
-            <span>{{ truckTypesHash[item.type] }}</span>
-          </template>
           <template v-slot:top>
             <v-text-field
               v-model="search"
@@ -40,42 +37,29 @@
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'TruckList',
+  name: 'TkNameList',
   components: {
     AppButtonsPanel,
   },
   data: () => ({
     search: null,
-    headers: [
-      { value: 'tkName.name', text: 'ТК' },
-      { value: 'name', text: 'Имя' },
-      { value: 'type', text: 'Тип' },
-      { value: 'regNum', text: 'Гос.номер' },
-      { value: 'brand', text: 'Марка' },
-      { value: 'model', text: 'Модель' },
-      { value: 'owner', text: 'Собственник' },
-    ],
+    headers: [{ value: 'name', text: 'Название' }],
   }),
   computed: {
-    ...mapGetters([
-      'trucks',
-      'loading',
-      'directoriesProfile',
-      'truckTypesHash',
-    ]),
+    ...mapGetters(['tkNames', 'loading', 'directoriesProfile']),
   },
   created() {
-    this.$store.dispatch('getTrucks')
+    this.$store.dispatch('getTkNames')
   },
   methods: {
     create() {
-      this.$router.push({ name: 'TruckCreate' })
+      this.$router.push({ name: 'TkNameCreate' })
     },
     refresh() {
-      this.$store.dispatch('getTrucks', true)
+      this.$store.dispatch('getTkNames', true)
     },
     dblClickRow(_, { item }) {
-      this.$router.push(`trucks/${item._id}`)
+      this.$router.push(`tk_names/${item._id}`)
     },
   },
 }

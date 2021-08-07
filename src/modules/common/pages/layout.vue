@@ -37,6 +37,7 @@
 <script>
 import AppAdminBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
+
 import { mapGetters } from 'vuex'
 
 export default {

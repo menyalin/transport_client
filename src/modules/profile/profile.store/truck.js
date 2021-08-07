@@ -3,15 +3,14 @@ import TruckService from '@/modules/profile/services/truck.service'
 export default {
   state: {
     trucks: [],
-    allowedToUseTrailersTrucks: {},
     truckTypes: [
       { text: 'Грузовик', value: 'truck' },
       { text: 'Прицеп (П/П)', value: 'trailer' },
     ],
   },
   mutations: {
-    clearDirectories({ trucks }) {
-      trucks = []
+    clearDirectories(state) {
+      state.trucks = []
     },
 
     setTrucks(state, payload) {
@@ -31,10 +30,6 @@ export default {
 
     deleteTruck(state, id) {
       state.trucks = state.trucks.filter((item) => item._id !== id)
-    },
-
-    addAllowUseTrailer({ allowedToUseTrailersTrucks }, truck) {
-      allowedToUseTrailersTrucks[truck._id] = truck.allowUseTrailer
     },
   },
   actions: {
@@ -86,7 +81,22 @@ export default {
         return hash
       }, {}),
 
-    allowedToUseTrailersTrucks: ({ allowedToUseTrailersTrucks }) =>
-      allowedToUseTrailersTrucks,
+    allowedToUseTrailersTrucksSet: ({ trucks }) => {
+      const filtered = trucks.filter(
+        (item) => item.type === 'truck' && item.allowUseTrailer
+      )
+      let res = new Set()
+      filtered.forEach((item) => {
+        res.add(item._id)
+      })
+      return res
+    },
+    trucksForSelect:
+      ({ trucks }) =>
+      ({ type, tkName }) => {
+        return trucks
+          .filter((item) => (tkName ? item.tkName._id === tkName : true))
+          .filter((item) => (type ? item.type === type : true))
+      },
   },
 }

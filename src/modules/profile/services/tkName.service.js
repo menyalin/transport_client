@@ -1,20 +1,21 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-const BASE_PATH = '/trucks'
+const BASE_PATH = '/tk_names'
 
-class TruckService {
+class TkNameService {
   constructor() {
-    socket.on('truck:created', (data) => {
-      store.commit('addTruck', data)
+    socket.on('tkName:created', (data) => {
+      store.commit('addTkName', data)
       store.commit('addToCache', data)
     })
-    socket.on('truck:updated', (data) => {
-      store.commit('updateTruck', data)
+
+    socket.on('tkName:updated', (data) => {
+      store.commit('updateTkName', data)
       store.commit('addToCache', data)
     })
-    socket.on('truck:deleted', (id) => {
-      store.commit('deleteTruck', id)
+    socket.on('tkName:deleted', (id) => {
+      store.commit('deleteTkName', id)
       store.commit('deleteFromCache', id)
     })
   }
@@ -38,11 +39,11 @@ class TruckService {
     return data
   }
 
-  async search(str, type, profile) {
+  async search(str, profile) {
     let params = { querySearch: str }
-    if (type) params.type = type
     if (profile) params.profile = profile
     const { data } = await api.get(BASE_PATH + '/search', { params })
+    store.commit('addArrayToCache', data)
     return data
   }
 
@@ -50,7 +51,7 @@ class TruckService {
     if (store.getters.cacheDirectories.has(id))
       return store.getters.cacheDirectories.get(id)
     else {
-      const { data } = await api.get(BASE_PATH + '/' + id)
+      let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)
       return data
     }
@@ -58,9 +59,8 @@ class TruckService {
 
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)
-    store.commit('deleteFromCache', id)
     return data
   }
 }
 
-export default new TruckService()
+export default new TkNameService()

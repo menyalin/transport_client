@@ -20,11 +20,14 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <v-text-field
+    <v-select
       v-model.trim="$v.form.tkName.$model"
-      outlined
+      :items="tkNames"
+      item-text="name"
+      item-value="_id"
       label="ТК"
       dense
+      outlined
     />
     <div class="row-input">
       <v-text-field
@@ -217,7 +220,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile']),
+    ...mapGetters(['myCompanies', 'directoriesProfile', 'tkNames']),
     isInvalidForm() {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
@@ -251,7 +254,7 @@ export default {
   },
   validations: {
     form: {
-      tkName: {},
+      tkName: { required },
       surname: { required },
       name: { required },
       patronymic: {},
@@ -287,6 +290,7 @@ export default {
       const keys = Object.keys(this.form)
       keys.forEach((key) => {
         this.form[key] = val[key]
+        if (val.tkName?._id) this.form.tkName = val.tkName._id
       })
     },
     resetForm() {

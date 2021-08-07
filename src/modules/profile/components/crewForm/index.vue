@@ -20,42 +20,46 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <app-truck-autocomplete
+    <v-select
+      v-model.trim="$v.form.tkName.$model"
+      :items="tkNames"
+      item-text="name"
+      item-value="_id"
+      label="ТК"
+      dense
+      outlined
+      @change="tkNameChange"
+    />
+    <app-truck-select
       v-model="$v.form.truck.$model"
       label="Грузовик"
       type="truck"
-      :disabled="!directoriesProfile"
+      :tkName="form.tkName"
+      :disabled="!directoriesProfile || !form.tkName"
+      @change="truckChange"
     />
-    <app-truck-autocomplete
+    <app-truck-select
       v-model="$v.form.trailer.$model"
       label="Прицеп"
       type="trailer"
+      :tkName="form.tkName"
       :disabled="!directoriesProfile || !form.truck || !allowUseTrailers"
     />
-
-    <app-driver-autocomplete
+    <v-select
       v-model="$v.form.driver.$model"
+      dense
+      outlined
       label="Водитель"
-      :disabled="!directoriesProfile || !form.truck"
+      :items="driversByTruck"
+      item-value="_id"
+      item-text="fullName"
     />
 
-    <app-driver-autocomplete
-      v-model="$v.form.driver2.$model"
-      label="Водитель 2"
-      :disabled="!directoriesProfile || !form.truck || !form.driver"
-    />
     <app-date-time-input
       v-model="$v.form.startDate.$model"
       label="Дата начала"
       :errorMessages="startDateError"
       @blur="$v.form.startDate.$touch()"
-    />
-    <app-date-time-input
-      v-model="$v.form.endDate.$model"
-      label="Дата завершения"
-      :disabled="!form.startDate"
-      :errorMessages="endDateError"
-      @blur="$v.form.endDate.$touch()"
     />
     <v-text-field
       v-model="$v.form.note.$model"
@@ -64,15 +68,15 @@
       dense
     />
     <div
-      v-if="routesheet && routesheet.manager"
+      v-if="crew && crew.manager"
       class="pb-4 text-caption"
     >
-      Отв.пользователь: {{ routesheet.manager.name }},
-      {{ routesheet.manager.email }}
+      Отв.пользователь: {{ crew.manager.name }},
+      {{ crew.manager.email }}
       <br>
-      Создан: {{ new Date(routesheet.createdAt).toLocaleString() }}
-      <span v-if="routesheet.updatedAt">
-        Обновлен: {{ new Date(routesheet.updatedAt).toLocaleString() }}
+      Создан: {{ new Date(crew.createdAt).toLocaleString() }}
+      <span v-if="crew.updatedAt">
+        Обновлен: {{ new Date(crew.updatedAt).toLocaleString() }}
       </span>
     </div>
     <v-btn
@@ -93,23 +97,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import AppTruckAutocomplete from '@/modules/profile/components/truckAutocomplete'
-import AppDriverAutocomplete from '@/modules/profile/components/driverAutocomplete'
+import AppTruckSelect from '@/modules/profile/components/truckSelect'
 
 export default {
-  name: 'RouteSheetForm',
+  name: 'CrewForm',
   components: {
     AppButtonsPanel,
-    AppTruckAutocomplete,
-    AppDriverAutocomplete,
     AppDateTimeInput,
+    AppTruckSelect,
   },
   props: {
-    routesheet: {
+    crew: {
       type: Object,
     },
     displayDeleteBtn: {
@@ -121,26 +122,36 @@ export default {
     return {
       loading: false,
       form: {
+        tkName: null,
         truck: null,
         trailer: null,
         driver: null,
-        driver2: null,
         startDate: null,
-        endDate: null,
         note: null,
       },
     }
   },
   computed: {
     ...mapGetters([
+      'tkNames',
       'myCompanies',
       'directoriesProfile',
-      'allowedToUseTrailersTrucks',
+      'allowedToUseTrailersTrucksSet',
     ]),
+    driversByTruck() {
+      if (!this.form.truck) return []
+      const tmpTruck = this.$store.getters.trucks.find(
+        (item) => item._id === this.form.truck
+      )
+      if (!tmpTruck) return []
+      return (
+        tmpTruck?.allowedDrivers?.map((driverId) =>
+          this.$store.getters.driversMap.get(driverId)
+        ) || []
+      )
+    },
     allowUseTrailers() {
-      if (this.allowedToUseTrailersTrucks[this.form.truck] !== undefined)
-        return this.allowedToUseTrailersTrucks[this.form.truck]
-      return true
+      return this.allowedToUseTrailersTrucksSet.has(this.form.truck)
     },
     isInvalidForm() {
       if (!this.directoriesProfile) return true
@@ -157,14 +168,9 @@ export default {
         return ['Начальная дата не может быть пустой']
       else return null
     },
-    endDateError() {
-      if (this.$v.form.endDate.$dirty && this.$v.form.endDate.$invalid)
-        return ['Должна быть больше даты начала']
-      else return null
-    },
   },
   watch: {
-    routesheet: {
+    crew: {
       immediate: true,
       handler: function (val) {
         if (val) this.setFormFields(val)
@@ -173,19 +179,24 @@ export default {
   },
   validations: {
     form: {
+      tkName: { required },
       truck: { required },
       trailer: {},
       driver: { required },
-      driver2: {},
       startDate: { required },
-      endDate: {
-        laterStartDate: isLaterThan('startDate'),
-      },
       note: {},
     },
   },
 
   methods: {
+    truckChange() {
+      this.form.driver = null
+    },
+    tkNameChange() {
+      this.form.truck = null
+      this.form.trailer = null
+      this.form.driver = null
+    },
     submit() {
       const item = { ...this.form, company: this.directoriesProfile }
       this.$emit('submit', item)
@@ -196,12 +207,11 @@ export default {
       this.$emit('cancel')
     },
     setFormFields(val) {
+      this.form.tkName = val.tkName?._id
       this.form.truck = val.truck?._id
       this.form.trailer = val.trailer?._id
       this.form.driver = val.driver?._id
-      this.form.driver2 = val.driver2?._id
       this.form.startDate = val.startDate
-      this.form.endDate = val.endDate
       this.form.note = val.note
     },
     resetForm() {

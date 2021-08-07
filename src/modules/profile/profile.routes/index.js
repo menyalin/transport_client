@@ -8,9 +8,10 @@ import AddressCreate from '../pages/address/addressCreate'
 import AddressList from '../pages/address/addressList'
 import AddressDetails from '../pages/address/addressDetails'
 
-import routeSheetRoutes from './routeSheets'
+import crewRoutes from './crews'
 import truckRoutes from './trucks'
 import driverRoutes from './drivers'
+import tkNameRoutes from './tkNames'
 
 import ProfileSettings from '../pages/profileSettings'
 
@@ -22,9 +23,10 @@ export default [
       authRequired: true,
     },
     children: [
-      ...routeSheetRoutes,
+      ...crewRoutes,
       ...truckRoutes,
       ...driverRoutes,
+      ...tkNameRoutes,
       { path: 'companies', name: 'companyList', component: Companies },
       {
         path: 'companies/create',
