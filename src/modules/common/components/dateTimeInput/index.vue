@@ -6,8 +6,9 @@
       :value="dateStr"
       class="date-input pt-0 mt-0"
       :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
-      outlined
+      :outlined="outlined"
       :disabled="disabled"
+      :hide-details="hideDetails"
       dense
       :error-messages="errorMessages"
       @click:prepend="setDate"
@@ -18,9 +19,10 @@
       type="time"
       :value="timeStr"
       class="time-input"
+      :hide-details="hideDetails"
       :disabled="timeInputDisabled || disabled"
       dense
-      outlined
+      :outlined="outlined"
       @change="changeTime"
     />
   </div>
@@ -39,6 +41,10 @@ export default {
     value: {
       type: [String, Date],
     },
+    hideDetails: {
+      type: Boolean,
+      default: false,
+    },
     label: {
       type: String,
     },
@@ -56,6 +62,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    outlined: {
+      type: Boolean,
+      default: true,
     },
   },
   data: () => ({

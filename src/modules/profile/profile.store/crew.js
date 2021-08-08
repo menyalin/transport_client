@@ -41,7 +41,7 @@ export default {
       })
     },
 
-    async getCrews({ commit, getters }, directiveUpdate) {
+    async getCrews({ commit, getters }, { directiveUpdate, date }) {
       try {
         commit('setLoading', true)
         if (
@@ -50,7 +50,8 @@ export default {
         ) {
           commit('setCrews', [])
           const data = await service.getByDerictoriesProfile(
-            getters.directoriesProfile
+            getters.directoriesProfile,
+            date
           )
           commit('setCrews', data)
         }
