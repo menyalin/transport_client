@@ -128,6 +128,13 @@
       </v-row>
       <v-row>
         <v-text-field
+          v-model.number="$v.form.order.$model"
+          outlined
+          label="Индекс в списке"
+          dense
+          type="number"
+        />
+        <v-text-field
           v-model.number="$v.form.volumeFuel.$model"
           outlined
           label="Объем топливного бака"
@@ -247,6 +254,7 @@ export default {
         note: null,
         allowUseTrailer: false,
         allowedDrivers: null,
+        order: 50,
       },
     }
   },
@@ -333,6 +341,7 @@ export default {
       pltCount: { numeric },
       note: {},
       allowedDrivers: {},
+      order: { numeric }
     },
   },
 
