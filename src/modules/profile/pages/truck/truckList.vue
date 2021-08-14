@@ -48,9 +48,8 @@ export default {
     search: null,
     headers: [
       { value: 'tkName.name', text: 'ТК' },
-      { value: 'name', text: 'Имя' },
-      { value: 'type', text: 'Тип' },
       { value: 'regNum', text: 'Гос.номер' },
+      { value: 'type', text: 'Тип' },
       { value: 'brand', text: 'Марка' },
       { value: 'model', text: 'Модель' },
       { value: 'owner', text: 'Собственник' },

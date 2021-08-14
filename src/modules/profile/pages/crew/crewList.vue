@@ -8,59 +8,76 @@
           @submit="create"
           @refresh="refresh"
         />
-        <v-data-table
-          :headers="headers"
-          :items="filteredCrews"
-          :loading="loading"
-          dense
-          :footer-props="{ 'items-per-page-options': [50, 100, 200] }"
-          @dblclick:row="dblClickRow"
-        >
-          <template v-slot:[`item.truckName`]="{ item }">
-            <span>
-              {{ item.truck.name ? item.truck.name : item.truck.regNum }}
-            </span>
-          </template>
-          <template v-slot:[`item.trailerName`]="{ item }">
-            <span v-if="item.trailer">
-              {{ item.trailer.name ? item.trailer.name : item.trailer.regNum }}
-            </span>
-            <v-icon v-else>
-              mdi-minus
-            </v-icon>
-          </template>
-          <template v-slot:[`item.startDate`]="{ item }">
-            <span>
-              {{ new Date(item.startDate).toLocaleString() }}
-            </span>
-          </template>
-          <template v-slot:top>
-            <div class="filter-wrapper">
-              <div class="date-filter">
-                <app-date-time-input
-                  v-model="dateFilter"
-                  hideTimeInput
-                  hide-details
-                  hidePrependIcon
-                  label="Экипажи на дату"
-                />
-              </div>
-              <div class="tkname-filter">
-                <v-select
-                  v-model="tkNameFilter"
-                  dense
-                  outlined
-                  hide-details
-                  label="ТК"
-                  clearable
-                  :items="tkNames"
-                  item-value="_id"
-                  item-text="name"
-                />
-              </div>
-            </div>
-          </template>
-        </v-data-table>
+        <div class="filters">
+          <app-date-time-input
+            :value="dateFilter"
+            @change="setDateFilter"
+          />
+          <div>
+            <v-select
+              :value="tkNameForCrews"
+              dense
+              outlined
+              hide-details
+              label="ТК"
+              clearable
+              :items="tkNames"
+              item-value="_id"
+              item-text="name"
+              @change="setTkNameFilter"
+            />
+          </div>
+        </div>
+        <v-list dense>
+          <v-list-group
+            v-for="truck in crewsByTruck"
+            :key="truck._id"
+            v-model="truck.active"
+            no-action
+            :disabled="!truck.nearCrews.length"
+          >
+            <template v-slot:activator>
+              <v-list-item-content
+                @dblclick="dblClickRow($event, truck.actualCrew)"
+              >
+                <div class="group-title-wrapper">
+                  <div>
+                    {{ truck.regNum }}
+                  </div>
+                  <div>
+                    {{ truck.tkName ? truck.tkName.name : 'Не определено' }}
+                  </div>
+                  <template v-if="truck.actualCrew">
+                    <div>{{ truck.actualCrew.driver.fullName }}</div>
+                    <div v-if="truck.actualCrew.trailer">
+                      {{ truck.actualCrew.trailer.regNum }}
+                    </div>
+                  </template>
+                </div>
+              </v-list-item-content>
+            </template>
+            <template v-if="truck.nearCrews.length">
+              <v-list-item
+                v-for="crew of truck.nearCrews"
+                :key="crew._id"
+                @dblclick="dblClickRow($event, crew)"
+                @click.prevent
+              >
+                <v-list-item-content>
+                  <div class="group-title-wrapper">
+                    <div>
+                      Начало: {{ new Date(crew.startDate).toLocaleString() }}
+                    </div>
+                    <div>{{ crew.driver.fullName }}</div>
+                    <div v-if="crew.trailer">
+                      {{ crew.trailer.regNum }}
+                    </div>
+                  </div>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list-group>
+        </v-list>
       </v-col>
     </v-row>
   </v-container>
@@ -70,12 +87,6 @@ import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 import { mapGetters } from 'vuex'
-import moment from 'moment'
-
-const _crewStartDateCompare = (a, b) => {
-  if (new Date(a.startDate) > new Date(b.startDate)) return -1
-  if (new Date(a.startDate) < new Date(b.startDate)) return 1
-}
 
 export default {
   name: 'CrewList',
@@ -84,74 +95,56 @@ export default {
     AppDateTimeInput,
   },
   data: () => ({
-    dateFormat: 'YYYY-MM-DD',
-    tkNameFilter: null,
-    dateFilter: null,
-    headers: [
-      { value: 'tkName.name', text: 'ТК' },
-      { value: 'truckName', text: 'Грузовик' },
-      { value: 'trailerName', text: 'Прицеп' },
-      { value: 'driver.fullName', text: 'Водитель' },
-      { value: 'startDate', text: 'Дата начала' },
-      { value: 'note', text: 'Примечание' },
-    ],
+    dateFormat: 'YYYY-MM-DD HH:mm',
   }),
   computed: {
-    ...mapGetters(['crews', 'loading', 'directoriesProfile', 'tkNames']),
-    filteredCrews() {
-      return this.crewsOnDate.filter((item) =>
-        this.tkNameFilter ? item.tkName._id === this.tkNameFilter : true
-      )
-    },
-    crewsOnDate() {
-      if (!this.dateFilter)
-        return this.crews.slice().sort(_crewStartDateCompare).reverse()
-
-      const truckIds = new Set(this.crews.map((item) => item.truck._id))
-      let sortedCrews = this.crews
-        .filter((item) => new Date(item.startDate) <= new Date(this.dateFilter))
-        .sort(_crewStartDateCompare)
-      let result = []
-      for (let truckId of truckIds) {
-        for (let crew of sortedCrews) {
-          if (crew.truck._id === truckId) {
-            result.push(crew)
-            break
-          }
-        }
-      }
-      return result.reverse()
+    ...mapGetters([
+      'crewsByTruck',
+      'directoriesProfile',
+      'tkNames',
+      'dateForCrews',
+      'tkNameForCrews',
+    ]),
+    dateFilter() {
+      if (!this.dateForCrews) return null
+      return this.dateForCrews.format(this.dateFormat)
     },
   },
   created() {
     this.$store.dispatch('getCrews', {})
-    this.dateFilter = moment().format(this.dateFormat)
   },
   methods: {
+    setTkNameFilter(val) {
+      this.$store.commit('setTkNameForCrews', val)
+    },
+    setDateFilter(val) {
+      this.$store.commit('setDateForCrews', val)
+    },
     create() {
       this.$router.push({ name: 'CrewCreate' })
     },
     refresh() {
       this.$store.dispatch('getCrews', { directiveUpdate: true })
     },
-    dblClickRow(_, { item }) {
-      this.$router.push(`crews/${item._id}`)
+    dblClickRow(_, crew) {
+      if (crew) this.$router.push(`crews/${crew._id}`)
     },
   },
 }
 </script>
 <style>
-.filter-wrapper {
+.group-title-wrapper {
   display: flex;
   flex-direction: row;
-  padding: 10px;
 }
-.tkname-filter {
-  padding: 10px;
-  max-width: 15rem;
+.group-title-wrapper > div {
+  padding: 0px 30px;
 }
-.date-filter {
-  max-width: 8 rem;
-  padding: 10px;
+.filters {
+  display: flex;
+  flex-direction: row;
+}
+.filters > div {
+  padding: 0px 10px;
 }
 </style>
