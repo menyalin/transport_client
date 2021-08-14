@@ -101,6 +101,7 @@ import { required } from 'vuelidate/lib/validators'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppTruckSelect from '@/modules/profile/components/truckSelect'
+import moment from 'moment'
 
 export default {
   name: 'CrewForm',
@@ -207,11 +208,11 @@ export default {
       this.$emit('cancel')
     },
     setFormFields(val) {
-      this.form.tkName = val.tkName?._id
-      this.form.truck = val.truck?._id
-      this.form.trailer = val.trailer?._id
-      this.form.driver = val.driver?._id
-      this.form.startDate = val.startDate
+      this.form.tkName = val.tkName?._id || val.tkName
+      this.form.truck = val.truck?._id || val.truck
+      this.form.trailer = val.trailer?._id || val.trailer
+      this.form.driver = val.driver?._id || val.driver
+      this.form.startDate = val.startDate || moment().format()
       this.form.note = val.note
     },
     resetForm() {

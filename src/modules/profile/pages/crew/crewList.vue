@@ -55,6 +55,14 @@
                   </template>
                 </div>
               </v-list-item-content>
+              <v-list-item-action v-if="truck.actualCrew">
+                <v-icon
+                  small
+                  @click="createWithCopy(truck.actualCrew)"
+                >
+                  mdi-note-plus
+                </v-icon>
+              </v-list-item-action>
             </template>
             <template v-if="truck.nearCrews.length">
               <v-list-item
@@ -74,6 +82,14 @@
                     </div>
                   </div>
                 </v-list-item-content>
+                <v-list-item-action>
+                  <v-icon
+                    small
+                    @click="createWithCopy(crew)"
+                  >
+                    mdi-note-plus
+                  </v-icon>
+                </v-list-item-action>
               </v-list-item>
             </template>
           </v-list-group>
@@ -114,6 +130,17 @@ export default {
     this.$store.dispatch('getCrews', {})
   },
   methods: {
+    createWithCopy(crew) {
+      this.$router.push({
+        name: 'CrewCreate',
+        params: {
+          tkName: crew.tkName._id,
+          truck: crew.truck._id,
+          trailer: crew.trailer?._id,
+          driver: crew.driver?._id,
+        },
+      })
+    },
     setTkNameFilter(val) {
       this.$store.commit('setTkNameForCrews', val)
     },
