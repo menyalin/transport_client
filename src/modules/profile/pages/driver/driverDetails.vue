@@ -54,10 +54,15 @@ export default {
       this.$router.push({ name: 'DriverList' })
     },
     async deleteHandler() {
-      this.loading = true
-      await driverService.deleteById(this.id)
-      this.loading = false
-      this.$router.go(-1)
+      const res = await this.$confirm(
+        'Вы действительно хотите удалить запись? '
+      )
+      if (res) {
+        this.loading = true
+        await driverService.deleteById(this.id)
+        this.loading = false
+        this.$router.go(-1)
+      }
     },
   },
 }

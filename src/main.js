@@ -5,9 +5,22 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate'
+import VuetifyConfirm from 'vuetify-confirm'
+
+Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
-Vue.config.productionTip = false
+
+Vue.use(VuetifyConfirm, {
+  vuetify,
+  buttonTrueText: 'Ок',
+  buttonFalseText: 'Отмена',
+  color: 'error',
+  icon: 'mdi-alert',
+  title: 'Внимание',
+  width: 350,
+  property: '$confirm',
+})
 
 new Vue({
   router,
