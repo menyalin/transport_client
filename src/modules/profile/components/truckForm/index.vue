@@ -23,7 +23,7 @@
 
     <v-container fluid>
       <!-- название марка модель -->
-      <v-row>
+      <v-row class="row-wrapper">
         <v-select
           v-model.trim="$v.form.tkName.$model"
           :items="tkNames"
@@ -55,7 +55,7 @@
           dense
         />
       </v-row>
-      <v-row>
+      <v-row class="row-wrapper">
         <v-select
           v-model="$v.form.type.$model"
           outlined
@@ -92,7 +92,7 @@
           dense
         />
       </v-row>
-      <v-row>
+      <v-row class="row-wrapper">
         <v-text-field
           v-model.trim="$v.form.regNum.$model"
           outlined
@@ -126,7 +126,7 @@
           dense
         />
       </v-row>
-      <v-row>
+      <v-row class="row-wrapper">
         <v-text-field
           v-model.number="$v.form.order.$model"
           outlined
@@ -163,13 +163,12 @@
           type="number"
         />
       </v-row>
-      <v-row>
+      <v-row class="row-wrapper">
         <v-text-field
           v-model.trim="$v.form.note.$model"
           outlined
           label="Примечание"
           dense
-          hide-details
         />
       </v-row>
       <v-row v-if="form.type === 'truck'">
@@ -341,7 +340,7 @@ export default {
       pltCount: { numeric },
       note: {},
       allowedDrivers: {},
-      order: { numeric }
+      order: { numeric },
     },
   },
 
@@ -371,4 +370,8 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.row-wrapper > * {
+  padding: 0px 10px;
+}
+</style>

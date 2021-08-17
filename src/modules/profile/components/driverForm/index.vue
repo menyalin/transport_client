@@ -20,142 +20,144 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <v-select
-      v-model.trim="$v.form.tkName.$model"
-      :items="tkNames"
-      item-text="name"
-      item-value="_id"
-      label="ТК"
-      dense
-      outlined
-    />
-    <div class="row-input">
-      <v-text-field
-        v-model.trim="$v.form.surname.$model"
-        outlined
-        label="Фамилия"
-        dense
-        :error-messages="surnameErrors"
-      />
-      <v-text-field
-        v-model.trim="$v.form.name.$model"
-        outlined
-        label="Имя"
-        dense
-        :error-messages="nameErrors"
-      />
-      <v-text-field
-        v-model.trim="$v.form.patronymic.$model"
-        outlined
-        label="Отчество"
-        dense
-        :error-messages="nameErrors"
-      />
-      <app-date-time-input
-        v-model="$v.form.birthday.$model"
-        label="Дата рождения"
-        hide-time-input
-        hide-prepend-icon
-      />
-    </div>
+    <v-container fluid>
+      <v-row class="row-wrapper">
+        <v-select
+          v-model.trim="$v.form.tkName.$model"
+          :items="tkNames"
+          item-text="name"
+          item-value="_id"
+          label="ТК"
+          dense
+          outlined
+        />
+      </v-row>
+      <v-row class="row-wrapper">
+        <v-text-field
+          v-model.trim="$v.form.surname.$model"
+          outlined
+          label="Фамилия"
+          dense
+          :error-messages="surnameErrors"
+        />
+        <v-text-field
+          v-model.trim="$v.form.name.$model"
+          outlined
+          label="Имя"
+          dense
+          :error-messages="nameErrors"
+        />
+        <v-text-field
+          v-model.trim="$v.form.patronymic.$model"
+          outlined
+          label="Отчество"
+          dense
+          :error-messages="nameErrors"
+        />
+        <app-date-time-input
+          v-model="$v.form.birthday.$model"
+          label="Дата рождения"
+          hide-time-input
+          hide-prepend-icon
+        />
+      </v-row>
 
-    <div class="row-input">
-      <v-text-field
-        v-model.trim="$v.form.passportId.$model"
-        outlined
-        label="Серия и номер паспорта"
-        dense
-      />
-      <v-text-field
-        v-model.trim="$v.form.passportIssued.$model"
-        outlined
-        label="Паспорт выдан"
-        dense
-      />
-      <app-date-time-input
-        v-model="$v.form.passportDate.$model"
-        label="Дата выдачи паспорта"
-        hide-time-input
-        hide-prepend-icon
-      />
-    </div>
+      <v-row class="row-wrapper">
+        <v-text-field
+          v-model.trim="$v.form.passportId.$model"
+          outlined
+          label="Серия и номер паспорта"
+          dense
+        />
+        <v-text-field
+          v-model.trim="$v.form.passportIssued.$model"
+          outlined
+          label="Паспорт выдан"
+          dense
+        />
+        <app-date-time-input
+          v-model="$v.form.passportDate.$model"
+          label="Дата выдачи паспорта"
+          hide-time-input
+          hide-prepend-icon
+        />
+      </v-row>
+      <v-row class="row-wrapper">
+        <v-text-field
+          v-model.trim="$v.form.licenseId.$model"
+          outlined
+          label="Номер ВУ"
+          dense
+        />
+        <app-date-time-input
+          v-model="$v.form.licenseDate.$model"
+          label="Дата выдачи ВУ"
+          hide-time-input
+          hide-prepend-icon
+        />
+        <v-text-field
+          v-model.trim="$v.form.licenseCategory.$model"
+          outlined
+          label="Кагории ВУ"
+          dense
+        />
+      </v-row>
+      <v-row class="row-wrapper">
+        <v-text-field
+          v-model.trim="$v.form.driverCardId.$model"
+          outlined
+          label="Карта водителя"
+          dense
+        />
+        <app-date-time-input
+          v-model="$v.form.driverCardPeriod.$model"
+          label="КВ действительна до"
+          hide-time-input
+          hide-prepend-icon
+        />
+      </v-row>
+      <v-row class="row-wrapper">
+        <v-text-field
+          v-model.trim="$v.form.phone.$model"
+          outlined
+          label="Телефон"
+          dense
+        />
+        <v-text-field
+          v-model.trim="$v.form.phone2.$model"
+          outlined
+          label="Телефон 2"
+          dense
+        />
+      </v-row>
+      <v-row class="row-wrapper">
+        <app-date-time-input
+          v-model="$v.form.employmentDate.$model"
+          label="Дата приема на работу"
+          hide-time-input
+        />
 
-    <div class="row-input">
-      <v-text-field
-        v-model.trim="$v.form.licenseId.$model"
-        outlined
-        label="Номер ВУ"
+        <app-date-time-input
+          v-model="$v.form.dismissalDate.$model"
+          label="Дата увольнения"
+          hide-time-input
+        />
+        <v-text-field
+          v-model.trim="$v.form.recommender.$model"
+          outlined
+          label="Кто рекомедовал"
+          dense
+        />
+      </v-row>
+      <v-row class="row-wrapper" />
+      <v-row class="row-wrapper" />
+      <v-checkbox
+        v-model="form.hasScans"
+        label="Есть сканы документов"
         dense
       />
-      <app-date-time-input
-        v-model="$v.form.licenseDate.$model"
-        label="Дата выдачи ВУ"
-        hide-time-input
-        hide-prepend-icon
-      />
-      <v-text-field
-        v-model.trim="$v.form.licenseCategory.$model"
-        outlined
-        label="Кагории ВУ"
-        dense
-      />
-    </div>
+    </v-container>
 
-    <div class="row-input">
-      <v-text-field
-        v-model.trim="$v.form.driverCardId.$model"
-        outlined
-        label="Карта водителя"
-        dense
-      />
-      <app-date-time-input
-        v-model="$v.form.driverCardPeriod.$model"
-        label="КВ действительна до"
-        hide-time-input
-        hide-prepend-icon
-      />
-    </div>
-
-    <div class="row-input">
-      <v-text-field
-        v-model.trim="$v.form.phone.$model"
-        outlined
-        label="Телефон"
-        dense
-      />
-      <v-text-field
-        v-model.trim="$v.form.phone2.$model"
-        outlined
-        label="Телефон 2"
-        dense
-      />
-    </div>
-
-    <div class="row-input">
-      <app-date-time-input
-        v-model="$v.form.employmentDate.$model"
-        label="Дата приема на работу"
-        hide-time-input
-      />
-
-      <app-date-time-input
-        v-model="$v.form.dismissalDate.$model"
-        label="Дата увольнения"
-        hide-time-input
-      />
-      <v-text-field
-        v-model.trim="$v.form.recommender.$model"
-        outlined
-        label="Кто рекомедовал"
-        dense
-      />
-    </div>
-
-    <v-checkbox
-      v-model="form.hasScans"
-      label="Есть сканы документов"
-      dense
-    />
     <v-btn
       v-if="displayDeleteBtn"
       color="error"
@@ -302,9 +304,8 @@ export default {
   },
 }
 </script>
-<style>
-.row-input {
-  display: flex;
-  flex-direction: row;
+<style scoped>
+.row-wrapper > * {
+  padding: 0px 10px;
 }
 </style>
