@@ -10,7 +10,7 @@
         />
         <v-data-table
           :headers="headers"
-          :items="drivers"
+          :items="filteredDrivers"
           :search="search"
           :loading="loading"
           dense
@@ -20,13 +20,26 @@
           @dblclick:row="dblClickRow"
         >
           <template v-slot:top>
-            <v-text-field
-              v-model="search"
-              outlined
-              hide-details
-              dense
-              label="Быстрый поиск"
-            />
+            <div class="filter-wrapper">
+              <v-select
+                v-model="tkNameFilter"
+                dense
+                outlined
+                hide-details
+                label="ТК"
+                clearable
+                :items="tkNames"
+                item-value="_id"
+                item-text="name"
+              />
+              <v-text-field
+                v-model="search"
+                outlined
+                hide-details
+                dense
+                label="Быстрый поиск"
+              />
+            </div>
           </template>
         </v-data-table>
       </v-col>
@@ -43,15 +56,20 @@ export default {
   },
   data: () => ({
     search: null,
+    tkNameFilter: null,
     headers: [
-      { value: 'tkName.name', text: 'ТК' },
       { value: 'surname', text: 'Фамилия' },
       { value: 'name', text: 'Имя' },
       { value: 'phone', text: 'Телефон' },
     ],
   }),
   computed: {
-    ...mapGetters(['drivers', 'loading', 'directoriesProfile']),
+    ...mapGetters(['drivers', 'loading', 'directoriesProfile', 'tkNames']),
+    filteredDrivers() {
+      return this.drivers.filter((item) =>
+        this.tkNameFilter ? item.tkName?._id === this.tkNameFilter : true
+      )
+    },
   },
   created() {
     this.$store.dispatch('getDrivers')
@@ -69,4 +87,12 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.filter-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+.filter-wrapper > * {
+  padding: 0px 10px;
+}
+</style>

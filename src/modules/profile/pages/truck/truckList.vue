@@ -15,7 +15,7 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :items="trucks"
+          :items="filteredTrucks"
           :loading="loading"
           @dblclick:row="dblClickRow"
         >
@@ -23,13 +23,26 @@
             <span>{{ truckTypesHash[item.type] }}</span>
           </template>
           <template v-slot:top>
-            <v-text-field
-              v-model="search"
-              outlined
-              hide-details
-              dense
-              label="Быстрый поиск"
-            />
+            <div class="filter-wrapper">
+              <v-select
+                v-model="tkNameFilter"
+                dense
+                outlined
+                hide-details
+                label="ТК"
+                clearable
+                :items="tkNames"
+                item-value="_id"
+                item-text="name"
+              />
+              <v-text-field
+                v-model="search"
+                outlined
+                hide-details
+                dense
+                label="Быстрый поиск"
+              />
+            </div>
           </template>
         </v-data-table>
       </v-col>
@@ -45,9 +58,9 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
+    tkNameFilter: null,
     search: null,
     headers: [
-      { value: 'tkName.name', text: 'ТК' },
       { value: 'regNum', text: 'Гос.номер' },
       { value: 'type', text: 'Тип' },
       { value: 'brand', text: 'Марка' },
@@ -61,7 +74,13 @@ export default {
       'loading',
       'directoriesProfile',
       'truckTypesHash',
+      'tkNames',
     ]),
+    filteredTrucks() {
+      return this.trucks.filter((item) =>
+        this.tkNameFilter ? item.tkName._id === this.tkNameFilter : true
+      )
+    },
   },
   created() {
     this.$store.dispatch('getTrucks')
@@ -79,4 +98,12 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.filter-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+.filter-wrapper > * {
+  padding: 0px 10px;
+}
+</style>
