@@ -15,6 +15,16 @@
     <v-spacer />
     <v-btn
       v-if="isLoggedIn"
+      to="/orders"
+      text
+    >
+      <v-icon left>
+        mdi-truck-fast
+      </v-icon>
+      Рейсы
+    </v-btn>
+    <v-btn
+      v-if="isLoggedIn"
       to="/profile"
       text
     >

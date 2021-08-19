@@ -6,6 +6,8 @@ import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 import AddressService from '@/modules/profile/services/address.service'
 import DriverService from '@/modules/profile/services/driver.service'
+import CrewService from '@/modules/profile/services/crew.service'
+import moment from 'moment'
 
 export default {
   state: {
@@ -230,6 +232,7 @@ export default {
         }
       })
     },
+
     async getDrivers({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
@@ -237,11 +240,13 @@ export default {
           directiveUpdate ||
           (getters.drivers.length === 0 && getters.directoriesProfile)
         ) {
+          const profile = getters.directoriesProfile
+          const date = moment().format()
           commit('setDrivers', [])
-          const data = await DriverService.getByDerictoriesProfile(
-            getters.directoriesProfile
-          )
-          commit('setDrivers', data)
+          const drivers = await DriverService.getByDerictoriesProfile(profile)
+          const actualCrews = await CrewService.getActualCrews(profile, date)
+          commit('setActualCrews', actualCrews)
+          commit('setDrivers', drivers)
         }
         commit('setLoading', false)
       } catch (e) {
@@ -262,7 +267,9 @@ export default {
       addresses.filter((item) => item.company === directoriesProfile),
 
     drivers: ({ drivers }, { directoriesProfile }) =>
-      drivers.filter((item) => item.company === directoriesProfile),
+      drivers
+        .filter((item) => item.company === directoriesProfile)
+        .sort(_sortDriversByFullName),
 
     driversMap: ({ drivers }) => {
       let map = new Map()
@@ -278,10 +285,7 @@ export default {
         drivers
           .filter((item) => item.dismissalDate === null)
           .filter((item) => item.tkName._id === tkName)
-          .sort((a, b) => {
-            if (a.fullName < b.fullName) return -1
-            if (a.fullName > b.fullName) return 1
-          }),
+          .sort(_sortDriversByFullName),
   },
 
   modules: {
@@ -289,4 +293,9 @@ export default {
     TruckModule,
     TkNameModule,
   },
+}
+
+const _sortDriversByFullName = (a, b) => {
+  if (a.fullName > b.fullName) return 1
+  else return -1
 }

@@ -33,6 +33,15 @@ class CrewService {
     return data
   }
 
+  async getActualCrews(profile, date) {
+    let { data } = await api.get(BASE_PATH + '/actual', {
+      params: { profile, date },
+    })
+    if (!Array.isArray(data))
+      throw new Error('Нужен массив!! пришло что-то другое!')
+    return data
+  }
+
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
     return data

@@ -11,24 +11,13 @@
         <v-data-table
           :headers="headers"
           :items="tkNames"
-          :search="search"
           :loading="loading"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
-        >
-          <template v-slot:top>
-            <v-text-field
-              v-model="search"
-              outlined
-              hide-details
-              dense
-              label="Быстрый поиск"
-            />
-          </template>
-        </v-data-table>
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -42,8 +31,7 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
-    search: null,
-    headers: [{ value: 'name', text: 'Название' }],
+    headers: [{ value: 'name', text: 'Перевозчики' }],
   }),
   computed: {
     ...mapGetters(['tkNames', 'loading', 'directoriesProfile']),

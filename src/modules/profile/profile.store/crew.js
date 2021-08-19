@@ -6,12 +6,14 @@ const NEAR_DAYS_COUNT = 1
 export default {
   state: {
     crews: [],
+    actualCrews: [],
     dateForCrews: moment(),
     tkNameForCrews: null,
   },
   mutations: {
     clearDirectories(state) {
       state.crews = []
+      state.activeCrews = []
     },
     setDateForCrews(state, payload) {
       if (payload) state.dateForCrews = moment(payload)
@@ -34,6 +36,9 @@ export default {
     },
     deleteCrew(state, id) {
       state.crews = state.crews.filter((item) => item._id !== id)
+    },
+    setActualCrews(state, payload) {
+      state.actualCrews = payload
     },
   },
   actions: {
@@ -111,6 +116,7 @@ export default {
       }
       return res
     },
+    actualCrews: ({ actualCrews }) => actualCrews,
   },
 }
 
