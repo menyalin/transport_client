@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row class="data-table-wrapper">
       <v-col>
         <app-buttons-panel
           panel-type="list"
@@ -13,6 +13,8 @@
           :items="filteredDrivers"
           :search="search"
           :loading="loading"
+          fixed-header
+          height="73vh"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
@@ -21,15 +23,6 @@
         >
           <template v-slot:top>
             <div class="filter-wrapper">
-              <v-select
-                v-model="scheduleFilter"
-                dense
-                outlined
-                hide-details
-                clearable
-                label="В работе / Выходной"
-                :items="scheduleOptions"
-              />
               <v-select
                 v-model="tkNameFilter"
                 dense
@@ -41,6 +34,17 @@
                 item-value="_id"
                 item-text="name"
               />
+
+              <v-select
+                v-model="scheduleFilter"
+                dense
+                outlined
+                hide-details
+                clearable
+                label="В работе / Выходной"
+                :items="scheduleOptions"
+              />
+
               <v-text-field
                 v-model="search"
                 outlined
@@ -76,10 +80,13 @@ export default {
     ],
     tkNameFilter: null,
     headers: [
+      { value: 'tkName.name', text: 'ТК' },
       { value: 'fullName', text: 'ФИО' },
       { value: 'phone', text: 'Телефон' },
       { value: 'phone2', text: 'Телефон2' },
       { value: 'schedule', text: 'Смена' },
+      { value: 'truck', text: 'Тягач' },
+      { value: 'trailer', text: 'Прицеп' },
     ],
   }),
   computed: {
