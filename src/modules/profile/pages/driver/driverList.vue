@@ -14,7 +14,7 @@
           :search="search"
           :loading="loading"
           fixed-header
-          height="73vh"
+          height="71vh"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
@@ -54,9 +54,6 @@
               />
             </div>
           </template>
-          <template v-slot:[`item.schedule`]="{ item }">
-            {{ driverInCrew(item) }}
-          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -84,21 +81,37 @@ export default {
       { value: 'fullName', text: 'ФИО' },
       { value: 'phone', text: 'Телефон' },
       { value: 'phone2', text: 'Телефон2' },
-      { value: 'schedule', text: 'Смена' },
-      { value: 'truck', text: 'Тягач' },
-      { value: 'trailer', text: 'Прицеп' },
+      { value: 'crewStatus', text: 'Смена' },
+      { value: 'crewTruck', text: 'Тягач', sortable: false },
+      { value: 'crewTrailer', text: 'Прицеп', sortable: false },
     ],
   }),
   computed: {
     ...mapGetters([
       'drivers',
+      'trucks',
       'loading',
       'directoriesProfile',
       'tkNames',
       'actualCrews',
     ]),
     filteredDrivers() {
-      return this.drivers
+      const tpmDrivers = this.drivers.slice()
+      tpmDrivers.forEach((driver) => {
+        const crew = this.actualCrews.find((item) => item.driver === driver._id)
+        if (!crew) {
+          driver.crewStatus = 'Выходной'
+        } else {
+          driver.crewStatus = `C ${moment(crew.startDate).format(
+            'DD.MM.YYYY HH:00'
+          )}`
+          const truck = this.trucks.find((item) => item._id === crew.truck)
+          driver.crewTruck = truck?.regNum
+          const trailer = this.trucks.find((item) => item._id === crew.trailer)
+          driver.crewTrailer = trailer?.regNum
+        }
+      })
+      return tpmDrivers
         .filter((item) =>
           this.tkNameFilter ? item.tkName?._id === this.tkNameFilter : true
         )
@@ -124,11 +137,6 @@ export default {
     },
     dblClickRow(_, { item }) {
       this.$router.push(`drivers/${item._id}`)
-    },
-    driverInCrew(driver) {
-      const crew = this.actualCrews.find((item) => item.driver === driver._id)
-      if (crew) return `C ${moment(crew.startDate).format('DD.MM.YYYY HH:00')}`
-      else return 'Выходной'
     },
   },
 }
