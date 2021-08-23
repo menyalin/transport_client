@@ -33,13 +33,6 @@
           dense
           outlined
         />
-        <v-text-field
-          v-model.trim="$v.form.name.$model"
-          outlined
-          label="Заголовок ТС"
-          dense
-          :error-messages="nameErrors"
-        />
 
         <v-text-field
           v-model.trim="$v.form.brand.$model"
@@ -63,6 +56,20 @@
           dense
           :items="truckTypes"
           :error-messages="typeErrors"
+        />
+        <v-select
+          v-model="$v.form.kind.$model"
+          outlined
+          label="Вид ТС"
+          dense
+          :items="truckKinds"
+        />
+        <v-select
+          v-model="$v.form.liftCapacityType.$model"
+          outlined
+          label="Тип грузоподъемности, тн"
+          dense
+          :items="liftCapacityTypes"
         />
 
         <v-text-field
@@ -171,13 +178,7 @@
           dense
         />
       </v-row>
-      <v-row v-if="form.type === 'truck'">
-        <v-checkbox
-          v-model="form.allowUseTrailer"
-          label="Разрешено использование прицепа"
-          dense
-        />
-      </v-row>
+
       <v-row v-if="!!form.tkName && form.type === 'truck'">
         <app-allowed-drivers
           v-model="$v.form.allowedDrivers.$model"
@@ -232,7 +233,6 @@ export default {
     return {
       loading: false,
       form: {
-        name: null,
         brand: null,
         model: null,
         issueYear: null,
@@ -240,6 +240,8 @@ export default {
         endServiceDate: null,
         tkName: null,
         type: null,
+        kind: null,
+        liftCapacityType: null,
         regNum: null,
         win: null,
         sts: null,
@@ -251,7 +253,6 @@ export default {
         liftCapacity: null,
         pltCount: null,
         note: null,
-        allowUseTrailer: false,
         allowedDrivers: null,
         order: 50,
       },
@@ -263,6 +264,8 @@ export default {
       'myCompanies',
       'directoriesProfile',
       'truckTypes',
+      'truckKinds',
+      'liftCapacityTypes',
       'tkNames',
     ]),
     isInvalidForm() {
@@ -320,7 +323,6 @@ export default {
   },
   validations: {
     form: {
-      name: { required },
       brand: {},
       model: {},
       issueYear: {},
@@ -328,6 +330,9 @@ export default {
       endServiceDate: {},
       tkName: { required },
       type: { required },
+      kind: {},
+      liftCapacity: { numeric },
+      liftCapacityType: { required, numeric },
       regNum: { required },
       win: {},
       sts: {},
@@ -336,7 +341,6 @@ export default {
       owner: {},
       volumeFuel: { numeric },
       volumeRef: { numeric },
-      liftCapacity: { numeric },
       pltCount: { numeric },
       note: {},
       allowedDrivers: {},

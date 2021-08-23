@@ -5,8 +5,14 @@ export default {
     trucks: [],
     truckTypes: [
       { text: 'Грузовик', value: 'truck' },
-      { text: 'Прицеп (П/П)', value: 'trailer' },
+      { text: 'Прицеп', value: 'trailer' },
     ],
+    truckKinds: [
+      { text: 'Реф', value: 'ref' },
+      { text: 'Изотерм', value: 'isoterm' },
+      { text: 'Тент', value: 'tent' },
+    ],
+    liftCapacityTypes: [20, 10, 5, 3.5, 1.5],
   },
   mutations: {
     clearDirectories(state) {
@@ -71,10 +77,13 @@ export default {
   },
   getters: {
     trucks: ({ trucks }, { directoriesProfile }) =>
-      trucks.filter((item) => item.company === directoriesProfile),
+      trucks
+        .filter((item) => item.company === directoriesProfile)
+        .sort(_trucksSortHandler),
 
     truckTypes: ({ truckTypes }) => truckTypes,
-
+    truckKinds: ({ truckKinds }) => truckKinds,
+    liftCapacityTypes: ({ liftCapacityTypes }) => liftCapacityTypes,
     truckTypesHash: ({ truckTypes }) =>
       truckTypes.reduce((hash, item) => {
         hash[item.value] = item.text
@@ -83,7 +92,7 @@ export default {
 
     allowedToUseTrailersTrucksSet: ({ trucks }) => {
       const filtered = trucks.filter(
-        (item) => item.type === 'truck' && item.allowUseTrailer
+        (item) => item.type === 'truck' && item.liftCapacityType === 20
       )
       let res = new Set()
       filtered.forEach((item) => {
@@ -99,4 +108,15 @@ export default {
           .filter((item) => (type ? item.type === type : true))
       },
   },
+}
+
+const _trucksSortHandler = (a, b) => {
+  if (a.tkName.name > b.tkName.name) return 1
+  if (a.tkName.name < b.tkName.name) return -1
+  if (a.type > b.type) return -1
+  if (a.type < b.type) return 1
+  if (a.liftCapacityType > b.liftCapacityType) return -1
+  if (a.liftCapacityType < b.liftCapacityType) return 1
+  if (a.regNum > b.regNum) return 1
+  if (a.regNum < b.regNum) return -1
 }

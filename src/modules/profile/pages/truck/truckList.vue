@@ -12,6 +12,8 @@
           :search="search"
           :headers="headers"
           dense
+          fixed-header
+          height="72vh"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -34,6 +36,15 @@
                 :items="tkNames"
                 item-value="_id"
                 item-text="name"
+              />
+              <v-select
+                v-model="truckFilter"
+                dense
+                outlined
+                hide-details
+                label="Тип транспорта"
+                clearable
+                :items="truckFilterOptions"
               />
               <v-text-field
                 v-model="search"
@@ -60,11 +71,18 @@ export default {
   data: () => ({
     tkNameFilter: null,
     search: null,
+    truckFilter: null,
+    truckFilterOptions: [
+      { text: 'Тягачи', value: '20tn' },
+      { text: '10-ки', value: '10tn' },
+      { text: 'Прицепы', value: 'trailers' },
+    ],
     headers: [
-      { value: 'regNum', text: 'Гос.номер' },
+      { value: 'tkName.name', text: 'ТК' },
       { value: 'type', text: 'Тип' },
+      { value: 'liftCapacityType', text: 'Груз-cть, т', width: '15rem' },
+      { value: 'regNum', text: 'Гос.номер' },
       { value: 'brand', text: 'Марка' },
-      { value: 'model', text: 'Модель' },
       { value: 'owner', text: 'Собственник' },
     ],
   }),
@@ -77,9 +95,22 @@ export default {
       'tkNames',
     ]),
     filteredTrucks() {
-      return this.trucks.filter((item) =>
-        this.tkNameFilter ? item.tkName._id === this.tkNameFilter : true
-      )
+      return this.trucks
+        .filter((item) =>
+          this.tkNameFilter ? item.tkName._id === this.tkNameFilter : true
+        )
+        .filter((item) => {
+          switch (this.truckFilter) {
+            case '20tn':
+              return item.type === 'truck' && item.liftCapacityType === 20
+            case '10tn':
+              return item.type === 'truck' && item.liftCapacityType === 10
+            case 'trailers':
+              return item.type === 'trailer'
+            default:
+              return true
+          }
+        })
     },
   },
   created() {
