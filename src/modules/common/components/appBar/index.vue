@@ -15,6 +15,16 @@
     <v-spacer />
     <v-btn
       v-if="isLoggedIn"
+      :to="{ name: 'Schedule' }"
+      text
+    >
+      <v-icon left>
+        mdi-pac-man
+      </v-icon>
+      Распределение
+    </v-btn>
+    <v-btn
+      v-if="isLoggedIn"
       to="/orders"
       text
     >
