@@ -80,10 +80,10 @@ export default {
     headers: [
       { value: 'tkName.name', text: 'ТК' },
       { value: 'type', text: 'Тип' },
-      { value: 'liftCapacityType', text: 'Груз-cть, т', width: '15rem' },
       { value: 'regNum', text: 'Гос.номер' },
+      { value: 'liftCapacityType', text: 'Груз-cть, т', width: '15rem' },
+      { value: 'pltCount', text: 'Плт' },
       { value: 'brand', text: 'Марка' },
-      { value: 'owner', text: 'Собственник' },
     ],
   }),
   computed: {
