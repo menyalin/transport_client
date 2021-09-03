@@ -9,10 +9,6 @@
           @refresh="refresh"
         />
         <div class="filters">
-          <app-date-time-input
-            :value="dateFilter"
-            @change="setDateFilter"
-          />
           <div>
             <v-select
               :value="tkNameForCrews"
@@ -47,7 +43,7 @@
 </template>
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+// import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 import { mapGetters } from 'vuex'
 
@@ -55,7 +51,6 @@ export default {
   name: 'CrewList',
   components: {
     AppButtonsPanel,
-    AppDateTimeInput,
   },
   data: () => ({
     dateFormat: 'YYYY-MM-DD HH:mm',
@@ -99,9 +94,6 @@ export default {
     setTkNameFilter(val) {
       this.$store.commit('setTkNameForCrews', val)
     },
-    setDateFilter(val) {
-      this.$store.commit('setDateForCrews', val)
-    },
     create() {
       this.$router.push({ name: 'CrewCreate' })
     },
@@ -115,18 +107,11 @@ export default {
 }
 </script>
 <style>
-.group-title-wrapper {
-  display: flex;
-  flex-direction: row;
-}
-.group-title-wrapper > div {
-  padding: 0px 30px;
-}
 .filters {
   display: flex;
   flex-direction: row;
 }
 .filters > div {
-  padding: 0px 10px;
+  margin: 0px 10px;
 }
 </style>

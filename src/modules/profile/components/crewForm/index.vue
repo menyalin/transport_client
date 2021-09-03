@@ -28,6 +28,7 @@
       label="ТК"
       dense
       outlined
+      :disabled="crew"
       @change="tkNameChange"
     />
     <v-select
@@ -39,14 +40,14 @@
       :items="tkDrivers"
       item-value="_id"
       item-text="fullName"
-      :disabled="!form.tkName"
+      :disabled="!form.tkName || crew"
     />
     <div class="row-input">
       <app-date-time-input
         v-model="$v.form.startDate.$model"
         label="Дата начала"
         :errorMessages="startDateError"
-        :disabled="!form.driver"
+        :disabled="!form.driver || crew"
         :minDate="minValueForStartDate"
         @blur="$v.form.startDate.$touch()"
       />
