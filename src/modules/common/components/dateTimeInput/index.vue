@@ -2,6 +2,7 @@
   <div class="input_wrapper_row">
     <v-text-field
       type="date"
+      :min="minDateValue"
       :label="label"
       :value="dateStr"
       class="date-input pt-0 mt-0"
@@ -17,6 +18,7 @@
     <v-text-field
       v-if="!hideTimeInput"
       type="time"
+      :min="minTimeValue"
       :value="timeStr"
       class="time-input"
       :hide-details="hideDetails"
@@ -67,6 +69,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    minDate: {
+      type: String,
+      default: null,
+    },
   },
   data: () => ({
     dateFormat: 'YYYY-MM-DD',
@@ -87,6 +93,13 @@ export default {
     timeInputDisabled() {
       if (!this.dateValue) return true
       return !this.dateValue?.isValid()
+    },
+    minDateValue() {
+      if (!this.minDate) return null
+      return moment(this.minDate).format('YYYY-MM-DD')
+    },
+    minTimeValue() {
+      return '10:00'
     },
   },
   watch: {
@@ -127,7 +140,7 @@ export default {
       } else {
         this.dateValue = null
         this.fullTimeStr = null
-        this.emitValue()
+        this.$emit('change', null)
       }
     },
     changeTime(timeStr) {

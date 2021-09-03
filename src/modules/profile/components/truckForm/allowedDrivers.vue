@@ -81,9 +81,7 @@ export default {
       else return this.tkName._id
     },
     driversForSelect() {
-      return this.$store.getters.driversForSelect({
-        tkName: this.tkNameId,
-      })
+      return this.$store.getters.driversForSelect(this.tkNameId)
     },
   },
   watch: {

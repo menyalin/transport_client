@@ -2,6 +2,7 @@
   <v-select
     outlined
     dense
+    :hide-details="hideDetails"
     :value="value"
     :label="label"
     :items="trucksForSelect"
@@ -33,6 +34,10 @@ export default {
       type: String,
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    hideDetails: {
       type: Boolean,
       default: false,
     },

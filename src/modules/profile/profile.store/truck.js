@@ -107,6 +107,10 @@ export default {
           .filter((item) => (tkName ? item.tkName._id === tkName : true))
           .filter((item) => (type ? item.type === type : true))
       },
+    truckById:
+      ({ trucks }) =>
+      (id) =>
+        trucks.find((truck) => truck._id === id),
   },
 }
 

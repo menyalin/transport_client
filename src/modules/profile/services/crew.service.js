@@ -1,6 +1,7 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+import moment from 'moment'
 const BASE_PATH = '/crews'
 
 class CrewService {
@@ -33,6 +34,23 @@ class CrewService {
     return data
   }
 
+  async getActualCrewByDriver(driver, date) {
+    try {
+      const params = { driver, date }
+      const { data } = await api.get(BASE_PATH + '/by_driver', { params })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      // throw new Error(e.message)
+    }
+  }
+
+  async getActualCrewByTruck(truck, date) {
+    const params = { truck, date }
+    const { data } = await api.get(BASE_PATH + '/by_truck', { params })
+    return data
+  }
+
   async getActualCrews(profile, date) {
     let { data } = await api.get(BASE_PATH + '/actual', {
       params: { profile, date },
@@ -42,6 +60,14 @@ class CrewService {
     return data
   }
 
+  async closeCrew(id, date, type = 'crew') {
+    const newDate = moment(date).add(-1, 'minutes').format()
+    let { data } = await api.put(BASE_PATH + '/close/' + id, {
+      endDate: newDate,
+      type,
+    })
+    return data
+  }
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
     return data

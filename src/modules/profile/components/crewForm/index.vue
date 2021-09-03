@@ -2,7 +2,7 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm || loading"
+      :disabledSubmit="editTransportTable || !form.transport.length"
       @cancel="cancel"
       @submit="submit"
     />
@@ -30,42 +30,63 @@
       outlined
       @change="tkNameChange"
     />
-    <app-truck-select
-      v-model="$v.form.truck.$model"
-      label="Грузовик"
-      type="truck"
-      :tkName="form.tkName"
-      :disabled="!directoriesProfile || !form.tkName"
-      @change="truckChange"
-    />
-    <app-truck-select
-      v-model="$v.form.trailer.$model"
-      label="Прицеп"
-      type="trailer"
-      :tkName="form.tkName"
-      :disabled="!directoriesProfile || !form.truck || !allowUseTrailers"
-    />
     <v-select
       v-model="$v.form.driver.$model"
-      dense
       outlined
+      hide-details
       label="Водитель"
-      :items="driversByTruck"
+      class="mb-2"
+      :items="tkDrivers"
       item-value="_id"
       item-text="fullName"
+      :disabled="!form.tkName"
+    />
+    <div class="row-input">
+      <app-date-time-input
+        v-model="$v.form.startDate.$model"
+        label="Дата начала"
+        :errorMessages="startDateError"
+        :disabled="!form.driver"
+        :minDate="minValueForStartDate"
+        @blur="$v.form.startDate.$touch()"
+      />
+      <app-date-time-input
+        v-model="$v.form.endDate.$model"
+        :disabled="!form.startDate"
+        label="Дата завершения"
+        :errorMessages="endDateError"
+        @blur="$v.form.endDate.$touch()"
+      />
+    </div>
+
+    <app-crew-message
+      v-if="actualDriverCrew && !actualDriverCrew.endDate"
+      text="У водителя есть открытая смена от"
+      :visibleDate="actualDriverCrew.startDate"
+      :date="form.startDate"
+      :crewId="actualDriverCrew._id"
+      :invalid="$v.form.startDate.$invalid"
+      @clearCrew="clearActualCrew"
     />
 
-    <app-date-time-input
-      v-model="$v.form.startDate.$model"
-      label="Дата начала"
-      :errorMessages="startDateError"
-      @blur="$v.form.startDate.$touch()"
+    <app-transport-table
+      v-if="form.driver && form.startDate && !actualDriverCrew"
+      :items="form.transport"
+      :date="form.startDate"
+      :driver="form.driver"
+      :crewId="crewId"
+      :tkName="form.tkName"
+      @addItem="addItem"
+      @editMode="changeEditModeStatus"
+      @itemsPop="deleteLastItemInTransport"
     />
+
     <v-text-field
       v-model="$v.form.note.$model"
       label="Примечание"
       outlined
       dense
+      class="mt-6"
     />
     <div
       v-if="crew && crew.manager"
@@ -97,10 +118,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
+import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
+
+import CrewService from '@/modules/profile/services/crew.service.js'
 
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import AppTruckSelect from '@/modules/profile/components/truckSelect'
+
+import AppTransportTable from './transportTable.vue'
+import AppCrewMessage from './crewMessage'
 import moment from 'moment'
 
 export default {
@@ -108,7 +134,8 @@ export default {
   components: {
     AppButtonsPanel,
     AppDateTimeInput,
-    AppTruckSelect,
+    AppTransportTable,
+    AppCrewMessage,
   },
   props: {
     crew: {
@@ -121,13 +148,17 @@ export default {
   },
   data() {
     return {
+      crewId: null,
       loading: false,
+      editTransportTable: false,
+      actualDriverCrew: null,
+      lastDriverCrew: null,
       form: {
         tkName: null,
-        truck: null,
-        trailer: null,
+        transport: [],
         driver: null,
         startDate: null,
+        endDate: null,
         note: null,
       },
     }
@@ -135,21 +166,15 @@ export default {
   computed: {
     ...mapGetters([
       'tkNames',
+      'drivers',
       'myCompanies',
+
       'directoriesProfile',
       'allowedToUseTrailersTrucksSet',
     ]),
-    driversByTruck() {
-      if (!this.form.truck) return []
-      const tmpTruck = this.$store.getters.trucks.find(
-        (item) => item._id === this.form.truck
-      )
-      if (!tmpTruck) return []
-      return (
-        tmpTruck?.allowedDrivers?.map((driverId) =>
-          this.$store.getters.driversMap.get(driverId)
-        ) || []
-      )
+    tkDrivers() {
+      if (!this.form.tkName) return []
+      else return this.$store.getters.driversForSelect(this.form.tkName)
     },
     allowUseTrailers() {
       return this.allowedToUseTrailersTrucksSet.has(this.form.truck)
@@ -164,38 +189,92 @@ export default {
         (item) => item._id === this.directoriesProfile
       ).name
     },
+    minValueForStartDate() {
+      if (!this.actualDriverCrew) return '2021-08-01'
+      else
+        return this.actualDriverCrew.endDate
+          ? this.actualDriverCrew.endDate
+          : this.actualDriverCrew.startDate
+    },
     startDateError() {
-      if (this.$v.form.startDate.$dirty && this.$v.form.startDate.$invalid)
-        return ['Начальная дата не может быть пустой']
-      else return null
+      let errors = []
+      if (this.$v.form.startDate.$dirty && !this.$v.form.startDate.required)
+        errors.push('Поле не может быть пустым')
+      if (
+        this.$v.form.startDate.$dirty &&
+        !this.$v.form.startDate.isLaterThan
+      ) {
+        const dateStr = moment(
+          this.$v.form.startDate.$params.isLaterThan.eq
+        ).format('DD.MM.YYYY HH:mm')
+        errors.push(`Дата должна быть больше ${dateStr}`)
+      }
+      return errors
+    },
+    endDateError() {
+      let errors = []
+      if (this.$v.form.startDate.$dirty && !this.$v.form.endDate.isLaterThan)
+        errors.push('Дата должна быть больше начальной даты')
+      return errors
     },
   },
   watch: {
     crew: {
       immediate: true,
       handler: function (val) {
-        if (val) this.setFormFields(val)
+        if (val) {
+          this.crewId = val._id
+          this.setFormFields(val)
+        }
+      },
+    },
+    ['form.driver']: {
+      handler: async function (val) {
+        if (val) {
+          this.actualDriverCrew = await CrewService.getActualCrewByDriver(val)
+        }
       },
     },
   },
-  validations: {
-    form: {
-      tkName: { required },
-      truck: { required },
-      trailer: {},
-      driver: { required },
-      startDate: { required },
-      note: {},
-    },
+  validations() {
+    return {
+      form: {
+        tkName: { required },
+        driver: { required },
+        startDate: {
+          required,
+          isLaterThan: isLaterThan(this.minValueForStartDate),
+        },
+        endDate: { isLaterThan: isLaterThan(this.form.startDate) },
+        note: {},
+      },
+    }
   },
 
   methods: {
+    clearActualCrew() {
+      this.actualDriverCrew = null
+    },
+    deleteLastItemInTransport() {
+      this.form.transport.pop()
+      // this.form.transport[this.form.transport.length - 1].endDate = null
+    },
+    changeEditModeStatus(val) {
+      this.editTransportTable = val
+    },
+    addItem(val) {
+      const idx = this.form.transport.length - 1
+      if (idx >= 0 && !this.form.transport[idx].endDate) {
+        this.form.transport[idx].endDate = val.startDate
+        this.form.transport[idx].updated = true
+      }
+      this.form.transport.push(val)
+    },
+
     truckChange() {
-      this.form.driver = null
+      console.log('change truck')
     },
     tkNameChange() {
-      this.form.truck = null
-      this.form.trailer = null
       this.form.driver = null
     },
     submit() {
@@ -209,10 +288,10 @@ export default {
     },
     setFormFields(val) {
       this.form.tkName = val.tkName?._id || val.tkName
-      this.form.truck = val.truck?._id || val.truck
-      this.form.trailer = val.trailer?._id || val.trailer
+      this.form.transport = val.transport
       this.form.driver = val.driver?._id || val.driver
       this.form.startDate = val.startDate || moment().format()
+      this.form.endDate = val.endDate
       this.form.note = val.note
     },
     resetForm() {
@@ -220,6 +299,7 @@ export default {
       keys.forEach((key) => {
         this.form[key] = null
       })
+      this.form.transport = []
     },
   },
 }
@@ -228,5 +308,8 @@ export default {
 .row-input {
   display: flex;
   flex-direction: row;
+}
+.row-input > * {
+  margin: 5px 20px;
 }
 </style>

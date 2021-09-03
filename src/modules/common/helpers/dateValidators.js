@@ -5,9 +5,13 @@ export const isLaterThan = (startDate) =>
   helpers.withParams(
     { type: 'isLaterThan', eq: startDate },
     function (val, parentVm) {
-      const startDateStr = helpers.ref(startDate, this, parentVm)
-      if (val && moment(val).isValid() && moment(startDateStr).isValid()) {
-        return moment(startDateStr).isBefore(val)
-      } else return true
+      if (
+        startDate &&
+        val &&
+        moment(val).isValid() &&
+        moment(startDate).isValid()
+      )
+        return moment(startDate).isBefore(val)
+      else return true
     }
   )

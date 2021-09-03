@@ -316,10 +316,6 @@ export default {
         if (!!val) this.setFormFields(val)
       },
     },
-    ['form.type'](val) {
-      if (val === 'truck') this.form.allowUseTrailer = true
-      else this.form.allowUseTrailer = false
-    },
   },
   validations: {
     form: {

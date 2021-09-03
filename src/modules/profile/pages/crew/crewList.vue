@@ -28,72 +28,19 @@
             />
           </div>
         </div>
-        <v-list dense>
-          <v-list-group
-            v-for="truck in crewsByTruck"
-            :key="truck._id"
-            v-model="truck.active"
-            no-action
-            :disabled="!truck.nearCrews.length"
-          >
-            <template v-slot:activator>
-              <v-list-item-content
-                @dblclick="dblClickRow($event, truck.actualCrew)"
-              >
-                <div class="group-title-wrapper">
-                  <div>
-                    {{ truck.regNum }}
-                  </div>
-                  <div>
-                    {{ truck.tkName ? truck.tkName.name : 'Не определено' }}
-                  </div>
-                  <template v-if="truck.actualCrew">
-                    <div>{{ truck.actualCrew.driver.fullName }}</div>
-                    <div v-if="truck.actualCrew.trailer">
-                      {{ truck.actualCrew.trailer.regNum }}
-                    </div>
-                  </template>
-                </div>
-              </v-list-item-content>
-              <v-list-item-action v-if="truck.actualCrew">
-                <v-icon
-                  small
-                  @click="createWithCopy(truck.actualCrew)"
-                >
-                  mdi-note-plus
-                </v-icon>
-              </v-list-item-action>
-            </template>
-            <template v-if="truck.nearCrews.length">
-              <v-list-item
-                v-for="crew of truck.nearCrews"
-                :key="crew._id"
-                @dblclick="dblClickRow($event, crew)"
-                @click.prevent
-              >
-                <v-list-item-content>
-                  <div class="group-title-wrapper">
-                    <div>
-                      Начало: {{ new Date(crew.startDate).toLocaleString() }}
-                    </div>
-                    <div>{{ crew.driver.fullName }}</div>
-                    <div v-if="crew.trailer">
-                      {{ crew.trailer.regNum }}
-                    </div>
-                  </div>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-icon
-                    small
-                    @click="createWithCopy(crew)"
-                  >
-                    mdi-note-plus
-                  </v-icon>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-          </v-list-group>
-        </v-list>
+        <v-data-table
+          :headers="headers"
+          :items="crews"
+          dense
+          @dblclick:row="dblClickRow"
+        >
+          <template v-slot:[`item.startDate`]="{ item }">
+            {{ new Date(item.startDate).toLocaleString() }}
+          </template>
+          <template v-slot:[`item.endDate`]="{ item }">
+            {{ item.endDate ? new Date(item.endDate).toLocaleString() : null }}
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -112,12 +59,20 @@ export default {
   },
   data: () => ({
     dateFormat: 'YYYY-MM-DD HH:mm',
+    headers: [
+      { value: '_id', text: '_id' },
+      { value: 'tkName.name', text: 'tkName' },
+      { value: 'startDate', text: 'startDate' },
+      { value: 'endDate', text: 'endDate' },
+      { value: 'driver.fullName', text: 'Водитель' },
+    ],
   }),
   computed: {
     ...mapGetters([
       'crewsByTruck',
       'directoriesProfile',
       'tkNames',
+      'crews',
       'dateForCrews',
       'tkNameForCrews',
     ]),
@@ -153,8 +108,8 @@ export default {
     refresh() {
       this.$store.dispatch('getCrews', { directiveUpdate: true })
     },
-    dblClickRow(_, crew) {
-      if (crew) this.$router.push(`crews/${crew._id}`)
+    dblClickRow(_, { item }) {
+      if (item) this.$router.push(`crews/${item._id}`)
     },
   },
 }
