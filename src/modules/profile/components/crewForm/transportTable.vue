@@ -156,6 +156,23 @@
       :transportId="actualTruckCrew.transport._id"
       @clearCrew="clearTruckCrew"
     />
+    <div
+      v-if="trailerError"
+      class="text-caption error-message"
+    >
+      {{ trailerError }}
+    </div>
+    <app-crew-message
+      v-if="
+        actualTrailerCrew && !trailerError && actualTrailerCrew._id !== crewId
+      "
+      text="Прицеп задействован в активном экипаже от"
+      :visibleDate="actualTrailerCrew.transport.startDate"
+      :date="newItem.startDate"
+      :crewId="actualTrailerCrew._id"
+      :transportId="actualTrailer.transport._id"
+      @clearCrew="clearTrailerCrew"
+    />
 
     <v-btn
       v-if="!editMode"
@@ -202,7 +219,9 @@ export default {
   data: () => ({
     editMode: false,
     truckError: null,
+    trailerError: null,
     actualTruckCrew: null,
+    actualTrailerCrew: null,
     newItem: {
       startDate: null,
       truck: null,
@@ -249,7 +268,9 @@ export default {
       const startDateValid =
         (this.items.length && !this.$v.newItem.startDate.$invalid) ||
         !this.items.length
-      return !this.truckError && fullCrew && startDateValid
+      return (
+        !this.truckError && !this.trailerError && fullCrew && startDateValid
+      )
     },
     minDateValue() {
       if (!this.items.length) return null
@@ -285,10 +306,29 @@ export default {
           const end = new Date(
             this.actualTruckCrew.transport.endDate
           ).toLocaleString()
-          this.truckError = `Использование этого грузовика до ${end} НЕВОЗМОЖНО!!!`
+          this.truckError = `Использование этого грузовика до ${end} - НЕВОЗМОЖНО!!!`
         }
       } catch (e) {
         this.truckError = e?.response?.data?.message
+      }
+    },
+    ['newItem.trailer']: async function (val) {
+      this.trailerError = null
+      this.actualTrailerCrew = null
+      if (!val) return null
+      try {
+        this.actualTrailerCrew = await CrewService.getActualCrewByTruck(
+          val,
+          this.newItem.startDate
+        )
+        if (this.actualTrailerCrew.transport.endDate) {
+          const end = new Date(
+            this.actualTrailerCrew.transport.endDate
+          ).toLocaleString()
+          this.trailerError = `Использование этого прицепа до ${end} - НЕВОЗМОЖНО!!!`
+        }
+      } catch (e) {
+        this.trailerError = e?.response?.data?.message
       }
     },
   },
@@ -333,6 +373,10 @@ export default {
     clearTruckCrew() {
       this.truckError = null
       this.actualTruckCrew = null
+    },
+    clearTrailerCrew() {
+      this.trailerError = null
+      this.actualTrailerCrew = null
     },
   },
 }
