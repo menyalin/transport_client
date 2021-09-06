@@ -45,8 +45,8 @@ class CrewService {
     }
   }
 
-  async getActualCrewByTruck(truck, date) {
-    const params = { truck, date }
+  async getActualCrewByTruck(truck) {
+    const params = { truck }
     const { data } = await api.get(BASE_PATH + '/by_truck', { params })
     return data
   }
@@ -61,9 +61,9 @@ class CrewService {
   }
 
   async closeCrew(id, date, type = 'crew') {
-    const newDate = moment(date).add(-1, 'minutes').format()
+    // const newDate = moment(date).add(-1, 'minutes').format()
     let { data } = await api.put(BASE_PATH + '/close/' + id, {
-      endDate: newDate,
+      endDate: date,
       type,
     })
     return data

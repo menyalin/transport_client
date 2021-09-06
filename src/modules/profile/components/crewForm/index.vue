@@ -26,7 +26,7 @@
       item-text="name"
       item-value="_id"
       label="ТК"
-      dense 
+      dense
       outlined
       :disabled="!!crewId"
       @change="tkNameChange"
@@ -61,21 +61,23 @@
     </div>
 
     <app-crew-message
-      v-if="actualDriverCrew && !actualDriverCrew.endDate"
+      v-if="!!actualDriverCrew && !actualDriverCrew.endDate"
       text="У водителя есть открытая смена от"
       :visibleDate="actualDriverCrew.startDate"
       :date="form.startDate"
       :crewId="actualDriverCrew._id"
       :invalid="$v.form.startDate.$invalid"
+      type="crew"
       @clearCrew="clearActualCrew"
     />
 
     <app-transport-table
-      v-if="form.driver && form.startDate && !actualDriverCrew"
+      v-if="showTransportTable"
       :items="form.transport"
       :date="form.startDate"
       :driver="form.driver"
       :crewId="crewId"
+      :isClosedCrew="!!form.endDate"
       :tkName="form.tkName"
       @addItem="addItem"
       @editMode="changeEditModeStatus"
@@ -184,6 +186,14 @@ export default {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid || (this.allowUseTrailers && !this.form.trailer)
     },
+    showTransportTable() {
+      return (
+        this.form.driver &&
+        this.form.startDate &&
+        !this.$v.form.startDate.$invalid &&
+        (this.actualDriverCrew?.endDate || !this.actualDriverCrew)
+      )
+    },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
       return this.myCompanies.find(
@@ -192,10 +202,12 @@ export default {
     },
     minValueForStartDate() {
       if (!this.actualDriverCrew) return '2021-08-01'
-      else
-        return this.actualDriverCrew.endDate
-          ? this.actualDriverCrew.endDate
-          : this.actualDriverCrew.startDate
+      const idx = this.actualDriverCrew.transport.length - 1
+      if (idx < 0) return '2021-08-01'
+
+      return this.actualDriverCrew.transport[idx].endDate
+        ? this.actualDriverCrew.transport[idx].endDate
+        : this.actualDriverCrew.transport[idx].startDate
     },
     startDateError() {
       let errors = []

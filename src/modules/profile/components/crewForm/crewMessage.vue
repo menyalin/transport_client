@@ -47,6 +47,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    type: {
+      type: String,
+      required: true,
+    },
   },
   methods: {
     async goto(id) {
@@ -61,7 +65,7 @@ export default {
       const res = await CrewService.closeCrew(
         this.transportId ? this.transportId : this.crewId,
         this.date,
-        'transport'
+        this.type
       )
       if (res) this.$emit('clearCrew')
     },
