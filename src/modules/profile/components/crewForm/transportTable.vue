@@ -53,14 +53,6 @@
               {{ item.note }}
             </td>
             <td class="action-column text-center">
-              <!-- <v-icon
-                v-if="ind === items.length - 1"
-                class="px-1"
-                color="green"
-                @click="createByCopy({ ...item })"
-              >
-                mdi-note-plus
-              </v-icon> -->
               <v-icon
                 v-if="ind > 0 && ind === items.length - 1"
                 color="red"
