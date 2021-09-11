@@ -2,13 +2,7 @@
   <v-app>
     <app-bar title="Рейсы" />
     <v-main>
-      <v-container>
-        <v-row>
-          <v-col>
-            <router-view />
-          </v-col>
-        </v-row>
-      </v-container>
+      <router-view />
       <app-snackbar />
     </v-main>
   </v-app>

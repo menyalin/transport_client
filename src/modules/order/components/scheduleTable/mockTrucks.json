@@ -1,0 +1,9 @@
+[
+  { "_id": 1, "regNum": "001", "order": 10 },
+  { "_id": 2, "regNum": "002", "order": 20 },
+  { "_id": 3, "regNum": "003", "order": 30 },
+  { "_id": 4, "regNum": "004", "order": 40 },
+  { "_id": 5, "regNum": "005", "order": 50 },
+  { "_id": 6, "regNum": "006", "order": 60 },
+  { "_id": 7, "regNum": "007", "order": 70 }
+]

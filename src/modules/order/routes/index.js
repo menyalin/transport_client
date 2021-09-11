@@ -4,16 +4,7 @@ import Schedule from '../pages/schedule'
 
 export default [
   {
-    path: '/orders',
-    component: Layout,
-    children: [...orderRoutes],
-    meta: {
-      authRequired: true,
-    },
-  },
-  {
     path: '/schedule',
-
     component: Layout,
     children: [
       {
@@ -22,6 +13,14 @@ export default [
         component: Schedule,
       },
     ],
+    meta: {
+      authRequired: true,
+    },
+  },
+  {
+    path: '/orders',
+    component: Layout,
+    children: [...orderRoutes],
     meta: {
       authRequired: true,
     },
