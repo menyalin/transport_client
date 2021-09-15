@@ -5,6 +5,9 @@ export default [
   {
     path: '/reports',
     component: ReportLayout,
-    childrens: [{ path: '/crews', component: CrewsReport }],
+    meta: {
+      authRequired: true,
+    },
+    children: [{ path: '/crews', name: "CrewReport", component: CrewsReport }],
   },
 ]
