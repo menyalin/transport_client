@@ -7,6 +7,7 @@ import authRoutes from '@/modules/auth/auth.routes'
 import adminRoutes from '@/modules/admin/admin.routes'
 import profileRoutes from '@/modules/profile/profile.routes/index.js'
 import orderRoutes from '@/modules/order/routes/index.js'
+import reportsRoutes from '@/modules/reports/routes/index.js'
 
 import serverNotAvailablePage from '@/modules/common/pages/error'
 import HomeLayout from '@/modules/common/pages/layout'
@@ -18,6 +19,7 @@ const routes = [
   ...adminRoutes,
   ...profileRoutes,
   ...orderRoutes,
+  ...reportsRoutes,
   {
     path: '/',
     name: 'Home',

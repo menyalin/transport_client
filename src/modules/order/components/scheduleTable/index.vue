@@ -1,45 +1,48 @@
+/* eslint-disable vue/no-template-key */
 <template>
   <div class="table-wrapper">
-    <v-simple-table
-      dense
-      fixed-header
-      height="80vh"
-    >
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th />
-            <th
-              v-for="date of dates"
-              :key="date"
-            >
-              {{ date }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="truck of trucks"
-            :key="truck._id"
-            class="truck-row"
+    <table>
+      <thead>
+        <tr>
+          <th />
+          <th
+            v-for="date of dates"
+            :key="date"
+            :colspan="timeZones.length"
+            class="text-center date-cell"
           >
-            <td>
-              <app-truck-title-cell :title="truck.regNum" />
-            </td>
+            {{ date }}
+          </th>
+        </tr>
+        <tr>
+          <th />
+          <th
+            v-for="cell of dayCels"
+            :key="cell.id"
+            class="text-center date-cell"
+          >
+            {{ cell.timeZone.title }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="truck of trucks"
+          :key="truck._id"
+          class="truck-row"
+        >
+          <td>
+            <app-truck-title-cell :title="truck.regNum" />
+          </td>
 
-            <td
-              v-for="date of dates"
-              :key="date"
-            >
-              {{ truck.regNum }} {{ date }}
+          <template v-for="cell of dayCels">
+            <td :key="cell.id">
+              {{ truck.regNum }}
             </td>
-          </tr>
-        </tbody>
-      </template>
-      <caption>
-        тут будет заголовок таблицы
-      </caption>
-    </v-simple-table>
+          </template>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 <script>
@@ -53,6 +56,12 @@ export default {
   },
   data: () => ({
     trucks: mockTrucks,
+    timeZones: [
+      { title: '00-06' },
+      { title: '06-12' },
+      { title: '12-18' },
+      { title: '18-24' },
+    ],
     dates: [
       '2021-09-10',
       '2021-09-11',
@@ -61,6 +70,17 @@ export default {
       '2021-09-14',
     ],
   }),
+  computed: {
+    dayCels() {
+      let cels = []
+      for (let date of this.dates) {
+        this.timeZones.forEach((zone) => {
+          cels.push({ id: date + zone.title, date, timeZone: zone, colspan: 1 })
+        })
+      }
+      return cels
+    },
+  },
 }
 </script>
 <style>
@@ -70,8 +90,11 @@ export default {
 }
 table {
   width: 100%;
+  border-collapse: collapse;
 }
-.truck-row {
-  border-bottom: indianred 1px dotted;
+.date-cell {
+  border: 1px solid rgb(250, 227, 227);
+  border-collapse: collapse;
+  box-sizing: content-box;
 }
 </style>

@@ -33,6 +33,7 @@
       </v-icon>
       Рейсы
     </v-btn>
+    <app-reports-menu />
     <v-btn
       v-if="isLoggedIn"
       to="/profile"
@@ -69,8 +70,12 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import AppReportsMenu from './reportsMenu.vue'
 
 export default {
+  components: {
+    AppReportsMenu,
+  },
   props: {
     title: {
       type: String,
