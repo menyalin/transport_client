@@ -1,5 +1,5 @@
-import ReportLayout from '../pages/layout.vue'
-import CrewsReport from '../pages/crewsReport.vue'
+import ReportLayout from '../pages/layout'
+import CrewsReport from '../pages/crewsReport'
 
 export default [
   {
@@ -8,6 +8,6 @@ export default [
     meta: {
       authRequired: true,
     },
-    children: [{ path: '/crews', name: "CrewReport", component: CrewsReport }],
+    children: [{ path: 'crews', name: 'CrewReport', component: CrewsReport }],
   },
 ]

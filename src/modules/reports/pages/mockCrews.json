@@ -1,0 +1,10 @@
+[
+  {
+    "_id": 1,
+    "truck": { "_id": "truck1", "regNum": "a001aa77" },
+    "trailer": { "_id": "trailer1", "regNum": "aa001799" },
+    "driver": { "_id": "driver1", "fullName": "Иванов Иван" },
+    "startDate": "2021-09-03 18:00",
+    "endDate": "2021-09-05 14:30"
+  }
+]
