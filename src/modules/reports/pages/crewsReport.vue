@@ -5,13 +5,13 @@
       <table class="background-table">
         <thead>
           <tr>
-            <td class="title-column" />
-            <td
+            <th class="title-column" />
+            <th
               v-for="day in tableColumns"
               :key="day"
             >
               {{ day }}
-            </td>
+            </th>
           </tr>
         </thead>
         <tbody
@@ -22,9 +22,9 @@
             v-for="row in tableRows"
             :key="row"
           >
-            <td class="title-column">
+            <th class="title-column">
               Гос.номер
-            </td>
+            </th>
             <td
               v-for="day in tableColumns"
               :key="day"
@@ -44,7 +44,7 @@ export default {
   name: 'CrewsReport',
   data() {
     return {
-      period: ['2021-09-01', '2021-09-20'],
+      period: ['2021-09-01', '2021-09-30'],
       crews: mockCrews,
     }
   },
@@ -76,21 +76,17 @@ export default {
 <style scoped>
 .table-wrapper {
   width: 100%;
-  height: 100%;
-  padding: 20px;
-  overflow-x: auto;
+  height: 40vh;
+  margin: 10px;
+  overflow: auto;
 }
 .background-table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-  border: 1px solid green;
   user-select: none;
 }
-.title-column {
-  min-width: 150px;
-  border: lightgray 1px dotted;
-}
+
 .data-cell {
   min-width: 150px;
   height: 50px;
@@ -98,6 +94,27 @@ export default {
 }
 .table-body {
   position: relative;
+}
+thead th {
+  position: sticky;
+  background-color: hotpink;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+thead th:first-child {
+  position: sticky;
+  left: 0;
+  /* z-index: 2; */
+  width: 150px;
+  background: white;
+}
+
+table tbody th {
+  position: sticky;
+  left: 0;
+  background: white;
+  /* z-index: 1; */
 }
 .block {
   background: lightpink;
