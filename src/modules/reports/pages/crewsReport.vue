@@ -5,7 +5,7 @@
       <table class="background-table">
         <thead>
           <tr>
-            <th class="title-column" />
+            <th />
             <th
               v-for="day in tableColumns"
               :key="day"
@@ -22,9 +22,7 @@
             v-for="row in tableRows"
             :key="row"
           >
-            <th class="title-column">
-              Гос.номер
-            </th>
+            <td>Гос.номер</td>
             <td
               v-for="day in tableColumns"
               :key="day"
@@ -75,16 +73,18 @@ export default {
 </script>
 <style scoped>
 .table-wrapper {
-  width: 100%;
-  height: 40vh;
-  margin: 10px;
+  width: 98vw;
+  height: 80vh;
   overflow: auto;
+  padding: 0px;
+  margin: 0 auto;
+  z-index: 5;
 }
 .background-table {
   width: 100%;
-  height: 100%;
   border-collapse: collapse;
   user-select: none;
+  z-index: 3;
 }
 
 .data-cell {
@@ -95,26 +95,29 @@ export default {
 .table-body {
   position: relative;
 }
+
 thead th {
   position: sticky;
-  background-color: hotpink;
+  background-color: white;
   position: sticky;
+  max-height: 30px;
+  min-height: 20px;
   top: 0;
   z-index: 1;
 }
-thead th:first-child {
+tbody td:first-child {
   position: sticky;
   left: 0;
-  /* z-index: 2; */
-  width: 150px;
+  z-index: 2;
+  min-width: 150px;
   background: white;
 }
 
-table tbody th {
+table thead th:first-child {
   position: sticky;
   left: 0;
   background: white;
-  /* z-index: 1; */
+  z-index: 3;
 }
 .block {
   background: lightpink;
