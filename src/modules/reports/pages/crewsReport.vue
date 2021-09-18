@@ -1,11 +1,12 @@
 <template>
   <div>
-    <span>period: {{ period }}</span>
+    <span>period: {{ period }}</span><br>
+    <span>width: {{ tableWidth }} </span>
     <div class="table-wrapper">
       <table class="background-table">
         <thead>
           <tr>
-            <th />
+            <th ref="titleCell" />
             <th
               v-for="day in tableColumns"
               :key="day"
@@ -20,16 +21,19 @@
         >
           <tr
             v-for="row in tableRows"
-            :key="row"
+            :key="row._id"
           >
-            <td>Гос.номер</td>
+            <td>{{ row.title }}</td>
             <td
               v-for="day in tableColumns"
               :key="day"
               class="data-cell"
             />
           </tr>
-          <div class="block" />
+          <div
+            class="block"
+            :style="blockStyles()"
+          />
         </tbody>
       </table>
     </div>
@@ -37,12 +41,16 @@
 </template>
 <script>
 import getDaysFromPeriod from '../utils/getDaysFromPeriod'
+import getRowsFromCrews from '../utils/getRowsFromCrews'
+
 import mockCrews from './mockCrews'
 export default {
   name: 'CrewsReport',
   data() {
     return {
-      period: ['2021-09-01', '2021-09-30'],
+      tableWidth: 0,
+      titleCellWidth: 0,
+      period: ['2021-09-01', '2021-09-10'],
       crews: mockCrews,
     }
   },
@@ -51,23 +59,32 @@ export default {
       return getDaysFromPeriod(this.period)
     },
     tableRows() {
-      return [
-        '001',
-        '002',
-        '003',
-        '004',
-        '005',
-        '006',
-        '007',
-        '008',
-        '009',
-        '010',
-        '011',
-      ]
+      const rows = getRowsFromCrews(this.crews, 'truck')
+      return rows
     },
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeHandler)
+  },
+
   mounted() {
-    console.log(this.$refs.tableBody)
+    window.addEventListener('resize', this.resizeHandler)
+    this.resizeHandler()
+  },
+  methods: {
+    resizeHandler() {
+      this.tableWidth =
+        this.$refs.tableBody.scrollWidth - this.$refs.titleCell.scrollWidth
+    },
+    blockStyles(crew) {
+      return {
+        background: 'lightpink',
+        height: '50px',
+        width: '120px',
+        top: '50px',
+        left: '800px',
+      }
+    },
   },
 }
 </script>
@@ -120,11 +137,8 @@ table thead th:first-child {
   z-index: 3;
 }
 .block {
-  background: lightpink;
-  height: 50px;
-  width: 120px;
-  top: 50px;
-  left: 800px;
   position: absolute;
+  border: 1px solid blue;
+  border-radius: 3px;
 }
 </style>
