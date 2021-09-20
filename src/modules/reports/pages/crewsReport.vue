@@ -49,8 +49,9 @@ export default {
   data() {
     return {
       tableWidth: 0,
+      group: 'truck',
       titleCellWidth: 0,
-      period: ['2021-09-01', '2021-09-10'],
+      period: ['2021-09-01', '2021-09-07'],
       crews: mockCrews,
     }
   },
@@ -59,8 +60,11 @@ export default {
       return getDaysFromPeriod(this.period)
     },
     tableRows() {
-      const rows = getRowsFromCrews(this.crews, 'truck')
+      const rows = getRowsFromCrews(this.crews, this.group)
       return rows
+    },
+    blocks() {
+      return []
     },
   },
   beforeDestroy() {
@@ -79,7 +83,7 @@ export default {
     blockStyles(crew) {
       return {
         background: 'lightpink',
-        height: '50px',
+        height: '35px',
         width: '120px',
         top: '50px',
         left: '800px',
@@ -105,9 +109,8 @@ export default {
 }
 
 .data-cell {
-  min-width: 150px;
-  height: 50px;
-  border: lightgray 1px dotted;
+  min-width: 100px;
+  height: 40px;
 }
 .table-body {
   position: relative;
@@ -126,15 +129,20 @@ tbody td:first-child {
   position: sticky;
   left: 0;
   z-index: 2;
-  min-width: 150px;
+  min-width: 100px;
+  max-width: 100px;
   background: white;
 }
-
+tbody tr td {
+  border: lightgray 1px dotted;
+}
 table thead th:first-child {
   position: sticky;
   left: 0;
   background: white;
   z-index: 3;
+  min-width: 100px;
+  max-width: 100px;
 }
 .block {
   position: absolute;
