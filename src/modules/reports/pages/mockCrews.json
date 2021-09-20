@@ -4,8 +4,8 @@
     "truck": { "_id": "truck1", "regNum": "a001aa77", "order": 10 },
     "trailer": { "_id": "trailer1", "regNum": "aa001799" },
     "driver": { "_id": "driver1", "fullName": "Иванов Иван" },
-    "startDate": "2021-09-03 18:00",
-    "endDate": "2021-09-05 14:30"
+    "startDate": "2021-09-01 00:00",
+    "endDate": "2021-09-05 00:00"
   },
   {
     "_id": 2,
@@ -20,7 +20,7 @@
     "truck": { "_id": "truck2", "regNum": "a002aa77", "order": 7 },
     "trailer": { "_id": "trailer1", "regNum": "aa001799" },
     "driver": { "_id": "driver1", "fullName": "Иванов Иван" },
-    "startDate": "2021-09-08 09:00",
-    "endDate": "2021-09-10 14:45"
+    "startDate": "2021-09-10 16:00",
+    "endDate": "2021-09-15 14:45"
   }
 ]

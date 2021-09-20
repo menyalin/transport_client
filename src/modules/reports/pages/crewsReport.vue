@@ -1,7 +1,8 @@
 <template>
   <div>
     <span>period: {{ period }}</span><br>
-    <span>width: {{ tableWidth }} </span>
+    <span>width: {{ tableWidth }} </span> <br>
+    <span> secInPx: {{ secInPx }}</span>
     <div class="table-wrapper">
       <table class="background-table">
         <thead>
@@ -31,15 +32,20 @@
             />
           </tr>
           <div
+            v-for="block in blocks"
+            :key="block._id"
             class="block"
-            :style="blockStyles()"
-          />
+            :style="block.styles"
+          >
+            {{ block.title }}
+          </div>
         </tbody>
       </table>
     </div>
   </div>
 </template>
 <script>
+import moment from 'moment'
 import getDaysFromPeriod from '../utils/getDaysFromPeriod'
 import getRowsFromCrews from '../utils/getRowsFromCrews'
 
@@ -51,7 +57,7 @@ export default {
       tableWidth: 0,
       group: 'truck',
       titleCellWidth: 0,
-      period: ['2021-09-01', '2021-09-07'],
+      period: ['2021-09-01', '2021-09-30'],
       crews: mockCrews,
     }
   },
@@ -64,7 +70,26 @@ export default {
       return rows
     },
     blocks() {
-      return []
+      if (!this.crews) return null
+      // let blocks = getBlocksFromCrews(crews)
+      return this.crews.map((item) => ({
+        ...item,
+        styles: {
+          width: this.getWidthInPxForBlock(item),
+          background: 'lightpink',
+          height: '20px',
+          top: this.getTopShiftInPxForBlock(item),
+          left: this.getLeftShiftInPxForBlock(item),
+          'z-index': 1,
+        },
+      }))
+    },
+    secInPx() {
+      if (!this.tableWidth) return 0
+      const dSec =
+        moment(this.period[1]).add(24, 'hour').unix() -
+        moment(this.period[0]).unix()
+      return dSec / this.tableWidth
     },
   },
   beforeDestroy() {
@@ -80,14 +105,38 @@ export default {
       this.tableWidth =
         this.$refs.tableBody.scrollWidth - this.$refs.titleCell.scrollWidth
     },
-    blockStyles(crew) {
-      return {
-        background: 'lightpink',
-        height: '35px',
-        width: '120px',
-        top: '50px',
-        left: '800px',
-      }
+    getWidthInPxForBlock(crew) {
+      if (!this.secInPx) return null
+      let endM = null
+      let startM = moment(crew.startDate).unix()
+      if (moment(this.period[0]).isSameOrAfter(crew.startDate))
+        startM = moment(this.period[0]).unix()
+      if (
+        !crew.endDate ||
+        moment(this.period[1]).add('24', 'hour').isSameOrBefore(crew.endDate)
+      )
+        endM = moment(this.period[1]).add(24, 'hour').unix()
+      else endM = moment(crew.endDate).unix()
+
+      return (endM - startM) / this.secInPx + 'px'
+    },
+
+    getLeftShiftInPxForBlock(crew) {
+      // dates in seconds
+      if (!this.$refs?.titleCell?.scrollWidth) return null
+      let leftShift = null
+      const startPeriod = moment(this.period[0]).unix()
+      const startCrew = moment(crew.startDate).unix()
+      if (startCrew <= startPeriod) leftShift = 0
+      else leftShift = startCrew - startPeriod
+      return leftShift / this.secInPx + this.$refs.titleCell.scrollWidth + 'px'
+    },
+
+    getTopShiftInPxForBlock(crew) {
+      const rowIndex = this.tableRows.findIndex(
+        (item) => item._id === crew[this.group]._id
+      )
+      return rowIndex * 40 + 'px'
     },
   },
 }
