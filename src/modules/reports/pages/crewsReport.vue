@@ -35,7 +35,7 @@
             :key="row._id"
           >
             <td>
-              <div class="pa-3 row-title">
+              <div class="px-2 row-title">
                 {{ row.title }}
               </div>
             </td>
@@ -132,7 +132,7 @@ export default {
   methods: {
     resizeHandler() {
       this.tableWidth =
-        this.$refs.tableBody.scrollWidth - this.$refs.titleCell.scrollWidth
+        this.$refs.tableBody.clientWidth - this.$refs.titleCell.clientWidth
     },
     getWidthInPxForBlock(crew) {
       if (!this.secInPx) return null
@@ -228,6 +228,9 @@ tbody td:first-child {
 tbody tr td {
   border: lightgray 1px dotted;
 }
+tbody tr {
+  max-height: 40px;
+}
 table thead th:first-child {
   position: sticky;
   left: 0;
@@ -245,6 +248,7 @@ table thead th:first-child {
   font-size: 14px;
 }
 .row-title {
+  min-width: 110px;
   line-height: 15px;
   letter-spacing: -0.047em;
   font-weight: 300;
