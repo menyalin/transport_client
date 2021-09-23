@@ -3,7 +3,7 @@ const _truckSorter = (a, b) => {
   else return 1
 }
 
-export default (crews, type) => {
+export default (crews, type = 'truck') => {
   if (!type || !['truck', 'driver', 'trailer'].includes(type))
     throw new Error('required argument not existed')
   if (!crews) return []

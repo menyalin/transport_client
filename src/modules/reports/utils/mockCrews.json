@@ -22,5 +22,12 @@
     "driver": { "_id": "driver1", "fullName": "Иванов Иван" },
     "startDate": "2021-09-08 09:00",
     "endDate": "2021-09-10 14:45"
+  },
+  {
+    "_id": 4,
+    "truck": { "_id": "truck3", "regNum": "a010aa77", "order": 12 },
+    "driver": { "_id": "driver2", "fullName": "Петров Петр" },
+    "startDate": "2021-09-08 09:00",
+    "endDate": "2021-09-10 14:45"
   }
 ]

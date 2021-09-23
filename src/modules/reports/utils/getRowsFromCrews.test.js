@@ -19,6 +19,6 @@ describe('getDaysFromPeriod', () => {
     }).toThrowError()
   })
   test('normal params #4', () => {
-    expect(getRowsFromCrews(mockRows, 'truck').length).toBe(2)
+    expect(getRowsFromCrews(mockRows, 'truck').length).toBe(3)
   })
 })

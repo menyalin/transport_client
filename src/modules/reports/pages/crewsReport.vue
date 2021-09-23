@@ -48,6 +48,7 @@
 import moment from 'moment'
 import getDaysFromPeriod from '../utils/getDaysFromPeriod'
 import getRowsFromCrews from '../utils/getRowsFromCrews'
+import getBlocksFromCrews from '../utils/getBlocksFromCrews'
 
 import mockCrews from './mockCrews'
 export default {
@@ -71,14 +72,14 @@ export default {
     },
     blocks() {
       if (!this.crews) return null
-      // let blocks = getBlocksFromCrews(crews)
-      return this.crews.map((item) => ({
+      let blocks = getBlocksFromCrews({ crews: this.crews, group: this.group })
+      return blocks.map((item) => ({
         ...item,
         styles: {
           width: this.getWidthInPxForBlock(item),
           background: 'lightpink',
-          height: '20px',
-          top: this.getTopShiftInPxForBlock(item),
+          height: '18px',
+          top: this.getTopShiftInPxForBlock(item, item.type),
           left: this.getLeftShiftInPxForBlock(item),
           'z-index': 1,
         },
@@ -132,11 +133,14 @@ export default {
       return leftShift / this.secInPx + this.$refs.titleCell.scrollWidth + 'px'
     },
 
-    getTopShiftInPxForBlock(crew) {
+    getTopShiftInPxForBlock(block) {
+      const ROW_HEIGTH = 40
       const rowIndex = this.tableRows.findIndex(
-        (item) => item._id === crew[this.group]._id
+        (item) => item._id === block.rowId
       )
-      return rowIndex * 40 + 'px'
+      return (
+        rowIndex * ROW_HEIGTH + (ROW_HEIGTH / 2) * (block.line - 1) + 1 + 'px'
+      )
     },
   },
 }
@@ -195,7 +199,12 @@ table thead th:first-child {
 }
 .block {
   position: absolute;
-  border: 1px solid blue;
+  border: 1px dotted grey;
   border-radius: 3px;
+  line-height: 16px;
+  letter-spacing: -0.047em;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 14px;
 }
 </style>
