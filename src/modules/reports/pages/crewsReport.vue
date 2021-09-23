@@ -3,6 +3,16 @@
     <span>period: {{ period }}</span><br>
     <span>width: {{ tableWidth }} </span> <br>
     <span> secInPx: {{ secInPx }}</span>
+    <div class="settings-wrapper">
+      <v-select
+        v-model="group"
+        label="Группировать по"
+        :items="groupItems"
+        hide-details
+        outlined
+        dense
+      />
+    </div>
     <div class="table-wrapper">
       <table class="background-table">
         <thead>
@@ -12,7 +22,7 @@
               v-for="day in tableColumns"
               :key="day"
             >
-              {{ day }}
+              {{ new Date(day).toLocaleDateString() }}
             </th>
           </tr>
         </thead>
@@ -24,7 +34,11 @@
             v-for="row in tableRows"
             :key="row._id"
           >
-            <td>{{ row.title }}</td>
+            <td>
+              <div class="pa-3 row-title">
+                {{ row.title }}
+              </div>
+            </td>
             <td
               v-for="day in tableColumns"
               :key="day"
@@ -56,6 +70,11 @@ export default {
   data() {
     return {
       tableWidth: 0,
+      groupItems: [
+        { value: 'truck', text: 'Грузовик' },
+        { value: 'driver', text: 'Водитель' },
+        { value: 'trailer', text: 'Прицеп' },
+      ],
       group: 'truck',
       titleCellWidth: 0,
       period: ['2021-09-01', '2021-09-30'],
@@ -93,6 +112,14 @@ export default {
       return dSec / this.tableWidth
     },
   },
+  watch: {
+    group: function () {
+      this.resizeHandler()
+    },
+    '$refs.titleCell.clientWidth': function (val) {
+      console.log(val)
+    },
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.resizeHandler)
   },
@@ -100,6 +127,7 @@ export default {
   mounted() {
     window.addEventListener('resize', this.resizeHandler)
     this.resizeHandler()
+    console.log(this.$refs.titleCell)
   },
   methods: {
     resizeHandler() {
@@ -124,13 +152,13 @@ export default {
 
     getLeftShiftInPxForBlock(crew) {
       // dates in seconds
-      if (!this.$refs?.titleCell?.scrollWidth) return null
+      if (!this.$refs?.titleCell?.clientWidth) return null
       let leftShift = null
       const startPeriod = moment(this.period[0]).unix()
       const startCrew = moment(crew.startDate).unix()
       if (startCrew <= startPeriod) leftShift = 0
       else leftShift = startCrew - startPeriod
-      return leftShift / this.secInPx + this.$refs.titleCell.scrollWidth + 'px'
+      return leftShift / this.secInPx + this.$refs.titleCell.clientWidth + 'px'
     },
 
     getTopShiftInPxForBlock(block) {
@@ -146,6 +174,15 @@ export default {
 }
 </script>
 <style scoped>
+.settings-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+.settings-wrapper > * {
+  max-width: 300px;
+  padding: 15px;
+}
+
 .table-wrapper {
   width: 98vw;
   height: 80vh;
@@ -177,13 +214,15 @@ thead th {
   min-height: 20px;
   top: 0;
   z-index: 1;
+  font-weight: 300;
+  font-size: 14px;
 }
 tbody td:first-child {
   position: sticky;
   left: 0;
   z-index: 2;
-  min-width: 100px;
-  max-width: 100px;
+  /* min-width: 150px; */
+
   background: white;
 }
 tbody tr td {
@@ -194,14 +233,19 @@ table thead th:first-child {
   left: 0;
   background: white;
   z-index: 3;
-  min-width: 100px;
-  max-width: 100px;
 }
 .block {
   position: absolute;
   border: 1px dotted grey;
   border-radius: 3px;
-  line-height: 16px;
+  line-height: 15px;
+  letter-spacing: -0.047em;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 14px;
+}
+.row-title {
+  line-height: 15px;
   letter-spacing: -0.047em;
   font-weight: 300;
   font-style: normal;
