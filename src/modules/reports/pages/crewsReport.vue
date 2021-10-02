@@ -1,9 +1,7 @@
 <template>
   <div>
-    <span>period: {{ period }}</span><br>
-    <span>width: {{ tableWidth }} </span> <br>
-    <span> secInPx: {{ secInPx }}</span>
     <div class="settings-wrapper">
+      <app-date-range v-model="period" />
       <v-select
         v-model="group"
         label="Группировать по"
@@ -14,20 +12,27 @@
       />
     </div>
     <div class="table-wrapper">
-      <table class="background-table">
+      <table
+        ref="tableBody"
+        class="background-table"
+      >
         <thead>
           <tr>
-            <th ref="titleCell" />
+            <th
+              ref="titleCell"
+              width="110px"
+            />
             <th
               v-for="day in tableColumns"
               :key="day"
+              width="120px"
             >
               {{ new Date(day).toLocaleDateString() }}
             </th>
           </tr>
         </thead>
         <tbody
-          ref="tableBody"
+          v-if="!rerender"
           class="table-body"
         >
           <tr
@@ -35,7 +40,7 @@
             :key="row._id"
           >
             <td>
-              <div class="px-2 row-title">
+              <div class="px-2 row-title-text">
                 {{ row.title }}
               </div>
             </td>
@@ -49,7 +54,7 @@
             v-for="block in blocks"
             :key="block._id"
             class="block"
-            :style="block.styles"
+            :style="getBlockStyles(block)"
           >
             {{ block.title }}
           </div>
@@ -60,6 +65,7 @@
 </template>
 <script>
 import moment from 'moment'
+import AppDateRange from '@/modules/common/components/dateRange'
 import getDaysFromPeriod from '../utils/getDaysFromPeriod'
 import getRowsFromCrews from '../utils/getRowsFromCrews'
 import getBlocksFromCrews from '../utils/getBlocksFromCrews'
@@ -67,9 +73,14 @@ import getBlocksFromCrews from '../utils/getBlocksFromCrews'
 import mockCrews from './mockCrews'
 export default {
   name: 'CrewsReport',
+  components: {
+    AppDateRange,
+  },
   data() {
     return {
       tableWidth: 0,
+      rerender: false,
+      secInPx: 0,
       groupItems: [
         { value: 'truck', text: 'Грузовик' },
         { value: 'driver', text: 'Водитель' },
@@ -91,33 +102,30 @@ export default {
     },
     blocks() {
       if (!this.crews) return null
-      let blocks = getBlocksFromCrews({ crews: this.crews, group: this.group })
+      let blocks = getBlocksFromCrews({
+        crews: this.crews,
+        group: this.group,
+        displayPeriod: this.period,
+      })
       return blocks.map((item) => ({
         ...item,
         styles: {
           width: this.getWidthInPxForBlock(item),
           background: 'lightpink',
-          height: '18px',
+          height: '19px',
           top: this.getTopShiftInPxForBlock(item, item.type),
           left: this.getLeftShiftInPxForBlock(item),
           'z-index': 1,
         },
       }))
     },
-    secInPx() {
-      if (!this.tableWidth) return 0
-      const dSec =
-        moment(this.period[1]).add(24, 'hour').unix() -
-        moment(this.period[0]).unix()
-      return dSec / this.tableWidth
-    },
   },
   watch: {
     group: function () {
       this.resizeHandler()
     },
-    '$refs.titleCell.clientWidth': function (val) {
-      console.log(val)
+    period: function () {
+      this.resizeHandler()
     },
   },
   beforeDestroy() {
@@ -127,38 +135,56 @@ export default {
   mounted() {
     window.addEventListener('resize', this.resizeHandler)
     this.resizeHandler()
-    console.log(this.$refs.titleCell)
   },
   methods: {
-    resizeHandler() {
-      this.tableWidth =
-        this.$refs.tableBody.clientWidth - this.$refs.titleCell.clientWidth
+    getBlockStyles(block) {
+      return {
+        width: this.getWidthInPxForBlock(block),
+        background: 'lightgreen',
+        height: '19px',
+        top: this.getTopShiftInPxForBlock(block, block.type),
+        left: this.getLeftShiftInPxForBlock(block),
+        'z-index': 1,
+      }
     },
-    getWidthInPxForBlock(crew) {
+    resizeHandler() {
+      this.rerender = true
+      this.tableWidth =
+        this.$refs.tableBody.offsetWidth - this.$refs.titleCell.offsetWidth
+
+      const dSec =
+        moment(this.period[1]).add(24, 'hour').unix() -
+        moment(this.period[0]).unix()
+      this.secInPx = dSec / this.tableWidth
+      this.$nextTick(() => {
+        this.rerender = false
+      })
+    },
+    getWidthInPxForBlock(block) {
       if (!this.secInPx) return null
       let endM = null
-      let startM = moment(crew.startDate).unix()
-      if (moment(this.period[0]).isSameOrAfter(crew.startDate))
+      let startM = moment(block.startDate).unix()
+      if (moment(this.period[0]).isSameOrAfter(block.startDate))
         startM = moment(this.period[0]).unix()
       if (
-        !crew.endDate ||
-        moment(this.period[1]).add('24', 'hour').isSameOrBefore(crew.endDate)
+        !block.endDate ||
+        moment(this.period[1]).add('24', 'hour').isSameOrBefore(block.endDate)
       )
         endM = moment(this.period[1]).add(24, 'hour').unix()
-      else endM = moment(crew.endDate).unix()
+      else endM = moment(block.endDate).unix()
 
       return (endM - startM) / this.secInPx + 'px'
     },
 
     getLeftShiftInPxForBlock(crew) {
       // dates in seconds
-      if (!this.$refs?.titleCell?.clientWidth) return null
+      if (!this.$refs?.titleCell) return null
       let leftShift = null
       const startPeriod = moment(this.period[0]).unix()
       const startCrew = moment(crew.startDate).unix()
       if (startCrew <= startPeriod) leftShift = 0
       else leftShift = startCrew - startPeriod
-      return leftShift / this.secInPx + this.$refs.titleCell.clientWidth + 'px'
+      return leftShift / this.secInPx + this.$refs.titleCell.offsetWidth + 'px'
     },
 
     getTopShiftInPxForBlock(block) {
@@ -192,20 +218,19 @@ export default {
   z-index: 5;
 }
 .background-table {
-  width: 100%;
   border-collapse: collapse;
   user-select: none;
   z-index: 3;
+  /* table-layout: fixed; */
 }
 
 .data-cell {
-  min-width: 100px;
+  min-width: 120px;
   height: 40px;
 }
 .table-body {
   position: relative;
 }
-
 thead th {
   position: sticky;
   background-color: white;
@@ -219,11 +244,11 @@ thead th {
 }
 tbody td:first-child {
   position: sticky;
+  box-sizing: content-box;
   left: 0;
   z-index: 2;
-  /* min-width: 150px; */
-
   background: white;
+  column-width: 110px;
 }
 tbody tr td {
   border: lightgray 1px dotted;
@@ -246,9 +271,11 @@ table thead th:first-child {
   font-weight: 300;
   font-style: normal;
   font-size: 14px;
+  word-wrap: none;
+  overflow-wrap: break-word;
 }
-.row-title {
-  min-width: 110px;
+
+.row-title-text {
   line-height: 15px;
   letter-spacing: -0.047em;
   font-weight: 300;

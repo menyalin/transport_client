@@ -1,15 +1,17 @@
+import moment from 'moment'
 const ALLOWED_TYPES_GROUP = ['truck', 'trailer', 'driver']
 
 const _getBlockTitle = ({ crew, type }) => {
+  const intervalStr = crew.startDate + ' - ' + crew.endDate
   switch (type) {
     case 'truck': {
-      return crew.truck.regNum
+      return crew.truck.regNum + ' / ' + intervalStr
     }
     case 'trailer': {
-      return crew.trailer.regNum
+      return crew.trailer.regNum + ' / ' + intervalStr
     }
     case 'driver': {
-      return crew.driver.fullName
+      return crew.driver.fullName + ' / ' + intervalStr
     }
   }
 }
@@ -24,7 +26,7 @@ const _createBlock = ({ crew, type, group, line }) => ({
   endDate: crew.endDate,
 })
 
-export default ({ crews, group }) => {
+export default ({ crews, group, displayPeriod }) => {
   let blocks = []
   if (!crews || !crews.length || !group)
     throw new Error('required argument not existed')
@@ -34,6 +36,13 @@ export default ({ crews, group }) => {
     )
 
   for (let i = 0; i < crews.length; i++) {
+    if (
+      crews[i].endDate &&
+      moment(crews[i].endDate).isSameOrBefore(displayPeriod[0])
+    )
+      continue
+    if (moment(crews[i].startDate).isSameOrAfter(displayPeriod[1])) continue
+
     if (group === 'truck') {
       blocks.push(
         _createBlock({ crew: crews[i], type: 'driver', group, line: 1 })
