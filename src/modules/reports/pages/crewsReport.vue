@@ -65,7 +65,7 @@
             class="block"
             :style="block.styles"
           >
-            {{ block.title }}
+            <div>{{ block.title }}</div>
           </div>
         </tbody>
       </table>
@@ -294,7 +294,7 @@ table thead th:first-child {
   border: 1px solid green;
   border-radius: 5px;
   line-height: 15px;
-  letter-spacing: -0.047em;
+  letter-spacing: -0.02em;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
@@ -302,6 +302,8 @@ table thead th:first-child {
   overflow-wrap: break-word;
   background-color: rgba(178, 248, 184, 0.801);
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .row-title-text {

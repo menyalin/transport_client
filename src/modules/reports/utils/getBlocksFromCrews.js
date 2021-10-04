@@ -15,7 +15,7 @@ const _getBlockTitle = ({ crew, type }) => {
       return crew.trailer.regNum + ' / ' + intervalStr
     }
     case 'driver': {
-      const driverName = crew.driver.surname + crew.driver.name
+      const driverName = crew.driver.surname + ' ' + crew.driver.name
       return driverName + ' / ' + intervalStr
     }
   }
