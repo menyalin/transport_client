@@ -290,16 +290,15 @@ table thead th:first-child {
 }
 .block {
   position: absolute;
-  padding-left: 5px;
+  padding-left: 3px;
   border: 1px solid green;
   border-radius: 5px;
   line-height: 15px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
-  word-wrap: none;
-  overflow-wrap: break-word;
+  white-space: nowrap;
   background-color: rgba(178, 248, 184, 0.801);
   overflow: hidden;
   display: flex;
