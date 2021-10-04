@@ -2,7 +2,9 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabledSubmit="editTransportTable || !form.transport.length"
+      :disabledSubmit="
+        editTransportTable || !form.transport.length || $v.$invalid
+      "
       @cancel="cancel"
       @submit="submit"
     />
@@ -56,6 +58,7 @@
         :disabled="!form.startDate"
         label="Дата завершения"
         :errorMessages="endDateError"
+        :minDate="form.startDate"
         @blur="$v.form.endDate.$touch()"
       />
     </div>
@@ -226,7 +229,7 @@ export default {
     },
     endDateError() {
       let errors = []
-      if (this.$v.form.startDate.$dirty && !this.$v.form.endDate.isLaterThan)
+      if (!this.$v.form.endDate.isLaterThan)
         errors.push('Дата должна быть больше начальной даты')
       return errors
     },
