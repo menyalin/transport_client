@@ -100,12 +100,16 @@ export default {
 </script>
 <style>
 .date-range-wrapper {
-  width: 300px;
+  width: 280px;
 }
 .inputs-row {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   flex-wrap: nowrap;
+}
+.date-text {
+  text-decoration: underline;
+  text-decoration-color: blue;
 }
 </style>

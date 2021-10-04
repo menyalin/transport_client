@@ -77,6 +77,13 @@ class CrewService {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data
   }
+
+  async diagramReport(params) {
+    let { data } = await api.get(BASE_PATH + '/reports/crew_diagram', {
+      params,
+    })
+    return data
+  }
 }
 
 export default new CrewService()

@@ -10,6 +10,14 @@
         outlined
         dense
       />
+      <v-select
+        v-model="analitic"
+        label="Детализация"
+        :items="analiticItems"
+        hide-details
+        outlined
+        dense
+      />
     </div>
     <div class="table-wrapper">
       <table
@@ -24,10 +32,11 @@
             />
             <th
               v-for="day in tableColumns"
-              :key="day"
+              :key="day.title"
               width="120px"
+              :class="{ todayHeader: day.isToday }"
             >
-              {{ new Date(day).toLocaleDateString() }}
+              {{ day.title }}
             </th>
           </tr>
         </thead>
@@ -46,7 +55,7 @@
             </td>
             <td
               v-for="day in tableColumns"
-              :key="day"
+              :key="day.title"
               class="data-cell"
             />
           </tr>
@@ -54,7 +63,7 @@
             v-for="block in blocks"
             :key="block._id"
             class="block"
-            :style="getBlockStyles(block)"
+            :style="block.styles"
           >
             {{ block.title }}
           </div>
@@ -65,12 +74,15 @@
 </template>
 <script>
 import moment from 'moment'
+import CrewService from '@/modules/profile/services/crew.service'
+
 import AppDateRange from '@/modules/common/components/dateRange'
 import getDaysFromPeriod from '../utils/getDaysFromPeriod'
 import getRowsFromCrews from '../utils/getRowsFromCrews'
 import getBlocksFromCrews from '../utils/getBlocksFromCrews'
 
-import mockCrews from './mockCrews'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'CrewsReport',
   components: {
@@ -87,44 +99,36 @@ export default {
         { value: 'trailer', text: 'Прицеп' },
       ],
       group: 'truck',
+      analitic: 'driver',
       titleCellWidth: 0,
-      period: ['2021-09-01', '2021-09-30'],
-      crews: mockCrews,
+      period: this.initDateRange(),
+      crews: [],
+      blocks: [],
+      tableColumns: [],
     }
   },
   computed: {
-    tableColumns() {
-      return getDaysFromPeriod(this.period)
-    },
+    ...mapGetters(['directoriesProfile']),
     tableRows() {
       const rows = getRowsFromCrews(this.crews, this.group)
       return rows
     },
-    blocks() {
-      if (!this.crews) return null
-      let blocks = getBlocksFromCrews({
-        crews: this.crews,
-        group: this.group,
-        displayPeriod: this.period,
-      })
-      return blocks.map((item) => ({
-        ...item,
-        styles: {
-          width: this.getWidthInPxForBlock(item),
-          background: 'lightpink',
-          height: '19px',
-          top: this.getTopShiftInPxForBlock(item, item.type),
-          left: this.getLeftShiftInPxForBlock(item),
-          'z-index': 1,
-        },
-      }))
+    analiticItems() {
+      return this.groupItems.filter((item) => item.value !== this.group)
     },
   },
   watch: {
-    group: function () {
+    group: function (val) {
+      this.getData()
+      if (val === 'driver' || val === 'trailer') this.analitic = 'truck'
+      if (val === 'truck') this.analitic = 'driver'
       this.resizeHandler()
     },
     period: function () {
+      this.getData()
+      this.resizeHandler()
+    },
+    analitic: function () {
       this.resizeHandler()
     },
   },
@@ -132,32 +136,47 @@ export default {
     window.removeEventListener('resize', this.resizeHandler)
   },
 
-  mounted() {
+  async mounted() {
+    await this.getData()
     window.addEventListener('resize', this.resizeHandler)
     this.resizeHandler()
   },
   methods: {
-    getBlockStyles(block) {
-      return {
-        width: this.getWidthInPxForBlock(block),
-        background: 'lightgreen',
-        height: '19px',
-        top: this.getTopShiftInPxForBlock(block, block.type),
-        left: this.getLeftShiftInPxForBlock(block),
-        'z-index': 1,
-      }
+    async getData() {
+      this.crews = await CrewService.diagramReport({
+        profile: this.directoriesProfile,
+        period: this.period.join(','),
+      })
+    },
+    getBlocksWithStyles() {
+      if (!this.crews) return null
+      let blocks = getBlocksFromCrews({
+        crews: this.crews,
+        group: this.group,
+        analitic: this.analitic,
+        displayPeriod: this.period,
+      })
+      return blocks.map((item) => ({
+        ...item,
+        styles: {
+          width: this.getWidthInPxForBlock(item),
+          height: '30px',
+          top: this.getTopShiftInPxForBlock(item, item.type),
+          left: this.getLeftShiftInPxForBlock(item),
+          'z-index': 1,
+        },
+      }))
     },
     resizeHandler() {
-      this.rerender = true
-      this.tableWidth =
-        this.$refs.tableBody.offsetWidth - this.$refs.titleCell.offsetWidth
-
-      const dSec =
-        moment(this.period[1]).add(24, 'hour').unix() -
-        moment(this.period[0]).unix()
-      this.secInPx = dSec / this.tableWidth
+      this.tableColumns = getDaysFromPeriod(this.period)
       this.$nextTick(() => {
-        this.rerender = false
+        this.tableWidth =
+          this.$refs.tableBody.offsetWidth - this.$refs.titleCell.offsetWidth
+        const dSec =
+          moment(this.period[1]).add(24, 'hour').unix() -
+          moment(this.period[0]).unix()
+        this.secInPx = dSec / this.tableWidth
+        this.blocks = this.getBlocksWithStyles()
       })
     },
     getWidthInPxForBlock(block) {
@@ -188,13 +207,19 @@ export default {
     },
 
     getTopShiftInPxForBlock(block) {
-      const ROW_HEIGTH = 40
+      const ROW_HEIGTH = 30
       const rowIndex = this.tableRows.findIndex(
         (item) => item._id === block.rowId
       )
-      return (
-        rowIndex * ROW_HEIGTH + (ROW_HEIGTH / 2) * (block.line - 1) + 1 + 'px'
-      )
+      return rowIndex * ROW_HEIGTH + 'px'
+    },
+    initDateRange() {
+      const dateFormat = 'YYYY-MM-DD'
+      const today = moment()
+      return [
+        today.add(-7, 'd').format(dateFormat),
+        today.add(12, 'd').format(dateFormat),
+      ]
     },
   },
 }
@@ -226,7 +251,7 @@ export default {
 
 .data-cell {
   min-width: 120px;
-  height: 40px;
+  height: 30px;
 }
 .table-body {
   position: relative;
@@ -248,10 +273,11 @@ tbody td:first-child {
   left: 0;
   z-index: 2;
   background: white;
-  column-width: 110px;
+  min-width: 110px;
+  max-width: 180px;
 }
 tbody tr td {
-  border: lightgray 1px dotted;
+  border: rgb(155, 154, 154) 1px solid;
 }
 tbody tr {
   max-height: 40px;
@@ -264,15 +290,18 @@ table thead th:first-child {
 }
 .block {
   position: absolute;
-  border: 1px dotted grey;
-  border-radius: 3px;
+  padding-left: 5px;
+  border: 1px solid green;
+  border-radius: 5px;
   line-height: 15px;
   letter-spacing: -0.047em;
-  font-weight: 300;
+  font-weight: 400;
   font-style: normal;
   font-size: 14px;
   word-wrap: none;
   overflow-wrap: break-word;
+  background-color: rgba(178, 248, 184, 0.801);
+  overflow: hidden;
 }
 
 .row-title-text {
@@ -281,5 +310,10 @@ table thead th:first-child {
   font-weight: 300;
   font-style: normal;
   font-size: 14px;
+}
+
+.todayHeader {
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 </style>

@@ -9,20 +9,26 @@ const _getRowTitle = ({ crew, type }) => {
       return crew.trailer.regNum
     }
     case 'driver': {
-      return crew.driver.fullName
+      return crew.driver.surname + ' ' + crew.driver.name[0] + '.'
     }
   }
 }
 
-const _truckSorter = (a, b) => {
-  if (a.order < b.order) return -1
-  else return 1
+const _rowSorter = (type) => (a, b) => {
+  switch (type) {
+    case 'driver':
+      if (a.surname < b.surname) return -1
+      else return 1
+    default:
+      if (a.order < b.order) return -1
+      else return 1
+  }
 }
 
 export default (crews, type) => {
   if (!type || !ALLOWED_TYPES_GROUP.includes(type))
     throw new Error('required argument not existed')
-  if (!crews) return []
+  if (!crews || !crews.length) return []
 
   const tmpCrews = crews.slice()
 
@@ -38,5 +44,5 @@ export default (crews, type) => {
       }
     }
   }
-  return rows.sort(_truckSorter)
+  return rows.sort(_rowSorter)
 }

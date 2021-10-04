@@ -2,7 +2,11 @@ import moment from 'moment'
 const ALLOWED_TYPES_GROUP = ['truck', 'trailer', 'driver']
 
 const _getBlockTitle = ({ crew, type }) => {
-  const intervalStr = crew.startDate + ' - ' + crew.endDate
+  let intervalStr = moment(crew.startDate).format('DD.MM.YY HH:mm') + ' - '
+  if (crew.endDate)
+    intervalStr = intervalStr.concat(
+      moment(crew.endDate).format('DD.MM.YY HH:mm')
+    )
   switch (type) {
     case 'truck': {
       return crew.truck.regNum + ' / ' + intervalStr
@@ -11,7 +15,8 @@ const _getBlockTitle = ({ crew, type }) => {
       return crew.trailer.regNum + ' / ' + intervalStr
     }
     case 'driver': {
-      return crew.driver.fullName + ' / ' + intervalStr
+      const driverName = crew.driver.surname + crew.driver.name
+      return driverName + ' / ' + intervalStr
     }
   }
 }
@@ -26,15 +31,14 @@ const _createBlock = ({ crew, type, group, line }) => ({
   endDate: crew.endDate,
 })
 
-export default ({ crews, group, displayPeriod }) => {
+export default ({ crews, group, displayPeriod, analitic }) => {
   let blocks = []
-  if (!crews || !crews.length || !group)
-    throw new Error('required argument not existed')
+  if (!crews || !group) throw new Error('required argument not existed')
   if (!ALLOWED_TYPES_GROUP.includes(group))
     throw new Error(
       `the group parameter must be in the list: ${ALLOWED_TYPES_GROUP}`
     )
-
+  if (!crews.length) return []
   for (let i = 0; i < crews.length; i++) {
     if (
       crews[i].endDate &&
@@ -42,35 +46,9 @@ export default ({ crews, group, displayPeriod }) => {
     )
       continue
     if (moment(crews[i].startDate).isSameOrAfter(displayPeriod[1])) continue
-
-    if (group === 'truck') {
-      blocks.push(
-        _createBlock({ crew: crews[i], type: 'driver', group, line: 1 })
-      )
-      if (crews[i].trailer) {
-        blocks.push(
-          _createBlock({ crew: crews[i], type: 'trailer', group, line: 2 })
-        )
-      }
-    } else if (group === 'driver') {
-      blocks.push(
-        _createBlock({ crew: crews[i], type: 'truck', group, line: 1 })
-      )
-      if (crews[i].trailer) {
-        blocks.push(
-          _createBlock({ crew: crews[i], type: 'trailer', group, line: 2 })
-        )
-      }
-    } else if (group === 'trailer') {
-      if (crews[i].trailer) {
-        blocks.push(
-          _createBlock({ crew: crews[i], type: 'truck', group, line: 1 })
-        )
-        blocks.push(
-          _createBlock({ crew: crews[i], type: 'driver', group, line: 2 })
-        )
-      }
-    }
+    if ((analitic === 'trailer' || group === 'trailer') && !crews[i].trailer)
+      continue
+    blocks.push(_createBlock({ crew: crews[i], type: analitic, group }))
   }
 
   return blocks
