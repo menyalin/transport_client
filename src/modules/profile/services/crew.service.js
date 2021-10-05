@@ -61,7 +61,6 @@ class CrewService {
   }
 
   async closeCrew(id, date, type = 'crew') {
-    // const newDate = moment(date).add(-1, 'minutes').format()
     let { data } = await api.put(BASE_PATH + '/close/' + id, {
       endDate: date,
       type,

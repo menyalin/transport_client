@@ -129,12 +129,7 @@
       Начальная дата должна быть больше
       {{ new Date(minDateValue).toLocaleString() }}
     </div>
-    <div
-      v-if="!!truckErrorMessage"
-      class="text-caption error-message"
-    >
-      {{ truckErrorMessage }}
-    </div>
+
     <app-crew-message
       v-if="showTruckMessage"
       text="Грузовик задействован в активном экипаже от"
@@ -142,27 +137,22 @@
       :date="newItem.startDate"
       :crewId="actualTruckCrew._id"
       :transportId="actualTruckCrew.transport._id"
+      :invalid="!truckClosureAvailable"
       type="transport"
       @clearCrew="clearTruckCrew"
     />
-    <!-- <div
-      v-if="trailerError"
-      class="text-caption error-message"
-    >
-      {{ trailerError }}
-    </div>
+
     <app-crew-message
-      v-if="
-        actualTrailerCrew && !trailerError && actualTrailerCrew._id !== crewId
-      "
+      v-if="showTrailerMessage"
       text="Прицеп задействован в активном экипаже от"
       :visibleDate="actualTrailerCrew.transport.startDate"
       :date="newItem.startDate"
       :crewId="actualTrailerCrew._id"
-      :transportId="actualTrailer.transport._id"
+      :invalid="!trailerClosureAvailable"
+      :transportId="actualTrailerCrew.transport._id"
       type="transport"
       @clearCrew="clearTrailerCrew"
-    /> -->
+    />
 
     <v-btn
       v-if="showAddRowBtn"
@@ -183,6 +173,7 @@ import CrewService from '@/modules/profile/services/crew.service'
 import AppCrewMessage from './crewMessage.vue'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
+import moment from 'moment'
 
 export default {
   name: 'TransportTable',
@@ -211,8 +202,7 @@ export default {
   },
   data: () => ({
     editMode: false,
-    truckError: null,
-    trailerError: null,
+
     actualTruckCrew: null,
     actualTrailerCrew: null,
     newItem: {
@@ -261,9 +251,9 @@ export default {
       const startDateValid =
         (this.items.length && !this.$v.newItem.startDate.$invalid) ||
         !this.items.length
-      return (
-        !this.truckError && !this.trailerError && fullCrew && startDateValid
-      )
+      const truckAvailable = this.showTruckMessage
+      const trailerAvailable = this.showTrailerMessage
+      return fullCrew && startDateValid && !truckAvailable && !trailerAvailable
     },
     minDateValue() {
       if (!this.items.length) return null
@@ -280,37 +270,62 @@ export default {
       return !this.editMode && !this.isClosedCrew
     },
     showTruckMessage() {
-      if (!this.actualTruckCrew || this.truckErrorMessage) return false
+      if (!this.actualTruckCrew) return false
       const isClosedCrew = this.actualTruckCrew?.transport?.endDate
-        ? new Date(this.actualTruckCrew.transport.endDate) <
+        ? new Date(this.actualTruckCrew.transport.endDate) <=
           new Date(this.newItem.startDate)
         : false
       return !isClosedCrew && this.actualTruckCrew._id !== this.crewId
     },
-    truckErrorMessage() {
-      if (!this.actualTruckCrew) return null
+    showTrailerMessage() {
+      if (!this.actualTrailerCrew || this.actualTrailerCrew._id === this.crewId)
+        return false
       if (
-        !this.actualTruckCrew.transport.endDate &&
-        new Date(this.actualTruckCrew.transport.startDate) >
-          new Date(this.newItem.startDate)
+        !!this.actualTrailerCrew.transport.endDate &&
+        moment(this.actualTrailerCrew.transport.endDate).isSameOrBefore(
+          this.newItem.startDate
+        )
       )
-        return `Дата начала работы экипажа должна быть больше ${new Date(
-          this.actualTruckCrew.transport.startDate
-        ).toLocaleString()}`
-      if (
-        new Date(this.actualTruckCrew.transport.endDate) >
-        new Date(this.newItem.startDate)
-      )
-        return `Грузовик задействован в другом экипаже до ${new Date(
-          this.actualTruckCrew.transport.endDate
-        ).toLocaleString()}`
-      else return null
+        return false
+      return true
     },
     trailerDisabled() {
       return (
         !this.allowUseTrailer ||
         (!!this.showTruckMessage && this.actualTruckCrew._id !== this.crewId)
       )
+    },
+
+    truckClosureAvailable() {
+      if (!this.showTruckMessage) return false
+
+      const isValidStartDateInOpenCrew =
+        !this.actualTruckCrew.transport.endDate &&
+        new Date(this.actualTruckCrew.transport.startDate) <
+          new Date(this.newItem.startDate)
+
+      const isValidStartDateinClosedCrew =
+        this.actualTruckCrew.transport.endDate &&
+        new Date(this.actualTruckCrew.transport.endDate) <
+          new Date(this.newItem.startDate)
+
+      return isValidStartDateInOpenCrew || isValidStartDateinClosedCrew
+    },
+
+    trailerClosureAvailable() {
+      if (!this.showTrailerMessage) return false
+
+      const isValidStartDateInOpenCrew =
+        !this.actualTrailerCrew.transport.endDate &&
+        new Date(this.actualTrailerCrew.transport.startDate) <
+          new Date(this.newItem.startDate)
+
+      const isValidStartDateinClosedCrew =
+        this.actualTrailerCrew.transport.endDate &&
+        new Date(this.actualTrailerCrew.transport.endDate) <
+          new Date(this.newItem.startDate)
+
+      return isValidStartDateInOpenCrew || isValidStartDateinClosedCrew
     },
   },
 
@@ -324,13 +339,12 @@ export default {
     },
     ['newItem.truck']: async function (val) {
       this.newItem.trailer = null
-      this.truckError = null
+
       this.actualTruckCrew = null
       if (!val) return null
       this.actualTruckCrew = await CrewService.getActualCrewByTruck(val)
     },
     ['newItem.trailer']: async function (val) {
-      this.trailerError = null
       this.actualTrailerCrew = null
       if (!val) return null
       this.actualTrailerCrew = await CrewService.getActualCrewByTruck(val)
@@ -368,11 +382,9 @@ export default {
       this.editMode = false
     },
     clearTruckCrew() {
-      this.truckError = null
       this.actualTruckCrew = null
     },
     clearTrailerCrew() {
-      this.trailerError = null
       this.actualTrailerCrew = null
     },
     getStartDateRow() {
