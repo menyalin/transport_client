@@ -17,7 +17,11 @@
           :key="id"
         >
           <v-list-item-title>
-            {{ driversMap.get(id).fullName }}
+            {{
+              driversMap.has(id)
+                ? driversMap.get(id).fullName
+                : 'запись удалена'
+            }}
           </v-list-item-title>
           <v-list-item-action>
             <v-icon

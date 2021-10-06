@@ -51,7 +51,7 @@ export default {
       this.$router.go(-1)
     },
     cancel() {
-      this.$router.push({ name: 'DriverList' })
+      this.$router.go(-1)
     },
     async deleteHandler() {
       const res = await this.$confirm(

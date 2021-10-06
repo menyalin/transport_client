@@ -40,6 +40,7 @@ export default (crews, type) => {
         rows.push({
           ...tmpCrews[i][type],
           title: _getRowTitle({ crew: tmpCrews[i], type }),
+          _id: tmpCrews[i][type]._id,
         })
       }
     }

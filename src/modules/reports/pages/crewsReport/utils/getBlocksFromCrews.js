@@ -21,9 +21,9 @@ const _getBlockTitle = ({ crew, type }) => {
   }
 }
 
-const _createBlock = ({ crew, type, group, line }) => ({
+const _createBlock = ({ crew, type, group }) => ({
   type,
-  line,
+  crewId: crew.crewId,
   title: _getBlockTitle({ crew, type }),
   rowId: crew[group]._id,
   [type]: crew[type],

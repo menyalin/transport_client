@@ -50,7 +50,9 @@
           >
             <td>
               <div class="px-2 row-title-text">
-                {{ row.title }}
+                <router-link :to="getUrlForRowTitle(row._id)">
+                  {{ row.title }}
+                </router-link>
               </div>
             </td>
             <td
@@ -65,7 +67,11 @@
             class="block"
             :style="block.styles"
           >
-            <div>{{ block.title }}</div>
+            <div>
+              <router-link :to="'/profile/crews/' + block.crewId">
+                {{ block.title }}
+              </router-link>
+            </div>
           </div>
         </tbody>
       </table>
@@ -77,9 +83,9 @@ import moment from 'moment'
 import CrewService from '@/modules/profile/services/crew.service'
 
 import AppDateRange from '@/modules/common/components/dateRange'
-import getDaysFromPeriod from '../utils/getDaysFromPeriod'
-import getRowsFromCrews from '../utils/getRowsFromCrews'
-import getBlocksFromCrews from '../utils/getBlocksFromCrews'
+import getDaysFromPeriod from './utils/getDaysFromPeriod'
+import getRowsFromCrews from './utils/getRowsFromCrews'
+import getBlocksFromCrews from './utils/getBlocksFromCrews'
 
 import { mapGetters } from 'vuex'
 
@@ -110,11 +116,14 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile']),
     tableRows() {
-      const rows = getRowsFromCrews(this.crews, this.group)
+      const rows = getRowsFromCrews(this.filteredCrews, this.group)
       return rows
     },
     analiticItems() {
       return this.groupItems.filter((item) => item.value !== this.group)
+    },
+    filteredCrews() {
+      return this.crews
     },
   },
   watch: {
@@ -142,6 +151,11 @@ export default {
     this.resizeHandler()
   },
   methods: {
+    getUrlForRowTitle(id) {
+      if (this.group === 'truck' || this.group === 'trailer')
+        return '/profile/trucks/' + id
+      else return '/profile/drivers/' + id
+    },
     async getData() {
       this.crews = await CrewService.diagramReport({
         profile: this.directoriesProfile,
@@ -149,9 +163,9 @@ export default {
       })
     },
     getBlocksWithStyles() {
-      if (!this.crews) return null
+      if (!this.filteredCrews) return null
       let blocks = getBlocksFromCrews({
-        crews: this.crews,
+        crews: this.filteredCrews,
         group: this.group,
         analitic: this.analitic,
         displayPeriod: this.period,
@@ -292,7 +306,7 @@ table thead th:first-child {
   position: absolute;
   padding-left: 3px;
   border: 1px solid green;
-  border-radius: 5px;
+  border-radius: 0px;
   line-height: 15px;
   letter-spacing: -0.03em;
   font-weight: 400;

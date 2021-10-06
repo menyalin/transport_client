@@ -56,7 +56,7 @@ export default {
       }
     },
     cancel() {
-      this.$router.push({ name: 'TruckList' })
+      this.$router.go(-1)
     },
     async deleteHandler() {
       const res = await this.$confirm(
