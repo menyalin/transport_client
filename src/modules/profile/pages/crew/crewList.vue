@@ -55,10 +55,9 @@ export default {
   data: () => ({
     dateFormat: 'YYYY-MM-DD HH:mm',
     headers: [
-      { value: '_id', text: '_id' },
-      { value: 'tkName.name', text: 'tkName' },
-      { value: 'startDate', text: 'startDate' },
-      { value: 'endDate', text: 'endDate' },
+      { value: 'tkName.name', text: 'ТК' },
+      { value: 'startDate', text: 'Начало смены' },
+      { value: 'endDate', text: 'Завершение смены' },
       { value: 'driver.fullName', text: 'Водитель' },
     ],
   }),

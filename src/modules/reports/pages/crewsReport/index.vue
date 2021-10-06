@@ -18,6 +18,17 @@
         outlined
         dense
       />
+      <v-select
+        v-model="tkNameFilter"
+        label="Фильтр по ТК"
+        :items="tkNames"
+        item-value="_id"
+        item-text="name"
+        hide-details
+        outlined
+        clearable
+        dense
+      />
     </div>
     <div class="table-wrapper">
       <table
@@ -97,6 +108,7 @@ export default {
   data() {
     return {
       tableWidth: 0,
+      tkNameFilter: null,
       rerender: false,
       secInPx: 0,
       groupItems: [
@@ -114,7 +126,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['directoriesProfile']),
+    ...mapGetters(['directoriesProfile', 'tkNames']),
     tableRows() {
       const rows = getRowsFromCrews(this.filteredCrews, this.group)
       return rows
@@ -123,7 +135,9 @@ export default {
       return this.groupItems.filter((item) => item.value !== this.group)
     },
     filteredCrews() {
-      return this.crews
+      return this.crews.filter((item) =>
+        this.tkNameFilter ? this.tkNameFilter === item.tkNameId : true
+      )
     },
   },
   watch: {
@@ -138,6 +152,9 @@ export default {
       this.resizeHandler()
     },
     analitic: function () {
+      this.resizeHandler()
+    },
+    tkNameFilter: function () {
       this.resizeHandler()
     },
   },
