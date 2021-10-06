@@ -82,7 +82,10 @@ export default {
   getters: {
     tkNameForCrews: ({ tkNameForCrews }) => tkNameForCrews,
     dateForCrews: ({ dateForCrews }) => dateForCrews,
-    crews: ({ crews }) => crews,
+    crews: ({ crews, tkNameForCrews }) =>
+      crews.filter((item) =>
+        tkNameForCrews ? item.tkName._id === tkNameForCrews : true
+      ),
     crewsByTruck: ({ crews, dateForCrews, tkNameForCrews }, { trucks }) => {
       const res = trucks
         .slice()
