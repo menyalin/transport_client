@@ -37,14 +37,10 @@
       >
         <thead>
           <tr>
-            <th
-              ref="titleCell"
-              width="110px"
-            />
+            <th ref="titleCell" />
             <th
               v-for="day in tableColumns"
               :key="day.title"
-              width="120px"
               :class="{ todayHeader: day.isToday }"
             >
               {{ day.title }}
@@ -307,7 +303,7 @@ tbody td:first-child {
   min-width: 110px;
   max-width: 180px;
 }
-tbody tr td {
+td {
   border: rgb(155, 154, 154) 1px solid;
 }
 tbody tr {

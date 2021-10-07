@@ -1,10 +1,16 @@
 <template>
   <div>
-    <app-schedule-table />
+    screenWidth: {{ screenWidth }}
+    <app-schedule-table
+      :columns="scheduleColumns"
+      :rows="scheduleRows"
+    />
   </div>
 </template>
 <script>
 import AppScheduleTable from '../../components/scheduleTable'
+import mockTrucks from './mockTrucks'
+
 export default {
   name: 'Schedule',
   components: {
@@ -16,12 +22,26 @@ export default {
       screenWidth: null,
     }
   },
+  computed: {
+    scheduleColumns() {
+      return [
+        '2021-09-10',
+        '2021-09-11',
+        '2021-09-12',
+        '2021-09-13',
+        '2021-09-14',
+      ]
+    },
+    scheduleRows() {
+      return mockTrucks
+    },
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.resizeScreen)
   },
   mounted() {
-    window.addEventListener('resize', this.resizeScreen)
     this.resizeScreen()
+    window.addEventListener('resize', this.resizeScreen)
   },
   methods: {
     resizeScreen() {

@@ -1,100 +1,98 @@
 /* eslint-disable vue/no-template-key */
 <template>
   <div class="table-wrapper">
-    <table>
+    <table border="1">
       <thead>
         <tr>
           <th />
           <th
-            v-for="date of dates"
+            v-for="date of columns"
             :key="date"
-            :colspan="timeZones.length"
             class="text-center date-cell"
           >
             {{ date }}
           </th>
         </tr>
-        <tr>
-          <th />
-          <th
-            v-for="cell of dayCels"
-            :key="cell.id"
-            class="text-center date-cell"
-          >
-            {{ cell.timeZone.title }}
-          </th>
-        </tr>
       </thead>
-      <tbody>
+      <tbody
+        @dragenter.prevent
+        @dragover.prevent
+      >
         <tr
-          v-for="truck of trucks"
+          v-for="truck of rows"
           :key="truck._id"
           class="truck-row"
         >
           <td>
             <app-truck-title-cell :title="truck.regNum" />
           </td>
-
-          <template v-for="cell of dayCels">
-            <td :key="cell.id">
-              {{ truck.regNum }}
-            </td>
-          </template>
+          <td
+            v-for="date of columns"
+            :key="date"
+          />
         </tr>
+        <div
+          class="block"
+          draggable
+          @dragstart="dragstart"
+        />
       </tbody>
     </table>
   </div>
 </template>
 <script>
 import appTruckTitleCell from './truckTitleCell.vue'
-import mockTrucks from './mockTrucks.json'
 
 export default {
   name: 'ScheduleTable',
   components: {
     appTruckTitleCell,
   },
+  props: {
+    columns: {
+      type: Array,
+      required: true,
+    },
+    rows: {
+      type: Array,
+      required: true,
+    },
+  },
   data: () => ({
-    trucks: mockTrucks,
-    timeZones: [
-      { title: '00-06' },
-      { title: '06-12' },
-      { title: '12-18' },
-      { title: '18-24' },
-    ],
-    dates: [
-      '2021-09-10',
-      '2021-09-11',
-      '2021-09-12',
-      '2021-09-13',
-      '2021-09-14',
-    ],
+    //
   }),
-  computed: {
-    dayCels() {
-      let cels = []
-      for (let date of this.dates) {
-        this.timeZones.forEach((zone) => {
-          cels.push({ id: date + zone.title, date, timeZone: zone, colspan: 1 })
-        })
-      }
-      return cels
+  computed: {},
+  methods: {
+    dragstart(e) {
+      console.log(e)
     },
   },
 }
 </script>
-<style>
+<style scoped>
 .table-wrapper {
   width: 100%;
   padding: 15px;
 }
 table {
+  --table-border: rgb(154, 154, 154) 1px solid;
   width: 100%;
   border-collapse: collapse;
+  border: var(--table-border);
 }
-.date-cell {
-  border: 1px solid rgb(250, 227, 227);
-  border-collapse: collapse;
-  box-sizing: content-box;
+td,
+th {
+  border: var(--table-border);
+}
+tbody {
+  position: relative;
+}
+.block {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  background-color: indigo;
+  width: 70px;
+  height: 50px;
 }
 </style>
