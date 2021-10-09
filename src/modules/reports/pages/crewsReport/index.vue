@@ -47,10 +47,7 @@
             </th>
           </tr>
         </thead>
-        <tbody
-          v-if="!rerender"
-          class="table-body"
-        >
+        <tbody class="table-body">
           <tr
             v-for="row in tableRows"
             :key="row._id"
@@ -90,7 +87,7 @@ import moment from 'moment'
 import CrewService from '@/modules/profile/services/crew.service'
 
 import AppDateRange from '@/modules/common/components/dateRange'
-import getDaysFromPeriod from './utils/getDaysFromPeriod'
+import getDaysFromPeriod from '../../../common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
 
@@ -105,7 +102,6 @@ export default {
     return {
       tableWidth: 0,
       tkNameFilter: null,
-      rerender: false,
       secInPx: 0,
       groupItems: [
         { value: 'truck', text: 'Грузовик' },

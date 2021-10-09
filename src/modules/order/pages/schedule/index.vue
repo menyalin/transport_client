@@ -1,15 +1,18 @@
 <template>
   <div>
-    screenWidth: {{ screenWidth }}
     <app-schedule-table
       :columns="scheduleColumns"
       :rows="scheduleRows"
+      :period="period"
+      :orders="filteredOrders"
     />
   </div>
 </template>
 <script>
+import getDaysFromPeriod from '../../../common/helpers/getDaysFromPeriod'
 import AppScheduleTable from '../../components/scheduleTable'
 import mockTrucks from './mockTrucks'
+import mockOrders from './mockOrders'
 
 export default {
   name: 'Schedule',
@@ -19,35 +22,22 @@ export default {
 
   data() {
     return {
-      screenWidth: null,
+      period: ['2021-10-01', '2021-10-10'],
     }
   },
   computed: {
     scheduleColumns() {
-      return [
-        '2021-09-10',
-        '2021-09-11',
-        '2021-09-12',
-        '2021-09-13',
-        '2021-09-14',
-      ]
+      return getDaysFromPeriod(this.period)
     },
     scheduleRows() {
       return mockTrucks
     },
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resizeScreen)
-  },
-  mounted() {
-    this.resizeScreen()
-    window.addEventListener('resize', this.resizeScreen)
-  },
-  methods: {
-    resizeScreen() {
-      this.screenWidth = window.innerWidth - 110
+    filteredOrders() {
+      return mockOrders
     },
   },
+
+  methods: {},
 }
 </script>
 <style></style>
