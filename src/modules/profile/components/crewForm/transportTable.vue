@@ -25,7 +25,9 @@
           <tr
             v-for="(item, ind) in items"
             :key="item._id || item.startDate"
-            :class="{ 'not-saved-row': !item._id || item.updated }"
+            :class="{
+              'not-saved-row': !item._id || item.updated,
+            }"
           >
             <td>
               {{ new Date(item.startDate).toLocaleString() }}
@@ -54,7 +56,15 @@
             </td>
             <td class="action-column text-center">
               <v-icon
-                v-if="ind > 0 && ind === items.length - 1"
+                v-if="ind === items.length - 1 && crewEditable"
+                color="green"
+                class="px-1"
+                @click="editItem"
+              >
+                mdi-pencil
+              </v-icon>
+              <v-icon
+                v-if="ind > 0 && ind === items.length - 1 && crewEditable"
                 color="red"
                 class="px-1"
                 @click="popItem"
@@ -77,7 +87,16 @@
                 :minDate="minDateValue"
               />
             </td>
-            <td />
+            <td>
+              <app-date-time-input
+                v-if="newItem.startDate"
+                v-model="newItem.endDate"
+                class="my-2"
+                label="Дата завершения"
+                hideDetails
+                :minDate="newItem.startDate"
+              />
+            </td>
             <td class="truck-col">
               <v-select
                 v-model="newItem.truck"
@@ -188,6 +207,10 @@ export default {
     date: {
       type: String,
     },
+    crewEditable: {
+      type: Boolean,
+      default: true,
+    },
     isClosedCrew: {
       type: Boolean,
       required: true,
@@ -202,11 +225,11 @@ export default {
   },
   data: () => ({
     editMode: false,
-
     actualTruckCrew: null,
     actualTrailerCrew: null,
     newItem: {
       startDate: null,
+      endDate: null,
       truck: null,
       trailer: null,
       note: null,
@@ -226,6 +249,7 @@ export default {
 
   computed: {
     ...mapGetters(['trucks', 'allowedToUseTrailersTrucksSet']),
+
     trucksByDriver() {
       if (!this.driver) return []
       return this.trucks.filter((truck) =>
@@ -339,7 +363,6 @@ export default {
     },
     ['newItem.truck']: async function (val) {
       this.newItem.trailer = null
-
       this.actualTruckCrew = null
       if (!val) return null
       this.actualTruckCrew = await CrewService.getActualCrewByTruck(val)
@@ -357,12 +380,23 @@ export default {
     }
   },
   methods: {
+    editItem() {
+      const lastItem = this.items[this.items.length - 1]
+      this.newItem.startDate = lastItem.startDate
+      this.newItem.endDate = lastItem.endDate
+      this.newItem.truck = lastItem.truck
+      this.newItem.trailer = lastItem.trailer
+      this.newItem.note = lastItem.note
+      this.$emit('itemsPop')
+      this.editMode = true
+    },
     popItem() {
       this.$emit('itemsPop')
       if (this.items.length === 0) this.editMode = true
     },
     cancelAddRow() {
       this.editMode = false
+      this.resetNewItem()
     },
     addItem() {
       if (!this.isValidNewItem) return null
@@ -380,6 +414,11 @@ export default {
     },
     resetNewItem() {
       this.editMode = false
+      this.newItem.startDate = null
+      this.newItem.endDate = null
+      this.newItem.truck = null
+      this.newItem.trailer = null
+      this.newItem.note = null
     },
     clearTruckCrew() {
       this.actualTruckCrew = null

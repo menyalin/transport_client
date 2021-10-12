@@ -1,7 +1,7 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-import moment from 'moment'
+
 const BASE_PATH = '/crews'
 
 class CrewService {
@@ -67,8 +67,9 @@ class CrewService {
     })
     return data
   }
-  async getById(id) {
-    let { data } = await api.get(BASE_PATH + '/' + id)
+  async getById({ id, forEdit }) {
+    const params = { forEdit }
+    let { data } = await api.get(BASE_PATH + '/' + id, { params })
     return data
   }
 

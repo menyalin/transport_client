@@ -55,12 +55,15 @@
       />
       <app-date-time-input
         v-model="$v.form.endDate.$model"
-        :disabled="!form.startDate"
+        :disabled="!form.startDate || !crew.editable"
         label="Дата завершения"
         :errorMessages="endDateError"
         :minDate="form.startDate"
         @blur="$v.form.endDate.$touch()"
       />
+      <div v-if="crew">
+        crew.editable: {{ crew.editable }}
+      </div>
     </div>
 
     <app-crew-message
@@ -80,6 +83,7 @@
       :date="form.startDate"
       :driver="form.driver"
       :crewId="crewId"
+      :crewEditable="crew.editable"
       :isClosedCrew="!!form.endDate"
       :tkName="form.tkName"
       @addItem="addItem"

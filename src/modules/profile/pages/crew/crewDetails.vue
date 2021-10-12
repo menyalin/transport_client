@@ -40,7 +40,7 @@ export default {
   },
   async created() {
     this.loading = true
-    this.crew = await service.getById(this.id)
+    this.crew = await service.getById({ id: this.id, forEdit: true })
     this.loading = false
   },
 
