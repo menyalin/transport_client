@@ -55,14 +55,14 @@
       />
       <app-date-time-input
         v-model="$v.form.endDate.$model"
-        :disabled="!form.startDate || !crew.editable"
+        :disabled="!form.startDate || !crewEditable"
         label="Дата завершения"
         :errorMessages="endDateError"
         :minDate="form.startDate"
         @blur="$v.form.endDate.$touch()"
       />
       <div v-if="crew">
-        crew.editable: {{ crew.editable }}
+        crewEditable: {{ crewEditable }}
       </div>
     </div>
 
@@ -83,7 +83,7 @@
       :date="form.startDate"
       :driver="form.driver"
       :crewId="crewId"
-      :crewEditable="crew.editable"
+      :crewEditable="crewEditable"
       :isClosedCrew="!!form.endDate"
       :tkName="form.tkName"
       @addItem="addItem"
@@ -161,6 +161,7 @@ export default {
       crewId: null,
       loading: false,
       editTransportTable: false,
+      crewEditable: false,
       actualDriverCrew: null,
       lastDriverCrew: null,
       form: {
@@ -244,6 +245,7 @@ export default {
       handler: function (val) {
         if (val) {
           this.crewId = val._id
+          this.crewEditable = val.editable
           this.setFormFields(val)
         }
       },
@@ -276,8 +278,8 @@ export default {
       this.actualDriverCrew = null
     },
     deleteLastItemInTransport() {
+      this.crewEditable = false
       this.form.transport.pop()
-      // this.form.transport[this.form.transport.length - 1].endDate = null
     },
     changeEditModeStatus(val) {
       this.editTransportTable = val
