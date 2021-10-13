@@ -33,7 +33,7 @@
       </v-icon>
       Рейсы
     </v-btn>
-    <app-reports-menu />
+    <app-reports-menu v-if="isLoggedIn" />
     <v-btn
       v-if="isLoggedIn"
       to="/profile"
