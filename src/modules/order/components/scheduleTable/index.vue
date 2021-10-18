@@ -20,7 +20,7 @@
       <tbody
         ref="tableBody"
         @dragenter.prevent
-        @dragover.prevent
+        @dragover.prevent="dragHandler"
       >
         <tr
           v-for="truck of rows"
@@ -145,6 +145,12 @@ export default {
     dragstart(e) {
       console.log(e)
     },
+    dragHandler(e) {
+      const y = e.layerY
+      const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
+      if (x <= 0) return false
+      // console.log(`[x: ${x}, y: ${y}]`)
+    },
     disabledZone(e) {
       e.dataTransfer.effectAllowed = 'none'
       return false
@@ -168,9 +174,11 @@ td,
 th {
   border: var(--table-border);
 }
+
 tbody {
   position: relative;
 }
+
 .block {
   position: absolute;
 }

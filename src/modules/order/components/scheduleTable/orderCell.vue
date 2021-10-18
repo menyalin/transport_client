@@ -3,7 +3,7 @@
     <div>row1</div>
     <div>row2</div>
   </div>
-</template>
+</template> 
 <script>
 export default {
   name: 'OrderCell',
