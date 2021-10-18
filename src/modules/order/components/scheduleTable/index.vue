@@ -149,7 +149,7 @@ export default {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
       if (x <= 0) return false
-      // console.log(`[x: ${x}, y: ${y}]`)
+      console.log(`[x: ${x}, y: ${y}]`)
     },
     disabledZone(e) {
       e.dataTransfer.effectAllowed = 'none'
