@@ -1,6 +1,8 @@
 <template>
-  <div>
-    {{ title }}
+  <div class="px-2">
+    <router-link :to="baseUrl + id">
+      {{ title }}
+    </router-link>
   </div>
 </template>
 <script>
@@ -11,7 +13,14 @@ export default {
       type: String,
       required: true,
     },
+    id: {
+      type: String,
+      required: true,
+    },
   },
+  data: () => ({
+    baseUrl: '/profile/trucks/',
+  }),
 }
 </script>
 <style></style>

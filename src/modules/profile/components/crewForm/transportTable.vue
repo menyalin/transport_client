@@ -444,6 +444,9 @@ export default {
 .not-saved-row {
   color: rgb(138, 13, 13);
 }
+.row-title-column {
+  width: 8rem;
+}
 .action-column {
   width: 10rem;
 }

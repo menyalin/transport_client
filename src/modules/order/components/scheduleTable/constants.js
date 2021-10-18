@@ -1,1 +1,1 @@
-export const LINE_HEIGHT = 40
+export const LINE_HEIGHT = 45

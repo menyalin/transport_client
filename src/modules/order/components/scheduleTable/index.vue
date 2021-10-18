@@ -1,11 +1,13 @@
 /* eslint-disable vue/no-template-key */
 <template>
   <div class="table-wrapper">
-    {{ tableWidth }}
-    <table border="1">
+    <table>
       <thead>
         <tr>
-          <td ref="rowTitleColumn" />
+          <td
+            ref="rowTitleColumn"
+            class="row-title-column"
+          />
           <td
             v-for="date of columns"
             :key="date.title"
@@ -26,14 +28,17 @@
           class="truck-row"
         >
           <td :style="cellStyles">
-            <app-truck-title-cell :title="truck.regNum" />
+            <app-truck-title-cell
+              :id="truck._id"
+              :title="truck.regNum"
+            />
           </td>
           <td
             v-for="date of columns"
             :key="date.title"
           />
         </tr>
-        <div
+        <app-order-cell
           v-for="order of orders"
           :key="order._id"
           class="block"
@@ -53,6 +58,7 @@
 <script>
 import { LINE_HEIGHT } from './constants'
 import appTruckTitleCell from './truckTitleCell.vue'
+import appOrderCell from './orderCell.vue'
 import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import moment from 'moment'
 
@@ -60,6 +66,7 @@ export default {
   name: 'ScheduleTable',
   components: {
     appTruckTitleCell,
+    appOrderCell,
   },
   props: {
     columns: {
@@ -117,9 +124,22 @@ export default {
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
       return leftShift / this.secInPx + this.$refs.rowTitleColumn.offsetWidth
     },
+    getTopShiftForOrder({ truckId }) {
+      const rowIdx = this.rows.findIndex((item) => item._id === truckId)
+      if (rowIdx === -1) return null
+      return rowIdx * LINE_HEIGHT
+    },
+    getOrderWidth({ startPositionDate, endPositionDate }) {
+      const orderDurationSec =
+        moment(endPositionDate).unix() - moment(startPositionDate).unix()
+      return orderDurationSec / this.secInPx
+    },
     getStylesForOrder(order) {
       return {
+        height: LINE_HEIGHT - 1 + 'px',
+        width: this.getOrderWidth(order) + 'px',
         left: this.getLeftShiftForOrder(order) + 'px',
+        top: this.getTopShiftForOrder(order) + 'px',
       }
     },
     dragstart(e) {
@@ -136,6 +156,7 @@ export default {
 .table-wrapper {
   width: 100%;
   padding: 15px;
+  box-sizing: border-box;
 }
 table {
   --table-border: rgb(154, 154, 154) 1px solid;
@@ -152,10 +173,6 @@ tbody {
 }
 .block {
   position: absolute;
-  top: 20px;
-  background-color: indigo;
-  width: 70px;
-  height: 50px;
 }
 
 .block-2 {
