@@ -160,6 +160,10 @@ export default {
       const dt = e.dataTransfer
       this.$emit('startDragOrder', id)
       dt.setData('application/orderId', id)
+      dt.setData(
+        'application/leftShiftInPx',
+        e.clientX - e.target.getBoundingClientRect().left
+      )
       dt.dropEffect = 'moveLink'
       dt.effectAllowed = 'moveLink'
       //dt.setDragImage(e.target, 0, 0)
@@ -190,8 +194,10 @@ export default {
     dropHandler(e) {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
+      const leftShiftInSec =
+        e.dataTransfer.getData('application/leftShiftInPx') * this.secInPx
       const startDate = moment
-        .unix(moment(this.period[0]).unix() + x * this.secInPx)
+        .unix(moment(this.period[0]).unix() + x * this.secInPx - leftShiftInSec)
         .format('YYYY-MM-DD HH:00')
       const rowInd = Math.floor(y / LINE_HEIGHT)
       this.$emit('updateOrder', {
