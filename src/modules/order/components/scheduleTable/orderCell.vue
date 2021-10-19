@@ -3,7 +3,7 @@
     <div>row1</div>
     <div>row2</div>
   </div>
-</template> 
+</template>
 <script>
 export default {
   name: 'OrderCell',
@@ -11,6 +11,8 @@ export default {
 </script>
 <style scoped>
 .order-wrapper {
+  height: 100%;
+  width: 100%;
   background-color: goldenrod;
   font-size: 14px;
   line-height: 15px;

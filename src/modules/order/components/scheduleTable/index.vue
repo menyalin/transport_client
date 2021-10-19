@@ -19,8 +19,8 @@
       </thead>
       <tbody
         ref="tableBody"
-        @dragenter.prevent
-        @dragover.prevent="dragHandler"
+        @dragover.prevent.stop="dragOverHandler"
+        @drop.prevent="dropHandler"
       >
         <tr
           v-for="truck of rows"
@@ -38,14 +38,21 @@
             :key="date.title"
           />
         </tr>
-        <app-order-cell
-          v-for="order of orders"
+        <div
+          v-for="order of filteredOrders"
           :key="order._id"
+          tag="div"
           class="block"
           draggable
           :style="getStylesForOrder(order)"
-          @dragstart="dragstart"
-        />
+          @dragover="disabledZone"
+          @dragenter="disabledZone"
+          @dragstart="dragStartHandler($event, order._id)"
+          @dragend="dragEndHandler($event, order._id)"
+        >
+          <app-order-cell />
+        </div>
+
         <div
           class="block-2"
           @dragover="disabledZone"
@@ -88,12 +95,19 @@ export default {
   data: () => ({
     tableWidth: 0,
     secInPx: null,
+    draggedOrderId: null,
+    movedNode: null,
   }),
   computed: {
     cellStyles() {
       return {
         height: LINE_HEIGHT + 'px',
       }
+    },
+    filteredOrders() {
+      return this.orders.filter((item) =>
+        this.draggedOrderId ? item._id !== this.draggedOrderId : true
+      )
     },
   },
   beforeDestroy() {
@@ -142,18 +156,53 @@ export default {
         top: this.getTopShiftForOrder(order) + 'px',
       }
     },
-    dragstart(e) {
-      console.log(e)
+    dragStartHandler(e, id) {
+      const dt = e.dataTransfer
+      this.$emit('startDragOrder', id)
+      dt.setData('application/orderId', id)
+      dt.dropEffect = 'moveLink'
+      dt.effectAllowed = 'moveLink'
+      //dt.setDragImage(e.target, 0, 0)
+      e.target.style['z-index'] = -1
     },
-    dragHandler(e) {
+    dragEndHandler(e, orderId) {
+      this.$emit('endDragOrder', orderId)
+      e.target.style.cursor = 'grab'
+      e.target.style['z-index'] = 3
+      if (
+        e.dataTransfer.dropEffect === 'none' ||
+        e.dataTransfer.mozUserCancelled
+      ) {
+        // console.log('dragCanceled')
+      } else {
+        // console.log('dragend')
+      }
+    },
+    dragOverHandler(e) {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
-      if (x <= 0) return false
-      console.log(`[x: ${x}, y: ${y}]`)
+      if (x < 0 || y < 0) {
+        e.dataTransfer.dropEffect = 'none'
+        return true
+      }
+      return false
+    },
+    dropHandler(e) {
+      const y = e.layerY
+      const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
+      const startDate = moment
+        .unix(moment(this.period[0]).unix() + x * this.secInPx)
+        .format('YYYY-MM-DD HH:00')
+      const rowInd = Math.floor(y / LINE_HEIGHT)
+      this.$emit('updateOrder', {
+        truckId: this.rows[rowInd]._id,
+        orderId: e.dataTransfer.getData('application/orderId'),
+        startDate,
+      })
     },
     disabledZone(e) {
-      e.dataTransfer.effectAllowed = 'none'
-      return false
+      e.dataTransfer.dropEffect = 'none'
+      return true
     },
   },
 }
@@ -178,11 +227,10 @@ th {
 tbody {
   position: relative;
 }
-
 .block {
   position: absolute;
+  cursor: grab;
 }
-
 .block-2 {
   position: absolute;
   top: 120px;
