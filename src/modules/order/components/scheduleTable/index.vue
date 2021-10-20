@@ -23,9 +23,10 @@
         @drop.prevent="dropHandler"
       >
         <tr
-          v-for="truck of rows"
+          v-for="(truck, idx) of rows"
           :key="truck._id"
           class="truck-row"
+          :class="{ 'drag-over-row': idx === overRowInd }"
         >
           <td :style="cellStyles">
             <app-truck-title-cell
@@ -97,6 +98,7 @@ export default {
     secInPx: null,
     draggedOrderId: null,
     movedNode: null,
+    overRowInd: null,
   }),
   computed: {
     cellStyles() {
@@ -173,6 +175,7 @@ export default {
       this.$emit('endDragOrder', orderId)
       e.target.style.cursor = 'grab'
       e.target.style['z-index'] = 3
+      this.overRowInd = null
       if (
         e.dataTransfer.dropEffect === 'none' ||
         e.dataTransfer.mozUserCancelled
@@ -187,8 +190,10 @@ export default {
       const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
       if (x < 0 || y < 0) {
         e.dataTransfer.dropEffect = 'none'
+        this.overRowInd = null
         return true
       }
+      this.overRowInd = Math.floor(y / LINE_HEIGHT)
       return false
     },
     dropHandler(e) {
@@ -248,5 +253,8 @@ tbody {
 }
 .today-header {
   font-weight: 700;
+}
+.drag-over-row {
+  box-shadow: inset 0px 0px 3px 1px lightskyblue;
 }
 </style>
