@@ -55,10 +55,11 @@
           <app-order-cell />
         </div>
 
-        <div
-          class="block-2"
-          @dragover="disabledZone"
-          @dragenter="disabledZone"
+        <app-bg-grid
+          if="titleColumnWidth"
+          :leftShift="titleColumnWidth"
+          :tableWidth="tableWidth + titleColumnWidth"
+          :days="columns"
         />
       </tbody>
     </table>
@@ -69,6 +70,7 @@ import { LINE_HEIGHT } from './constants'
 import appTruckTitleCell from './truckTitleCell.vue'
 import appOrderCell from './orderCell.vue'
 import getSecInPx from '@/modules/common/helpers/getSecInPx'
+import appBgGrid from './bgGrid'
 import moment from 'moment'
 
 export default {
@@ -76,6 +78,7 @@ export default {
   components: {
     appTruckTitleCell,
     appOrderCell,
+    appBgGrid,
   },
   props: {
     columns: {
@@ -96,6 +99,7 @@ export default {
   },
   data: () => ({
     tableWidth: 0,
+    titleColumnWidth: 0,
     secInPx: null,
     draggedOrderId: null,
     movedNode: null,
@@ -123,7 +127,7 @@ export default {
   methods: {
     resizeScreen() {
       if (!this.$refs.tableBody) return null
-
+      this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
       this.tableWidth =
         this.$refs.tableBody.offsetWidth - this.$refs.rowTitleColumn.offsetWidth
       this.$nextTick(() => {
@@ -170,12 +174,12 @@ export default {
       dt.dropEffect = 'moveLink'
       dt.effectAllowed = 'moveLink'
       //dt.setDragImage(e.target, 0, 0)
-      e.target.style['z-index'] = -1
+      e.target.style.zIndex = -3
     },
     dragEndHandler(e, orderId) {
       this.$emit('endDragOrder', orderId)
       e.target.style.cursor = 'grab'
-      e.target.style['z-index'] = 3
+      e.target.style.zIndex = 3
       this.overRowInd = null
       if (
         e.dataTransfer.dropEffect === 'none' ||
@@ -239,20 +243,15 @@ th {
 
 tbody {
   position: relative;
+  z-index: 2;
 }
 .block {
   position: absolute;
   cursor: grab;
-}
-.block-2 {
-  position: absolute;
-  top: 120px;
-  left: 340px;
-  background-color: lightgray;
-  width: 200px;
-  height: 100px;
+  opacity: 0.7;
   z-index: 3;
 }
+
 .today-header {
   font-weight: 700;
 }
