@@ -19,7 +19,7 @@
       </thead>
       <tbody
         ref="tableBody"
-        @dragover.prevent.stop="dragOverHandler"
+        @dragover.prevent="dragOverHandler"
         @drop.prevent="dropHandler"
         @dragleave.prevent="disabledZone"
       >
@@ -47,8 +47,6 @@
           class="block"
           draggable
           :style="getStylesForOrder(order)"
-          @dragover="disabledZone"
-          @dragenter="disabledZone"
           @dragstart="dragStartHandler($event, order._id)"
           @dragend="dragEndHandler($event, order._id)"
         >
@@ -56,7 +54,7 @@
         </div>
 
         <app-bg-grid
-          if="titleColumnWidth"
+          v-if="titleColumnWidth"
           :leftShift="titleColumnWidth"
           :tableWidth="tableWidth + titleColumnWidth"
           :days="columns"
@@ -165,21 +163,26 @@ export default {
     },
     dragStartHandler(e, id) {
       const dt = e.dataTransfer
-      this.$emit('startDragOrder', id)
-      dt.setData('application/orderId', id)
+      dt.setData('text/orderId', id)
       dt.setData(
-        'application/leftShiftInPx',
+        'text/leftShiftInPx',
         e.clientX - e.target.getBoundingClientRect().left
       )
-      dt.dropEffect = 'moveLink'
-      dt.effectAllowed = 'moveLink'
-      //dt.setDragImage(e.target, 0, 0)
-      e.target.style.zIndex = -3
+      dt.dropEffect = 'move'
+      dt.effectAllowed = 'move'
+      // dt.setDragImage(
+      //   e.target.cloneNode(true),
+      //   e.clientX - e.target.getBoundingClientRect().left,
+      //   e.clientY - e.target.getBoundingClientRect().top
+      // )
+      this.$emit('startDragOrder', id)
+      e.target.style.zIndex = 1
+      e.target.style.opacity = 0.5
     },
     dragEndHandler(e, orderId) {
       this.$emit('endDragOrder', orderId)
-      e.target.style.cursor = 'grab'
-      e.target.style.zIndex = 3
+      e.target.style.zIndex = 5
+      e.target.style.opacity = 1
       this.overRowInd = null
       if (
         e.dataTransfer.dropEffect === 'none' ||
@@ -192,32 +195,34 @@ export default {
     },
     dragOverHandler(e) {
       const y = e.layerY
-      const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
-      if (x < 0 || y < 0 || e.dataTransfer.dropEffect === 'none') {
+      const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
+      if (x < 0 || y < 0 || e.dataTransfer.effectAllowed === 'none') {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
         return true
+      } else {
+        e.dataTransfer.dropEffect = 'move'
+        this.overRowInd = Math.floor(y / LINE_HEIGHT)
       }
-      this.overRowInd = Math.floor(y / LINE_HEIGHT)
-      return false
     },
     dropHandler(e) {
       const y = e.layerY
-      const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
+      const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
       const leftShiftInSec =
-        e.dataTransfer.getData('application/leftShiftInPx') * this.secInPx
+        e.dataTransfer.getData('text/leftShiftInPx') * this.secInPx
       const startDate = moment
         .unix(moment(this.period[0]).unix() + x * this.secInPx - leftShiftInSec)
         .format('YYYY-MM-DD HH:00')
       const rowInd = Math.floor(y / LINE_HEIGHT)
       this.$emit('updateOrder', {
         truckId: this.rows[rowInd]._id,
-        orderId: e.dataTransfer.getData('application/orderId'),
+        orderId: e.dataTransfer.getData('text/orderId'),
         startDate,
       })
     },
     disabledZone(e) {
       e.dataTransfer.dropEffect = 'none'
+      e.dataTransfer.effectAllowed = 'none'
       this.overRowInd = null
       return true
     },
@@ -235,6 +240,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   border: var(--table-border);
+  z-index: 3;
 }
 td,
 th {
@@ -243,13 +249,12 @@ th {
 
 tbody {
   position: relative;
-  z-index: 2;
+
+  user-select: auto;
 }
 .block {
   position: absolute;
-  cursor: grab;
-  opacity: 0.7;
-  z-index: 3;
+  z-index: 5;
 }
 
 .today-header {

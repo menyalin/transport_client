@@ -39,7 +39,7 @@
         :x2="(dayWidth / 4) * 3 + ind * dayWidth + leftShift"
         y2="100%"
         stroke="black"
-        opacity="0.1"
+        opacity="0.15"
       />
     </g>
   </svg>
