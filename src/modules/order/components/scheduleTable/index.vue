@@ -21,6 +21,7 @@
         ref="tableBody"
         @dragover.prevent.stop="dragOverHandler"
         @drop.prevent="dropHandler"
+        @dragleave.prevent="disabledZone"
       >
         <tr
           v-for="(truck, idx) of rows"
@@ -188,7 +189,7 @@ export default {
     dragOverHandler(e) {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.clientWidth
-      if (x < 0 || y < 0) {
+      if (x < 0 || y < 0 || e.dataTransfer.dropEffect === 'none') {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
         return true
@@ -213,6 +214,7 @@ export default {
     },
     disabledZone(e) {
       e.dataTransfer.dropEffect = 'none'
+      this.overRowInd = null
       return true
     },
   },
@@ -246,7 +248,7 @@ tbody {
   position: absolute;
   top: 120px;
   left: 340px;
-  background-color: red;
+  background-color: lightgray;
   width: 200px;
   height: 100px;
   z-index: 3;
