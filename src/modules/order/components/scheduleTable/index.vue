@@ -240,7 +240,6 @@ table {
   width: 100%;
   border-collapse: collapse;
   border: var(--table-border);
-  z-index: 3;
 }
 td,
 th {
@@ -249,7 +248,7 @@ th {
 
 tbody {
   position: relative;
-
+  z-index: 2;
   user-select: auto;
 }
 .block {
