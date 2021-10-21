@@ -1,11 +1,15 @@
 <template>
   <div>
-    <app-schedule-setting v-if="showSetting" />
+    <app-schedule-setting
+      v-if="showSetting"
+      :date="date"
+      @incDate="incDate"
+      @setDate="setDate"
+    />
     <app-schedule-table
       :rows="scheduleRows"
-      :date="date.format('YYYY-MM-DD')"
+      :date="date"
       :orders="filteredOrders"
-      @changeWidth="changeWidth"
       @startDragOrder="startDragOrder"
       @endDragOrder="endDragOrder"
       @updateOrder="updateOrderHandler"
@@ -31,7 +35,7 @@ export default {
     return {
       orders: mockOrders,
       showSetting: false,
-      date: moment(),
+      date: moment().format('YYYY-MM-DD'),
     }
   },
   computed: {
@@ -45,9 +49,16 @@ export default {
     },
   },
   methods: {
-    changeWidth(width) {
-      this.tableWidth = width
+    incDate(count) {
+      this.date = moment(this.date).add(count, 'day').format('YYYY-MM-DD')
     },
+    setDate(date) {
+      if (!date) this.date = moment().format('YYYY-MM-DD')
+      else this.date = date
+    },
+    // changeWidth(width) {
+    //   this.tableWidth = width
+    // },
     startDragOrder(orderId) {
       // console.log('startDragOrder', orderId)
     },

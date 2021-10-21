@@ -1,7 +1,6 @@
 /* eslint-disable vue/no-template-key */
 <template>
   <div class="table-wrapper">
-    {{ tableWidth }}
     <table>
       <thead>
         <tr>
@@ -301,7 +300,7 @@ export default {
 <style scoped>
 .table-wrapper {
   width: 100%;
-  padding: 15px;
+  padding: 8px;
   box-sizing: border-box;
 }
 table {
