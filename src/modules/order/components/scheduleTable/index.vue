@@ -105,6 +105,7 @@ export default {
     tableWidth: 0,
     titleColumnWidth: 0,
     secInPx: null,
+    leftShiftInPx: 0,
     draggedOrderId: null,
     movedNode: null,
     overRowInd: null,
@@ -225,10 +226,8 @@ export default {
     dragStartHandler(e, id) {
       const dt = e.dataTransfer
       dt.setData('text/orderId', id)
-      dt.setData(
-        'text/leftShiftInPx',
-        e.clientX - e.target.getBoundingClientRect().left
-      )
+      this.leftShiftInPx = e.clientX - e.target.getBoundingClientRect().left
+
       dt.dropEffect = 'move'
       dt.effectAllowed = 'move'
       // dt.setDragImage(
@@ -261,7 +260,8 @@ export default {
 
     dragOverHandler(e) {
       const y = e.layerY
-      const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
+      const x =
+        e.layerX - this.$refs.rowTitleColumn.offsetWidth - this.leftShiftInPx
       if (x < 0 || y < 0 || e.dataTransfer.effectAllowed === 'none') {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
@@ -275,8 +275,7 @@ export default {
     dropHandler(e) {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
-      const leftShiftInSec =
-        e.dataTransfer.getData('text/leftShiftInPx') * this.secInPx
+      const leftShiftInSec = this.leftShiftInPx * this.secInPx
       const startDate = moment
         .unix(moment(this.period[0]).unix() + x * this.secInPx - leftShiftInSec)
         .format('YYYY-MM-DD HH:00')
