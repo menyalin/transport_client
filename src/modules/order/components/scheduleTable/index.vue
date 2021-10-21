@@ -156,7 +156,9 @@ export default {
     ordersFilterByPeriod(item) {
       return !(
         moment(item.endPositionDate).isSameOrBefore(this.period[0]) ||
-        moment(item.startPositionDate).isSameOrAfter(this.period[1])
+        moment(this.period[1])
+          .add('1', 'd')
+          .isSameOrBefore(item.startPositionDate)
       )
     },
     ordersFilterByDraggedOrder(item) {
