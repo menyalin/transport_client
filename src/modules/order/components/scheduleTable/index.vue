@@ -112,17 +112,17 @@ export default {
     period() {
       switch (true) {
         case this.tableWidth > 1900:
-          return this.getPeriodFromDate(this.date, -4, 2)
+          return this.getPeriodFromDate(this.date, -2, 4)
         case this.tableWidth > 1600:
-          return this.getPeriodFromDate(this.date, -3, 1)
+          return this.getPeriodFromDate(this.date, -1, 3)
         case this.tableWidth > 1300:
-          return this.getPeriodFromDate(this.date, -2, 1)
+          return this.getPeriodFromDate(this.date, -1, 2)
         case this.tableWidth > 800:
-          return this.getPeriodFromDate(this.date, -1, 0)
+          return this.getPeriodFromDate(this.date, 0, 1)
         case this.tableWidth > 500:
           return this.getPeriodFromDate(this.date, 0, 0)
         default:
-          return this.getPeriodFromDate(this.date, -1, 1)
+          return this.getPeriodFromDate(this.date, 0, 1)
       }
     },
     columns() {
@@ -134,9 +134,9 @@ export default {
       }
     },
     filteredOrders() {
-      return this.orders.filter((item) =>
-        this.draggedOrderId ? item._id !== this.draggedOrderId : true
-      )
+      return this.orders
+        .filter(this.ordersFilterByPeriod)
+        .filter(this.ordersFilterByDraggedOrder)
     },
   },
   beforeDestroy() {
@@ -147,10 +147,19 @@ export default {
     window.addEventListener('resize', this.resizeScreen)
   },
   methods: {
-    getPeriodFromDate(date, a, b) {
+    ordersFilterByPeriod(item) {
+      return !(
+        moment(item.endPositionDate).isSameOrBefore(this.period[0]) ||
+        moment(item.startPositionDate).isSameOrAfter(this.period[1])
+      )
+    },
+    ordersFilterByDraggedOrder(item) {
+      return this.draggedOrderId ? item._id !== this.draggedOrderId : true
+    },
+    getPeriodFromDate(dateStr, a, b) {
       return [
-        moment(date).add(a, 'd').format('YYYY-MM-DD'),
-        moment(date).add(b, 'd').format('YYYY-MM-DD'),
+        moment(dateStr).add(a, 'd').format('YYYY-MM-DD'),
+        moment(dateStr).add(b, 'd').format('YYYY-MM-DD'),
       ]
     },
     resizeScreen() {
@@ -169,6 +178,7 @@ export default {
       // Округляем время отображения до 00, 06, 12, 18
       const sPositionMoment = moment(startPositionDate)
       sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
+
       if (!this.$refs.rowTitleColumn) return null
       const sPeriod = moment(this.period[0]).unix()
       const sOrder = sPositionMoment.unix()
@@ -184,6 +194,7 @@ export default {
     },
 
     getOrderWidth({ startPositionDate, endPositionDate }) {
+      //
       const orderDurationSec =
         moment(endPositionDate).unix() - moment(startPositionDate).unix()
       return orderDurationSec / this.secInPx
