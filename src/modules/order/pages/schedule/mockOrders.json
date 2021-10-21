@@ -2,8 +2,8 @@
   {
     "_id": 1,
     "title": "Первый рейс",
-    "startPositionDate": "2021-10-19 06:00",
-    "endPositionDate": "2021-10-19 12:00",
+    "startPositionDate": "2021-10-21 06:00",
+    "endPositionDate": "2021-10-21 12:00",
     "truckId": "6113d8618e0c1a42ec19dfd5"
   }
 ]
