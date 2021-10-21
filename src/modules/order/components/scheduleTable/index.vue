@@ -6,14 +6,21 @@
         <tr>
           <td
             ref="rowTitleColumn"
-            class="row-title-column"
-          />
-          <td
-            v-for="date of columns"
-            :key="date.title"
-            :class="{ 'today-header': date.isToday, 'text-center': true }"
+            class="row-title-column text-center"
           >
-            {{ date.title }}
+            <v-icon
+              small
+              @click="$emit('showSetting')"
+            >
+              mdi-cog
+            </v-icon>
+          </td>
+          <td
+            v-for="column of columns"
+            :key="column.title"
+            :class="{ 'today-header': column.isToday, 'text-center': true }"
+          >
+            <div>{{ column.title }}</div>
           </td>
         </tr>
       </thead>
@@ -36,8 +43,8 @@
             />
           </td>
           <td
-            v-for="date of columns"
-            :key="date.title"
+            v-for="column of columns"
+            :key="column.title"
           />
         </tr>
         <div
@@ -64,12 +71,15 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 import { LINE_HEIGHT } from './constants'
+import { roundingHours } from './helpers'
+import getSecInPx from '@/modules/common/helpers/getSecInPx'
+import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
+
 import appTruckTitleCell from './truckTitleCell.vue'
 import appOrderCell from './orderCell.vue'
-import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import appBgGrid from './bgGrid'
-import moment from 'moment'
 
 export default {
   name: 'ScheduleTable',
@@ -79,20 +89,15 @@ export default {
     appBgGrid,
   },
   props: {
-    columns: {
-      type: Array,
-      required: true,
-    },
     rows: {
-      type: Array,
-      required: true,
-    },
-    period: {
       type: Array,
       required: true,
     },
     orders: {
       type: Array,
+    },
+    date: {
+      type: String,
     },
   },
   data: () => ({
@@ -104,6 +109,25 @@ export default {
     overRowInd: null,
   }),
   computed: {
+    period() {
+      switch (true) {
+        case this.tableWidth > 1900:
+          return this.getPeriodFromDate(this.date, -4, 2)
+        case this.tableWidth > 1600:
+          return this.getPeriodFromDate(this.date, -3, 1)
+        case this.tableWidth > 1300:
+          return this.getPeriodFromDate(this.date, -2, 1)
+        case this.tableWidth > 800:
+          return this.getPeriodFromDate(this.date, -1, 0)
+        case this.tableWidth > 500:
+          return this.getPeriodFromDate(this.date, 0, 0)
+        default:
+          return this.getPeriodFromDate(this.date, -1, 1)
+      }
+    },
+    columns() {
+      return getDaysFromPeriod(this.period)
+    },
     cellStyles() {
       return {
         height: LINE_HEIGHT + 'px',
@@ -123,6 +147,12 @@ export default {
     window.addEventListener('resize', this.resizeScreen)
   },
   methods: {
+    getPeriodFromDate(date, a, b) {
+      return [
+        moment(date).add(a, 'd').format('YYYY-MM-DD'),
+        moment(date).add(b, 'd').format('YYYY-MM-DD'),
+      ]
+    },
     resizeScreen() {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
@@ -136,23 +166,29 @@ export default {
       })
     },
     getLeftShiftForOrder({ startPositionDate }) {
+      // Округляем время отображения до 00, 06, 12, 18
+      const sPositionMoment = moment(startPositionDate)
+      sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
       if (!this.$refs.rowTitleColumn) return null
       const sPeriod = moment(this.period[0]).unix()
-      const sOrder = moment(startPositionDate).unix()
+      const sOrder = sPositionMoment.unix()
       let leftShift = 0
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
       return leftShift / this.secInPx + this.$refs.rowTitleColumn.offsetWidth
     },
+
     getTopShiftForOrder({ truckId }) {
       const rowIdx = this.rows.findIndex((item) => item._id === truckId)
       if (rowIdx === -1) return null
       return rowIdx * LINE_HEIGHT
     },
+
     getOrderWidth({ startPositionDate, endPositionDate }) {
       const orderDurationSec =
         moment(endPositionDate).unix() - moment(startPositionDate).unix()
       return orderDurationSec / this.secInPx
     },
+
     getStylesForOrder(order) {
       return {
         height: LINE_HEIGHT - 1 + 'px',
@@ -161,6 +197,7 @@ export default {
         top: this.getTopShiftForOrder(order) + 'px',
       }
     },
+
     dragStartHandler(e, id) {
       const dt = e.dataTransfer
       dt.setData('text/orderId', id)
@@ -176,13 +213,17 @@ export default {
       //   e.clientY - e.target.getBoundingClientRect().top
       // )
       this.$emit('startDragOrder', id)
-      e.target.style.zIndex = 1
-      e.target.style.opacity = 0.5
+      // e.target.style.zIndex = 1
+
+      // setTimeout(() => (e.target.className = 'invisible'), 0)
+      // e.target.style.opacity = 0.5
     },
+
     dragEndHandler(e, orderId) {
       this.$emit('endDragOrder', orderId)
-      e.target.style.zIndex = 5
-      e.target.style.opacity = 1
+      // e.target.className = 'empty'
+      // e.target.style.zIndex = 5
+      // e.target.style.opacity = 1
       this.overRowInd = null
       if (
         e.dataTransfer.dropEffect === 'none' ||
@@ -193,6 +234,7 @@ export default {
         // console.log('dragend')
       }
     },
+
     dragOverHandler(e) {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
@@ -205,6 +247,7 @@ export default {
         this.overRowInd = Math.floor(y / LINE_HEIGHT)
       }
     },
+
     dropHandler(e) {
       const y = e.layerY
       const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
@@ -220,6 +263,7 @@ export default {
         startDate,
       })
     },
+
     disabledZone(e) {
       e.dataTransfer.dropEffect = 'none'
       e.dataTransfer.effectAllowed = 'none'
@@ -238,6 +282,7 @@ export default {
 table {
   --table-border: rgb(154, 154, 154) 1px solid;
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   border: var(--table-border);
 }
@@ -248,12 +293,12 @@ th {
 
 tbody {
   position: relative;
-  z-index: 2;
+  z-index: 0;
   user-select: auto;
 }
 .block {
   position: absolute;
-  z-index: 5;
+  /* z-index: 5; */
 }
 
 .today-header {

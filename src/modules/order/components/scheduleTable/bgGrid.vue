@@ -17,13 +17,23 @@
       v-for="(day, ind) of days"
       :key="day.title"
     >
+      <rect
+        v-if="day.isToday"
+        :x="ind * dayWidth + leftShift"
+        :y="0"
+        height="100%"
+        :width="dayWidth"
+        fill="green"
+        opacity="0.05"
+      />
+
       <line
         :x1="dayWidth / 4 + ind * dayWidth + leftShift"
         y1="0"
         :x2="dayWidth / 4 + ind * dayWidth + leftShift"
         y2="100%"
-        stroke="black"
-        opacity="0.1"
+        stroke="darkblue"
+        opacity="0.2"
       />
       <line
         :x1="dayWidth / 2 + ind * dayWidth + leftShift"
@@ -38,8 +48,8 @@
         y1="0"
         :x2="(dayWidth / 4) * 3 + ind * dayWidth + leftShift"
         y2="100%"
-        stroke="black"
-        opacity="0.15"
+        stroke="darkblue"
+        opacity="0.2"
       />
     </g>
   </svg>

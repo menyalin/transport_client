@@ -1,38 +1,40 @@
 <template>
   <div>
+    <app-schedule-setting v-if="showSetting" />
     <app-schedule-table
-      :columns="scheduleColumns"
       :rows="scheduleRows"
-      :period="period"
+      :date="date.format('YYYY-MM-DD')"
       :orders="filteredOrders"
+      @changeWidth="changeWidth"
       @startDragOrder="startDragOrder"
       @endDragOrder="endDragOrder"
       @updateOrder="updateOrderHandler"
+      @showSetting="showSetting = !showSetting"
     />
   </div>
 </template>
 <script>
 import moment from 'moment'
-import getDaysFromPeriod from '../../../common/helpers/getDaysFromPeriod'
+
 import AppScheduleTable from '../../components/scheduleTable'
+import AppScheduleSetting from '../../components/scheduleSetting'
 import mockOrders from './mockOrders'
 
 export default {
   name: 'Schedule',
   components: {
     AppScheduleTable,
+    AppScheduleSetting,
   },
 
   data() {
     return {
-      period: ['2021-10-01', '2021-10-06'],
       orders: mockOrders,
+      showSetting: false,
+      date: moment(),
     }
   },
   computed: {
-    scheduleColumns() {
-      return getDaysFromPeriod(this.period)
-    },
     scheduleRows() {
       return this.$store.getters.trucks
         .filter((item) => item.type === 'truck')
@@ -42,8 +44,10 @@ export default {
       return this.orders
     },
   },
-
   methods: {
+    changeWidth(width) {
+      this.tableWidth = width
+    },
     startDragOrder(orderId) {
       // console.log('startDragOrder', orderId)
     },
