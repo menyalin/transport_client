@@ -1,6 +1,7 @@
 /* eslint-disable vue/no-template-key */
 <template>
   <div class="table-wrapper">
+    {{ tableWidth }}
     <table>
       <thead>
         <tr>
@@ -111,18 +112,22 @@ export default {
   computed: {
     period() {
       switch (true) {
+        case this.tableWidth > 3000:
+          return this.getPeriodFromDate(this.date, -3, 3)
         case this.tableWidth > 1900:
-          return this.getPeriodFromDate(this.date, -2, 4)
-        case this.tableWidth > 1600:
+          return this.getPeriodFromDate(this.date, -2, 3)
+        case this.tableWidth > 1680:
           return this.getPeriodFromDate(this.date, -1, 3)
-        case this.tableWidth > 1300:
+        case this.tableWidth > 1470:
           return this.getPeriodFromDate(this.date, -1, 2)
-        case this.tableWidth > 800:
+        case this.tableWidth > 1100:
+          return this.getPeriodFromDate(this.date, -1, 1)
+        case this.tableWidth > 660:
           return this.getPeriodFromDate(this.date, 0, 1)
         case this.tableWidth > 500:
           return this.getPeriodFromDate(this.date, 0, 0)
         default:
-          return this.getPeriodFromDate(this.date, 0, 1)
+          return this.getPeriodFromDate(this.date, 0, 0)
       }
     },
     columns() {
@@ -194,10 +199,18 @@ export default {
     },
 
     getOrderWidth({ startPositionDate, endPositionDate }) {
-      //
-      const orderDurationSec =
-        moment(endPositionDate).unix() - moment(startPositionDate).unix()
-      return orderDurationSec / this.secInPx
+      let startPoint
+      let endPoint
+
+      if (new Date(startPositionDate) < new Date(this.period[0]))
+        startPoint = moment(this.period[0])
+      else startPoint = moment(startPositionDate)
+
+      if (new Date(endPositionDate) > new Date(this.period[1]))
+        endPoint = moment(this.period[1])
+      else endPoint = moment(endPositionDate)
+
+      return (endPoint.unix() - startPoint.unix()) / this.secInPx
     },
 
     getStylesForOrder(order) {
