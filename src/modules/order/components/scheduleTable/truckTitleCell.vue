@@ -1,6 +1,9 @@
 <template>
   <div class="px-2">
-    <router-link :to="baseUrl + id">
+    <router-link
+      :to="baseUrl + id"
+      draggable="false"
+    >
       {{ title }}
     </router-link>
   </div>
