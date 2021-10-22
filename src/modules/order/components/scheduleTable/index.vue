@@ -228,7 +228,6 @@ export default {
       const dt = e.dataTransfer
       dt.setData('text/orderId', id)
       // this.leftShiftInPx = e.clientX - e.target.getBoundingClientRect().left
-
       dt.dropEffect = 'move'
       dt.effectAllowed = 'move'
 
@@ -236,14 +235,14 @@ export default {
       // e.target.style.zIndex = 1
 
       // setTimeout(() => (e.target.className = 'invisible'), 0)
-      // e.target.style.opacity = 0.5
+      e.target.style.opacity = 0.5
     },
 
     dragEndHandler(e, orderId) {
       this.$emit('endDragOrder', orderId)
       // e.target.className = 'empty'
       // e.target.style.zIndex = 5
-      // e.target.style.opacity = 1
+      e.target.style.opacity = 1
       this.overRowInd = null
       if (
         e.dataTransfer.dropEffect === 'none' ||
@@ -295,8 +294,12 @@ export default {
 <style scoped>
 .table-wrapper {
   width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+  margin: 8px;
+  box-sizing: content-box;
+  max-height: 70vh;
+  min-height: 70vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 table {
   --table-border: rgb(154, 154, 154) 1px solid;
@@ -304,10 +307,17 @@ table {
   table-layout: fixed;
   border-collapse: collapse;
   border: var(--table-border);
+  box-sizing: border-box;
 }
-td,
-th {
+td {
   border: var(--table-border);
+}
+
+thead > tr > td {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background-color: white;
 }
 
 tbody {
