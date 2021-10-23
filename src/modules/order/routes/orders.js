@@ -4,6 +4,6 @@ import DetailsOrder from '../pages/orders/details'
 
 export default [
   { path: '/', name: 'ListOrder', component: ListOrder },
-  { path: '/create', name: 'CreateOrder', component: CreateOrder },
-  { path: '/:id', name: 'DetailsOrder', component: DetailsOrder, props: true },
+  { path: 'create', name: 'CreateOrder', component: CreateOrder },
+  { path: ':id', name: 'DetailsOrder', component: DetailsOrder, props: true },
 ]

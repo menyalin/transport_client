@@ -294,7 +294,7 @@ export default {
     },
 
     truckChange() {
-      console.log('change truck')
+      // console.log('change truck')
     },
     tkNameChange() {
       this.form.driver = null

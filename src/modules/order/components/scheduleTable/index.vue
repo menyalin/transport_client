@@ -47,25 +47,27 @@
             :key="column.title"
           />
         </tr>
-        <div
-          v-for="order of filteredOrders"
-          :key="order._id"
-          tag="div"
-          class="block"
-          draggable
-          :style="getStylesForOrder(order)"
-          @dragstart="dragStartHandler($event, order._id)"
-          @dragend="dragEndHandler($event, order._id)"
-        >
-          <app-order-cell />
-        </div>
+        <template v-if="tableWidth">
+          <div
+            v-for="order of filteredOrders"
+            :key="order._id"
+            tag="div"
+            class="block"
+            draggable
+            :style="getStylesForOrder(order)"
+            @dragstart="dragStartHandler($event, order._id)"
+            @dragend="dragEndHandler($event, order._id)"
+          >
+            <app-order-cell />
+          </div>
 
-        <app-bg-grid
-          v-if="titleColumnWidth"
-          :leftShift="titleColumnWidth"
-          :tableWidth="tableWidth + titleColumnWidth"
-          :days="columns"
-        />
+          <app-bg-grid
+            v-if="titleColumnWidth"
+            :leftShift="titleColumnWidth"
+            :tableWidth="tableWidth + titleColumnWidth"
+            :days="columns"
+          />
+        </template>
       </tbody>
     </table>
   </div>
@@ -127,7 +129,7 @@ export default {
         case this.tableWidth > 500:
           return this.getPeriodFromDate(this.date, 0, 0)
         default:
-          return this.getPeriodFromDate(this.date, 0, 0)
+          return this.getPeriodFromDate(this.date, -1, 3)
       }
     },
     columns() {
@@ -142,6 +144,15 @@ export default {
       return this.orders
         .filter(this.ordersFilterByPeriod)
         .filter(this.ordersFilterByDraggedOrder)
+    },
+  },
+  watch: {
+    period: {
+      immediate: false,
+      handler: function (val, oldVal) {
+        if (val && val.toString() !== oldVal.toString())
+          this.$store.commit('setPeriod', val)
+      },
     },
   },
   beforeDestroy() {

@@ -1,28 +1,29 @@
+import moment from 'moment'
 import service from '../services/order.service'
-
-const _initDateRange = () => {
-  return ['2021-08-01', '2021-08-16']
-}
 
 export default {
   state: {
     orders: [],
-    ordersDateRange: _initDateRange(),
+    period: [],
   },
   mutations: {
+    setPeriod(state, payload) {
+      state.period = payload
+    },
     clearDirectories(state) {
       state.orders = []
     },
-    setOrders({ orders }, payload) {
-      orders = payload
+    setOrders(state, payload) {
+      state.orders = payload
     },
     addOrder({ orders }, payload) {
       if (orders.findIndex((item) => item._id === payload._id) === -1)
         orders.push(payload)
     },
-    updateOrder({ orders }, payload) {
-      const ind = orders.findIndex((item) => item._id === payload._id)
-      if (ind !== -1) orders.splice(ind, 1, payload)
+    updateOrder(state, payload) {
+      
+      const ind = state.orders.findIndex((item) => item._id === payload._id)
+      if (ind !== -1) state.orders.splice(ind, 1, payload)
     },
     deleteTruck(state, id) {
       state.orders = state.orders.filter((item) => item._id !== id)
@@ -31,17 +32,35 @@ export default {
   actions: {
     getOrders({ commit, getters }) {
       if (!getters.directoriesProfile) {
-        commit('setError', 'Профиль настроек не определен')
+        commit('setError', 'Профиль настроек не установлен')
         return null
       }
-      if (!isValidOrdersDateRange) {
-        commit('setError', 'Временной интервал не задан')
-        return null
-      }
+      service
+        .getByDirectoriesProfile({
+          profile: getters.directoriesProfile,
+          startDate: getters.schedulePeriod[0],
+          endDate: getters.schedulePeriod[1],
+        })
+        .then((res) => {
+          commit('setOrders', res)
+        })
+        .catch((e) => {
+          commit('setError', e.message)
+        })
     },
   },
   getters: {
-    isValidOrdersDateRange: ({ ordersDateRange }) => true,
-    ordersDateRange: ({ ordersDateRange }) => ordersDateRange,
+    ordersForSchedule: ({ orders }) =>
+      orders.map((item) => ({
+        _id: item._id,
+        company: item.company,
+        startPositionDate: item.startPositionDate,
+        endPositionDate: item.endPositionDate,
+        truckId: item.truck,
+      })),
+    schedulePeriod: ({ period }) => [
+      period[0],
+      moment(period[1]).add(1, 'd').format('YYYY-MM-DD'),
+    ],
   },
 }

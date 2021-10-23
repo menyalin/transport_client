@@ -7,55 +7,65 @@
       @refresh="refresh"
     />
     <div class="filter-wrapper">
-      <app-date-time-input
-        hidePrependIcon
-        hideTimeInput
-        label="Начало периода"
-      />
-      <app-date-time-input
-        hidePrependIcon
-        hideTimeInput
-        label="Конец периода"
-      />
+      <app-date-range :period="datePeriod" />
     </div>
     <div class="table-wrapper">
       <v-data-table
         :headers="headers"
         dense
+        :loading="loading"
+        :items="orders"
         fixed-header
         height="72vh"
         :footer-props="{
           'items-per-page-options': [50, 100, 200],
         }"
-        :loading="loading"
       />
     </div>
   </div>
 </template>
 <script>
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import service from '@/modules/order/services/order.service'
+import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ListOrder',
   components: {
-    AppDateTimeInput,
+    AppDateRange,
     AppButtonsPanel,
   },
   data: () => ({
     loading: false,
-    headers: [],
+    datePeriod: ['2021-10-18', '2021-10-25'],
+    orders: [],
+    headers: [{ value: '_id', text: 'id' }],
   }),
   computed: {
     ...mapGetters(['directoriesProfile']),
+  },
+  created() {
+    this.getOrders()
   },
   methods: {
     create() {
       this.$router.push({ name: 'CreateOrder' })
     },
     refresh() {
-      console.log('refresh')
+      this.getOrders()
+    },
+    async getOrders() {
+      try {
+        this.loading = true
+        this.orders = await service.getByDirectoriesProfile({
+          profile: this.directoriesProfile,
+        })
+        this.loading = false
+      } catch (e) {
+        this.loading = false
+        this.$store.commit('setError', e.message)
+      }
     },
   },
 }
@@ -64,9 +74,5 @@ export default {
 .filter-wrapper {
   display: flex;
   flex-direction: row;
-}
-.filter-wrapper > * {
-  padding: 0px 10px;
-  width: 150px;
 }
 </style>

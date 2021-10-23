@@ -12,12 +12,16 @@ class OrderService {
 
     socket.on('order:updated', (data) => {
       store.commit('updateOrder', data)
-      store.commit('addToCache', data)
+      store.commit('addToCache', data)  
     })
     socket.on('order:deleted', (id) => {
       store.commit('deleteOrder', id)
       store.commit('deleteFromCache', id)
     })
+  }
+
+  moveOrderInSchedule(body) {
+    socket.emit('moveOrderInSchedule', body)
   }
 
   async create(body) {
@@ -30,7 +34,7 @@ class OrderService {
     return data
   }
 
-  async getByDerictoriesProfile(profile, startDate, endDate) {
+  async getByDirectoriesProfile({ profile, startDate, endDate }) {
     let { data } = await api.get(BASE_PATH, {
       params: { profile, startDate, endDate },
     })

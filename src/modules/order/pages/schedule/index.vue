@@ -23,6 +23,7 @@ import moment from 'moment'
 import AppScheduleTable from '../../components/scheduleTable'
 import AppScheduleSetting from '../../components/scheduleSetting'
 import mockOrders from './mockOrders'
+import service from '../../services/order.service'
 
 export default {
   name: 'Schedule',
@@ -30,7 +31,6 @@ export default {
     AppScheduleTable,
     AppScheduleSetting,
   },
-
   data() {
     return {
       orders: mockOrders,
@@ -45,10 +45,19 @@ export default {
         .sort((a, b) => a.order - b.order)
     },
     filteredOrders() {
-      return this.orders
+      return this.$store.getters.ordersForSchedule
+    },
+  },
+  watch: {
+    '$store.getters.schedulePeriod': function (val, oldVal) {
+      if (!val) return null
+      this.getOrders()
     },
   },
   methods: {
+    getOrders() {
+      this.$store.dispatch('getOrders')
+    },
     incDate(count) {
       this.date = moment(this.date).add(count, 'day').format('YYYY-MM-DD')
     },
@@ -66,14 +75,20 @@ export default {
       //  console.log('endDragOrder', orderId)
     },
     updateOrderHandler({ orderId, truckId, startDate }) {
-      const editedOrder = this.orders.find((item) => item._id == orderId)
+      const editedOrder = this.$store.getters.ordersForSchedule.find(
+        (item) => item._id == orderId
+      )
       const offsetDateInSec =
         moment(editedOrder.startPositionDate).unix() - moment(startDate).unix()
-      editedOrder.truckId = truckId
-      editedOrder.startPositionDate = startDate
-      editedOrder.endPositionDate = moment
+      const endDate = moment
         .unix(moment(editedOrder.endPositionDate).unix() - offsetDateInSec)
         .format('YYYY-MM-DD HH:00')
+      service.moveOrderInSchedule({
+        orderId,
+        truck: truckId,
+        startPositionDate: startDate,
+        endPositionDate: endDate,
+      })
     },
   },
 }

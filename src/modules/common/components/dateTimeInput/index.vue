@@ -1,32 +1,41 @@
 <template>
-  <div class="input_wrapper_row">
-    <v-text-field
-      type="date"
-      :min="minDateValue"
-      :label="label"
-      :value="dateStr"
-      class="date-input pt-0 mt-0"
-      :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
-      :outlined="outlined"
-      :disabled="disabled"
-      :hide-details="hideDetails"
-      dense
-      :error-messages="errorMessages"
-      @click:prepend="setDate"
-      @change="changeDate"
-    />
-    <v-text-field
-      v-if="!hideTimeInput"
-      type="time"
-      :min="minTimeValue"
-      :value="timeStr"
-      class="time-input"
-      :hide-details="hideDetails"
-      :disabled="timeInputDisabled || disabled"
-      dense
-      :outlined="outlined"
-      @change="changeTime"
-    />
+  <div>
+    <div class="input_wrapper_row">
+      <v-text-field
+        type="date"
+        :min="minDateValue"
+        :label="label"
+        :value="dateStr"
+        class="date-input pt-0 mt-0"
+        :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
+        :outlined="outlined"
+        :disabled="disabled"
+        :hide-details="hideDetails"
+        dense
+        :error-messages="errorMessages"
+        @click:prepend="setDate"
+        @change="changeDate"
+      />
+      <v-text-field
+        v-if="!hideTimeInput"
+        type="time"
+        :min="minTimeValue"
+        :error-messages="errorMessages"
+        :value="timeStr"
+        class="time-input"
+        :hide-details="hideDetails"
+        :disabled="timeInputDisabled || disabled"
+        dense
+        :outlined="outlined"
+        @change="changeTime"
+      />
+    </div>
+    <div
+      v-if="errorMessages && errorMessages.length"
+      class="text-caption px-5 red--text"
+    >
+      {{ errorMessages.join(', ') }}
+    </div>
   </div>
 </template>
 <script>
@@ -45,7 +54,7 @@ export default {
     },
     hideDetails: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     label: {
       type: String,
@@ -156,8 +165,8 @@ export default {
 </script>
 <style scoped>
 .input_wrapper_row {
-  max-width: 18rem;
-  min-width: 13rem;
+  max-width: 20rem;
+  min-width: 20rem;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -165,6 +174,11 @@ export default {
 }
 
 .time-input {
-  padding-left: 5px;
+  padding-left: 1px;
+  max-width: 6rem;
+}
+
+.date-input {
+  max-width: 13rem;
 }
 </style>
