@@ -69,10 +69,10 @@ export default {
     //   this.tableWidth = width
     // },
     startDragOrder(orderId) {
-      // console.log('startDragOrder', orderId)
+      service.disable({ orderId, state: true })
     },
     endDragOrder(orderId) {
-      //  console.log('endDragOrder', orderId)
+     service.disable({ orderId, state: false })
     },
     updateOrderHandler({ orderId, truckId, startDate }) {
       const editedOrder = this.$store.getters.ordersForSchedule.find(

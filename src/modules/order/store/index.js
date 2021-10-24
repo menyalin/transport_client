@@ -21,7 +21,6 @@ export default {
         orders.push(payload)
     },
     updateOrder(state, payload) {
-      
       const ind = state.orders.findIndex((item) => item._id === payload._id)
       if (ind !== -1) state.orders.splice(ind, 1, payload)
     },
@@ -57,6 +56,7 @@ export default {
         startPositionDate: item.startPositionDate,
         endPositionDate: item.endPositionDate,
         truckId: item.truck,
+        isDisabled: item.isDisabled,
       })),
     schedulePeriod: ({ period }) => [
       period[0],

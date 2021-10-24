@@ -53,10 +53,11 @@
             :key="order._id"
             tag="div"
             class="block"
-            draggable
+            :draggable="!order.isDisabled"
             :style="getStylesForOrder(order)"
             @dragstart="dragStartHandler($event, order._id)"
             @dragend="dragEndHandler($event, order._id)"
+            @dragover="disabledZone"
           >
             <app-order-cell />
           </div>
@@ -141,9 +142,8 @@ export default {
       }
     },
     filteredOrders() {
-      return this.orders
-        .filter(this.ordersFilterByPeriod)
-        .filter(this.ordersFilterByDraggedOrder)
+      return this.orders.filter(this.ordersFilterByPeriod)
+      //.filter(this.ordersFilterByDraggedOrder)
     },
   },
   watch: {
@@ -165,9 +165,9 @@ export default {
   methods: {
     ordersFilterByPeriod(item) {
       return !(
-        moment(item.endPositionDate).isSameOrBefore(this.period[0]) ||
+        moment(item.endPositionDate).isBefore(this.period[0]) ||
         moment(this.period[1])
-          .add('1', 'd')
+          .add('24', 'd')
           .isSameOrBefore(item.startPositionDate)
       )
     },
@@ -185,11 +185,10 @@ export default {
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
       this.tableWidth =
         this.$refs.tableBody.offsetWidth - this.$refs.rowTitleColumn.offsetWidth
-      this.$nextTick(() => {
-        this.secInPx = getSecInPx({
-          lengthInPx: this.tableWidth,
-          period: this.period,
-        })
+
+      this.secInPx = getSecInPx({
+        lengthInPx: this.tableWidth,
+        period: this.period,
       })
     },
     getLeftShiftForOrder({ startPositionDate }) {
@@ -214,16 +213,21 @@ export default {
     getOrderWidth({ startPositionDate, endPositionDate }) {
       let startPoint
       let endPoint
-
+      const SEC_IN_SIX_HOURS = 6 * 60 * 60
       if (new Date(startPositionDate) < new Date(this.period[0]))
         startPoint = moment(this.period[0])
       else startPoint = moment(startPositionDate)
+      startPoint.hour(roundingHours(startPoint.hour()))
 
-      if (new Date(endPositionDate) > new Date(this.period[1]))
-        endPoint = moment(this.period[1])
+      if (moment(this.period[1]).add(24, 'h').isBefore(endPositionDate))
+        endPoint = moment(this.period[1]).add(1, 'd')
       else endPoint = moment(endPositionDate)
-
-      return (endPoint.unix() - startPoint.unix()) / this.secInPx
+      const dutation = endPoint.unix() - startPoint.unix()
+      endPoint.hour(roundingHours(endPoint.hour()))
+      return (
+        (dutation > SEC_IN_SIX_HOURS ? dutation : SEC_IN_SIX_HOURS) /
+        this.secInPx
+      )
     },
 
     getStylesForOrder(order) {
@@ -232,6 +236,7 @@ export default {
         width: this.getOrderWidth(order) + 'px',
         left: this.getLeftShiftForOrder(order) + 'px',
         top: this.getTopShiftForOrder(order) + 'px',
+        opacity: order.isDisabled ? 0.5 : 1,
       }
     },
 
@@ -241,7 +246,7 @@ export default {
       // this.leftShiftInPx = e.clientX - e.target.getBoundingClientRect().left
       dt.dropEffect = 'move'
       dt.effectAllowed = 'move'
-
+      this.draggedOrderId = id
       this.$emit('startDragOrder', id)
       // e.target.style.zIndex = 1
 
@@ -250,16 +255,16 @@ export default {
     },
 
     dragEndHandler(e, orderId) {
-      this.$emit('endDragOrder', orderId)
       // e.target.className = 'empty'
       // e.target.style.zIndex = 5
       e.target.style.opacity = 1
+      this.draggedOrderId = null
       this.overRowInd = null
       if (
         e.dataTransfer.dropEffect === 'none' ||
         e.dataTransfer.mozUserCancelled
       ) {
-        // console.log('dragCanceled')
+        this.$emit('endDragOrder', orderId)
       } else {
         // console.log('dragend')
       }
@@ -267,7 +272,7 @@ export default {
 
     dragOverHandler(e) {
       const y = e.layerY
-      const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
+      const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
       if (x < 0 || y < 0 || e.dataTransfer.effectAllowed === 'none') {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
@@ -279,17 +284,24 @@ export default {
     },
 
     dropHandler(e) {
-      const y = e.layerY
-      const x = e.layerX - this.$refs.rowTitleColumn.offsetWidth
+      if (
+        this.overRowInd === null ||
+        this.overRowInd < 0 ||
+        this.overRowInd > this.rows.length - 1
+      )
+        return null
+      // const y = e.layerY
+      const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
       // const leftShiftInSec = this.leftShiftInPx * this.secInPx
-      const startDate = moment
-        .unix(moment(this.period[0]).unix() + x * this.secInPx)
-        .format('YYYY-MM-DD HH:00')
-      const rowInd = Math.floor(y / LINE_HEIGHT)
+      const startDate = moment.unix(
+        moment(this.period[0]).unix() + x * this.secInPx
+      )
+      startDate.hour(roundingHours(startDate.hour()))
+
       this.$emit('updateOrder', {
-        truckId: this.rows[rowInd]._id,
+        truckId: this.rows[this.overRowInd]._id,
         orderId: e.dataTransfer.getData('text/orderId'),
-        startDate,
+        startDate: startDate.format('YYYY-MM-DD HH:00'),
       })
     },
 

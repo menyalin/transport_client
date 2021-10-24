@@ -12,7 +12,7 @@ class OrderService {
 
     socket.on('order:updated', (data) => {
       store.commit('updateOrder', data)
-      store.commit('addToCache', data)  
+      store.commit('addToCache', data)
     })
     socket.on('order:deleted', (id) => {
       store.commit('deleteOrder', id)
@@ -22,6 +22,10 @@ class OrderService {
 
   moveOrderInSchedule(body) {
     socket.emit('moveOrderInSchedule', body)
+  }
+
+  disable(body) {
+    socket.emit('disableOrder', body)
   }
 
   async create(body) {
