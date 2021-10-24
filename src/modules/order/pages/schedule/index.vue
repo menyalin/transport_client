@@ -49,10 +49,15 @@ export default {
     },
   },
   watch: {
-    '$store.getters.schedulePeriod': function (val, oldVal) {
+    '$store.getters.schedulePeriod': function (val) {
       if (!val) return null
       this.getOrders()
     },
+  },
+  mounted() {
+    if (this.$store.getters.ordersForSchedule.length === 0) {
+      this.getOrders()
+    }
   },
   methods: {
     getOrders() {
@@ -65,14 +70,11 @@ export default {
       if (!date) this.date = moment().format('YYYY-MM-DD')
       else this.date = date
     },
-    // changeWidth(width) {
-    //   this.tableWidth = width
-    // },
     startDragOrder(orderId) {
       service.disable({ orderId, state: true })
     },
     endDragOrder(orderId) {
-     service.disable({ orderId, state: false })
+      service.disable({ orderId, state: false })
     },
     updateOrderHandler({ orderId, truckId, startDate }) {
       const editedOrder = this.$store.getters.ordersForSchedule.find(
