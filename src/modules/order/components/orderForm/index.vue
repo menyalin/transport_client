@@ -42,6 +42,20 @@
         />
       </div>
     </div>
+    <v-btn
+      v-if="displayDeleteBtn"
+      color="error"
+      class="ma-4"
+      @click="$emit('delete')"
+    >
+      <v-icon
+        left
+        dark
+      >
+        mdi-delete
+      </v-icon>
+      Удалить
+    </v-btn>
   </div>
 </template>
 <script>

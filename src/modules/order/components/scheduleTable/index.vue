@@ -59,7 +59,7 @@
             @dragend="dragEndHandler($event, order._id)"
             @dragover="disabledZone"
           >
-            <app-order-cell />
+            <app-order-cell :orderId="order._id" />
           </div>
 
           <app-bg-grid

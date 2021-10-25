@@ -33,7 +33,7 @@ class OrderService {
     return data
   }
 
-  async updateOne(id, body) {
+  async updateOne({id, body}) {
     let { data } = await api.put(BASE_PATH + '/' + id, body)
     return data
   }

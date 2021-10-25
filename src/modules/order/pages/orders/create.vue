@@ -20,6 +20,7 @@ export default {
     },
     async submit(order) {
       const newOrder = await orderService.create(order)
+      this.$router.go(-1)
     },
   },
 }

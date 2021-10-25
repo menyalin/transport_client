@@ -1,5 +1,8 @@
 <template>
-  <div class="order-wrapper">
+  <div
+    class="order-wrapper"
+    @dblclick="dblclickHandler"
+  >
     <div>row1</div>
     <div>row2</div>
   </div>
@@ -7,6 +10,17 @@
 <script>
 export default {
   name: 'OrderCell',
+  props: {
+    orderId: {
+      type: String,
+      required: true,
+    },
+  },
+  methods: {
+    dblclickHandler() {
+      this.$router.push('/orders/' + this.orderId)
+    },
+  },
 }
 </script>
 <style scoped>

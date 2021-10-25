@@ -24,7 +24,7 @@ export default {
       const ind = state.orders.findIndex((item) => item._id === payload._id)
       if (ind !== -1) state.orders.splice(ind, 1, payload)
     },
-    deleteTruck(state, id) {
+    deleteOrder(state, id) {
       state.orders = state.orders.filter((item) => item._id !== id)
     },
   },

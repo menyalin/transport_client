@@ -21,7 +21,11 @@
           'items-per-page-options': [50, 100, 200],
         }"
         @dblclick:row="dblClickRow"
-      />
+      >
+        <template v-slot:[`item.createdAt`]="{ item }">
+          {{ new Date(item.createdAt).toLocaleString() }}
+        </template>
+      </v-data-table>
     </div>
   </div>
 </template>
@@ -41,7 +45,10 @@ export default {
     loading: false,
     datePeriod: ['2021-10-18', '2021-10-25'],
     orders: [],
-    headers: [{ value: '_id', text: 'id' }],
+    headers: [
+      { value: '_id', text: 'id' },
+      { value: 'createdAt', text: 'Создан' },
+    ],
   }),
   computed: {
     ...mapGetters(['directoriesProfile']),
