@@ -46,7 +46,6 @@ export default {
   methods: {
     async submit(val) {
       this.loading = true
-      console.log(this.id)
       this.order = await service.updateOne({ id: this.id, body: val })
       this.loading = false
       this.$router.go(-1)

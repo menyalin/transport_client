@@ -1,5 +1,5 @@
 import TruckService from '@/modules/profile/services/truck.service'
-
+//['rear', 'top', 'side']
 export default {
   state: {
     trucks: [],
@@ -11,6 +11,11 @@ export default {
       { text: 'Реф', value: 'ref' },
       { text: 'Изотерм', value: 'isoterm' },
       { text: 'Тент', value: 'tent' },
+    ],
+    loadDirection: [
+      { text: 'Задняя', value: 'rear' },
+      { text: 'Боковая', value: 'side' },
+      { text: 'Верхняя', value: 'top' },
     ],
     liftCapacityTypes: [20, 10, 5, 3.5, 1.5],
   },
@@ -80,7 +85,7 @@ export default {
       trucks
         .filter((item) => item.company === directoriesProfile)
         .sort(_trucksSortHandler),
-
+    loadDirection: ({ loadDirection }) => loadDirection,
     truckTypes: ({ truckTypes }) => truckTypes,
     truckKinds: ({ truckKinds }) => truckKinds,
     liftCapacityTypes: ({ liftCapacityTypes }) => liftCapacityTypes,

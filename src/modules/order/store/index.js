@@ -5,6 +5,10 @@ export default {
   state: {
     orders: [],
     period: [],
+    pointTypes: [
+      { value: 'loading', text: 'Погрузка' },
+      { value: 'unloading', text: 'Выгрузка' },
+    ],
   },
   mutations: {
     setPeriod(state, payload) {
@@ -49,15 +53,21 @@ export default {
     },
   },
   getters: {
+    pointTypes: ({ pointTypes }) => pointTypes,
     ordersForSchedule: ({ orders }) =>
-      orders.map((item) => ({
-        _id: item._id,
-        company: item.company,
-        startPositionDate: item.startPositionDate,
-        endPositionDate: item.endPositionDate,
-        truckId: item.truck,
-        isDisabled: item.isDisabled,
-      })),
+      orders
+        .map((item) => ({
+          _id: item._id,
+          company: item.company,
+          startPositionDate: item.startPositionDate,
+          endPositionDate: item.endPositionDate,
+          truckId: item.truck,
+          isDisabled: item.isDisabled,
+        }))
+        .sort(
+          (a, b) =>
+            new Date(a.startPositionDate) - new Date(b.startPositionDate)
+        ),
     schedulePeriod: ({ period }) => [
       period[0],
       moment(period[1]).add(1, 'd').format('YYYY-MM-DD'),
