@@ -12,6 +12,7 @@ import crewRoutes from './crews'
 import truckRoutes from './trucks'
 import driverRoutes from './drivers'
 import tkNameRoutes from './tkNames'
+import partnerRoutes from './partners'
 
 import ProfileSettings from '../pages/profileSettings'
 
@@ -27,6 +28,7 @@ export default [
       ...truckRoutes,
       ...driverRoutes,
       ...tkNameRoutes,
+      ...partnerRoutes,
       { path: 'companies', name: 'companyList', component: Companies },
       {
         path: 'companies/create',

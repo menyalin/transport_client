@@ -2,6 +2,7 @@ import CrewModule from './crew'
 import TruckModule from './truck'
 import TkNameModule from './tkName'
 import DriverModule from './driver'
+import PartnerModule from './partner'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
@@ -85,8 +86,6 @@ export default {
     deleteAddress(state, id) {
       state.addresses = state.addresses.filter((item) => item._id !== id)
     },
-
-    
   },
   actions: {
     async getMyCompanies({ commit }) {
@@ -103,13 +102,14 @@ export default {
 
     setDirectories(
       { commit },
-      { companies, addresses, drivers, trucks, tkNames }
+      { companies, addresses, drivers, trucks, tkNames, partners }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
       if (addresses?.length) commit('setAddresses', addresses)
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
       if (tkNames?.length) commit('setTkNames', tkNames)
+      if (partners?.length) commit('setPartners', partners)
     },
 
     async createCompany({ commit }, payload) {
@@ -203,8 +203,6 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
-
- 
   },
   getters: {
     cacheDirectories: ({ cacheDirectories }) => cacheDirectories,
@@ -216,8 +214,6 @@ export default {
     tasks: ({ tasks }) => tasks,
     addresses: ({ addresses }, { directoriesProfile }) =>
       addresses.filter((item) => item.company === directoriesProfile),
-
-    
   },
 
   modules: {
@@ -225,5 +221,6 @@ export default {
     TruckModule,
     TkNameModule,
     DriverModule,
+    PartnerModule,
   },
 }

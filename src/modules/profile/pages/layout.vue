@@ -43,6 +43,11 @@ export default {
         link: '/profile/address',
       },
       {
+        text: 'Партнеры',
+        icon: 'mdi-emoticon-devil',
+        link: '/profile/partners',
+      },
+      {
         text: 'Экипажи',
         icon: 'mdi-cow',
         link: '/profile/crews',
