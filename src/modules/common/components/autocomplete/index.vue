@@ -14,10 +14,7 @@
       max-width="850"
     >
       <v-card class="pa-3">
-        <slot
-          name="form"
-          @cancel="cancelHandler"
-        />
+       
       </v-card>
     </v-dialog>
   </div>

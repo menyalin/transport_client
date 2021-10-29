@@ -33,11 +33,8 @@
               v-model="partnerValue"
               label="Партнер"
               items-getter="partnersForAutocomplete"
-            >
-              <template v-slot:form>
-                <app-partner-form />
-              </template>
-            </app-autocomplete>
+            />
+            <v-text-field v-model="someData" />
           </v-col>
         </v-row>
       </v-container>
@@ -58,10 +55,10 @@ export default {
     AppAdminBar,
     AppSnackbar,
     AppAutocomplete,
-    AppPartnerForm,
   },
   data: () => ({
     partnerValue: '617bbc1e70a11d01eb72f022',
+    someData: null,
   }),
   computed: {
     ...mapGetters(['isLoggedIn', 'user']),
