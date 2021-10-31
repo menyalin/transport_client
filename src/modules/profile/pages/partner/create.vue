@@ -4,7 +4,9 @@
       <v-col>
         <app-partner-form
           :loading="loading"
+          :needFormCache="needFormCache"
           @submit="submit"
+          @saveToCache="saveToCache"
           @cancel="cancel"
         />
       </v-col>
@@ -22,7 +24,15 @@ export default {
   data() {
     return {
       loading: false,
+      needFormCache: false,
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    console.log('need form cache')
+    this.needFormCache = true
+    this.$$nextTick(() => {
+      next()
+    })
   },
   methods: {
     submit(data) {
@@ -37,6 +47,9 @@ export default {
           this.loading = false
           this.$store.commit('setError', e)
         })
+    },
+    saveToCache(val) {
+      console.log('val')
     },
     cancel() {
       this.$router.go(-1)

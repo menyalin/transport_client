@@ -20,6 +20,9 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
+    <router-link to="/">
+      На главную
+    </router-link>
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
@@ -68,9 +71,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    cancelCB: {
-      type: Function,
-    },
+    needFormCache:Boolean
   },
   data() {
     return {
@@ -81,6 +82,7 @@ export default {
       },
     }
   },
+
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
@@ -99,6 +101,9 @@ export default {
         errors.push('Название не может быть пустым')
       return errors
     },
+    formState() {
+      return { ...this.form, company: this.directoriesProfile }
+    },
   },
   watch: {
     partner: {
@@ -106,6 +111,11 @@ export default {
       handler: function (val) {
         if (val) this.setFormFields(val)
       },
+    },
+    needFormCache: function (val) {
+      if (val) {
+        this.$emit('saveToCache', this.formState)
+      }
     },
   },
   validations: {
@@ -117,16 +127,11 @@ export default {
 
   methods: {
     submit() {
-      const partner = { ...this.form, company: this.directoriesProfile }
-      this.$emit('submit', partner)
+      this.$emit('submit', this.formState)
       this.resetForm()
     },
     cancel() {
       this.resetForm()
-      if (this.cancelCB) {
-        console.log('cb')
-        this.cancelCB()
-      }
       this.$emit('cancel')
     },
     setFormFields(val) {
