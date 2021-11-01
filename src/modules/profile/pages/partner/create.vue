@@ -4,7 +4,7 @@
       <v-col>
         <app-partner-form
           :loading="loading"
-          :needFormCache="needFormCache"
+          :partner="formCache"
           @submit="submit"
           @saveToCache="saveToCache"
           @cancel="cancel"
@@ -15,24 +15,25 @@
 </template>
 <script>
 import AppPartnerForm from '@/modules/profile/components/partnerForm'
+import cacheFormMixinBuilder from '@/modules/common/mixins/cacheFormMixinBuilder'
+
+// const formMixin = cacheFormMixinBuilder()
 
 export default {
   name: 'PartnerCreate',
   components: {
     AppPartnerForm,
   },
+  mixins: [cacheFormMixinBuilder()],
   data() {
     return {
       loading: false,
-      needFormCache: false,
     }
   },
-  beforeRouteLeave(to, from, next) {
-    console.log('need form cache')
-    this.needFormCache = true
-    this.$$nextTick(() => {
-      next()
-    })
+  computed: {
+    formName() {
+      return 'createPartner'
+    },
   },
   methods: {
     submit(data) {
@@ -41,18 +42,13 @@ export default {
         .dispatch('createPartner', data)
         .then(() => {
           this.loading = false
+          this.clearCache()
           this.$router.push({ name: 'PartnerList' })
         })
         .catch((e) => {
           this.loading = false
           this.$store.commit('setError', e)
         })
-    },
-    saveToCache(val) {
-      console.log('val')
-    },
-    cancel() {
-      this.$router.go(-1)
     },
   },
 }

@@ -71,7 +71,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    needFormCache:Boolean
   },
   data() {
     return {
@@ -112,11 +111,9 @@ export default {
         if (val) this.setFormFields(val)
       },
     },
-    needFormCache: function (val) {
-      if (val) {
-        this.$emit('saveToCache', this.formState)
-      }
-    },
+  },
+  beforeDestroy() {
+    this.$emit('saveToCache', this.formState)
   },
   validations: {
     form: {

@@ -141,6 +141,7 @@ export default {
       },
     }
   },
+
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
@@ -165,6 +166,9 @@ export default {
         errors.push('Введенные координаты не корректны')
       return errors
     },
+    formState() {
+      return { ...this.form }
+    },
   },
   watch: {
     address: {
@@ -173,6 +177,9 @@ export default {
         if (!!val) this.setFormFields(val)
       },
     },
+  },
+  beforeDestroy() {
+    this.$emit('saveToCache', this.formState)
   },
   validations: {
     form: {

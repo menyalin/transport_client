@@ -7,11 +7,12 @@
         </div>
         <app-partner-form
           v-else
-          :partner="partner"
+          :partner="formCache ? formCache : partner"
           display-delete-btn
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
+          @saveToCache="saveToCache"
         />
       </v-col>
     </v-row>
@@ -20,11 +21,14 @@
 <script>
 import AppPartnerForm from '@/modules/profile/components/partnerForm'
 import service from '../../services/partner.service'
+import cacheFormMixinBuilder from '@/modules/common/mixins/cacheFormMixinBuilder'
+
 export default {
-  name: 'TkNameDetails',
+  name: 'PartnerDetails',
   components: {
     AppPartnerForm,
   },
+  mixins: [cacheFormMixinBuilder()],
   props: {
     id: {
       type: String,
@@ -37,6 +41,11 @@ export default {
       partner: null,
     }
   },
+  computed: {
+    formName() {
+      return `detailsPartner:${this.id}`
+    },
+  },
   async created() {
     this.loading = true
     this.partner = await service.getById(this.id)
@@ -48,11 +57,10 @@ export default {
       this.loading = true
       this.partner = await service.updateOne(this.id, val)
       this.loading = false
+      this.clearCache()
       this.$router.go(-1)
     },
-    cancel() {
-      this.$router.push({ name: 'PartnerList' })
-    },
+
     async deleteHandler() {
       const res = await this.$confirm(
         'Вы действительно хотите удалить запись? '
@@ -60,6 +68,7 @@ export default {
       if (res) {
         this.loading = true
         await service.deleteById(this.id)
+        this.clearCache()
         this.loading = false
         this.$router.go(-1)
       }
