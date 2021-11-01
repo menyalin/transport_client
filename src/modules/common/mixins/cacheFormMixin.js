@@ -23,7 +23,9 @@ export default () => {
       clearCache() {
         this.$store.commit('deleteFormCache', this.formName)
       },
-
+      updateCache(payload) {
+        this.$store.commit('updateFormCache', payload)
+      },
       cancel() {
         this.needFormCache = false
         this.clearCache()

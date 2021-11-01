@@ -40,6 +40,15 @@
       label="Сокращенное наименование адреса"
       :hint="addressShortNameHint"
     />
+    <app-autocomplete
+      v-model="$v.form.partner.$model"
+      dense
+      outlined
+      label="Партнер"
+      itemsGetter="partnersForAutocomplete"
+      :formName="formName"
+      createItemPath="/profile/partners/create"
+    />
     <v-text-field
       v-model="$v.form.note.$model"
       outlined
@@ -93,6 +102,7 @@ import { required } from 'vuelidate/lib/validators'
 
 import AppAddressAutocomplete from '@/modules/profile/components/addressAutocomplete'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppAutocomplete from '@/modules/common/components/autocomplete'
 
 const validCoordinates = (val) => {
   if (!val) return true
@@ -111,6 +121,7 @@ export default {
   components: {
     AppAddressAutocomplete,
     AppButtonsPanel,
+    AppAutocomplete,
   },
   props: {
     address: {
@@ -120,6 +131,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    formName: String,
   },
   data() {
     return {
@@ -138,6 +150,7 @@ export default {
         note: null,
         isShipmentPlace: false,
         isDeliveryPlace: false,
+        partner: null,
       },
     }
   },
@@ -191,6 +204,7 @@ export default {
       },
       shortName: {},
       note: {},
+      partner: {},
     },
   },
 
@@ -212,6 +226,7 @@ export default {
       this.form.note = val.note
       this.form.isShipmentPlace = val.isShipmentPlace
       this.form.isDeliveryPlace = val.isDeliveryPlace
+      this.form.partner = val.partner
     },
     resetForm() {
       this.form.name = null
@@ -221,6 +236,7 @@ export default {
       this.form.note = null
       this.form.isShipmentPlace = false
       this.form.isDeliveryPlace = false
+      this.form.partner = null
     },
     getParsedAddress(val) {
       if (!val) {

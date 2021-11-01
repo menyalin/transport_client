@@ -4,19 +4,14 @@
       :label="label"
       :items="items"
       :value="value"
+      :dense="dense"
+      :hideDetails="hideDetails"
+      :outlined="outlined"
       clearable
       :append-icon="appendIcon"
       @change="change"
       @click:append="appendClick"
     />
-    <v-dialog
-      v-model="dialog"
-      max-width="850"
-    >
-      <v-card class="pa-3">
-       
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 <script>
@@ -27,9 +22,14 @@ export default {
     event: 'change',
   },
   props: {
+    hideDetails: { type: Boolean, default: false },
+    outlined: { type: Boolean, default: false },
+    dense: { type: Boolean, default: false },
     value: String,
     label: String,
     itemsGetter: String,
+    formName: String,
+    createItemPath: String,
   },
   data() {
     return { dialog: false }
@@ -42,23 +42,23 @@ export default {
       return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
     },
   },
-  mounted() {
-    this.$on('cancel', () => {
-      console.log('cancel')
-    })
-  },
+
   methods: {
     change(val) {
       this.$emit('change', val)
     },
     appendClick() {
-      this.$nextTick(() => {
-        this.dialog = true
-      })
-    },
-    cancelHandler() {
-      console.log('cancel')
-      this.dialog = false
+      console.log(-111)
+      if (this.value) {
+      } else {
+        this.$router.push({
+          path: this.createItemPath,
+          params: {
+            formName: this.formName,
+            field: 'form.partner',
+          },
+        })
+      }
     },
   },
 }

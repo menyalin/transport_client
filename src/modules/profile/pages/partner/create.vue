@@ -15,16 +15,14 @@
 </template>
 <script>
 import AppPartnerForm from '@/modules/profile/components/partnerForm'
-import cacheFormMixinBuilder from '@/modules/common/mixins/cacheFormMixinBuilder'
-
-// const formMixin = cacheFormMixinBuilder()
+import cacheFormMixin from '@/modules/common/mixins/cacheFormMixin'
 
 export default {
   name: 'PartnerCreate',
   components: {
     AppPartnerForm,
   },
-  mixins: [cacheFormMixinBuilder()],
+  mixins: [cacheFormMixin],
   data() {
     return {
       loading: false,
@@ -40,10 +38,18 @@ export default {
       this.loading = true
       this.$store
         .dispatch('createPartner', data)
-        .then(() => {
+        .then((res) => {
           this.loading = false
+          console.log(res._id)
+          this.updateCache({
+            value: res._id,
+            formName: this.$route.params.formName,
+            field: this.$route.params.field,
+          })
           this.clearCache()
-          this.$router.push({ name: 'PartnerList' })
+          this.$nextTick(() => {
+            this.$router.go(-1)
+          })
         })
         .catch((e) => {
           this.loading = false

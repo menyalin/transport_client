@@ -53,6 +53,11 @@ export default new Vuex.Store({
     deleteFormCache({ formCacheMap }, formName) {
       formCacheMap.delete(formName)
     },
+    updateFormCache({ formCacheMap }, { formName, field, value }) {
+      let cache = formCacheMap.get(formName)
+      cache = { ...cache, [field]: value }
+      formCacheMap.set(formName, cache)
+    },
   },
   actions: {
     setError({ commit }, error) {

@@ -3,8 +3,11 @@
     <v-row>
       <v-col>
         <app-address-form
+          :formName="formName"
+          :address="formCache"
           @submit="submit"
           @cancel="cancel"
+          @saveToCache="saveToCache"
         />
       </v-col>
     </v-row>
@@ -12,16 +15,23 @@
 </template>
 <script>
 import AppAddressForm from '@/modules/profile/components/addressForm'
+import cacheFormMixinBuilder from '@/modules/common/mixins/cacheFormMixinBuilder'
 
 export default {
   name: 'AddressCreate',
   components: {
     AppAddressForm,
   },
+  mixins: [cacheFormMixinBuilder()],
   data() {
     return {
       loading: false,
     }
+  },
+  computed: {
+    formName() {
+      return 'createAddress'
+    },
   },
   methods: {
     submit(address) {
