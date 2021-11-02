@@ -2,7 +2,9 @@
   <v-container fluid>
     <v-row>
       <v-col>
+        <app-load-spinner v-if="loading" />
         <app-partner-form
+          v-else
           :loading="loading"
           :partner="formCache"
           @submit="submit"
@@ -15,14 +17,21 @@
 </template>
 <script>
 import AppPartnerForm from '@/modules/profile/components/partnerForm'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import cacheFormMixin from '@/modules/common/mixins/cacheFormMixin'
 
 export default {
   name: 'PartnerCreate',
   components: {
     AppPartnerForm,
+    AppLoadSpinner,
   },
   mixins: [cacheFormMixin],
+  props: {
+    initFormName: String,
+    fieldName: String,
+  },
+
   data() {
     return {
       loading: false,
@@ -39,12 +48,12 @@ export default {
       this.$store
         .dispatch('createPartner', data)
         .then((res) => {
+          this.needFormCache = false
           this.loading = false
-          console.log(res._id)
           this.updateCache({
             value: res._id,
-            formName: this.$route.params.formName,
-            field: this.$route.params.field,
+            formName: this.initFormName,
+            fieldName: this.fieldName,
           })
           this.clearCache()
           this.$nextTick(() => {

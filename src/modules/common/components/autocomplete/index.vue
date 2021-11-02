@@ -29,7 +29,9 @@ export default {
     label: String,
     itemsGetter: String,
     formName: String,
-    createItemPath: String,
+    createRouteName: String,
+    updateRouteName: String,
+    fieldName: String,
   },
   data() {
     return { dialog: false }
@@ -48,14 +50,21 @@ export default {
       this.$emit('change', val)
     },
     appendClick() {
-      console.log(-111)
       if (this.value) {
+        this.$router.push({
+          name: this.updateRouteName,
+          params: {
+            id: this.value,
+            initFormName: this.formName,
+            fieldName: this.fieldName,
+          },
+        })
       } else {
         this.$router.push({
-          path: this.createItemPath,
+          name: this.createRouteName,
           params: {
-            formName: this.formName,
-            field: 'form.partner',
+            initFormName: this.formName,
+            fieldName: this.fieldName,
           },
         })
       }

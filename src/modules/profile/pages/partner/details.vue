@@ -2,9 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div v-if="loading">
-          Загружаю...
-        </div>
+        <app-load-spinner v-if="loading" />
+
         <app-partner-form
           v-else
           :partner="formCache ? formCache : partner"
@@ -20,15 +19,17 @@
 </template>
 <script>
 import AppPartnerForm from '@/modules/profile/components/partnerForm'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import service from '../../services/partner.service'
-import cacheFormMixinBuilder from '@/modules/common/mixins/cacheFormMixinBuilder'
+import cacheFormMixin from '@/modules/common/mixins/cacheFormMixin'
 
 export default {
   name: 'PartnerDetails',
   components: {
     AppPartnerForm,
+    AppLoadSpinner,
   },
-  mixins: [cacheFormMixinBuilder()],
+  mixins: [cacheFormMixin],
   props: {
     id: {
       type: String,

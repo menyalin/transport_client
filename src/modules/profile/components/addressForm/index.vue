@@ -47,7 +47,9 @@
       label="Партнер"
       itemsGetter="partnersForAutocomplete"
       :formName="formName"
-      createItemPath="/profile/partners/create"
+      createRouteName="PartnerCreate"
+      updateRouteName="PartnerDetails"
+      fieldName="partner"
     />
     <v-text-field
       v-model="$v.form.note.$model"
@@ -199,7 +201,6 @@ export default {
       name: { required },
       label: {},
       geo: {
-        required,
         validCoordinates,
       },
       shortName: {},

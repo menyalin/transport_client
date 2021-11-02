@@ -53,9 +53,9 @@ export default new Vuex.Store({
     deleteFormCache({ formCacheMap }, formName) {
       formCacheMap.delete(formName)
     },
-    updateFormCache({ formCacheMap }, { formName, field, value }) {
+    updateFormCache({ formCacheMap }, { formName, fieldName, value }) {
       let cache = formCacheMap.get(formName)
-      cache = { ...cache, [field]: value }
+      cache = { ...cache, [fieldName]: value }
       formCacheMap.set(formName, cache)
     },
   },

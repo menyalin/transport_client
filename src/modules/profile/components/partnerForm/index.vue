@@ -2,7 +2,7 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm || loading"
+      :disabled-submit="isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
@@ -74,7 +74,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       form: {
         name: null,
         inn: null,

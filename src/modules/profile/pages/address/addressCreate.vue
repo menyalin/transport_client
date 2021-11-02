@@ -15,14 +15,14 @@
 </template>
 <script>
 import AppAddressForm from '@/modules/profile/components/addressForm'
-import cacheFormMixinBuilder from '@/modules/common/mixins/cacheFormMixinBuilder'
+import cacheFormMixin from '@/modules/common/mixins/cacheFormMixin'
 
 export default {
   name: 'AddressCreate',
   components: {
     AppAddressForm,
   },
-  mixins: [cacheFormMixinBuilder()],
+  mixins: [cacheFormMixin],
   data() {
     return {
       loading: false,
@@ -46,10 +46,7 @@ export default {
           this.loading = false
           this.$store.commit('setError', e)
         })
-    },
-    cancel() {
-      this.$router.go(-1)
-    },
+    }
   },
 }
 </script>

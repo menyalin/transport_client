@@ -14,6 +14,7 @@ export default [
     path: BASE_PATH + '/create',
     name: 'PartnerCreate',
     component: Create,
+    props: true,
   },
   {
     path: BASE_PATH + '/:id',
