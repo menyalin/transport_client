@@ -40,13 +40,14 @@ export default {
         .dispatch('createAddress', address)
         .then(() => {
           this.loading = false
-          this.$router.push({ name: 'AddressList' })
+          this.$router.go(-1)
+          this.clearCache()
         })
         .catch((e) => {
           this.loading = false
           this.$store.commit('setError', e)
         })
-    }
+    },
   },
 }
 </script>

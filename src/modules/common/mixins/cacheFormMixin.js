@@ -1,4 +1,8 @@
 export default {
+  props: {
+    initFormName: String,
+    fieldName: String,
+  },
   data() {
     return {
       needFormCache: true,
