@@ -62,6 +62,8 @@ export default {
     },
   },
   getters: {
+    partnersMap: ({ partners }) =>
+      new Map(partners.map((item) => [item._id, item])),
     partners: ({ partners }) =>
       partners.sort((a, b) => {
         if (a.name < b.name) return -1

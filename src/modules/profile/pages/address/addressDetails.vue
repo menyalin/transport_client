@@ -7,6 +7,7 @@
           v-else
           :address="formCache ? formCache : item"
           display-delete-btn
+          :formName="formName"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

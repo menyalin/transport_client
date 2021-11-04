@@ -52,6 +52,7 @@ export default [
         path: 'address/create',
         name: 'createAddress',
         component: AddressCreate,
+        props: true,
       },
       {
         path: 'address/:id',
