@@ -2,7 +2,9 @@
   <v-container fluid>
     <v-row>
       <v-col>
+        <app-load-spinner v-if="loading" />
         <app-address-form
+          v-else
           :formName="formName"
           :address="formCache"
           @submit="submit"
@@ -16,25 +18,24 @@
 <script>
 import AppAddressForm from '@/modules/profile/components/addressForm'
 import cacheFormMixin from '@/modules/common/mixins/cacheFormMixin'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 
 export default {
   name: 'AddressCreate',
   components: {
     AppAddressForm,
+    AppLoadSpinner,
   },
   mixins: [cacheFormMixin],
-  data() {
-    return {
-      loading: false,
-    }
-  },
+
   computed: {
     formName() {
-      return 'createAddress'
+      return 'AddressCreate'
     },
   },
   methods: {
     submit(address) {
+      this.needFormCache = false
       this.loading = true
       this.$store
         .dispatch('createAddress', address)

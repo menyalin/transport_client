@@ -20,9 +20,6 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <router-link to="/">
-      На главную
-    </router-link>
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"

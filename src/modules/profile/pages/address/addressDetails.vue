@@ -2,12 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div v-if="loading">
-          Загружаю адрес...
-        </div>
+        <app-load-spinner v-if="loading" />
         <app-address-form
           v-else
-          :address="formCache ? formCache : address"
+          :address="formCache ? formCache : item"
           display-delete-btn
           @cancel="cancel"
           @submit="submit"
@@ -20,7 +18,7 @@
 </template>
 <script>
 import AppAddressForm from '@/modules/profile/components/addressForm'
-import addressService from '../../services/address.service'
+import service from '../../services/address.service'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import cacheFormMixin from '@/modules/common/mixins/cacheFormMixin'
 
@@ -28,6 +26,7 @@ export default {
   name: 'AddressDetails',
   components: {
     AppAddressForm,
+    AppLoadSpinner,
   },
   mixins: [cacheFormMixin],
   props: {
@@ -38,40 +37,23 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      address: null,
+      service: service,
     }
   },
   computed: {
     formName() {
-      return `detailsPartner:${this.id}`
+      return `AddressDetails:${this.id}`
     },
   },
-  async created() {
-    this.loading = true
-    this.address = await addressService.getById(this.id)
-    this.loading = false
-  },
+
   methods: {
     async submit(val) {
+      this.needFormCache = false
       this.loading = true
-      this.address = await addressService.updateOne(this.id, val)
+      this.item = await this.service.updateOne(this.id, val)
       this.loading = false
       this.clearCache()
       this.$router.go(-1)
-    },
-
-    async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
-      if (res) {
-        this.loading = true
-        await addressService.deleteById(this.id)
-        this.loading = false
-        this.clearCache()
-        this.$router.go(-1)
-      }
     },
   },
 }

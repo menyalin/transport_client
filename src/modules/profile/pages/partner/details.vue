@@ -6,7 +6,7 @@
 
         <app-partner-form
           v-else
-          :partner="formCache ? formCache : partner"
+          :partner="formCache ? formCache : item"
           display-delete-btn
           @cancel="cancel"
           @submit="submit"
@@ -38,41 +38,23 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      partner: null,
+      service: service,
     }
   },
   computed: {
     formName() {
-      return `detailsPartner:${this.id}`
+      return `PartnerDetails:${this.id}`
     },
-  },
-  async created() {
-    this.loading = true
-    this.partner = await service.getById(this.id)
-    this.loading = false
   },
 
   methods: {
     async submit(val) {
+      this.needFormCache = false
       this.loading = true
-      this.partner = await service.updateOne(this.id, val)
+      this.item = await this.service.updateOne(this.id, val)
       this.loading = false
       this.clearCache()
       this.$router.go(-1)
-    },
-
-    async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
-      if (res) {
-        this.loading = true
-        await service.deleteById(this.id)
-        this.clearCache()
-        this.loading = false
-        this.$router.go(-1)
-      }
     },
   },
 }

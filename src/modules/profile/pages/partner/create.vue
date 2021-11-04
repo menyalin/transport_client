@@ -27,28 +27,19 @@ export default {
     AppLoadSpinner,
   },
   mixins: [cacheFormMixin],
-  props: {
-    initFormName: String,
-    fieldName: String,
-  },
 
-  data() {
-    return {
-      loading: false,
-    }
-  },
   computed: {
     formName() {
-      return 'createPartner'
+      return 'PartnerCreate'
     },
   },
   methods: {
     submit(data) {
+      this.needFormCache = false
       this.loading = true
       this.$store
         .dispatch('createPartner', data)
         .then((res) => {
-          this.needFormCache = false
           this.loading = false
           this.updateCache({
             value: res._id,
