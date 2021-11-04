@@ -27,6 +27,7 @@
         <v-data-table
           :headers="headers"
           :items="crews"
+          height="72vh"
           dense
           @dblclick:row="dblClickRow"
         >
