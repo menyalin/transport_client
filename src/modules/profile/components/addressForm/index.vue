@@ -20,7 +20,7 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <app-address-autocomplete
+    <app-address-suggestion
       class="mt-3"
       @change="getParsedAddress"
     />
@@ -40,16 +40,11 @@
       label="Сокращенное наименование адреса"
       :hint="addressShortNameHint"
     />
-    <app-autocomplete
+    <app-partner-autocomplete
       v-model="$v.form.partner.$model"
       dense
       outlined
       label="Партнер"
-      itemsGetter="partnersForAutocomplete"
-      :formName="formName"
-      createRouteName="PartnerCreate"
-      updateRouteName="PartnerDetails"
-      fieldName="partner"
     />
     <v-text-field
       v-model="$v.form.note.$model"
@@ -102,9 +97,9 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppAddressAutocomplete from '@/modules/profile/components/addressAutocomplete'
+import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import AppAutocomplete from '@/modules/common/components/autocomplete'
+import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
 const validCoordinates = (val) => {
   if (!val) return true
@@ -121,9 +116,9 @@ const validCoordinates = (val) => {
 export default {
   name: 'AddressForm',
   components: {
-    AppAddressAutocomplete,
+    AppAddressSuggestion,
     AppButtonsPanel,
-    AppAutocomplete,
+    AppPartnerAutocomplete,
   },
   props: {
     address: {
@@ -192,9 +187,6 @@ export default {
         if (!!val) this.setFormFields(val)
       },
     },
-  },
-  beforeDestroy() {
-    this.$emit('saveToCache', this.formState)
   },
   validations: {
     form: {

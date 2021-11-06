@@ -1,23 +1,23 @@
-import List from '../pages/partner/list'
-import Details from '../pages/partner/details'
+import List from '../pages/address/list'
+import Details from '../pages/address/details'
 
-const BASE_PATH = 'partners'
+const BASE_PATH = 'address'
 
 export default [
   {
     path: BASE_PATH,
-    name: 'PartnerList',
+    name: 'AddressList',
     component: List,
   },
   {
     path: BASE_PATH + '/create',
-    name: 'PartnerCreate',
+    name: 'AddressCreate',
     component: Details,
     props: true,
   },
   {
     path: BASE_PATH + '/:id',
-    name: 'PartnerDetails',
+    name: 'AddressDetails',
     component: Details,
     props: true,
   },

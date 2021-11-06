@@ -68,6 +68,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    openInModal: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -108,9 +112,7 @@ export default {
       },
     },
   },
-  beforeDestroy() {
-    this.$emit('saveToCache', this.formState)
-  },
+  
   validations: {
     form: {
       name: { required },

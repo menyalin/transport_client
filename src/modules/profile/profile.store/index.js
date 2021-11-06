@@ -1,3 +1,4 @@
+import AddressModule from './address'
 import CrewModule from './crew'
 import TruckModule from './truck'
 import TkNameModule from './tkName'
@@ -6,15 +7,13 @@ import PartnerModule from './partner'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
-import AddressService from '@/modules/profile/services/address.service'
 
-import CrewService from '@/modules/profile/services/crew.service'
-import moment from 'moment'
+// import CrewService from '@/modules/profile/services/crew.service'
+// import moment from 'moment'
 
 export default {
   state: {
     myCompanies: [],
-    addresses: [],
 
     cacheDirectories: new Map(),
     tasks: [],
@@ -70,21 +69,6 @@ export default {
         (item) => item._id !== company._id
       )
       state.myCompanies.push(company)
-    },
-    setAddresses(state, payload) {
-      state.addresses = payload
-    },
-    addAddress({ addresses }, payload) {
-      if (addresses.findIndex((item) => item._id === payload._id) === -1) {
-        addresses.push(payload)
-      }
-    },
-    updateAddress({ addresses }, payload) {
-      const ind = addresses.findIndex((item) => item._id === payload._id)
-      if (ind !== -1) addresses.splice(ind, 1, payload)
-    },
-    deleteAddress(state, id) {
-      state.addresses = state.addresses.filter((item) => item._id !== id)
     },
   },
   actions: {
@@ -168,21 +152,7 @@ export default {
       }
     },
 
-    createAddress({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const newAddress = await AddressService.create(payload)
-          commit('addAddress', newAddress)
-          commit('setLoading', false)
-          resolve(newAddress)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
-      })
-    },
+    
 
     async getAddresses({ commit, getters }, directiveUpdate) {
       try {
@@ -212,15 +182,14 @@ export default {
     staffRoles: ({ staffRoles }) => staffRoles,
 
     tasks: ({ tasks }) => tasks,
-    addresses: ({ addresses }, { directoriesProfile }) =>
-      addresses.filter((item) => item.company === directoriesProfile),
   },
 
   modules: {
+    AddressModule,
     CrewModule,
+    DriverModule,
     TruckModule,
     TkNameModule,
-    DriverModule,
     PartnerModule,
   },
 }

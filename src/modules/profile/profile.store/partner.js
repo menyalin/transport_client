@@ -25,21 +25,21 @@ export default {
     },
   },
   actions: {
-    createPartner({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const data = await service.create(payload)
-          commit('addPartner', data)
-          commit('setLoading', false)
-          resolve(data)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
-      })
-    },
+    // __createPartner({ commit }, payload) {
+    //   return new Promise(async (resolve, reject) => {
+    //     try {
+    //       commit('setLoading', true)
+    //       const data = await service.create(payload)
+    //       commit('addPartner', data)
+    //       commit('setLoading', false)
+    //       resolve(data)
+    //     } catch (e) {
+    //       commit('setLoading', false)
+    //       commit('setError', e)
+    //       reject(e)
+    //     }
+    //   })
+    // },
 
     async getPartners({ commit, getters }, directiveUpdate) {
       try {
@@ -64,15 +64,19 @@ export default {
   getters: {
     partnersMap: ({ partners }) =>
       new Map(partners.map((item) => [item._id, item])),
-    partners: ({ partners }) =>
-      partners.sort((a, b) => {
-        if (a.name < b.name) return -1
-        if (a.name > b.name) return 1
-      }),
-    partnersForAutocomplete: ({ partners }) =>
-      partners.map((item) => ({
-        value: item._id,
-        text: item.name,
-      })),
+    partners: ({ partners }, { directoriesProfile }) =>
+      partners
+        .filter((item) => item.company === directoriesProfile)
+        .sort((a, b) => {
+          if (a.name < b.name) return -1
+          if (a.name > b.name) return 1
+        }),
+    partnersForAutocomplete: ({ partners }, { directoriesProfile }) =>
+      partners
+        .filter((item) => item.company === directoriesProfile)
+        .map((item) => ({
+          value: item._id,
+          text: item.name,
+        })),
   },
 }

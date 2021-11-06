@@ -4,15 +4,13 @@ import CompanyEdit from '../pages/companyEdit'
 import CompanyDetails from '../pages/companyDetails'
 import TaskList from '../pages/taskList'
 
-import AddressCreate from '../pages/address/addressCreate'
-import AddressList from '../pages/address/addressList'
-import AddressDetails from '../pages/address/addressDetails'
 
 import crewRoutes from './crews'
 import truckRoutes from './trucks'
 import driverRoutes from './drivers'
 import tkNameRoutes from './tkNames'
 import partnerRoutes from './partners'
+import addressRoutes from './address'
 
 import ProfileSettings from '../pages/profileSettings'
 
@@ -29,6 +27,7 @@ export default [
       ...driverRoutes,
       ...tkNameRoutes,
       ...partnerRoutes,
+      ...addressRoutes,
       { path: 'companies', name: 'companyList', component: Companies },
       {
         path: 'companies/create',
@@ -43,23 +42,7 @@ export default [
       },
       { path: 'tasks', name: 'taskList', component: TaskList },
 
-      {
-        path: 'address',
-        name: 'AddressList',
-        component: AddressList,
-      },
-      {
-        path: 'address/create',
-        name: 'createAddress',
-        component: AddressCreate,
-        props: true,
-      },
-      {
-        path: 'address/:id',
-        name: 'addressDetails',
-        component: AddressDetails,
-        props: true,
-      },
+      
       /// Настройки профиля
       {
         path: 'settings',

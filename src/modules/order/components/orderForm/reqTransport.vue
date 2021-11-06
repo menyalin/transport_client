@@ -24,7 +24,7 @@
       outlined
       dense
       hide-details
-      label="t-режим"
+      label="Загрузка"
       @change="change($event, 'loadDirection')"
     />
   </div>
@@ -45,7 +45,7 @@ export default {
       params: {
         kind: null,
         liftCapacity: null,
-        loadDirection: 'rear',
+        loadDirection: null,
       },
     }
   },
@@ -59,7 +59,7 @@ export default {
         if (val) {
           this.params.kind = val.kind
           this.params.liftCapacity = val.liftCapacity
-          this.params.loadDirection = val.loadDirection
+          this.params.loadDirection = val.loadDirection || 'rear'
         }
       },
     },

@@ -26,6 +26,8 @@
           <div class="text-caption px-5 py-2">
             Период отображения рейса
           </div>
+          <p>{{ formState }}</p>
+
           <div class="dates-position-block">
             <app-date-time-input
               v-model="$v.form.startPositionDate.$model"
@@ -48,7 +50,7 @@
           <h6>Требования к транспорту</h6>
           <app-req-transport v-model="reqTransport" />
           <h6>Маршрут</h6>
-          <app-route-points :points="points" />
+          <app-route-points v-model="points" />
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -105,7 +107,10 @@ export default {
         note: null,
         tRegime: null,
       },
-      points: [],
+      points: [
+        { type: 'loading', address: null, plannedDate: '', note: '' },
+        { type: 'unloading', address: null, plannedDate: '', note: '' },
+      ],
       reqTransport: {},
       form: {
         startPositionDate: null,
@@ -131,6 +136,15 @@ export default {
       if (!this.$v.form.endPositionDate.isLaterThan)
         errors.push('Дата должна быть больше начальной даты')
       return errors
+    },
+    formState() {
+      return {
+        ...this.form,
+        points: this.points,
+        company: this.directoriesProfile,
+        cargoParams: this.cargoParams,
+        reqTransport: this.reqTransport,
+      }
     },
   },
   watch: {
@@ -160,13 +174,7 @@ export default {
     submit() {
       if (!this.directoriesProfile) return null
 
-      this.$emit('submit', {
-        ...this.form,
-        points: this.points,
-        company: this.directoriesProfile,
-        cargoParams: this.cargoParams,
-        reqTransport: this.reqTransport,
-      })
+      this.$emit('submit', this.formState)
     },
     cancel() {
       this.$emit('cancel')

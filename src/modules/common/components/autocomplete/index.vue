@@ -5,12 +5,14 @@
       :items="items"
       :value="value"
       :dense="dense"
+      :disabled="disabled"
       :hideDetails="hideDetails"
       :outlined="outlined"
       clearable
-      :append-icon="appendIcon"
+      :search-input.sync="search"
+      :append-outer-icon="appendIcon"
       @change="change"
-      @click:append="appendClick"
+      @click:append-outer="appendClick"
     />
   </div>
 </template>
@@ -25,6 +27,7 @@ export default {
     hideDetails: { type: Boolean, default: false },
     outlined: { type: Boolean, default: false },
     dense: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
     value: String,
     label: String,
     itemsGetter: String,
@@ -34,14 +37,22 @@ export default {
     fieldName: String,
   },
   data() {
-    return { dialog: false }
+    return {
+      search: null,
+    }
   },
   computed: {
     items() {
       return this.$store.getters[this.itemsGetter]
     },
     appendIcon() {
+      if (!this.createRouteName || !this.updateRouteName) return null
       return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
+    },
+  },
+  watch: {
+    search: function (val) {
+      this.$emit('changeSearch', val)
     },
   },
 

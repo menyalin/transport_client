@@ -1,10 +1,14 @@
 <template>
   <div class="wrapper">
-    <app-point-detail
-      v-for="(point, ind) in tmpPoints"
+    <div
+      v-for="(point, ind) of tmpPoints"
       :key="ind"
-      :point="point"
-    />
+    >
+      <app-point-detail
+        :point="point"
+        @changePoint="change($event, ind)"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -18,37 +22,34 @@ export default {
   },
   model: {
     prop: 'points',
-    event: 'change',
+    event: 'changePoints',
   },
   props: {
     points: Array,
   },
   data() {
     return {
-      pointTypes: ['loading', 'unloading'],
-      tmpPoints: [
-        { type: 'loading', address: '', plannedDate: '', note: '' },
-        { type: 'unloading', address: '', plannedDate: '', note: '' },
-      ],
+      // pointTypes: ['loading', 'unloading'],
+      tmpPoints: [],
     }
   },
   computed: {
-    ...mapGetters([]),
+    // ...mapGetters([]),
   },
   watch: {
     points: {
       immediate: true,
       handler: function (val) {
-        if (!!val && val.length) {
+        if (val && val.length) {
           this.tmpPoints = val.slice()
         }
       },
     },
   },
   methods: {
-    change(val, field) {
-      this.params[field] = val
-      this.$emit('change', this.params)
+    change(val, ind) {
+      this.tmpPoints.splice(ind, 1, val)
+      this.$emit('changePoints', this.tmpPoints)
     },
   },
 }
