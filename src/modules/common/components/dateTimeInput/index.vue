@@ -22,7 +22,7 @@
         :min="minTimeValue"
         :error-messages="errorMessages"
         :value="timeStr"
-        class="time-input"
+        class="time-input pt-0 mt-0"
         :hide-details="hideDetails"
         :disabled="timeInputDisabled || disabled"
         dense
@@ -168,6 +168,7 @@ export default {
   max-width: 20rem;
   min-width: 20rem;
   display: flex;
+
   flex-direction: row;
   flex-wrap: nowrap;
   width: 100%;

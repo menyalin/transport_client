@@ -16,18 +16,10 @@
         >
           Профиль справочников не выбран, сохранение не возможно
         </v-alert>
-        <div
-          v-else
-          class="ma-3 text-caption"
-        >
-          Профиль настроек: {{ directoriesProfileName }}
-        </div>
         <div class="wrapper">
           <div class="text-caption px-5 py-2">
             Период отображения рейса
           </div>
-          <p>{{ formState }}</p>
-
           <div class="dates-position-block">
             <app-date-time-input
               v-model="$v.form.startPositionDate.$model"
@@ -45,12 +37,21 @@
               @blur="$v.form.endPositionDate.$touch()"
             />
           </div>
-          <h6>Параметры груза</h6>
-          <app-cargo-params v-model="cargoParams" />
-          <h6>Требования к транспорту</h6>
-          <app-req-transport v-model="reqTransport" />
-          <h6>Маршрут</h6>
-          <app-route-points v-model="points" />
+
+          <app-cargo-params
+            v-model="cargoParams"
+            title="Параметры груза"
+          />
+
+          <app-req-transport
+            v-model="reqTransport"
+            title="Требования к транспорту"
+          />
+
+          <app-route-points
+            v-model="route"
+            title="Маршрут"
+          />
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -107,7 +108,7 @@ export default {
         note: null,
         tRegime: null,
       },
-      points: [
+      route: [
         { type: 'loading', address: null, plannedDate: '', note: '' },
         { type: 'unloading', address: null, plannedDate: '', note: '' },
       ],
@@ -140,7 +141,7 @@ export default {
     formState() {
       return {
         ...this.form,
-        points: this.points,
+        route: this.route,
         company: this.directoriesProfile,
         cargoParams: this.cargoParams,
         reqTransport: this.reqTransport,
@@ -181,7 +182,7 @@ export default {
     },
     setFormFields(val) {
       const keys = Object.keys(this.form)
-      if (val.points) this.points = val.points
+      if (val.route) this.route = val.route
       if (val.cargoParams) this.cargoParams = val.cargoParams
       if (val.reqTransport) this.reqTransport = val.reqTransport
       keys.forEach((key) => {
@@ -190,7 +191,7 @@ export default {
     },
     resetForm() {
       const keys = Object.keys(this.form)
-      this.points = []
+      this.route = []
       this.cargoParams = { ...{} }
       this.reqTransport = { ...{} }
       keys.forEach((key) => {

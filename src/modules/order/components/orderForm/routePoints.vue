@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <app-block-title>{{ title }}</app-block-title>
     <div
       v-for="(point, ind) of tmpPoints"
       :key="ind"
@@ -12,13 +13,13 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import AppPointDetail from './pointDetail'
-
+import AppBlockTitle from './blockTitle.vue'
 export default {
   name: 'RoutePoints',
   components: {
     AppPointDetail,
+    AppBlockTitle,
   },
   model: {
     prop: 'points',
@@ -26,16 +27,14 @@ export default {
   },
   props: {
     points: Array,
+    title: String,
   },
   data() {
     return {
-      // pointTypes: ['loading', 'unloading'],
       tmpPoints: [],
     }
   },
-  computed: {
-    // ...mapGetters([]),
-  },
+
   watch: {
     points: {
       immediate: true,

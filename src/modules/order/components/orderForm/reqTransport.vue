@@ -1,44 +1,54 @@
 <template>
-  <div class="req-transport-block">
-    <v-select
-      :value="reqTransport.kind"
-      :items="truckKinds"
-      outlined
-      dense
-      hide-details
-      label="Вид ТС"
-      @change="change($event, 'kind')"
-    />
-    <v-select
-      :value="reqTransport.liftCapacity"
-      :items="liftCapacityTypes"
-      outlined
-      dense
-      hide-details
-      label="Груз-ть"
-      @change="change($event, 'liftCapacity')"
-    />
-    <v-select
-      :value="reqTransport.loadDirection"
-      :items="loadDirection"
-      outlined
-      dense
-      hide-details
-      label="Загрузка"
-      @change="change($event, 'loadDirection')"
-    />
+  <div>
+    <div>
+      <app-block-title>{{ title }}</app-block-title>
+    </div>
+    <div class="req-transport-block">
+      <v-select
+        :value="reqTransport.kind"
+        :items="truckKinds"
+        outlined
+        dense
+        hide-details
+        label="Вид ТС"
+        @change="change($event, 'kind')"
+      />
+      <v-select
+        :value="reqTransport.liftCapacity"
+        :items="liftCapacityTypes"
+        outlined
+        dense
+        hide-details
+        label="Груз-ть"
+        @change="change($event, 'liftCapacity')"
+      />
+      <v-select
+        :value="reqTransport.loadDirection"
+        :items="loadDirection"
+        outlined
+        dense
+        hide-details
+        label="Загрузка"
+        @change="change($event, 'loadDirection')"
+      />
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import AppBlockTitle from './blockTitle.vue'
 export default {
   name: 'ReqTransport',
+  components: {
+    AppBlockTitle,
+  },
   model: {
     prop: 'reqTransport',
     event: 'change',
   },
   props: {
     reqTransport: Object,
+    title: String,
   },
   data() {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3">
+  <div class="pa-3 point-wrapper">
     <v-select
       v-model="tmpPoint.type"
       :items="pointTypes"
@@ -8,10 +8,16 @@
       outlined
       @change="change"
     />
+    <app-date-time-input
+      v-model="tmpPoint.plannedDate"
+      label="Плановая дата"
+      hidePrependIcon
+    />
     <app-address-autocomplete
       v-model="tmpPoint.address"
       :pointType="tmpPoint.type"
       :disabled="!tmpPoint.type"
+      label="Адрес"
       dense
       outlined
       hide-details
@@ -21,11 +27,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
+import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 export default {
   name: 'PointDetail',
   components: {
     AppAddressAutocomplete,
+    AppDateTimeInput,
   },
   props: {
     point: {
@@ -37,6 +45,7 @@ export default {
       tmpPoint: {
         type: null,
         address: null,
+        plannedDate: null,
       },
     }
   },
@@ -44,13 +53,6 @@ export default {
     ...mapGetters(['pointTypes']),
   },
   watch: {
-    // tmpPoint: {
-    //   deep: true,
-    //   handler: function (val) {
-    //     console.log('change point', val)
-    //   },
-    // },
-
     point: {
       immediate: true,
       handler: function (val) {
@@ -71,4 +73,10 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.point-wrapper {
+  display: grid;
+  grid-gap: 7px;
+  grid-template-columns: 140px 320px auto;
+}
+</style>
