@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-3">
     <v-select
       v-model="tmpPoint.type"
       :items="pointTypes"

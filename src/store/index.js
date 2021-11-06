@@ -30,7 +30,6 @@ export default new Vuex.Store({
     appLoading: false,
     error: null,
     baseUrl: process.env.VUE_APP_API_URL,
-    formCacheMap: new Map(),
   }),
   mutations: {
     setAppLoading(state, payload) {
@@ -47,17 +46,6 @@ export default new Vuex.Store({
     clearError(state) {
       state.error = null
     },
-    addFormToCache({ formCacheMap }, { key, form }) {
-      formCacheMap.set(key, form)
-    },
-    deleteFormCache({ formCacheMap }, formName) {
-      formCacheMap.delete(formName)
-    },
-    updateFormCache({ formCacheMap }, { formName, fieldName, value }) {
-      let cache = formCacheMap.get(formName)
-      cache = { ...cache, [fieldName]: value }
-      formCacheMap.set(formName, cache)
-    },
   },
   actions: {
     setError({ commit }, error) {
@@ -69,7 +57,6 @@ export default new Vuex.Store({
     error: ({ error }) => error,
     appLoading: ({ appLoading }) => appLoading,
     loading: ({ loading }) => loading,
-    formCacheMap: ({ formCacheMap }) => formCacheMap,
   },
   modules: { AuthModule, AdminModule, ProfileModule, OrderModule },
   plugins: [initPlugin],
