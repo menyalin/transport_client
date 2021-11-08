@@ -38,6 +38,11 @@
             />
           </div>
 
+          <app-route-state
+            v-model="state"
+            title="Статус рейса"
+          />
+
           <app-cargo-params
             v-model="cargoParams"
             title="Параметры груза"
@@ -51,6 +56,10 @@
           <app-route-points
             v-model="route"
             title="Маршрут"
+          />
+          <app-confirmed-crew
+            v-model="confirmedCrew"
+            title="Подтвержденный экипаж"
           />
         </div>
         <v-btn
@@ -77,6 +86,8 @@ import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppCargoParams from './cargoParams.vue'
 import AppRoutePoints from './routePoints.vue'
 import AppReqTransport from './reqTransport.vue'
+import AppRouteState from './routeState.vue'
+
 import { required, numeric } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 import { mapGetters } from 'vuex'
@@ -88,6 +99,7 @@ export default {
     AppReqTransport,
     AppCargoParams,
     AppRoutePoints,
+    AppRouteState,
   },
   props: {
     order: {
@@ -108,6 +120,7 @@ export default {
         note: null,
         tRegime: null,
       },
+      state: {},
       route: [
         { type: 'loading', address: null, plannedDate: '', note: '' },
         { type: 'unloading', address: null, plannedDate: '', note: '' },
@@ -141,10 +154,12 @@ export default {
     formState() {
       return {
         ...this.form,
+        state: this.state,
         route: this.route,
         company: this.directoriesProfile,
         cargoParams: this.cargoParams,
         reqTransport: this.reqTransport,
+        confirmedCrew: this.confirmedCrew,
       }
     },
   },
@@ -174,7 +189,6 @@ export default {
   methods: {
     submit() {
       if (!this.directoriesProfile) return null
-
       this.$emit('submit', this.formState)
     },
     cancel() {
@@ -182,6 +196,8 @@ export default {
     },
     setFormFields(val) {
       const keys = Object.keys(this.form)
+      if (val.confirmedCrew) this.confirmedCrew = val.confirmedCrew
+      if (val.state) this.state = val.state
       if (val.route) this.route = val.route
       if (val.cargoParams) this.cargoParams = val.cargoParams
       if (val.reqTransport) this.reqTransport = val.reqTransport
@@ -192,6 +208,8 @@ export default {
     resetForm() {
       const keys = Object.keys(this.form)
       this.route = []
+      this.confirmedCrew = { ...{} }
+      this.state = { ...{} }
       this.cargoParams = { ...{} }
       this.reqTransport = { ...{} }
       keys.forEach((key) => {

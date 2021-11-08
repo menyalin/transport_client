@@ -9,6 +9,14 @@ export default {
       { value: 'loading', text: 'Погрузка' },
       { value: 'unloading', text: 'Выгрузка' },
     ],
+    orderStatuses: [
+      { value: 'needGet', text: 'Надо получить' },
+      { value: 'getted', text: 'Получен' },
+      { value: 'inProgress', text: 'В работе' },
+      { value: 'completed', text: 'Выполнен' },
+      { value: 'weRefused', text: 'Мы отказались' },
+      { value: 'clientRefused', text: 'Клиент отказался' },
+    ],
   },
   mutations: {
     setPeriod(state, payload) {
@@ -61,7 +69,7 @@ export default {
           company: item.company,
           startPositionDate: item.startPositionDate,
           endPositionDate: item.endPositionDate,
-          truckId: item.truck,
+          truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
         }))
         .sort(
@@ -72,5 +80,6 @@ export default {
       period[0],
       moment(period[1]).add(1, 'd').format('YYYY-MM-DD'),
     ],
+    orderStatuses: ({ orderStatuses }) => orderStatuses,
   },
 }
