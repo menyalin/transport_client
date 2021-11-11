@@ -10,6 +10,7 @@
         :prepend-inner-icon="!hidePrependIcon ? 'mdi-chevron-right' : null"
         :outlined="outlined"
         :disabled="disabled"
+        :readonly="readonly"
         :hide-details="hideDetails"
         dense
         :error-messages="errorMessages"
@@ -24,6 +25,7 @@
         :value="timeStr"
         class="time-input pt-0 mt-0"
         :hide-details="hideDetails"
+        :readonly="readonly"
         :disabled="timeInputDisabled || disabled"
         dense
         :outlined="outlined"
@@ -55,6 +57,10 @@ export default {
     hideDetails: {
       type: Boolean,
       default: true,
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
     },
     label: {
       type: String,
@@ -128,6 +134,7 @@ export default {
   },
   methods: {
     setDate() {
+      if (this.readonly) return null
       this.dateValue = moment()
       this.emitValue()
     },

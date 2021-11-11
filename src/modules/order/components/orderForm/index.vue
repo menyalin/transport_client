@@ -25,12 +25,14 @@
               v-model="$v.form.startPositionDate.$model"
               label="Дата начала"
               hideDetails
+              readonly
               @blur="$v.form.startPositionDate.$touch()"
             />
             <app-date-time-input
               v-model="$v.form.endPositionDate.$model"
               :disabled="!form.startPositionDate"
               label="Дата завершения"
+              readonly
               :errorMessages="endPositionDateErrors"
               :minDate="form.startPositionDate"
               hideDetails
