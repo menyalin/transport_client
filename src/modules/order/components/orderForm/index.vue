@@ -188,8 +188,8 @@ export default {
           newRouteValue.length
         ) {
           const firstPoint = newRouteValue[0]
-          // const lastPoint = newRouteValue[newRouteValue.length - 1]
-          this.form.startPositionDate = firstPoint.plannedDate
+          if (!this.orderId)
+            this.form.startPositionDate = firstPoint.plannedDate
           this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
         }
       },
