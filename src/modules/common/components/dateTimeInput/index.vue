@@ -7,13 +7,13 @@
         :label="label"
         :value="dateStr"
         class="date-input pt-0 mt-0"
-        :prepend-icon="!hidePrependIcon ? 'mdi-arrow-right' : null"
+        :prepend-inner-icon="!hidePrependIcon ? 'mdi-chevron-right' : null"
         :outlined="outlined"
         :disabled="disabled"
         :hide-details="hideDetails"
         dense
         :error-messages="errorMessages"
-        @click:prepend="setDate"
+        @click:prepend-inner="setDate"
         @change="changeDate"
       />
       <v-text-field

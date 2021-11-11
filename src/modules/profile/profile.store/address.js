@@ -2,8 +2,8 @@ import service from '@/modules/profile/services/address.service'
 const _getAddressTextForAutocomplete = (item, partnersMap) => {
   let res = ''
   if (item.partner && partnersMap.has(item.partner))
-    res += `${partnersMap.get(item.partner).name} : `
-  if (item.shortName) res += `${item.shortName} : `
+    res += `${partnersMap.get(item.partner).name} - `
+  if (item.shortName) res += `${item.shortName} - `
   res += item.name
   return res
 }

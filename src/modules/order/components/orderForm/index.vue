@@ -59,7 +59,7 @@
           />
           <app-confirmed-crew
             v-model="confirmedCrew"
-            title="Подтвержденный экипаж"
+            title="Экипаж"
           />
         </div>
         <v-btn
@@ -87,6 +87,7 @@ import AppCargoParams from './cargoParams.vue'
 import AppRoutePoints from './routePoints.vue'
 import AppReqTransport from './reqTransport.vue'
 import AppRouteState from './routeState.vue'
+import AppConfirmedCrew from './confirmedCrew.vue'
 
 import { required, numeric } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
@@ -100,6 +101,7 @@ export default {
     AppCargoParams,
     AppRoutePoints,
     AppRouteState,
+    AppConfirmedCrew,
   },
   props: {
     order: {
@@ -126,6 +128,7 @@ export default {
         { type: 'unloading', address: null, plannedDate: '', note: '' },
       ],
       reqTransport: {},
+      confirmedCrew: {},
       form: {
         startPositionDate: null,
         endPositionDate: null,
@@ -173,6 +176,24 @@ export default {
         }
       },
     },
+    route: {
+      // редактирование маршрута
+      deep: true,
+      handler: function (newRouteValue) {
+        // при создании рейса
+        if (
+          // !this.orderId &&
+          newRouteValue &&
+          Array.isArray(newRouteValue) &&
+          newRouteValue.length
+        ) {
+          const firstPoint = newRouteValue[0]
+          // const lastPoint = newRouteValue[newRouteValue.length - 1]
+          this.form.startPositionDate = firstPoint.plannedDate
+          this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
+        }
+      },
+    },
   },
   validations() {
     return {
@@ -215,6 +236,20 @@ export default {
       keys.forEach((key) => {
         this.form[key] = null
       })
+    },
+
+    getEndPositionDate(route) {
+      let dates = []
+      const dateFields = ['plannedDate', 'arrivalDate', 'departureDate']
+      dateFields.forEach((field) => {
+        dates.push(
+          route
+            .filter((i) => i[field])
+            .map((i) => i[field])
+            .reverse()[0]
+        )
+      })
+      return dates.sort((a, b) => new Date(b) - new Date(a))[0]
     },
   },
 }

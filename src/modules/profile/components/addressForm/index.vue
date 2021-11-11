@@ -208,7 +208,7 @@ export default {
       this.resetForm()
     },
     cancel() {
-      this.resetForm()
+      // this.resetForm()
       this.$emit('cancel')
     },
     setFormFields(val) {

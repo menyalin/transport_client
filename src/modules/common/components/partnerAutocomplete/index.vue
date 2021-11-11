@@ -11,8 +11,8 @@
       clearable
       :label="label"
       :outlined="outlined"
-      :append-outer-icon="appendIcon"
-      @click:append-outer="appendClick"
+      :append-icon="appendIcon"
+      @click:append="appendClick"
       @change="changeValue"
     />
     <v-dialog

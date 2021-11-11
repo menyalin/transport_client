@@ -10,12 +10,12 @@ export default {
       { value: 'unloading', text: 'Выгрузка' },
     ],
     orderStatuses: [
-      { value: 'needGet', text: 'Надо получить' },
-      { value: 'getted', text: 'Получен' },
-      { value: 'inProgress', text: 'В работе' },
-      { value: 'completed', text: 'Выполнен' },
-      { value: 'weRefused', text: 'Мы отказались' },
-      { value: 'clientRefused', text: 'Клиент отказался' },
+      // { value: 'needGet', text: 'Надо получить' },
+      // { value: 'getted', text: 'Получен' },
+      // { value: 'inProgress', text: 'В работе' },
+      // { value: 'completed', text: 'Выполнен' },
+      // { value: 'weRefused', text: 'Мы отказались' },
+      // { value: 'clientRefused', text: 'Клиент отказался' },
     ],
   },
   mutations: {
@@ -38,6 +38,10 @@ export default {
     },
     deleteOrder(state, id) {
       state.orders = state.orders.filter((item) => item._id !== id)
+    },
+
+    setOrderStatuses(state, payload) {
+      state.orderStatuses = payload
     },
   },
   actions: {

@@ -1,5 +1,8 @@
 <template>
-  <div class="wrapper">
+  <div
+    class="wrapper"
+    :class="{ invalid: !isValidRoute }"
+  >
     <app-block-title>{{ title }}</app-block-title>
     <div
       v-for="(point, ind) of tmpPoints"
@@ -34,7 +37,17 @@ export default {
       tmpPoints: [],
     }
   },
+  computed: {
+    isValidRoute() {
+      if (!this.tmpPoints) return false
+      const length = this.tmpPoints.length >= 2
+      const firstPoint = this.tmpPoints[0].type === 'loading'
+      const lastPoint =
+        this.tmpPoints[this.tmpPoints.length - 1].type === 'unloading'
 
+      return length && firstPoint && lastPoint
+    },
+  },
   watch: {
     points: {
       immediate: true,
@@ -59,5 +72,8 @@ export default {
   grid-template-columns: 160px 160px 160px;
   margin: 10px;
   gap: 15px;
+}
+.invalid {
+  border: tomato 1px solid;
 }
 </style>

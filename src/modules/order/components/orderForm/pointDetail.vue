@@ -12,7 +12,9 @@
       v-model="tmpPoint.plannedDate"
       label="Плановая дата"
       hidePrependIcon
+      @change="change"
     />
+
     <app-address-autocomplete
       v-model="tmpPoint.address"
       :pointType="tmpPoint.type"
@@ -21,6 +23,26 @@
       dense
       outlined
       hide-details
+      @change="change"
+    />
+
+    <app-date-time-input
+      v-model="tmpPoint.arrivalDate"
+      label="Факт прибытия"
+      @change="change"
+    />
+    <v-text-field
+      v-model="tmpPoint.note"
+      label="Примечание"
+      hide-details
+      outlined
+      dense
+      @change="change"
+    />
+    <app-date-time-input
+      v-model="tmpPoint.departureDate"
+      label="Факт убытия"
+      @change="change"
     />
   </div>
 </template>
@@ -46,6 +68,9 @@ export default {
         type: null,
         address: null,
         plannedDate: null,
+        arrivalDate: null,
+        departureDate: null,
+        note: null,
       },
     }
   },
@@ -76,7 +101,7 @@ export default {
 <style scoped>
 .point-wrapper {
   display: grid;
-  grid-gap: 7px;
-  grid-template-columns: 140px 320px auto;
+  grid-gap: 10px;
+  grid-template-columns: auto 1000px;
 }
 </style>

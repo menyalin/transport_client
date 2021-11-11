@@ -86,7 +86,15 @@ export default {
 
     setDirectories(
       { commit },
-      { companies, addresses, drivers, trucks, tkNames, partners }
+      {
+        companies,
+        addresses,
+        drivers,
+        trucks,
+        tkNames,
+        partners,
+        orderStatuses,
+      }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
       if (addresses?.length) commit('setAddresses', addresses)
@@ -94,6 +102,7 @@ export default {
       if (trucks?.length) commit('setTrucks', trucks)
       if (tkNames?.length) commit('setTkNames', tkNames)
       if (partners?.length) commit('setPartners', partners)
+      if (orderStatuses?.length) commit('setOrderStatuses', orderStatuses)
     },
 
     async createCompany({ commit }, payload) {
@@ -151,8 +160,6 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
-
-    
 
     async getAddresses({ commit, getters }, directiveUpdate) {
       try {

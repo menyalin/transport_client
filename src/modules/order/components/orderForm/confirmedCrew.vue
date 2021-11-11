@@ -3,33 +3,14 @@
     <div>
       <app-block-title>{{ title }}</app-block-title>
     </div>
-    <div class="req-transport-block">
+    <div class="confirmed-crew-block">
       <v-select
-        :value="reqTransport.kind"
-        :items="truckKinds"
-        outlined
+        label="Грузовик"
+        :value="params.truck"
         dense
-        hide-details
-        label="Вид ТС"
-        @change="change($event, 'kind')"
-      />
-      <v-select
-        :value="reqTransport.liftCapacity"
-        :items="liftCapacityTypes"
+        :items="trucks"
         outlined
-        dense
-        hide-details
-        label="Груз-ть"
-        @change="change($event, 'liftCapacity')"
-      />
-      <v-select
-        :value="reqTransport.loadDirection"
-        :items="loadDirection"
-        outlined
-        dense
-        hide-details
-        label="Загрузка"
-        @change="change($event, 'loadDirection')"
+        @change="change($event, 'truck')"
       />
     </div>
   </div>
@@ -38,38 +19,44 @@
 import { mapGetters } from 'vuex'
 import AppBlockTitle from './blockTitle.vue'
 export default {
-  name: 'ReqTransport',
+  name: 'ConfirmedCrew',
   components: {
     AppBlockTitle,
   },
   model: {
-    prop: 'reqTransport',
+    prop: 'crew',
     event: 'change',
   },
   props: {
-    reqTransport: Object,
+    crew: Object,
     title: String,
   },
   data() {
     return {
       params: {
-        kind: null,
-        liftCapacity: null,
-        loadDirection: null,
+        truck: null,
+        trailer: null,
+        driver: null,
       },
     }
   },
   computed: {
-    ...mapGetters(['liftCapacityTypes', 'truckKinds', 'loadDirection']),
+    ...mapGetters([]),
+    trucks() {
+      return this.$store.getters.trucks
+        .filter((item) => item.type === 'truck')
+        .map((item) => ({ value: item._id, text: item.regNum }))
+    },
   },
   watch: {
-    reqTransport: {
+    crew: {
       immediate: true,
       handler: function (val) {
         if (val) {
-          this.params.kind = val.kind
-          this.params.liftCapacity = val.liftCapacity
-          this.params.loadDirection = val.loadDirection || 'rear'
+          const keys = Object.keys(this.params)
+          keys.forEach((key) => {
+            this.params[key] = val[key]
+          })
         }
       },
     },
@@ -83,9 +70,9 @@ export default {
 }
 </script>
 <style scoped>
-.req-transport-block {
+.confirmed-crew-block {
   display: grid;
-  grid-template-columns: 160px 160px 160px;
+  grid-template-columns: 200px;
   margin: 10px;
   gap: 15px;
 }
