@@ -44,6 +44,11 @@ class CrewService {
       // throw new Error(e.message)
     }
   }
+  async getCrewByTruckAndDate({ truck, date }) {
+    const params = { truck, date }
+    const { data } = await api.get(BASE_PATH + '/by_truck_and_date', { params })
+    return data
+  }
 
   async getActualCrewByTruck(truck) {
     const params = { truck }

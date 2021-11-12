@@ -61,6 +61,7 @@
           />
           <app-confirmed-crew
             v-model="confirmedCrew"
+            :date="form.startPositionDate"
             title="Экипаж"
           />
         </div>
@@ -91,7 +92,7 @@ import AppReqTransport from './reqTransport.vue'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew.vue'
 
-import { required, numeric } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 import { mapGetters } from 'vuex'
 export default {

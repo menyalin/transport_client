@@ -59,7 +59,7 @@ export default {
   name: 'SvgGrid',
   props: {
     leftShift: {
-      // Отступ. равный ширине столбца
+      // Отступ равный ширине столбца
       type: Number,
       required: true,
     },
