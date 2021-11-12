@@ -25,6 +25,7 @@
         readonly
         dense
         outlined
+        @change="change($event, 'driver')"
       />
       <v-autocomplete
         label="Прицеп"
@@ -33,6 +34,7 @@
         readonly
         dense
         outlined
+        @change="change($event, 'trailer')"
       />
     </div>
   </div>
@@ -108,9 +110,9 @@ export default {
         truck: this.params.truck,
         date: this.date,
       })
-      console.log(crew)
       this.params.driver = crew.driver
       this.params.trailer = crew.transport.trailer
+      this.$emit('change', this.params)
     },
   },
 }
