@@ -27,7 +27,7 @@
         </template>
         <template v-slot:[`item.client.client`]="{ item }">
           {{
-            partnersMap.has(item.client.client)
+            !!item.client && partnersMap.has(item.client.client)
               ? partnersMap.get(item.client.client).name
               : '-'
           }}
