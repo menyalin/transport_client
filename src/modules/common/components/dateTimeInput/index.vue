@@ -28,6 +28,7 @@
         :readonly="readonly"
         :disabled="timeInputDisabled || disabled"
         dense
+        label="Время"
         :outlined="outlined"
         @change="changeTime"
       />

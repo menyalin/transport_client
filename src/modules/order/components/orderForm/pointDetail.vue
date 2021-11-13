@@ -1,49 +1,65 @@
 <template>
   <div class="pa-3 point-wrapper">
-    <v-select
-      v-model="tmpPoint.type"
-      :items="pointTypes"
-      dense
-      hide-details
-      outlined
-      @change="change"
-    />
-    <app-date-time-input
-      v-model="tmpPoint.plannedDate"
-      label="Плановая дата"
-      hidePrependIcon
-      @change="change"
-    />
-
-    <app-address-autocomplete
-      v-model="tmpPoint.address"
-      :pointType="tmpPoint.type"
-      :disabled="!tmpPoint.type"
-      label="Адрес"
-      dense
-      outlined
-      hide-details
-      @change="change"
-    />
-
-    <app-date-time-input
-      v-model="tmpPoint.arrivalDate"
-      label="Факт прибытия"
-      @change="change"
-    />
-    <v-text-field
-      v-model="tmpPoint.note"
-      label="Примечание"
-      hide-details
-      outlined
-      dense
-      @change="change"
-    />
-    <app-date-time-input
-      v-model="tmpPoint.departureDate"
-      label="Факт убытия"
-      @change="change"
-    />
+    <div>
+      <v-select
+        v-model="tmpPoint.type"
+        :items="pointTypes"
+        dense
+        hide-details
+        outlined
+        :style="{ 'max-width': '150px' }"
+        @change="change"
+      />
+      <app-address-autocomplete
+        v-model="tmpPoint.address"
+        :pointType="tmpPoint.type"
+        :disabled="!tmpPoint.type"
+        label="Адрес"
+        dense
+        outlined
+        hide-details
+        @change="change"
+      />
+      <v-text-field
+        v-model="tmpPoint.note"
+        label="Примечание"
+        hide-details
+        outlined
+        dense
+        @change="change"
+      />
+    </div>
+    <div>
+      <app-date-time-input
+        v-model="tmpPoint.plannedDate"
+        label="Плановая дата"
+        hidePrependIcon
+        @change="change"
+      />
+      <app-date-time-input
+        v-model="tmpPoint.arrivalDate"
+        label="Факт прибытия"
+        @change="change"
+      />
+      <app-date-time-input
+        v-model="tmpPoint.departureDate"
+        label="Факт убытия"
+        @change="change"
+      />
+    </div>
+    <div
+      v-if="showDeleteBtn"
+      class="remove-btn-wrapper"
+    >
+      <v-btn
+        icon
+        dark
+        color="error"
+        @click="$emit('delete', ind)"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 <script>
@@ -60,6 +76,11 @@ export default {
   props: {
     point: {
       type: Object,
+    },
+    ind: Number,
+    showDeleteBtn: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -102,6 +123,14 @@ export default {
 .point-wrapper {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: auto 1000px;
+  grid-template-columns: 1fr auto 50px;
+}
+.point-wrapper > div > * {
+  margin: 5px;
+}
+.remove-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

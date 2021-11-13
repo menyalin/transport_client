@@ -14,12 +14,6 @@
     >
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
-    <div
-      v-else
-      class="ma-3 text-caption"
-    >
-      Профиль настроек: {{ directoriesProfileName }}
-    </div>
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
@@ -30,8 +24,13 @@
     <v-text-field
       v-model.trim="$v.form.inn.$model"
       outlined
+      hide-details
       label="ИНН"
       dense
+    />
+    <v-checkbox
+      v-model="form.isClient"
+      label="Клиент"
     />
 
     <v-btn
@@ -78,6 +77,7 @@ export default {
       form: {
         name: null,
         inn: null,
+        isClient: false,
       },
     }
   },
@@ -112,7 +112,7 @@ export default {
       },
     },
   },
-  
+
   validations: {
     form: {
       name: { required },

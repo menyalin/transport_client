@@ -15,6 +15,7 @@
     "socket.io-client": "^4.1.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vuedraggable": "^2.24.3",
     "vuelidate": "^0.7.6",
     "vuetify": "^2.4.0",
     "vuetify-confirm": "^2.0.6",

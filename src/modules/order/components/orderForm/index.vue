@@ -17,10 +17,13 @@
           Профиль справочников не выбран, сохранение не возможно
         </v-alert>
         <div class="wrapper">
-          <div class="text-caption px-5 py-2">
-            Период отображения рейса
-          </div>
-          <div class="dates-position-block">
+          <div
+            v-if="false"
+            class="dates-position-block"
+          >
+            <div class="text-caption px-5 py-2">
+              Период отображения рейса
+            </div>
             <app-date-time-input
               v-model="$v.form.startPositionDate.$model"
               label="Дата начала"
@@ -43,26 +46,35 @@
           <app-route-state
             v-model="state"
             title="Статус рейса"
+            class="route-state"
           />
-
+          <app-client-block
+            v-model="client"
+            title="Информация о клиенте"
+            class="client"
+          />
           <app-cargo-params
             v-model="cargoParams"
             title="Параметры груза"
+            class="cargo-params"
           />
 
           <app-req-transport
             v-model="reqTransport"
             title="Требования к транспорту"
+            class="req-transport"
           />
 
           <app-route-points
             v-model="route"
             title="Маршрут"
+            class="route-points"
           />
           <app-confirmed-crew
             v-model="confirmedCrew"
             :date="form.startPositionDate"
             title="Экипаж"
+            class="crew"
           />
         </div>
         <v-btn
@@ -91,6 +103,7 @@ import AppRoutePoints from './routePoints.vue'
 import AppReqTransport from './reqTransport.vue'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew.vue'
+import AppClientBlock from './clientBlock.vue'
 
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
@@ -105,6 +118,7 @@ export default {
     AppRoutePoints,
     AppRouteState,
     AppConfirmedCrew,
+    AppClientBlock,
   },
   props: {
     order: {
@@ -119,6 +133,7 @@ export default {
     return {
       loading: false,
       orderId: null,
+      client: {},
       cargoParams: {
         weight: null,
         places: null,
@@ -160,6 +175,7 @@ export default {
     formState() {
       return {
         ...this.form,
+        client: this.client,
         state: this.state,
         route: this.route,
         company: this.directoriesProfile,
@@ -220,6 +236,7 @@ export default {
     },
     setFormFields(val) {
       const keys = Object.keys(this.form)
+      if (val.client) this.client = val.client
       if (val.confirmedCrew) this.confirmedCrew = val.confirmedCrew
       if (val.state) this.state = val.state
       if (val.route) this.route = val.route
@@ -232,6 +249,7 @@ export default {
     resetForm() {
       const keys = Object.keys(this.form)
       this.route = []
+      this.client = { ...{} }
       this.confirmedCrew = { ...{} }
       this.state = { ...{} }
       this.cargoParams = { ...{} }
@@ -266,5 +284,35 @@ export default {
 }
 .dates-position-block > div {
   padding: 0px 15px;
+}
+.wrapper {
+  display: grid;
+  align-content: start;
+  justify-content: start;
+  grid-template-columns: 1fr 4fr;
+}
+.route-state {
+  grid-column: 1/2;
+  grid-row: 1/5;
+}
+.client {
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+.req-transport {
+  grid-column: 2/3;
+  grid-row: 2/3;
+}
+.cargo-params {
+  grid-column: 2/3;
+  grid-row: 3/4;
+}
+.route-points {
+  grid-column: 2/3;
+  grid-row: 5/8;
+}
+.crew {
+  grid-column: 2/3;
+  grid-row: 4/5;
 }
 </style>

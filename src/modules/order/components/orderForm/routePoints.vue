@@ -1,21 +1,36 @@
 <template>
-  <div
-    class="wrapper"
-    :class="{ invalid: !isValidRoute }"
-  >
+  <div :class="{ invalid: !isValidRoute }">
     <app-block-title>{{ title }}</app-block-title>
-    <div
-      v-for="(point, ind) of tmpPoints"
-      :key="ind"
+    <draggable v-model="xPoints">
+      <transition-group name="route">
+        <div
+          v-for="(point, ind) of tmpPoints"
+          :key="ind"
+          class="point-wrapper-outer"
+        >
+          <app-point-detail
+            :point="point"
+            :ind="ind"
+            :showDeleteBtn="tmpPoints.length > 2"
+            @changePoint="change($event, ind)"
+            @delete="deleteHandler"
+          />
+        </div>
+      </transition-group>
+    </draggable>
+
+    <v-btn
+      text
+      color="primary"
+      small
+      @click="addPoint"
     >
-      <app-point-detail
-        :point="point"
-        @changePoint="change($event, ind)"
-      />
-    </div>
+      Добавить адрес
+    </v-btn>
   </div>
 </template>
 <script>
+import draggable from 'vuedraggable'
 import AppPointDetail from './pointDetail'
 import AppBlockTitle from './blockTitle.vue'
 export default {
@@ -23,6 +38,7 @@ export default {
   components: {
     AppPointDetail,
     AppBlockTitle,
+    draggable,
   },
   model: {
     prop: 'points',
@@ -38,13 +54,20 @@ export default {
     }
   },
   computed: {
+    xPoints: {
+      get() {
+        return this.tmpPoints
+      },
+      set(val) {
+        this.$emit('changePoints', val)
+      },
+    },
     isValidRoute() {
       if (!this.tmpPoints) return false
       const length = this.tmpPoints.length >= 2
       const firstPoint = this.tmpPoints[0].type === 'loading'
       const lastPoint =
         this.tmpPoints[this.tmpPoints.length - 1].type === 'unloading'
-
       return length && firstPoint && lastPoint
     },
   },
@@ -63,17 +86,29 @@ export default {
       this.tmpPoints.splice(ind, 1, val)
       this.$emit('changePoints', this.tmpPoints)
     },
+    addPoint() {
+      this.tmpPoints.push({
+        type: 'unloading',
+      })
+      this.$emit('changePoints', this.tmpPoints)
+    },
+    deleteHandler(ind) {
+      this.tmpPoints.splice(ind, 1)
+      this.$emit('changePoints', this.tmpPoints)
+    },
   },
 }
 </script>
 <style scoped>
-.req-transport-block {
-  display: grid;
-  grid-template-columns: 160px 160px 160px;
-  margin: 10px;
-  gap: 15px;
-}
 .invalid {
   border: tomato 1px solid;
+}
+.point-wrapper-outer {
+  border: 1px dotted gray;
+  border-radius: 5px;
+  margin: 5px;
+}
+.route-move {
+  transition: transform 0.5s;
 }
 </style>

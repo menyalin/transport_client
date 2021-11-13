@@ -6,6 +6,7 @@
     <div class="confirmed-crew-block">
       <v-autocomplete
         label="Грузовик"
+        :loading="loading"
         :value="params.truck"
         dense
         :items="trucks"
@@ -14,9 +15,10 @@
       />
       <v-btn
         :disabled="!date || !params.truck"
+        icon
         @click="getCrew"
       >
-        get crew
+        <v-icon>mdi-cached</v-icon>
       </v-btn>
       <v-autocomplete
         label="Водитель"
@@ -60,6 +62,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       params: {
         truck: null,
         trailer: null,
@@ -98,20 +101,36 @@ export default {
         }
       },
     },
+    date: async function (val) {
+      if (val) {
+        await this.getCrew()
+      }
+    },
+  },
+  async mounted() {
+    await this.getCrew()
   },
   methods: {
-    change(val, field) {
+    async change(val, field) {
       this.params[field] = val
-      this.$emit('change', this.params)
+      if (field === 'truck') {
+        await this.getCrew()
+      } else {
+        this.$emit('change', this.params)
+      }
     },
     async getCrew() {
-      if (!this.date) return null
+      if (!this.date || !this.params.truck) return null
+      this.loading = true
+      this.params.driver = null
+      this.params.trailer = null
       const crew = await CrewService.getCrewByTruckAndDate({
         truck: this.params.truck,
         date: this.date,
       })
-      this.params.driver = crew.driver
-      this.params.trailer = crew.transport.trailer
+      this.params.driver = crew?.driver
+      this.params.trailer = crew?.transport?.trailer
+      this.loading = false
       this.$emit('change', this.params)
     },
   },
@@ -120,7 +139,7 @@ export default {
 <style scoped>
 .confirmed-crew-block {
   display: grid;
-  grid-template-columns: 300px 150px 300px 300px;
+  grid-template-columns: 300px 30px 300px 300px;
   margin: 10px;
   gap: 15px;
 }

@@ -25,6 +25,13 @@
         <template v-slot:[`item.createdAt`]="{ item }">
           {{ new Date(item.createdAt).toLocaleString() }}
         </template>
+        <template v-slot:[`item.client.client`]="{ item }">
+          {{
+            partnersMap.has(item.client.client)
+              ? partnersMap.get(item.client.client).name
+              : '-'
+          }}
+        </template>
       </v-data-table>
     </div>
   </div>
@@ -46,12 +53,16 @@ export default {
     datePeriod: ['2021-10-18', '2021-10-25'],
     orders: [],
     headers: [
-      { value: '_id', text: 'id' },
       { value: 'createdAt', text: 'Создан' },
+      { value: 'client.client', text: 'Клиент' },
+      { value: 'client.num', text: 'Номер заказа клиента' },
     ],
   }),
   computed: {
     ...mapGetters(['directoriesProfile']),
+    partnersMap() {
+      return this.$store.getters.partnersMap
+    },
   },
   created() {
     this.getOrders()
