@@ -1,7 +1,7 @@
 <template>
   <div
     class="order-wrapper"
-    @dblclick="dblclickHandler"
+    @dblclick.stop="dblclickHandler"
   >
     <div>row1</div>
     <div>row2</div>

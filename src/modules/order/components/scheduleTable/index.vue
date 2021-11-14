@@ -29,6 +29,7 @@
         @dragover.prevent="dragOverHandler"
         @drop.prevent="dropHandler"
         @dragleave.prevent="disabledZone"
+        @dblclick.stop="dblclickHandler"
       >
         <tr
           v-for="(truck, idx) of rows"
@@ -143,7 +144,6 @@ export default {
     },
     filteredOrders() {
       return this.orders.filter(this.ordersFilterByPeriod)
-      //.filter(this.ordersFilterByDraggedOrder)
     },
   },
   watch: {
@@ -163,6 +163,18 @@ export default {
     window.addEventListener('resize', this.resizeScreen)
   },
   methods: {
+    dblclickHandler(e) {
+      const offsetX = e.layerX - this.titleColumnWidth
+      const offsetY = e.layerY
+      if (offsetX < 0 || offsetY < 0) return null
+      const startDateMoment = moment(this.period[0]).add(
+        this.secInPx * offsetX,
+        's'
+      )
+      startDateMoment.hour(roundingHours(startDateMoment.hour()))
+      const startDateStr = startDateMoment.format('YYYY-MM-DD HH:00')
+      // получить id машины по offsetY
+    },
     ordersFilterByPeriod(item) {
       return !(
         moment(item.endPositionDate).isBefore(this.period[0]) ||
