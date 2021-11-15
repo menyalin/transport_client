@@ -167,13 +167,19 @@ export default {
       const offsetX = e.layerX - this.titleColumnWidth
       const offsetY = e.layerY
       if (offsetX < 0 || offsetY < 0) return null
-      const startDateMoment = moment(this.period[0]).add(
-        this.secInPx * offsetX,
-        's'
-      )
-      startDateMoment.hour(roundingHours(startDateMoment.hour()))
-      const startDateStr = startDateMoment.format('YYYY-MM-DD HH:00')
+      const startDateM = moment(this.period[0]).add(this.secInPx * offsetX, 's')
+      startDateM.hour(roundingHours(startDateM.hour()))
+      const startDateStr = startDateM.format('YYYY-MM-DD HH:00')
       // получить id машины по offsetY
+      const rowInd = Math.floor(offsetY / LINE_HEIGHT)
+      const truckId = this.rows[rowInd]._id
+      this.$router.push({
+        name: 'CreateOrder',
+        params: {
+          truckId,
+          startDate: startDateStr,
+        },
+      })
     },
     ordersFilterByPeriod(item) {
       return !(

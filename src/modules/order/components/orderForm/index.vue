@@ -191,6 +191,7 @@ export default {
       handler: function (val) {
         if (val) {
           this.orderId = val._id
+          console.log('setFields', val)
           this.setFormFields(val)
         }
       },

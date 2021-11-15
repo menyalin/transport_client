@@ -101,13 +101,16 @@ export default {
         }
       },
     },
-    date: async function (val) {
-      if (val) {
-        await this.getCrew()
-      }
+    date: {
+      immediate: true,
+      handler: async function (val) {
+        if (val) {
+          await this.getCrew()
+        }
+      },
     },
   },
-  async mounted() {
+  async created() {
     await this.getCrew()
   },
   methods: {

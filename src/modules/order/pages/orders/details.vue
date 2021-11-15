@@ -28,10 +28,30 @@ export default {
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],
-
+  props: {
+    truckId: String,
+    startDate: String,
+  },
   data() {
     return {
       service: service,
+    }
+  },
+  created() {
+    if (this.truckId && this.startDate) {
+      this.item = {
+        startPositionDate: this.startDate,
+        confirmedCrew: {
+          truck: this.truckId,
+        },
+        route: [
+          {
+            type: 'loading',
+            plannedDate: this.startDate,
+          },
+          { type: 'unloading' },
+        ],
+      }
     }
   },
 }
