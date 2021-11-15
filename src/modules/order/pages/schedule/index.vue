@@ -35,10 +35,13 @@ export default {
     return {
       orders: mockOrders,
       showSetting: false,
-      date: moment().format('YYYY-MM-DD'),
+      // date: moment().format('YYYY-MM-DD'),
     }
   },
   computed: {
+    date() {
+      return this.$store.getters.scheduleDate
+    },
     scheduleRows() {
       return this.$store.getters.trucks
         .filter((item) => item.type === 'truck')
@@ -64,11 +67,12 @@ export default {
       this.$store.dispatch('getOrders')
     },
     incDate(count) {
-      this.date = moment(this.date).add(count, 'day').format('YYYY-MM-DD')
+      this.$store.commit('incScheduleDate', count)
     },
     setDate(date) {
-      if (!date) this.date = moment().format('YYYY-MM-DD')
-      else this.date = date
+      if (!date)
+        this.$store.commit('setScheduleDate', moment().format('YYYY-MM-DD'))
+      else this.$store.commit('setScheduleDate', date)
     },
     startDragOrder(orderId) {
       service.disable({ orderId, state: true })

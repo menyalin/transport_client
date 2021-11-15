@@ -9,14 +9,8 @@ export default {
       { value: 'loading', text: 'Погрузка' },
       { value: 'unloading', text: 'Выгрузка' },
     ],
-    orderStatuses: [
-      // { value: 'needGet', text: 'Надо получить' },
-      // { value: 'getted', text: 'Получен' },
-      // { value: 'inProgress', text: 'В работе' },
-      // { value: 'completed', text: 'Выполнен' },
-      // { value: 'weRefused', text: 'Мы отказались' },
-      // { value: 'clientRefused', text: 'Клиент отказался' },
-    ],
+    orderStatuses: [],
+    scheduleDate: moment().format('YYYY-MM-DD'),
   },
   mutations: {
     setPeriod(state, payload) {
@@ -42,6 +36,15 @@ export default {
 
     setOrderStatuses(state, payload) {
       state.orderStatuses = payload
+    },
+
+    incScheduleDate(state, count) {
+      state.scheduleDate = moment(state.scheduleDate)
+        .add(count, 'day')
+        .format('YYYY-MM-DD')
+    },
+    setScheduleDate(state, newDate) {
+      state.scheduleDate = newDate
     },
   },
   actions: {
@@ -84,6 +87,7 @@ export default {
       period[0],
       moment(period[1]).add(1, 'd').format('YYYY-MM-DD'),
     ],
+    scheduleDate: ({ scheduleDate }) => scheduleDate,
     orderStatuses: ({ orderStatuses }) => orderStatuses,
   },
 }
