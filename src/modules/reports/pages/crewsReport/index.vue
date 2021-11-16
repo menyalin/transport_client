@@ -30,7 +30,13 @@
         dense
       />
     </div>
-    <div class="table-wrapper">
+    <div v-if="!filteredCrews.length">
+      <h6>no data</h6>
+    </div>
+    <div
+      v-else
+      class="table-wrapper"
+    >
       <table
         ref="tableBody"
         class="background-table"
@@ -192,9 +198,10 @@ export default {
     },
     resizeHandler() {
       this.tableColumns = getDaysFromPeriod(this.period)
+      //  if (!this.$refs.tableBody) return null
       this.$nextTick(() => {
         this.tableWidth =
-          this.$refs.tableBody.offsetWidth - this.$refs.titleCell.offsetWidth
+          this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
         const dSec =
           moment(this.period[1]).add(24, 'hour').unix() -
           moment(this.period[0]).unix()
