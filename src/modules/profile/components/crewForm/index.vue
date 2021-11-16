@@ -252,6 +252,8 @@ export default {
     },
     ['form.driver']: {
       handler: async function (val) {
+        this.actualDriverCrew = null
+        this.form.transport = []
         if (val) {
           this.actualDriverCrew = await CrewService.getActualCrewByDriver(val)
         }
