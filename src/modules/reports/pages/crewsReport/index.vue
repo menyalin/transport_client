@@ -30,8 +30,11 @@
         dense
       />
     </div>
-    <div v-if="!filteredCrews.length">
-      <h6>no data</h6>
+    <div
+      v-if="!filteredCrews.length"
+      class="text-center"
+    >
+      <h4>Нет данных для отображния</h4>
     </div>
     <div
       v-else
