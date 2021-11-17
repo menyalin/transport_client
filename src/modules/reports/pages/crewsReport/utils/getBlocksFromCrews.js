@@ -40,12 +40,9 @@ export default ({ crews, group, displayPeriod, analitic }) => {
     )
   if (!crews.length) return []
   for (let i = 0; i < crews.length; i++) {
-    if (
-      crews[i].endDate &&
-      moment(crews[i].endDate).isSameOrBefore(displayPeriod[0])
-    )
+    if (crews[i].endDate && moment(crews[i].endDate).isBefore(displayPeriod[0]))
       continue
-    if (moment(crews[i].startDate).isSameOrAfter(displayPeriod[1])) continue
+    if (moment(crews[i].startDate).isAfter(displayPeriod[1])) continue
     if ((analitic === 'trailer' || group === 'trailer') && !crews[i].trailer)
       continue
     blocks.push(_createBlock({ crew: crews[i], type: analitic, group }))

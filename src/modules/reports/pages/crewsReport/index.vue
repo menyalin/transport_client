@@ -34,7 +34,10 @@
       v-if="!filteredCrews.length"
       class="text-center"
     >
-      <h4>Нет данных для отображния</h4>
+      <app-load-spinner v-if="false" />
+      <h4 v-else>
+        Нет данных для отображния
+      </h4>
     </div>
     <div
       v-else
@@ -95,6 +98,7 @@
 import moment from 'moment'
 import CrewService from '@/modules/profile/services/crew.service'
 
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import AppDateRange from '@/modules/common/components/dateRange'
 import getDaysFromPeriod from '../../../common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
@@ -106,6 +110,7 @@ export default {
   name: 'CrewsReport',
   components: {
     AppDateRange,
+    AppLoadSpinner,
   },
   data() {
     return {
@@ -124,11 +129,13 @@ export default {
       crews: [],
       blocks: [],
       tableColumns: [],
+      tableRows: [],
+      loading: false,
     }
   },
   computed: {
     ...mapGetters(['directoriesProfile', 'tkNames']),
-    tableRows() {
+    _tableRows() {
       const rows = getRowsFromCrews(this.filteredCrews, this.group)
       return rows
     },
@@ -142,14 +149,14 @@ export default {
     },
   },
   watch: {
-    group: function (val) {
-      this.getData()
+    group: async function (val) {
+      await this.getData()
       if (val === 'driver' || val === 'trailer') this.analitic = 'truck'
       if (val === 'truck') this.analitic = 'driver'
       this.resizeHandler()
     },
-    period: function () {
-      this.getData()
+    period: async function () {
+      await this.getData()
       this.resizeHandler()
     },
     analitic: function () {
@@ -175,10 +182,12 @@ export default {
       else return '/profile/drivers/' + id
     },
     async getData() {
+      this.loading = true
       this.crews = await CrewService.diagramReport({
         profile: this.directoriesProfile,
         period: this.period.join(','),
       })
+      this.loading = false
     },
     getBlocksWithStyles() {
       if (!this.filteredCrews) return null
@@ -202,6 +211,7 @@ export default {
     resizeHandler() {
       this.tableColumns = getDaysFromPeriod(this.period)
       //  if (!this.$refs.tableBody) return null
+      this.tableRows = getRowsFromCrews(this.filteredCrews, this.group)
       this.$nextTick(() => {
         this.tableWidth =
           this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
@@ -209,7 +219,10 @@ export default {
           moment(this.period[1]).add(24, 'hour').unix() -
           moment(this.period[0]).unix()
         this.secInPx = dSec / this.tableWidth
-        this.blocks = this.getBlocksWithStyles()
+
+        this.$nextTick(() => {
+          this.blocks = this.getBlocksWithStyles()
+        })
       })
     },
     getWidthInPxForBlock(block) {
@@ -224,8 +237,8 @@ export default {
       )
         endM = moment(this.period[1]).add(24, 'hour').unix()
       else endM = moment(block.endDate).unix()
-
-      return (endM - startM) / this.secInPx + 'px'
+      const widthPx = (endM - startM) / this.secInPx
+      return widthPx > 10 ? widthPx + 'px' : '10px'
     },
 
     getLeftShiftInPxForBlock(crew) {
@@ -323,7 +336,7 @@ table thead th:first-child {
 }
 .block {
   position: absolute;
-  padding-left: 3px;
+  padding-left: 0px;
   border: 1px solid green;
   border-radius: 0px;
   line-height: 15px;
