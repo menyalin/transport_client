@@ -84,6 +84,10 @@ export default {
       const editedOrder = this.$store.getters.ordersForSchedule.find(
         (item) => item._id == orderId
       )
+
+      // if (editedOrder)
+      // сравнить startPositionDate и endPositionDate и если не равны, то в дату окончания положить endPositionDate
+      // если равны то в endPositionDate положить startDate
       const offsetDateInSec =
         moment(editedOrder.startPositionDate).unix() - moment(startDate).unix()
       const endDate = moment

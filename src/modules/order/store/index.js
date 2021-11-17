@@ -1,6 +1,13 @@
 import moment from 'moment'
 import service from '../services/order.service'
 
+const _getLastPlannedDate = (order) => {
+  return order.route
+    .filter((point) => !!point.plannedDate)
+    .map((point) => point.plannedDate)
+    .reverse()[0]
+}
+
 export default {
   state: {
     orders: [],
@@ -75,7 +82,7 @@ export default {
           _id: item._id,
           company: item.company,
           startPositionDate: item.startPositionDate,
-          endPositionDate: item.endPositionDate,
+          endPositionDate: _getLastPlannedDate(item),
           truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
           state: item.state,
