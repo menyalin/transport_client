@@ -78,6 +78,7 @@ export default {
           endPositionDate: item.endPositionDate,
           truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
+          state: item.state,
         }))
         .sort(
           (a, b) =>

@@ -45,6 +45,7 @@
 
           <app-route-state
             v-model="state"
+            :enableConfirm="enableConfirmOrder"
             title="Статус рейса"
             class="route-state"
           />
@@ -68,11 +69,13 @@
           <app-route-points
             v-model="route"
             title="Маршрут"
+            :confirmed="orderConfirmed"
             class="route-points"
           />
           <app-confirmed-crew
             v-model="confirmedCrew"
             :date="form.startPositionDate"
+            :confirmed="orderConfirmed"
             title="Экипаж"
             class="crew"
           />
@@ -172,6 +175,12 @@ export default {
         errors.push('Дата должна быть больше начальной даты')
       return errors
     },
+    enableConfirmOrder() {
+      return !!this.confirmedCrew.driver
+    },
+    orderConfirmed() {
+      return this.state.driverNotified || this.state.clientNotified
+    },
     formState() {
       return {
         ...this.form,
@@ -191,7 +200,6 @@ export default {
       handler: function (val) {
         if (val) {
           this.orderId = val._id
-          console.log('setFields', val)
           this.setFormFields(val)
         }
       },

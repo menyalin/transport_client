@@ -23,6 +23,7 @@
           :value="params.driverNotified"
           label="Водитель оповещен"
           class="pt-0 mt-1"
+          :disabled="!enableConfirm"
           hide-details
           @change="change($event, 'driverNotified')"
         />
@@ -30,6 +31,7 @@
           :value="params.clientNotified"
           label="Клиент оповещен"
           class="pt-0 mt-1"
+          :disabled="!enableConfirm"
           hide-details
           @change="change($event, 'clientNotified')"
         />
@@ -59,6 +61,7 @@ export default {
   props: {
     routeState: Object,
     title: String,
+    enableConfirm: Boolean,
   },
   data() {
     return {

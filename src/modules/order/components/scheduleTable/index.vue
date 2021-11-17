@@ -54,7 +54,7 @@
             :key="order._id"
             tag="div"
             class="block"
-            :draggable="!order.isDisabled"
+            :draggable="isDraggableOrder(order)"
             :style="getStylesForOrder(order)"
             @dragstart="dragStartHandler($event, order._id)"
             @dragend="dragEndHandler($event, order._id)"
@@ -328,6 +328,12 @@ export default {
       e.dataTransfer.effectAllowed = 'none'
       this.overRowInd = null
       return true
+    },
+    isDraggableOrder(order) {
+      const disabled = order.isDisabled
+      const confirmed =
+        order.state?.driverNotified || order.state?.clientNotified
+      return !disabled && !confirmed
     },
   },
 }

@@ -9,17 +9,12 @@
         :loading="loading"
         :value="params.truck"
         dense
+        :readonly="confirmed"
         :items="trucks"
         outlined
         @change="change($event, 'truck')"
       />
-      <v-btn
-        :disabled="!date || !params.truck"
-        icon
-        @click="getCrew"
-      >
-        <v-icon>mdi-cached</v-icon>
-      </v-btn>
+
       <v-autocomplete
         label="Водитель"
         :value="params.driver"
@@ -59,10 +54,12 @@ export default {
     crew: Object,
     title: String,
     date: String,
+    confirmed: Boolean,
   },
   data() {
     return {
       loading: false,
+
       params: {
         truck: null,
         trailer: null,
@@ -123,7 +120,7 @@ export default {
       }
     },
     async getCrew() {
-      if (!this.date || !this.params.truck) return null
+      if (!this.date || !this.params.truck || this.confirmed) return null
       this.loading = true
       this.params.driver = null
       this.params.trailer = null
@@ -142,7 +139,7 @@ export default {
 <style scoped>
 .confirmed-crew-block {
   display: grid;
-  grid-template-columns: 300px 30px 300px 300px;
+  grid-template-columns: 300px 300px 300px;
   margin: 10px;
   gap: 15px;
 }

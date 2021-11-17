@@ -11,6 +11,7 @@
           <app-point-detail
             :point="point"
             :ind="ind"
+            :confirmed="confirmed"
             :showDeleteBtn="tmpPoints.length > 2"
             @changePoint="change($event, ind)"
             @delete="deleteHandler"
@@ -47,6 +48,7 @@ export default {
   props: {
     points: Array,
     title: String,
+    confirmed: Boolean,
   },
   data() {
     return {
