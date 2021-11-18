@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     createAddress() {
-      this.$router.push({ name: 'createAddress' })
+      this.$router.push({ name: 'AddressCreate' })
     },
     refresh() {
       this.$store.dispatch('getAddresses', true)
