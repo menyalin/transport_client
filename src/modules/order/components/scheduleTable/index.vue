@@ -1,82 +1,105 @@
 /* eslint-disable vue/no-template-key */
 <template>
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <td
-            ref="rowTitleColumn"
-            class="row-title-column text-center"
-          >
-            <v-icon
-              small
-              @click="$emit('showSetting')"
+  <div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <td
+              ref="rowTitleColumn"
+              class="text-center"
+              :style="{ width: initTitleWidth }"
             >
-              mdi-cog
-            </v-icon>
-          </td>
-          <td
-            v-for="column of columns"
-            :key="column.title"
-            :class="{ 'today-header': column.isToday, 'text-center': true }"
-          >
-            <div>{{ column.title }}</div>
-          </td>
-        </tr>
-      </thead>
-      <tbody
-        ref="tableBody"
-        @dragover.prevent="dragOverHandler"
-        @drop.prevent="dropHandler"
-        @dragleave.prevent="disabledZone"
-        @dblclick.stop="dblclickHandler"
-      >
-        <tr
-          v-for="(truck, idx) of rows"
-          :key="truck._id"
-          class="truck-row"
-          :class="{ 'drag-over-row': idx === overRowInd }"
+              <v-icon
+                small
+                @click="$emit('showSetting')"
+              >
+                mdi-cog
+              </v-icon>
+            </td>
+            <td
+              v-for="column of columns"
+              :key="column.title"
+              :class="{ 'today-header': column.isToday, 'text-center': true }"
+            >
+              <div>{{ column.title }}</div>
+            </td>
+          </tr>
+        </thead>
+        <tbody
+          ref="tableBody"
+          @dragover.prevent="dragOverHandler"
+          @drop.prevent="dropHandler"
+          @dragleave.prevent="disabledZone"
+          @dblclick.stop="dblclickHandler"
         >
-          <td :style="cellStyles">
-            <app-truck-title-cell
-              :id="truck._id"
-              :title="truck.regNum"
-            />
-          </td>
-          <td
-            v-for="column of columns"
-            :key="column.title"
-          />
-        </tr>
-        <template v-if="tableWidth">
-          <div
-            v-for="order of filteredOrders"
-            :key="order._id"
-            tag="div"
-            class="block"
-            :draggable="isDraggableOrder(order)"
-            :style="getStylesForOrder(order)"
-            @dragstart="dragStartHandler($event, order._id)"
-            @dragend="dragEndHandler($event, order._id)"
-            @dragover="disabledZone"
+          <tr
+            v-for="(truck, idx) of rows"
+            :key="truck._id"
+            class="truck-row"
+            :class="{ 'drag-over-row': idx === overRowInd }"
           >
-            <app-order-cell :orderId="order._id" />
-          </div>
+            <td :style="cellStyles">
+              <app-truck-title-cell
+                :id="truck._id"
+                :title="truck.regNum"
+              />
+            </td>
+            <td
+              v-for="column of columns"
+              :key="column.title"
+            />
+          </tr>
+          <template v-if="tableWidth">
+            <div
+              v-for="order of filteredOrders"
+              :key="order._id"
+              tag="div"
+              class="block"
+              :draggable="isDraggableOrder(order)"
+              :style="getStylesForOrder(order)"
+              @dragstart="dragStartHandler($event, order._id)"
+              @dragend="dragEndHandler($event, order._id)"
+              @dragover="disabledZone"
+            >
+              <app-order-cell :orderId="order._id" />
+            </div>
 
+            <app-bg-grid
+              v-if="titleColumnWidth"
+              :leftShift="titleColumnWidth"
+              :tableWidth="tableWidth + titleColumnWidth"
+              :days="columns"
+            />
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <v-divider />
+    <div class="buffer-wrapper">
+      <table>
+        <tbody @dragover.prevent="dragoverBufferHandler">
+          <tr :style="{ 'min-height': '100%' }">
+            <td :style="{ width: initTitleWidth, height: '150px' }" />
+            <td
+              v-for="column of columns"
+              :key="column.title"
+            />
+          </tr>
           <app-bg-grid
             v-if="titleColumnWidth"
             :leftShift="titleColumnWidth"
             :tableWidth="tableWidth + titleColumnWidth"
             :days="columns"
           />
-        </template>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 <script>
 import moment from 'moment'
-import { LINE_HEIGHT } from './constants'
+import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
 import { roundingHours } from './helpers'
 import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
@@ -112,6 +135,7 @@ export default {
     draggedOrderId: null,
     movedNode: null,
     overRowInd: null,
+    initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
   }),
   computed: {
     period() {
@@ -278,11 +302,11 @@ export default {
       e.target.style.opacity = 1
       this.draggedOrderId = null
       this.overRowInd = null
+      this.$emit('endDragOrder', orderId)
       if (
         e.dataTransfer.dropEffect === 'none' ||
         e.dataTransfer.mozUserCancelled
       ) {
-        this.$emit('endDragOrder', orderId)
       } else {
         // console.log('dragend')
       }
@@ -300,7 +324,9 @@ export default {
         this.overRowInd = Math.floor(y / LINE_HEIGHT)
       }
     },
-
+    dragoverBufferHandler(e) {
+      console.log(e)
+    },
     dropHandler(e) {
       if (
         this.overRowInd === null ||
@@ -344,13 +370,23 @@ export default {
   margin: 8px;
   box-sizing: content-box;
   max-height: 70vh;
-  min-height: 70vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
+.buffer-wrapper {
+  width: 100%;
+  margin: 8px;
+  box-sizing: content-box;
+  min-height: 150px;
+  border: grey dotted 1px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 table {
   --table-border: rgb(154, 154, 154) 1px solid;
   width: 100%;
+  height: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   border: var(--table-border);
@@ -359,7 +395,6 @@ table {
 td {
   border: var(--table-border);
 }
-
 thead > tr > td {
   position: sticky;
   top: 0;
@@ -371,6 +406,7 @@ tbody {
   position: relative;
   z-index: 0;
   user-select: auto;
+  height: 100%;
 }
 .block {
   position: absolute;

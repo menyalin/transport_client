@@ -35,6 +35,7 @@ export default {
     return {
       orders: mockOrders,
       showSetting: false,
+      titleColumnWidth: null,
       // date: moment().format('YYYY-MM-DD'),
     }
   },
@@ -98,7 +99,7 @@ export default {
             'setError',
             'Начало рейса не может быть позднее планируемой даты завершения'
           )
-          service.disable({ orderId, state: false })
+          // service.disable({ orderId, state: false })
           return null
         }
         endDate = editedOrder.endPositionDate
@@ -114,4 +115,4 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped></style>

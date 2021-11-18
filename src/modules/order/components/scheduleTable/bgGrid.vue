@@ -13,6 +13,14 @@
       zIndex: -1,
     }"
   >
+    <line
+      x1="0"
+      y1="0"
+      x2="100%"
+      y2="0"
+      stroke="black"
+      opacity="1"
+    />
     <g
       v-for="(day, ind) of days"
       :key="day.title"
