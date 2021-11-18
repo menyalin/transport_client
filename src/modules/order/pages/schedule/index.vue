@@ -81,18 +81,29 @@ export default {
       service.disable({ orderId, state: false })
     },
     updateOrderHandler({ orderId, truckId, startDate }) {
+      let endDate
       const editedOrder = this.$store.getters.ordersForSchedule.find(
         (item) => item._id == orderId
       )
+      if (editedOrder.startPositionDate === editedOrder.endPositionDate) {
+        const offsetDateInSec =
+          moment(editedOrder.startPositionDate).unix() -
+          moment(startDate).unix()
+        endDate = moment
+          .unix(moment(editedOrder.startPositionDate).unix() - offsetDateInSec)
+          .format('YYYY-MM-DD HH:00')
+      } else {
+        if (new Date(startDate) >= new Date(editedOrder.endPositionDate)) {
+          this.$store.commit(
+            'setError',
+            'Начало рейса не может быть позднее планируемой даты завершения'
+          )
+          service.disable({ orderId, state: false })
+          return null
+        }
+        endDate = editedOrder.endPositionDate
+      }
 
-      // if (editedOrder)
-      // сравнить startPositionDate и endPositionDate и если не равны, то в дату окончания положить endPositionDate
-      // если равны то в endPositionDate положить startDate
-      const offsetDateInSec =
-        moment(editedOrder.startPositionDate).unix() - moment(startDate).unix()
-      const endDate = moment
-        .unix(moment(editedOrder.endPositionDate).unix() - offsetDateInSec)
-        .format('YYYY-MM-DD HH:00')
       service.moveOrderInSchedule({
         orderId,
         truck: truckId,
