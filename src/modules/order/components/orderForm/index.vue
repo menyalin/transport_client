@@ -25,11 +25,10 @@
               Период отображения рейса
             </div>
             <app-date-time-input
-              v-model="$v.form.startPositionDate.$model"
+              v-model="form.startPositionDate"
               label="Дата начала"
               hideDetails
               readonly
-              @blur="$v.form.startPositionDate.$touch()"
             />
           </div>
 
@@ -61,6 +60,7 @@
             title="Маршрут"
             :confirmed="orderConfirmed"
             class="route-points"
+            :isValid="isValidRoute"
           />
           <app-confirmed-crew
             v-model="confirmedCrew"
@@ -99,8 +99,8 @@ import AppConfirmedCrew from './confirmedCrew.vue'
 import AppClientBlock from './clientBlock.vue'
 
 import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'OrderForm',
   components: {
@@ -149,8 +149,16 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
     isInvalidForm() {
-      if (!this.directoriesProfile) return true
-      return this.$v.$invalid
+      return !this.form.startPositionDate || !this.isValidRoute
+    },
+    isValidRoute() {
+      if (!this.route) return false
+      const length = this.route.length >= 2
+      const firstPoint = this.route[0].type === 'loading'
+      const lastPoint = this.route[this.route.length - 1].type === 'unloading'
+      const hasAddresses =
+        this.route.filter((item) => !!item.address).length === this.route.length
+      return length && firstPoint && lastPoint && hasAddresses
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
@@ -212,17 +220,10 @@ export default {
       },
     },
   },
-  validations() {
-    return {
-      form: {
-        startPositionDate: { required },
-        note: {},
-      },
-    }
-  },
+
   methods: {
     submit() {
-      if (!this.directoriesProfile) return null
+      if (!this.directoriesProfile || this.isInvalidForm) return null
       this.$emit('submit', this.formState)
     },
     cancel() {

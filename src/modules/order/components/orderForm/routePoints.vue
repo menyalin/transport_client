@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ invalid: !isValidRoute }">
+  <div :class="{ invalid: !isValid }">
     <app-block-title>{{ title }}</app-block-title>
     <draggable v-model="xPoints">
       <transition-group name="route">
@@ -49,6 +49,7 @@ export default {
     points: Array,
     title: String,
     confirmed: Boolean,
+    isValid: Boolean,
   },
   data() {
     return {
@@ -63,14 +64,6 @@ export default {
       set(val) {
         this.$emit('changePoints', val)
       },
-    },
-    isValidRoute() {
-      if (!this.tmpPoints) return false
-      const length = this.tmpPoints.length >= 2
-      const firstPoint = this.tmpPoints[0].type === 'loading'
-      const lastPoint =
-        this.tmpPoints[this.tmpPoints.length - 1].type === 'unloading'
-      return length && firstPoint && lastPoint
     },
   },
   watch: {
