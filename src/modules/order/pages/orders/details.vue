@@ -38,10 +38,9 @@ export default {
     }
   },
   created() {
-    if (this.truckId && this.startDate) {
+    if (this.startDate) {
       this.item = {
         startPositionDate: this.startDate,
-        endPositionDate: this.startDate,
         confirmedCrew: {
           truck: this.truckId,
         },

@@ -81,6 +81,7 @@
         <tbody
           @dragover.prevent
           @drop.prevent="dropOnBufferHandler"
+          @dblclick.stop="dblclickHandler($event, true)"
         >
           <tr :style="{ 'min-height': '100%' }">
             <td
@@ -246,21 +247,24 @@ export default {
     window.addEventListener('resize', this.resizeScreen)
   },
   methods: {
-    dblclickHandler(e) {
-      const offsetX = e.layerX - this.titleColumnWidth
+    dblclickHandler(e, isBuffer) {
+      let truckId = null
       const offsetY = e.layerY
+      const offsetX = e.layerX - this.titleColumnWidth
       if (offsetX < 0 || offsetY < 0) return null
+      if (!isBuffer) {
+        const rowInd = Math.floor(offsetY / LINE_HEIGHT)
+        truckId = this.rows[rowInd]._id
+      }
+
       const startDateM = moment(this.period[0]).add(this.secInPx * offsetX, 's')
       startDateM.hour(roundingHours(startDateM.hour()))
-      const startDateStr = startDateM.format('YYYY-MM-DD HH:00')
-      // получить id машины по offsetY
-      const rowInd = Math.floor(offsetY / LINE_HEIGHT)
-      const truckId = this.rows[rowInd]._id
+
       this.$router.push({
         name: 'CreateOrder',
         params: {
           truckId,
-          startDate: startDateStr,
+          startDate: startDateM.format('YYYY-MM-DD HH:00'),
         },
       })
     },
