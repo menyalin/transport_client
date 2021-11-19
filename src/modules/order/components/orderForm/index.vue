@@ -98,7 +98,6 @@ import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew.vue'
 import AppClientBlock from './clientBlock.vue'
 
-import { required } from 'vuelidate/lib/validators'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -149,7 +148,11 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
     isInvalidForm() {
-      return !this.form.startPositionDate || !this.isValidRoute
+      return (
+        !this.form.startPositionDate ||
+        !this.isValidRoute ||
+        !this.isValidClientInfo
+      )
     },
     isValidRoute() {
       if (!this.route) return false
@@ -159,6 +162,9 @@ export default {
       const hasAddresses =
         this.route.filter((item) => !!item.address).length === this.route.length
       return length && firstPoint && lastPoint && hasAddresses
+    },
+    isValidClientInfo() {
+      return !!this.client?.client
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null

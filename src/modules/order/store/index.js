@@ -100,5 +100,6 @@ export default {
     ],
     scheduleDate: ({ scheduleDate }) => scheduleDate,
     orderStatuses: ({ orderStatuses }) => orderStatuses,
+    ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
   },
 }

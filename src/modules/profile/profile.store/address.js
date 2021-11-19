@@ -82,5 +82,7 @@ export default {
 
     addresses: ({ addresses }, { directoriesProfile }) =>
       addresses.filter((item) => item.company === directoriesProfile),
+    addressMap: ({ addresses }) =>
+      new Map(addresses.map((item) => [item._id, item])),
   },
 }

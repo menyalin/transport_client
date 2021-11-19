@@ -20,7 +20,6 @@
       <v-text-field
         v-if="!hideTimeInput"
         type="time"
-        :min="minTimeValue"
         :error-messages="errorMessages"
         :value="timeStr"
         class="time-input pt-0 mt-0"
@@ -113,9 +112,6 @@ export default {
     minDateValue() {
       if (!this.minDate) return null
       return moment(this.minDate).format('YYYY-MM-DD')
-    },
-    minTimeValue() {
-      return '10:00'
     },
   },
   watch: {
