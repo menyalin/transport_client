@@ -87,7 +87,6 @@
             <td
               :style="{
                 width: initTitleWidth,
-                'min-height': '150px',
                 height: bufferHeight,
               }"
             />
@@ -224,6 +223,8 @@ export default {
     },
     bufferHeight() {
       let arr = []
+      if (this.lineForUndistributedOrdersMap.size === 0)
+        return LINE_HEIGHT * 2 + 'px'
       this.lineForUndistributedOrdersMap.forEach((val) => arr.push(val))
       return (
         ((Math.max(...arr) + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
