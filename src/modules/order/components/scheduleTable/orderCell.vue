@@ -1,6 +1,6 @@
 <template>
   <div
-    class="order-wrapper"
+    :class="orderClasses"
     @dblclick.stop="dblclickHandler"
   >
     <div class="row-text">
@@ -22,14 +22,24 @@ export default {
     },
   },
   computed: {
+    orderClasses() {
+      let classes = ['order-wrapper']
+
+      if (this.order.state.driverNotified) classes.push('driver-notified')
+      if (this.order.state.clientNotified) classes.push('client-notified')
+      classes.push(this.order.state.status)
+      return classes
+    },
     order() {
       return this.$store.getters.ordersMap.get(this.orderId)
     },
     firstRow() {
       const addressId = this.order.route[0].address
-      const hours = moment(this.order.route[0].plannedDate).format('hh')
+      const hours = moment(this.order.route[0].plannedDate).format('HH')
+
       const addressName =
-        this.$store.getters.addressMap.get(addressId).shortName || ' ---- '
+        this.$store.getters.addressMap.get(addressId)?.shortName || ' - '
+
       return `${addressName} - ${hours}`
     },
     secondRow() {
@@ -44,7 +54,7 @@ export default {
 
       const addressId = point.address
       resRow.push(
-        this.$store.getters.addressMap.get(addressId).shortName || ' ---- '
+        this.$store.getters.addressMap.get(addressId)?.shortName || ' ---- '
       )
       if (point.plannedDate) resRow.push(moment(point.plannedDate).format('hh'))
       return resRow.join(' - ')
@@ -61,21 +71,31 @@ export default {
 .order-wrapper {
   height: 100%;
   width: 100%;
-  background-color: goldenrod;
-  font-size: 14px;
-  line-height: 15px;
-  letter-spacing: 0em;
-  font-weight: 300;
-  border: 1px solid lightgrey;
+  background-color: white;
+  border: 1px dotted rgb(80, 80, 80);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 .row-text {
+  padding-left: 3px;
   font-size: 11px;
   line-height: 11px;
   letter-spacing: -0.023em;
   font-weight: 300;
   overflow: hidden;
+}
+.getted {
+  border: 1px solid black;
+}
+.driver-notified {
+  color: rgb(2, 2, 134);
+}
+
+.client-notified {
+  background-color: lightblue;
+}
+.inProgress {
+  background-color: lightgreen;
 }
 </style>
