@@ -9,6 +9,7 @@
         :loading="loading"
         :value="params.truck"
         dense
+        clearable
         :readonly="confirmed"
         :items="trucks"
         outlined
@@ -113,6 +114,10 @@ export default {
   methods: {
     async change(val, field) {
       this.params[field] = val
+      if (!val) {
+        this.params.driver = null
+        this.params.trailer = null
+      }
       if (field === 'truck') {
         await this.getCrew()
       } else {

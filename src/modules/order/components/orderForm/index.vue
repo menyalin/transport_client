@@ -31,16 +31,6 @@
               readonly
               @blur="$v.form.startPositionDate.$touch()"
             />
-            <app-date-time-input
-              v-model="$v.form.endPositionDate.$model"
-              :disabled="!form.startPositionDate"
-              label="Дата завершения"
-              readonly
-              :errorMessages="endPositionDateErrors"
-              :minDate="form.startPositionDate"
-              hideDetails
-              @blur="$v.form.endPositionDate.$touch()"
-            />
           </div>
 
           <app-route-state
@@ -152,7 +142,6 @@ export default {
       confirmedCrew: {},
       form: {
         startPositionDate: null,
-        endPositionDate: null,
       },
     }
   },
@@ -227,10 +216,6 @@ export default {
     return {
       form: {
         startPositionDate: { required },
-        endPositionDate: {
-          required,
-          isLaterThan: isLaterThan(this.form.startPositionDate),
-        },
         note: {},
       },
     }

@@ -52,7 +52,7 @@
           </tr>
           <template v-if="tableWidth">
             <div
-              v-for="order of filteredOrders"
+              v-for="order of distributedOrders"
               :key="order._id"
               tag="div"
               class="block"
@@ -78,20 +78,45 @@
     <v-divider />
     <div class="buffer-wrapper">
       <table>
-        <tbody @dragover.prevent="dragoverBufferHandler">
+        <tbody
+          @dragover.prevent
+          @drop.prevent="dropOnBufferHandler"
+        >
           <tr :style="{ 'min-height': '100%' }">
-            <td :style="{ width: initTitleWidth, height: '150px' }" />
+            <td
+              :style="{
+                width: initTitleWidth,
+                'min-height': '150px',
+                height: bufferHeight,
+              }"
+            />
             <td
               v-for="column of columns"
               :key="column.title"
             />
           </tr>
-          <app-bg-grid
-            v-if="titleColumnWidth"
-            :leftShift="titleColumnWidth"
-            :tableWidth="tableWidth + titleColumnWidth"
-            :days="columns"
-          />
+          <template v-if="tableWidth">
+            <div
+              v-for="order of unDistributedOrders"
+              :key="order._id"
+              tag="div"
+              class="block"
+              :draggable="isDraggableOrder(order)"
+              :style="getStylesForOrder(order)"
+              @dragstart="dragStartHandler($event, order._id)"
+              @dragend="dragEndHandler($event, order._id)"
+              @dragover="disabledZone"
+            >
+              <app-order-cell :orderId="order._id" />
+            </div>
+
+            <app-bg-grid
+              v-if="titleColumnWidth"
+              :leftShift="titleColumnWidth"
+              :tableWidth="tableWidth + titleColumnWidth"
+              :days="columns"
+            />
+          </template>
         </tbody>
       </table>
     </div>
@@ -169,6 +194,40 @@ export default {
     filteredOrders() {
       return this.orders.filter(this.ordersFilterByPeriod)
     },
+    distributedOrders() {
+      return this.filteredOrders.filter((i) => !!i?.truckId)
+    },
+    unDistributedOrders() {
+      return this.filteredOrders.filter((i) => !i?.truckId)
+    },
+    lineForUndistributedOrdersMap() {
+      let tmpMap = new Map()
+      for (let order of this.unDistributedOrders) {
+        const group = this.getLeftShiftForOrder(order)
+        if (tmpMap.has(group)) {
+          const arr = tmpMap.get(group)
+          arr.push(order._id)
+          tmpMap.set(group, arr)
+        } else tmpMap.set(group, [order._id])
+      }
+      const orderLinesMap = new Map()
+      for (let group of tmpMap) {
+        group[1].forEach((orderId) => {
+          orderLinesMap.set(
+            orderId,
+            group[1].findIndex((i) => i === orderId)
+          )
+        })
+      }
+      return orderLinesMap
+    },
+    bufferHeight() {
+      let arr = []
+      this.lineForUndistributedOrdersMap.forEach((val) => arr.push(val))
+      return (
+        ((Math.max(...arr) + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
+      )
+    },
   },
   watch: {
     period: {
@@ -216,12 +275,14 @@ export default {
     ordersFilterByDraggedOrder(item) {
       return this.draggedOrderId ? item._id !== this.draggedOrderId : true
     },
+
     getPeriodFromDate(dateStr, a, b) {
       return [
         moment(dateStr).add(a, 'd').format('YYYY-MM-DD'),
         moment(dateStr).add(b, 'd').format('YYYY-MM-DD'),
       ]
     },
+
     resizeScreen() {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
@@ -233,6 +294,7 @@ export default {
         period: this.period,
       })
     },
+
     getLeftShiftForOrder({ startPositionDate }) {
       // Округляем время отображения до 00, 06, 12, 18
       const sPositionMoment = moment(startPositionDate)
@@ -246,7 +308,10 @@ export default {
       return leftShift / this.secInPx + this.$refs.rowTitleColumn.offsetWidth
     },
 
-    getTopShiftForOrder({ truckId }) {
+    getTopShiftForOrder({ truckId, _id }) {
+      if (!truckId)
+        return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
+
       const rowIdx = this.rows.findIndex((item) => item._id === truckId)
       if (rowIdx === -1) return null
       return rowIdx * LINE_HEIGHT
@@ -297,18 +362,11 @@ export default {
     },
 
     dragEndHandler(e, orderId) {
-      // e.target.className = 'empty'
-      // e.target.style.zIndex = 5
       e.target.style.opacity = 1
-      this.draggedOrderId = null
       this.overRowInd = null
-      this.$emit('endDragOrder', orderId)
-      if (
-        e.dataTransfer.dropEffect === 'none' ||
-        e.dataTransfer.mozUserCancelled
-      ) {
-      } else {
-        // console.log('dragend')
+      if (this.draggedOrderId) {
+        this.draggedOrderId = null
+        this.$emit('endDragOrder', orderId)
       }
     },
 
@@ -324,19 +382,30 @@ export default {
         this.overRowInd = Math.floor(y / LINE_HEIGHT)
       }
     },
-    dragoverBufferHandler(e) {
-      console.log(e)
+    dropOnBufferHandler(e) {
+      this.draggedOrderId = null
+      const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
+      const startDate = moment.unix(
+        moment(this.period[0]).unix() + x * this.secInPx
+      )
+      startDate.hour(roundingHours(startDate.hour()))
+      this.$emit('updateOrder', {
+        truckId: null,
+        orderId: e.dataTransfer.getData('text/orderId'),
+        startDate: startDate.format('YYYY-MM-DD HH:00'),
+      })
     },
     dropHandler(e) {
+      this.draggedOrderId = null
       if (
         this.overRowInd === null ||
         this.overRowInd < 0 ||
         this.overRowInd > this.rows.length - 1
       )
         return null
-      // const y = e.layerY
+
       const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
-      // const leftShiftInSec = this.leftShiftInPx * this.secInPx
+
       const startDate = moment.unix(
         moment(this.period[0]).unix() + x * this.secInPx
       )
@@ -377,8 +446,6 @@ export default {
   width: 100%;
   margin: 8px;
   box-sizing: content-box;
-  min-height: 150px;
-  border: grey dotted 1px;
   overflow-y: scroll;
   overflow-x: hidden;
 }

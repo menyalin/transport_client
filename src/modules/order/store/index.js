@@ -2,10 +2,13 @@ import moment from 'moment'
 import service from '../services/order.service'
 
 const _getLastPlannedDate = (order) => {
-  return order.route
+  const tmpRoute = order.route.slice()
+  tmpRoute.shift()
+  const plannedDates = tmpRoute
     .filter((point) => !!point.plannedDate)
     .map((point) => point.plannedDate)
-    .reverse()[0]
+    .reverse()
+  return plannedDates.length ? plannedDates[0] : null
 }
 
 export default {
