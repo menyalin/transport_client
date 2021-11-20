@@ -8,7 +8,9 @@ const _getLastPlannedDate = (order) => {
     .filter((point) => !!point.plannedDate)
     .map((point) => point.plannedDate)
     .reverse()
-  return plannedDates.length ? plannedDates[0] : null
+  return plannedDates.length
+    ? moment(plannedDates[0]).add(4, 'h').format('YYYY-MM-DD HH:00')
+    : null
 }
 
 export default {

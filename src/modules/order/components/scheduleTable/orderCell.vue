@@ -1,15 +1,32 @@
 <template>
-  <div
-    :class="orderClasses"
-    @dblclick.stop="dblclickHandler"
+  <v-tooltip
+    bottom
+    open-delay="700"
   >
-    <div class="row-text">
-      {{ firstRow }}
+    <template v-slot:activator="{ on, attrs }">
+      <div
+        v-bind="attrs"
+        :class="orderClasses"
+        v-on="on"
+        @dblclick.stop="dblclickHandler"
+      >
+        <div class="row-text">
+          {{ firstRow }}
+        </div>
+        <div class="row-text">
+          {{ secondRow }}
+        </div>
+      </div>
+    </template>
+    <div>
+      <div class="title-row-text">
+        {{ firstRow }}
+      </div>
+      <div class="title-row-text">
+        {{ secondRow }}
+      </div>
     </div>
-    <div class="row-text">
-      {{ secondRow }}
-    </div>
-  </div>
+  </v-tooltip>
 </template>
 <script>
 import moment from 'moment'
@@ -82,8 +99,10 @@ export default {
   font-size: 11px;
   line-height: 11px;
   letter-spacing: -0.023em;
+  white-space: nowrap;
   font-weight: 300;
   overflow: hidden;
+  user-select: none;
 }
 .getted {
   border: 1px solid black;
@@ -97,5 +116,8 @@ export default {
 }
 .inProgress {
   background-color: lightgreen;
+}
+.title-row-text {
+  font-size: 16px;
 }
 </style>
