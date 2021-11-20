@@ -18,7 +18,22 @@
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
-        />
+        >
+          <template v-slot:[`item.type`]="{ item }">
+            <span>{{ downtimeTypesHash[item.type] }}</span>
+          </template>
+          <template v-slot:[`item.truck`]="{ item }">
+            <span>{{
+              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
+            }}</span>
+          </template>
+          <template v-slot:[`item.startPositionDate`]="{ item }">
+            <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
+          </template>
+          <template v-slot:[`item.endPositionDate`]="{ item }">
+            <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -33,12 +48,22 @@ export default {
   },
   data: () => ({
     headers: [
-      { value: '_id', text: 'id' },
-      { value: 'title', text: 'title' },
+      { value: 'title', text: 'Заголовок' },
+      { value: 'type', text: 'Тип' },
+      { value: 'truck', text: 'Грузовик' },
+      { value: 'startPositionDate', text: 'Начало' },
+      { value: 'endPositionDate', text: 'Конец' },
+      { value: 'note', text: 'Примечание' },
     ],
   }),
   computed: {
     ...mapGetters(['downtimes', 'loading', 'directoriesProfile']),
+    downtimeTypesHash() {
+      return this.$store.getters.downtimeTypesHash
+    },
+    trucksHash() {
+      return this.$store.getters.trucksHash
+    },
   },
   created() {
     this.$store.dispatch('getDowntimes')

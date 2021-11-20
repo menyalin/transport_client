@@ -66,6 +66,7 @@ export default {
   methods: {
     getOrders() {
       this.$store.dispatch('getOrders')
+      this.$store.dispatch('getDowntimes')
     },
     incDate(count) {
       this.$store.commit('incScheduleDate', count)

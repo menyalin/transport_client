@@ -1,7 +1,8 @@
 <template>
   <v-tooltip
     bottom
-    open-delay="700"
+    open-delay="1000"
+    close-delay="300"
   >
     <template v-slot:activator="{ on, attrs }">
       <div

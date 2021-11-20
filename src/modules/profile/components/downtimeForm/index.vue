@@ -73,13 +73,13 @@ import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 export default {
-  name: 'PartnerForm',
+  name: 'DowntimeForm',
   components: {
     AppButtonsPanel,
     AppDateTimeInput,
   },
   props: {
-    partner: {
+    downtime: {
       type: Object,
     },
     displayDeleteBtn: {
@@ -130,7 +130,7 @@ export default {
     },
   },
   watch: {
-    partner: {
+    downtime: {
       immediate: true,
       handler: function (val) {
         if (val) this.setFormFields(val)

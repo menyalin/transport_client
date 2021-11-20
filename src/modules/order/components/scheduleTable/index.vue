@@ -65,6 +65,17 @@
               <app-order-cell :orderId="order._id" />
             </div>
 
+            <div
+              v-for="downtime of filteredDountimes"
+              :key="downtime._id"
+              tag="div"
+              class="block"
+              :style="getStylesForOrder(downtime)"
+              @dragover="disabledZone"
+            >
+              <app-downtime-cell :itemId="downtime._id" />
+            </div>
+
             <app-bg-grid
               v-if="titleColumnWidth"
               :leftShift="titleColumnWidth"
@@ -131,12 +142,14 @@ import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 
 import appTruckTitleCell from './truckTitleCell.vue'
 import appOrderCell from './orderCell.vue'
+import appDowntimeCell from './downtimeCell.vue'
 import appBgGrid from './bgGrid'
 
 export default {
   name: 'ScheduleTable',
   components: {
     appTruckTitleCell,
+    appDowntimeCell,
     appOrderCell,
     appBgGrid,
   },
@@ -199,6 +212,12 @@ export default {
     },
     unDistributedOrders() {
       return this.filteredOrders.filter((i) => !i?.truckId)
+    },
+    filteredDountimes() {
+      return this.$store.getters.downtimesForSchedule.map((item) => ({
+        ...item,
+        truckId: item.truck,
+      }))
     },
     lineForUndistributedOrdersMap() {
       let tmpMap = new Map()

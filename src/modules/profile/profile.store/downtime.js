@@ -16,11 +16,8 @@ export default {
       state.downtimes = payload
     },
     addDowntimes(state, payload) {
-      if (
-        state.downtimes.findIndex((item) => item._id === payload._id) === -1
-      ) {
+      if (state.downtimes.findIndex((item) => item._id === payload._id) === -1)
         state.downtimes.push(payload)
-      }
     },
     updateDowntime(state, payload) {
       const ind = state.downtimes.findIndex((item) => item._id === payload._id)
@@ -56,5 +53,12 @@ export default {
       new Map(downtimes.map((item) => [item._id, item])),
     downtimes: ({ downtimes }) => downtimes,
     downtimeTypes: ({ downtimeTypes }) => downtimeTypes,
+    downtimeTypesHash: ({ downtimeTypes }) =>
+      downtimeTypes.reduce((hash, item) => {
+        hash[item.value] = item.text
+        return hash
+      }, {}),
+
+    downtimesForSchedule: ({ downtimes }) => downtimes,
   },
 }

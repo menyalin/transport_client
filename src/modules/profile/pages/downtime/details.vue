@@ -22,7 +22,7 @@ import service from '../../services/downtime.service'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {
-  name: 'PartnerDetails',
+  name: 'DowntimeDetails',
   components: {
     AppDowntimeForm,
     AppLoadSpinner,

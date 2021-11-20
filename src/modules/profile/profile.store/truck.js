@@ -94,6 +94,11 @@ export default {
         hash[item.value] = item.text
         return hash
       }, {}),
+    trucksHash: ({ trucks }) =>
+      trucks.reduce((hash, item) => {
+        hash[item._id] = item
+        return hash
+      }, {}),
 
     allowedToUseTrailersTrucksSet: ({ trucks }) => {
       const filtered = trucks.filter(
