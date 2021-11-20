@@ -43,6 +43,11 @@ export default {
         link: '/profile/address',
       },
       {
+        text: 'Простои/Выходные',
+        icon: 'mdi-car-wrench',
+        link: '/profile/downtimes',
+      },
+      {
         text: 'Партнеры',
         icon: 'mdi-emoticon-devil',
         link: '/profile/partners',

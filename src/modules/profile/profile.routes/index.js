@@ -11,7 +11,7 @@ import driverRoutes from './drivers'
 import tkNameRoutes from './tkNames'
 import partnerRoutes from './partners'
 import addressRoutes from './address'
-
+import downtimeRoutes from './downtime'
 import ProfileSettings from '../pages/profileSettings'
 
 export default [
@@ -28,6 +28,7 @@ export default [
       ...tkNameRoutes,
       ...partnerRoutes,
       ...addressRoutes,
+      ...downtimeRoutes,
       { path: 'companies', name: 'companyList', component: Companies },
       {
         path: 'companies/create',

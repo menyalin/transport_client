@@ -4,6 +4,7 @@ import TruckModule from './truck'
 import TkNameModule from './tkName'
 import DriverModule from './driver'
 import PartnerModule from './partner'
+import DowntimeModule from './downtime'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
@@ -198,5 +199,6 @@ export default {
     TruckModule,
     TkNameModule,
     PartnerModule,
+    DowntimeModule,
   },
 }
