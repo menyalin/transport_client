@@ -14,12 +14,7 @@
     >
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
-    <v-text-field
-      v-model.trim="$v.form.title.$model"
-      outlined
-      label="Заголовок"
-      dense
-    />
+
     <v-autocomplete
       v-model="$v.form.truck.$model"
       label="Грузовик"
@@ -32,6 +27,12 @@
       label="Тип простоя"
       :items="downtimeTypes"
       outlined
+      dense
+    />
+    <v-text-field
+      v-model.trim="$v.form.title.$model"
+      outlined
+      label="Заголовок"
       dense
     />
     <div class="row-input mb-4">
