@@ -43,6 +43,7 @@
       <app-date-time-input
         v-model="$v.form.endPositionDate.$model"
         label="Дата завешения"
+        :minDate="form.startPositionDate"
       />
     </div>
     <v-text-field
@@ -69,6 +70,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
+import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
@@ -139,15 +141,20 @@ export default {
     },
   },
 
-  validations: {
-    form: {
-      title: { required },
-      truck: { required },
-      type: { required },
-      note: {},
-      startPositionDate: { required },
-      endPositionDate: { required },
-    },
+  validations() {
+    return {
+      form: {
+        title: { required },
+        truck: { required },
+        type: { required },
+        note: {},
+        startPositionDate: { required },
+        endPositionDate: {
+          required,
+          isLaterThan: isLaterThan(this.form.startPositionDate),
+        },
+      },
+    }
   },
 
   methods: {
