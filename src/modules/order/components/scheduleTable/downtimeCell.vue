@@ -3,7 +3,7 @@
     :class="classes"
     @dblclick.stop="dblclickHandler"
   >
-    <div class="px-3 text-caption">
+    <div class="row-text">
       {{ downtime.title }}
     </div>
   </div>
@@ -40,7 +40,16 @@ export default {
   border: 1px dotted rgb(80, 80, 80);
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: start;
+  user-select: none;
+}
+.row-text {
+  padding-left: 3px;
+  font-size: 12px;
+  line-height: 13px;
+  letter-spacing: -0.023em;
+  font-weight: 300;
+  overflow: hidden;
   user-select: none;
 }
 .holiday {
