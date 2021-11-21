@@ -34,9 +34,9 @@ class CrewService {
     return data
   }
 
-  async getActualCrewByDriver(driver, date) {
+  async getActualCrewByDriver(driver) {
     try {
-      const params = { driver, date }
+      const params = { driver }
       const { data } = await api.get(BASE_PATH + '/by_driver', { params })
       return data
     } catch (e) {

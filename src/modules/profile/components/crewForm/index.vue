@@ -210,12 +210,10 @@ export default {
     },
     minValueForStartDate() {
       if (!this.actualDriverCrew) return '2021-08-01'
-      const idx = this.actualDriverCrew.transport.length - 1
-      if (idx < 0) return '2021-08-01'
 
-      return this.actualDriverCrew.transport[idx].endDate
-        ? this.actualDriverCrew.transport[idx].endDate
-        : this.actualDriverCrew.transport[idx].startDate
+      return this.actualDriverCrew.transport.endDate
+        ? this.actualDriverCrew.transport.endDate
+        : this.actualDriverCrew.transport.startDate
     },
     startDateError() {
       let errors = []

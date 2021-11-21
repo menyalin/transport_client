@@ -26,16 +26,16 @@
     <div>
       Грузовик:
       {{
-        trucksMap.has(crew.transport[0].truck)
-          ? trucksMap.get(crew.transport[0].truck).regNum
+        trucksMap.has(crew.transport.truck)
+          ? trucksMap.get(crew.transport.truck).regNum
           : ' - '
       }}
     </div>
     <div>
       Прицеп:
       {{
-        trucksMap.has(crew.transport[0].trailer)
-          ? trucksMap.get(crew.transport[0].trailer).regNum
+        trucksMap.has(crew.transport.trailer)
+          ? trucksMap.get(crew.transport.trailer).regNum
           : ' - '
       }}
     </div>
