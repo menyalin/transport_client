@@ -319,11 +319,13 @@ export default {
       })
     },
 
-    getLeftShiftForOrder({ startPositionDate }) {
+    getLeftShiftForOrder({ startPositionDate, type }) {
       // Округляем время отображения до 00, 06, 12, 18
       const sPositionMoment = moment(startPositionDate)
-      sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
-
+      if (!type) {
+        sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
+        sPositionMoment.minute(0)
+      }
       if (!this.$refs.rowTitleColumn) return null
       const sPeriod = moment(this.period[0]).unix()
       const sOrder = sPositionMoment.unix()
@@ -341,15 +343,18 @@ export default {
       return rowIdx * LINE_HEIGHT
     },
 
-    getOrderWidth({ startPositionDate, endPositionDate }) {
+    getOrderWidth({ startPositionDate, endPositionDate, type }) {
       let startPoint
       let endPoint
       const SEC_IN_SIX_HOURS = 6 * 60 * 60
       if (new Date(startPositionDate) < new Date(this.period[0]))
         startPoint = moment(this.period[0])
       else startPoint = moment(startPositionDate)
-      startPoint.hour(roundingHours(startPoint.hour()))
 
+      if (!type) {
+        startPoint.hour(roundingHours(startPoint.hour()))
+        startPoint.minute(0)
+      }
       if (moment(this.period[1]).add(24, 'h').isBefore(endPositionDate))
         endPoint = moment(this.period[1]).add(1, 'd')
       else endPoint = moment(endPositionDate)
