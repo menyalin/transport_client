@@ -31,6 +31,7 @@
 </template>
 <script>
 import moment from 'moment'
+import { roundingHours } from './helpers'
 export default {
   name: 'OrderCell',
   props: {
@@ -40,12 +41,18 @@ export default {
     },
   },
   computed: {
+    breakingSchedule() {
+      const roundedPlannedDate = moment(this.order?.route[0]?.plannedDate)
+      roundedPlannedDate.hours(roundingHours(roundedPlannedDate.hours()))
+      return !roundedPlannedDate.isSame(this.order.startPositionDate, 'hour')
+    },
     orderClasses() {
       let classes = ['order-wrapper']
 
       if (this.order.state.driverNotified) classes.push('driver-notified')
       if (this.order.state.clientNotified) classes.push('client-notified')
       classes.push(this.order.state.status)
+      if (this.breakingSchedule) classes.push('breaking-schedule')
       return classes
     },
     order() {
@@ -105,8 +112,12 @@ export default {
   overflow: hidden;
   user-select: none;
 }
+
 .getted {
   border: 1px solid black;
+}
+.breaking-schedule {
+  border-bottom: red 2px solid;
 }
 .driver-notified {
   color: rgb(2, 2, 134);
