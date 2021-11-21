@@ -154,7 +154,8 @@
       text="Грузовик задействован в активном экипаже от"
       :visibleDate="actualTruckCrew.transport.startDate"
       :date="newItem.startDate"
-      :crewId="actualTruckCrew._id"
+      :crew="actualTruckCrew"
+      
       :transportId="actualTruckCrew.transport._id"
       :invalid="!truckClosureAvailable"
       type="transport"
@@ -166,7 +167,8 @@
       text="Прицеп задействован в активном экипаже от"
       :visibleDate="actualTrailerCrew.transport.startDate"
       :date="newItem.startDate"
-      :crewId="actualTrailerCrew._id"
+      :crew="actualTrailerCrew"
+      
       :invalid="!trailerClosureAvailable"
       :transportId="actualTrailerCrew.transport._id"
       type="transport"
@@ -362,7 +364,7 @@ export default {
       this.newItem.truck = null
     },
     ['newItem.truck']: async function (val) {
-      this.newItem.trailer = null
+      if (!this.editMode) this.newItem.trailer = null
       this.actualTruckCrew = null
       if (!val) return null
       this.actualTruckCrew = await CrewService.getActualCrewByTruck(val)

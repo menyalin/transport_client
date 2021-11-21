@@ -71,7 +71,7 @@
       text="У водителя есть открытая смена от"
       :visibleDate="actualDriverCrew.startDate"
       :date="form.startDate"
-      :crewId="actualDriverCrew._id"
+      :crew="actualDriverCrew"
       :invalid="$v.form.startDate.$invalid"
       type="crew"
       @clearCrew="clearActualCrew"

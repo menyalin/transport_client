@@ -117,6 +117,14 @@ export default {
           .filter((item) => (tkName ? item.tkName._id === tkName : true))
           .filter((item) => (type ? item.type === type : true))
       },
+
+    trucksMap: ({ trucks }) => {
+      let map = new Map()
+      trucks.forEach((item) => {
+        map.set(item._id, item)
+      })
+      return map
+    },
     truckById:
       ({ trucks }) =>
       (id) =>

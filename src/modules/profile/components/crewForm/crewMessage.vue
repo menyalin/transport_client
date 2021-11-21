@@ -3,7 +3,7 @@
     {{ `${text} ${new Date(visibleDate).toLocaleDateString()}` }}
     <span
       class="link-text"
-      @click="goto(crewId)"
+      @click="goto(crew._id)"
     > Перейти </span>
     ,
     <span
@@ -11,10 +11,34 @@
       :class="{
         'disabled-link': !date || invalid,
       }"
-      @click="closeCrew(crewId)"
+      @click="closeCrew(crew._id)"
     >
       Закрыть
     </span>
+    <div>
+      Водитель:
+      {{
+        driversMap.has(crew.driver)
+          ? driversMap.get(crew.driver).fullName
+          : ' - '
+      }}
+    </div>
+    <div>
+      Грузовик:
+      {{
+        trucksMap.has(crew.transport[0].truck)
+          ? trucksMap.get(crew.transport[0].truck).regNum
+          : ' - '
+      }}
+    </div>
+    <div>
+      Прицеп:
+      {{
+        trucksMap.has(crew.transport[0].trailer)
+          ? trucksMap.get(crew.transport[0].trailer).regNum
+          : ' - '
+      }}
+    </div>
   </div>
 </template>
 <script>
@@ -36,10 +60,7 @@ export default {
       // дата которой будет закрываться смена
       type: String,
     },
-    crewId: {
-      type: String,
-      required: true,
-    },
+    crew: Object,
     transportId: {
       type: String,
     },
@@ -50,6 +71,14 @@ export default {
     type: {
       type: String,
       required: true,
+    },
+  },
+  computed: {
+    driversMap() {
+      return this.$store.getters.driversMap
+    },
+    trucksMap() {
+      return this.$store.getters.trucksMap
     },
   },
   methods: {
@@ -63,7 +92,7 @@ export default {
     async closeCrew(id) {
       if (!id || !this.date || this.invalid) return null
       const res = await CrewService.closeCrew(
-        this.transportId ? this.transportId : this.crewId,
+        this.transportId ? this.transportId : this.crew._id,
         this.date,
         this.type
       )
