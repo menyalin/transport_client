@@ -66,18 +66,11 @@ export default {
       { value: 'endDate', text: 'Завершение смены' },
       { value: 'driver.fullName', text: 'Водитель' },
       { value: 'truck', text: 'Грузовик' },
-      { value: 'trailer', text: 'Грузовик' },
+      { value: 'trailer', text: 'Прицеп' },
     ],
   }),
   computed: {
-    ...mapGetters([
-      'crewsByTruck',
-      'directoriesProfile',
-      'tkNames',
-      'crews',
-      'dateForCrews',
-      'tkNameForCrews',
-    ]),
+    ...mapGetters(['directoriesProfile', 'tkNames', 'crews', 'tkNameForCrews']),
   },
   created() {
     this.$store.dispatch('getCrews', {})
