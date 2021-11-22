@@ -43,6 +43,11 @@
           <template v-slot:[`item.trailer`]="{ item }">
             {{ getTruckName(item, 'trailer') }}
           </template>
+          <template v-slot:[`item.isActual`]="{ item }">
+            <v-icon>
+              {{ isActualCrew(item) ? 'mdi-check' : 'mdi-minus' }}
+            </v-icon>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -67,6 +72,7 @@ export default {
       { value: 'driver.fullName', text: 'Водитель' },
       { value: 'truck', text: 'Грузовик' },
       { value: 'trailer', text: 'Прицеп' },
+      { value: 'isActual', text: 'В работе' },
     ],
   }),
   computed: {
@@ -92,6 +98,10 @@ export default {
       const lastIdx = crew.transport.length - 1
       const truckId = crew.transport[lastIdx][field]
       return truckId ? this.$store.getters.trucksMap.get(truckId).regNum : ' - '
+    },
+    isActualCrew(crew) {
+      const lastIdx = crew.transport.length - 1
+      return !crew.transport[lastIdx].endDate
     },
   },
 }
