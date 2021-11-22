@@ -27,14 +27,6 @@
             >
               Необходима авторизация
             </div>
-            partnerValue: {{ partnerValue }}
-
-            <app-autocomplete
-              v-model="partnerValue"
-              label="Партнер"
-              items-getter="partnersForAutocomplete"
-            />
-            <v-text-field v-model="someData" />
           </v-col>
         </v-row>
       </v-container>
@@ -45,8 +37,6 @@
 <script>
 import AppAdminBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
-import AppAutocomplete from '@/modules/common/components/autocomplete'
-import AppPartnerForm from '@/modules/profile/components/partnerForm'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -54,20 +44,12 @@ export default {
   components: {
     AppAdminBar,
     AppSnackbar,
-    AppAutocomplete,
   },
-  data: () => ({
-    partnerValue: '617bbc1e70a11d01eb72f022',
-    someData: null,
-  }),
+  data: () => ({}),
   computed: {
     ...mapGetters(['isLoggedIn', 'user']),
   },
-  methods: {
-    createError() {
-      this.$store.commit('setError', 'Ошибка!!"')
-    },
-  },
+  methods: {},
 }
 </script>
 <style></style>

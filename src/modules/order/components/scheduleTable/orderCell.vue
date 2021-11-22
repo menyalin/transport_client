@@ -48,9 +48,9 @@ export default {
     },
     orderClasses() {
       let classes = ['order-wrapper']
-
       if (this.order.state.driverNotified) classes.push('driver-notified')
       if (this.order.state.clientNotified) classes.push('client-notified')
+      if (this.order.state.warning) classes.push('warning-state')
       classes.push(this.order.state.status)
       if (this.breakingSchedule) classes.push('breaking-schedule')
       return classes
@@ -120,16 +120,19 @@ export default {
   border-bottom: red 2px solid;
 }
 .driver-notified {
-  color: rgb(2, 2, 134);
+  color: rgb(27, 27, 252);
 }
 
 .client-notified {
-  background-color: lightblue;
+  background-color: rgb(200, 239, 252);
 }
 .inProgress {
   background-color: lightgreen;
 }
 .title-row-text {
   font-size: 16px;
+}
+.warning-state {
+  box-shadow: 0px 0px 3px 1px #f97509;
 }
 </style>

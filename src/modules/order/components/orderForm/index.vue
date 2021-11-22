@@ -18,7 +18,7 @@
         </v-alert>
         <div class="wrapper">
           <div
-            v-if="true"
+            v-if="false"
             class="dates-position-block"
           >
             <div class="text-caption px-5 py-2">
