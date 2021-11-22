@@ -9,20 +9,25 @@
           @refresh="refresh"
         />
         <div class="filters">
-          <div>
-            <v-select
-              :value="tkNameForCrews"
-              dense
-              outlined
-              hide-details
-              label="ТК"
-              clearable
-              :items="tkNames"
-              item-value="_id"
-              item-text="name"
-              @change="setTkNameFilter"
-            />
-          </div>
+          <v-select
+            :value="tkNameForCrews"
+            dense
+            outlined
+            hide-details
+            label="ТК"
+            clearable
+            :items="tkNames"
+            item-value="_id"
+            item-text="name"
+            @change="setTkNameFilter"
+          />
+
+          <v-select
+            dense
+            outlined
+            hide-details
+            label="Состояние экипажа"
+          />
         </div>
         <v-data-table
           :headers="headers"
