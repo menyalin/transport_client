@@ -37,6 +37,12 @@
           <template v-slot:[`item.endDate`]="{ item }">
             {{ item.endDate ? new Date(item.endDate).toLocaleString() : null }}
           </template>
+          <template v-slot:[`item.truck`]="{ item }">
+            {{ getTruckName(item, 'truck') }}
+          </template>
+          <template v-slot:[`item.trailer`]="{ item }">
+            {{ getTruckName(item, 'trailer') }}
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -44,7 +50,6 @@
 </template>
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-// import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 import { mapGetters } from 'vuex'
 
@@ -60,6 +65,8 @@ export default {
       { value: 'startDate', text: 'Начало смены' },
       { value: 'endDate', text: 'Завершение смены' },
       { value: 'driver.fullName', text: 'Водитель' },
+      { value: 'truck', text: 'Грузовик' },
+      { value: 'trailer', text: 'Грузовик' },
     ],
   }),
   computed: {
@@ -71,26 +78,11 @@ export default {
       'dateForCrews',
       'tkNameForCrews',
     ]),
-    dateFilter() {
-      if (!this.dateForCrews) return null
-      return this.dateForCrews.format(this.dateFormat)
-    },
   },
   created() {
     this.$store.dispatch('getCrews', {})
   },
   methods: {
-    createWithCopy(crew) {
-      this.$router.push({
-        name: 'CrewCreate',
-        params: {
-          tkName: crew.tkName._id,
-          truck: crew.truck._id,
-          trailer: crew.trailer?._id,
-          driver: crew.driver?._id,
-        },
-      })
-    },
     setTkNameFilter(val) {
       this.$store.commit('setTkNameForCrews', val)
     },
@@ -102,6 +94,11 @@ export default {
     },
     dblClickRow(_, { item }) {
       if (item) this.$router.push(`crews/${item._id}`)
+    },
+    getTruckName(crew, field) {
+      const lastIdx = crew.transport.length - 1
+      const truckId = crew.transport[lastIdx][field]
+      return truckId ? this.$store.getters.trucksMap.get(truckId).regNum : ' - '
     },
   },
 }
