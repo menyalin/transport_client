@@ -134,7 +134,9 @@ export default {
         note: null,
         tRegime: null,
       },
-      state: {},
+      state: {
+        status: 'needGet',
+      },
       route: [
         { type: 'loading', address: null, plannedDate: '', note: '' },
         { type: 'unloading', address: null, plannedDate: '', note: '' },

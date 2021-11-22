@@ -135,4 +135,8 @@ export default {
 .warning-state {
   box-shadow: 0px 0px 3px 1px #f97509;
 }
+
+.completed {
+  background-color: rgb(189, 223, 189);
+}
 </style>
