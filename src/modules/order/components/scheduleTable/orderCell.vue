@@ -127,7 +127,7 @@ export default {
   background-color: rgb(200, 239, 252);
 }
 .inProgress {
-  background-color: lightgreen;
+  background-color: rgb(159, 255, 159);
 }
 .title-row-text {
   font-size: 16px;

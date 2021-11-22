@@ -14,6 +14,7 @@
             v-for="status in orderStatuses"
             :key="status.value"
             :label="status.text"
+            :disabled="disabledStatus(status)"
             :value="status.value"
           />
         </v-radio-group>
@@ -23,7 +24,7 @@
           :value="params.driverNotified"
           label="Водитель оповещен"
           class="pt-0 mt-1"
-          :disabled="!enableConfirm"
+          :disabled="!enableConfirm || disabledNotification"
           hide-details
           @change="change($event, 'driverNotified')"
         />
@@ -31,7 +32,7 @@
           :value="params.clientNotified"
           label="Клиент оповещен"
           class="pt-0 mt-1"
-          :disabled="!enableConfirm"
+          :disabled="!enableConfirm || disabledNotification"
           hide-details
           @change="change($event, 'clientNotified')"
         />
@@ -62,11 +63,13 @@ export default {
     routeState: Object,
     title: String,
     enableConfirm: Boolean,
+    routeCompleted: Boolean,
+    enableRefuse: Boolean,
   },
   data() {
     return {
       params: {
-        status: null,
+        status: 'needGet',
         warning: false,
         driverNotified: false,
         clientNotified: false,
@@ -77,6 +80,9 @@ export default {
     ...mapGetters([]),
     orderStatuses() {
       return this.$store.getters.orderStatuses
+    },
+    disabledNotification() {
+      return !['getted'].includes(this.params.status)
     },
   },
   watch: {
@@ -93,11 +99,58 @@ export default {
         }
       },
     },
+    routeCompleted: {
+      immediate: true,
+      handler: function (val) {
+        if (val) {
+          this.params.status = 'completed'
+        }
+      },
+    },
   },
   methods: {
     change(val, field) {
       this.params[field] = val
       this.$emit('change', this.params)
+    },
+    disabledStatus(status) {
+      if (this.params.status === 'needGet' && this.enableRefuse)
+        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(
+          status.value
+        )
+      if (this.params.status === 'needGet' && !this.enableRefuse)
+        return !['needGet', 'getted'].includes(status.value)
+      if (
+        this.params.status === 'getted' &&
+        !this.params.driverNotified &&
+        !this.params.clientNotified &&
+        this.enableRefuse
+      )
+        return !['needGet', 'getted', 'weRefused', 'clientRefused'].includes(
+          status.value
+        )
+      if (
+        this.params.status === 'getted' &&
+        !this.params.driverNotified &&
+        !this.params.clientNotified &&
+        !this.enableRefuse
+      )
+        return !['needGet', 'getted'].includes(status.value)
+      if (
+        this.params.status === 'getted' &&
+        this.params.driverNotified &&
+        this.params.clientNotified
+      )
+        return !['getted', 'inProgress'].includes(status.value)
+      if (this.params.status === 'inProgress')
+        return !['getted', 'inProgress'].includes(status.value)
+      if (this.params.status === 'completed')
+        return !['completed', 'inProgress'].includes(status.value)
+      if (this.params.status === 'weRefused')
+        return !['getted', 'weRefused'].includes(status.value)
+      if (this.params.status === 'clientRefused')
+        return !['getted', 'clientRefused'].includes(status.value)
+      return true
     },
   },
 }

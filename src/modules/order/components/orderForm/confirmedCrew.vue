@@ -9,7 +9,7 @@
         :loading="loading"
         :value="params.truck"
         dense
-        clearable
+        :clearable="!confirmed"
         :readonly="confirmed"
         :items="trucks"
         outlined

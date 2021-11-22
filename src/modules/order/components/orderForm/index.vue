@@ -35,6 +35,8 @@
           <app-route-state
             v-model="state"
             :enableConfirm="enableConfirmOrder"
+            :routeCompleted="routeCompleted"
+            :enableRefuse="enableRefuseOrder"
             title="Статус рейса"
             class="route-state"
           />
@@ -58,7 +60,7 @@
           <app-route-points
             v-model="route"
             title="Маршрут"
-            :confirmed="orderConfirmed"
+            :confirmed="orderInProgress"
             class="route-points"
             :isValid="isValidRoute"
           />
@@ -181,8 +183,17 @@ export default {
     enableConfirmOrder() {
       return !!this.confirmedCrew.driver
     },
+    enableRefuseOrder() {
+      return !this.confirmedCrew.truck
+    },
     orderConfirmed() {
       return this.state.driverNotified || this.state.clientNotified
+    },
+    orderInProgress() {
+      return this.orderConfirmed && this.state.status === 'inProgress'
+    },
+    routeCompleted() {
+      return this.route.filter((point) => !point.departureDate).length === 0
     },
     formState() {
       return {
