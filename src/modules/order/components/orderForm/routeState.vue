@@ -136,18 +136,26 @@ export default {
         !this.enableRefuse
       )
         return !['needGet', 'getted'].includes(status.value)
+      
       if (
         this.params.status === 'getted' &&
         this.params.driverNotified &&
         this.params.clientNotified
       )
         return !['getted', 'inProgress'].includes(status.value)
-      if (this.params.status === 'inProgress')
+      
+      if (this.params.status === 'inProgress' && this.routeCompleted)
+        return !['getted', 'inProgress', 'completed'].includes(status.value)
+      
+      if (this.params.status === 'inProgress' && !this.routeCompleted)
         return !['getted', 'inProgress'].includes(status.value)
+      
       if (this.params.status === 'completed')
         return !['completed', 'inProgress'].includes(status.value)
+      
       if (this.params.status === 'weRefused')
         return !['getted', 'weRefused'].includes(status.value)
+      
       if (this.params.status === 'clientRefused')
         return !['getted', 'clientRefused'].includes(status.value)
       return true
