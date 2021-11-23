@@ -1,3 +1,4 @@
+import moment from 'moment'
 import service from '@/modules/profile/services/downtime.service'
 
 export default {
@@ -59,6 +60,14 @@ export default {
         return hash
       }, {}),
 
-    downtimesForSchedule: ({ downtimes }) => downtimes,
+    downtimesForSchedule: ({ downtimes }, { schedulePeriod }) =>
+      downtimes.filter((d) => {
+        const sP = moment(schedulePeriod[0])
+        const eP = moment(schedulePeriod[1])
+        return (
+          eP.isAfter(d.startPositionDate) &&
+          sP.isSameOrBefore(d.endPositionDate)
+        )
+      }),
   },
 }

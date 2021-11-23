@@ -368,7 +368,7 @@ export default {
 
     getStylesForOrder(order) {
       return {
-        height: LINE_HEIGHT - 1 + 'px',
+        height: LINE_HEIGHT + 'px',
         width: this.getOrderWidth(order) + 'px',
         left: this.getLeftShiftForOrder(order) + 'px',
         top: this.getTopShiftForOrder(order) + 'px',
