@@ -163,7 +163,6 @@ export default {
       this.resizeHandler()
     },
     period: async function (val) {
-      console.log(val)
       this.$route.query.period = val
       await this.getData()
       this.resizeHandler()
