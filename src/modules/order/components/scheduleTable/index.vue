@@ -253,8 +253,8 @@ export default {
   watch: {
     period: {
       immediate: false,
-      handler: function (val, oldVal) {
-        if (val && val.toString() !== oldVal.toString())
+      handler: function (val) {
+        if (!!val)
           this.$store.commit('setPeriod', val)
       },
     },

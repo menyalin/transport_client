@@ -17,11 +17,12 @@ const _getLastPlannedDate = (order) => {
 const _getLastPositionDate = (order) => {
   const tmpRoute = order.route.slice()
   let routeDates = []
+
   routeDates.push(order.startPositionDate)
-  for (let point of tmpRoute) {
-    routeDates.push(point.plannedDate)
-    routeDates.push(point.arrivalDate)
-    routeDates.push(point.departureDate)
+  for (let i = 0; i < tmpRoute.length; i++) {
+    if (i !== 0) routeDates.push(tmpRoute[i].plannedDate)
+    routeDates.push(tmpRoute[i].arrivalDate)
+    routeDates.push(tmpRoute[i].departureDate)
   }
   routeDates = routeDates.filter((date) => !!date)
   return routeDates.sort((a, b) => new Date(b) - new Date(a))[0]
