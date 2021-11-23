@@ -205,7 +205,7 @@ export default {
       }
     },
     filteredOrders() {
-      return this.orders.filter(this.ordersFilterByPeriod)
+      return this.$store.getters.ordersForSchedule
     },
     distributedOrders() {
       return this.filteredOrders.filter((i) => !!i?.truckId)

@@ -9,7 +9,6 @@
     <app-schedule-table
       :rows="scheduleRows"
       :date="date"
-      :orders="filteredOrders"
       @startDragOrder="startDragOrder"
       @endDragOrder="endDragOrder"
       @updateOrder="updateOrderHandler"
@@ -34,9 +33,8 @@ export default {
   data() {
     return {
       orders: mockOrders,
-      showSetting: false,
+      showSetting: true,
       titleColumnWidth: null,
-      // date: moment().format('YYYY-MM-DD'),
     }
   },
   computed: {
@@ -47,9 +45,6 @@ export default {
       return this.$store.getters.trucks
         .filter((item) => item.type === 'truck')
         .sort((a, b) => a.order - b.order)
-    },
-    filteredOrders() {
-      return this.$store.getters.ordersForSchedule
     },
   },
   watch: {
@@ -87,8 +82,8 @@ export default {
         (item) => item._id == orderId
       )
       if (
-        !!editedOrder.endPositionDate &&
-        new Date(startDate) > new Date(editedOrder.endPositionDate)
+        !!editedOrder.lastPlannedDate &&
+        new Date(startDate) > new Date(editedOrder.lastPlannedDate)
       ) {
         this.$store.commit(
           'setError',

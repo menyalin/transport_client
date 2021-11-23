@@ -4,13 +4,27 @@ import service from '../services/order.service'
 const _getLastPlannedDate = (order) => {
   const tmpRoute = order.route.slice()
   tmpRoute.shift()
-  const plannedDates = tmpRoute
-    .filter((point) => !!point.plannedDate)
-    .map((point) => point.plannedDate)
-    .reverse()
-  return plannedDates.length
-    ? moment(plannedDates[0]).add(4, 'h').format('YYYY-MM-DD HH:00')
-    : null
+  let plannedDates = []
+  for (let point of tmpRoute) {
+    plannedDates.push(point.plannedDate)
+  }
+  plannedDates = plannedDates
+    .filter((x) => !!x)
+    .sort((a, b) => new Date(b) - new Date(a))
+  return plannedDates.length ? plannedDates[0] : null
+}
+
+const _getLastPositionDate = (order) => {
+  const tmpRoute = order.route.slice()
+  let routeDates = []
+  routeDates.push(order.startPositionDate)
+  for (let point of tmpRoute) {
+    routeDates.push(point.plannedDate)
+    routeDates.push(point.arrivalDate)
+    routeDates.push(point.departureDate)
+  }
+  routeDates = routeDates.filter((date) => !!date)
+  return routeDates.sort((a, b) => new Date(b) - new Date(a))[0]
 }
 
 export default {
@@ -81,17 +95,26 @@ export default {
   },
   getters: {
     pointTypes: ({ pointTypes }) => pointTypes,
-    ordersForSchedule: ({ orders }) =>
+    ordersForSchedule: ({ orders }, { schedulePeriod }) =>
       orders
         .map((item) => ({
           _id: item._id,
           company: item.company,
           startPositionDate: item.startPositionDate,
-          endPositionDate: _getLastPlannedDate(item),
+          endPositionDate: _getLastPositionDate(item), // для определения длины блока
+          lastPlannedDate: _getLastPlannedDate(item), // для проверки при перемещении
           truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
           state: item.state,
         }))
+        .filter((order) => {
+          const sP = moment(schedulePeriod[0])
+          const eP = moment(schedulePeriod[1])
+          return (
+            eP.isAfter(order.startPositionDate) &&
+            sP.isSameOrBefore(order.endPositionDate)
+          )
+        })
         .sort(
           (a, b) =>
             new Date(a.startPositionDate) - new Date(b.startPositionDate)
