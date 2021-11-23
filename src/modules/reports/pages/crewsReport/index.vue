@@ -7,10 +7,10 @@
       >
         <v-icon> mdi-cached </v-icon>
       </v-btn>
-      <app-date-range v-model="period" />
+      <app-date-range v-model="settings.period" />
 
       <v-select
-        v-model="group"
+        v-model="settings.group"
         label="Группировать по"
         :items="groupItems"
         hide-details
@@ -18,7 +18,7 @@
         dense
       />
       <v-select
-        v-model="analitic"
+        v-model="settings.analitic"
         label="Детализация"
         :items="analiticItems"
         hide-details
@@ -26,7 +26,7 @@
         dense
       />
       <v-select
-        v-model="tkNameFilter"
+        v-model="settings.tkNameFilter"
         label="Фильтр по ТК"
         :items="tkNames"
         item-value="_id"
@@ -121,18 +121,23 @@ export default {
   },
   data() {
     return {
+      formName: 'crewDiagramReport',
+      settings: {
+        tkNameFilter: null,
+        group: 'truck',
+        analitic: 'driver',
+        period: this.initDateRange(),
+      },
       tableWidth: 0,
-      tkNameFilter: null,
       secInPx: 0,
       groupItems: [
         { value: 'truck', text: 'Грузовик' },
         { value: 'driver', text: 'Водитель' },
         { value: 'trailer', text: 'Прицеп' },
       ],
-      group: 'truck',
-      analitic: 'driver',
+
       titleCellWidth: 0,
-      period: this.initDateRange(),
+
       crews: [],
       blocks: [],
       tableColumns: [],
@@ -143,41 +148,49 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile', 'tkNames']),
     _tableRows() {
-      const rows = getRowsFromCrews(this.filteredCrews, this.group)
+      const rows = getRowsFromCrews(this.filteredCrews, this.settings.group)
       return rows
     },
     analiticItems() {
-      return this.groupItems.filter((item) => item.value !== this.group)
+      return this.groupItems.filter(
+        (item) => item.value !== this.settings.group
+      )
     },
     filteredCrews() {
       return this.crews.filter((item) =>
-        this.tkNameFilter ? this.tkNameFilter === item.tkNameId : true
+        this.settings.tkNameFilter
+          ? this.settings.tkNameFilter === item.tkNameId
+          : true
       )
     },
   },
   watch: {
-    group: async function (val) {
+    ['settings.group']: async function (val) {
       await this.getData()
-      if (val === 'driver' || val === 'trailer') this.analitic = 'truck'
-      if (val === 'truck') this.analitic = 'driver'
+      if (val === 'driver' || val === 'trailer')
+        this.settings.analitic = 'truck'
+      if (val === 'truck') this.settings.analitic = 'driver'
       this.resizeHandler()
     },
-    period: async function (val) {
-      this.$route.query.period = val
+    ['settings.period']: async function (val) {
       await this.getData()
       this.resizeHandler()
     },
-    analitic: function () {
+    ['settings.analitic']: function () {
       this.resizeHandler()
     },
-    tkNameFilter: function () {
+    ['settings.tkNameFilter']: function () {
       this.resizeHandler()
     },
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.resizeHandler)
   },
-
+  created() {
+    if (this.$store.getters.formSettingsMap.has(this.formName)) {
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    }
+  },
   async mounted() {
     await this.getData()
     window.addEventListener('resize', this.resizeHandler)
@@ -185,7 +198,7 @@ export default {
   },
   methods: {
     getUrlForRowTitle(id) {
-      if (this.group === 'truck' || this.group === 'trailer')
+      if (this.settings.group === 'truck' || this.settings.group === 'trailer')
         return '/profile/trucks/' + id
       else return '/profile/drivers/' + id
     },
@@ -193,7 +206,7 @@ export default {
       this.loading = true
       this.crews = await CrewService.diagramReport({
         profile: this.directoriesProfile,
-        period: this.period.join(','),
+        period: this.settings.period.join(','),
       })
       this.loading = false
     },
@@ -201,9 +214,9 @@ export default {
       if (!this.filteredCrews) return null
       let blocks = getBlocksFromCrews({
         crews: this.filteredCrews,
-        group: this.group,
-        analitic: this.analitic,
-        displayPeriod: this.period,
+        group: this.settings.group,
+        analitic: this.settings.analitic,
+        displayPeriod: this.settings.period,
       })
       return blocks.map((item) => ({
         ...item,
@@ -217,33 +230,39 @@ export default {
       }))
     },
     resizeHandler() {
-      this.tableColumns = getDaysFromPeriod(this.period)
+      this.tableColumns = getDaysFromPeriod(this.settings.period)
       //  if (!this.$refs.tableBody) return null
-      this.tableRows = getRowsFromCrews(this.filteredCrews, this.group)
+      this.tableRows = getRowsFromCrews(this.filteredCrews, this.settings.group)
       this.$nextTick(() => {
         this.tableWidth =
           this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
         const dSec =
-          moment(this.period[1]).add(24, 'hour').unix() -
-          moment(this.period[0]).unix()
+          moment(this.settings.period[1]).add(24, 'hour').unix() -
+          moment(this.settings.period[0]).unix()
         this.secInPx = dSec / this.tableWidth
 
         this.$nextTick(() => {
           this.blocks = this.getBlocksWithStyles()
         })
       })
+      this.$store.commit('setFormSettings', {
+        formName: this.formName,
+        settings: this.settings,
+      })
     },
     getWidthInPxForBlock(block) {
       if (!this.secInPx) return null
       let endM = null
       let startM = moment(block.startDate).unix()
-      if (moment(this.period[0]).isSameOrAfter(block.startDate))
-        startM = moment(this.period[0]).unix()
+      if (moment(this.settings.period[0]).isSameOrAfter(block.startDate))
+        startM = moment(this.settings.period[0]).unix()
       if (
         !block.endDate ||
-        moment(this.period[1]).add('24', 'hour').isSameOrBefore(block.endDate)
+        moment(this.settings.period[1])
+          .add('24', 'hour')
+          .isSameOrBefore(block.endDate)
       )
-        endM = moment(this.period[1]).add(24, 'hour').unix()
+        endM = moment(this.settings.period[1]).add(24, 'hour').unix()
       else endM = moment(block.endDate).unix()
       const widthPx = (endM - startM) / this.secInPx
       return widthPx > 10 ? widthPx + 'px' : '10px'
@@ -253,7 +272,7 @@ export default {
       // dates in seconds
       if (!this.$refs?.titleCell) return null
       let leftShift = null
-      const startPeriod = moment(this.period[0]).unix()
+      const startPeriod = moment(this.settings.period[0]).unix()
       const startCrew = moment(crew.startDate).unix()
       if (startCrew <= startPeriod) leftShift = 0
       else leftShift = startCrew - startPeriod

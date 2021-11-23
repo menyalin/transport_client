@@ -15,7 +15,7 @@ import UserService from '@/modules/auth/services/user.service'
 export default {
   state: {
     myCompanies: [],
-
+    formSettings: new Map(),
     cacheDirectories: new Map(),
     tasks: [],
     staffRoles: [
@@ -25,6 +25,9 @@ export default {
     ],
   },
   mutations: {
+    setFormSettings({ formSettings }, { formName, settings }) {
+      formSettings.set(formName, settings)
+    },
     addArrayToCache(state, items) {
       items.forEach((item) => {
         state.cacheDirectories.set(item._id, item)
@@ -190,6 +193,8 @@ export default {
     staffRoles: ({ staffRoles }) => staffRoles,
 
     tasks: ({ tasks }) => tasks,
+
+    formSettingsMap: ({ formSettings }) => formSettings,
   },
 
   modules: {
