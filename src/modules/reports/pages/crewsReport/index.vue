@@ -1,7 +1,14 @@
 <template>
   <div>
     <div class="settings-wrapper">
+      <v-btn
+        icon
+        @click.stop="getData"
+      >
+        <v-icon> mdi-cached </v-icon>
+      </v-btn>
       <app-date-range v-model="period" />
+
       <v-select
         v-model="group"
         label="Группировать по"
@@ -274,6 +281,8 @@ export default {
 .settings-wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  padding-left: 15px;
 }
 .settings-wrapper > * {
   max-width: 300px;
