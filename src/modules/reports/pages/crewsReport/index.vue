@@ -162,7 +162,9 @@ export default {
       if (val === 'truck') this.analitic = 'driver'
       this.resizeHandler()
     },
-    period: async function () {
+    period: async function (val) {
+      console.log(val)
+      this.$route.query.period = val
       await this.getData()
       this.resizeHandler()
     },

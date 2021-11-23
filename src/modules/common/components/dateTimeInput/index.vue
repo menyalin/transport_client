@@ -169,8 +169,7 @@ export default {
 </script>
 <style scoped>
 .input_wrapper_row {
-  max-width: 20rem;
-  min-width: 20rem;
+  width: 20rem;
   display: flex;
 
   flex-direction: row;
