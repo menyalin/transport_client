@@ -27,8 +27,8 @@ class CrewService {
     return data
   }
 
-  async getByDerictoriesProfile(profile, date) {
-    let { data } = await api.get(BASE_PATH, { params: { profile, date } })
+  async getList(params) {
+    let { data } = await api.get(BASE_PATH, { params })
     if (!Array.isArray(data))
       throw new Error('Нужен массив!! пришло что-то другое!')
     return data
@@ -41,7 +41,6 @@ class CrewService {
       return data
     } catch (e) {
       store.commit('setError', e.message)
-      // throw new Error(e.message)
     }
   }
   async getActualCrewByTruck(truck) {
@@ -51,7 +50,6 @@ class CrewService {
       return data
     } catch (e) {
       store.commit('setError', e.message)
-      // throw new Error(e.message)
     }
   }
 
@@ -60,15 +58,6 @@ class CrewService {
     const { data } = await api.get(BASE_PATH + '/by_truck_and_date', { params })
     return data
   }
-
-  // async getActualCrews(profile, date) {
-  //   let { data } = await api.get(BASE_PATH + '/actual', {
-  //     params: { profile, date },
-  //   })
-  //   if (!Array.isArray(data))
-  //     throw new Error('Нужен массив!! пришло что-то другое!')
-  //   return data
-  // }
 
   async closeCrew(id, date, type = 'crew') {
     let { data } = await api.put(BASE_PATH + '/close/' + id, {

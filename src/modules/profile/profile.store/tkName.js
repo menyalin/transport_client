@@ -67,5 +67,13 @@ export default {
         if (a.name < b.name) return -1
         if (a.name > b.name) return 1
       }),
+
+    tkNamesMap: ({ tkNames }) => {
+      let map = new Map()
+      tkNames.forEach((item) => {
+        map.set(item._id, item)
+      })
+      return map
+    },
   },
 }
