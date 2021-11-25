@@ -23,6 +23,9 @@
         :options.sync="settings.listOptions"
         @dblclick:row="dblClickRow"
       >
+        <template v-slot:[`item.state.status`]="{ item }">
+          {{ getStatusText(item.state.status) }}
+        </template>
         <template v-slot:[`item.plannedDate`]="{ item }">
           {{ new Date(item.route[0].plannedDate).toLocaleString() }}
         </template>
@@ -71,6 +74,7 @@ export default {
     orders: [],
     headers: [
       { value: 'plannedDate', text: 'Дата погрузки', sortable: false },
+      { value: 'state.status', text: 'Статус', sortable: false },
       { value: 'client.client', text: 'Клиент', sortable: false },
       { value: 'client.num', text: 'Номер заказа клиента', sortable: false },
     ],
@@ -105,7 +109,9 @@ export default {
     create() {
       this.$router.push({ name: 'CreateOrder' })
     },
-
+    getStatusText(status) {
+      return this.$store.getters.orderStatusesMap.get(status) || ' --- '
+    },
     refresh() {
       this.getData()
     },

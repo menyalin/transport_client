@@ -81,7 +81,7 @@ export default {
         commit('setError', 'Профиль настроек не установлен')
         return null
       }
-      
+
       service
         .getListForSchedule({
           profile: getters.directoriesProfile,
@@ -128,6 +128,8 @@ export default {
     },
     scheduleDate: ({ scheduleDate }) => scheduleDate,
     orderStatuses: ({ orderStatuses }) => orderStatuses,
+    orderStatusesMap: ({ orderStatuses }) =>
+      new Map(orderStatuses.map((item) => [item.value, item.text])),
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
   },
 }

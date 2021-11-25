@@ -4,7 +4,7 @@
       :to="baseUrl + id"
       draggable="false"
     >
-      {{ title }}
+      {{ title.toLowerCase() }}
     </router-link>
   </div>
 </template>
@@ -26,4 +26,4 @@ export default {
   }),
 }
 </script>
-<style></style>
+<style scoped></style>
