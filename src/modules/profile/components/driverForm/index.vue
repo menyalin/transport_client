@@ -130,6 +130,7 @@
           dense
         />
       </v-row>
+
       <v-row class="row-wrapper">
         <app-date-time-input
           v-model="$v.form.employmentDate.$model"
@@ -149,8 +150,13 @@
           dense
         />
       </v-row>
-      <v-row class="row-wrapper" />
-      <v-row class="row-wrapper" />
+
+      <app-med-book
+        v-model="medBook"
+        title="Мед.книжка"
+        class="mb-5"
+      />
+
       <v-checkbox
         v-model="form.hasScans"
         label="Есть сканы документов"
@@ -177,6 +183,7 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
+import AppMedBook from './medBook.vue'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 
@@ -185,6 +192,7 @@ export default {
   components: {
     AppButtonsPanel,
     AppDateTimeInput,
+    AppMedBook,
   },
   props: {
     driver: {
@@ -198,6 +206,7 @@ export default {
   data() {
     return {
       loading: false,
+      medBook: {},
       form: {
         tkName: null,
         surname: null,
@@ -280,7 +289,11 @@ export default {
 
   methods: {
     submit() {
-      const driver = { ...this.form, company: this.directoriesProfile }
+      const driver = {
+        ...this.form,
+        company: this.directoriesProfile,
+        medBook: this.medBook,
+      }
       this.$emit('submit', driver)
       this.resetForm()
     },
@@ -290,6 +303,7 @@ export default {
     },
     setFormFields(val) {
       const keys = Object.keys(this.form)
+      this.medBook = val.medBook
       keys.forEach((key) => {
         this.form[key] = val[key]
         if (val.tkName?._id) this.form.tkName = val.tkName._id
@@ -297,6 +311,7 @@ export default {
     },
     resetForm() {
       const keys = Object.keys(this.form)
+      this.medBook = { ...{} }
       keys.forEach((key) => {
         this.form[key] = null
       })
