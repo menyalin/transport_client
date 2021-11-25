@@ -29,20 +29,19 @@ export default {
     },
   },
   actions: {
-    async getDowntimes({ commit, getters }, directiveUpdate) {
+    async getDowntimesForSchedule({ commit, getters }) {
       try {
-        commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.downtimes.length === 0 && getters.directoriesProfile)
-        ) {
-          commit('setDowntimes', [])
-          const data = await service.getByDerictoriesProfile(
-            getters.directoriesProfile
-          )
-          commit('setDowntimes', data)
+        if (!getters.schedulePeriod) return null
+        if (!getters.directoriesProfile) {
+          commit('setError', 'Профиль настроек не установлен')
+          return null
         }
-        commit('setLoading', false)
+        const data = await service.getListForSchedule({
+          company: getters.directoriesProfile,
+          startDate: getters.schedulePeriod[0],
+          endDate: getters.schedulePeriod[1],
+        })
+        commit('setDowntimes', data)
       } catch (e) {
         commit('setLoading', false)
         commit('setError', e.response?.data?.message)

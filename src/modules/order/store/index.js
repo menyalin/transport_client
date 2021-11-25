@@ -75,13 +75,15 @@ export default {
     },
   },
   actions: {
-    getOrders({ commit, getters }) {
+    getOrdersForSchedule({ commit, getters }) {
+      if (!getters.schedulePeriod) return null
       if (!getters.directoriesProfile) {
         commit('setError', 'Профиль настроек не установлен')
         return null
       }
+      
       service
-        .getByDirectoriesProfile({
+        .getListForSchedule({
           profile: getters.directoriesProfile,
           startDate: getters.schedulePeriod[0],
           endDate: getters.schedulePeriod[1],
@@ -120,10 +122,10 @@ export default {
           (a, b) =>
             new Date(a.startPositionDate) - new Date(b.startPositionDate)
         ),
-    schedulePeriod: ({ period }) => [
-      period[0],
-      moment(period[1]).add(1, 'd').format('YYYY-MM-DD'),
-    ],
+    schedulePeriod: ({ period }) => {
+      if (period.length !== 2) return null
+      return [period[0], moment(period[1]).add(1, 'd').format('YYYY-MM-DD')]
+    },
     scheduleDate: ({ scheduleDate }) => scheduleDate,
     orderStatuses: ({ orderStatuses }) => orderStatuses,
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),

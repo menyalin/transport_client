@@ -50,18 +50,18 @@ export default {
   watch: {
     '$store.getters.schedulePeriod': function (val) {
       if (!val) return null
-      this.getOrders()
+      this.getData()
     },
   },
   mounted() {
     if (this.$store.getters.ordersForSchedule.length === 0) {
-      this.getOrders()
+      this.getData()
     }
   },
   methods: {
-    getOrders() {
-      this.$store.dispatch('getOrders')
-      this.$store.dispatch('getDowntimes')
+    getData() {
+      this.$store.dispatch('getOrdersForSchedule')
+      this.$store.dispatch('getDowntimesForSchedule')
     },
     incDate(count) {
       this.$store.commit('incScheduleDate', count)

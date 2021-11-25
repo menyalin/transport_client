@@ -7,7 +7,7 @@
       @refresh="refresh"
     />
     <div class="filter-wrapper">
-      <app-date-range :period="datePeriod" />
+      <app-date-range v-model="settings.period" />
     </div>
     <div class="table-wrapper">
       <v-data-table
@@ -20,10 +20,11 @@
         :footer-props="{
           'items-per-page-options': [50, 100, 200],
         }"
+        :options.sync="settings.listOptions"
         @dblclick:row="dblClickRow"
       >
-        <template v-slot:[`item.createdAt`]="{ item }">
-          {{ new Date(item.createdAt).toLocaleString() }}
+        <template v-slot:[`item.plannedDate`]="{ item }">
+          {{ new Date(item.route[0].plannedDate).toLocaleString() }}
         </template>
         <template v-slot:[`item.client.client`]="{ item }">
           {{
@@ -37,10 +38,19 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 import service from '@/modules/order/services/order.service'
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
+
+const _initPeriod = () => {
+  const todayM = moment()
+  return [
+    todayM.add(-10, 'd').format('YYYY-MM-DD'),
+    todayM.add(20, 'd').format('YYYY-MM-DD'),
+  ]
+}
 
 export default {
   name: 'ListOrder',
@@ -49,13 +59,20 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
+    formName: 'orderList',
     loading: false,
-    datePeriod: ['2021-10-18', '2021-10-25'],
+    settings: {
+      period: _initPeriod(),
+      listOptions: {
+        page: 1,
+        itemsPerPage: 50,
+      },
+    },
     orders: [],
     headers: [
-      { value: 'createdAt', text: 'Создан' },
-      { value: 'client.client', text: 'Клиент' },
-      { value: 'client.num', text: 'Номер заказа клиента' },
+      { value: 'plannedDate', text: 'Дата погрузки', sortable: false },
+      { value: 'client.client', text: 'Клиент', sortable: false },
+      { value: 'client.num', text: 'Номер заказа клиента', sortable: false },
     ],
   }),
   computed: {
@@ -64,21 +81,45 @@ export default {
       return this.$store.getters.partnersMap
     },
   },
+  watch: {
+    settings: {
+      deep: true,
+      handler: function () {
+        this.getData()
+      },
+    },
+  },
   created() {
-    this.getOrders()
+    if (this.$store.getters.formSettingsMap.has(this.formName))
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    // this.getData()
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   methods: {
     create() {
       this.$router.push({ name: 'CreateOrder' })
     },
+
     refresh() {
-      this.getOrders()
+      this.getData()
     },
-    async getOrders() {
+    async getData() {
       try {
         this.loading = true
-        this.orders = await service.getByDirectoriesProfile({
+        this.orders = await service.getList({
           profile: this.directoriesProfile,
+          startDate: this.settings.period[0],
+          endDate: this.settings.period[1],
+          skip:
+            this.settings.listOptions.itemsPerPage *
+            (this.settings.listOptions.page - 1),
+          limit: this.settings.listOptions.itemsPerPage,
         })
         this.loading = false
       } catch (e) {
