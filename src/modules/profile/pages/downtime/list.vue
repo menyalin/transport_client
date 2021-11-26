@@ -15,7 +15,7 @@
           :headers="headers"
           :items="list"
           :loading="loading"
-          height="72vh"
+          height="73vh"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],

@@ -12,11 +12,12 @@
           :headers="headers"
           :items="partners"
           :loading="loading"
-          height="72vh"
+          height="73vh"
           dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
+          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         />
       </v-col>
@@ -27,11 +28,15 @@
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'TkNameList',
+  name: 'PartnerList',
   components: {
     AppButtonsPanel,
   },
   data: () => ({
+    formName: 'PartnerList',
+    settings: {
+      listOptions: {},
+    },
     headers: [
       { value: 'name', text: 'Наименование' },
       { value: 'inn', text: 'ИНН' },
@@ -40,8 +45,18 @@ export default {
   computed: {
     ...mapGetters(['partners', 'loading', 'directoriesProfile']),
   },
+  created() {},
   created() {
+    if (this.$store.getters.formSettingsMap.has(this.formName))
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getPartners')
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   methods: {
     create() {

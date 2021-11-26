@@ -9,10 +9,11 @@
           @refresh="refresh"
         />
         <v-data-table
-          :search="search"
+          :search="settings.search"
           :headers="headers"
           :items="addresses"
           :loading="loading"
+          :options.sync="settings.listOptions"
           height="72vh"
           dense
           :footer-props="{
@@ -51,7 +52,7 @@
           </template>
           <template v-slot:top>
             <v-text-field
-              v-model="search"
+              v-model="settings.search"
               outlined
               hide-details
               dense
@@ -72,7 +73,12 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
-    search: null,
+    formName: 'AddressList',
+    settings: {
+      search: null,
+      listOptions: {},
+    },
+
     headers: [
       { value: 'shortName', text: 'Сокращенный адрес' },
       { value: 'partner', text: 'Партнер' },
@@ -97,8 +103,18 @@ export default {
   computed: {
     ...mapGetters(['addresses', 'loading', 'directoriesProfile']),
   },
+
   created() {
+    if (this.$store.getters.formSettingsMap.has(this.formName))
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getAddresses')
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   methods: {
     createAddress() {
