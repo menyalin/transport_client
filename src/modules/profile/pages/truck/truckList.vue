@@ -9,7 +9,7 @@
           @refresh="refresh"
         />
         <v-data-table
-          :search="search"
+          :search="settings.search"
           :headers="headers"
           dense
           fixed-header
@@ -17,6 +17,7 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
+          :options.sync="settings.listOptions"
           :items="filteredTrucks"
           :loading="loading"
           @dblclick:row="dblClickRow"
@@ -27,7 +28,7 @@
           <template v-slot:top>
             <div class="filter-wrapper">
               <v-select
-                v-model="tkNameFilter"
+                v-model="settings.tkNameFilter"
                 dense
                 outlined
                 hide-details
@@ -38,7 +39,7 @@
                 item-text="name"
               />
               <v-select
-                v-model="truckFilter"
+                v-model="settings.truckFilter"
                 dense
                 outlined
                 hide-details
@@ -47,7 +48,7 @@
                 :items="truckFilterOptions"
               />
               <v-text-field
-                v-model="search"
+                v-model="settings.search"
                 outlined
                 hide-details
                 dense
@@ -69,9 +70,14 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
-    tkNameFilter: null,
-    search: null,
-    truckFilter: null,
+    formName: 'TruckList',
+    settings: {
+      tkNameFilter: null,
+      search: null,
+      truckFilter: null,
+      listOptions: {},
+    },
+
     truckFilterOptions: [
       { text: 'Тягачи', value: '20tn' },
       { text: '10-ки', value: '10tn' },
@@ -97,10 +103,12 @@ export default {
     filteredTrucks() {
       return this.trucks
         .filter((item) =>
-          this.tkNameFilter ? item.tkName._id === this.tkNameFilter : true
+          this.settings.tkNameFilter
+            ? item.tkName._id === this.settings.tkNameFilter
+            : true
         )
         .filter((item) => {
-          switch (this.truckFilter) {
+          switch (this.settings.truckFilter) {
             case '20tn':
               return item.type === 'truck' && item.liftCapacityType === 20
             case '10tn':
@@ -114,8 +122,18 @@ export default {
     },
   },
   created() {
+    if (this.$store.getters.formSettingsMap.has(this.formName))
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getTrucks')
   },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
+  },
+
   methods: {
     create() {
       this.$router.push({ name: 'TruckCreate' })
