@@ -11,7 +11,7 @@
         <v-data-table
           :headers="headers"
           :items="filteredDrivers"
-          :search="search"
+          :search="settings.search"
           :loading="loading"
           fixed-header
           height="71vh"
@@ -19,6 +19,7 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
+          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template v-slot:[`item.medBookState.validDays`]="{ item }">
@@ -34,7 +35,7 @@
           <template v-slot:top>
             <div class="filter-wrapper">
               <v-select
-                v-model="tkNameFilter"
+                v-model="settings.tkNameFilter"
                 dense
                 outlined
                 hide-details
@@ -46,7 +47,7 @@
               />
 
               <v-text-field
-                v-model="search"
+                v-model="settings.search"
                 outlined
                 hide-details
                 dense
@@ -69,8 +70,13 @@ export default {
     AppButtonsPanel,
   },
   data: () => ({
-    search: null,
-    tkNameFilter: null,
+    formName: 'DriverList',
+    settings: {
+      listOptions: {},
+      search: null,
+      tkNameFilter: null,
+    },
+
     headers: [
       { value: 'tkName.name', text: 'ТК' },
       { value: 'fullName', text: 'ФИО' },
@@ -88,12 +94,24 @@ export default {
     filteredDrivers() {
       const tpmDrivers = this.drivers.slice()
       return tpmDrivers.filter((item) =>
-        this.tkNameFilter ? item.tkName?._id === this.tkNameFilter : true
+        this.settings.tkNameFilter
+          ? item.tkName?._id === this.settings.tkNameFilter
+          : true
       )
     },
   },
+
   created() {
-    this.$store.dispatch('getDrivers', true)
+    if (this.$store.getters.formSettingsMap.has(this.formName))
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    this.$store.dispatch('getDrivers')
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   methods: {
     createDriver() {
