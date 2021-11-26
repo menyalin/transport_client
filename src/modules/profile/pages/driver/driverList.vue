@@ -21,6 +21,16 @@
           }"
           @dblclick:row="dblClickRow"
         >
+          <template v-slot:[`item.medBookState.validDays`]="{ item }">
+            <v-chip
+              v-if="item.medBookState.validDays"
+              small
+              class="my-0 mx-4"
+              :color="item.medBookState.color"
+            >
+              {{ item.medBookState.validDays }}
+            </v-chip>
+          </template>
           <template v-slot:top>
             <div class="filter-wrapper">
               <v-select
@@ -66,6 +76,11 @@ export default {
       { value: 'fullName', text: 'ФИО' },
       { value: 'phone', text: 'Телефон' },
       { value: 'phone2', text: 'Телефон2' },
+      {
+        value: 'medBookState.validDays',
+        text: 'Мед.книжка, дней',
+        align: 'center',
+      },
     ],
   }),
   computed: {

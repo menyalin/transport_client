@@ -64,7 +64,8 @@ export default {
     drivers: ({ drivers }, { directoriesProfile }) =>
       drivers
         .filter((item) => item.company === directoriesProfile)
-        .sort(_sortDriversByFullName),
+        .sort(_sortDriversByFullName)
+        .map(_addMedBookState),
 
     driversMap: ({ drivers }) => {
       let map = new Map()
@@ -86,4 +87,42 @@ export default {
 const _sortDriversByFullName = (a, b) => {
   if (a.fullName > b.fullName) return 1
   else return -1
+}
+
+const _getColor = (days) => {
+  if (!days) return null
+  if (days < 14) return 'error'
+  if (days < 30) return 'warning'
+  return 'light-green'
+}
+
+const _addMedBookState = (driver) => {
+  const MS_IN_DAY = 1000 * 60 * 60 * 24
+  const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365
+  let validDays
+  const today = new Date()
+  if (
+    !driver?.medBook?.certifiedBeforeDate ||
+    !driver?.medBook?.annualCommisionDate
+  )
+    validDays = null
+  else {
+    const validCertDays = Math.floor(
+      (new Date(driver.medBook.certifiedBeforeDate) - today) / MS_IN_DAY
+    )
+
+    const daysBeforeMedExamination = Math.floor(
+      (+new Date(driver.medBook.annualCommisionDate) + MS_IN_YEAR - today) /
+        MS_IN_DAY
+    )
+    validDays = Math.min(daysBeforeMedExamination, validCertDays)
+  }
+
+  return {
+    ...driver,
+    medBookState: {
+      validDays,
+      color: _getColor(validDays),
+    },
+  }
 }
