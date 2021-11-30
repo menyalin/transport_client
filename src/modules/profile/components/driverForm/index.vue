@@ -20,8 +20,8 @@
     >
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <v-container fluid>
-      <v-row class="row-wrapper">
+    <div>
+      <div class="row-wrapper tk-name">
         <v-select
           v-model.trim="$v.form.tkName.$model"
           :items="tkNames"
@@ -31,8 +31,8 @@
           dense
           outlined
         />
-      </v-row>
-      <v-row class="row-wrapper">
+      </div>
+      <div class="row-wrapper driver-name">
         <v-text-field
           v-model.trim="$v.form.surname.$model"
           outlined
@@ -60,78 +60,95 @@
           hide-time-input
           hide-prepend-icon
         />
-      </v-row>
+      </div>
 
-      <v-row class="row-wrapper">
-        <v-text-field
-          v-model.trim="$v.form.passportId.$model"
-          outlined
-          label="Серия и номер паспорта"
-          dense
-        />
-        <v-text-field
-          v-model.trim="$v.form.passportIssued.$model"
-          outlined
-          label="Паспорт выдан"
-          dense
-        />
-        <app-date-time-input
-          v-model="$v.form.passportDate.$model"
-          label="Дата выдачи паспорта"
-          hide-time-input
-          hide-prepend-icon
-        />
-      </v-row>
-      <v-row class="row-wrapper">
-        <v-text-field
-          v-model.trim="$v.form.licenseId.$model"
-          outlined
-          label="Номер ВУ"
-          dense
-        />
-        <app-date-time-input
-          v-model="$v.form.licenseDate.$model"
-          label="Дата выдачи ВУ"
-          hide-time-input
-          hide-prepend-icon
-        />
-        <v-text-field
-          v-model.trim="$v.form.licenseCategory.$model"
-          outlined
-          label="Кагории ВУ"
-          dense
-        />
-      </v-row>
-      <v-row class="row-wrapper">
-        <v-text-field
-          v-model.trim="$v.form.driverCardId.$model"
-          outlined
-          label="Карта водителя"
-          dense
-        />
-        <app-date-time-input
-          v-model="$v.form.driverCardPeriod.$model"
-          label="КВ действительна до"
-          hide-time-input
-          hide-prepend-icon
-        />
-      </v-row>
-      <v-row class="row-wrapper">
+      <div class="row-wrapper">
+        <div class="passport">
+          <div>
+            <v-text-field
+              v-model.trim="$v.form.passportId.$model"
+              outlined
+              hide-details
+              label="Номер паспорта"
+              dense
+              class="pb-3"
+            />
+            <app-date-time-input
+              v-model="$v.form.passportDate.$model"
+              label="Дата выдачи паспорта"
+              hide-time-input
+              hide-prepend-icon
+            />
+          </div>
+          <v-textarea
+            v-model.trim="$v.form.passportIssued.$model"
+            outlined
+            label="Паспорт выдан"
+            dense
+            :rows="4"
+          />
+        </div>
+        <div class="driver-license">
+          <v-text-field
+            v-model.trim="$v.form.licenseId.$model"
+            outlined
+            hide-details
+            label="Номер ВУ"
+            dense
+          />
+          <v-text-field
+            v-model.trim="$v.form.licenseCategory.$model"
+            outlined
+            label="Категории ВУ"
+            hide-details
+            dense
+          />
+          <app-date-time-input
+            v-model="$v.form.licenseDate.$model"
+            label="Дата выдачи ВУ"
+            hide-time-input
+            hide-prepend-icon
+          />
+        </div>
+        <div class="driver-cards">
+          <v-text-field
+            v-model.trim="$v.form.driverCardId.$model"
+            outlined
+            hide-details
+            label="Карта водителя"
+            dense
+          />
+          <app-date-time-input
+            v-model="$v.form.driverCardPeriod.$model"
+            label="КВ действительна до"
+            hide-time-input
+            hide-prepend-icon
+          />
+        </div>
+      </div>
+      <div class="row-wrapper phones">
         <v-text-field
           v-model.trim="$v.form.phone.$model"
           outlined
           label="Телефон"
+          hide-details
           dense
         />
         <v-text-field
           v-model.trim="$v.form.phone2.$model"
           outlined
           label="Телефон 2"
+          hide-details
           dense
         />
-      </v-row>
+      </div>
 
-      <v-row class="row-wrapper">
+      <app-med-book
+        v-model="medBook"
+        title="Мед.книжка"
+        class="mb-5"
+      />
+      <div class="work-status">
         <app-date-time-input
           v-model="$v.form.employmentDate.$model"
           label="Дата приема на работу"
@@ -149,34 +166,30 @@
           label="Кто рекомедовал"
           dense
         />
-      </v-row>
-
-      <app-med-book
-        v-model="medBook"
-        title="Мед.книжка"
-        class="mb-5"
-      />
-
+      </div>
       <v-checkbox
         v-model="form.hasScans"
         label="Есть сканы документов"
         dense
       />
-    </v-container>
-
-    <v-btn
+    </div>
+    <div
       v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
+      class="delete-btn-row"
     >
-      <v-icon
-        left
-        dark
+      <v-btn
+        color="error"
+        @click="$emit('delete')"
       >
-        mdi-delete
-      </v-icon>
-      Удалить
-    </v-btn>
+        <v-icon
+          left
+          dark
+        >
+          mdi-delete
+        </v-icon>
+        Удалить
+      </v-btn>
+    </div>
   </div>
 </template>
 <script>
@@ -320,7 +333,56 @@ export default {
 }
 </script>
 <style scoped>
+.row-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
 .row-wrapper > * {
-  padding: 0px 10px;
+  padding: 2px 10px;
+  width: 100%;
+}
+.tk-name > * {
+  max-width: 15rem;
+}
+.driver-name {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1fr;
+}
+.passport {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.passport > * {
+  /* padding: 2px 10px; */
+  margin-right: 10px;
+}
+.driver-license {
+  max-width: 230px;
+}
+.driver-license > * {
+  margin-bottom: 8px;
+}
+.phones > * {
+  margin-bottom: 8px;
+  max-width: 300px;
+}
+
+.driver-cards {
+  max-width: 230px;
+}
+.driver-cards > * {
+  margin-bottom: 8px;
+}
+.work-status {
+  display: grid;
+  grid-template-columns: 200px 200px auto;
+  gap: 15px;
+}
+.delete-btn-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
 }
 </style>

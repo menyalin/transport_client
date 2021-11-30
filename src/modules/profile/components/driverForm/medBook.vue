@@ -106,6 +106,7 @@ export default {
       return Math.floor((certDateSec - todaySec) / (60 * 60 * 24))
     },
     daysBeforeMedExamination() {
+      if (!this.params.annualCommisionDate) return null
       const lastDate = moment(this.params.annualCommisionDate)
         .add(1, 'year')
         .unix()
