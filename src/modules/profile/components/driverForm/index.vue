@@ -175,7 +175,7 @@
     </div>
     <div
       v-if="displayDeleteBtn"
-      class="delete-btn-row"
+      class="delete-btn-row mt-3  "
     >
       <v-btn
         color="error"

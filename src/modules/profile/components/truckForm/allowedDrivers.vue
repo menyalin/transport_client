@@ -8,26 +8,41 @@
       >
         нет данных
       </div>
-      <v-list
-        v-else
-        dense
-      >
+      <v-list v-else>
         <v-list-item
-          v-for="id in driverList"
-          :key="id"
+          v-for="item in driverList"
+          :key="item.driver"
         >
-          <v-list-item-title>
-            {{
-              driversMap.has(id)
-                ? driversMap.get(id).fullName
-                : 'запись удалена'
-            }}
-          </v-list-item-title>
+          <v-list-item-avatar @click="changeDriverState(item)">
+            <v-icon
+              v-if="item.isPermanent"
+              color="green"
+              large
+            >
+              mdi-account-lock-outline
+            </v-icon>
+            <v-icon
+              v-else
+              large
+              color="orange"
+            >
+              mdi-account-clock-outline
+            </v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{
+                driversMap.has(item.driver)
+                  ? driversMap.get(item.driver).fullName
+                  : 'запись удалена'
+              }}
+            </v-list-item-title>
+          </v-list-item-content>
           <v-list-item-action>
             <v-icon
               small
               color="error"
-              @click="deleteDriver(id)"
+              @click="deleteDriver(item.driver)"
             >
               mdi-delete
             </v-icon>
@@ -54,7 +69,6 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'AllowedDrivers',
   model: {
@@ -100,16 +114,24 @@ export default {
     addDriver() {
       this.isVisibleBtn = false
     },
+    changeDriverState(driver) {
+      driver.isPermanent = !driver.isPermanent
+    },
     changeDriver(val) {
-      if (val && this.selectedDrivers.findIndex((i) => i === val) === -1) {
-        this.selectedDrivers.push(val)
+      if (
+        val &&
+        this.selectedDrivers.findIndex((i) => i.driver === val) === -1
+      ) {
+        this.selectedDrivers.push({ driver: val, isPermanent: false })
         this.$emit('change', this.selectedDrivers)
       }
       this.isVisibleBtn = true
     },
     deleteDriver(id) {
-      if (!id) return
-      this.selectedDrivers = this.selectedDrivers.filter((item) => item !== id)
+      if (!id) return null
+      this.selectedDrivers = this.selectedDrivers.filter(
+        (item) => item.driver !== id
+      )
       this.$emit('change', this.selectedDrivers)
     },
   },

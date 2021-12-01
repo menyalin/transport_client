@@ -21,19 +21,78 @@
       Профиль настроек: {{ directoriesProfileName }}
     </div>
 
-    <v-container fluid>
+    <div>
       <!-- название марка модель -->
-      <v-row class="row-wrapper">
-        <v-select
-          v-model.trim="$v.form.tkName.$model"
-          :items="tkNames"
-          item-text="name"
-          item-value="_id"
-          label="ТК"
-          dense
-          outlined
-        />
+      <div class="row-wrapper first-row">
+        <div class="base-info">
+          <v-select
+            v-model.trim="$v.form.tkName.$model"
+            :items="tkNames"
+            item-text="name"
+            item-value="_id"
+            label="ТК"
+            dense
+            outlined
+          />
+          <v-select
+            v-model="$v.form.type.$model"
+            outlined
+            label="Тип ТС"
+            dense
+            :items="truckTypes"
+            :error-messages="typeErrors"
+          />
+          <v-select
+            v-model="$v.form.liftCapacityType.$model"
+            outlined
+            label="Грузоподъемность, тн"
+            dense
+            :items="liftCapacityTypes"
+          />
+          <template
+            v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
+          >
+            <v-select
+              v-model="$v.form.kind.$model"
+              outlined
+              label="Вид ТС"
+              dense
+              :items="truckKinds"
+            />
 
+            <v-text-field
+              v-model.number="$v.form.pltCount.$model"
+              outlined
+              label="Макс.кол-во плт"
+              dense
+              type="number"
+            />
+          </template>
+        </div>
+        <div class="servive-dates">
+          <app-date-time-input
+            v-model="$v.form.startServiceDate.$model"
+            label="Дата ввода в эксплуатацию"
+            hide-time-input
+            hide-prepend-icon
+          />
+
+          <app-date-time-input
+            v-model="$v.form.endServiceDate.$model"
+            label="Дата вывода из эксплуатации"
+            hide-time-input
+            hide-prepend-icon
+          />
+        </div>
+      </div>
+      <div class="row-wrapper second-row">
+        <v-text-field
+          v-model.trim="$v.form.regNum.$model"
+          outlined
+          label="Гос.номер"
+          dense
+          :error-messages="regNumErrors"
+        />
         <v-text-field
           v-model.trim="$v.form.brand.$model"
           outlined
@@ -47,30 +106,6 @@
           label="Модель"
           dense
         />
-      </v-row>
-      <v-row class="row-wrapper">
-        <v-select
-          v-model="$v.form.type.$model"
-          outlined
-          label="Тип ТС"
-          dense
-          :items="truckTypes"
-          :error-messages="typeErrors"
-        />
-        <v-select
-          v-model="$v.form.kind.$model"
-          outlined
-          label="Вид ТС"
-          dense
-          :items="truckKinds"
-        />
-        <v-select
-          v-model="$v.form.liftCapacityType.$model"
-          outlined
-          label="Тип грузоподъемности, тн"
-          dense
-          :items="liftCapacityTypes"
-        />
 
         <v-text-field
           v-model.trim="$v.form.issueYear.$model"
@@ -79,61 +114,6 @@
           dense
         />
 
-        <app-date-time-input
-          v-model="$v.form.startServiceDate.$model"
-          label="Дата ввода в эксплуатацию"
-          hide-time-input
-          hide-prepend-icon
-        />
-
-        <app-date-time-input
-          v-model="$v.form.endServiceDate.$model"
-          label="Дата вывода из эксплуатации"
-          hide-time-input
-          hide-prepend-icon
-        />
-        <v-text-field
-          v-model.trim="$v.form.win.$model"
-          outlined
-          label="WIN"
-          dense
-        />
-      </v-row>
-      <v-row class="row-wrapper">
-        <v-text-field
-          v-model.trim="$v.form.regNum.$model"
-          outlined
-          label="Гос.номер"
-          dense
-          :error-messages="regNumErrors"
-        />
-
-        <v-text-field
-          v-model.trim="$v.form.sts.$model"
-          outlined
-          label="СТС"
-          dense
-        />
-        <app-date-time-input
-          v-model="$v.form.stsDate.$model"
-          label="Дата СТС"
-          hide-time-input
-          hide-prepend-icon
-        />
-        <v-text-field
-          v-model.trim="$v.form.pts.$model"
-          outlined
-          label="ПТС"
-          dense
-        />
-        <v-text-field
-          v-model.trim="$v.form.owner.$model"
-          outlined
-          label="Собственник"
-          dense
-        />
-      </v-row>
-      <v-row class="row-wrapper">
         <v-text-field
           v-model.number="$v.form.order.$model"
           outlined
@@ -155,29 +135,72 @@
           dense
           type="number"
         />
+      </div>
+      <div class="row-wrappe third-row">
         <v-text-field
-          v-model.number="$v.form.liftCapacity.$model"
+          v-model.trim="$v.form.win.$model"
           outlined
-          label="Грузоподъемность ТС в кг"
+          label="WIN"
           dense
-          type="number"
         />
         <v-text-field
-          v-model.number="$v.form.pltCount.$model"
+          v-model.trim="$v.form.owner.$model"
           outlined
-          label="Макс.кол-во плт"
+          label="Собственник"
           dense
-          type="number"
         />
-      </v-row>
-      <v-row class="row-wrapper">
+
         <v-text-field
+          v-model.trim="$v.form.sts.$model"
+          outlined
+          label="СТС"
+          dense
+        />
+        <app-date-time-input
+          v-model="$v.form.stsDate.$model"
+          label="Дата СТС"
+          hide-time-input
+          hide-prepend-icon
+        />
+        <v-text-field
+          v-model.trim="$v.form.pts.$model"
+          outlined
+          label="ПТС"
+          dense
+        />
+      </div>
+      <app-insurance
+        v-model="insurance"
+        title="Страховка"
+        :truckType="form.type"
+      />
+
+      <app-permits
+        v-if="form.type === 'truck'"
+        v-model="permits"
+        title="Разрешения"
+      />
+      <app-additional-details
+        v-if="form.type === 'truck'"
+        v-model="additionalDetails"
+        title="Доп.реквизиты"
+      />
+      <app-date-time-input
+        v-if="form.type === 'trailer'"
+        v-model="form.sanitaryPassportExpDate"
+        label="Сан.паспорт действует до"
+        hide-time-input
+        hide-prepend-icon
+      />
+      <div class="row-wrapper my-3">
+        <v-textarea
           v-model.trim="$v.form.note.$model"
           outlined
+          rows="3"
           label="Примечание"
           dense
         />
-      </v-row>
+      </div>
 
       <v-row v-if="!!form.tkName && form.type === 'truck'">
         <app-allowed-drivers
@@ -188,21 +211,22 @@
         />
       </v-row>
       <v-divider />
-    </v-container>
-
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
+    </div>
+    <div class="delete-btn-row mt-3">
+      <v-btn
+        v-if="displayDeleteBtn"
+        color="error"
+        @click="$emit('delete')"
       >
-        mdi-delete
-      </v-icon>
-      Удалить
-    </v-btn>
+        <v-icon
+          left
+          dark
+        >
+          mdi-delete
+        </v-icon>
+        Удалить
+      </v-btn>
+    </div>
   </div>
 </template>
 <script>
@@ -212,6 +236,9 @@ import { required, numeric } from 'vuelidate/lib/validators'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppAllowedDrivers from './allowedDrivers.vue'
+import AppInsurance from './insurance.vue'
+import AppPermits from './permits.vue'
+import AppAdditionalDetails from './additionalDetails .vue'
 
 export default {
   name: 'TruckForm',
@@ -219,6 +246,9 @@ export default {
     AppButtonsPanel,
     AppDateTimeInput,
     AppAllowedDrivers,
+    AppInsurance,
+    AppPermits,
+    AppAdditionalDetails,
   },
   props: {
     truck: {
@@ -232,14 +262,18 @@ export default {
   data() {
     return {
       loading: false,
+      insurance: {},
+      additionalDetails: {},
+      permits: {},
       form: {
+        sanitaryPassportExpDate: null,
         brand: null,
         model: null,
         issueYear: null,
         startServiceDate: null,
         endServiceDate: null,
         tkName: null,
-        type: null,
+        type: 'truck',
         kind: null,
         liftCapacityType: null,
         regNum: null,
@@ -346,7 +380,13 @@ export default {
 
   methods: {
     submit() {
-      const truck = { ...this.form, company: this.directoriesProfile }
+      const truck = {
+        ...this.form,
+        company: this.directoriesProfile,
+        insurance: this.insurance,
+        permits: this.permits,
+        additionalDetails: this.additionalDetails,
+      }
       this.$emit('submit', truck)
       this.resetForm()
     },
@@ -359,10 +399,16 @@ export default {
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
-      if (val.tkName?._id) this.form.tkName = val.tkName?._id
+      if (val.insurance) this.insurance = val.insurance
+      if (val.permits) this.permits = val.permits
+      if (val.additionalDetails) this.additionalDetails = val.additionalDetails
+      if (val.tkName?._id) this.form.tkName = val.tkName._id
     },
     resetForm() {
       const keys = Object.keys(this.form)
+      this.insurance = { ...{} }
+      this.permits = { ...{} }
+      this.additionalDetails = { ...{} }
       keys.forEach((key) => {
         this.form[key] = null
       })
@@ -371,7 +417,42 @@ export default {
 }
 </script>
 <style scoped>
-.row-wrapper > * {
-  padding: 0px 10px;
+.row-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.first-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.base-info {
+  display: grid;
+  grid-template-columns: 250px 130px 130px 180px 180px;
+  gap: 10px;
+}
+.servive-dates {
+  display: flex;
+  flex-direction: row;
+}
+.servive-dates > * {
+  margin-right: 10px;
+  width: 230px;
+}
+.delete-btn-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+.second-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr 150px 150px 170px 170px;
+  gap: 10px;
+}
+.third-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 250px 250px 250px 150px 250px;
 }
 </style>
