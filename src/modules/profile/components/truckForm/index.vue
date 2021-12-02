@@ -185,13 +185,24 @@
         v-model="additionalDetails"
         title="Доп.реквизиты"
       />
-      <app-date-time-input
-        v-if="form.type === 'trailer'"
-        v-model="form.sanitaryPassportExpDate"
-        label="Сан.паспорт действует до"
-        hide-time-input
-        hide-prepend-icon
-      />
+      <div
+        v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
+        id="sanpassport"
+      >
+        <app-date-time-input
+          v-model="form.sanitaryPassportExpDate"
+          label="Сан.паспорт действует до"
+          hide-time-input
+          hide-prepend-icon
+        />
+        <v-text-field
+          v-model.trim="form.sanitaryPassportNote"
+          outlined
+          label="Комментарий к сан.паспорту"
+          dense
+        />
+      </div>
+
       <div class="row-wrapper my-3">
         <v-textarea
           v-model.trim="$v.form.note.$model"
@@ -267,6 +278,7 @@ export default {
       permits: {},
       form: {
         sanitaryPassportExpDate: null,
+        sanitaryPassportNote: null,
         brand: null,
         model: null,
         issueYear: null,
@@ -454,5 +466,10 @@ export default {
   display: grid;
   gap: 10px;
   grid-template-columns: 250px 250px 250px 150px 250px;
+}
+#sanpassport {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 200px auto;
 }
 </style>
