@@ -162,7 +162,7 @@ export default {
 .fields-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: stretch;
+
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
@@ -184,13 +184,9 @@ export default {
   margin-left: 5px;
 }
 #tachograph {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-left: 0px 20px;
-}
-#tachograph > * {
-  margin-left: 5px;
+  display: grid;
+  grid-template-columns: 190px 190px 350px;
+  gap: 5px;
 }
 
 #transponder {
@@ -202,11 +198,8 @@ export default {
   margin-right: 5px;
 }
 #fuel-card {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-}
-#fuel-card > * {
-  margin-right: 5px;
+  display: grid;
+  grid-template-columns: 190px 190px 350px;
+  gap: 5px;
 }
 </style>

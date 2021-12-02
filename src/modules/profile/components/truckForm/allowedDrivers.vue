@@ -13,17 +13,18 @@
           v-for="item in driverList"
           :key="item.driver"
         >
-          <v-list-item-avatar @click="changeDriverState(item)">
+          <v-list-item-avatar
+            :style="{ cursor: 'pointer' }"
+            @click="changeDriverState(item)"
+          >
             <v-icon
               v-if="item.isPermanent"
               color="green"
-              large
             >
               mdi-account-lock-outline
             </v-icon>
             <v-icon
               v-else
-              large
               color="orange"
             >
               mdi-account-clock-outline
