@@ -22,7 +22,7 @@
         color="primary"
       >
         <v-list-item
-          v-for="item in items"
+          v-for="item in menuItems"
           :key="item.link"
           :to="item.link"
         >
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'LeftAdminNav',
   props: {
@@ -54,6 +54,13 @@ export default {
     ...mapState({
       user: (state) => state.AuthModule.user,
     }),
+    menuItems() {
+      return this.items.filter(
+        (i) =>
+          !i.onlyWithDirectoriesProfile ||
+          !!this.$store.getters.directoriesProfile
+      )
+    },
   },
 }
 </script>

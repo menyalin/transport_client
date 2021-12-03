@@ -60,6 +60,10 @@ export default {
   },
   methods: {
     getData() {
+      if (!this.$store.getters.directoriesProfile) {
+        this.$router.push('/profile')
+        return null
+      }
       this.$store.dispatch('getOrdersForSchedule')
       this.$store.dispatch('getDowntimesForSchedule')
     },

@@ -117,6 +117,10 @@ export default {
     },
     async getData() {
       try {
+        if (!this.$store.getters.directoriesProfile) {
+          this.$router.push('/profile')
+          return null
+        }
         this.loading = true
         this.orders = await service.getList({
           profile: this.directoriesProfile,

@@ -30,47 +30,65 @@ export default {
   },
   data: () => ({
     navButtons: [
-      { text: 'Настройки профиля', icon: 'mdi-cog', link: '/profile/settings' },
-      { text: 'Компании', icon: 'mdi-factory', link: '/profile/companies' },
+      {
+        text: 'Настройки профиля',
+        icon: 'mdi-cog',
+        link: '/profile/settings',
+        onlyWithDirectoriesProfile: true,
+      },
+      {
+        text: 'Компании',
+        icon: 'mdi-factory',
+        link: '/profile/companies',
+        onlyWithDirectoriesProfile: false,
+      },
       {
         text: 'Перевозчики',
         icon: 'mdi-alien',
         link: '/profile/tk_names',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Адреса',
         icon: 'mdi-domain',
         link: '/profile/address',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Простои/Выходные',
         icon: 'mdi-car-wrench',
         link: '/profile/downtimes',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Партнеры',
         icon: 'mdi-emoticon-devil',
         link: '/profile/partners',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Экипажи',
         icon: 'mdi-cow',
         link: '/profile/crews',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Транспорт',
         icon: 'mdi-truck',
         link: '/profile/trucks',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Водители',
         icon: 'mdi-card-account-details',
         link: '/profile/drivers',
+        onlyWithDirectoriesProfile: true,
       },
       {
         text: 'Задачи',
         icon: 'mdi-message-reply-text',
         link: '/profile/tasks',
+        onlyWithDirectoriesProfile: false,
       },
     ],
   }),

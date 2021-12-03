@@ -84,7 +84,7 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters([, 'directoriesProfile']),
+    ...mapGetters(['directoriesProfile']),
     downtimeTypesHash() {
       return this.$store.getters.downtimeTypesHash
     },
@@ -122,6 +122,10 @@ export default {
       this.$router.push(`downtimes/${item._id}`)
     },
     async getData() {
+      if (!this.directoriesProfile) {
+        this.$router.push('/profile')
+        return null
+      }
       try {
         this.loading = true
         this.list = await service.getList({

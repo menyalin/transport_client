@@ -45,7 +45,11 @@
       Профиль
     </v-btn>
     <v-btn
-      v-if="isLoggedIn && $store.state.AuthModule.user.email === '1@1.ru'"
+      v-if="
+        isLoggedIn &&
+          !!$store.getters.user &&
+          !!$store.getters.user.email === '1@1.ru'
+      "
       to="/admin"
       text
     >

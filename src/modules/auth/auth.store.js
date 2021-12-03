@@ -42,14 +42,15 @@ export default {
       socket.disconnect()
       router.push('/auth/login')
     },
-    getUserData({ commit, dispatch }) {
+    getUserData({ commit, dispatch, getters }) {
       return new Promise((resolve, reject) => {
         api
           .get('/auth')
           .then((res) => {
             if (res.data.user) {
               commit('setUser', res.data.user)
-              dispatch('setDirectories', res.data)
+              if (res.data.user.directoriesProfile)
+                dispatch('setDirectories', res.data)
             } else dispatch('logOut')
             socket.auth = { userId: res.data.user._id }
             socket.connect()
