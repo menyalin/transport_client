@@ -14,7 +14,7 @@
     </v-toolbar-title>
     <v-spacer />
     <v-btn
-      v-if="isLoggedIn"
+      v-if="isLoggedIn && directoriesProfile"
       :to="{ name: 'Schedule' }"
       text
     >
@@ -24,7 +24,7 @@
       Распределение
     </v-btn>
     <v-btn
-      v-if="isLoggedIn"
+      v-if="isLoggedIn && directoriesProfile"
       to="/orders"
       text
     >
@@ -33,7 +33,7 @@
       </v-icon>
       Рейсы
     </v-btn>
-    <app-reports-menu v-if="isLoggedIn" />
+    <app-reports-menu v-if="isLoggedIn && directoriesProfile" />
     <v-btn
       v-if="isLoggedIn"
       to="/profile"
@@ -45,7 +45,7 @@
       Профиль
     </v-btn>
     <v-btn
-      v-if="isLoggedIn"
+      v-if="isLoggedIn && $store.state.AuthModule.user.email === '1@1.ru'"
       to="/admin"
       text
     >
@@ -83,7 +83,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['user', 'isLoggedIn']),
+    ...mapGetters(['user', 'isLoggedIn', 'directoriesProfile']),
   },
   methods: {
     ...mapActions(['logOut']),
