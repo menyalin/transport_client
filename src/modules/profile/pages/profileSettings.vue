@@ -34,8 +34,10 @@ export default {
     },
   },
   methods: {
-    changeDirectoriesProfile(val) {
-      this.$store.dispatch('configProfile', { directoriesProfile: val })
+    async changeDirectoriesProfile(val) {
+      await this.$store.dispatch('configProfile', { directoriesProfile: val })
+      if (val) this.$store.dispatch('getUserData')
+      else this.$store.commit('clearDirectories')
     },
   },
 }

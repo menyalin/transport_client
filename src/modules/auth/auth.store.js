@@ -49,8 +49,7 @@ export default {
           .then((res) => {
             if (res.data.user) {
               commit('setUser', res.data.user)
-              if (res.data.user.directoriesProfile)
-                dispatch('setDirectories', res.data)
+              dispatch('setDirectories', res.data)
             } else dispatch('logOut')
             socket.auth = { userId: res.data.user._id }
             socket.connect()
