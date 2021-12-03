@@ -48,7 +48,7 @@
       v-if="
         isLoggedIn &&
           !!$store.getters.user &&
-          !!$store.getters.user.email === '1@1.ru'
+          $store.getters.user.email == '1@1.ru'
       "
       to="/admin"
       text

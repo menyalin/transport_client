@@ -42,7 +42,7 @@ export default {
       socket.disconnect()
       router.push('/auth/login')
     },
-    getUserData({ commit, dispatch, getters }) {
+    getUserData({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         api
           .get('/auth')
