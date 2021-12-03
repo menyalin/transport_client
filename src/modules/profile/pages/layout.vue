@@ -34,7 +34,7 @@ export default {
         text: 'Настройки профиля',
         icon: 'mdi-cog',
         link: '/profile/settings',
-        onlyWithDirectoriesProfile: true,
+        onlyWithDirectoriesProfile: false,
       },
       {
         text: 'Компании',
