@@ -155,7 +155,6 @@
       :visibleDate="actualTruckCrew.transport.startDate"
       :date="newItem.startDate"
       :crew="actualTruckCrew"
-      
       :transportId="actualTruckCrew.transport._id"
       :invalid="!truckClosureAvailable"
       type="transport"
@@ -168,7 +167,6 @@
       :visibleDate="actualTrailerCrew.transport.startDate"
       :date="newItem.startDate"
       :crew="actualTrailerCrew"
-      
       :invalid="!trailerClosureAvailable"
       :transportId="actualTrailerCrew.transport._id"
       type="transport"
@@ -254,9 +252,11 @@ export default {
 
     trucksByDriver() {
       if (!this.driver) return []
-      return this.trucks.filter((truck) =>
-        truck?.allowedDrivers?.includes(this.driver)
-      )
+      return this.trucks
+        .filter((t) => t.type === 'truck')
+        .filter((t) => {
+          return t.allowedDrivers?.some((d) => d.driver === this.driver)
+        })
     },
     trailers() {
       return this.trucks.filter(
