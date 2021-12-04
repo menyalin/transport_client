@@ -115,8 +115,9 @@ export default {
     addDriver() {
       this.isVisibleBtn = false
     },
-    changeDriverState(driver) {
-      driver.isPermanent = !driver.isPermanent
+    async changeDriverState(driver) {
+      const res = await this.$confirm('Вы уверены? ')
+      if (res) driver.isPermanent = !driver.isPermanent
     },
     changeDriver(val) {
       if (
