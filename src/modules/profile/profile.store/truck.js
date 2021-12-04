@@ -84,7 +84,8 @@ export default {
     trucks: ({ trucks }, { directoriesProfile }) =>
       trucks
         .filter((item) => item.company === directoriesProfile)
-        .sort(_trucksSortHandler),
+        .sort(_trucksSortHandler)
+        .map(_prepareTruck),
     loadDirection: ({ loadDirection }) => loadDirection,
     truckTypes: ({ truckTypes }) => truckTypes,
     truckKinds: ({ truckKinds }) => truckKinds,
@@ -141,4 +142,22 @@ const _trucksSortHandler = (a, b) => {
   if (a.liftCapacityType < b.liftCapacityType) return 1
   if (a.regNum > b.regNum) return 1
   if (a.regNum < b.regNum) return -1
+}
+
+const _getPermanentDriversFromTruck = (truck) => {
+  if (!truck.allowedDrivers) return 0
+  return truck.allowedDrivers.filter((driver) => driver.isPermanent).length
+}
+
+const _getTemporaryDriverFromTruck = (truck) => {
+  if (!truck.allowedDrivers) return 0
+  return truck.allowedDrivers.filter((driver) => !driver.isPermanent).length
+}
+
+const _prepareTruck = (truck) => {
+  return {
+    ...truck,
+    permanentDriverCount: _getPermanentDriversFromTruck(truck),
+    temporaryDriverCount: _getTemporaryDriverFromTruck(truck),
+  }
 }

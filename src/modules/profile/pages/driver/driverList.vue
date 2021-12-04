@@ -82,6 +82,7 @@ export default {
       { value: 'fullName', text: 'ФИО' },
       { value: 'phone', text: 'Телефон' },
       { value: 'phone2', text: 'Телефон2' },
+      
       {
         value: 'medBookState.validDays',
         text: 'Мед.книжка, дней',

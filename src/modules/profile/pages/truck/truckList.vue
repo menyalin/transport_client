@@ -90,6 +90,18 @@ export default {
       { value: 'liftCapacityType', text: 'Груз-cть, т', width: '15rem' },
       { value: 'pltCount', text: 'Плт' },
       { value: 'brand', text: 'Марка' },
+      {
+        value: 'permanentDriverCount',
+        text: 'Закреп. водители',
+        align: 'center',
+        width: '10rem',
+      },
+      {
+        value: 'temporaryDriverCount',
+        text: 'Времен. водители',
+        align: 'center',
+        width: '10rem',
+      },
     ],
   }),
   computed: {
