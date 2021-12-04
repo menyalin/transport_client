@@ -203,6 +203,23 @@
         />
       </div>
 
+      <div id="leaders">
+        <v-autocomplete
+          v-model="form.brigadier"
+          label="Бригадир"
+          outlined
+          :items="brigadiers"
+          dense
+        />
+        <v-autocomplete
+          v-model="form.mechanic"
+          label="Механик"
+          :items="mechanics"
+          outlined
+          dense
+        />
+      </div>
+
       <div class="row-wrapper my-3">
         <v-textarea
           v-model.trim="$v.form.note.$model"
@@ -277,6 +294,8 @@ export default {
       additionalDetails: {},
       permits: {},
       form: {
+        brigadier: null,
+        mechanic: null,
         sanitaryPassportExpDate: null,
         sanitaryPassportNote: null,
         brand: null,
@@ -314,6 +333,12 @@ export default {
       'liftCapacityTypes',
       'tkNames',
     ]),
+    brigadiers() {
+      return this.$store.getters.brigadiersForSelect
+    },
+    mechanics() {
+      return this.$store.getters.mechanicsForSelect
+    },
     isInvalidForm() {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
@@ -471,5 +496,10 @@ export default {
   display: grid;
   gap: 10px;
   grid-template-columns: 200px auto;
+}
+#leaders {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 300px 300px;
 }
 </style>

@@ -149,6 +149,20 @@
         class="mb-5"
       />
       <div class="work-status">
+        <div>
+          <v-checkbox
+            v-model="form.isBrigadier"
+            label="Бригадир"
+            hide-details
+            dense
+          />
+          <v-checkbox
+            v-model="form.isMechanic"
+            label="Механик"
+            hide-details
+            dense
+          />
+        </div>
         <app-date-time-input
           v-model="$v.form.employmentDate.$model"
           label="Дата приема на работу"
@@ -165,6 +179,7 @@
           outlined
           label="Кто рекомедовал"
           dense
+          hide-details
         />
       </div>
       <v-checkbox
@@ -175,7 +190,7 @@
     </div>
     <div
       v-if="displayDeleteBtn"
-      class="delete-btn-row mt-3  "
+      class="delete-btn-row mt-3"
     >
       <v-btn
         color="error"
@@ -240,6 +255,8 @@ export default {
         dismissalDate: null,
         recommender: null,
         birthday: null,
+        isBrigadier: false,
+        isMechanic: false,
       },
     }
   },
@@ -377,8 +394,10 @@ export default {
 }
 .work-status {
   display: grid;
-  grid-template-columns: 200px 200px auto;
+  grid-template-columns: 150px 200px 200px auto;
   gap: 15px;
+  align-items: center;
+  margin-bottom: 30px;
 }
 .delete-btn-row {
   display: flex;

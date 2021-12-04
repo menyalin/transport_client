@@ -75,6 +75,23 @@ export default {
       return map
     },
 
+    brigadiersForSelect: ({ drivers }) =>
+      drivers
+        .filter((d) => d.isBrigadier)
+        .map((d) => ({
+          ...d,
+          value: d._id,
+          text: d.fullName,
+        })),
+    mechanicsForSelect: ({ drivers }) =>
+      drivers
+        .filter((d) => d.isMechanic)
+        .map((d) => ({
+          ...d,
+          value: d._id,
+          text: d.fullName,
+        })),
+
     driversForSelect:
       ({ drivers }) =>
       (tkName) =>
