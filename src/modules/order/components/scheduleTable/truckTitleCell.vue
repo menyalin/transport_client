@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2">
+  <div class="px-2 title-wrapper">
     <router-link
       :to="baseUrl + id"
       draggable="false"
@@ -26,4 +26,9 @@ export default {
   }),
 }
 </script>
-<style scoped></style>
+<style scoped>
+.title-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+}
+</style>
