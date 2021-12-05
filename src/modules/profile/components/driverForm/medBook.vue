@@ -29,7 +29,7 @@
             @change="change($event, 'certifiedBeforeDate')"
           />
           <v-chip
-            v-if="certificateValidityPeriod"
+            v-if="certificateValidityPeriod !== null"
             class="my-1 mx-4"
             :color="chipColor(certificateValidityPeriod)"
           >
@@ -45,7 +45,7 @@
             @change="change($event, 'annualCommisionDate')"
           />
           <v-chip
-            v-if="daysBeforeMedExamination"
+            v-if="daysBeforeMedExamination !== null"
             class="my-1 mx-4"
             :color="chipColor(daysBeforeMedExamination)"
           >
