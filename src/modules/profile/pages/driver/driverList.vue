@@ -24,7 +24,7 @@
         >
           <template v-slot:[`item.medBookState.validDays`]="{ item }">
             <v-chip
-              v-if="item.medBookState.validDays"
+              v-if="item.medBookState.validDays !== null"
               small
               class="my-0 mx-4"
               :color="item.medBookState.color"
@@ -82,7 +82,7 @@ export default {
       { value: 'fullName', text: 'ФИО' },
       { value: 'phone', text: 'Телефон' },
       { value: 'phone2', text: 'Телефон2' },
-      
+
       {
         value: 'medBookState.validDays',
         text: 'Мед.книжка, дней',
