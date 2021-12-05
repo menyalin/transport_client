@@ -107,7 +107,7 @@ const _sortDriversByFullName = (a, b) => {
 }
 
 const _getColor = (days) => {
-  if (!days) return null
+  if (days === null || days === undefined) return null
   if (days < 14) return 'error'
   if (days < 30) return 'warning'
   return 'light-green'
