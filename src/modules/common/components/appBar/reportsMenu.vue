@@ -17,6 +17,9 @@
       <v-list-item to="/reports/crews">
         <v-list-item-title>Использование транспорта</v-list-item-title>
       </v-list-item>
+      <v-list-item to="/reports/daysControl">
+        <v-list-item-title>Контроль сроков</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
