@@ -3,7 +3,12 @@
     <v-row>
       <v-col>
         <div id="report-settings">
-          Настойки отчета (пока зашиты 30 дней)
+          <v-btn
+            icon
+            @click.stop="getData"
+          >
+            <v-icon> mdi-cached </v-icon>
+          </v-btn>
         </div>
         <v-data-table
           :headers="headers"
