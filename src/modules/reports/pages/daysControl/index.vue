@@ -16,7 +16,11 @@
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
-        />
+        >
+          <template v-slot:[`item.tkName`]="{ item }">
+            {{ $store.getters.tkNamesMap.get(item.tkName).name }}
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -32,6 +36,7 @@ export default {
       loading: false,
       rows: [],
       headers: [
+        { value: 'tkName', text: 'ТК' },
         { value: 'name', text: 'Имя' },
         { value: 'controlDates.title', text: 'Объект' },
         { value: 'controlDates.validDays', text: 'Кол-во дней' },
