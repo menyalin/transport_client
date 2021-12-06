@@ -94,6 +94,7 @@
                 class="my-2"
                 label="Дата завершения"
                 hideDetails
+                :errorMessages="endDateErrors"
                 :minDate="newItem.startDate"
               />
             </td>
@@ -109,7 +110,7 @@
               />
             </td>
             <td class="truck-col">
-              <v-select
+              <v-autocomplete
                 v-model="newItem.trailer"
                 :disabled="trailerDisabled"
                 class="pa-0 ma-0"
@@ -243,6 +244,9 @@ export default {
           required,
           isLaterThan: isLaterThan(this.minDateValue),
         },
+        endDate: {
+          isLaterThan: isLaterThan(this.newItem.startDate),
+        },
       },
     }
   },
@@ -270,6 +274,10 @@ export default {
       if (!this.items.length) return true
       else return !this.$v.newItem.startDate.$invalid
     },
+    endDateErrors() {
+      if (this.$v.newItem.endDate.$invalid) return ['Значение не корректно']
+      else return null
+    },
     isValidNewItem() {
       const fullCrew =
         (this.newItem.truck && this.allowUseTrailer && this.newItem.trailer) ||
@@ -279,7 +287,14 @@ export default {
         !this.items.length
       const truckAvailable = this.showTruckMessage
       const trailerAvailable = this.showTrailerMessage
-      return fullCrew && startDateValid && !truckAvailable && !trailerAvailable
+      const validEndDate = !this.$v.newItem.endDate.$invalid
+      return (
+        fullCrew &&
+        startDateValid &&
+        !truckAvailable &&
+        !trailerAvailable &&
+        validEndDate
+      )
     },
     minDateValue() {
       if (!this.items.length) return null

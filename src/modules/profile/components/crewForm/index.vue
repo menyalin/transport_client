@@ -33,7 +33,7 @@
       :disabled="!!crewId"
       @change="tkNameChange"
     />
-    <v-select
+    <v-autocomplete
       v-model="$v.form.driver.$model"
       outlined
       hide-details
@@ -55,7 +55,7 @@
       />
       <app-date-time-input
         v-model="$v.form.endDate.$model"
-        :disabled="!form.startDate || !crewEditable"
+        :disabled="!form.startDate || (!!form.endDate && !crewEditable)"
         label="Дата завершения"
         :errorMessages="endDateError"
         :minDate="form.startDate"
