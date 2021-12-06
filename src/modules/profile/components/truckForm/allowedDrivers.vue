@@ -129,8 +129,10 @@ export default {
       }
       this.isVisibleBtn = true
     },
-    deleteDriver(id) {
+    async deleteDriver(id) {
       if (!id) return null
+      const res = await this.$confirm('Вы уверены? ')
+      if (!res) return null
       this.selectedDrivers = this.selectedDrivers.filter(
         (item) => item.driver !== id
       )
