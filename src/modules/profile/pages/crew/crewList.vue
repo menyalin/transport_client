@@ -93,8 +93,9 @@ export default {
       },
     },
     crewStatuses: [
-      { value: 'active', text: 'В работе' },
       { value: 'all', text: 'Все' },
+      { value: 'active', text: 'В работе' },
+      { value: 'inactive', text: 'Завершенные' },
     ],
     dateFormat: 'YYYY-MM-DD HH:mm',
 
