@@ -125,7 +125,7 @@ export default {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
 
-    this.getData()
+    // this.getData()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -146,8 +146,6 @@ export default {
           limit: this.settings.listOptions?.itemsPerPage,
           tkName: this.settings.tkName,
           state: this.settings.crewStatus,
-          sortBy: this.settings.listOptions?.sortBy,
-          sortDesc: this.settings.listOptions?.sortDesc,
         })
         this.loading = false
       } catch (e) {
