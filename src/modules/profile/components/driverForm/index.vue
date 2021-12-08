@@ -2,7 +2,7 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm || loading"
+      :disabled-submit="isInvalidForm || loading || !formChanged"
       @cancel="cancel"
       @submit="submit"
     />
@@ -235,6 +235,7 @@ export default {
     return {
       loading: false,
       medBook: {},
+      initialFormState: null,
       form: {
         tkName: null,
         surname: null,
@@ -284,6 +285,16 @@ export default {
         errors.push('Имя не может быть пустым')
       return errors
     },
+    formChanged() {
+      return this.initialFormState !== JSON.stringify(this.formState)
+    },
+    formState() {
+      return {
+        ...this.form,
+        medBook: this.medBook,
+        company: this.directoriesProfile,
+      }
+    },
   },
   watch: {
     driver: {
@@ -316,15 +327,12 @@ export default {
       birthday: {},
     },
   },
-
+  mounted() {
+    this.initialFormState = JSON.stringify(this.formState)
+  },
   methods: {
     submit() {
-      const driver = {
-        ...this.form,
-        company: this.directoriesProfile,
-        medBook: this.medBook,
-      }
-      this.$emit('submit', driver)
+      this.$emit('submit', this.formState)
       this.resetForm()
     },
     cancel() {

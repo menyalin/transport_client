@@ -2,7 +2,7 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm"
+      :disabled-submit="isInvalidForm || !formChanged"
       @cancel="cancel"
       @submit="submit"
     />
@@ -74,6 +74,7 @@ export default {
   },
   data() {
     return {
+      initialFormState: null,
       form: {
         name: null,
         inn: null,
@@ -103,6 +104,9 @@ export default {
     formState() {
       return { ...this.form, company: this.directoriesProfile }
     },
+    formChanged() {
+      return JSON.stringify(this.formState) !== this.initialFormState
+    },
   },
   watch: {
     partner: {
@@ -119,7 +123,9 @@ export default {
       inn: {},
     },
   },
-
+  mounted() {
+    this.initialFormState = JSON.stringify(this.formState)
+  },
   methods: {
     submit() {
       this.$emit('submit', this.formState)
