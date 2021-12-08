@@ -35,6 +35,7 @@
           :items="list"
           height="72vh"
           :loading="loading"
+          :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -84,6 +85,7 @@ export default {
     formName: 'crewList',
     loading: false,
     list: [],
+    count: null,
     settings: {
       tkName: null,
       crewStatus: 'active',
@@ -138,7 +140,7 @@ export default {
     async getData() {
       try {
         this.loading = true
-        this.list = await service.getList({
+        const data = await service.getList({
           profile: this.directoriesProfile,
           skip:
             (this.settings.listOptions?.page - 1) *
@@ -147,6 +149,9 @@ export default {
           tkName: this.settings.tkName,
           state: this.settings.crewStatus,
         })
+        console.log(data)
+        this.list = data.items
+        this.count = data.count
         this.loading = false
       } catch (e) {
         this.loading = false

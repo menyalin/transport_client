@@ -29,8 +29,6 @@ class CrewService {
 
   async getList(params) {
     let { data } = await api.get(BASE_PATH, { params })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
