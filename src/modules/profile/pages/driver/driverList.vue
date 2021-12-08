@@ -32,6 +32,7 @@
               {{ item.medBookState.validDays }}
             </v-chip>
           </template>
+
           <template v-slot:top>
             <div class="filter-wrapper">
               <v-select
@@ -45,7 +46,13 @@
                 item-value="_id"
                 item-text="name"
               />
-
+              <v-select
+                v-model="settings.workState"
+                label="Статус"
+                :items="workStateItems"
+                outlined
+                dense
+              />
               <v-text-field
                 v-model="settings.search"
                 outlined
@@ -61,6 +68,7 @@
   </v-container>
 </template>
 <script>
+import CrewService from '../../services/crew.service'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 
@@ -71,7 +79,16 @@ export default {
   },
   data: () => ({
     formName: 'DriverList',
+
+    loading: false,
+    crews: [],
+    workStateItems: [
+      { value: 'all', text: 'Все' },
+      { value: 'active', text: 'В работе' },
+      { value: 'holiday', text: 'Выходной' },
+    ],
     settings: {
+      workState: 'all',
       listOptions: {},
       search: null,
       tkNameFilter: null,
@@ -82,7 +99,9 @@ export default {
       { value: 'fullName', text: 'ФИО' },
       { value: 'phone', text: 'Телефон' },
       { value: 'phone2', text: 'Телефон2' },
-
+      { value: 'state', text: 'Текущее состояние', align: 'center' },
+      { value: 'truckNumber', text: 'Грузовик', align: 'center' },
+      { value: 'daysInWork', text: 'Дней в смене', align: 'center' },
       {
         value: 'medBookState.validDays',
         text: 'Мед.книжка, дней',
@@ -91,14 +110,29 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters(['drivers', 'loading', 'directoriesProfile', 'tkNames']),
+    ...mapGetters(['drivers', 'directoriesProfile', 'tkNames']),
     filteredDrivers() {
       const tpmDrivers = this.drivers.slice()
-      return tpmDrivers.filter((item) =>
-        this.settings.tkNameFilter
-          ? item.tkName?._id === this.settings.tkNameFilter
-          : true
-      )
+      return tpmDrivers
+        .filter((item) =>
+          this.settings.tkNameFilter
+            ? item.tkName?._id === this.settings.tkNameFilter
+            : true
+        )
+        .filter(this.stateFilterHandler)
+        .map((d) => ({
+          ...d,
+          state: this.crewsMapByDriver.has(d._id) ? 'В работе' : 'Выходной',
+          daysInWork: this.getDaysInWork(d._id),
+          truckNumber: this.getTruckNumber(d._id),
+        }))
+    },
+    crewsMapByDriver() {
+      let tmpMap = new Map()
+      this.crews.forEach((cr) => {
+        tmpMap.set(cr.driver, { ...cr })
+      })
+      return tmpMap
     },
   },
 
@@ -106,6 +140,7 @@ export default {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getDrivers')
+    this.getData()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -118,11 +153,42 @@ export default {
     createDriver() {
       this.$router.push({ name: 'DriverCreate' })
     },
+    stateFilterHandler(driver) {
+      if (this.settings.workState === 'all') return true
+      if (this.settings.workState === 'holiday')
+        return !this.crewsMapByDriver.has(driver._id)
+      else return this.crewsMapByDriver.has(driver._id)
+    },
+    async getData() {
+      this.loading = true
+      this.crews = await CrewService.getActualCrewsOnCurrentDate({
+        profile: this.directoriesProfile,
+      })
+      this.loading = false
+    },
     refresh() {
       this.$store.dispatch('getDrivers', true)
+      this.getData()
     },
     dblClickRow(_, { item }) {
       this.$router.push(`drivers/${item._id}`)
+    },
+    getDaysInWork(driverId) {
+      if (!this.crewsMapByDriver.has(driverId)) return null
+      else {
+        const startDate = new Date(
+          this.crewsMapByDriver.get(driverId).startDate
+        )
+        const today = new Date()
+        return Math.floor((today - startDate) / (1000 * 60 * 60 * 24))
+      }
+    },
+    getTruckNumber(driverId) {
+      if (!this.crewsMapByDriver.has(driverId)) return null
+      else {
+        const truckId = this.crewsMapByDriver.get(driverId).transport.truck
+        return this.$store.getters.trucksMap.get(truckId)?.regNum || null
+      }
     },
   },
 }

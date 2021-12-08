@@ -34,6 +34,15 @@ class CrewService {
     return data
   }
 
+  async getActualCrewsOnCurrentDate(params) {
+    try {
+      const { data } = await api.get(BASE_PATH + '/actual', { params })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+    }
+  }
+
   async getActualCrewByDriver(driver) {
     try {
       const params = { driver }
