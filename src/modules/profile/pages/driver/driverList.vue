@@ -79,7 +79,6 @@ export default {
   },
   data: () => ({
     formName: 'DriverList',
-
     loading: false,
     crews: [],
     workStateItems: [

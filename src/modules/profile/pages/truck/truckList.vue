@@ -62,6 +62,7 @@
   </v-container>
 </template>
 <script>
+import CrewService from '../../services/crew.service'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 export default {
@@ -71,6 +72,8 @@ export default {
   },
   data: () => ({
     formName: 'TruckList',
+    loading: false,
+    crews: [],
     settings: {
       tkNameFilter: null,
       search: null,
@@ -90,6 +93,7 @@ export default {
       { value: 'liftCapacityType', text: 'Груз-cть, т', width: '15rem' },
       { value: 'pltCount', text: 'Плт' },
       { value: 'brand', text: 'Марка' },
+      { value: 'currentDriver', text: 'Водитель' },
       {
         value: 'permanentDriverCount',
         text: 'Закреп. водители',
@@ -107,7 +111,6 @@ export default {
   computed: {
     ...mapGetters([
       'trucks',
-      'loading',
       'directoriesProfile',
       'truckTypesHash',
       'tkNames',
@@ -131,12 +134,24 @@ export default {
               return true
           }
         })
+        .map((t) => ({
+          ...t,
+          currentDriver: this.getDriverName(t._id),
+        }))
+    },
+    crewsMapByTruck() {
+      let tmpMap = new Map()
+      this.crews.forEach((cr) => {
+        tmpMap.set(cr.transport.truck, { ...cr })
+      })
+      return tmpMap
     },
   },
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getTrucks')
+    this.getData()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -147,14 +162,27 @@ export default {
   },
 
   methods: {
+    async getData() {
+      this.loading = true
+      this.crews = await CrewService.getActualCrewsOnCurrentDate({
+        profile: this.directoriesProfile,
+      })
+      this.loading = false
+    },
     create() {
       this.$router.push({ name: 'TruckCreate' })
     },
     refresh() {
       this.$store.dispatch('getTrucks', true)
+      this.getData()
     },
     dblClickRow(_, { item }) {
       this.$router.push(`trucks/${item._id}`)
+    },
+    getDriverName(truckId) {
+      if (!this.crewsMapByTruck.has(truckId)) return null
+      const driverId = this.crewsMapByTruck.get(truckId).driver
+      return this.$store.getters.driversMap.get(driverId)?.fullName || null
     },
   },
 }
