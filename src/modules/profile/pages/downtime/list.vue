@@ -17,6 +17,7 @@
           :loading="loading"
           height="73vh"
           dense
+          :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -73,6 +74,7 @@ export default {
         itemsPerPage: 50,
       },
     },
+    count: 0,
     list: [],
     headers: [
       { value: 'title', text: 'Заголовок' },
@@ -128,7 +130,7 @@ export default {
       }
       try {
         this.loading = true
-        this.list = await service.getList({
+        const data = await service.getList({
           company: this.directoriesProfile,
           startDate: this.settings.period[0],
           endDate: this.settings.period[1],
@@ -137,6 +139,8 @@ export default {
             (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
         })
+        this.list = data.items
+        this.count = data.count
         this.loading = false
       } catch (e) {
         this.loading = false
