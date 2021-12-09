@@ -17,6 +17,7 @@
         :items="orders"
         fixed-header
         height="72vh"
+        :serverItemsLength="count"
         :footer-props="{
           'items-per-page-options': [50, 100, 200],
         }"
@@ -71,6 +72,7 @@ export default {
         itemsPerPage: 50,
       },
     },
+    count: 0,
     orders: [],
     headers: [
       { value: 'plannedDate', text: 'Дата погрузки', sortable: false },
@@ -122,7 +124,7 @@ export default {
           return null
         }
         this.loading = true
-        this.orders = await service.getList({
+        const data = await service.getList({
           profile: this.directoriesProfile,
           startDate: this.settings.period[0],
           endDate: this.settings.period[1],
@@ -131,6 +133,8 @@ export default {
             (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
         })
+        this.orders = data.items
+        this.count = data.count
         this.loading = false
       } catch (e) {
         this.loading = false
