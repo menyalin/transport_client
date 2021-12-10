@@ -222,7 +222,7 @@ export default {
         ...item,
         styles: {
           width: this.getWidthInPxForBlock(item),
-          height: '30px',
+          height: '25px',
           top: this.getTopShiftInPxForBlock(item, item.type),
           left: this.getLeftShiftInPxForBlock(item),
           'z-index': 1,
@@ -280,7 +280,7 @@ export default {
     },
 
     getTopShiftInPxForBlock(block) {
-      const ROW_HEIGTH = 30
+      const ROW_HEIGTH = 25
       const rowIndex = this.tableRows.findIndex(
         (item) => item._id === block.rowId
       )
@@ -326,13 +326,12 @@ export default {
 
 .data-cell {
   min-width: 120px;
-  height: 30px;
+  height: 25px;
 }
 .table-body {
   position: relative;
 }
 thead th {
-  position: sticky;
   background-color: white;
   position: sticky;
   max-height: 30px;
@@ -355,7 +354,7 @@ td {
   border: rgb(155, 154, 154) 1px solid;
 }
 tbody tr {
-  max-height: 40px;
+  max-height: 25px;
 }
 table thead th:first-child {
   position: sticky;
@@ -365,16 +364,16 @@ table thead th:first-child {
 }
 .block {
   position: absolute;
-  padding-left: 0px;
+  padding-left: 5px;
   border: 1px solid green;
   border-radius: 0px;
   line-height: 15px;
   letter-spacing: -0.03em;
   font-weight: 400;
   font-style: normal;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
-  background-color: rgba(178, 248, 184, 0.801);
+  background-color: rgba(178, 248, 184, 0.5);
   overflow: hidden;
   display: flex;
   align-items: center;

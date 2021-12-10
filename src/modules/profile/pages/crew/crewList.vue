@@ -102,13 +102,13 @@ export default {
     dateFormat: 'YYYY-MM-DD HH:mm',
 
     headers: [
-      { value: 'tkName', text: 'ТК', sortable: false },
-      { value: 'startDate', text: 'Начало смены', sortable: false },
-      { value: 'endDate', text: 'Завершение смены', sortable: false },
-      { value: 'driver', text: 'Водитель', sortable: false },
+      { value: 'tkName', text: 'ТК' },
+      { value: 'isActual', text: 'В работе', sortable: false },
       { value: 'truck', text: 'Грузовик', sortable: false },
       { value: 'trailer', text: 'Прицеп', sortable: false },
-      { value: 'isActual', text: 'В работе', sortable: false },
+      { value: 'driver', text: 'Водитель' },
+      { value: 'startDate', text: 'Начало смены' },
+      { value: 'endDate', text: 'Завершение смены', sortable: false },
     ],
   }),
   computed: {
@@ -148,8 +148,13 @@ export default {
           limit: this.settings.listOptions?.itemsPerPage,
           tkName: this.settings.tkName,
           state: this.settings.crewStatus,
+          sortBy: this.settings.listOptions.sortBy.length
+            ? this.settings.listOptions.sortBy[0]
+            : null,
+          sortDesc: this.settings.listOptions.sortDesc.length
+            ? this.settings.listOptions.sortDesc[0]
+            : null,
         })
-        console.log(data)
         this.list = data.items
         this.count = data.count
         this.loading = false

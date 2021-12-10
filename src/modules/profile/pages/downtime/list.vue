@@ -10,6 +10,17 @@
         />
         <div class="filter-wrapper">
           <app-date-range v-model="settings.period" />
+          <v-autocomplete
+            v-model="settings.truckFilter"
+            label="Грузовик"
+            :items="trucks"
+            item-text="regNum"
+            item-value="_id"
+            dense
+            outlined
+            hide-details
+            clearable
+          />
         </div>
         <v-data-table
           :headers="headers"
@@ -68,6 +79,7 @@ export default {
     formName: 'downtimeList',
     loading: false,
     settings: {
+      truckFilter: null,
       period: _initPeriod(),
       listOptions: {
         page: 1,
@@ -77,18 +89,21 @@ export default {
     count: 0,
     list: [],
     headers: [
-      { value: 'title', text: 'Заголовок' },
-      { value: 'type', text: 'Тип' },
-      { value: 'truck', text: 'Грузовик' },
-      { value: 'startPositionDate', text: 'Начало' },
-      { value: 'endPositionDate', text: 'Конец' },
-      { value: 'note', text: 'Примечание' },
+      { value: 'title', text: 'Заголовок', sortable: false },
+      { value: 'type', text: 'Тип', sortable: false },
+      { value: 'truck', text: 'Грузовик', sortable: true },
+      { value: 'startPositionDate', text: 'Начало', sortable: true },
+      { value: 'endPositionDate', text: 'Конец', sortable: false },
+      { value: 'note', text: 'Примечание', sortable: false },
     ],
   }),
   computed: {
     ...mapGetters(['directoriesProfile']),
     downtimeTypesHash() {
       return this.$store.getters.downtimeTypesHash
+    },
+    trucks() {
+      return this.$store.getters.trucksForSelect({ type: 'truck' })
     },
     trucksHash() {
       return this.$store.getters.trucksHash
@@ -134,10 +149,17 @@ export default {
           company: this.directoriesProfile,
           startDate: this.settings.period[0],
           endDate: this.settings.period[1],
+          truckFilter: this.settings.truckFilter,
           skip:
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
+          sortBy: this.settings.listOptions.sortBy.length
+            ? this.settings.listOptions.sortBy[0]
+            : null,
+          sortDesc: this.settings.listOptions.sortDesc.length
+            ? this.settings.listOptions.sortDesc[0]
+            : null,
         })
         this.list = data.items
         this.count = data.count
@@ -150,4 +172,10 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.filter-wrapper {
+  display: grid;
+  grid-template-columns: 300px 280px;
+  align-items: center;
+}
+</style>
