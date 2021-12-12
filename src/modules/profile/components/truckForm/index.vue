@@ -219,7 +219,7 @@
           dense
         />
       </div>
-
+      <app-additional-notifications v-model="additionalNotifications" />
       <div class="row-wrapper my-3">
         <v-textarea
           v-model.trim="$v.form.note.$model"
@@ -267,6 +267,7 @@ import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'
 import AppPermits from './permits.vue'
 import AppAdditionalDetails from './additionalDetails .vue'
+import AppAdditionalNotifications from '@/modules/common/components/additionalNotifications'
 
 export default {
   name: 'TruckForm',
@@ -277,6 +278,7 @@ export default {
     AppInsurance,
     AppPermits,
     AppAdditionalDetails,
+    AppAdditionalNotifications,
   },
   props: {
     truck: {
@@ -292,6 +294,7 @@ export default {
       loading: false,
       insurance: {},
       additionalDetails: {},
+      additionalNotifications: [],
       permits: {},
       form: {
         brigadier: null,
@@ -423,6 +426,7 @@ export default {
         insurance: this.insurance,
         permits: this.permits,
         additionalDetails: this.additionalDetails,
+        additionalNotifications: this.additionalNotifications,
       }
       this.$emit('submit', truck)
       this.resetForm()
@@ -436,6 +440,8 @@ export default {
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
+      if (val.additionalNotifications)
+        this.additionalNotifications = val.additionalNotifications
       if (val.insurance) this.insurance = val.insurance
       if (val.permits) this.permits = val.permits
       if (val.additionalDetails) this.additionalDetails = val.additionalDetails
@@ -445,6 +451,7 @@ export default {
       const keys = Object.keys(this.form)
       this.insurance = { ...{} }
       this.permits = { ...{} }
+      this.additionalNotifications = []
       this.additionalDetails = { ...{} }
       keys.forEach((key) => {
         this.form[key] = null
