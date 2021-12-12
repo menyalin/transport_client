@@ -182,6 +182,7 @@
           hide-details
         />
       </div>
+      <app-additional-notifications v-model="additionalNotifications" />
       <v-checkbox
         v-model="form.hasScans"
         label="Есть сканы документов"
@@ -214,6 +215,7 @@ import { required } from 'vuelidate/lib/validators'
 import AppMedBook from './medBook.vue'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppAdditionalNotifications from '@/modules/common/components/additionalNotifications'
 
 export default {
   name: 'DriverForm',
@@ -221,6 +223,7 @@ export default {
     AppButtonsPanel,
     AppDateTimeInput,
     AppMedBook,
+    AppAdditionalNotifications,
   },
   props: {
     driver: {
@@ -235,6 +238,7 @@ export default {
     return {
       loading: false,
       medBook: {},
+      additionalNotifications: [],
       initialFormState: null,
       form: {
         tkName: null,
@@ -293,6 +297,7 @@ export default {
         ...this.form,
         medBook: this.medBook,
         company: this.directoriesProfile,
+        additionalNotifications: this.additionalNotifications,
       }
     },
   },
@@ -342,6 +347,8 @@ export default {
     setFormFields(val) {
       const keys = Object.keys(this.form)
       this.medBook = val.medBook
+      if (val.additionalNotifications)
+        this.additionalNotifications = val.additionalNotifications
       keys.forEach((key) => {
         this.form[key] = val[key]
         if (val.tkName?._id) this.form.tkName = val.tkName._id
@@ -350,6 +357,7 @@ export default {
     resetForm() {
       const keys = Object.keys(this.form)
       this.medBook = { ...{} }
+      this.additionalNotifications = []
       keys.forEach((key) => {
         this.form[key] = null
       })

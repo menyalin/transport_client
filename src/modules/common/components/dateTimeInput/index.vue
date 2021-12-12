@@ -1,11 +1,15 @@
 <template>
   <div>
-    <div class="input_wrapper_row">
+    <div
+      class="input_wrapper_row"
+      @blur="$emit('blur')"
+    >
       <v-text-field
         type="date"
         :min="minDateValue"
         :label="label"
         :value="dateStr"
+        :error="Array.isArray(errorMessages) && !!errorMessages.length"
         class="date-input pt-0 mt-0"
         :prepend-inner-icon="!hidePrependIcon ? 'mdi-chevron-right' : null"
         :outlined="outlined"
@@ -13,15 +17,14 @@
         :readonly="readonly"
         :hide-details="hideDetails"
         dense
-        :error-messages="errorMessages"
         @click:prepend-inner="setDate"
         @change="changeDate"
       />
       <v-text-field
         v-if="!hideTimeInput"
         type="time"
-        :error-messages="errorMessages"
         :value="timeStr"
+        :error="Array.isArray(errorMessages) && !!errorMessages.length"
         class="time-input pt-0 mt-0"
         :hide-details="hideDetails"
         :readonly="readonly"
