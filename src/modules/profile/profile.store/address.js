@@ -30,22 +30,6 @@ export default {
     },
   },
   actions: {
-    // createAddress({ commit }, payload) {
-    //   return new Promise(async (resolve, reject) => {
-    //     try {
-    //       commit('setLoading', true)
-    //       const newAddress = await service.create(payload)
-    //       commit('addAddress', newAddress)
-    //       commit('setLoading', false)
-    //       resolve(newAddress)
-    //     } catch (e) {
-    //       commit('setLoading', false)
-    //       commit('setError', e)
-    //       reject(e)
-    //     }
-    //   })
-    // },
-
     async getAddresses({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
@@ -80,8 +64,13 @@ export default {
           unloading: item.isDeliveryPlace,
         })),
 
-    addresses: ({ addresses }, { directoriesProfile }) =>
-      addresses.filter((item) => item.company === directoriesProfile),
+    addresses: ({ addresses }, { directoriesProfile, partnersMap }) =>
+      addresses
+        .filter((item) => item.company === directoriesProfile)
+        .map((a) => ({
+          ...a,
+          partnerName: partnersMap.get(a.partner).name,
+        })),
     addressMap: ({ addresses }) =>
       new Map(addresses.map((item) => [item._id, item])),
   },

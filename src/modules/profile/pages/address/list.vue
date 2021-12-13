@@ -43,13 +43,7 @@
               mdi-minus
             </v-icon>
           </template>
-          <template v-slot:[`item.partner`]="{ item }">
-            {{
-              $store.getters.partnersMap.has(item.partner)
-                ? $store.getters.partnersMap.get(item.partner).name
-                : '-'
-            }}
-          </template>
+
           <template v-slot:top>
             <v-text-field
               v-model="settings.search"
@@ -81,7 +75,7 @@ export default {
 
     headers: [
       { value: 'shortName', text: 'Сокращенный адрес' },
-      { value: 'partner', text: 'Партнер' },
+      { value: 'partnerName', text: 'Партнер' },
       { value: 'name', text: 'Адрес' },
       { value: 'note', text: 'Примечание' },
       { value: 'label', text: 'Метки' },
