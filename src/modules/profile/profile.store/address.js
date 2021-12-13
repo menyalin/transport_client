@@ -69,7 +69,7 @@ export default {
         .filter((item) => item.company === directoriesProfile)
         .map((a) => ({
           ...a,
-          partnerName: partnersMap.get(a.partner).name,
+          partnerName: partnersMap.get(a.partner)?.name,
         })),
     addressMap: ({ addresses }) =>
       new Map(addresses.map((item) => [item._id, item])),
