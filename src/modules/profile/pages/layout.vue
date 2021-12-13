@@ -2,16 +2,10 @@
   <v-app>
     <app-admin-bar title="User profile" />
     <v-main>
-      <v-container fluid>
-        <v-row>
-          <v-col cols="auto">
-            <app-left-nav :items="navButtons" />
-          </v-col>
-          <v-col>
-            <router-view />
-          </v-col>
-        </v-row>
-      </v-container>
+      <div class="layout">
+        <app-left-nav :items="navButtons" />
+        <router-view />
+      </div>
       <app-snackbar />
     </v-main>
   </v-app>
@@ -94,4 +88,11 @@ export default {
   }),
 }
 </script>
-<style></style>
+<style scoped>
+.layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+</style>
