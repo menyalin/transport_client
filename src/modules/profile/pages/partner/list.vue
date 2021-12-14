@@ -8,10 +8,20 @@
           @submit="create"
           @refresh="refresh"
         />
+        <div id="settings-wrapper">
+          <v-text-field
+            v-model="settings.search"
+            label="Поиск"
+            outlined
+            hide-details
+            dense
+          />
+        </div>
         <v-data-table
           :headers="headers"
           :items="partners"
           :loading="loading"
+          :search="settings.search"
           height="73vh"
           dense
           :footer-props="{
@@ -35,6 +45,7 @@ export default {
   data: () => ({
     formName: 'PartnerList',
     settings: {
+      search: null,
       listOptions: {},
     },
     headers: [
@@ -71,4 +82,10 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+#settings-wrapper {
+  display: grid;
+  grid-template-columns: 300px;
+  gap: 10px;
+}
+</style>
