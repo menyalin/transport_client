@@ -13,6 +13,7 @@
           :headers="headers"
           :items="addresses"
           :loading="loading"
+          fixed-header
           :options.sync="settings.listOptions"
           height="72vh"
           dense

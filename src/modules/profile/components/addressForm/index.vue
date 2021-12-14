@@ -78,6 +78,10 @@
       label="Место разгрузки"
       dense
     />
+    <app-similar-addresses
+      v-if="!displayDeleteBtn && similarAddresses.length"
+      :addresses="similarAddresses"
+    />
     <v-btn
       v-if="displayDeleteBtn"
       color="error"
@@ -100,6 +104,8 @@ import { required } from 'vuelidate/lib/validators'
 import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import AppSimilarAddresses from './similarAddresses.vue'
+import addressService from '../../services/address.service'
 
 const validCoordinates = (val) => {
   if (!val) return true
@@ -119,6 +125,7 @@ export default {
     AppAddressSuggestion,
     AppButtonsPanel,
     AppPartnerAutocomplete,
+    AppSimilarAddresses,
   },
   props: {
     address: {
@@ -139,6 +146,7 @@ export default {
         'Координаты адреса в формате "Ширина, Долгота", пример "55.75396, 37.620393"',
       addressShortNameHint: 'Сокращенное наименование адреса',
       parsedAddress: null,
+      similarAddresses: [],
       form: {
         name: null,
         label: null,
@@ -187,6 +195,15 @@ export default {
         if (!!val) this.setFormFields(val)
       },
     },
+    ['form.name']: {
+      handler: async function (val) {
+        if (!val) {
+          this.similarAddresses = []
+          return null
+        }
+        await this.searchSimilarAddresses()
+      },
+    },
   },
   validations: {
     form: {
@@ -202,6 +219,12 @@ export default {
   },
 
   methods: {
+    async searchSimilarAddresses() {
+      this.similarAddresses = await addressService.search({
+        search: this.form.name,
+        profile: this.directoriesProfile,
+      })
+    },
     submit() {
       const address = { ...this.form, company: this.directoriesProfile }
       this.$emit('submit', address)

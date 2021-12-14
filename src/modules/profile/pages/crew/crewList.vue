@@ -34,6 +34,7 @@
           :headers="headers"
           :items="list"
           height="72vh"
+          fixed-header
           :loading="loading"
           :serverItemsLength="count"
           :footer-props="{

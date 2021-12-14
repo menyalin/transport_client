@@ -34,6 +34,11 @@ class AddressService {
     return data
   }
 
+  async search(params) {
+    const { data } = await api.get(BASE_PATH + '/search', { params })
+    return data
+  }
+
   async create(newAddress) {
     let { data } = await api.post(BASE_PATH, newAddress)
     data = this._prepareData(data)

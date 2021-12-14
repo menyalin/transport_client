@@ -21,6 +21,7 @@
           :headers="headers"
           :items="partners"
           :loading="loading"
+          fixed-header
           :search="settings.search"
           height="73vh"
           dense

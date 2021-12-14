@@ -12,6 +12,7 @@
           :headers="headers"
           :items="tkNames"
           :loading="loading"
+          fixed-header
           height="72vh"
           dense
           :footer-props="{

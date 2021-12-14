@@ -40,6 +40,7 @@
                 dense
                 outlined
                 hide-details
+                
                 label="ТК"
                 clearable
                 :items="tkNames"
