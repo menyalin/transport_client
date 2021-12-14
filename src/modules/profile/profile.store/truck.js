@@ -157,6 +157,7 @@ const _getTemporaryDriverFromTruck = (truck) => {
 const _prepareTruck = (truck) => {
   return {
     ...truck,
+    order: truck.order ? +truck.order : 50,
     permanentDriverCount: _getPermanentDriversFromTruck(truck),
     temporaryDriverCount: _getTemporaryDriverFromTruck(truck),
   }

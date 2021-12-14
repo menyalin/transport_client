@@ -87,6 +87,7 @@ export default {
       { text: 'Прицепы', value: 'trailers' },
     ],
     headers: [
+      { value: 'order', text: 'Индекс' },
       { value: 'tkName.name', text: 'ТК' },
       { value: 'type', text: 'Тип' },
       { value: 'regNum', text: 'Гос.номер' },
