@@ -96,7 +96,8 @@ export default {
       ({ drivers }) =>
       (tkName) =>
         drivers
-          .filter((item) => item.tkName._id === tkName)
+
+          .filter((item) => (!!tkName ? item.tkName._id === tkName : true))
           .sort(_sortDriversByFullName),
   },
 }

@@ -40,7 +40,6 @@
                 dense
                 outlined
                 hide-details
-                
                 label="ТК"
                 clearable
                 :items="tkNames"
@@ -51,6 +50,13 @@
                 v-model="settings.workState"
                 label="Статус"
                 :items="workStateItems"
+                outlined
+                dense
+              />
+              <v-select
+                v-model="settings.stuffStatus"
+                label="Сотрудники"
+                :items="stuffStatusItems"
                 outlined
                 dense
               />
@@ -82,6 +88,11 @@ export default {
     formName: 'DriverList',
     loading: false,
     crews: [],
+    stuffStatusItems: [
+      { value: 'all', text: 'Все' },
+      { value: 'employee', text: 'Действующие' },
+      { value: 'fired', text: 'Уволены' },
+    ],
     workStateItems: [
       { value: 'all', text: 'Все' },
       { value: 'active', text: 'В работе' },
@@ -89,6 +100,7 @@ export default {
     ],
     settings: {
       workState: 'all',
+      stuffStatus: 'employee',
       listOptions: {},
       search: null,
       tkNameFilter: null,
@@ -102,11 +114,11 @@ export default {
       { value: 'state', text: 'Текущее состояние', align: 'center' },
       { value: 'truckNumber', text: 'Грузовик', align: 'center' },
       { value: 'daysInWork', text: 'Дней в смене', align: 'center' },
-      {
-        value: 'medBookState.validDays',
-        text: 'Мед.книжка, дней',
-        align: 'center',
-      },
+      // {
+      //   value: 'medBookState.validDays',
+      //   text: 'Мед.книжка, дней',
+      //   align: 'center',
+      // },
     ],
   }),
   computed: {
@@ -120,6 +132,7 @@ export default {
             : true
         )
         .filter(this.stateFilterHandler)
+        .filter(this.stuffStatusFilterHandler)
         .map((d) => ({
           ...d,
           state: this.crewsMapByDriver.has(d._id) ? 'В работе' : 'Выходной',
@@ -159,6 +172,11 @@ export default {
         return !this.crewsMapByDriver.has(driver._id)
       else return this.crewsMapByDriver.has(driver._id)
     },
+    stuffStatusFilterHandler(driver) {
+      if (this.settings.stuffStatus === 'all') return true
+      if (this.settings.stuffStatus === 'employee') return !driver.dismissalDate
+      if (this.settings.stuffStatus === 'fired') return driver.dismissalDate
+    },
     async getData() {
       this.loading = true
       this.crews = await CrewService.getActualCrewsOnCurrentDate({
@@ -195,10 +213,8 @@ export default {
 </script>
 <style scoped>
 .filter-wrapper {
-  display: flex;
-  flex-direction: row;
-}
-.filter-wrapper > * {
-  padding: 0px 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 15px;
 }
 </style>

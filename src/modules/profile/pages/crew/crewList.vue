@@ -29,6 +29,24 @@
             hide-details
             label="Состояние экипажа"
           />
+          <v-autocomplete
+            v-model="settings.driver"
+            dense
+            clearable
+            :items="drivers"
+            outlined
+            hide-details
+            label="Водитель"
+          />
+          <v-autocomplete
+            v-model="settings.truck"
+            dense
+            clearable
+            :items="trucks"
+            outlined
+            hide-details
+            label="Грузовик"
+          />
         </div>
         <v-data-table
           :headers="headers"
@@ -88,6 +106,8 @@ export default {
     list: [],
     count: null,
     settings: {
+      driver: null,
+      truck: null,
       tkName: null,
       crewStatus: 'active',
       listOptions: {
@@ -114,6 +134,27 @@ export default {
   }),
   computed: {
     ...mapGetters(['directoriesProfile', 'tkNames']),
+    drivers() {
+      return this.$store.getters
+        .driversForSelect(this.settings.tkName)
+        .map((d) => ({
+          ...d,
+          value: d._id,
+          text: d.fullName,
+        }))
+    },
+    trucks() {
+      return this.$store.getters
+        .trucksForSelect({
+          type: 'truck',
+          tkName: this.settings.tkName,
+        })
+        .map((t) => ({
+          ...t,
+          value: t._id,
+          text: t.regNum,
+        }))
+    },
   },
   watch: {
     settings: {
@@ -143,6 +184,8 @@ export default {
         this.loading = true
         const data = await service.getList({
           profile: this.directoriesProfile,
+          driver: this.settings.driver,
+          truck: this.settings.truck,
           skip:
             (this.settings.listOptions?.page - 1) *
             this.settings.listOptions?.itemsPerPage,
@@ -194,7 +237,7 @@ export default {
 <style>
 .filters {
   display: grid;
-  grid-template-columns: 250px 250px;
+  grid-template-columns: 250px 250px 300px 300px;
   gap: 10px;
 }
 .filters > div {

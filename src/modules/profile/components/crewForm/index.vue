@@ -185,7 +185,10 @@ export default {
     ]),
     tkDrivers() {
       if (!this.form.tkName) return []
-      else return this.$store.getters.driversForSelect(this.form.tkName)
+      else
+        return this.$store.getters
+          .driversForSelect(this.form.tkName)
+          .filter((d) => !d.dismissalDate)
     },
     allowUseTrailers() {
       return this.allowedToUseTrailersTrucksSet.has(this.form.truck)
