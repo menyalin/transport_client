@@ -119,7 +119,7 @@ export default {
 .fields-wrapper {
   display: grid;
   gap: 10px;
-  grid-template-columns: 220px 170px 220px 220px 170px 220px;
+  grid-template-columns: 220px 200px 220px 220px 200px 220px;
   margin-bottom: 20px;
 }
 </style>

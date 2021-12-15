@@ -136,7 +136,7 @@
           type="number"
         />
       </div>
-      <div class="row-wrappe third-row">
+      <div class="row-wrapper third-row">
         <v-text-field
           v-model.trim="$v.form.win.$model"
           outlined
@@ -497,7 +497,7 @@ export default {
 .third-row {
   display: grid;
   gap: 10px;
-  grid-template-columns: 250px 250px 250px 150px 250px;
+  grid-template-columns: 250px 250px 250px 200px 250px;
 }
 #sanpassport {
   display: grid;
