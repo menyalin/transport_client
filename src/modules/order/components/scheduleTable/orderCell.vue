@@ -12,10 +12,20 @@
         @dblclick.stop="dblclickHandler"
       >
         <div class="row-text">
-          {{ firstRow }}
+          <span
+            :class="{
+              'next-point': firstPoint.isNextPoint,
+              'wait-at-point': firstPoint.isWait,
+              delay: firstPoint.delayed,
+            }"
+          >
+            {{ firstPoint.title }}
+          </span>
         </div>
         <div class="row-text">
-          {{ secondRow }}
+          <span class="completed-point">
+            {{ secondRow }}
+          </span>
         </div>
       </div>
     </template>
@@ -61,11 +71,32 @@ export default {
     firstRow() {
       const addressId = this.order.route[0].address
       const hours = moment(this.order.route[0].plannedDate).format('HH')
-
       const addressName =
         this.$store.getters.addressMap.get(addressId)?.shortName || ' - '
-
       return `${addressName} - ${hours}`
+    },
+    waitAtPoint() {
+      return this.order.route.findIndex(
+        (p) => !!p.arrivalDate && !p.departureDate
+      )
+    },
+    nextPointIndex() {
+      //if (this.waitAtPoint !== -1) return null
+      return this.order.route.findIndex((p) => !p.departureDate)
+    },
+    firstPoint() {
+      return {
+        title: this.firstRow,
+        isNextPoint: this.nextPointIndex === 0,
+        isWait: this.waitAtPoint === 0,
+        delayed: this.delayToPointInd === 0,
+      }
+    },
+    delayToPointInd() {
+      const idx = this.order.route.findIndex(
+        (p) => new Date(p.plannedDate) < new Date() && !p.arrivalDate
+      )
+      return idx
     },
     secondRow() {
       let point
@@ -112,7 +143,18 @@ export default {
   overflow: hidden;
   user-select: none;
 }
-
+.next-point {
+  font-weight: 500;
+}
+.completed-point {
+  font-weight: 200;
+}
+.wait-at-point {
+  text-decoration: underline;
+}
+.delay {
+  color: red;
+}
 .getted {
   border: 1px solid black;
 }
@@ -127,7 +169,7 @@ export default {
   background-color: rgb(200, 239, 252);
 }
 .inProgress {
-  background-color: rgb(159, 255, 159);
+  background-color: rgb(217, 255, 217);
 }
 .title-row-text {
   font-size: 16px;
