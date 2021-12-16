@@ -16,25 +16,39 @@
             :class="{
               'next-point': firstPoint.isNextPoint,
               'wait-at-point': firstPoint.isWait,
-              delay: firstPoint.delayed,
+              delay: firstPoint.isDelayed,
+              'completed-point': firstPoint.isCompleted,
             }"
           >
             {{ firstPoint.title }}
           </span>
         </div>
         <div class="row-text">
-          <span class="completed-point">
-            {{ secondRow }}
+          <span
+            v-for="(point, ind) in otherPoints"
+            :key="ind"
+            :class="{
+              'next-point': point.isNextPoint,
+              'wait-at-point': point.isWait,
+              delay: point.isDelayed,
+              'completed-point': point.isCompleted,
+            }"
+          >
+            {{ point.title }};
           </span>
         </div>
       </div>
     </template>
     <div>
       <div class="title-row-text">
-        {{ firstRow }}
+        {{ getPointTitle(0) }}
       </div>
-      <div class="title-row-text">
-        {{ secondRow }}
+      <div
+        v-for="(point, ind) in otherPoints"
+        :key="ind"
+        class="title-row-text"
+      >
+        {{ point.title }}
       </div>
     </div>
   </v-tooltip>
@@ -54,7 +68,11 @@ export default {
     breakingSchedule() {
       const roundedPlannedDate = moment(this.order?.route[0]?.plannedDate)
       roundedPlannedDate.hours(roundingHours(roundedPlannedDate.hours()))
-      return !roundedPlannedDate.isSame(this.order.startPositionDate, 'hour')
+      const roundedStartPositionDate = moment(this.order.startPositionDate)
+      roundedStartPositionDate.hours(
+        roundingHours(roundedStartPositionDate.hours())
+      )
+      return !roundedPlannedDate.isSame(roundedStartPositionDate, 'hour')
     },
     orderClasses() {
       let classes = ['order-wrapper']
@@ -81,16 +99,31 @@ export default {
       )
     },
     nextPointIndex() {
+      if (this.order.state.status !== 'inProgress') return null
       //if (this.waitAtPoint !== -1) return null
       return this.order.route.findIndex((p) => !p.departureDate)
     },
     firstPoint() {
       return {
-        title: this.firstRow,
+        title: this.getPointTitle(0),
         isNextPoint: this.nextPointIndex === 0,
         isWait: this.waitAtPoint === 0,
-        delayed: this.delayToPointInd === 0,
+        isDelayed: this.delayToPointInd === 0,
+        isCompleted: !!this.order.route[0].departureDate,
       }
+    },
+    otherPoints() {
+      let res = []
+      for (let i = 1; i < this.order.route.length; i++) {
+        res.push({
+          title: this.getPointTitle(i),
+          isNextPoint: this.nextPointIndex === i,
+          isWait: this.waitAtPoint === i,
+          isDelayed: this.delayToPointInd === i,
+          isCompleted: !!this.order.route[i].departureDate,
+        })
+      }
+      return res
     },
     delayToPointInd() {
       const idx = this.order.route.findIndex(
@@ -120,6 +153,21 @@ export default {
     dblclickHandler() {
       this.$router.push('/orders/' + this.orderId)
     },
+    getPointTitle(idx) {
+      if (idx === null || undefined) return null
+      let res = []
+      const address = this.$store.getters.addressMap.get(
+        this.order.route[idx].address
+      )?.shortName
+      res.push(address)
+      let plannedTime = null
+      if (!!this.order.route[idx]?.plannedDate) {
+        plannedTime = moment(this.order.route[idx].plannedDate).format('HH')
+        res.push(plannedTime)
+      }
+
+      return res.join(' ')
+    },
   },
 }
 </script>
@@ -148,6 +196,7 @@ export default {
 }
 .completed-point {
   font-weight: 200;
+  color: gray;
 }
 .wait-at-point {
   text-decoration: underline;
