@@ -1,7 +1,7 @@
 <template>
   <v-tooltip
     bottom
-    open-delay="1000"
+    open-delay="650"
     close-delay="50"
   >
     <template v-slot:activator="{ on, attrs }">
@@ -13,39 +13,35 @@
       >
         <div class="row-text">
           <span
-            :class="{
-              'next-point': firstPoint.isNextPoint,
-              'wait-at-point': firstPoint.isWait,
-              delay: firstPoint.isDelayed,
-              'completed-point': firstPoint.isCompleted,
-            }"
+            v-for="point of points.filter((p) => p.type === 'loading')"
+            :key="point.idx"
+            :class="getPointStyles(point)"
           >
-            {{ firstPoint.title }}
+            {{ point.title }}
           </span>
         </div>
         <div class="row-text">
           <span
-            v-for="(point, ind) in otherPoints"
-            :key="ind"
-            :class="{
-              'next-point': point.isNextPoint,
-              'wait-at-point': point.isWait,
-              delay: point.isDelayed,
-              'completed-point': point.isCompleted,
-            }"
+            v-for="point of points.filter((p) => p.type === 'unloading')"
+            :key="point.idx"
+            :class="getPointStyles(point)"
           >
-            {{ point.title }};
+            {{ point.title }}
           </span>
         </div>
       </div>
     </template>
     <div>
-      <div class="title-row-text">
-        {{ getPointTitle(0) }}
+      <div
+        v-for="point in points.filter((p) => p.type === 'loading')"
+        :key="point.idx"
+        class="title-row-text"
+      >
+        {{ point.title }}
       </div>
       <div
-        v-for="(point, ind) in otherPoints"
-        :key="ind"
+        v-for="point in points.filter((p) => p.type === 'unloading')"
+        :key="point.idx"
         class="title-row-text"
       >
         {{ point.title }}
@@ -103,25 +99,10 @@ export default {
       //if (this.waitAtPoint !== -1) return null
       return this.order.route.findIndex((p) => !p.departureDate)
     },
-    firstPoint() {
-      return {
-        title: this.getPointTitle(0),
-        isNextPoint: this.nextPointIndex === 0,
-        isWait: this.waitAtPoint === 0,
-        isDelayed: this.delayToPointInd === 0,
-        isCompleted: !!this.order.route[0].departureDate,
-      }
-    },
-    otherPoints() {
+    points() {
       let res = []
-      for (let i = 1; i < this.order.route.length; i++) {
-        res.push({
-          title: this.getPointTitle(i),
-          isNextPoint: this.nextPointIndex === i,
-          isWait: this.waitAtPoint === i,
-          isDelayed: this.delayToPointInd === i,
-          isCompleted: !!this.order.route[i].departureDate,
-        })
+      for (let i = 0; i < this.order.route.length; i++) {
+        res.push(this.createPoint(i))
       }
       return res
     },
@@ -131,25 +112,27 @@ export default {
       )
       return idx
     },
-    secondRow() {
-      let point
-      let resRow = []
-      const tmpPoints = this.order.route
-        .slice(1)
-        .filter((item) => !item.departureDate)
-
-      if (tmpPoints.length) point = tmpPoints[0]
-      else point = this.order.route.slice().reverse()[0]
-
-      const addressId = point.address
-      resRow.push(
-        this.$store.getters.addressMap.get(addressId)?.shortName || ' ---- '
-      )
-      if (point.plannedDate) resRow.push(moment(point.plannedDate).format('hh'))
-      return resRow.join(' - ')
-    },
   },
   methods: {
+    getPointStyles(point) {
+      return {
+        'next-point': point.isNextPoint,
+        'wait-at-point': point.isWait,
+        delay: point.isDelayed,
+        'completed-point': point.isCompleted,
+      }
+    },
+    createPoint(idx) {
+      return {
+        idx: idx,
+        type: this.order.route[idx].type,
+        title: this.getPointTitle(idx),
+        isNextPoint: this.nextPointIndex === idx,
+        isWait: this.waitAtPoint === idx,
+        isDelayed: this.delayToPointInd === idx,
+        isCompleted: !!this.order.route[idx].departureDate,
+      }
+    },
     dblclickHandler() {
       this.$router.push('/orders/' + this.orderId)
     },

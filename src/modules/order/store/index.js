@@ -16,8 +16,9 @@ const _getLastPlannedDate = (order) => {
 
 const _getLastPositionDate = (order) => {
   const tmpRoute = order.route.slice()
+  if (!!tmpRoute[tmpRoute.length - 1].departureDate)
+    return tmpRoute[tmpRoute.length - 1].departureDate
   let routeDates = []
-
   routeDates.push(order.startPositionDate)
   for (let i = 0; i < tmpRoute.length; i++) {
     if (i !== 0) routeDates.push(tmpRoute[i].plannedDate)

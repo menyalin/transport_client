@@ -115,9 +115,12 @@ export default {
     },
     disabledStatus(status) {
       if (this.params.status === 'needGet' && this.enableRefuse)
-        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(
-          status.value
-        )
+        return ![
+          'needGet',
+          'getted',
+          'notСonfirmedByClient',
+          'weRefused',
+        ].includes(status.value)
       if (this.params.status === 'needGet' && !this.enableRefuse)
         return !['needGet', 'getted'].includes(status.value)
       if (
