@@ -30,7 +30,11 @@
           }"
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
-        />
+        >
+          <template v-slot:[`item.isClient`]="{ item }">
+            <div>{{ item.isClient ? 'Да' : 'Нет' }}</div>
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -52,6 +56,7 @@ export default {
     headers: [
       { value: 'name', text: 'Наименование' },
       { value: 'inn', text: 'ИНН' },
+      { value: 'isClient', text: 'Клиент' },
     ],
   }),
   computed: {

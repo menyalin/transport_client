@@ -77,6 +77,7 @@ export default {
         .map((item) => ({
           value: item._id,
           text: item.name,
+          isClient: item.isClient,
         })),
   },
 }

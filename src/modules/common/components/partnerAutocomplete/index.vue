@@ -49,6 +49,7 @@ export default {
     outlined: { type: Boolean, default: false },
     dense: { type: Boolean, default: false },
     value: String,
+    onlyClients: Boolean,
     disabled: { type: Boolean, default: false },
   },
   data() {
@@ -61,7 +62,9 @@ export default {
       return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
     },
     items() {
-      return this.$store.getters.partnersForAutocomplete
+      return this.$store.getters.partnersForAutocomplete.filter((p) =>
+        this.onlyClients ? p.isClient : true
+      )
     },
   },
   methods: {

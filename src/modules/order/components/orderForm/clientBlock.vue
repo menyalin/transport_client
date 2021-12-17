@@ -9,6 +9,7 @@
         :value="params.client"
         outlined
         dense
+        only-clients
         hide-details
         @change="change($event, 'client')"
       />

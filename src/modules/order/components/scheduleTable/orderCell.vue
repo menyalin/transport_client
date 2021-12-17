@@ -204,7 +204,7 @@ export default {
   background-color: rgb(217, 255, 217);
 }
 .title-row-text {
-  font-size: 16px;
+  font-size: 13px;
 }
 .warning-state {
   box-shadow: 0px 0px 3px 1px #f97509;
