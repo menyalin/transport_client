@@ -16,7 +16,7 @@ export default {
     setDowntimes(state, payload) {
       state.downtimes = payload
     },
-    addDowntimes(state, payload) {
+    addDowntime(state, payload) {
       if (state.downtimes.findIndex((item) => item._id === payload._id) === -1)
         state.downtimes.push(payload)
     },

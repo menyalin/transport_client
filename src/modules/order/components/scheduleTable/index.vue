@@ -37,63 +37,53 @@
           </td>
         </tr>
 
-        <template
-          ref="tableBody"
-          @dragover.prevent="dragOverHandler"
-          @drop.prevent="dropHandler"
-          @dragleave.prevent="disabledZone"
-          @dblclick.stop="dblclickHandler"
+        <tr
+          v-for="(truck, idx) of rows"
+          :key="truck._id"
+          class="truck-row"
+          :class="{ 'drag-over-row': idx === overRowInd }"
         >
-          <tr
-            v-for="(truck, idx) of rows"
-            :key="truck._id"
-            class="truck-row"
-            :class="{ 'drag-over-row': idx === overRowInd }"
+          <td :style="cellStyles">
+            <app-truck-title-cell
+              :id="truck._id"
+              :title="truck.regNum"
+            />
+          </td>
+          <td
+            v-for="column of columns"
+            :key="column.title"
+          />
+        </tr>
+        <template v-if="tableWidth">
+          <div
+            v-for="item of allItems"
+            :key="item._id"
+            tag="div"
+            class="block"
+            :draggable="
+              item.itemType === 'order' ? isDraggableOrder(item) : false
+            "
+            :style="getStylesForOrder(item)"
+            @dragstart="dragStartHandler($event, item._id)"
+            @dragend="dragEndHandler($event, item._id)"
+            @dragover="disabledZone"
           >
-            <td :style="cellStyles">
-              <app-truck-title-cell
-                :id="truck._id"
-                :title="truck.regNum"
-              />
-            </td>
-            <td
-              v-for="column of columns"
-              :key="column.title"
+            <app-order-cell
+              v-if="item.itemType === 'order'"
+              :orderId="item._id"
             />
-          </tr>
-          <template v-if="tableWidth">
-            <div
-              v-for="order of distributedOrders"
-              :key="order._id"
-              tag="div"
-              class="block"
-              :draggable="isDraggableOrder(order)"
-              :style="getStylesForOrder(order)"
-              @dragstart="dragStartHandler($event, order._id)"
-              @dragend="dragEndHandler($event, order._id)"
-              @dragover="disabledZone"
-            >
-              <app-order-cell :orderId="order._id" />
-            </div>
-
-            <div
-              v-for="downtime of filteredDountimes"
-              :key="downtime._id"
-              tag="div"
-              class="block"
-              :style="getStylesForOrder(downtime)"
-              @dragover="disabledZone"
-            >
-              <app-downtime-cell :itemId="downtime._id" />
-            </div>
-
-            <app-bg-grid
-              v-if="titleColumnWidth"
-              :leftShift="titleColumnWidth"
-              :tableWidth="tableWidth + titleColumnWidth"
-              :days="columns"
+            <app-downtime-cell
+              v-else
+              :itemId="item._id"
             />
-          </template>
+          </div>
+
+          <app-bg-grid
+            v-if="titleColumnWidth"
+            :leftShift="titleColumnWidth"
+            :tableWidth="tableWidth + titleColumnWidth"
+            :days="columns"
+          />
         </template>
       </table>
     </div>
@@ -219,6 +209,21 @@ export default {
     filteredOrders() {
       return this.$store.getters.ordersForSchedule
     },
+    allItems() {
+      // Объединяем в один массив заказы и простою, сортируем по дате отображения
+      return this.distributedOrders
+        .map((o) => ({
+          ...o,
+          itemType: 'order',
+        }))
+        .concat(
+          this.filteredDountimes.map((d) => ({ ...d, itemType: 'downtime' }))
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.startPositionDate) - new Date(b.startPositionDate)
+        )
+    },
     distributedOrders() {
       return this.filteredOrders.filter((i) => !!i?.truckId)
     },
@@ -233,6 +238,7 @@ export default {
     },
     lineForUndistributedOrdersMap() {
       let tmpMap = new Map()
+      // группируем рейсы по дате начала и определяем кол-во строк для отображения буферной зоны
       for (let order of this.unDistributedOrders) {
         const group = this.getLeftShiftForOrder(order)
         if (tmpMap.has(group)) {
@@ -280,7 +286,7 @@ export default {
   methods: {
     dblclickHandler(e, isBuffer) {
       let truckId = null
-      const offsetY = e.layerY
+      const offsetY = e.layerY - this.titleRowHeight
       const offsetX = e.layerX - this.titleColumnWidth
       if (offsetX < 0 || offsetY < 0) return null
       if (!isBuffer) {
@@ -331,14 +337,21 @@ export default {
       })
     },
 
-    getLeftShiftForOrder({ startPositionDate, type }) {
+    getLeftShiftForOrder({ startPositionDate, needRoundTime }) {
       // Округляем время отображения до 00, 06, 12, 18
-      const sPositionMoment = moment(startPositionDate)
-      if (!type) {
+      if (!this.$refs.rowTitleColumn) return null
+
+      let sPositionMoment
+      // У заказа нет поля type, оно только у dowtime
+      if (needRoundTime) {
+        sPositionMoment = moment(startPositionDate)
         sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
         sPositionMoment.minute(0)
+      } else {
+        // если это downtime
+        sPositionMoment = moment(startPositionDate)
       }
-      if (!this.$refs.rowTitleColumn) return null
+
       const sPeriod = moment(this.period[0]).unix()
       const sOrder = sPositionMoment.unix()
       let leftShift = 0
@@ -355,7 +368,12 @@ export default {
       return rowIdx * LINE_HEIGHT + this.titleRowHeight
     },
 
-    getOrderWidth({ startPositionDate, endPositionDate, type }) {
+    getOrderWidth({
+      startPositionDate,
+      endPositionDate,
+      needRoundTime,
+      isCompleted,
+    }) {
       let startPoint
       let endPoint
       const SEC_IN_SIX_HOURS = 6 * 60 * 60
@@ -363,7 +381,7 @@ export default {
         startPoint = moment(this.period[0])
       else startPoint = moment(startPositionDate)
 
-      if (!type) {
+      if (needRoundTime) {
         startPoint.hour(roundingHours(startPoint.hour()))
         startPoint.minute(0)
       }
@@ -371,10 +389,11 @@ export default {
         endPoint = moment(this.period[1]).add(1, 'd')
       else endPoint = moment(endPositionDate)
       const dutation = endPoint.unix() - startPoint.unix()
-      endPoint.hour(roundingHours(endPoint.hour()))
+      //endPoint.hour(roundingHours(endPoint.hour()))
       return (
-        (dutation > SEC_IN_SIX_HOURS ? dutation : SEC_IN_SIX_HOURS) /
-        this.secInPx
+        (dutation > SEC_IN_SIX_HOURS || isCompleted
+          ? dutation
+          : SEC_IN_SIX_HOURS) / this.secInPx
       )
     },
 

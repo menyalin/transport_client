@@ -1,6 +1,12 @@
 import moment from 'moment'
 import service from '../services/order.service'
 
+const _getStartPositionDate = (order) => {
+  return order.route[0]?.arrivalDate
+    ? order.route[0].arrivalDate
+    : order.startPositionDate
+}
+
 const _getLastPlannedDate = (order) => {
   const tmpRoute = order.route.slice()
   tmpRoute.shift()
@@ -104,12 +110,15 @@ export default {
         .map((item) => ({
           _id: item._id,
           company: item.company,
-          startPositionDate: item.startPositionDate,
+          needRoundTime: !item.route[0].arrivalDate,
+          isCompleted: !!item.route[item.route.length - 1]?.departureDate,
+          startPositionDate: _getStartPositionDate(item),
           endPositionDate: _getLastPositionDate(item), // для определения длины блока
           lastPlannedDate: _getLastPlannedDate(item), // для проверки при перемещении
           truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
           state: item.state,
+          route: item.route,
         }))
         .filter((order) => {
           const sP = moment(schedulePeriod[0])

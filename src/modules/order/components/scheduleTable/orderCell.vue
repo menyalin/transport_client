@@ -1,9 +1,7 @@
 <template>
   <v-tooltip
-    left
     bottom
-    nudge-left="100px"
-    z-index="10"
+    nudge-left="70"
     open-delay="700"
     close-delay="50"
     transition="fade-transition"
