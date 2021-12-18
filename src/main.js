@@ -6,6 +6,9 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate'
 import VuetifyConfirm from 'vuetify-confirm'
+import moment from 'moment'
+
+moment.locale('ru')
 
 Vue.config.productionTip = false
 

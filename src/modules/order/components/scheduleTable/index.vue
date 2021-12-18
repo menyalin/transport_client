@@ -23,6 +23,12 @@
               :class="{ 'today-header': column.isToday, 'text-center': true }"
             >
               <div>{{ column.title }}</div>
+              <div class="title-time-row">
+                <div>00-06</div>
+                <div>06-12</div>
+                <div>12-18</div>
+                <div>18-00</div>
+              </div>
             </td>
           </tr>
         </thead>
@@ -254,8 +260,7 @@ export default {
     period: {
       immediate: false,
       handler: function (val) {
-        if (!!val)
-          this.$store.commit('setPeriod', val)
+        if (!!val) this.$store.commit('setPeriod', val)
       },
     },
   },
@@ -470,6 +475,7 @@ export default {
   max-height: 70vh;
   overflow-y: scroll;
   overflow-x: hidden;
+  border-top: 1px solid black;
 }
 .buffer-wrapper {
   width: 100%;
@@ -480,24 +486,26 @@ export default {
 }
 
 table {
-  --table-border: rgb(154, 154, 154) 1px solid;
+  --table-border: rgb(0, 0, 0) 2px solid;
   width: 100%;
   height: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  border: var(--table-border);
   box-sizing: border-box;
 }
 td {
-  border: var(--table-border);
+  /* border: var(--table-border); */
+  border-left: var(--table-border);
+  border-right: var(--table-border);
+  border-top: 1px dotted grey;
 }
-thead > tr > td {
+thead {
   position: sticky;
+  border-bottom: var(--table-border);
   top: 0;
   z-index: 4;
   background-color: white;
 }
-
 tbody {
   position: relative;
   z-index: 0;
@@ -514,5 +522,10 @@ tbody {
 }
 .drag-over-row {
   box-shadow: inset 0px 0px 3px 1px lightskyblue;
+}
+.title-time-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  font-size: 0.7rem;
 }
 </style>

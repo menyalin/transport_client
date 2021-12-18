@@ -147,10 +147,10 @@ export default {
   },
   computed: {
     ...mapGetters(['directoriesProfile', 'tkNames']),
-    _tableRows() {
-      const rows = getRowsFromCrews(this.filteredCrews, this.settings.group)
-      return rows
-    },
+    // _tableRows() {
+    //   const rows = getRowsFromCrews(this.filteredCrews, this.settings.group)
+    //   return rows
+    // },
     analiticItems() {
       return this.groupItems.filter(
         (item) => item.value !== this.settings.group
@@ -331,13 +331,13 @@ export default {
 .table-body {
   position: relative;
 }
-thead th {
+thead {
   background-color: white;
   position: sticky;
   max-height: 30px;
   min-height: 20px;
   top: 0;
-  z-index: 1;
+  z-index: 2;
   font-weight: 300;
   font-size: 14px;
 }
@@ -345,7 +345,7 @@ tbody td:first-child {
   position: sticky;
   box-sizing: content-box;
   left: 0;
-  z-index: 2;
+  z-index: 1;
   background: white;
   min-width: 110px;
   max-width: 180px;

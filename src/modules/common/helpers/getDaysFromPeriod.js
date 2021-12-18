@@ -1,5 +1,5 @@
 import moment from 'moment'
-const TITLE_FORMAT = 'DD.MM.YY'
+const TITLE_FORMAT = 'DD.MM.YY, ddd'
 
 export default (period) => {
   if (!period || period.length !== 2)

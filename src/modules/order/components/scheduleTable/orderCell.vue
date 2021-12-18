@@ -1,8 +1,12 @@
 <template>
   <v-tooltip
+    left
     bottom
-    open-delay="650"
+    nudge-left="100px"
+    z-index="10"
+    open-delay="700"
     close-delay="50"
+    transition="fade-transition"
   >
     <template v-slot:activator="{ on, attrs }">
       <div
@@ -178,8 +182,8 @@ export default {
   font-weight: 500;
 }
 .completed-point {
-  font-weight: 200;
-  color: gray;
+  font-weight: 300;
+  color: rgb(65, 64, 64);
 }
 .wait-at-point {
   text-decoration: underline;
@@ -198,10 +202,10 @@ export default {
 }
 
 .client-notified {
-  background-color: rgb(200, 239, 252);
+  background-color: rgba(200, 239, 252, 0.9);
 }
 .inProgress {
-  background-color: rgb(217, 255, 217);
+  background-color: rgba(217, 255, 217, 0.9);
 }
 .title-row-text {
   font-size: 13px;
@@ -211,6 +215,9 @@ export default {
 }
 
 .completed {
-  background-color: rgb(189, 223, 189);
+  background-color: rgba(189, 223, 189, 0.9);
+}
+.tooltip-wrapper {
+  position: relative;
 }
 </style>

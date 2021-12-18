@@ -32,7 +32,7 @@
         height="100%"
         :width="dayWidth"
         fill="green"
-        opacity="0.05"
+        opacity="0.08"
       />
 
       <line
@@ -49,7 +49,7 @@
         :x2="leftShift + dayWidth / 2 + ind * dayWidth"
         y2="100%"
         stroke="black"
-        opacity="0.25"
+        opacity="0.3"
       />
       <line
         :x1="(dayWidth / 4) * 3 + ind * dayWidth + leftShift"
