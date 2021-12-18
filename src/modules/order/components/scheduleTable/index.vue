@@ -2,37 +2,42 @@
 <template>
   <div>
     <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <td
-              ref="rowTitleColumn"
-              class="text-center"
-              :style="{ width: initTitleWidth }"
+      <table
+        ref="tableBody"
+        @dragover.prevent="dragOverHandler"
+        @drop.prevent="dropHandler"
+        @dragleave.prevent="disabledZone"
+        @dblclick.stop="dblclickHandler"
+      >
+        <tr class="head-row">
+          <td
+            ref="rowTitleColumn"
+            class="text-center"
+            :style="{ width: initTitleWidth }"
+          >
+            <v-icon
+              small
+              @click="$emit('showSetting')"
             >
-              <v-icon
-                small
-                @click="$emit('showSetting')"
-              >
-                mdi-cog
-              </v-icon>
-            </td>
-            <td
-              v-for="column of columns"
-              :key="column.title"
-              :class="{ 'today-header': column.isToday, 'text-center': true }"
-            >
-              <div>{{ column.title }}</div>
-              <div class="title-time-row">
-                <div>00-06</div>
-                <div>06-12</div>
-                <div>12-18</div>
-                <div>18-00</div>
-              </div>
-            </td>
-          </tr>
-        </thead>
-        <tbody
+              mdi-cog
+            </v-icon>
+          </td>
+          <td
+            v-for="column of columns"
+            :key="column.title"
+            :class="{ 'today-header': column.isToday, 'text-center': true }"
+          >
+            <div>{{ column.title }}</div>
+            <div class="title-time-row">
+              <div>00-06</div>
+              <div>06-12</div>
+              <div>12-18</div>
+              <div>18-00</div>
+            </div>
+          </td>
+        </tr>
+
+        <template
           ref="tableBody"
           @dragover.prevent="dragOverHandler"
           @drop.prevent="dropHandler"
@@ -89,7 +94,7 @@
               :days="columns"
             />
           </template>
-        </tbody>
+        </template>
       </table>
     </div>
     <v-divider />
@@ -174,6 +179,7 @@ export default {
   data: () => ({
     tableWidth: 0,
     titleColumnWidth: 0,
+    titleRowHeight: 0,
     secInPx: null,
     leftShiftInPx: 0,
     draggedOrderId: null,
@@ -315,6 +321,7 @@ export default {
     resizeScreen() {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
+      this.titleRowHeight = this.$refs.rowTitleColumn.offsetHeight
       this.tableWidth =
         this.$refs.tableBody.offsetWidth - this.$refs.rowTitleColumn.offsetWidth
 
@@ -345,7 +352,7 @@ export default {
 
       const rowIdx = this.rows.findIndex((item) => item._id === truckId)
       if (rowIdx === -1) return null
-      return rowIdx * LINE_HEIGHT
+      return rowIdx * LINE_HEIGHT + this.titleRowHeight
     },
 
     getOrderWidth({ startPositionDate, endPositionDate, type }) {
@@ -413,7 +420,7 @@ export default {
         return true
       } else {
         e.dataTransfer.dropEffect = 'move'
-        this.overRowInd = Math.floor(y / LINE_HEIGHT)
+        this.overRowInd = Math.floor((y - this.titleRowHeight) / LINE_HEIGHT)
       }
     },
     dropOnBufferHandler(e) {
@@ -469,49 +476,45 @@ export default {
 </script>
 <style scoped>
 .table-wrapper {
+  --table-border: rgb(0, 0, 0) 1px solid;
   width: 100%;
   margin: 8px;
-  box-sizing: content-box;
-  max-height: 70vh;
+  box-sizing: border-box;
+  max-height: 75vh;
   overflow-y: scroll;
   overflow-x: hidden;
-  border-top: 1px solid black;
+  border-top: var(--table-border);
 }
 .buffer-wrapper {
   width: 100%;
   margin: 8px;
-  box-sizing: content-box;
+  box-sizing: border-box;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 table {
-  --table-border: rgb(0, 0, 0) 2px solid;
   width: 100%;
   height: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+  user-select: auto;
 }
 td {
-  /* border: var(--table-border); */
   border-left: var(--table-border);
   border-right: var(--table-border);
-  border-top: 1px dotted grey;
+  border-bottom: 1px dotted grey;
 }
-thead {
+.head-row {
   position: sticky;
-  border-bottom: var(--table-border);
   top: 0;
   z-index: 4;
   background-color: white;
 }
-tbody {
-  position: relative;
-  z-index: 0;
-  user-select: auto;
-  height: 100%;
-}
+
 .block {
   position: absolute;
   /* z-index: 5; */
@@ -525,7 +528,9 @@ tbody {
 }
 .title-time-row {
   display: grid;
+  box-sizing: border-box;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  border-bottom: 1px dotted grey;
 }
 </style>
