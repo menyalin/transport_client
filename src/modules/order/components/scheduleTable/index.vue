@@ -89,47 +89,45 @@
     </div>
     <v-divider />
     <div class="buffer-wrapper">
-      <table>
-        <tbody
-          @dragover.prevent
-          @drop.prevent="dropOnBufferHandler"
-          @dblclick.stop="dblclickHandler($event, true)"
-        >
-          <tr :style="{ 'min-height': '100%' }">
-            <td
-              :style="{
-                width: initTitleWidth,
-                height: bufferHeight,
-              }"
-            />
-            <td
-              v-for="column of columns"
-              :key="column.title"
-            />
-          </tr>
-          <template v-if="tableWidth">
-            <div
-              v-for="order of unDistributedOrders"
-              :key="order._id"
-              tag="div"
-              class="block"
-              :draggable="isDraggableOrder(order)"
-              :style="getStylesForOrder(order)"
-              @dragstart="dragStartHandler($event, order._id)"
-              @dragend="dragEndHandler($event, order._id)"
-              @dragover="disabledZone"
-            >
-              <app-order-cell :orderId="order._id" />
-            </div>
+      <table
+        @dragover.prevent
+        @drop.prevent="dropOnBufferHandler"
+        @dblclick.stop="dblclickHandler($event, true)"
+      >
+        <tr :style="{ 'min-height': '100%' }">
+          <td
+            :style="{
+              width: initTitleWidth,
+              height: bufferHeight,
+            }"
+          />
+          <td
+            v-for="column of columns"
+            :key="column.title"
+          />
+        </tr>
+        <template v-if="tableWidth">
+          <div
+            v-for="order of unDistributedOrders"
+            :key="order._id"
+            tag="div"
+            class="block"
+            :draggable="isDraggableOrder(order)"
+            :style="getStylesForOrder(order)"
+            @dragstart="dragStartHandler($event, order._id)"
+            @dragend="dragEndHandler($event, order._id)"
+            @dragover="disabledZone"
+          >
+            <app-order-cell :orderId="order._id" />
+          </div>
 
-            <app-bg-grid
-              v-if="titleColumnWidth"
-              :leftShift="titleColumnWidth"
-              :tableWidth="tableWidth + titleColumnWidth"
-              :days="columns"
-            />
-          </template>
-        </tbody>
+          <app-bg-grid
+            v-if="titleColumnWidth"
+            :leftShift="titleColumnWidth"
+            :tableWidth="tableWidth + titleColumnWidth"
+            :days="columns"
+          />
+        </template>
       </table>
     </div>
   </div>
@@ -286,7 +284,13 @@ export default {
   methods: {
     dblclickHandler(e, isBuffer) {
       let truckId = null
-      const offsetY = e.layerY - this.titleRowHeight
+      let offsetY
+      if (isBuffer) {
+        offsetY = e.layerY
+      } else {
+        offsetY = e.layerY - this.titleRowHeight
+      }
+
       const offsetX = e.layerX - this.titleColumnWidth
       if (offsetX < 0 || offsetY < 0) return null
       if (!isBuffer) {
@@ -377,9 +381,12 @@ export default {
       let startPoint
       let endPoint
       const SEC_IN_SIX_HOURS = 6 * 60 * 60
-      if (new Date(startPositionDate) < new Date(this.period[0]))
+      if (moment(startPositionDate).isBefore(this.period[0]))
         startPoint = moment(this.period[0])
-      else startPoint = moment(startPositionDate)
+      else {
+        console.log('startPositionDate', startPositionDate)
+        startPoint = moment(startPositionDate)
+      }
 
       if (needRoundTime) {
         startPoint.hour(roundingHours(startPoint.hour()))
@@ -387,7 +394,9 @@ export default {
       }
       if (moment(this.period[1]).add(24, 'h').isBefore(endPositionDate))
         endPoint = moment(this.period[1]).add(1, 'd')
-      else endPoint = moment(endPositionDate)
+      else {
+        endPoint = moment(endPositionDate)
+      }
       const dutation = endPoint.unix() - startPoint.unix()
       //endPoint.hour(roundingHours(endPoint.hour()))
       return (
@@ -513,6 +522,7 @@ export default {
 }
 
 table {
+  --table-border: rgb(0, 0, 0) 1px solid;
   width: 100%;
   height: 100%;
   table-layout: fixed;
