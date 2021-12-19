@@ -63,7 +63,7 @@
             :draggable="
               item.itemType === 'order' ? isDraggableOrder(item) : false
             "
-            :style="getStylesForOrder(item)"
+            :style="item.itemStyles"
             @dragstart="dragStartHandler($event, item._id)"
             @dragend="dragEndHandler($event, item._id)"
             @dragover="disabledZone"
@@ -221,6 +221,10 @@ export default {
           (a, b) =>
             new Date(a.startPositionDate) - new Date(b.startPositionDate)
         )
+        .map((item) => ({
+          ...item,
+          itemStyles: this.getStylesForOrder(item),
+        }))
     },
     distributedOrders() {
       return this.filteredOrders.filter((i) => !!i?.truckId)
@@ -278,8 +282,10 @@ export default {
     window.removeEventListener('resize', this.resizeScreen)
   },
   mounted() {
-    this.resizeScreen()
     window.addEventListener('resize', this.resizeScreen)
+    this.$nextTick(() => {
+      this.resizeScreen()
+    })
   },
   methods: {
     dblclickHandler(e, isBuffer) {
