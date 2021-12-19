@@ -1,8 +1,7 @@
 import moment from 'moment'
 
-export default ({ lengthInPx, period }) => {
-  if (!lengthInPx || period.length !== 2) return null
-  const dSec =
-    moment(period[1]).add(1, 'd').unix() - moment(period[0]).unix()
+export default ({ lengthInPx, dayCount }) => {
+  if (!lengthInPx || dayCount === 0) return null
+  const dSec = dayCount * 24 * 60 * 60
   return dSec / lengthInPx
 }

@@ -168,32 +168,38 @@ export default {
     tableWidth: 0,
     titleColumnWidth: 0,
     titleRowHeight: 0,
-    secInPx: null,
     leftShiftInPx: 0,
     draggedOrderId: null,
+    dayCount: 5,
     movedNode: null,
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
   }),
   computed: {
+    secInPx() {
+      return getSecInPx({
+        lengthInPx: this.tableWidth,
+        dayCount: this.dayCount,
+      })
+    },
     period() {
       switch (true) {
         case this.tableWidth > 3000:
-          return this.getPeriodFromDate(this.date, -3, 3)
+          return this.getPeriodFromDate(this.date, -3, 3, 7)
         case this.tableWidth > 1900:
-          return this.getPeriodFromDate(this.date, -2, 3)
+          return this.getPeriodFromDate(this.date, -2, 3, 6)
         case this.tableWidth > 1680:
-          return this.getPeriodFromDate(this.date, -1, 3)
+          return this.getPeriodFromDate(this.date, -1, 3, 5)
         case this.tableWidth > 1470:
-          return this.getPeriodFromDate(this.date, -1, 2)
+          return this.getPeriodFromDate(this.date, -1, 2, 4)
         case this.tableWidth > 1100:
-          return this.getPeriodFromDate(this.date, -1, 1)
+          return this.getPeriodFromDate(this.date, -1, 1, 3)
         case this.tableWidth > 660:
-          return this.getPeriodFromDate(this.date, 0, 1)
+          return this.getPeriodFromDate(this.date, 0, 1, 2)
         case this.tableWidth > 500:
-          return this.getPeriodFromDate(this.date, 0, 0)
+          return this.getPeriodFromDate(this.date, 0, 0, 1)
         default:
-          return this.getPeriodFromDate(this.date, -1, 3)
+          return this.getPeriodFromDate(this.date, -1, 3, 5)
       }
     },
     columns() {
@@ -327,7 +333,8 @@ export default {
       return this.draggedOrderId ? item._id !== this.draggedOrderId : true
     },
 
-    getPeriodFromDate(dateStr, a, b) {
+    getPeriodFromDate(dateStr, a, b, dayCount) {
+      this.dayCount = dayCount
       return [
         moment(dateStr).add(a, 'd').format('YYYY-MM-DD'),
         moment(dateStr).add(b, 'd').format('YYYY-MM-DD'),
@@ -340,11 +347,6 @@ export default {
       this.titleRowHeight = this.$refs.rowTitleColumn.offsetHeight
       this.tableWidth =
         this.$refs.tableBody.offsetWidth - this.$refs.rowTitleColumn.offsetWidth
-
-      this.secInPx = getSecInPx({
-        lengthInPx: this.tableWidth,
-        period: this.period,
-      })
     },
 
     getLeftShiftForOrder({ startPositionDate, needRoundTime }) {
@@ -390,7 +392,6 @@ export default {
       if (moment(startPositionDate).isBefore(this.period[0]))
         startPoint = moment(this.period[0])
       else {
-        console.log('startPositionDate', startPositionDate)
         startPoint = moment(startPositionDate)
       }
 
@@ -404,7 +405,6 @@ export default {
         endPoint = moment(endPositionDate)
       }
       const dutation = endPoint.unix() - startPoint.unix()
-      //endPoint.hour(roundingHours(endPoint.hour()))
       return (
         (dutation > SEC_IN_SIX_HOURS || isCompleted
           ? dutation

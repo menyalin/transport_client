@@ -39,13 +39,14 @@
       <app-date-time-input
         v-model="tmpPoint.arrivalDate"
         label="Факт прибытия"
-        :disabled="!confirmed"
+        :disabled="!confirmed || !isActive"
         @change="change"
       />
       <app-date-time-input
         v-model="tmpPoint.departureDate"
         label="Факт убытия"
-        :disabled="!confirmed"
+        :disabled="!confirmed || !(tmpPoint.arrivalDate && isActive)"
+        :minDate="tmpPoint.arrivalDate"
         @change="change"
       />
     </div>
@@ -80,6 +81,7 @@ export default {
       type: Object,
     },
     confirmed: Boolean,
+    isActive: Boolean,
     ind: Number,
     showDeleteBtn: {
       type: Boolean,

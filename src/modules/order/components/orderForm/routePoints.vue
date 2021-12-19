@@ -12,6 +12,7 @@
             :point="point"
             :ind="ind"
             :confirmed="confirmed"
+            :isActive="activePointInd === ind"
             :showDeleteBtn="tmpPoints.length > 2"
             @changePoint="change($event, ind)"
             @delete="deleteHandler"
@@ -64,6 +65,9 @@ export default {
       set(val) {
         this.$emit('changePoints', val)
       },
+    },
+    activePointInd() {
+      return this.tmpPoints.findIndex((p) => !p.departureDate)
     },
   },
   watch: {
