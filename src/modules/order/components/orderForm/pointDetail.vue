@@ -39,14 +39,18 @@
       <app-date-time-input
         v-model="tmpPoint.arrivalDate"
         label="Факт прибытия"
-        :disabled="!confirmed || !isActive"
+        :minDate="tmpPoint.minArrivalDate"
+        :disabled="!confirmed || tmpPoint.arrivalDateDisabled"
+        :errorMessages="arrivalDateErrors"
         @change="change"
       />
+      {{ tmpPoint.isLastPoint }}
       <app-date-time-input
         v-model="tmpPoint.departureDate"
         label="Факт убытия"
-        :disabled="!confirmed || !(tmpPoint.arrivalDate && isActive)"
+        :disabled="!confirmed || tmpPoint.departureDateDisabled"
         :minDate="tmpPoint.arrivalDate"
+        :errorMessages="departureDateErrors"
         @change="change"
       />
     </div>
@@ -67,6 +71,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
@@ -102,6 +107,30 @@ export default {
   },
   computed: {
     ...mapGetters(['pointTypes']),
+    departureDateErrors() {
+      let errors = []
+      if (!this.$v.tmpPoint.departureDate.isLaterThan)
+        errors.push('Дата не корректна')
+      return errors
+    },
+    arrivalDateErrors() {
+      let errors = []
+      if (!this.$v.tmpPoint.arrivalDate.isLaterThan)
+        errors.push('Дата не корректна')
+      return errors
+    },
+  },
+  validations() {
+    return {
+      tmpPoint: {
+        departureDate: {
+          isLaterThan: isLaterThan(this.tmpPoint.arrivalDate),
+        },
+        arrivalDate: {
+          isLaterThan: isLaterThan(this.tmpPoint.minArrivalDate),
+        },
+      },
+    }
   },
   watch: {
     point: {

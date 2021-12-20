@@ -12,7 +12,7 @@
             :point="point"
             :ind="ind"
             :confirmed="confirmed"
-            :isActive="activePointInd === ind"
+            :isActive="point.isCurrent"
             :showDeleteBtn="tmpPoints.length > 2"
             @changePoint="change($event, ind)"
             @delete="deleteHandler"

@@ -9,7 +9,7 @@
         :min="minDateValue"
         :label="label"
         :value="dateStr"
-        :error="Array.isArray(errorMessages) && !!errorMessages.length"
+        :error="Array.isArray(errorMessages) && errorMessages.length >= 1"
         class="date-input pt-0 mt-0"
         :prepend-inner-icon="!hidePrependIcon ? 'mdi-chevron-right' : null"
         :outlined="outlined"
@@ -24,7 +24,7 @@
         v-if="!hideTimeInput"
         type="time"
         :value="timeStr"
-        :error="Array.isArray(errorMessages) && !!errorMessages.length"
+        :error="Array.isArray(errorMessages) && errorMessages.length >= 1"
         class="time-input pt-0 mt-0"
         :hide-details="hideDetails"
         :readonly="readonly"
@@ -37,7 +37,7 @@
     </div>
     <div
       v-if="errorMessages && errorMessages.length"
-      class="text-caption px-5 red--text"
+      class="text-caption px-5 red--text text-center"
     >
       {{ errorMessages.join(', ') }}
     </div>

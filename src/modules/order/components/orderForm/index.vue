@@ -58,7 +58,7 @@
           />
 
           <app-route-points
-            v-model="route"
+            v-model="preparedRoute"
             title="Маршрут"
             :confirmed="orderInProgress"
             class="route-points"
@@ -151,12 +151,41 @@ export default {
 
   computed: {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
+    currentPointInd() {
+      return this.route.findIndex((p) => !p.departureDate)
+    },
+    preparedRoute: {
+      get: function () {
+        return this.route.map((point, ind) => ({
+          ...point,
+          // isCurrent: this.currentPointInd === ind,
+          arrivalDateDisabled: this.isDisabledArrivalDate(ind),
+          departureDateDisabled: this.isDisabledDepartureDate(ind),
+          minArrivalDate: this.getMinArrivalDate(ind),
+        }))
+      },
+      set: function (val) {
+        this.route = val
+      },
+    },
     isInvalidForm() {
       return (
         !this.form.startPositionDate ||
         !this.isValidRoute ||
         !this.isValidClientInfo
       )
+    },
+    isValidDatesInRoute() {
+      let dates = []
+      this.route.forEach((p) => {
+        if (p.arrivalDate) dates.push(new Date(p.arrivalDate))
+        if (p.departureDate) dates.push(new Date(p.departureDate))
+      })
+      if (dates.length < 2) return true
+      for (let i = 1; i < dates.length; i++) {
+        if (dates[i] < dates[i - 1]) return false
+      }
+      return true
     },
     isValidRoute() {
       if (!this.route) return false
@@ -165,7 +194,13 @@ export default {
       const lastPoint = this.route[this.route.length - 1].type === 'unloading'
       const hasAddresses =
         this.route.filter((item) => !!item.address).length === this.route.length
-      return length && firstPoint && lastPoint && hasAddresses
+      return (
+        length &&
+        firstPoint &&
+        lastPoint &&
+        hasAddresses &&
+        this.isValidDatesInRoute
+      )
     },
     isValidClientInfo() {
       return !!this.client?.client
@@ -241,6 +276,27 @@ export default {
   },
 
   methods: {
+    getMinArrivalDate(ind) {
+      if (!ind) return null
+      if (ind > 0 && !!this.route[ind - 1].departureDate)
+        return this.route[ind - 1].departureDate
+      return null
+    },
+    isDisabledArrivalDate(ind) {
+      if (this.currentPointInd === ind && !!this.route[ind].departureDate)
+        return true
+      if (this.currentPointInd !== ind) return true
+      return false
+    },
+    isDisabledDepartureDate(ind) {
+      if (this.currentPointInd === ind && !this.route[ind].arrivalDate)
+        return true
+      if (this.currentPointInd !== -1 && !this.route[ind].arrivalDate)
+        return true
+      if (ind + 1 <= this.route.length - 1 && !!this.route[ind + 1].arrivalDate)
+        return true
+      return false
+    },
     submit() {
       if (!this.directoriesProfile || this.isInvalidForm) return null
       this.$emit('submit', this.formState)

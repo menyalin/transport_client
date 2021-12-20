@@ -30,5 +30,6 @@ export default {
 .title-wrapper {
   overflow: hidden;
   white-space: nowrap;
+  user-select: none;
 }
 </style>

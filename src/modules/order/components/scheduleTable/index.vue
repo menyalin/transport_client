@@ -548,6 +548,7 @@ td {
   top: 0;
   z-index: 4;
   background-color: white;
+  user-select: none;
 }
 
 .block {
