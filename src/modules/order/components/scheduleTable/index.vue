@@ -553,6 +553,7 @@ td {
 
 .block {
   position: absolute;
+  padding-left: 1px;
   /* z-index: 5; */
 }
 

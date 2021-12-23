@@ -7,6 +7,11 @@ export default {
     return {
       item: null,
       loading: false,
+      tmpVal: null,
+      error: {
+        message: null,
+        show: false,
+      },
     }
   },
 
@@ -23,14 +28,31 @@ export default {
     },
   },
   methods: {
+    toggleAlert() {
+      this.error = {
+        show: false,
+        message: null,
+      }
+    },
     async submit(val) {
-      this.loading = true
-      if (this.id) {
-        this.item = await this.service.updateOne(this.id, val)
-      } else this.item = await this.service.create(val)
-      this.loading = false
-      if (this.openInModal) this.$emit('submit', this.item._id)
-      else this.$router.go(-1)
+      this.tmpVal = val
+      try {
+        this.loading = true
+        if (this.id) {
+          this.item = await this.service.updateOne(this.id, val)
+        } else this.item = await this.service.create(val)
+        this.loading = false
+        this.tmpVal = null
+        if (this.openInModal) this.$emit('submit', this.item._id)
+        else this.$router.go(-1)
+      } catch (e) {
+        this.loading = false
+        this.item = this.tmpVal
+        if (e.response.status === 400) {
+          this.error.message = e.response.data
+          this.error.show = true
+        }
+      }
     },
 
     cancel() {

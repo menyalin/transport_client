@@ -64,6 +64,7 @@ export default {
   },
   computed: {
     breakingSchedule() {
+      if (this.order.route[0].arrivalDate) return false
       const roundedPlannedDate = moment(this.order?.route[0]?.plannedDate)
       roundedPlannedDate.hours(roundingHours(roundedPlannedDate.hours()))
       const roundedStartPositionDate = moment(this.order.startPositionDate)

@@ -158,7 +158,6 @@ export default {
       get: function () {
         return this.route.map((point, ind) => ({
           ...point,
-          // isCurrent: this.currentPointInd === ind,
           arrivalDateDisabled: this.isDisabledArrivalDate(ind),
           departureDateDisabled: this.isDisabledDepartureDate(ind),
           minArrivalDate: this.getMinArrivalDate(ind),
