@@ -8,6 +8,24 @@
     />
     <div class="filter-wrapper">
       <app-date-range v-model="settings.period" />
+      <v-select
+        v-model="settings.status"
+        label="Статус"
+        :items="orderStatuses"
+        dense
+        hide-details
+        outlined
+        clearable
+      />
+      <v-autocomplete
+        v-model="settings.truck"
+        dense
+        clearable
+        :items="trucks"
+        outlined
+        hide-details
+        label="Грузовик"
+      />
     </div>
     <div class="table-wrapper">
       <v-data-table
@@ -29,6 +47,14 @@
         </template>
         <template v-slot:[`item.plannedDate`]="{ item }">
           {{ new Date(item.route[0].plannedDate).toLocaleString() }}
+        </template>
+        <template v-slot:[`item.truck`]="{ item }">
+          {{
+            !!item.confirmedCrew.truck &&
+              trucksMap.has(item.confirmedCrew.truck)
+              ? trucksMap.get(item.confirmedCrew.truck).regNum
+              : '-'
+          }}
         </template>
         <template v-slot:[`item.client.client`]="{ item }">
           {{
@@ -66,6 +92,8 @@ export default {
     formName: 'orderList',
     loading: false,
     settings: {
+      truck: null,
+      status: null,
       period: _initPeriod(),
       listOptions: {
         page: 1,
@@ -75,16 +103,43 @@ export default {
     count: 0,
     orders: [],
     headers: [
-      { value: 'plannedDate', text: 'Дата погрузки', sortable: false },
+      {
+        value: 'plannedDate',
+        text: 'Дата погрузки',
+        sortable: false,
+        width: '12rem',
+      },
+      {
+        value: 'truck',
+        text: 'Грузовик',
+        sortable: false,
+        align: 'center',
+        width: '10rem',
+      },
       { value: 'state.status', text: 'Статус', sortable: false },
       { value: 'client.client', text: 'Клиент', sortable: false },
       { value: 'client.num', text: 'Номер заказа клиента', sortable: false },
     ],
   }),
   computed: {
-    ...mapGetters(['directoriesProfile']),
+    ...mapGetters(['directoriesProfile', 'orderStatuses']),
     partnersMap() {
       return this.$store.getters.partnersMap
+    },
+    trucksMap() {
+      return this.$store.getters.trucksMap
+    },
+    trucks() {
+      return this.$store.getters
+        .trucksForSelect({
+          type: 'truck',
+          tkName: this.settings.tkName,
+        })
+        .map((t) => ({
+          ...t,
+          value: t._id,
+          text: t.regNum,
+        }))
     },
   },
   watch: {
@@ -125,6 +180,8 @@ export default {
         }
         this.loading = true
         const data = await service.getList({
+          truck: this.settings.truck,
+          status: this.settings.status,
           profile: this.directoriesProfile,
           startDate: this.settings.period[0],
           endDate: this.settings.period[1],
@@ -149,7 +206,9 @@ export default {
 </script>
 <style scoped>
 .filter-wrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 300px 250px 250px;
+  align-items: start;
 }
 </style>
