@@ -50,9 +50,6 @@ export default {
       },
     }
   },
-  computed: {
-    ...mapGetters([]),
-  },
   watch: {
     item: {
       immediate: true,

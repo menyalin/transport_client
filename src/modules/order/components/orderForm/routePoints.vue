@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ invalid: !isValid }">
+  <div
+    class="route-wrapper"
+    :class="{ invalid: !isValid }"
+  >
     <app-block-title>{{ title }}</app-block-title>
     <draggable v-model="xPoints">
       <transition-group name="route">
@@ -14,6 +17,7 @@
             :confirmed="confirmed"
             :isActive="point.isCurrent"
             :showDeleteBtn="tmpPoints.length > 2"
+            :isTemplate="isTemplate"
             @changePoint="change($event, ind)"
             @delete="deleteHandler"
           />
@@ -51,6 +55,10 @@ export default {
     title: String,
     confirmed: Boolean,
     isValid: Boolean,
+    isTemplate: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -99,13 +107,19 @@ export default {
 }
 </script>
 <style scoped>
+.route-wrapper {
+  padding: 15px;
+  border-radius: 5px;
+}
 .invalid {
-  border: tomato 1px solid;
+  border: tomato 2px solid;
+
+  border-radius: 5px;
 }
 .point-wrapper-outer {
-  border: 1px dotted gray;
+  border: 2px dotted gray;
   border-radius: 5px;
-  margin: 5px;
+  margin: 2px;
 }
 .route-move {
   transition: transform 0.5s;

@@ -5,6 +5,7 @@ import TkNameModule from './tkName'
 import DriverModule from './driver'
 import PartnerModule from './partner'
 import DowntimeModule from './downtime'
+import OrderTemplateModule from './orderTemplate'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
@@ -98,6 +99,7 @@ export default {
         tkNames,
         partners,
         orderStatuses,
+        orderTemplates,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -107,6 +109,7 @@ export default {
       if (tkNames?.length) commit('setTkNames', tkNames)
       if (partners?.length) commit('setPartners', partners)
       if (orderStatuses?.length) commit('setOrderStatuses', orderStatuses)
+      if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
     },
 
     async createCompany({ commit }, payload) {
@@ -205,5 +208,6 @@ export default {
     TkNameModule,
     PartnerModule,
     DowntimeModule,
+    OrderTemplateModule,
   },
 }

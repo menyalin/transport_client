@@ -36,7 +36,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppBlockTitle from './blockTitle.vue'
+import AppBlockTitle from '@/modules/order/components/orderForm/blockTitle.vue'
+
 export default {
   name: 'ReqTransport',
   components: {

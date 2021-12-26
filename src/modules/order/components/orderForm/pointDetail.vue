@@ -29,7 +29,7 @@
         @change="change"
       />
     </div>
-    <div>
+    <div v-if="!isTemplate">
       <app-date-time-input
         v-model="tmpPoint.plannedDate"
         label="Плановая дата"
@@ -89,6 +89,10 @@ export default {
     isActive: Boolean,
     ind: Number,
     showDeleteBtn: {
+      type: Boolean,
+      default: false,
+    },
+    isTemplate: {
       type: Boolean,
       default: false,
     },
