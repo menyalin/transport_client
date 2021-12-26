@@ -79,6 +79,12 @@ export default {
         onlyWithDirectoriesProfile: true,
       },
       {
+        text: 'Шаблоны рейсов',
+        icon: 'mdi-receipt',
+        link: '/profile/order_templates',
+        onlyWithDirectoriesProfile: true,
+      },
+      {
         text: 'Задачи',
         icon: 'mdi-message-reply-text',
         link: '/profile/tasks',

@@ -4,7 +4,6 @@ import CompanyEdit from '../pages/companyEdit'
 import CompanyDetails from '../pages/companyDetails'
 import TaskList from '../pages/taskList'
 
-
 import crewRoutes from './crews'
 import truckRoutes from './trucks'
 import driverRoutes from './drivers'
@@ -13,6 +12,7 @@ import partnerRoutes from './partners'
 import addressRoutes from './address'
 import downtimeRoutes from './downtime'
 import ProfileSettings from '../pages/profileSettings'
+import orderTemplateRoutes from './orderTemplates'
 
 export default [
   {
@@ -29,6 +29,7 @@ export default [
       ...partnerRoutes,
       ...addressRoutes,
       ...downtimeRoutes,
+      ...orderTemplateRoutes,
       { path: 'companies', name: 'companyList', component: Companies },
       {
         path: 'companies/create',
@@ -43,7 +44,6 @@ export default [
       },
       { path: 'tasks', name: 'taskList', component: TaskList },
 
-      
       /// Настройки профиля
       {
         path: 'settings',
