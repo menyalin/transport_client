@@ -33,6 +33,10 @@
         v-model="reqTransport"
         title="Требования к транспорту"
       />
+      <app-cargo-params
+        v-model="cargoParams"
+        title="Параметры груза"
+      />
       <app-route-points
         v-model="route"
         title="Маршрут"
@@ -63,7 +67,7 @@ import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocompl
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppReqTransport from '@/modules/order/components/orderForm/reqTransport'
 import AppRoutePoints from '@/modules/order/components/orderForm/routePoints'
-
+import AppCargoParams from '@/modules/order/components/orderForm/cargoParams'
 export default {
   name: 'OrderTemplateForm',
   components: {
@@ -71,6 +75,7 @@ export default {
     AppPartnerAutocomplete,
     AppRoutePoints,
     AppReqTransport,
+    AppCargoParams,
   },
   props: {
     orderTemplate: {
@@ -88,11 +93,11 @@ export default {
   data() {
     return {
       route: [{ type: 'loading' }, { type: 'unloading' }],
+      cargoParams: {},
       reqTransport: {},
       form: {
         name: null,
         client: null,
-        // reqTransport: {},
       },
     }
   },
@@ -125,6 +130,7 @@ export default {
         company: this.directoriesProfile,
         reqTransport: this.reqTransport,
         route: this.route,
+        cargoParams: this.cargoParams,
       }
     },
   },
@@ -156,6 +162,7 @@ export default {
       this.$emit('cancel')
     },
     setFormFields(val) {
+      if (val.cargoParams) this.cargoParams = val.cargoParams
       if (val.reqTransport) this.reqTransport = val.reqTransport
       if (val.route.length) this.route = val.route
       const keys = Object.keys(this.form)
@@ -166,6 +173,7 @@ export default {
     resetForm() {
       this.reqTransport = Object.assign({})
       this.route = []
+      this.cargoParams = Object.assign({})
       const keys = Object.keys(this.form)
       keys.forEach((key) => {
         this.form[key] = null
@@ -179,7 +187,6 @@ export default {
   margin-bottom: 20px;
   padding: 10px;
   display: grid;
-
   gap: 15px;
 }
 

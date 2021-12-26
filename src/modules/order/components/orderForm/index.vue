@@ -2,12 +2,62 @@
   <v-container>
     <v-row>
       <v-col>
-        <app-buttons-panel
-          :disabled-submit="isInvalidForm || loading"
-          panel-type="form"
-          @cancel="cancel"
-          @submit="submit"
-        />
+        <div class="top-panel">
+          <app-buttons-panel
+            :disabled-submit="isInvalidForm || loading"
+            panel-type="form"
+            @cancel="cancel"
+            @submit="submit"
+          />
+          <div class="template-panel">
+            <v-autocomplete
+              v-model="templateSelector"
+              label="Заполнить из шаблона"
+              clearable
+              outlined
+              :disabled="state.status !== 'needGet'"
+              dense
+              hide-details
+              :items="$store.getters.orderTemplatesForSelect"
+            />
+            <v-btn
+              color="primary"
+              :disabled="isInvalidForm || !!templateSelector"
+              @click="templateDialog = true"
+            >
+              Создать шаблон
+            </v-btn>
+            <v-dialog
+              v-model="templateDialog"
+              persistent
+              max-width="600"
+            >
+              <v-card>
+                <v-card-title> Создать новый шаблон </v-card-title>
+                <v-card-text>
+                  <v-text-field
+                    v-model="templateName"
+                    label="Название шаблона"
+                  />
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn @click="cancelCreateTemplate">
+                    Отмена
+                  </v-btn>
+                  <v-btn
+                    color="secondary"
+                    :disabled="!templateName"
+                    :loading="createTemplateLoading"
+                    @click="createTemplateHandler"
+                  >
+                    Сохранить
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+        </div>
+
         <v-alert
           v-if="!directoriesProfile"
           outlined
@@ -91,6 +141,8 @@
   </v-container>
 </template>
 <script>
+import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
+
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppCargoParams from './cargoParams.vue'
@@ -125,9 +177,15 @@ export default {
   },
   data() {
     return {
+      createTemplateLoading: false,
+      templateDialog: false,
+      templateName: null,
+      templateSelector: null,
       loading: false,
       orderId: null,
-      client: {},
+      client: {
+        client: null,
+      },
       cargoParams: {
         weight: null,
         places: null,
@@ -245,6 +303,25 @@ export default {
     },
   },
   watch: {
+    templateSelector(value) {
+      if (!value) return null
+      const template = this.$store.getters.orderTemplatesMap.get(value)
+      if (!template) return null
+      this.client = Object.assign({}, this.client, { client: template.client })
+      this.reqTransport = Object.assign(
+        {},
+        this.reqTransport,
+        template.reqTransport
+      )
+      const plannedDate = this.route[0].plannedDate
+      this.route = template.route
+      this.route[0].plannedDate = plannedDate
+      this.cargoParams = Object.assign(
+        {},
+        this.cargoParams,
+        template.cargoParams
+      )
+    },
     order: {
       immediate: true,
       handler: function (val) {
@@ -275,6 +352,27 @@ export default {
   },
 
   methods: {
+    async createTemplateHandler() {
+      try {
+        this.createTemplateLoading = true
+        await OrderTemplateService.create(
+          Object.assign({}, this.formState, {
+            name: this.templateName,
+            client: this.formState.client.client,
+          })
+        )
+        this.createTemplateLoading = false
+        this.templateName = null
+        this.templateDialog = false
+      } catch (e) {
+        this.createTemplateLoading = false
+        this.$store.commit('setError', e.message)
+      }
+    },
+    cancelCreateTemplate() {
+      this.templateDialog = false
+      this.templateName = null
+    },
     getMinArrivalDate(ind) {
       if (!ind) return null
       if (ind > 0 && !!this.route[ind - 1].departureDate)
@@ -345,6 +443,17 @@ export default {
 }
 </script>
 <style scoped>
+.top-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.template-panel {
+  display: grid;
+  grid-template-columns: 300px 200px;
+  gap: 15px;
+}
 .dates-position-block {
   display: flex;
   flex-direction: row;

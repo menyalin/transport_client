@@ -47,5 +47,10 @@ export default {
     orderTemplates: ({ orderTemplates }) => orderTemplates,
     orderTemplatesMap: ({ orderTemplates }) =>
       new Map(orderTemplates.map((item) => [item._id, item])),
+    orderTemplatesForSelect: ({ orderTemplates }) =>
+      orderTemplates.map((o) => ({
+        value: o._id,
+        text: o.name,
+      })),
   },
 }
