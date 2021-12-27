@@ -25,6 +25,7 @@
         <v-date-picker
           :value="startDate"
           no-title
+          :first-day-of-week="1"
           :max="endDate"
           color="primary"
           @change="changeStartDate"
@@ -52,6 +53,7 @@
         <v-date-picker
           :value="endDate"
           no-title
+          :first-day-of-week="1"
           :disabled="!startDate"
           :min="startDate"
           color="primary"
