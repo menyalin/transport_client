@@ -50,7 +50,8 @@
         </template>
         <template v-slot:[`item.truck`]="{ item }">
           {{
-            !!item.confirmedCrew.truck &&
+            !!item.confirmedCrew &&
+              !!item.confirmedCrew.truck &&
               trucksMap.has(item.confirmedCrew.truck)
               ? trucksMap.get(item.confirmedCrew.truck).regNum
               : '-'
