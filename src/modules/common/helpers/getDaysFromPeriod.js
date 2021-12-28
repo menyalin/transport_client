@@ -14,6 +14,7 @@ export default (period) => {
   let res = []
   while (startDate.isSameOrBefore(endDate, 'day')) {
     res.push({
+      date: startDate.format('YYYY-MM-DD'),
       title: startDate.format(TITLE_FORMAT),
       isToday: startDate.isSame(today, 'day'),
     })

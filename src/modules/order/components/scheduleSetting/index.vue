@@ -21,6 +21,14 @@
         <v-icon>mdi-arrow-right-bold</v-icon>
       </v-btn>
     </div>
+    <v-btn
+      color="primary"
+      text
+      small
+      to="/orders/group"
+    >
+      Создать группу рейсов
+    </v-btn>
   </div>
 </template>
 <script>
@@ -46,6 +54,8 @@ export default {
 .wrapper {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 .date-settings {
   display: flex;
