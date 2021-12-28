@@ -116,7 +116,7 @@
           />
           <app-confirmed-crew
             v-model="confirmedCrew"
-            :date="form.startPositionDate"
+            :date="dateForCrew"
             :confirmed="orderConfirmed"
             title="Экипаж"
             class="crew"
@@ -224,6 +224,9 @@ export default {
       set: function (val) {
         this.route = val
       },
+    },
+    dateForCrew() {
+      return this.startPositionDate
     },
     isInvalidForm() {
       return (

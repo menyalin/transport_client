@@ -1,8 +1,5 @@
 <template>
-  <v-navigation-drawer
-    permanent
-    expand-on-hover
-  >
+  <v-navigation-drawer permanent>
     <v-list>
       <v-list-item>
         <v-list-item-content>
