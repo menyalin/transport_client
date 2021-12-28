@@ -92,8 +92,8 @@ export default {
       service
         .getListForSchedule({
           profile: getters.directoriesProfile,
-          startDate: getters.schedulePeriod[0],
-          endDate: getters.schedulePeriod[1],
+          startDate: moment(getters.schedulePeriod[0]).toISOString(),
+          endDate: moment(getters.schedulePeriod[1]).toISOString(),
         })
         .then((res) => {
           commit('setOrders', res)

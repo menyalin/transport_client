@@ -226,7 +226,8 @@ export default {
       },
     },
     dateForCrew() {
-      return this.startPositionDate
+      if (this.route[0]?.plannedDate) return this.route[0]?.plannedDate
+      return this.form.startPositionDate
     },
     isInvalidForm() {
       return (
