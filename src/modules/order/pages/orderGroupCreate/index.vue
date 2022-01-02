@@ -1,15 +1,35 @@
 <template>
   <div class="wrapper">
+    <v-alert
+      v-model="showAlert"
+      type="info"
+      class="my-4"
+      dense
+      transition="fade-transition"
+      dismissible
+    >
+      Рейсы успешно созданы
+    </v-alert>
     <div class="settings">
       <app-date-range v-model="period" />
       <v-spacer />
       <div>Будет создано рейсов: {{ totalOrderCount }}</div>
       <v-btn
+        :disabled="!totalOrderCount || loading"
         small
-        class="ml-3"
+        class="mx-3"
         @click="crearTable"
       >
         Очистить таблицу
+      </v-btn>
+      <v-btn
+        :disabled="!totalOrderCount || loading"
+        :loading="loading"
+        color="error"
+        small
+        @click="createOrders"
+      >
+        Создать рейсы
       </v-btn>
     </div>
     <div
@@ -85,8 +105,11 @@
 </template>
 
 <script>
+import moment from 'moment'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import AppDateRange from '@/modules/common/components/dateRange'
+import service from '@/modules/order/services/order.service'
+
 export default {
   name: 'CreateOrderGroup',
   components: {
@@ -94,10 +117,12 @@ export default {
   },
   data() {
     return {
-      period: ['2021-12-27', '2021-12-31'],
+      period: this.initDateRange(),
       templates: [],
       templateSearch: null,
       orders: {},
+      loading: false,
+      showAlert: false,
     }
   },
   computed: {
@@ -118,9 +143,23 @@ export default {
       let val = 0
       const keys = Object.keys(this.orders)
       keys.forEach((k) => {
-        val += parseInt(this.orders[k])
+        val += this.orders[k]
       })
       return val
+    },
+    preparedOrders() {
+      let res = []
+      const keys = Object.keys(this.orders)
+      keys.forEach((key) => {
+        if (this.orders[key] !== 0) {
+          res.push({
+            template: key.split(',')[0],
+            date: key.split(',')[1],
+            count: this.orders[key],
+          })
+        }
+      })
+      return res
     },
   },
   watch: {
@@ -132,14 +171,22 @@ export default {
         this.templateSearch = null
       })
     },
-    orders: {
-      deep: true,
-      handler: function (val) {
-        console.log(val)
-      },
-    },
   },
   methods: {
+    async createOrders() {
+      const res = await this.$confirm('Вы уверены?')
+      if (!res) return null
+      try {
+        this.loading = true
+        await service.createFromTemplate(this.preparedOrders)
+        this.showAlert = true
+        this.crearTable()
+        this.loading = false
+      } catch (e) {
+        this.loading = false
+        this.$store.commit('setError', e.response?.data)
+      }
+    },
     crearTable() {
       this.orders = Object.assign({})
     },
@@ -151,7 +198,17 @@ export default {
       this.templates = this.$store.getters.orderTemplates.map((i) => i._id)
     },
     setOrder(e, key) {
-      this.orders = Object.assign({}, this.orders, { [key]: e.target.value })
+      this.orders = Object.assign({}, this.orders, {
+        [key]: parseInt(e.target.value) || 0,
+      })
+    },
+    initDateRange() {
+      const dateFormat = 'YYYY-MM-DD'
+      const today = moment()
+      return [
+        today.add(1, 'd').format(dateFormat),
+        today.add(8, 'd').format(dateFormat),
+      ]
     },
   },
 }

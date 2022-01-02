@@ -33,6 +33,11 @@ class OrderService {
     return data
   }
 
+  async createFromTemplate(body) {
+    let { data } = await api.post(BASE_PATH + '/from_template', body)
+    return data
+  }
+
   async updateOne(id, body) {
     let { data } = await api.put(BASE_PATH + '/' + id, body)
     return data
