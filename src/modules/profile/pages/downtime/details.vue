@@ -37,9 +37,21 @@ export default {
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],
+  props: {
+    truckId: String,
+    startDate: String,
+  },
   data() {
     return {
       service: service,
+    }
+  },
+  created() {
+    if (this.startDate) {
+      this.item = {
+        startPositionDate: this.startDate,
+        truck: this.truckId,
+      }
     }
   },
 }

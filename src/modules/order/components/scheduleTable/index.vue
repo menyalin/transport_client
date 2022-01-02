@@ -86,7 +86,29 @@
           />
         </template>
       </table>
+      <div>
+        <v-menu
+          v-model="showMenu"
+          :position-x="menuX"
+          :position-y="menuY"
+          absolute
+          offset-y
+        >
+          <v-list>
+            <v-list-item @click="createOrder">
+              <v-list-item-title>Создать рейс</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="createDowntime">
+              <v-list-item-title>Создать "сервис/выходной"</v-list-item-title>
+            </v-list-item>
+            <v-list-item disabled>
+              <v-list-item-title>Создать заметку</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </div>
+
     <v-divider />
     <div class="buffer-wrapper">
       <table
@@ -174,6 +196,11 @@ export default {
     movedNode: null,
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
+    showMenu: false,
+    menuX: 0,
+    menuY: 0,
+    truckId: null,
+    tmpStartDate: null,
   }),
   computed: {
     secInPx() {
@@ -295,29 +322,48 @@ export default {
   },
   methods: {
     dblclickHandler(e, isBuffer) {
-      let truckId = null
+      e.preventDefault()
+      this.truckId = null
       let offsetY
-      if (isBuffer) {
-        offsetY = e.layerY
-      } else {
-        offsetY = e.layerY - this.titleRowHeight
-      }
-
+      if (isBuffer) offsetY = e.layerY
+      else offsetY = e.layerY - this.titleRowHeight
       const offsetX = e.layerX - this.titleColumnWidth
       if (offsetX < 0 || offsetY < 0) return null
-      if (!isBuffer) {
-        const rowInd = Math.floor(offsetY / LINE_HEIGHT)
-        truckId = this.rows[rowInd]._id
-      }
 
       const startDateM = moment(this.period[0]).add(this.secInPx * offsetX, 's')
       startDateM.hour(roundingHours(startDateM.hour()))
+      this.tmpStartDate = startDateM.format('YYYY-MM-DD HH:00')
 
+      if (isBuffer) this.createOrder()
+      else {
+        const rowInd = Math.floor(offsetY / LINE_HEIGHT)
+        this.truckId = this.rows[rowInd]._id
+        this.showMenu = false
+        this.menuX = e.clientX
+        this.menuY = e.clientY
+
+        this.$nextTick(() => {
+          this.showMenu = true
+        })
+      }
+    },
+
+    createDowntime() {
+      this.$router.push({
+        name: 'DowntimeCreate',
+        params: {
+          truckId: this.truckId,
+          startDate: this.tmpStartDate,
+        },
+      })
+    },
+
+    createOrder() {
       this.$router.push({
         name: 'CreateOrder',
         params: {
-          truckId,
-          startDate: startDateM.format('YYYY-MM-DD HH:00'),
+          truckId: this.truckId,
+          startDate: this.tmpStartDate,
         },
       })
     },
