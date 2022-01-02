@@ -30,22 +30,16 @@ export default {
   },
   actions: {
     async getDowntimesForSchedule({ commit, getters }) {
-      try {
-        if (!getters.schedulePeriod) return null
-        if (!getters.directoriesProfile) {
-          commit('setError', 'Профиль настроек не установлен')
-          return null
-        }
-        const data = await service.getListForSchedule({
-          company: getters.directoriesProfile,
-          startDate: getters.schedulePeriod[0],
-          endDate: getters.schedulePeriod[1],
-        })
-        commit('setDowntimes', data)
-      } catch (e) {
-        commit('setLoading', false)
-        commit('setError', e.response?.data?.message)
+      if (!getters.schedulePeriod) return null
+      if (!getters.directoriesProfile) {
+        commit('setError', 'Профиль настроек не установлен')
+        return null
       }
+      service.getListForSchedule({
+        company: getters.directoriesProfile,
+        startDate: moment(getters.schedulePeriod[0]).toISOString(),
+        endDate: moment(getters.schedulePeriod[1]).toISOString(),
+      })
     },
   },
   getters: {

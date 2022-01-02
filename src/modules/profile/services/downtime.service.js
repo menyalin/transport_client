@@ -10,6 +10,10 @@ class DowntimeService {
       store.commit('addToCache', data)
     })
 
+    socket.on('downtimesForSchedule', (data) => {
+      store.commit('setDowntimes', data)
+    })
+
     socket.on('downtime:updated', (data) => {
       store.commit('updateDowntime', data)
       store.commit('addToCache', data)
@@ -38,10 +42,12 @@ class DowntimeService {
   }
 
   async getListForSchedule(params) {
-    let { data } = await api.get(BASE_PATH + '/schedule', { params })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
-    return data
+    socket.emit('downtimesForSchedule', params)
+
+    // let { data } = await api.get(BASE_PATH + '/schedule', { params })
+    // if (!Array.isArray(data))
+    //   throw new Error('Нужен массив!! пришло что-то другое!')
+    // return data
   }
 
   async getById(id) {

@@ -1,6 +1,7 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+import moment from 'moment'
 const BASE_PATH = '/orders'
 
 class OrderService {
@@ -10,10 +11,15 @@ class OrderService {
       store.commit('addToCache', data)
     })
 
+    socket.on('ordersForSchedule', (orders) => {
+      store.commit('setOrders', orders)
+    })
+
     socket.on('order:updated', (data) => {
       store.commit('updateOrder', data)
       store.commit('addToCache', data)
     })
+
     socket.on('order:deleted', (id) => {
       store.commit('deleteOrder', id)
       store.commit('deleteFromCache', id)
@@ -43,11 +49,17 @@ class OrderService {
     return data
   }
 
-  async getListForSchedule(params) {
-    let { data } = await api.get(BASE_PATH + '/schedule', { params })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
-    return data
+  async getListForSchedule() {
+    socket.emit('ordersForSchedule', {
+      profile: store.getters.directoriesProfile,
+      startDate: moment(store.getters.schedulePeriod[0]).toISOString(),
+      endDate: moment(store.getters.schedulePeriod[1]).toISOString(),
+    })
+
+    // let { data } = await api.get(BASE_PATH + '/schedule', { params })
+    // if (!Array.isArray(data))
+    //   throw new Error('Нужен массив!! пришло что-то другое!')
+    // return data
   }
 
   async getList(params) {

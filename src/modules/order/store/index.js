@@ -88,19 +88,7 @@ export default {
         commit('setError', 'Профиль настроек не установлен')
         return null
       }
-
-      service
-        .getListForSchedule({
-          profile: getters.directoriesProfile,
-          startDate: moment(getters.schedulePeriod[0]).toISOString(),
-          endDate: moment(getters.schedulePeriod[1]).toISOString(),
-        })
-        .then((res) => {
-          commit('setOrders', res)
-        })
-        .catch((e) => {
-          commit('setError', e.message)
-        })
+      service.getListForSchedule()
     },
   },
   getters: {
