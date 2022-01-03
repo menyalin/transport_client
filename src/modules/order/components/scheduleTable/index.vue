@@ -55,42 +55,42 @@
           />
         </tr>
         <app-note
-          v-for="note of notes"
+          v-for="note of filteredNotes"
           :key="note._id"
+          :note="note"
           :styles="notesStyle[note._id]"
           @dragover.prevent
         />
-        <template v-if="tableWidth">
-          <div
-            v-for="item of allItems"
-            :key="item._id"
-            tag="div"
-            class="block"
-            :draggable="
-              item.itemType === 'order' ? isDraggableOrder(item) : false
-            "
-            :style="getStylesForOrder(item)"
-            @dragstart="dragStartHandler($event, item._id)"
-            @dragend="dragEndHandler($event, item._id)"
-            @dragover="disabledZone"
-          >
-            <app-order-cell
-              v-if="item.itemType === 'order'"
-              :orderId="item._id"
-            />
-            <app-downtime-cell
-              v-else
-              :itemId="item._id"
-            />
-          </div>
 
-          <app-bg-grid
-            v-if="titleColumnWidth"
-            :leftShift="titleColumnWidth"
-            :tableWidth="tableWidth + titleColumnWidth"
-            :days="columns"
+        <div
+          v-for="item of allItems"
+          :key="item._id"
+          tag="div"
+          class="block"
+          :draggable="
+            item.itemType === 'order' ? isDraggableOrder(item) : false
+          "
+          :style="getStylesForOrder(item)"
+          @dragstart="dragStartHandler($event, item._id)"
+          @dragend="dragEndHandler($event, item._id)"
+          @dragover="disabledZone"
+        >
+          <app-order-cell
+            v-if="item.itemType === 'order'"
+            :orderId="item._id"
           />
-        </template>
+          <app-downtime-cell
+            v-else
+            :itemId="item._id"
+          />
+        </div>
+
+        <app-bg-grid
+          v-if="titleColumnWidth"
+          :leftShift="titleColumnWidth"
+          :tableWidth="tableWidth + titleColumnWidth"
+          :days="columns"
+        />
       </table>
       <div>
         <v-menu
@@ -216,6 +216,12 @@ export default {
         text: 'Какое-то примечание',
         startPositionDate: '2022-01-04 18:00',
       },
+      {
+        _id: '1214',
+        truck: '61ab26381c1d0f0e3fbae931',
+        text: 'ТУТ БУДЕТ БОЛЬШОЙ КОММЕНТАРИЙ',
+        startPositionDate: '2022-01-03 18:00',
+      },
     ],
   }),
   computed: {
@@ -294,6 +300,9 @@ export default {
     },
     unDistributedOrders() {
       return this.filteredOrders.filter((i) => !i?.truckId)
+    },
+    filteredNotes() {
+      return this.notes.filter((i) => i.truck).filter(this.notesFilterByPeriod)
     },
     filteredDountimes() {
       return this.$store.getters.downtimesForSchedule.map((item) => ({
@@ -395,12 +404,18 @@ export default {
         },
       })
     },
+    notesFilterByPeriod(item) {
+      return (
+        moment(item.startPositionDate).isSameOrAfter(this.period[0]) &&
+        moment(this.period[1]).add('24', 'h').isAfter(item.startPositionDate)
+      )
+    },
 
     ordersFilterByPeriod(item) {
       return !(
         moment(item.endPositionDate).isBefore(this.period[0]) ||
         moment(this.period[1])
-          .add('24', 'd')
+          .add('24', 'h')
           .isSameOrBefore(item.startPositionDate)
       )
     },
@@ -511,7 +526,11 @@ export default {
       e.target.style.opacity = 1
       this.overRowInd = null
       this.draggedOrderId = null
-      if (e.dataTransfer.dropEffect === 'none')
+      console.log(e.dataTransfer)
+      if (
+        e.dataTransfer.dropEffect === 'none' ||
+        e.dataTransfer.mozUserCancelled
+      )
         this.$emit('endDragOrder', orderId)
     },
 

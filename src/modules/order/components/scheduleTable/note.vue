@@ -4,7 +4,7 @@
     :style="styles"
     @dblclick="dblCLickHandler"
   >
-    тут будет напоминание
+    {{ note.text }}
   </span>
 </template>
 <script>
@@ -13,6 +13,11 @@ export default {
   props: {
     styles: {
       type: Object,
+      required: true,
+    },
+    note: {
+      type: Object,
+      required: true,
     },
   },
   methods: {
@@ -25,6 +30,8 @@ export default {
 <style scoped>
 .note-wrapper {
   position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
   user-select: none;
   z-index: 0;
   font-size: 12px;

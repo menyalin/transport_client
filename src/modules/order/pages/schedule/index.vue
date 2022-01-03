@@ -66,6 +66,7 @@ export default {
       }
       this.$store.dispatch('getOrdersForSchedule')
       this.$store.dispatch('getDowntimesForSchedule')
+      this.$store.dispatch('getNotesForSchedule')
     },
     incDate(count) {
       this.$store.commit('incScheduleDate', count)
@@ -82,6 +83,7 @@ export default {
       service.disable({ orderId, state: false })
     },
     updateOrderHandler({ orderId, truckId, startDate }) {
+      console.log('move order')
       const editedOrder = this.$store.getters.ordersForSchedule.find(
         (item) => item._id == orderId
       )
