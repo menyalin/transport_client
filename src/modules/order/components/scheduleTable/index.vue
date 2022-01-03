@@ -107,7 +107,7 @@
             <v-list-item @click="createDowntime">
               <v-list-item-title>Создать "сервис/выходной"</v-list-item-title>
             </v-list-item>
-            <v-list-item disabled>
+            <v-list-item @click="createScheduleNote">
               <v-list-item-title>Создать заметку</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -209,27 +209,12 @@ export default {
     menuY: 0,
     truckId: null,
     tmpStartDate: null,
-    notes: [
-      {
-        _id: '1213',
-        truck: '61ab26381c1d0f0e3fbae931',
-        text: 'Какое-то примечание',
-        startPositionDate: '2022-01-04 18:00',
-      },
-      {
-        _id: '1214',
-        truck: '61ab26381c1d0f0e3fbae931',
-        text: 'ТУТ БУДЕТ БОЛЬШОЙ КОММЕНТАРИЙ',
-        startPositionDate: '2022-01-03 18:00',
-      },
-    ],
   }),
   computed: {
     notesStyle() {
       const styles = {}
-      this.notes.forEach((note) => {
+      this.filteredNotes.forEach((note) => {
         styles[note._id] = {
-          'background-color': 'red',
           left:
             this.getLeftShiftForOrder({
               startPositionDate: note.startPositionDate,
@@ -302,7 +287,7 @@ export default {
       return this.filteredOrders.filter((i) => !i?.truckId)
     },
     filteredNotes() {
-      return this.notes.filter((i) => i.truck).filter(this.notesFilterByPeriod)
+      return this.$store.getters.notesForSchedule
     },
     filteredDountimes() {
       return this.$store.getters.downtimesForSchedule.map((item) => ({
@@ -398,6 +383,15 @@ export default {
     createOrder() {
       this.$router.push({
         name: 'CreateOrder',
+        params: {
+          truckId: this.truckId,
+          startDate: this.tmpStartDate,
+        },
+      })
+    },
+    createScheduleNote() {
+      this.$router.push({
+        name: 'ScheduleNoteCreate',
         params: {
           truckId: this.truckId,
           startDate: this.tmpStartDate,
@@ -526,7 +520,7 @@ export default {
       e.target.style.opacity = 1
       this.overRowInd = null
       this.draggedOrderId = null
-      console.log(e.dataTransfer)
+
       if (
         e.dataTransfer.dropEffect === 'none' ||
         e.dataTransfer.mozUserCancelled

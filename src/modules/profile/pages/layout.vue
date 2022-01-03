@@ -55,6 +55,12 @@ export default {
         onlyWithDirectoriesProfile: true,
       },
       {
+        text: 'Заметки в распределении',
+        icon: 'mdi-note-multiple',
+        link: '/profile/schedule_notes',
+        onlyWithDirectoriesProfile: true,
+      },
+      {
         text: 'Партнеры',
         icon: 'mdi-emoticon-devil',
         link: '/profile/partners',

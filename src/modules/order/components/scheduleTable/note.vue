@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     dblCLickHandler() {
-      console.log('dbl')
+      this.$router.push('/profile/schedule_notes/' + this.note._id)
     },
   },
 }
@@ -39,5 +39,6 @@ export default {
   line-height: 16px;
   font-weight: 400;
   font-style: normal;
+  background-color: rgba(202, 123, 255, 0.493);
 }
 </style>

@@ -6,6 +6,7 @@ import DriverModule from './driver'
 import PartnerModule from './partner'
 import DowntimeModule from './downtime'
 import OrderTemplateModule from './orderTemplate'
+import ScheduleNotes from './scheduleNote'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
@@ -209,5 +210,6 @@ export default {
     PartnerModule,
     DowntimeModule,
     OrderTemplateModule,
+    ScheduleNotes,
   },
 }

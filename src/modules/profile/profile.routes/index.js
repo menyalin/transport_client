@@ -4,15 +4,16 @@ import CompanyEdit from '../pages/companyEdit'
 import CompanyDetails from '../pages/companyDetails'
 import TaskList from '../pages/taskList'
 
-import crewRoutes from './crews'
-import truckRoutes from './trucks'
-import driverRoutes from './drivers'
-import tkNameRoutes from './tkNames'
-import partnerRoutes from './partners'
-import addressRoutes from './address'
-import downtimeRoutes from './downtime'
+import crewRoutes from './crews.js'
+import truckRoutes from './trucks.js'
+import driverRoutes from './drivers.js'
+import tkNameRoutes from './tkNames.js'
+import partnerRoutes from './partners.js'
+import addressRoutes from './address.js'
+import downtimeRoutes from './downtime.js'
 import ProfileSettings from '../pages/profileSettings'
-import orderTemplateRoutes from './orderTemplates'
+import orderTemplateRoutes from './orderTemplates.js'
+import scheduleNoteRoutes from './scheduleNotes.js'
 
 export default [
   {
@@ -30,6 +31,7 @@ export default [
       ...addressRoutes,
       ...downtimeRoutes,
       ...orderTemplateRoutes,
+      ...scheduleNoteRoutes,
       { path: 'companies', name: 'companyList', component: Companies },
       {
         path: 'companies/create',
