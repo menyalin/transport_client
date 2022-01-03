@@ -54,6 +54,12 @@
             :key="column.title"
           />
         </tr>
+        <app-note
+          v-for="note of notes"
+          :key="note._id"
+          :styles="notesStyle[note._id]"
+          @dragover.prevent
+        />
         <template v-if="tableWidth">
           <div
             v-for="item of allItems"
@@ -63,7 +69,7 @@
             :draggable="
               item.itemType === 'order' ? isDraggableOrder(item) : false
             "
-            :style="item.itemStyles"
+            :style="getStylesForOrder(item)"
             @dragstart="dragStartHandler($event, item._id)"
             @dragend="dragEndHandler($event, item._id)"
             @dragover="disabledZone"
@@ -165,6 +171,7 @@ import appTruckTitleCell from './truckTitleCell.vue'
 import appOrderCell from './orderCell.vue'
 import appDowntimeCell from './downtimeCell.vue'
 import appBgGrid from './bgGrid'
+import appNote from './note.vue'
 
 export default {
   name: 'ScheduleTable',
@@ -173,6 +180,7 @@ export default {
     appDowntimeCell,
     appOrderCell,
     appBgGrid,
+    appNote,
   },
   props: {
     rows: {
@@ -201,8 +209,34 @@ export default {
     menuY: 0,
     truckId: null,
     tmpStartDate: null,
+    notes: [
+      {
+        _id: '1213',
+        truck: '61ab26381c1d0f0e3fbae931',
+        text: 'Какое-то примечание',
+        startPositionDate: '2022-01-04 18:00',
+      },
+    ],
   }),
   computed: {
+    notesStyle() {
+      const styles = {}
+      this.notes.forEach((note) => {
+        styles[note._id] = {
+          'background-color': 'red',
+          left:
+            this.getLeftShiftForOrder({
+              startPositionDate: note.startPositionDate,
+              needRoundTime: true,
+            }) + 'px',
+          top:
+            this.getTopShiftForOrder({ truckId: note.truck }) +
+            (LINE_HEIGHT - 3) / 2 +
+            'px',
+        }
+      })
+      return styles
+    },
     secInPx() {
       return getSecInPx({
         lengthInPx: this.tableWidth,
@@ -226,7 +260,7 @@ export default {
         case this.tableWidth > 500:
           return this.getPeriodFromDate(this.date, 0, 0, 1)
         default:
-          return this.getPeriodFromDate(this.date, -1, 3, 5)
+          return this.getPeriodFromDate(this.date, 0, 0, 1)
       }
     },
     columns() {
@@ -254,10 +288,6 @@ export default {
           (a, b) =>
             new Date(a.startPositionDate) - new Date(b.startPositionDate)
         )
-        .map((item) => ({
-          ...item,
-          itemStyles: this.getStylesForOrder(item),
-        }))
     },
     distributedOrders() {
       return this.filteredOrders.filter((i) => !!i?.truckId)
@@ -316,9 +346,7 @@ export default {
   },
   mounted() {
     window.addEventListener('resize', this.resizeScreen)
-    this.$nextTick(() => {
-      this.resizeScreen()
-    })
+    this.resizeScreen()
   },
   methods: {
     dblclickHandler(e, isBuffer) {
@@ -367,6 +395,7 @@ export default {
         },
       })
     },
+
     ordersFilterByPeriod(item) {
       return !(
         moment(item.endPositionDate).isBefore(this.period[0]) ||
@@ -391,13 +420,12 @@ export default {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
       this.titleRowHeight = this.$refs.rowTitleColumn.offsetHeight
-      this.tableWidth =
-        this.$refs.tableBody.offsetWidth - this.$refs.rowTitleColumn.offsetWidth
+      this.tableWidth = this.$refs.tableBody.offsetWidth - this.titleColumnWidth
     },
 
     getLeftShiftForOrder({ startPositionDate, needRoundTime }) {
       // Округляем время отображения до 00, 06, 12, 18
-      if (!this.$refs.rowTitleColumn) return null
+      if (!this.tableWidth) return null
 
       let sPositionMoment
       // У заказа нет поля type, оно только у dowtime
@@ -414,7 +442,7 @@ export default {
       const sOrder = sPositionMoment.unix()
       let leftShift = 0
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
-      return leftShift / this.secInPx + this.$refs.rowTitleColumn.offsetWidth
+      return leftShift / this.secInPx + this.titleColumnWidth
     },
 
     getTopShiftForOrder({ truckId, _id }) {
@@ -475,25 +503,21 @@ export default {
       dt.dropEffect = 'move'
       dt.effectAllowed = 'move'
       this.draggedOrderId = id
-      this.$emit('startDragOrder', id)
-      // e.target.style.zIndex = 1
-
-      // setTimeout(() => (e.target.className = 'invisible'), 0)
       e.target.style.opacity = 0.5
+      this.$emit('startDragOrder', id)
     },
 
     dragEndHandler(e, orderId) {
       e.target.style.opacity = 1
       this.overRowInd = null
-      if (this.draggedOrderId) {
-        this.draggedOrderId = null
+      this.draggedOrderId = null
+      if (e.dataTransfer.dropEffect === 'none')
         this.$emit('endDragOrder', orderId)
-      }
     },
 
     dragOverHandler(e) {
       const y = e.layerY
-      const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
+      const x = e.layerX - this.titleColumnWidth
       if (x < 0 || y < 0 || e.dataTransfer.effectAllowed === 'none') {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
@@ -505,7 +529,7 @@ export default {
     },
     dropOnBufferHandler(e) {
       this.draggedOrderId = null
-      const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
+      const x = e.layerX - this.titleColumnWidth
       const startDate = moment.unix(
         moment(this.period[0]).unix() + x * this.secInPx
       )
@@ -525,7 +549,7 @@ export default {
       )
         return null
 
-      const x = e.layerX - this.$refs.rowTitleColumn.scrollWidth
+      const x = e.layerX - this.titleColumnWidth
 
       const startDate = moment.unix(
         moment(this.period[0]).unix() + x * this.secInPx

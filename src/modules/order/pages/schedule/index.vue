@@ -93,7 +93,6 @@ export default {
           'setError',
           'Начало рейса не может быть позднее планируемой даты завершения'
         )
-        service.disable({ orderId, state: false })
         return null
       }
 
