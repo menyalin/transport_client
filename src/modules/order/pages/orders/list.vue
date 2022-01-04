@@ -184,8 +184,8 @@ export default {
           truck: this.settings.truck,
           status: this.settings.status,
           profile: this.directoriesProfile,
-          startDate: this.settings.period[0],
-          endDate: this.settings.period[1],
+          startDate: moment(this.settings.period[0]).toISOString(),
+          endDate: moment(this.settings.period[1]).toISOString(),
           skip:
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),

@@ -137,8 +137,8 @@ export default {
         this.loading = true
         const data = await service.getList({
           company: this.directoriesProfile,
-          startDate: this.settings.period[0],
-          endDate: this.settings.period[1],
+          startDate: moment(this.settings.period[0]).toISOString(),
+          endDate: moment(this.settings.period[1]).toISOString(),
           truckFilter: this.settings.truckFilter,
           skip:
             this.settings.listOptions.itemsPerPage *
