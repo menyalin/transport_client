@@ -59,19 +59,20 @@ export default {
       service.disable({ orderId, state: false })
     },
     updateOrderHandler({ orderId, truckId, startDate }) {
-      const editedOrder = this.$store.getters.ordersForSchedule.find(
-        (item) => item._id == orderId
-      )
-      if (
-        !!editedOrder.lastPlannedDate &&
-        new Date(startDate) > new Date(editedOrder.lastPlannedDate)
-      ) {
-        this.$store.commit(
-          'setError',
-          'Начало рейса не может быть позднее планируемой даты завершения'
-        )
-        return null
-      }
+      // const editedOrder = this.$store.getters.ordersForSchedule.find(
+      //   (item) => item._id == orderId
+      // )
+      // if (
+      //   !!editedOrder.lastPlannedDate &&
+      //   new Date(startDate) > new Date(editedOrder.lastPlannedDate)
+      // ) {
+      //   this.$store.commit(
+      //     'setError',
+      //     'Начало рейса не может быть позднее планируемой даты завершения'
+      //   )
+      //   service.disable({ orderId, state: false })
+      //   return null
+      // }
       service.moveOrderInSchedule({
         orderId,
         truck: truckId,
