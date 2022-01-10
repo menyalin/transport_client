@@ -9,11 +9,26 @@
           >
             <v-icon> mdi-cached </v-icon>
           </v-btn>
+          <v-text-field
+            v-model.number="settings.dayCount"
+            label="Кол-во дней"
+            hideDetails
+            outlined
+            dense
+          />
+          <v-text-field
+            v-model.trim="settings.search"
+            label="Поиск"
+            hideDetails
+            outlined
+            dense
+          />
         </div>
         <v-data-table
           :headers="headers"
           :items="rows"
           :loading="loading"
+          :search="settings.search"
           fixed-header
           height="76vh"
           dense
@@ -38,7 +53,12 @@ export default {
   name: 'DaysControl',
   data() {
     return {
+      formName: 'DaysControlReport',
       loading: false,
+      settings: {
+        dayCount: 30,
+        search: null,
+      },
       rows: [],
       headers: [
         { value: 'tkName', text: 'ТК' },
@@ -51,8 +71,28 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile']),
   },
+  watch: {
+    ['settings.dayCount']: {
+      deep: true,
+      handler: function () {
+        this.getData()
+      },
+    },
+  },
   async mounted() {
     await this.getData()
+  },
+  created() {
+    if (this.$store.getters.formSettingsMap.has(this.formName)) {
+      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: this.settings,
+    })
+    next()
   },
   methods: {
     dblClickRow(_, { item }) {
@@ -62,10 +102,17 @@ export default {
       this.loading = true
       this.rows = await ReportService.daysControl({
         profile: this.directoriesProfile,
+        days: this.settings.dayCount,
       })
       this.loading = false
     },
   },
 }
 </script>
-<style></style>
+<style scoped>
+#report-settings {
+  display: grid;
+  grid-template-columns: 50px 150px 300px;
+  gap: 10px;
+}
+</style>

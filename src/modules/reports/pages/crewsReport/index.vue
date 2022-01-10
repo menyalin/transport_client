@@ -147,10 +147,6 @@ export default {
   },
   computed: {
     ...mapGetters(['directoriesProfile', 'tkNames']),
-    // _tableRows() {
-    //   const rows = getRowsFromCrews(this.filteredCrews, this.settings.group)
-    //   return rows
-    // },
     analiticItems() {
       return this.groupItems.filter(
         (item) => item.value !== this.settings.group
