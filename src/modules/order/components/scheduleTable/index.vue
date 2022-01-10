@@ -589,13 +589,13 @@ export default {
   --table-border: rgb(0, 0, 0) 1px solid;
   width: 100%;
   box-sizing: border-box;
-  max-height: 75vh;
+  max-height: 77vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 .buffer-wrapper {
   width: 100%;
-  margin: 8px;
+  margin-top: 5px;
   box-sizing: border-box;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -609,12 +609,12 @@ table {
   border-collapse: collapse;
   box-sizing: border-box;
   position: relative;
-  z-index: 0;
+  z-index: 1;
   user-select: auto;
 }
 td {
-  border-left: var(--table-border);
-  border-right: var(--table-border);
+  /* border-left: var(--table-border);
+  border-right: var(--table-border); */
   border-bottom: 1px dotted grey;
 }
 .head-row {
@@ -642,6 +642,6 @@ td {
   box-sizing: border-box;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   font-size: 0.75rem;
-  border-bottom: 1px dotted grey;
+  border-bottom: 2px solid grey;
 }
 </style>

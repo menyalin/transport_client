@@ -34,7 +34,14 @@
         fill="green"
         opacity="0.08"
       />
-
+      <line
+        :x1="ind * dayWidth + leftShift"
+        y1="0"
+        :x2="ind * dayWidth + leftShift"
+        y2="100%"
+        stroke="black"
+        opacity="1"
+      />
       <line
         :x1="dayWidth / 4 + ind * dayWidth + leftShift"
         y1="0"
