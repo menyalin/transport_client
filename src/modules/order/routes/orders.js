@@ -1,10 +1,13 @@
-import ListOrder from '../pages/orders/list'
-// import CreateOrder from '../pages/orders/create'
+// import ListOrder from '../pages/orders/list'
 import DetailsOrder from '../pages/orders/details'
 import CreateOrderGroup from '../pages/orderGroupCreate/index.vue'
 
 export default [
-  { path: '/', name: 'ListOrder', component: ListOrder },
+  {
+    path: '/',
+    name: 'ListOrder',
+    component: () => import('../pages/orders/list'),
+  },
   { path: 'create', name: 'CreateOrder', component: DetailsOrder, props: true },
   {
     path: 'group',

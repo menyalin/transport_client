@@ -1,6 +1,6 @@
 import ReportLayout from '../pages/layout'
-import CrewsReport from '../pages/crewsReport'
-import DaysControl from '../pages/daysControl'
+// import CrewsReport from '../pages/crewsReport'
+// import DaysControl from '../pages/daysControl'
 
 export default [
   {
@@ -10,8 +10,16 @@ export default [
       authRequired: true,
     },
     children: [
-      { path: 'crews', name: 'CrewReport', component: CrewsReport },
-      { path: 'daysControl', name: 'DaysControl', component: DaysControl },
+      {
+        path: 'crews',
+        name: 'CrewReport',
+        component: () => import('../pages/crewsReport'),
+      },
+      {
+        path: 'daysControl',
+        name: 'DaysControl',
+        component: () => import('../pages/daysControl'),
+      },
     ],
   },
 ]

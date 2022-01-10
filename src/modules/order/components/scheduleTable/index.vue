@@ -481,7 +481,8 @@ export default {
       }
       const dutation = endPoint.unix() - startPoint.unix()
       return (
-        (dutation > SEC_IN_SIX_HOURS || isCompleted
+        (dutation > SEC_IN_SIX_HOURS ||
+        (isCompleted && !this.$store.getters.onlyPlannedDates)
           ? dutation
           : SEC_IN_SIX_HOURS) / this.secInPx
       )
