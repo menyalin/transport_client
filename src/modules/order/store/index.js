@@ -45,8 +45,12 @@ export default {
     ],
     orderStatuses: [],
     scheduleDate: moment().format('YYYY-MM-DD'),
+    onlyPlannedDates: false,
   },
   mutations: {
+    changeOnlyPlannedDates(state) {
+      state.onlyPlannedDates = !state.onlyPlannedDates
+    },
     setPeriod(state, payload) {
       state.period = payload
     },
@@ -93,15 +97,17 @@ export default {
   },
   getters: {
     pointTypes: ({ pointTypes }) => pointTypes,
-    ordersForSchedule: ({ orders }, { schedulePeriod }) =>
+    ordersForSchedule: ({ orders }, { schedulePeriod, onlyPlannedDates }) =>
       orders
         .map((item) => ({
           _id: item._id,
           company: item.company,
-          needRoundTime: !item.route[0].arrivalDate,
+          needRoundTime: !item.route[0].arrivalDate || onlyPlannedDates,
           isCompleted: !!item.route[item.route.length - 1]?.departureDate,
           startPositionDate: _getStartPositionDate(item),
-          endPositionDate: _getLastPositionDate(item), // для определения длины блока
+          endPositionDate: onlyPlannedDates
+            ? _getStartPositionDate(item)
+            : _getLastPositionDate(item), // для определения длины блока
           lastPlannedDate: _getLastPlannedDate(item), // для проверки при перемещении
           truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
@@ -129,5 +135,6 @@ export default {
     orderStatusesMap: ({ orderStatuses }) =>
       new Map(orderStatuses.map((item) => [item.value, item.text])),
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
+    onlyPlannedDates: ({ onlyPlannedDates }) => onlyPlannedDates,
   },
 }

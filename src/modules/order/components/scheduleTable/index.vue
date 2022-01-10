@@ -430,7 +430,6 @@ export default {
       if (!this.tableWidth) return null
 
       let sPositionMoment
-      // У заказа нет поля type, оно только у dowtime
       if (needRoundTime) {
         sPositionMoment = moment(startPositionDate)
         sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
