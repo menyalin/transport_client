@@ -4,11 +4,8 @@
       <v-col>
         <v-data-table
           dense
-          hide-default-footer
           :headers="headers"
           :items="activeConnection"
-          :items-per-page="5"
-          class="elevation-1"
         >
           <template v-slot:top>
             <v-subheader>Active connections</v-subheader>
@@ -38,7 +35,7 @@ export default {
     })
     socket.emit('getActiveUsers')
   },
-  
+
   beforeDestroy() {
     socket.off('activeUsers')
   },
