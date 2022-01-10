@@ -161,7 +161,7 @@ export default {
 .order-wrapper {
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
   border: 1px dotted rgb(80, 80, 80);
   display: flex;
   flex-direction: column;

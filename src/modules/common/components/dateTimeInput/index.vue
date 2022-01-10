@@ -8,6 +8,7 @@
         type="date"
         :min="minDateValue"
         :label="label"
+        :dense="dense"
         :value="dateStr"
         :error="Array.isArray(errorMessages) && errorMessages.length >= 1"
         class="date-input pt-0 mt-0"
@@ -16,7 +17,6 @@
         :disabled="disabled"
         :readonly="readonly"
         :hide-details="hideDetails"
-        dense
         @click:prepend-inner="setDate"
         @change="changeDate"
       />
@@ -29,7 +29,7 @@
         :hide-details="hideDetails"
         :readonly="readonly"
         :disabled="timeInputDisabled || disabled"
-        dense
+        :dense="dense"
         label="Время"
         :outlined="outlined"
         @change="changeTime"
@@ -56,6 +56,10 @@ export default {
   props: {
     value: {
       type: [String, Date],
+    },
+    dense: {
+      type: Boolean,
+      default: true,
     },
     hideDetails: {
       type: Boolean,

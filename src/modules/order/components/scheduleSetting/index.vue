@@ -1,69 +1,59 @@
 <template>
-  <div class="wrapper ma-2">
-    <div class="date-settings">
-      <v-btn
-        icon
-        @click="$emit('incDate', -1)"
-      >
-        <v-icon>mdi-arrow-left-bold</v-icon>
-      </v-btn>
-      <app-date-time-input
-        :value="date"
-        hideDetails
-        hideTimeInput
-        hidePrependIcon
-        @change="changeDate"
-      />
-      <v-btn
-        icon
-        @click="$emit('incDate', 1)"
-      >
-        <v-icon>mdi-arrow-right-bold</v-icon>
-      </v-btn>
-    </div>
+  <div class="date-settings">
     <v-btn
-      color="primary"
-      text
+      icon
       small
-      to="/orders/group"
+      @click="incDate(-1)"
     >
-      Создать группу рейсов
+      <v-icon>mdi-arrow-left-bold</v-icon>
+    </v-btn>
+    <app-date-time-input
+      :value="date"
+      hideDetails
+      dense
+      hideTimeInput
+      hidePrependIcon
+      @change="setDate"
+    />
+    <v-btn
+      icon
+      small
+      @click="incDate(1)"
+    >
+      <v-icon>mdi-arrow-right-bold</v-icon>
     </v-btn>
   </div>
 </template>
 <script>
+import moment from 'moment'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 export default {
   name: 'ScheduleSettings',
   components: {
     AppDateTimeInput,
   },
-  props: {
-    date: {
-      type: String,
+  computed: {
+    date() {
+      return this.$store.getters.scheduleDate
     },
   },
   methods: {
-    changeDate(val) {
-      this.$emit('setDate', val)
+    incDate(count) {
+      this.$store.commit('incScheduleDate', count)
+    },
+    setDate(date) {
+      if (!date)
+        this.$store.commit('setScheduleDate', moment().format('YYYY-MM-DD'))
+      else this.$store.commit('setScheduleDate', date)
     },
   },
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
 .date-settings {
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin-left: 20px;
-  margin-top: 10px;
-}
-.date-settings > * {
-  margin: 5px;
 }
 </style>

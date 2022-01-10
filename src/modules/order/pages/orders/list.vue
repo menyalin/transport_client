@@ -26,6 +26,14 @@
         hide-details
         label="Грузовик"
       />
+      <v-btn
+        color="primary"
+        text
+        small
+        to="/orders/group"
+      >
+        Создать группу рейсов
+      </v-btn>
     </div>
     <div class="table-wrapper">
       <v-data-table

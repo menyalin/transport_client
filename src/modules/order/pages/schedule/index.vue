@@ -1,39 +1,23 @@
 <template>
-  <div>
-    <app-schedule-setting
-      v-if="showSetting"
-      :date="date"
-      @incDate="incDate"
-      @setDate="setDate"
-    />
-    <app-schedule-table
-      :rows="scheduleRows"
-      :date="date"
-      @startDragOrder="startDragOrder"
-      @endDragOrder="endDragOrder"
-      @updateOrder="updateOrderHandler"
-      @showSetting="showSetting = !showSetting"
-    />
-  </div>
+  <app-schedule-table
+    :rows="scheduleRows"
+    @startDragOrder="startDragOrder"
+    @endDragOrder="endDragOrder"
+    @updateOrder="updateOrderHandler"
+  />
 </template>
 <script>
-import moment from 'moment'
-
 import AppScheduleTable from '../../components/scheduleTable'
-import AppScheduleSetting from '../../components/scheduleSetting'
-import mockOrders from './mockOrders'
 import service from '../../services/order.service'
 
 export default {
   name: 'Schedule',
   components: {
     AppScheduleTable,
-    AppScheduleSetting,
   },
   data() {
     return {
-      orders: mockOrders,
-      showSetting: true,
+      orders: [],
       titleColumnWidth: null,
     }
   },
@@ -68,14 +52,6 @@ export default {
       this.$store.dispatch('getDowntimesForSchedule')
       this.$store.dispatch('getNotesForSchedule')
     },
-    incDate(count) {
-      this.$store.commit('incScheduleDate', count)
-    },
-    setDate(date) {
-      if (!date)
-        this.$store.commit('setScheduleDate', moment().format('YYYY-MM-DD'))
-      else this.$store.commit('setScheduleDate', date)
-    },
     startDragOrder(orderId) {
       service.disable({ orderId, state: true })
     },
@@ -96,7 +72,6 @@ export default {
         )
         return null
       }
-
       service.moveOrderInSchedule({
         orderId,
         truck: truckId,

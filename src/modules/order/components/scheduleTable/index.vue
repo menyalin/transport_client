@@ -14,14 +14,7 @@
             ref="rowTitleColumn"
             class="text-center"
             :style="{ width: initTitleWidth }"
-          >
-            <v-icon
-              small
-              @click="$emit('showSetting')"
-            >
-              mdi-cog
-            </v-icon>
-          </td>
+          />
           <td
             v-for="column of columns"
             :key="column.title"
@@ -190,9 +183,6 @@ export default {
     orders: {
       type: Array,
     },
-    date: {
-      type: String,
-    },
   },
   data: () => ({
     tableWidth: 0,
@@ -211,6 +201,9 @@ export default {
     tmpStartDate: null,
   }),
   computed: {
+    date() {
+      return this.$store.getters.scheduleDate
+    },
     notesStyle() {
       const styles = {}
       this.filteredNotes.forEach((note) => {
@@ -595,12 +588,10 @@ export default {
 .table-wrapper {
   --table-border: rgb(0, 0, 0) 1px solid;
   width: 100%;
-  margin: 8px;
   box-sizing: border-box;
   max-height: 75vh;
   overflow-y: scroll;
   overflow-x: hidden;
-  border-top: var(--table-border);
 }
 .buffer-wrapper {
   width: 100%;

@@ -12,6 +12,7 @@
     >
       s4log
     </v-toolbar-title>
+    <slot />
     <v-spacer />
     <v-btn
       v-if="isLoggedIn && directoriesProfile"
