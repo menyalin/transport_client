@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+
 import AppBlockTitle from './blockTitle.vue'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 export default {

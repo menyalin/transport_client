@@ -26,6 +26,14 @@
         hide-details
         label="Грузовик"
       />
+      <app-partner-autocomplete
+        v-model="settings.client"
+        label="Клиент"
+        outlined
+        dense
+        only-clients
+        hide-details
+      />
       <v-btn
         color="primary"
         text
@@ -81,6 +89,7 @@ import moment from 'moment'
 import service from '@/modules/order/services/order.service'
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import { mapGetters } from 'vuex'
 
 const _initPeriod = () => {
@@ -96,11 +105,13 @@ export default {
   components: {
     AppDateRange,
     AppButtonsPanel,
+    AppPartnerAutocomplete,
   },
   data: () => ({
     formName: 'orderList',
     loading: false,
     settings: {
+      client: null,
       truck: null,
       status: null,
       period: _initPeriod(),
@@ -189,6 +200,7 @@ export default {
         }
         this.loading = true
         const data = await service.getList({
+          client: this.settings.client,
           truck: this.settings.truck,
           status: this.settings.status,
           profile: this.directoriesProfile,
@@ -217,7 +229,7 @@ export default {
 .filter-wrapper {
   display: grid;
   gap: 10px;
-  grid-template-columns: 300px 250px 250px;
+  grid-template-columns: 300px 250px 250px 250px;
   align-items: start;
 }
 </style>
