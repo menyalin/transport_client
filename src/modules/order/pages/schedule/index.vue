@@ -52,13 +52,13 @@ export default {
       this.$store.dispatch('getDowntimesForSchedule')
       this.$store.dispatch('getNotesForSchedule')
     },
-    startDragOrder(orderId) {
-      service.disable({ orderId, state: true })
+    async startDragOrder(orderId) {
+      await service.disable({ orderId, state: true })
     },
-    endDragOrder(orderId) {
-      service.disable({ orderId, state: false })
+    async endDragOrder(orderId) {
+      await service.disable({ orderId, state: false })
     },
-    updateOrderHandler({ orderId, truckId, startDate }) {
+    async updateOrderHandler({ orderId, truckId, startDate }) {
       // const editedOrder = this.$store.getters.ordersForSchedule.find(
       //   (item) => item._id == orderId
       // )
@@ -73,7 +73,7 @@ export default {
       //   service.disable({ orderId, state: false })
       //   return null
       // }
-      service.moveOrderInSchedule({
+      await service.moveOrderInSchedule({
         orderId,
         truck: truckId,
         startPositionDate: startDate,

@@ -362,7 +362,6 @@ export default {
         })
       }
     },
-
     createDowntime() {
       this.$router.push({
         name: 'DowntimeCreate',
@@ -372,7 +371,6 @@ export default {
         },
       })
     },
-
     createOrder() {
       this.$router.push({
         name: 'CreateOrder',
@@ -397,7 +395,6 @@ export default {
         moment(this.period[1]).add('24', 'h').isAfter(item.startPositionDate)
       )
     },
-
     ordersFilterByPeriod(item) {
       return !(
         moment(item.endPositionDate).isBefore(this.period[0]) ||
@@ -409,7 +406,6 @@ export default {
     ordersFilterByDraggedOrder(item) {
       return this.draggedOrderId ? item._id !== this.draggedOrderId : true
     },
-
     getPeriodFromDate(dateStr, a, b, dayCount) {
       this.dayCount = dayCount
       return [
@@ -417,14 +413,12 @@ export default {
         moment(dateStr).add(b, 'd').format('YYYY-MM-DD'),
       ]
     },
-
     resizeScreen() {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
       this.titleRowHeight = this.$refs.rowTitleColumn.offsetHeight
       this.tableWidth = this.$refs.tableBody.offsetWidth - this.titleColumnWidth
     },
-
     getLeftShiftForOrder({ startPositionDate, needRoundTime }) {
       // Округляем время отображения до 00, 06, 12, 18
       if (!this.tableWidth) return null
@@ -445,7 +439,6 @@ export default {
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
       return leftShift / this.secInPx + this.titleColumnWidth
     },
-
     getTopShiftForOrder({ truckId, _id }) {
       if (!truckId)
         return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
@@ -454,7 +447,6 @@ export default {
       if (rowIdx === -1) return null
       return rowIdx * LINE_HEIGHT + this.titleRowHeight
     },
-
     getOrderWidth({
       startPositionDate,
       endPositionDate,
@@ -487,7 +479,6 @@ export default {
           : SEC_IN_SIX_HOURS) / this.secInPx
       )
     },
-
     getStylesForOrder(order) {
       return {
         height: LINE_HEIGHT + 'px',
@@ -501,8 +492,7 @@ export default {
     dragStartHandler(e, id) {
       const dt = e.dataTransfer
       dt.setData('text/orderId', id)
-      // this.leftShiftInPx = e.clientX - e.target.getBoundingClientRect().left
-      dt.dropEffect = 'move'
+      // dt.dropEffect = 'move'
       dt.effectAllowed = 'move'
       this.draggedOrderId = id
       e.target.style.opacity = 0.5
@@ -511,14 +501,13 @@ export default {
 
     dragEndHandler(e, orderId) {
       e.target.style.opacity = 1
-      this.overRowInd = null
-      this.draggedOrderId = null
-
       if (
         e.dataTransfer.dropEffect === 'none' ||
         e.dataTransfer.mozUserCancelled
       )
         this.$emit('endDragOrder', orderId)
+      this.overRowInd = null
+      this.draggedOrderId = null
     },
 
     dragOverHandler(e) {
