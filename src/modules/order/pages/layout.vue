@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <app-bar title="Рейсы">
-      <app-schedule-settings />
+      <app-schedule-settings v-if="$route.fullPath === '/schedule/'" />
     </app-bar>
     <v-main>
       <router-view />
