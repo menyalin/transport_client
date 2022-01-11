@@ -104,9 +104,11 @@ export default {
           company: item.company,
           needRoundTime: !item.route[0].arrivalDate || onlyPlannedDates,
           isCompleted: !!item.route[item.route.length - 1]?.departureDate,
-          startPositionDate: _getStartPositionDate(item),
+          startPositionDate: onlyPlannedDates
+            ? item.startPositionDate
+            : _getStartPositionDate(item),
           endPositionDate: onlyPlannedDates
-            ? _getStartPositionDate(item)
+            ? item.startPositionDate
             : _getLastPositionDate(item), // для определения длины блока
           lastPlannedDate: _getLastPlannedDate(item), // для проверки при перемещении
           truckId: item.confirmedCrew?.truck,

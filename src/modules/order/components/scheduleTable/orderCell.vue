@@ -76,6 +76,7 @@ export default {
     orderClasses() {
       let classes = ['order-wrapper']
       if (this.order.state.driverNotified) classes.push('driver-notified')
+      if (this.order.state.status === 'needGet') classes.push('need-get')
       if (this.order.state.clientNotified) classes.push('client-notified')
       if (this.order.state.warning) classes.push('warning-state')
       classes.push(this.order.state.status)
@@ -189,6 +190,9 @@ export default {
 }
 .delay {
   color: red;
+}
+.need-get {
+  border: 1px solid red;
 }
 .getted {
   border: 1px solid black;
