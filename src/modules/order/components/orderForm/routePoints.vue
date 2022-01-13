@@ -4,7 +4,10 @@
     :class="{ invalid: !isValid }"
   >
     <app-block-title>{{ title }}</app-block-title>
-    <draggable v-model="xPoints">
+    <draggable
+      v-model="xPoints"
+      :disabled="!dragEnabled"
+    >
       <transition-group name="route">
         <div
           v-for="(point, ind) of tmpPoints"
@@ -55,6 +58,7 @@ export default {
     title: String,
     confirmed: Boolean,
     isValid: Boolean,
+    state: Object,
     isTemplate: {
       type: Boolean,
       default: false,
@@ -66,6 +70,10 @@ export default {
     }
   },
   computed: {
+    dragEnabled() {
+      if (this.state.driverNotified || this.state.clientNotified) return false
+      return ['needGet', 'getted'].includes(this.state.status)
+    },
     xPoints: {
       get() {
         return this.tmpPoints

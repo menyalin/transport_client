@@ -87,6 +87,7 @@
             :enableConfirm="enableConfirmOrder"
             :routeCompleted="routeCompleted"
             :enableRefuse="enableRefuseOrder"
+            :isExistFirstArrivalDate="isExistFirstArrivalDate"
             title="Статус рейса"
             class="route-state"
           />
@@ -110,6 +111,7 @@
           <app-route-points
             v-model="preparedRoute"
             title="Маршрут"
+            :state="state"
             :confirmed="orderInProgress"
             class="route-points"
             :isValid="isValidRoute"
@@ -292,6 +294,9 @@ export default {
     },
     routeCompleted() {
       return this.route.filter((point) => !point.departureDate).length === 0
+    },
+    isExistFirstArrivalDate() {
+      return !!this.route[0]?.arrivalDate
     },
     formState() {
       return {

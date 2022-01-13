@@ -65,6 +65,7 @@ export default {
     enableConfirm: Boolean,
     routeCompleted: Boolean,
     enableRefuse: Boolean,
+    isExistFirstArrivalDate: Boolean,
   },
   data() {
     return {
@@ -148,7 +149,14 @@ export default {
         return !['getted', 'inProgress'].includes(status.value)
 
       if (this.params.status === 'inProgress' && this.routeCompleted)
-        return !['getted', 'inProgress', 'completed'].includes(status.value)
+        return !['inProgress', 'completed'].includes(status.value)
+
+      if (
+        this.params.status === 'inProgress' &&
+        !this.routeCompleted &&
+        this.isExistFirstArrivalDate
+      )
+        return !['inProgress'].includes(status.value)
 
       if (this.params.status === 'inProgress' && !this.routeCompleted)
         return !['getted', 'inProgress'].includes(status.value)
