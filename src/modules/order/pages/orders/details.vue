@@ -56,7 +56,7 @@ export default {
         route: [
           {
             type: 'loading',
-            plannedDate: this.startDate,
+            plannedDate: new Date(this.startDate).toISOString(),
           },
           { type: 'unloading' },
         ],
