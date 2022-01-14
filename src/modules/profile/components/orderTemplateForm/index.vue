@@ -115,9 +115,9 @@ export default {
       ).name
     },
     isValidRoute() {
-      if (!this.route) return false
+      if (!this.route || this.route.length === 0) return false
       const length = this.route.length >= 2
-      const firstPoint = this.route[0].type === 'loading'
+      const firstPoint = this.route[0]?.type === 'loading'
       const lastPoint = this.route[this.route.length - 1].type === 'unloading'
       const hasAddresses =
         this.route.filter((item) => !!item.address).length === this.route.length

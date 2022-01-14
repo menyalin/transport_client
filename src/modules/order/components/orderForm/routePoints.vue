@@ -71,8 +71,8 @@ export default {
   },
   computed: {
     dragEnabled() {
-      if (this.state.driverNotified || this.state.clientNotified) return false
-      return ['needGet', 'getted'].includes(this.state.status)
+      if (this.state?.driverNotified || this.state?.clientNotified) return false
+      return ['needGet', 'getted'].includes(this.state?.status)
     },
     xPoints: {
       get() {
