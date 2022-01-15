@@ -47,7 +47,6 @@
             {{ item.state === 'loading' ? 'На погрузке' : 'На выгрузке' }}
           </template>
         </v-data-table>
-        {{ settings.selected }}
       </v-col>
     </v-row>
   </v-container>
