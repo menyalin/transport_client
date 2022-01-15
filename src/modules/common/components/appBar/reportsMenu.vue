@@ -20,6 +20,9 @@
       <v-list-item to="/reports/daysControl">
         <v-list-item-title>Контроль сроков</v-list-item-title>
       </v-list-item>
+      <v-list-item to="/reports/ordersInProgress">
+        <v-list-item-title>Простой транспорта</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>

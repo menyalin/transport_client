@@ -1,6 +1,4 @@
 import ReportLayout from '../pages/layout'
-// import CrewsReport from '../pages/crewsReport'
-// import DaysControl from '../pages/daysControl'
 
 export default [
   {
@@ -19,6 +17,11 @@ export default [
         path: 'daysControl',
         name: 'DaysControl',
         component: () => import('../pages/daysControl'),
+      },
+      {
+        path: 'ordersInProgress',
+        name: 'OrdersInProgress',
+        component: () => import('../pages/ordersInProgress'),
       },
     ],
   },
