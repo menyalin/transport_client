@@ -78,6 +78,7 @@ export default {
         { value: 'truckNum', text: 'Грузовик' },
         { value: 'trailerNum', text: 'Прицеп' },
         { value: 'state', text: 'Статус' },
+        { value: 'currentPoint.name', text: 'Адрес' },
       ],
     }
   },
