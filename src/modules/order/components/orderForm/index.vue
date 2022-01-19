@@ -88,6 +88,7 @@
             :routeCompleted="routeCompleted"
             :enableRefuse="enableRefuseOrder"
             :isExistFirstArrivalDate="isExistFirstArrivalDate"
+            :isValidGrade="isValidGrade"
             title="Статус рейса"
             class="route-state"
           />
@@ -108,6 +109,13 @@
             class="req-transport"
           />
 
+          <app-grade-block
+            v-if="showGradeBlock"
+            v-model="grade"
+            :disabled="state.status === 'completed'"
+            title="Оценка водителя"
+            class="grade"
+          />
           <app-route-points
             v-model="preparedRoute"
             title="Маршрут"
@@ -153,6 +161,7 @@ import AppReqTransport from './reqTransport.vue'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew.vue'
 import AppClientBlock from './clientBlock.vue'
+import AppGradeBlock from './gradeBlock.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -167,6 +176,7 @@ export default {
     AppRouteState,
     AppConfirmedCrew,
     AppClientBlock,
+    AppGradeBlock,
   },
   props: {
     order: {
@@ -193,6 +203,10 @@ export default {
         places: null,
         note: null,
         tRegime: null,
+      },
+      grade: {
+        grade: null,
+        note: null,
       },
       state: {
         status: 'needGet',
@@ -265,6 +279,14 @@ export default {
         this.isValidDatesInRoute
       )
     },
+    showGradeBlock() {
+      return this.routeCompleted
+    },
+    isValidGrade() {
+      if (!this.grade.grade) return false
+      if (this.grade.grade === 2) return true
+      else return !!this.grade.note
+    },
     isValidClientInfo() {
       return !!this.client?.client
     },
@@ -274,12 +296,12 @@ export default {
         (item) => item._id === this.directoriesProfile
       )?.name
     },
-    endPositionDateErrors() {
-      let errors = []
-      if (!this.$v.form.endPositionDate.isLaterThan)
-        errors.push('Дата должна быть больше начальной даты')
-      return errors
-    },
+    // endPositionDateErrors() {
+    //   let errors = []
+    //   if (!this.$v.form.endPositionDate.isLaterThan)
+    //     errors.push('Дата должна быть больше начальной даты')
+    //   return errors
+    // },
     enableConfirmOrder() {
       return !!this.confirmedCrew.driver
     },
@@ -308,6 +330,7 @@ export default {
         cargoParams: this.cargoParams,
         reqTransport: this.reqTransport,
         confirmedCrew: this.confirmedCrew,
+        grade: this.grade,
       }
     },
   },
@@ -354,7 +377,7 @@ export default {
           const firstPoint = newRouteValue[0]
           if (!this.orderId)
             this.form.startPositionDate = firstPoint.plannedDate
-          this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
+          // this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
         }
       },
     },
@@ -412,6 +435,7 @@ export default {
     },
     setFormFields(val) {
       const keys = Object.keys(this.form)
+      if (val.grade) this.grade = val.grade
       if (val.client) this.client = val.client
       if (val.confirmedCrew) this.confirmedCrew = val.confirmedCrew
       if (val.state) this.state = val.state
@@ -425,6 +449,7 @@ export default {
     resetForm() {
       const keys = Object.keys(this.form)
       this.route = []
+      this.grade = { ...{} }
       this.client = { ...{} }
       this.confirmedCrew = { ...{} }
       this.state = { ...{} }
@@ -481,6 +506,11 @@ export default {
 .route-state {
   grid-column: 1/2;
   grid-row: 1/5;
+}
+
+.grade {
+  grid-column: 1/2;
+  grid-row: 5;
 }
 .client {
   grid-column: 2/3;

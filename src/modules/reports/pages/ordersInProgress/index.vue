@@ -43,8 +43,13 @@
           <template v-slot:[`item.plannedDate`]="{ item }">
             {{ new Date(item.plannedDate).toLocaleDateString() }}
           </template>
+
           <template v-slot:[`item.state`]="{ item }">
-            {{ item.state === 'loading' ? 'На погрузке' : 'На выгрузке' }}
+            <span v-if="!item.state"> ? </span>
+            <span v-else>
+              {{
+                item.state === 'loading' ? 'На погрузке' : 'На выгрузке'
+              }}</span>
           </template>
         </v-data-table>
       </v-col>

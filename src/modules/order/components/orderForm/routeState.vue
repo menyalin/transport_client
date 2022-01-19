@@ -66,6 +66,7 @@ export default {
     routeCompleted: Boolean,
     enableRefuse: Boolean,
     isExistFirstArrivalDate: Boolean,
+    isValidGrade: Boolean,
   },
   data() {
     return {
@@ -99,15 +100,7 @@ export default {
           })
         }
       },
-    },
-    routeCompleted: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          this.params.status = 'completed'
-        }
-      },
-    },
+    }
   },
   methods: {
     change(val, field) {
@@ -148,8 +141,12 @@ export default {
       )
         return !['getted', 'inProgress'].includes(status.value)
 
-      if (this.params.status === 'inProgress' && this.routeCompleted)
-        return !['inProgress', 'completed'].includes(status.value)
+      if (
+        this.params.status === 'inProgress' &&
+        !this.routeCompleted &&
+        !this.isExistFirstArrivalDate
+      )
+        return !['inProgress', 'getted'].includes(status.value)
 
       if (
         this.params.status === 'inProgress' &&
@@ -158,8 +155,19 @@ export default {
       )
         return !['inProgress'].includes(status.value)
 
-      if (this.params.status === 'inProgress' && !this.routeCompleted)
-        return !['getted', 'inProgress'].includes(status.value)
+      if (
+        this.params.status === 'inProgress' &&
+        this.routeCompleted &&
+        !this.isValidGrade
+      )
+        return !['inProgress'].includes(status.value)
+
+      if (
+        this.params.status === 'inProgress' &&
+        this.routeCompleted &&
+        this.isValidGrade
+      )
+        return !['completed', 'inProgress'].includes(status.value)
 
       if (this.params.status === 'completed')
         return !['completed', 'inProgress'].includes(status.value)
