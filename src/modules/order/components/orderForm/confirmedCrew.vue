@@ -123,10 +123,10 @@ export default {
     await this.getCrew()
   },
   /**
-  
-  Рено   Х681ВТ799   ЕМ558577   
-  Стародубцев Виталий Юрьевич   
-  Паспорт 68 02 571679 Выдан Мичуринским ГУВД Тамбовской обл. 18.06.2002   
+
+  Рено   Х681ВТ799   ЕМ558577
+  Стародубцев Виталий Юрьевич
+  Паспорт 68 02 571679 Выдан Мичуринским ГУВД Тамбовской обл. 18.06.2002
   тел +7 (920) 470-01-51
 
    **/
@@ -161,9 +161,13 @@ export default {
       resStr += `${d.driver}\n`
       resStr += `Паспорт ${d.passportId || '-'}, Выдан ${
         d.passportIssued || '-'
-      }, от ${d.passportDate || '-'}\n`
-      resStr += `ВУ ${d.licenseId || '-'}, от ${d.licenseDate || '-'}\n`
-      resStr += `тел: ${d.phone}  ${d.phone2}`
+      }, от ${
+        d.passportDate ? new Date(d.passportDate).toLocaleDateString() : '-'
+      }\n`
+      resStr += `ВУ ${d.licenseId || '-'}, от ${
+        d.licenseDate ? new Date(d.licenseDate).toLocaleDateString() : '-'
+      }\n`
+      resStr += `тел: ${d.phone || ''}  ${d.phone2 || ''}`
       navigator.clipboard.writeText(resStr).then()
     },
     async change(val, field) {
