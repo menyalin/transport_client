@@ -125,8 +125,8 @@ export default {
           return (
             eP.isAfter(order.startPositionDate) &&
             sP.isSameOrBefore(order.endPositionDate) &&
-            (!orders.confirmedCrew?.truckId ||
-              !hiddenTruckIds.includes(orders.confirmedCrew?.truckId))
+            (!orders.confirmedCrew?.truck ||
+              !hiddenTruckIds.includes(orders.confirmedCrew?.truck))
           )
         })
         .sort(
