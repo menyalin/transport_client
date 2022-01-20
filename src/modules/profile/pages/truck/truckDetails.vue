@@ -47,12 +47,14 @@ export default {
     async submit(val) {
       try {
         this.loading = true
-        this.truck = await service.updateOne(this.id, val)
+        const data = await service.updateOne(this.id, val)
         this.loading = false
-        this.$router.go(-1)
+        if (data) {
+          this.truck = data
+          this.$router.go(-1)
+        }
       } catch (e) {
         this.loading = false
-        this.$store.commit('setError', e.message)
       }
     },
     cancel() {

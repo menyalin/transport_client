@@ -26,9 +26,14 @@ class TruckService {
   }
 
   async updateOne(id, body) {
-    let { data } = await api.put(BASE_PATH + '/' + id, body)
-    store.commit('addToCache', data)
-    return data
+    try {
+      let { data } = await api.put(BASE_PATH + '/' + id, body)
+      store.commit('addToCache', data)
+      return data
+    } catch (e) {
+      store.commit('setError', e.response.data)
+      return null
+    }
   }
 
   async getByDerictoriesProfile(profile) {
