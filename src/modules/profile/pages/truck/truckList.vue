@@ -33,6 +33,14 @@
                 :listSettingsName="listSettingsName"
               />
               <v-select
+                v-model="settings.serviceStatus"
+                label="Статус ТС"
+                outlined
+                dense
+                hide-details
+                :items="serviceStatusItems"
+              />
+              <v-select
                 v-model="settings.tkNameFilter"
                 dense
                 outlined
@@ -80,6 +88,11 @@ export default {
   data: () => ({
     formName: 'TruckList',
     listSettingsName: 'truckListFields',
+    serviceStatusItems: [
+      { value: 'all', text: 'Все' },
+      { value: 'active', text: 'Действующие' },
+      { value: 'inactive', text: 'Вышедшие из эксплуатации' },
+    ],
     loading: false,
     activeHeaders: [],
     defaultHeaders: [
@@ -97,6 +110,7 @@ export default {
     crews: [],
     settings: {
       tkNameFilter: null,
+      serviceStatus: 'active',
       search: null,
       truckFilter: null,
       listOptions: {},
@@ -193,6 +207,16 @@ export default {
               return true
           }
         })
+        .filter((item) => {
+          switch (this.settings.serviceStatus) {
+            case 'all':
+              return true
+            case 'active':
+              return !item.endServiceDate
+            case 'inactive':
+              return item.endServiceDate
+          }
+        })
         .map((t) => ({
           ...t,
           currentDriver: this.getDriverName(t._id),
@@ -252,11 +276,10 @@ export default {
 </script>
 <style scoped>
 .filter-wrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 30px 200px 300px 300px auto;
   align-items: center;
-}
-.filter-wrapper > * {
-  padding: 0px 10px;
+  gap: 10px;
+  padding: 5px;
 }
 </style>
