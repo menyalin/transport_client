@@ -10,7 +10,7 @@
         />
         <v-data-table
           :search="settings.search"
-          :headers="headers"
+          :headers="filteredHeaders"
           dense
           fixed-header
           height="72vh"
@@ -27,6 +27,11 @@
           </template>
           <template v-slot:top>
             <div class="filter-wrapper">
+              <app-table-column-settings
+                v-model="activeHeaders"
+                :allHeaders="allHeaders"
+                :listSettingsName="listSettingsName"
+              />
               <v-select
                 v-model="settings.tkNameFilter"
                 dense
@@ -64,15 +69,31 @@
 <script>
 import CrewService from '../../services/crew.service'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import { mapGetters } from 'vuex'
 export default {
   name: 'TruckList',
   components: {
     AppButtonsPanel,
+    AppTableColumnSettings,
   },
   data: () => ({
     formName: 'TruckList',
+    listSettingsName: 'truckListFields',
     loading: false,
+    activeHeaders: [],
+    defaultHeaders: [
+      'order',
+      'tkName.name',
+      'type',
+      'regNum',
+      'liftCapacityType',
+      'pltCount',
+      'brand',
+      'currentDriver',
+      'permanentDriverCount',
+      'temporaryDriverCount',
+    ],
     crews: [],
     settings: {
       tkNameFilter: null,
@@ -80,13 +101,12 @@ export default {
       truckFilter: null,
       listOptions: {},
     },
-
     truckFilterOptions: [
       { text: 'Тягачи', value: '20tn' },
       { text: '10-ки', value: '10tn' },
       { text: 'Прицепы', value: 'trailers' },
     ],
-    headers: [
+    allHeaders: [
       { value: 'order', text: 'Индекс' },
       { value: 'tkName.name', text: 'ТК' },
       { value: 'type', text: 'Тип' },
@@ -107,6 +127,41 @@ export default {
         align: 'center',
         width: '10rem',
       },
+      {
+        value: 'additionalDetails.transponderNumber',
+        text: 'Транспондер',
+        align: 'center',
+      },
+      {
+        value: 'additionalDetails.platonNumber',
+        text: 'Платон',
+        align: 'center',
+      },
+      {
+        value: 'additionalDetails.fuelCardNumber',
+        text: 'Топл.карта',
+        align: 'center',
+      },
+      {
+        value: 'sts',
+        text: 'СТС',
+        align: 'center',
+      },
+      {
+        value: 'win',
+        text: 'ВИН',
+        align: 'center',
+      },
+      {
+        value: 'owner',
+        text: 'Собственник',
+        align: 'center',
+      },
+      {
+        value: 'issueYear',
+        text: 'Год выпуска',
+        align: 'center',
+      },
     ],
   }),
   computed: {
@@ -116,6 +171,9 @@ export default {
       'truckTypesHash',
       'tkNames',
     ]),
+    filteredHeaders() {
+      return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
+    },
     filteredTrucks() {
       return this.trucks
         .filter((item) =>
@@ -149,6 +207,10 @@ export default {
     },
   },
   created() {
+    const fields = JSON.parse(localStorage.getItem(this.listSettingsName))
+    if (!fields || fields.length === 0) this.activeHeaders = this.defaultHeaders
+    else this.activeHeaders = fields
+
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getTrucks')
@@ -192,6 +254,7 @@ export default {
 .filter-wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .filter-wrapper > * {
   padding: 0px 10px;
