@@ -189,7 +189,7 @@ export default {
       this.params.trailer = null
       const crew = await CrewService.getCrewByTruckAndDate({
         truck: this.params.truck,
-        date: this.date,
+        date: new Date(this.date),
       })
       this.params.driver = crew?.driver
       this.params.trailer = crew?.transport?.trailer
