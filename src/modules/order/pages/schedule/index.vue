@@ -27,7 +27,7 @@ export default {
     },
     scheduleRows() {
       return this.$store.getters.trucks
-        .filter((item) => item.type === 'truck')
+        .filter((item) => item.type === 'truck' && !item.endServiceDate)
         .sort((a, b) => a.order - b.order)
     },
   },

@@ -180,9 +180,9 @@ export default {
       type: Array,
       required: true,
     },
-    orders: {
-      type: Array,
-    },
+    // orders: {
+    //   type: Array,
+    // },
   },
   data: () => ({
     tableWidth: 0,

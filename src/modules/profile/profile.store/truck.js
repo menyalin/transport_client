@@ -126,6 +126,9 @@ export default {
       })
       return map
     },
+    hiddenTruckIds: ({ trucks }) => {
+      return trucks.filter((t) => t.endServiceDate).map((t) => t._id)
+    },
     truckById:
       ({ trucks }) =>
       (id) =>

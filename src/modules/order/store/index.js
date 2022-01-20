@@ -97,7 +97,10 @@ export default {
   },
   getters: {
     pointTypes: ({ pointTypes }) => pointTypes,
-    ordersForSchedule: ({ orders }, { schedulePeriod, onlyPlannedDates }) =>
+    ordersForSchedule: (
+      { orders },
+      { schedulePeriod, onlyPlannedDates, hiddenTruckIds }
+    ) =>
       orders
         .map((item) => ({
           _id: item._id,
@@ -121,7 +124,9 @@ export default {
           const eP = moment(schedulePeriod[1])
           return (
             eP.isAfter(order.startPositionDate) &&
-            sP.isSameOrBefore(order.endPositionDate)
+            sP.isSameOrBefore(order.endPositionDate) &&
+            (!orders.confirmedCrew?.truckId ||
+              !hiddenTruckIds.includes(orders.confirmedCrew?.truckId))
           )
         })
         .sort(

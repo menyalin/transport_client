@@ -53,13 +53,14 @@ export default {
         return hash
       }, {}),
 
-    downtimesForSchedule: ({ downtimes }, { schedulePeriod }) =>
+    downtimesForSchedule: ({ downtimes }, { schedulePeriod, hiddenTruckIds }) =>
       downtimes.filter((d) => {
         const sP = moment(schedulePeriod[0])
         const eP = moment(schedulePeriod[1])
         return (
           eP.isAfter(d.startPositionDate) &&
-          sP.isSameOrBefore(d.endPositionDate)
+          sP.isSameOrBefore(d.endPositionDate) &&
+          !hiddenTruckIds.includes(d.truck)
         )
       }),
   },

@@ -44,14 +44,15 @@ export default {
 
     scheduleNotes: ({ notes }) => notes,
 
-    notesForSchedule: ({ notes }, { schedulePeriod }) => {
+    notesForSchedule: ({ notes }, { schedulePeriod, hiddenTruckIds }) => {
       if (!schedulePeriod) return []
       return notes.filter((n) => {
         const sP = moment(schedulePeriod[0])
         const eP = moment(schedulePeriod[1])
         return (
           eP.isAfter(n.startPositionDate) &&
-          sP.isSameOrBefore(n.startPositionDate)
+          sP.isSameOrBefore(n.startPositionDate) &&
+          !hiddenTruckIds.includes(n.truck)
         )
       })
     },
