@@ -15,13 +15,25 @@
             hideDetails
             outlined
             dense
+            :style="{ 'max-width': '300px' }"
           />
           <v-checkbox
             v-model="settings.selectedOnly"
             label="Только выделенные"
             hideDetails
             dense
+            class="py-0 my-0"
           />
+          <v-spacer />
+          <v-btn
+            v-if="showCopyButton"
+            text
+            color="primary"
+            small
+            @click="copyHandler"
+          >
+            скопировать в буфер
+          </v-btn>
         </div>
         <v-data-table
           v-model="settings.selected"
@@ -39,19 +51,7 @@
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
-        >
-          <template v-slot:[`item.plannedDate`]="{ item }">
-            {{ new Date(item.plannedDate).toLocaleDateString() }}
-          </template>
-
-          <template v-slot:[`item.state`]="{ item }">
-            <span v-if="!item.state"> ? </span>
-            <span v-else>
-              {{
-                item.state === 'loading' ? 'На погрузке' : 'На выгрузке'
-              }}</span>
-          </template>
-        </v-data-table>
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -73,27 +73,36 @@ export default {
       },
       rows: [],
       headers: [
-        { value: 'clientName', text: 'Клиент' },
-        { value: 'plannedDate', text: 'Дата рейса' },
-        { value: 'driverName', text: 'Водитель' },
-        { value: 'driverPhone', text: 'Телефон' },
-        { value: 'driverPhone2', text: 'Телефон 2' },
+        { value: 'clientName', text: 'Заказчик' },
+        { value: 'date', text: 'Дата рейса' },
         { value: 'loadingPoints', text: 'Погрузка' },
         { value: 'unloadingPoints', text: 'Разгрузка' },
         { value: 'truckNum', text: 'Грузовик' },
         { value: 'trailerNum', text: 'Прицеп' },
+        { value: 'driverName', text: 'Водитель' },
+        { value: 'driverPhone', text: 'Телефон' },
         { value: 'state', text: 'Статус' },
-        { value: 'currentPoint.name', text: 'Адрес' },
+        { value: 'address', text: 'Адрес' },
       ],
     }
   },
   computed: {
     ...mapGetters(['directoriesProfile']),
     filteredRows() {
-      return this.rows.filter((item) => {
-        if (!this.settings.selectedOnly) return true
-        return this.settings.selected.map((s) => s._id).includes(item._id)
-      })
+      return this.rows
+        .filter((item) => {
+          if (!this.settings.selectedOnly) return true
+          return this.settings.selected.map((s) => s._id).includes(item._id)
+        })
+        .map((item) => ({
+          ...item,
+          date: new Date(item.plannedDate).toLocaleDateString(),
+          state: item.state === 'loading' ? 'На погрузке' : 'На выгрузке',
+          address: item.currentPoint.name,
+        }))
+    },
+    showCopyButton() {
+      return !!window.ClipboardItem
     },
   },
   watch: {
@@ -120,6 +129,30 @@ export default {
     next()
   },
   methods: {
+    getTableForClipboard() {
+      // if (this.filteredRows.length === 0) return null
+
+      let resStr = '<html><body><table style="border-collapse: collapse;">'
+      resStr +=
+        '<tr>' +
+        this.headers.reduce((accum, item) => {
+          return (accum += `<th style="border: 1px solid gray; font-size: 12px; padding: 3px;">${item.text}</th>`)
+        }, '') +
+        '</tr>'
+
+      for (let i = 0; i < this.filteredRows.length; i++) {
+        resStr +=
+          '<tr>' +
+          this.headers.reduce((accum, item) => {
+            return (accum += `<td style="border: 1px solid gray; font-size: 12px; padding: 3px;">
+            ${this.filteredRows[i][item.value]}
+            </td>`)
+          }, '') +
+          '</tr>'
+      }
+
+      return resStr + '</table></body></html>'
+    },
     dblClickRow(_, { item }) {
       this.$router.push(`/orders/${item._id}`)
     },
@@ -130,13 +163,25 @@ export default {
       })
       this.loading = false
     },
+    copyHandler() {
+      const text = this.getTableForClipboard()
+      var data = [
+        new ClipboardItem({
+          'text/html': new Blob([text], { type: 'text/html' }),
+        }),
+      ]
+      navigator.clipboard.write(data).then()
+    },
   },
 }
 </script>
 <style scoped>
 #report-settings {
-  display: grid;
-  grid-template-columns: 50px 300px 300px;
-  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#report-settings > * {
+  margin: 10px;
 }
 </style>
