@@ -125,10 +125,10 @@ export default {
           return (
             eP.isAfter(order.startPositionDate) &&
             sP.isSameOrBefore(order.endPositionDate) &&
-            (!orders.confirmedCrew?.truck ||
-              !hiddenTruckIds.includes(orders.confirmedCrew?.truck))
+            (!order.truckId || !hiddenTruckIds.includes(order.truckId))
           )
         })
+
         .sort(
           (a, b) =>
             new Date(a.startPositionDate) - new Date(b.startPositionDate)
