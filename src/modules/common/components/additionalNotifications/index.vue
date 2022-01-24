@@ -238,12 +238,9 @@ export default {
 thead {
   font-size: 0.8rem;
 }
-.notification-form > * {
-  /* margin-bottom: 20px; */
-}
 .dates-row {
   display: grid;
-  grid-template-columns: 150px 150px auto;
+  grid-template-columns: 200px 150px auto;
   flex-direction: row;
   gap: 10px;
 }
