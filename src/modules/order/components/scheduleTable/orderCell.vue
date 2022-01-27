@@ -77,15 +77,20 @@ export default {
       let classes = ['order-wrapper']
       if (this.order.state.driverNotified) classes.push('driver-notified')
       if (this.order.state.status === 'needGet') classes.push('need-get')
+      if (this.order.state.status === 'notСonfirmedByClient')
+        classes.push('not-confirmed-by-client')
+      if (this.order.state.status === 'weRefused') classes.push('we-refused')
       if (this.order.state.clientNotified) classes.push('client-notified')
       if (this.order.state.warning) classes.push('warning-state')
       classes.push(this.order.state.status)
       if (this.breakingSchedule) classes.push('breaking-schedule')
       return classes
     },
+
     order() {
       return this.$store.getters.ordersMap.get(this.orderId)
     },
+
     firstRow() {
       const addressId = this.order.route[0].address
       const hours = moment(this.order.route[0].plannedDate).format('HH')
@@ -111,6 +116,15 @@ export default {
       return res
     },
     delayToPointInd() {
+      if (
+        [
+          'notСonfirmedByClient',
+          'weRefused',
+          'clientRefused',
+          'needGet',
+        ].includes(this.order.state.status)
+      )
+        return -1
       const idx = this.order.route.findIndex(
         (p) => new Date(p.plannedDate) < new Date() && !p.arrivalDate
       )
@@ -222,5 +236,13 @@ export default {
 }
 .tooltip-wrapper {
   position: relative;
+}
+.not-confirmed-by-client {
+  background-color: red;
+  color: black;
+}
+.we-refused {
+  background-color: black;
+  color: red;
 }
 </style>

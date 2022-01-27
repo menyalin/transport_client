@@ -100,7 +100,7 @@ export default {
           })
         }
       },
-    }
+    },
   },
   methods: {
     change(val, field) {
@@ -179,7 +179,9 @@ export default {
         return !['getted', 'clientRefused'].includes(status.value)
 
       if (this.params.status === 'notСonfirmedByClient')
-        return !['needGet', 'getted'].includes(status.value)
+        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(
+          status.value
+        )
       return true
     },
   },
