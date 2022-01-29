@@ -27,6 +27,12 @@
             >
               Создать шаблон
             </v-btn>
+            <v-btn
+              icon
+              @click="copyTimestamptsToClipboard"
+            >
+              <v-icon>mdi-clock</v-icon>
+            </v-btn>
             <v-dialog
               v-model="templateDialog"
               persistent
@@ -384,6 +390,41 @@ export default {
   },
 
   methods: {
+    async copyTimestamptsToClipboard() {
+      const loadingPoints = this.route.filter((p) => p.type === 'loading')
+      const unloadingPoints = this.route.filter((p) => p.type === 'unloading')
+      const loadingArrivalDate = loadingPoints[0].arrivalDate
+      const loadingDepartureDate =
+        loadingPoints[loadingPoints.length - 1].departureDate
+      const unloadingArrivalDate = unloadingPoints[0].arrivalDate
+      const unloadingDepartureDate =
+        unloadingPoints[unloadingPoints.length - 1].departureDate
+      let resStr = '<table><tr>'
+      resStr +=
+        '<td>' + new Date(loadingArrivalDate).toLocaleDateString() + '</td>'
+      resStr +=
+        '<td>' + new Date(loadingArrivalDate).toLocaleTimeString() + '</td>'
+      resStr +=
+        '<td>' + new Date(loadingDepartureDate).toLocaleDateString() + '</td>'
+      resStr +=
+        '<td>' + new Date(loadingDepartureDate).toLocaleTimeString() + '</td>'
+      resStr +=
+        '<td>' + new Date(unloadingArrivalDate).toLocaleDateString() + '</td>'
+      resStr +=
+        '<td>' + new Date(unloadingArrivalDate).toLocaleTimeString() + '</td>'
+      resStr +=
+        '<td>' + new Date(unloadingDepartureDate).toLocaleDateString() + '</td>'
+      resStr +=
+        '<td>' + new Date(unloadingDepartureDate).toLocaleTimeString() + '</td>'
+
+      resStr += '</tr></table>'
+      var data = [
+        new ClipboardItem({
+          'text/html': new Blob([resStr], { type: 'text/html' }),
+        }),
+      ]
+      navigator.clipboard.write(data).then()
+    },
     async createTemplateHandler() {
       try {
         this.createTemplateLoading = true
@@ -485,7 +526,7 @@ export default {
 }
 .template-panel {
   display: grid;
-  grid-template-columns: 300px 200px;
+  grid-template-columns: 300px 200px 30px;
   gap: 15px;
 }
 .dates-position-block {
