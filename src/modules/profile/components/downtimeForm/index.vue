@@ -50,7 +50,12 @@
       v-model="$v.form.note.$model"
       label="Примечание"
       outlined
+      hide-details
       dense
+    />
+    <v-checkbox
+      v-model="form.inOrderTime"
+      label="Разрешить пересечение с рейсом"
     />
     <v-btn
       v-if="displayDeleteBtn"
@@ -103,6 +108,7 @@ export default {
         note: null,
         startPositionDate: null,
         endPositionDate: null,
+        inOrderTime: false,
       },
     }
   },
