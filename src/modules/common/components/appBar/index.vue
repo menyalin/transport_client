@@ -34,7 +34,10 @@
       </v-icon>
       Рейсы
     </v-btn>
-    <app-reports-menu v-if="isLoggedIn && directoriesProfile" />
+    <app-reports-menu
+      v-if="isLoggedIn && directoriesProfile"
+      
+    />
     <v-btn
       v-if="isLoggedIn"
       to="/profile"
@@ -85,6 +88,9 @@ export default {
     title: {
       type: String,
       required: true,
+    },
+    reports: {
+      type: Array,
     },
   },
   computed: {

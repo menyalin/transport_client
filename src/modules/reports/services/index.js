@@ -19,6 +19,18 @@ class ReportService {
       return []
     }
   }
+
+  async truckStateOnDate(params) {
+    try {
+      const { data } = await api.get(BASE_PATH + '/truckStateOnDate', {
+        params,
+      })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      return []
+    }
+  }
 }
 
 export default new ReportService()

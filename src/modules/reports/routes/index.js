@@ -23,6 +23,11 @@ export default [
         name: 'OrdersInProgress',
         component: () => import('../pages/ordersInProgress'),
       },
+      {
+        path: 'truckStateOnDate',
+        name: 'TruckStateOnDate',
+        component: () => import('../pages/truckStateOnDate'),
+      },
     ],
   },
 ]
