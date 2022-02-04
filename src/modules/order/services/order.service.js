@@ -81,6 +81,11 @@ class OrderService {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data
   }
+
+  async getDistance(coords) {
+    let { data } = await api.post(BASE_PATH + '/get_distance', { coords })
+    return data
+  }
 }
 
 export default new OrderService()

@@ -46,6 +46,7 @@ export default {
     orderStatuses: [],
     scheduleDate: moment().format('YYYY-MM-DD'),
     onlyPlannedDates: false,
+    orderAnalyticTypes: [],
   },
   mutations: {
     changeOnlyPlannedDates(state) {
@@ -74,6 +75,9 @@ export default {
 
     setOrderStatuses(state, payload) {
       state.orderStatuses = payload
+    },
+    setOrderAnalyticTypes(state, payload) {
+      state.orderAnalyticTypes = payload
     },
 
     incScheduleDate(state, count) {
@@ -141,6 +145,10 @@ export default {
     orderStatuses: ({ orderStatuses }) => orderStatuses,
     orderStatusesMap: ({ orderStatuses }) =>
       new Map(orderStatuses.map((item) => [item.value, item.text])),
+    orderAnalyticTypes: ({ orderAnalyticTypes }) => orderAnalyticTypes,
+    orderAnalyticTypesMap: ({ orderAnalyticTypes }) =>
+      new Map(orderAnalyticTypes.map((item) => [item.value, item.text])),
+
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
     onlyPlannedDates: ({ onlyPlannedDates }) => onlyPlannedDates,
   },

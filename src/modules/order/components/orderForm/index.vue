@@ -137,6 +137,13 @@
             title="Экипаж"
             class="crew"
           />
+          <app-analytic-block
+            id="analytic"
+            v-model="analytics"
+            :isValidRoute="isValidRoute"
+            :route="route"
+            title="Аналитика"
+          />
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -168,6 +175,7 @@ import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew.vue'
 import AppClientBlock from './clientBlock.vue'
 import AppGradeBlock from './gradeBlock.vue'
+import AppAnalyticBlock from './analyticBlock.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -183,6 +191,7 @@ export default {
     AppConfirmedCrew,
     AppClientBlock,
     AppGradeBlock,
+    AppAnalyticBlock,
   },
   props: {
     order: {
@@ -213,6 +222,11 @@ export default {
       grade: {
         grade: null,
         note: null,
+      },
+      analytics: {
+        // type: null,
+        // distanceRoad: null,
+        // distanceDirect: null,
       },
       state: {
         status: 'needGet',
@@ -302,12 +316,6 @@ export default {
         (item) => item._id === this.directoriesProfile
       )?.name
     },
-    // endPositionDateErrors() {
-    //   let errors = []
-    //   if (!this.$v.form.endPositionDate.isLaterThan)
-    //     errors.push('Дата должна быть больше начальной даты')
-    //   return errors
-    // },
     enableConfirmOrder() {
       return !!this.confirmedCrew.driver
     },
@@ -337,6 +345,7 @@ export default {
         reqTransport: this.reqTransport,
         confirmedCrew: this.confirmedCrew,
         grade: this.grade,
+        analytics: this.analytics,
       }
     },
   },
@@ -372,7 +381,7 @@ export default {
     route: {
       // редактирование маршрута
       deep: true,
-      handler: function (newRouteValue) {
+      handler: function (newRouteValue, oldVal) {
         // при создании рейса
         if (
           // !this.orderId &&
@@ -384,6 +393,15 @@ export default {
           if (!this.orderId)
             this.form.startPositionDate = firstPoint.plannedDate
           // this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
+        }
+        // проверяю изменились ли адреса в рейсе и если изменились, очищаю расстояния в аналитике
+        if (
+          this.isValidRoute &&
+          newRouteValue.map((r) => r.address).join() !==
+            oldVal.map((r) => r.address).join()
+        ) {
+          this.analytics.distanceDirect = 0
+          this.analytics.distanceRoad = 0
         }
       },
     },
@@ -483,6 +501,7 @@ export default {
       if (val.route) this.route = val.route
       if (val.cargoParams) this.cargoParams = val.cargoParams
       if (val.reqTransport) this.reqTransport = val.reqTransport
+      if (val.analytics) this.analytics = val.analytics
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
@@ -496,24 +515,25 @@ export default {
       this.state = { ...{} }
       this.cargoParams = { ...{} }
       this.reqTransport = { ...{} }
+      this.analytics = { ...{} }
       keys.forEach((key) => {
         this.form[key] = null
       })
     },
 
-    getEndPositionDate(route) {
-      let dates = []
-      const dateFields = ['plannedDate', 'arrivalDate', 'departureDate']
-      dateFields.forEach((field) => {
-        dates.push(
-          route
-            .filter((i) => i[field])
-            .map((i) => i[field])
-            .reverse()[0]
-        )
-      })
-      return dates.sort((a, b) => new Date(b) - new Date(a))[0]
-    },
+    // getEndPositionDate(route) {
+    //   let dates = []
+    //   const dateFields = ['plannedDate', 'arrivalDate', 'departureDate']
+    //   dateFields.forEach((field) => {
+    //     dates.push(
+    //       route
+    //         .filter((i) => i[field])
+    //         .map((i) => i[field])
+    //         .reverse()[0]
+    //     )
+    //   })
+    //   return dates.sort((a, b) => new Date(b) - new Date(a))[0]
+    // },
   },
 }
 </script>
@@ -566,11 +586,15 @@ export default {
   grid-row: 3/4;
 }
 .route-points {
-  grid-column: 2/3;
+  grid-column: 2/4;
   grid-row: 5/8;
 }
 .crew {
-  grid-column: 2/3;
+  grid-column: 2/4;
   grid-row: 4/5;
+}
+#analytic {
+  grid-column: 3/4;
+  grid-row: 1/2;
 }
 </style>
