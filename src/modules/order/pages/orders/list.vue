@@ -80,6 +80,15 @@
               : '-'
           }}
         </template>
+        <template v-slot:[`item.analytics.type`]="{ item }">
+          {{
+            !!item.analytics &&
+              !!item.analytics.type &&
+              orderAnalyticTypeMap.has(item.analytics.type)
+              ? orderAnalyticTypeMap.get(item.analytics.type)
+              : ''
+          }}
+        </template>
       </v-data-table>
     </div>
   </div>
@@ -130,6 +139,12 @@ export default {
         width: '12rem',
       },
       {
+        value: 'analytics.type',
+        text: 'Тип рейса',
+        sortable: false,
+        width: '10rem',
+      },
+      {
         value: 'truck',
         text: 'Грузовик',
         sortable: false,
@@ -145,6 +160,9 @@ export default {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
     partnersMap() {
       return this.$store.getters.partnersMap
+    },
+    orderAnalyticTypeMap() {
+      return this.$store.getters.orderAnalyticTypesMap
     },
     trucksMap() {
       return this.$store.getters.trucksMap
