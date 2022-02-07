@@ -83,7 +83,6 @@ export default {
     AppButtonsPanel,
     AppDateTimeInput,
     AppClients,
-    AppPartnerAutocomplete,
   },
   props: {
     agreement: {

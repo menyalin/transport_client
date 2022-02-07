@@ -17,7 +17,7 @@
             <v-list-item-title>
               {{
                 partnersMap.has(item)
-                  ? driversMap.get(item).name
+                  ? partnersMap.get(item).name
                   : 'запись удалена'
               }}
             </v-list-item-title>
@@ -26,7 +26,7 @@
             <v-icon
               small
               color="error"
-              @click="deleteDriver(item)"
+              @click="deleteClient(item)"
             >
               mdi-delete
             </v-icon>
@@ -35,7 +35,8 @@
       </v-list>
       <app-partner-autocomplete
         v-if="!isVisibleBtn"
-        @change="addPartner"
+        onlyClients
+        @change="addClient"
       />
       <v-btn
         v-else
@@ -61,14 +62,22 @@ export default {
     prop: 'clientList',
     event: 'change',
   },
-  props: {},
+  props: {
+    clientList: {
+      type: Array,
+    },
+  },
   data() {
     return {
       selectedClients: [],
       isVisibleBtn: true,
     }
   },
-  computed: {},
+  computed: {
+    partnersMap() {
+      return this.$store.getters.partnersMap
+    },
+  },
   watch: {
     clientList: {
       immediate: true,
@@ -82,24 +91,19 @@ export default {
       this.isVisibleBtn = false
     },
 
-    addPartner(val) {
-      if (
-        val &&
-        this.selectedDrivers.findIndex((i) => i.driver === val) === -1
-      ) {
-        this.selectedDrivers.push({ driver: val, isPermanent: false })
-        this.$emit('change', this.selectedDrivers)
+    addClient(val) {
+      if (val && !this.selectedClients.includes(val)) {
+        this.selectedClients.push(val)
+        this.$emit('change', this.selectedClients)
       }
       this.isVisibleBtn = true
     },
-    async deletePartner(id) {
+    async deleteClient(id) {
       if (!id) return null
       const res = await this.$confirm('Вы уверены? ')
       if (!res) return null
-      this.selectedPartners = this.selectedPartners.filter(
-        (item) => item !== id
-      )
-      this.$emit('change', this.selectedPartners)
+      this.selectedClients = this.selectedClients.filter((item) => item !== id)
+      this.$emit('change', this.selectedClients)
     },
   },
 }
