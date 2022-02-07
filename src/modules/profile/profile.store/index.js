@@ -99,6 +99,7 @@ export default {
         orderStatuses,
         orderTemplates,
         orderAnalyticTypes,
+        calcMethods,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -111,6 +112,7 @@ export default {
       if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
       if (orderAnalyticTypes?.length)
         commit('setOrderAnalyticTypes', orderAnalyticTypes)
+      if (calcMethods?.length) commit('setCalcMethods', calcMethods)
     },
 
     async createCompany({ commit }, payload) {

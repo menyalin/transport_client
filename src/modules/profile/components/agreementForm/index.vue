@@ -35,6 +35,17 @@
         dense
         outlined
       />
+      <v-select
+        v-model="$v.form.calcMethod.$model"
+        label="Метод расчета стоимости рейса"
+        :items="calcMethods"
+        outlined
+        :hint="calcMethodHint"
+        persistent-hint
+        dense
+        clearable
+      />
+      <app-clients v-model="$v.form.clients.$model" />
       <v-text-field
         v-model="$v.form.note.$model"
         label="Примечание"
@@ -64,12 +75,15 @@ import { required } from 'vuelidate/lib/validators'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import AppClients from './clients.vue'
 
 export default {
   name: 'AgreementForm',
   components: {
     AppButtonsPanel,
     AppDateTimeInput,
+    AppClients,
+    AppPartnerAutocomplete,
   },
   props: {
     agreement: {
@@ -91,6 +105,8 @@ export default {
         note: null,
         date: null,
         vatRate: null,
+        calcMethod: null,
+        clients: [],
       },
     }
   },
@@ -114,6 +130,14 @@ export default {
     vatRates() {
       return this.$store.getters.vatRates
     },
+    calcMethods() {
+      return this.$store.getters.calcMethods
+    },
+    calcMethodHint() {
+      if (!this.form.calcMethod) return null
+      return this.calcMethods.filter((c) => c.value === this.form.calcMethod)[0]
+        ?.description
+    },
   },
   watch: {
     agreement: {
@@ -130,6 +154,8 @@ export default {
         name: { required },
         date: { required },
         vatRate: { required },
+        calcMethod: {},
+        clients: {},
         note: {},
       },
     }

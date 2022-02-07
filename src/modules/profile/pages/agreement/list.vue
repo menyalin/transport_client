@@ -75,6 +75,7 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile']),
     filteredList() {
+      if (!this.list) return []
       return this.list.map((i) => {
         const vatRateText = this.$store.getters.vatRates.filter(
           (vR) => vR.value === i.vatRate
