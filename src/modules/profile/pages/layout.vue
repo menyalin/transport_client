@@ -37,6 +37,12 @@ export default {
         onlyWithDirectoriesProfile: false,
       },
       {
+        text: 'Соглашения',
+        icon: 'mdi-file-sign',
+        link: '/profile/agreements',
+        onlyWithDirectoriesProfile: true,
+      },
+      {
         text: 'Перевозчики',
         icon: 'mdi-alien',
         link: '/profile/tk_names',

@@ -7,12 +7,9 @@ import PartnerModule from './partner'
 import DowntimeModule from './downtime'
 import OrderTemplateModule from './orderTemplate'
 import ScheduleNotes from './scheduleNote'
-
+import agreementModule from './agreement'
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
-
-// import CrewService from '@/modules/profile/services/crew.service'
-// import moment from 'moment'
 
 export default {
   state: {
@@ -214,5 +211,6 @@ export default {
     DowntimeModule,
     OrderTemplateModule,
     ScheduleNotes,
+    agreementModule,
   },
 }

@@ -14,6 +14,7 @@ import downtimeRoutes from './downtime.js'
 import ProfileSettings from '../pages/profileSettings'
 import orderTemplateRoutes from './orderTemplates.js'
 import scheduleNoteRoutes from './scheduleNotes.js'
+import agreementRoutes from './agreement'
 
 export default [
   {
@@ -23,6 +24,7 @@ export default [
       authRequired: true,
     },
     children: [
+      ...agreementRoutes,
       ...crewRoutes,
       ...truckRoutes,
       ...driverRoutes,
