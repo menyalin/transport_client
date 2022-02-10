@@ -52,6 +52,14 @@
         outlined
         dense
       />
+      <v-checkbox
+        v-model="form.useByDefault"
+        label="Используется по умолчанию"
+      />
+      <v-checkbox
+        v-model="form.closed"
+        label="Соглашение закрыто"
+      />
     </div>
 
     <v-btn
@@ -106,6 +114,8 @@ export default {
         vatRate: null,
         calcMethod: null,
         clients: [],
+        closed: null,
+        useByDefault: false,
       },
     }
   },

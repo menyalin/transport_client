@@ -39,7 +39,7 @@
 <script>
 import AppBlockTitle from './blockTitle.vue'
 import orderService from '../../services/order.service'
-import getDistanceBetweenPoints from '@/modules/common/helpers/getDistanceBetweenPoints'
+import getMaxDistance from '@/modules/common/helpers/getMaxDistance'
 
 export default {
   name: 'AnalyticBlock',
@@ -72,17 +72,19 @@ export default {
     },
     coords() {
       let tmp = []
-      this.route.forEach((point) => {
-        if (this.addressMap.has(point.address)) {
-          tmp.push(
-            this.addressMap
-              .get(point.address)
-              ?.geo.split(', ')
-              .map((s) => parseFloat(s))
-              .reverse()
-          )
-        }
-      })
+      this.route
+        .filter((p) => !p.isReturn)
+        .forEach((point) => {
+          if (this.addressMap.has(point.address)) {
+            tmp.push(
+              this.addressMap
+                .get(point.address)
+                ?.geo.split(', ')
+                .map((s) => parseFloat(s))
+                .reverse()
+            )
+          }
+        })
       return tmp
     },
   },
@@ -120,7 +122,7 @@ export default {
     },
     async getDirectDistance() {
       if (this.isValidRoute) {
-        this.params.distanceDirect = getDistanceBetweenPoints(this.coords)
+        this.params.distanceDirect = getMaxDistance(this.coords)
       }
     },
   },

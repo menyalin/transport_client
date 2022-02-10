@@ -4,14 +4,15 @@
       :value="value"
       dense
       :hide-details="hideDetails"
+      :readonly="readonly"
       hide-no-data
       :items="items"
       :disabled="disabled"
       auto-select-first
-      clearable
+      :clearable="!readonly"
       :label="label"
       :outlined="outlined"
-      :append-icon="appendIcon"
+      :append-icon="!readonly ? appendIcon : null"
       @click:append="appendClick"
       @change="changeValue"
     />
@@ -56,6 +57,10 @@ export default {
     dense: { type: Boolean, default: false },
     value: String,
     disabled: { type: Boolean, default: false },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {

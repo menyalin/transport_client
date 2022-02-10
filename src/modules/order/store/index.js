@@ -47,6 +47,7 @@ export default {
     scheduleDate: moment().format('YYYY-MM-DD'),
     onlyPlannedDates: false,
     orderAnalyticTypes: [],
+    orderPriceTypes: [],
   },
   mutations: {
     changeOnlyPlannedDates(state) {
@@ -79,7 +80,9 @@ export default {
     setOrderAnalyticTypes(state, payload) {
       state.orderAnalyticTypes = payload
     },
-
+    setOrderPriceTypes(state, payload) {
+      state.orderPriceTypes = payload
+    },
     incScheduleDate(state, count) {
       state.scheduleDate = moment(state.scheduleDate)
         .add(count, 'day')
@@ -151,5 +154,8 @@ export default {
 
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
     onlyPlannedDates: ({ onlyPlannedDates }) => onlyPlannedDates,
+    orderPriceTypes: ({ orderPriceTypes }) => orderPriceTypes,
+    orderPriceTypesMap: ({ orderPriceTypes }) =>
+      new Map(orderPriceTypes.map((t) => [t.value, t.text])),
   },
 }

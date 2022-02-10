@@ -1,21 +1,37 @@
 <template>
   <div class="pa-3 point-wrapper">
     <div>
-      <v-select
-        v-model="tmpPoint.type"
-        :items="pointTypes"
-        dense
-        hide-details
-        outlined
-        :style="{ 'max-width': '150px' }"
-        @change="change"
-      />
+      <div class="row">
+        <v-select
+          v-model="tmpPoint.type"
+          :items="pointTypes"
+          dense
+          :readonly="readonly"
+          hide-details
+          outlined
+          :style="{ 'max-width': '150px' }"
+          @change="change"
+        />
+        <v-checkbox
+          v-if="tmpPoint.isReturn"
+          v-model="tmpPoint.isReturn"
+          label="Возврат"
+          readonly
+          hide-details
+          dense
+          color="red"
+          class="ml-4"
+        />
+      </div>
+
       <app-address-autocomplete
         v-model="tmpPoint.address"
-        :pointType="tmpPoint.type"
+        :pointType="!tmpPoint.isReturn ? tmpPoint.type : null"
         :disabled="!tmpPoint.type"
         label="Адрес"
+        :readonly="readonly"
         dense
+        :style="{ 'min-width': '550px' }"
         outlined
         hide-details
         @change="change"
@@ -25,6 +41,7 @@
         label="Примечание"
         hide-details
         outlined
+        :style="{ 'min-width': '550px' }"
         dense
         @change="change"
       />
@@ -55,7 +72,7 @@
       />
     </div>
     <div
-      v-if="showDeleteBtn"
+      v-if="showDeleteBtn && !readonly"
       class="remove-btn-wrapper"
     >
       <v-btn
@@ -92,6 +109,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
     isTemplate: {
       type: Boolean,
       default: false,
@@ -102,6 +123,7 @@ export default {
       tmpPoint: {
         type: null,
         address: null,
+        isReturn: false,
         plannedDate: null,
         arrivalDate: null,
         departureDate: null,
@@ -160,8 +182,8 @@ export default {
 <style scoped>
 .point-wrapper {
   display: grid;
-  grid-gap: 10px;
-  grid-template-columns: 1fr auto 50px;
+  gap: 10px;
+  grid-template-columns: auto 270px 50px;
 }
 .point-wrapper > div > * {
   margin: 5px;

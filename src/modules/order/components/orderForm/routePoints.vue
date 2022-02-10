@@ -17,6 +17,7 @@
           <app-point-detail
             :point="point"
             :ind="ind"
+            :readonly="readonly"
             :confirmed="confirmed"
             :isActive="point.isCurrent"
             :showDeleteBtn="tmpPoints.length > 2"
@@ -27,15 +28,32 @@
         </div>
       </transition-group>
     </draggable>
-
-    <v-btn
-      text
-      color="primary"
-      small
-      @click="addPoint"
+    <div
+      v-if="!readonly"
+      class="row py-3"
     >
-      Добавить адрес
-    </v-btn>
+      <v-btn
+        text
+        color="primary"
+        small
+        outlined
+        class="ma-2"
+        @click="addPoint"
+      >
+        Добавить адрес
+      </v-btn>
+      <v-btn
+        v-if="state.status === 'inProgress'"
+        text
+        outlined
+        small
+        color="red"
+        class="ma-2"
+        @click="addReturn"
+      >
+        Добавить возврат
+      </v-btn>
+    </div>
   </div>
 </template>
 <script>
@@ -85,6 +103,9 @@ export default {
     activePointInd() {
       return this.tmpPoints.findIndex((p) => !p.departureDate)
     },
+    readonly() {
+      return this.state.status === 'completed'
+    },
   },
   watch: {
     points: {
@@ -104,6 +125,13 @@ export default {
     addPoint() {
       this.tmpPoints.push({
         type: 'unloading',
+      })
+      this.$emit('changePoints', this.tmpPoints)
+    },
+    addReturn() {
+      this.tmpPoints.push({
+        type: 'unloading',
+        isReturn: true,
       })
       this.$emit('changePoints', this.tmpPoints)
     },

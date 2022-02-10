@@ -102,6 +102,7 @@
             v-model="client"
             title="Информация о клиенте"
             class="client"
+            :routeDate="routeDate"
           />
           <app-cargo-params
             v-model="cargoParams"
@@ -144,6 +145,12 @@
             :route="route"
             title="Аналитика"
           />
+          <app-price-block
+            id="price"
+            v-model="prices"
+            :agreementId="client.agreement"
+            title="Стоимость рейса"
+          />
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -176,6 +183,7 @@ import AppConfirmedCrew from './confirmedCrew.vue'
 import AppClientBlock from './clientBlock.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
+import AppPriceBlock from './priceBlock.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -192,6 +200,7 @@ export default {
     AppClientBlock,
     AppGradeBlock,
     AppAnalyticBlock,
+    AppPriceBlock,
   },
   props: {
     order: {
@@ -210,6 +219,7 @@ export default {
       templateSelector: null,
       loading: false,
       orderId: null,
+      prices: [],
       client: {
         client: null,
       },
@@ -223,11 +233,7 @@ export default {
         grade: null,
         note: null,
       },
-      analytics: {
-        // type: null,
-        // distanceRoad: null,
-        // distanceDirect: null,
-      },
+      analytics: {},
       state: {
         status: 'needGet',
       },
@@ -247,6 +253,10 @@ export default {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
     currentPointInd() {
       return this.route.findIndex((p) => !p.departureDate)
+    },
+    routeDate() {
+      if (!this.isValidRoute) return null
+      return this.route[0].plannedDate
     },
     preparedRoute: {
       get: function () {
@@ -346,6 +356,7 @@ export default {
         confirmedCrew: this.confirmedCrew,
         grade: this.grade,
         analytics: this.analytics,
+        prices: this.prices,
       }
     },
   },
@@ -410,7 +421,7 @@ export default {
   methods: {
     async copyTimestamptsToClipboard() {
       const loadingPoints = this.route.filter((p) => p.type === 'loading')
-      const unloadingPoints = this.route.filter((p) => p.type === 'unloading')
+      const unloadingPoints = this.route.filter((p) => p.type === 'unloading' && !p.isReturn)
       const loadingArrivalDate = loadingPoints[0].arrivalDate
       const loadingDepartureDate =
         loadingPoints[loadingPoints.length - 1].departureDate
@@ -502,6 +513,7 @@ export default {
       if (val.cargoParams) this.cargoParams = val.cargoParams
       if (val.reqTransport) this.reqTransport = val.reqTransport
       if (val.analytics) this.analytics = val.analytics
+      if (val.prices) this.prices = val.prices
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
@@ -516,6 +528,7 @@ export default {
       this.cargoParams = { ...{} }
       this.reqTransport = { ...{} }
       this.analytics = { ...{} }
+      this.prices = []
       keys.forEach((key) => {
         this.form[key] = null
       })
@@ -563,6 +576,7 @@ export default {
   align-content: start;
   justify-content: start;
   grid-template-columns: 1fr 4fr;
+  gap: 10px;
 }
 .route-state {
   grid-column: 1/2;
@@ -596,5 +610,9 @@ export default {
 #analytic {
   grid-column: 3/4;
   grid-row: 1/2;
+}
+#price {
+  grid-column: 3/4;
+  grid-row: 2/4;
 }
 </style>

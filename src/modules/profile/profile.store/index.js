@@ -33,7 +33,7 @@ export default {
       })
     },
     addToCache(state, item) {
-      state.cacheDirectories.set(item._id, item)
+      if (item?._id) state.cacheDirectories.set(item._id, item)
     },
     deleteFromCache(state, id) {
       state.cacheDirectories.delete(id)
@@ -100,6 +100,7 @@ export default {
         orderTemplates,
         orderAnalyticTypes,
         calcMethods,
+        orderPriceTypes,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -113,6 +114,7 @@ export default {
       if (orderAnalyticTypes?.length)
         commit('setOrderAnalyticTypes', orderAnalyticTypes)
       if (calcMethods?.length) commit('setCalcMethods', calcMethods)
+      if (orderPriceTypes?.length) commit('setOrderPriceTypes', orderPriceTypes)
     },
 
     async createCompany({ commit }, payload) {

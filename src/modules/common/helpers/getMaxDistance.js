@@ -1,12 +1,12 @@
-// поиск прямого расстояния между точками в маршруте
+// Поиск дальнейшей точки относительно первой в списке по прямой (по рулетке)
 
 export default (coordArray) => {
   if (!coordArray || coordArray.length < 2) return null
-  let dist = 0
+  let distArray = []
   for (let i = 1; i < coordArray.length; i++) {
-    dist += _distBetweenPoints(coordArray[i - 1], coordArray[i])
+    distArray.push(_distBetweenPoints(coordArray[0], coordArray[i]))
   }
-  return Math.round(dist / 10) / 100
+  return Math.round(Math.max(...distArray) / 10) / 100
 }
 
 const _distBetweenPoints = (a, b) => {
