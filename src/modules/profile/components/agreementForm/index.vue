@@ -15,51 +15,68 @@
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
     <div>
-      <v-text-field
-        v-model="$v.form.name.$model"
-        class="mt-3"
-        label="Название"
-        outlined
-        dense
+      <div id="title-row">
+        <v-text-field
+          v-model="$v.form.name.$model"
+          class="mt-3"
+          label="Название"
+          outlined
+          dense
+          :style="{ 'max-width': '300px' }"
+        />
+        <app-date-time-input
+          v-model="$v.form.date.$model"
+          label="Дата начала"
+          hideTimeInput
+          hidePrependIcon
+          class="mb-4"
+          :style="{ 'max-width': '300px' }"
+        />
+        <v-select
+          v-model="$v.form.vatRate.$model"
+          label="Ставка НДС"
+          :items="vatRates"
+          dense
+          outlined
+          :style="{ 'max-width': '130px' }"
+        />
+        <v-select
+          v-model="$v.form.calcMethod.$model"
+          label="Метод расчета стоимости рейса"
+          :items="calcMethods"
+          outlined
+          :hint="calcMethodHint"
+          persistent-hint
+          dense
+          clearable
+          :style="{ 'max-width': '500px' }"
+        />
+      </div>
+      <app-clients
+        v-model="$v.form.clients.$model"
+        :style="{ 'max-width': '400px' }"
       />
-      <app-date-time-input
-        v-model="$v.form.date.$model"
-        label="Дата начала"
-        hideTimeInput
-        class="mb-4"
+      <app-zone-distances
+        v-if="form.calcMethod === 'distanceZones'"
+        v-model="form.zones"
       />
-      <v-select
-        v-model="$v.form.vatRate.$model"
-        label="Ставка НДС"
-        :items="vatRates"
-        dense
-        outlined
-      />
-      <v-select
-        v-model="$v.form.calcMethod.$model"
-        label="Метод расчета стоимости рейса"
-        :items="calcMethods"
-        outlined
-        :hint="calcMethodHint"
-        persistent-hint
-        dense
-        clearable
-      />
-      <app-clients v-model="$v.form.clients.$model" />
       <v-text-field
         v-model="$v.form.note.$model"
         label="Примечание"
         outlined
         dense
       />
-      <v-checkbox
-        v-model="form.useByDefault"
-        label="Используется по умолчанию"
-      />
-      <v-checkbox
-        v-model="form.closed"
-        label="Соглашение закрыто"
-      />
+      <div class="row mb-2">
+        <v-checkbox
+          v-model="form.useByDefault"
+          label="Используется по умолчанию"
+          class="mx-4"
+        />
+        <v-checkbox
+          v-model="form.closed"
+          label="Соглашение закрыто"
+        />
+      </div>
     </div>
 
     <v-btn
@@ -84,6 +101,7 @@ import { required } from 'vuelidate/lib/validators'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppClients from './clients.vue'
+import AppZoneDistances from './zones.vue'
 
 export default {
   name: 'AgreementForm',
@@ -91,6 +109,7 @@ export default {
     AppButtonsPanel,
     AppDateTimeInput,
     AppClients,
+    AppZoneDistances,
   },
   props: {
     agreement: {
@@ -115,6 +134,7 @@ export default {
         calcMethod: null,
         clients: [],
         closed: null,
+        zones: [],
         useByDefault: false,
       },
     }
@@ -198,5 +218,16 @@ export default {
 .row-input {
   display: flex;
   flex-direction: row;
+}
+.list-move {
+  transition: transform 1s;
+}
+
+#title-row {
+  display: flex;
+  flex-direction: row;
+}
+#title-row > * {
+  margin: 10px;
 }
 </style>

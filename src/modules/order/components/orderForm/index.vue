@@ -149,6 +149,7 @@
             id="price"
             v-model="prices"
             :agreementId="client.agreement"
+            :analytics="analytics"
             title="Стоимость рейса"
           />
         </div>
@@ -421,7 +422,9 @@ export default {
   methods: {
     async copyTimestamptsToClipboard() {
       const loadingPoints = this.route.filter((p) => p.type === 'loading')
-      const unloadingPoints = this.route.filter((p) => p.type === 'unloading' && !p.isReturn)
+      const unloadingPoints = this.route.filter(
+        (p) => p.type === 'unloading' && !p.isReturn
+      )
       const loadingArrivalDate = loadingPoints[0].arrivalDate
       const loadingDepartureDate =
         loadingPoints[loadingPoints.length - 1].departureDate

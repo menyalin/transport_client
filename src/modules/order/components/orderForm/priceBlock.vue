@@ -166,6 +166,7 @@
 <script>
 import AppBlockTitle from './blockTitle.vue'
 import AgreementService from '@/modules/profile/services/agreement.service'
+import getPriceByDistanceZone from './calcMethods/distanceZones'
 
 export default {
   name: 'PriceBlock',
@@ -180,6 +181,7 @@ export default {
     items: Array,
     title: String,
     agreementId: String,
+    analytics: Object,
   },
   data() {
     return {
@@ -251,7 +253,11 @@ export default {
   methods: {
     setPrice() {
       const parsedVal = parseFloat(this.editedPrice.tmpPrice)
-      if (!this.agreement?.vatRate) return null
+      if (
+        this.agreement?.vatRate === undefined ||
+        this.agreement?.vatRate === null
+      )
+        return null
       if (isNaN(parsedVal)) return null
       const vatKoef = parseFloat(1 + this.agreement.vatRate / 100)
       const newPriceItem = {
@@ -310,7 +316,21 @@ export default {
       })
     },
     fillBasePrice() {
-      console.log('Должен заполниться базовый тариф')
+      let price = 0
+      switch (this.agreement.calcMethod) {
+        case 'distanceZones':
+          price = getPriceByDistanceZone({
+            distance: this.analytics.distanceDirect,
+            zones: this.agreement.zones,
+          })
+          break
+        default:
+          this.$store.commit('setError', 'Не известный метод расчета тарифа')
+      }
+      this.editedPrice.type = 'base'
+      this.editedPrice.tmpPrice = price
+
+      this.setPrice()
     },
   },
 }

@@ -40,6 +40,9 @@
           <template v-slot:[`item.tkName`]="{ item }">
             {{ $store.getters.tkNamesMap.get(item.tkName).name }}
           </template>
+          <template v-slot:[`item.note`]="{ item }">
+            {{ item.controlDates.note || item.note }}
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -65,6 +68,7 @@ export default {
         { value: 'name', text: 'Имя' },
         { value: 'controlDates.title', text: 'Объект' },
         { value: 'controlDates.validDays', text: 'Кол-во дней' },
+        { value: 'note', text: 'Комментарий' },
       ],
     }
   },
