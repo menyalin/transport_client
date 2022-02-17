@@ -43,6 +43,9 @@
           <template v-slot:[`item.note`]="{ item }">
             {{ item.controlDates.note || item.note }}
           </template>
+          <template v-slot:[`item.controlDates.endDate`]="{ item }">
+            {{ new Date(item.controlDates.endDate).toLocaleDateString() }}
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -67,7 +70,16 @@ export default {
         { value: 'tkName', text: 'ТК' },
         { value: 'name', text: 'Имя' },
         { value: 'controlDates.title', text: 'Объект' },
-        { value: 'controlDates.validDays', text: 'Кол-во дней' },
+        {
+          value: 'controlDates.validDays',
+          text: 'Кол-во дней',
+          align: 'center',
+        },
+        {
+          value: 'controlDates.endDate',
+          text: 'Дата завершения',
+          align: 'center',
+        },
         { value: 'note', text: 'Комментарий' },
       ],
     }
