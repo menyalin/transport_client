@@ -1,7 +1,10 @@
 /* eslint-disable vue/no-template-key */
 <template>
   <div>
-    <div class="table-wrapper">
+    <div
+      class="table-wrapper"
+      :style="{ 'max-height': showBufferZone ? '77vh' : '100%' }"
+    >
       <table
         ref="tableBody"
         @dragover.prevent="dragOverHandler"
@@ -14,7 +17,14 @@
             ref="rowTitleColumn"
             class="text-center"
             :style="{ width: initTitleWidth }"
-          />
+          >
+            <v-icon
+              small
+              @click="showBufferZone = !showBufferZone"
+            >
+              {{ showBufferZone ? 'mdi-eye' : 'mdi-eye-off' }}
+            </v-icon>
+          </td>
           <td
             v-for="column of columns"
             :key="column.title"
@@ -109,7 +119,10 @@
     </div>
 
     <v-divider />
-    <div class="buffer-wrapper">
+    <div
+      v-if="showBufferZone"
+      class="buffer-wrapper"
+    >
       <table
         @dragover.prevent
         @drop.prevent="dropOnBufferHandler"
@@ -180,9 +193,6 @@ export default {
       type: Array,
       required: true,
     },
-    // orders: {
-    //   type: Array,
-    // },
   },
   data: () => ({
     tableWidth: 0,
@@ -195,6 +205,7 @@ export default {
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
     showMenu: false,
+    showBufferZone: false,
     menuX: 0,
     menuY: 0,
     truckId: null,
@@ -580,7 +591,6 @@ export default {
   --table-border: rgb(0, 0, 0) 1px solid;
   width: 100%;
   box-sizing: border-box;
-  max-height: 77vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
