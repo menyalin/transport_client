@@ -19,19 +19,18 @@
         dense
         label="Номер заказа клиента"
       />
-      <v-autocomplete
-        v-model="params.agreement"
-        label="Соглашение"
-        dense
-        :items="agreements"
-        item-value="_id"
-        item-text="name"
-        outlined
-        :loading="loading"
-        :error-messages="errorMessage"
-        append-icon="mdi-autorenew"
-        @click:append="getAgreements"
-      />
+    </div>
+    <div
+      v-if="loading"
+      class="text-caption"
+    >
+      Загружаю...
+    </div>
+    <div
+      v-else
+      class="text-caption"
+    >
+      {{ agreement ? agreement.name : 'Соглашение отсутствует' }}
     </div>
   </div>
 </template>
@@ -58,6 +57,7 @@ export default {
   data() {
     return {
       agreements: [],
+      agreement: null,
       errorMessage: null,
       loading: false,
       params: {
@@ -77,7 +77,7 @@ export default {
           this.params.agreement = val.agreement
         }
         if (val?.agreement) {
-          this.agreements.push(await service.getById(val.agreement))
+          this.agreement = await service.getById(val.agreement)
         }
       },
     },
@@ -90,42 +90,36 @@ export default {
     ['params.client']: {
       handler: async function () {
         this.params.agreement = null
-        await this.getAgreements()
+        await this.getAgreement()
       },
     },
     routeDate: async function () {
       this.params.agreement = null
-      await this.getAgreements()
+      await this.getAgreement()
     },
   },
   methods: {
-    async getAgreements() {
-      this.clearAgreements()
+    async getAgreement() {
+      this.clearAgreement()
       if (!this.routeDate || !this.params.client) return null
 
       try {
         this.loading = true
-        this.agreements = await service.getForOrder({
+        this.agreement = await service.getForOrder({
           company: this.$store.getters.directoriesProfile,
           date: this.routeDate,
           client: this.params.client,
         })
+        this.params.agreement = this.agreement._id
         this.loading = false
-        if (this.agreements.length === 1)
-          this.params.agreement = this.agreements[0]._id
-        this.agreements.forEach((a) => {
-          if (a.type === 'default') {
-            this.params.agreement = a._id
-          }
-        })
       } catch (e) {
         this.loading = false
         this.errorMessage = e.message
       }
     },
-    clearAgreements() {
+    clearAgreement() {
       this.params.agreement = null
-      this.agreements = []
+      this.agreement = null
     },
   },
 }
@@ -133,8 +127,8 @@ export default {
 <style scoped>
 .client-block {
   display: grid;
-  grid-template-columns: 230px 180px auto;
+  grid-template-columns: 280px 230px;
   margin: 10px;
-  grid-gap: 15px;
+  gap: 10px;
 }
 </style>

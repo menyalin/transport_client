@@ -1,21 +1,10 @@
 <template>
-  <div>
+  <div v-if="showPriceBlock">
     <div>
       <app-block-title>{{ title }}</app-block-title>
     </div>
     <div>
       <div id="button-panel">
-        <v-btn
-          small
-          text
-          outlined
-          :disabled="calcMethod === 'fixed'"
-          color="primary"
-          class="mx-1"
-          @click="fillBasePrice"
-        >
-          Заполнить тариф
-        </v-btn>
         <v-btn
           small
           text
@@ -128,6 +117,7 @@
                     />
                     <v-checkbox
                       v-model="withVat"
+                      :disabled="agreement.vatRate == 0"
                       label="c НДС"
                       hide-details
                       dense
@@ -166,7 +156,6 @@
 <script>
 import AppBlockTitle from './blockTitle.vue'
 import AgreementService from '@/modules/profile/services/agreement.service'
-import getPriceByDistanceZone from './calcMethods/distanceZones'
 
 export default {
   name: 'PriceBlock',
@@ -200,13 +189,13 @@ export default {
   },
   computed: {
     availablePriceTypes() {
-      if (!this.calcMethod) return []
-      return this.$store.getters.orderPriceTypes.filter((t) =>
-        this.calcMethod === 'fixed' ? true : t.value !== 'base'
-      )
+      return this.$store.getters.orderPriceTypes
     },
     isValidNewPrice() {
       return this.editedPrice.tmpPrice > 0 && !!this.editedPrice.type
+    },
+    showPriceBlock() {
+      return this.agreement.useCustomPrices
     },
   },
   watch: {
@@ -241,9 +230,11 @@ export default {
       immediate: true,
       handler: async function (val) {
         if (val) {
-          this.agreement = await AgreementService.getById(val)
-          this.withVat = this.agreement.vatRate !== 0
-          this.calcMethod = this.agreement.calcMethod
+          const res = await AgreementService.getById(val)
+          if (res) {
+            this.agreement = Object.assign({}, res)
+            this.withVat = this.agreement.vatRate !== 0
+          }
         } else {
           this.agreement = { ...{} }
         }
@@ -314,23 +305,6 @@ export default {
       this.$nextTick(() => {
         this.dialog = true
       })
-    },
-    fillBasePrice() {
-      let price = 0
-      switch (this.agreement.calcMethod) {
-        case 'distanceZones':
-          price = getPriceByDistanceZone({
-            distance: this.analytics.distanceDirect,
-            zones: this.agreement.zones,
-          })
-          break
-        default:
-          this.$store.commit('setError', 'Не известный метод расчета тарифа')
-      }
-      this.editedPrice.type = 'base'
-      this.editedPrice.tmpPrice = price
-
-      this.setPrice()
     },
   },
 }

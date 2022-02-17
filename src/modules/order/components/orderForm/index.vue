@@ -223,6 +223,7 @@ export default {
       prices: [],
       client: {
         client: null,
+        agreement: null,
       },
       cargoParams: {
         weight: null,
@@ -256,7 +257,6 @@ export default {
       return this.route.findIndex((p) => !p.departureDate)
     },
     routeDate() {
-      if (!this.isValidRoute) return null
       return this.route[0].plannedDate
     },
     preparedRoute: {

@@ -22,7 +22,7 @@
           label="Название"
           outlined
           dense
-          :style="{ 'max-width': '300px' }"
+          :style="{ 'max-width': '500px' }"
         />
         <app-date-time-input
           v-model="$v.form.date.$model"
@@ -40,40 +40,27 @@
           outlined
           :style="{ 'max-width': '130px' }"
         />
-        <v-select
-          v-model="$v.form.calcMethod.$model"
-          label="Метод расчета стоимости рейса"
-          :items="calcMethods"
-          outlined
-          :hint="calcMethodHint"
-          persistent-hint
-          dense
-          clearable
-          :style="{ 'max-width': '500px' }"
-        />
       </div>
       <app-clients
-        v-model="$v.form.clients.$model"
+        v-model="form.clients"
         :style="{ 'max-width': '400px' }"
       />
-      <app-zone-distances
-        v-if="form.calcMethod === 'distanceZones'"
-        v-model="form.zones"
-      />
+      <app-zone-distances v-model="form.zones" />
       <v-text-field
-        v-model="$v.form.note.$model"
+        v-model="form.note"
         label="Примечание"
         outlined
         dense
       />
       <div class="row mb-2">
         <v-checkbox
-          v-model="form.useByDefault"
-          label="Используется по умолчанию"
-          class="mx-4"
+          v-model="form.useCustomPrices"
+          class="pl-2"
+          label="Разрешены индивидуальные тарифы"
         />
         <v-checkbox
           v-model="form.closed"
+          class="pl-6"
           label="Соглашение закрыто"
         />
       </div>
@@ -131,11 +118,10 @@ export default {
         note: null,
         date: null,
         vatRate: null,
-        calcMethod: null,
+        useCustomPrices: true,
         clients: [],
         closed: null,
         zones: [],
-        useByDefault: false,
       },
     }
   },
@@ -159,14 +145,6 @@ export default {
     vatRates() {
       return this.$store.getters.vatRates
     },
-    calcMethods() {
-      return this.$store.getters.calcMethods
-    },
-    calcMethodHint() {
-      if (!this.form.calcMethod) return null
-      return this.calcMethods.filter((c) => c.value === this.form.calcMethod)[0]
-        ?.description
-    },
   },
   watch: {
     agreement: {
@@ -183,9 +161,6 @@ export default {
         name: { required },
         date: { required },
         vatRate: { required },
-        calcMethod: {},
-        clients: {},
-        note: {},
       },
     }
   },
