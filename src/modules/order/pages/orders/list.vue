@@ -26,6 +26,17 @@
         hide-details
         label="Грузовик"
       />
+      <v-autocomplete
+        v-model="settings.driver"
+        dense
+        item-value="_id"
+        item-text="fullName"
+        clearable
+        :items="drivers"
+        outlined
+        hide-details
+        label="Водитель"
+      />
       <app-partner-autocomplete
         v-model="settings.client"
         label="Клиент"
@@ -122,6 +133,7 @@ export default {
     settings: {
       client: null,
       truck: null,
+      driver: null,
       status: null,
       period: _initPeriod(),
       listOptions: {
@@ -179,6 +191,9 @@ export default {
           text: t.regNum,
         }))
     },
+    drivers() {
+      return this.$store.getters.drivers
+    },
   },
   watch: {
     settings: {
@@ -211,6 +226,7 @@ export default {
       this.getData()
     },
     async getData() {
+      this.settings.listOptions.page = 1
       try {
         if (!this.$store.getters.directoriesProfile) {
           this.$router.push('/profile')
@@ -220,6 +236,7 @@ export default {
         const data = await service.getList({
           client: this.settings.client,
           truck: this.settings.truck,
+          driver: this.settings.driver,
           status: this.settings.status,
           profile: this.directoriesProfile,
           startDate: moment(this.settings.period[0]).toISOString(),
@@ -247,7 +264,7 @@ export default {
 .filter-wrapper {
   display: grid;
   gap: 10px;
-  grid-template-columns: 300px 250px 250px 250px;
+  grid-template-columns: 300px 250px 250px 300px 250px;
   align-items: start;
 }
 </style>
