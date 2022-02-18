@@ -16,6 +16,7 @@
         hide-details
         outlined
         clearable
+        @change="settings.listOptions.page = 1"
       />
       <v-autocomplete
         v-model="settings.truck"
@@ -25,6 +26,7 @@
         outlined
         hide-details
         label="Грузовик"
+        @change="settings.listOptions.page = 1"
       />
       <v-autocomplete
         v-model="settings.driver"
@@ -36,6 +38,7 @@
         outlined
         hide-details
         label="Водитель"
+        @change="settings.listOptions.page = 1"
       />
       <app-partner-autocomplete
         v-model="settings.client"
@@ -44,6 +47,7 @@
         dense
         only-clients
         hide-details
+        @change="settings.listOptions.page = 1"
       />
       <v-btn
         color="primary"
@@ -226,7 +230,6 @@ export default {
       this.getData()
     },
     async getData() {
-      this.settings.listOptions.page = 1
       try {
         if (!this.$store.getters.directoriesProfile) {
           this.$router.push('/profile')
