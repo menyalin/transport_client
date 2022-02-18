@@ -186,6 +186,7 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
     preparedOrders() {
+      if (!this.orders) return []
       return this.orders.map((order) => ({
         ...order,
         loadingPoints: order.route
