@@ -63,7 +63,7 @@
         :headers="headers"
         dense
         :loading="loading"
-        :items="orders"
+        :items="preparedOrders"
         fixed-header
         height="72vh"
         :serverItemsLength="count"
@@ -119,8 +119,8 @@ import { mapGetters } from 'vuex'
 const _initPeriod = () => {
   const todayM = moment()
   return [
-    todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(20, 'd').format('YYYY-MM-DD'),
+    todayM.add(-3, 'd').format('YYYY-MM-DD'),
+    todayM.add(6, 'd').format('YYYY-MM-DD'),
   ]
 }
 
@@ -167,13 +167,35 @@ export default {
         align: 'center',
         width: '10rem',
       },
+      {
+        value: 'loadingPoints',
+        text: 'Погрузка',
+        sortable: false,
+        //width: '10rem',
+      },
+      {
+        value: 'unloadingPoints',
+        text: 'Разгрузка',
+        sortable: false,
+        //width: '10rem',
+      },
       { value: 'state.status', text: 'Статус', sortable: false },
       { value: 'client.client', text: 'Клиент', sortable: false },
-      { value: 'client.num', text: 'Номер заказа клиента', sortable: false },
     ],
   }),
   computed: {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
+    preparedOrders() {
+      return this.orders.map((order) => ({
+        ...order,
+        loadingPoints: order.route
+          .filter((p) => p.type === 'loading')
+          .map((p) => this.$store.getters.addressMap.get(p.address)?.shortName),
+        unloadingPoints: order.route
+          .filter((p) => p.type === 'unloading')
+          .map((p) => this.$store.getters.addressMap.get(p.address)?.shortName),
+      }))
+    },
     partnersMap() {
       return this.$store.getters.partnersMap
     },
