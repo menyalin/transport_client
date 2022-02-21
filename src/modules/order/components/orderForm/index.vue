@@ -142,7 +142,7 @@
             id="analytic"
             v-model="analytics"
             :isValidRoute="isValidRoute"
-            :route="route"
+            :coords="coords"
             title="Аналитика"
           />
           <app-price-block
@@ -173,6 +173,7 @@
 </template>
 <script>
 import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
+import OrderService from '@/modules/order/services/order.service.js'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
@@ -345,6 +346,26 @@ export default {
     isExistFirstArrivalDate() {
       return !!this.route[0]?.arrivalDate
     },
+    addressMap() {
+      return this.$store.getters.addressMap
+    },
+    coords() {
+      let tmp = []
+      this.route
+        .filter((p) => !p.isReturn)
+        .forEach((point) => {
+          if (this.addressMap.has(point.address)) {
+            tmp.push(
+              this.addressMap
+                .get(point.address)
+                ?.geo.split(', ')
+                .map((s) => parseFloat(s))
+                .reverse()
+            )
+          }
+        })
+      return tmp
+    },
     formState() {
       return {
         ...this.form,
@@ -499,8 +520,17 @@ export default {
         return true
       return false
     },
-    submit() {
+    async submit() {
       if (!this.directoriesProfile || this.isInvalidForm) return null
+      if (!this.analytics.distanceDirect)
+        this.analytics.distanceDirect = OrderService.getDirectDistance(
+          this.coords
+        )
+      if (!this.analytics.distanceRoad) {
+        const { distanceRoad } = await OrderService.getDistance(this.coords)
+        this.analytics.distanceRoad = distanceRoad
+      }
+
       this.$emit('submit', this.formState)
     },
     cancel() {
@@ -536,20 +566,6 @@ export default {
         this.form[key] = null
       })
     },
-
-    // getEndPositionDate(route) {
-    //   let dates = []
-    //   const dateFields = ['plannedDate', 'arrivalDate', 'departureDate']
-    //   dateFields.forEach((field) => {
-    //     dates.push(
-    //       route
-    //         .filter((i) => i[field])
-    //         .map((i) => i[field])
-    //         .reverse()[0]
-    //     )
-    //   })
-    //   return dates.sort((a, b) => new Date(b) - new Date(a))[0]
-    // },
   },
 }
 </script>
