@@ -6,7 +6,8 @@ export default (coordArray) => {
   for (let i = 1; i < coordArray.length; i++) {
     distArray.push(_distBetweenPoints(coordArray[0], coordArray[i]))
   }
-  return Math.round(Math.max(...distArray) / 10) / 100
+  return Math.floor(Math.max(...distArray) / 10 / 100)
+  // округление до целых вниз
 }
 
 const _distBetweenPoints = (a, b) => {

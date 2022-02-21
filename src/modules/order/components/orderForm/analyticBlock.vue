@@ -39,7 +39,6 @@
 <script>
 import AppBlockTitle from './blockTitle.vue'
 import orderService from '../../services/order.service'
-import getMaxDistance from '@/modules/common/helpers/getMaxDistance'
 
 export default {
   name: 'AnalyticBlock',
@@ -55,6 +54,7 @@ export default {
     title: String,
     isValidRoute: Boolean,
     route: Array,
+    coords: Array,
   },
   data() {
     return {
@@ -65,28 +65,6 @@ export default {
         distanceDirect: null,
       },
     }
-  },
-  computed: {
-    addressMap() {
-      return this.$store.getters.addressMap
-    },
-    coords() {
-      let tmp = []
-      this.route
-        .filter((p) => !p.isReturn)
-        .forEach((point) => {
-          if (this.addressMap.has(point.address)) {
-            tmp.push(
-              this.addressMap
-                .get(point.address)
-                ?.geo.split(', ')
-                .map((s) => parseFloat(s))
-                .reverse()
-            )
-          }
-        })
-      return tmp
-    },
   },
   watch: {
     item: {
@@ -122,7 +100,7 @@ export default {
     },
     async getDirectDistance() {
       if (this.isValidRoute) {
-        this.params.distanceDirect = getMaxDistance(this.coords)
+        this.params.distanceDirect = orderService.getDirectDistance(this.coords)
       }
     },
   },

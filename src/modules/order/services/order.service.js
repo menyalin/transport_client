@@ -2,6 +2,8 @@ import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
 import moment from 'moment'
+import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
+
 const BASE_PATH = '/orders'
 
 class OrderService {
@@ -85,6 +87,9 @@ class OrderService {
   async getDistance(coords) {
     let { data } = await api.post(BASE_PATH + '/get_distance', { coords })
     return data
+  }
+  getDirectDistance(coords) {
+    return getMaxDistance(coords)
   }
 }
 
