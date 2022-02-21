@@ -4,6 +4,7 @@ import AuthModule from '@/modules/auth/auth.store'
 import AdminModule from '@/modules/admin/admin.store'
 import ProfileModule from '@/modules/profile/profile.store/index.js'
 import OrderModule from '@/modules/order/store/index.js'
+import AccountingModule from '@/modules/accounting/store.js'
 import router from '../router'
 
 const initPlugin = (store) => {
@@ -58,6 +59,12 @@ export default new Vuex.Store({
     appLoading: ({ appLoading }) => appLoading,
     loading: ({ loading }) => loading,
   },
-  modules: { AuthModule, AdminModule, ProfileModule, OrderModule },
+  modules: {
+    AuthModule,
+    AdminModule,
+    ProfileModule,
+    OrderModule,
+    AccountingModule,
+  },
   plugins: [initPlugin],
 })

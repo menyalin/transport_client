@@ -101,6 +101,8 @@ export default {
         orderAnalyticTypes,
         calcMethods,
         orderPriceTypes,
+        documentTypes,
+        documentStatuses,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -115,6 +117,9 @@ export default {
         commit('setOrderAnalyticTypes', orderAnalyticTypes)
       if (calcMethods?.length) commit('setCalcMethods', calcMethods)
       if (orderPriceTypes?.length) commit('setOrderPriceTypes', orderPriceTypes)
+      if (documentTypes?.length) commit('setDocumentTypes', documentTypes)
+      if (documentStatuses?.length)
+        commit('setDocumentStatuses', documentStatuses)
     },
 
     async createCompany({ commit }, payload) {

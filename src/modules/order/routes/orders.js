@@ -1,4 +1,3 @@
-// import ListOrder from '../pages/orders/list'
 import DetailsOrder from '../pages/orders/details'
 import CreateOrderGroup from '../pages/orderGroupCreate/index.vue'
 

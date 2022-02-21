@@ -1,6 +1,6 @@
 import Layout from '../pages/layout'
 import orderRoutes from './orders'
-import Schedule from '../pages/schedule'
+
 
 export default [
   {

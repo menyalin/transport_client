@@ -10,7 +10,7 @@
       class="app-title"
       @click="toHomePage"
     >
-      s4log
+      {{ title || 's4log' }}
     </v-toolbar-title>
     <slot />
     <v-spacer />
@@ -34,10 +34,7 @@
       </v-icon>
       Рейсы
     </v-btn>
-    <app-reports-menu
-      v-if="isLoggedIn && directoriesProfile"
-      
-    />
+    <app-reports-menu v-if="isLoggedIn && directoriesProfile" />
     <v-btn
       v-if="isLoggedIn"
       to="/profile"
@@ -47,6 +44,16 @@
         mdi-account-outline
       </v-icon>
       Профиль
+    </v-btn>
+    <v-btn
+      v-if="isLoggedIn"
+      text
+      to="/accounting"
+    >
+      <v-icon left>
+        mdi-calculator-variant
+      </v-icon>
+      Учет
     </v-btn>
     <v-btn
       v-if="
@@ -86,8 +93,7 @@ export default {
   },
   props: {
     title: {
-      type: String,
-      required: true,
+      type: String, 
     },
     reports: {
       type: Array,

@@ -49,6 +49,10 @@
         hide-details
         @change="settings.listOptions.page = 1"
       />
+      <v-switch
+        v-model="settings.accountingMode"
+        label="Бухгалтер"
+      />
       <v-btn
         color="primary"
         text
@@ -60,7 +64,7 @@
     </div>
     <div class="table-wrapper">
       <v-data-table
-        :headers="headers"
+        :headers="filteredHeaders"
         dense
         :loading="loading"
         :items="preparedOrders"
@@ -104,7 +108,55 @@
               : ''
           }}
         </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                icon
+                small
+                dark
+                v-bind="attrs"
+                v-on="on"
+                @click="openDocsDialog(item._id)"
+              >
+                <v-icon small>
+                  mdi-file-document-multiple
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Сопроводительные документы</span>
+          </v-tooltip>
+        </template>
       </v-data-table>
+      <v-dialog
+        v-model="docDialog"
+        max-width="800"
+      >
+        <v-card>
+          <v-card-title class="text-h5">
+            Use Google's location service?
+          </v-card-title>
+
+          <v-card-text>
+            Let Google help apps determine location. This means sending
+            anonymous location data to Google, even when no apps are running.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn @click="cancelDocDialog">
+              Отмена
+            </v-btn>
+
+            <v-btn
+              color="primary"
+              @click="saveDocDialog"
+            >
+              Agree
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -133,12 +185,15 @@ export default {
   },
   data: () => ({
     formName: 'orderList',
+    docDialog: false,
+    editableDocs: [],
     loading: false,
     settings: {
       client: null,
       truck: null,
       driver: null,
       status: null,
+      accountingMode: true,
       period: _initPeriod(),
       listOptions: {
         page: 1,
@@ -147,7 +202,7 @@ export default {
     },
     count: 0,
     orders: [],
-    headers: [
+    allHeaders: [
       {
         value: 'plannedDate',
         text: 'Дата погрузки',
@@ -181,10 +236,36 @@ export default {
       },
       { value: 'state.status', text: 'Статус', sortable: false },
       { value: 'client.client', text: 'Клиент', sortable: false },
+      {
+        value: 'client.num',
+        text: 'Номер клиента',
+        sortable: false,
+        forAccountingMode: true,
+      },
+      {
+        value: 'agreement.name',
+        text: 'Соглашение',
+        sortable: false,
+        forAccountingMode: true,
+      },
+      {
+        value: 'actions',
+        text: 'Действия',
+        sortable: false,
+        forAccountingMode: true,
+      },
     ],
   }),
   computed: {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
+    accountingMode() {
+      return this.settings.accountingMode
+    },
+    filteredHeaders() {
+      return this.allHeaders.filter((item) =>
+        this.accountingMode ? true : !item.forAccountingMode
+      )
+    },
     preparedOrders() {
       if (!this.orders) return []
       return this.orders.map((order) => ({
@@ -225,8 +306,8 @@ export default {
   watch: {
     settings: {
       deep: true,
-      handler: function () {
-        this.getData()
+      handler: async function (newVal, oldVal) {
+        await this.getData()
       },
     },
   },
@@ -243,6 +324,17 @@ export default {
     next()
   },
   methods: {
+    async openDocsDialog(orderId) {
+      const { docs } = await service.getById(orderId)
+      this.docDialog = true
+    },
+    cancelDocDialog() {
+      this.docDialog = false
+    },
+    saveDocDialog() {
+      console.log('save docs')
+      this.docDialog = false
+    },
     create() {
       this.$router.push({ name: 'CreateOrder' })
     },
@@ -267,6 +359,7 @@ export default {
           profile: this.directoriesProfile,
           startDate: moment(this.settings.period[0]).toISOString(),
           endDate: moment(this.settings.period[1]).toISOString(),
+          accountingMode: this.accountingMode,
           skip:
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),
@@ -290,7 +383,7 @@ export default {
 .filter-wrapper {
   display: grid;
   gap: 10px;
-  grid-template-columns: 300px 250px 250px 300px 250px;
-  align-items: start;
+  grid-template-columns: 300px 250px 250px 300px 250px 150px;
+  align-items: center;
 }
 </style>
