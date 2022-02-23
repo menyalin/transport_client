@@ -155,6 +155,22 @@ export default {
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
     onlyPlannedDates: ({ onlyPlannedDates }) => onlyPlannedDates,
     orderPriceTypes: ({ orderPriceTypes }) => orderPriceTypes,
+    orderCountByDates: ({ orders }, { ordersForSchedule }) => {
+      let tmpRes = new Map()
+      const filteredOrders = orders.filter((o) => o.confirmedCrew?.truck)
+      for (let i = 0; i < filteredOrders.length; i++) {
+        const key = moment(filteredOrders[i].startPositionDate).format(
+          'YYYY-MM-DD'
+        )
+        if (tmpRes.has(key)) {
+          const lastVal = tmpRes.get(key)
+          tmpRes.set(key, { totalInDate: (lastVal.totalInDate += 1) })
+        } else {
+          tmpRes.set(key, { totalInDate: 1 })
+        }
+      }
+      return tmpRes
+    },
     orderPriceTypesMap: ({ orderPriceTypes }) =>
       new Map(orderPriceTypes.map((t) => [t.value, t.text])),
   },

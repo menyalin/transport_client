@@ -30,16 +30,17 @@
             :key="column.title"
             :class="{ 'today-header': column.isToday, 'text-center': true }"
           >
-            <div>{{ column.title }}</div>
-            <div class="title-time-row">
-              <div>00-06</div>
-              <div>06-12</div>
-              <div>12-18</div>
-              <div>18-00</div>
+            <div>
+              <div>{{ column.title }}</div>
+              <div class="title-time-row">
+                <div>00-06</div>
+                <div>06-12</div>
+                <div>12-18</div>
+                <div>18-00</div>
+              </div>
             </div>
           </td>
         </tr>
-
         <tr
           v-for="(truck, idx) of rows"
           :key="truck._id"
@@ -56,6 +57,17 @@
             v-for="column of columns"
             :key="column.title"
           />
+        </tr>
+        <tr>
+          <td class="text-center">
+            Итоги
+          </td>
+          <td
+            v-for="column of columns"
+            :key="column.title"
+          >
+            <app-result-cell :date="column.date" />
+          </td>
         </tr>
         <app-note
           v-for="note of filteredNotes"
@@ -178,6 +190,7 @@ import appOrderCell from './orderCell.vue'
 import appDowntimeCell from './downtimeCell.vue'
 import appBgGrid from './bgGrid'
 import appNote from './note.vue'
+import appResultCell from './resultCell.vue'
 
 export default {
   name: 'ScheduleTable',
@@ -187,6 +200,7 @@ export default {
     appOrderCell,
     appBgGrid,
     appNote,
+    appResultCell,
   },
   props: {
     rows: {
