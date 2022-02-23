@@ -133,29 +133,12 @@
         v-model="docDialog"
         max-width="800"
       >
-        <v-card>
-          <v-card-title class="text-h5">
-            Use Google's location service?
-          </v-card-title>
-
-          <v-card-text>
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn @click="cancelDocDialog">
-              Отмена
-            </v-btn>
-
-            <v-btn
-              color="primary"
-              @click="saveDocDialog"
-            >
-              Agree
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <app-doc-list-form
+          :docs="editableDocs"
+          :orderId="editableOrderId"
+          @cancel="cancelDocDialog"
+          @save="saveDocDialog"
+        />
       </v-dialog>
     </div>
   </div>
@@ -166,6 +149,8 @@ import service from '@/modules/order/services/order.service'
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import AppDocListForm from '../../components/docListForm/index.vue'
+
 import { mapGetters } from 'vuex'
 
 const _initPeriod = () => {
@@ -182,11 +167,13 @@ export default {
     AppDateRange,
     AppButtonsPanel,
     AppPartnerAutocomplete,
+    AppDocListForm,
   },
   data: () => ({
     formName: 'orderList',
     docDialog: false,
     editableDocs: [],
+    editableOrderId: null,
     loading: false,
     settings: {
       client: null,
