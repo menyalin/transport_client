@@ -1,4 +1,3 @@
-/* eslint-disable vue/no-template-key */
 <template>
   <div>
     <div
@@ -12,7 +11,10 @@
         @dragleave.prevent="disabledZone"
         @dblclick.stop="dblclickHandler"
       >
-        <tr class="head-row">
+        <tr
+          class="head-row"
+          @dragover.prevent="disabledZone"
+        >
           <td
             ref="rowTitleColumn"
             class="text-center"
@@ -47,7 +49,10 @@
           class="truck-row"
           :class="{ 'drag-over-row': idx === overRowInd }"
         >
-          <td :style="cellStyles">
+          <td
+            :style="cellStyles"
+            @dragover.prevent="disabledZone"
+          >
             <app-truck-title-cell
               :id="truck._id"
               :title="truck.regNum"
@@ -58,13 +63,17 @@
             :key="column.title"
           />
         </tr>
-        <tr>
+        <tr
+          :style="{ 'user-select': 'none', height: '100%' }"
+          @dragover.prevent="disabledZone"
+        >
           <td class="text-center">
             Итоги
           </td>
           <td
             v-for="column of columns"
             :key="column.title"
+            @dragover.prevent="disabledZone"
           >
             <app-result-cell :date="column.date" />
           </td>

@@ -155,23 +155,38 @@ export default {
     ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
     onlyPlannedDates: ({ onlyPlannedDates }) => onlyPlannedDates,
     orderPriceTypes: ({ orderPriceTypes }) => orderPriceTypes,
-    orderCountByDates: ({ orders }, { ordersForSchedule }) => {
-      let tmpRes = new Map()
+
+    orderCountByDates: ({ orders }) => {
+      const tmpRes = new Map()
+      if (!orders.length) return tmpRes
       const filteredOrders = orders.filter((o) => o.confirmedCrew?.truck)
-      for (let i = 0; i < filteredOrders.length; i++) {
-        const key = moment(filteredOrders[i].startPositionDate).format(
-          'YYYY-MM-DD'
-        )
-        if (tmpRes.has(key)) {
-          const lastVal = tmpRes.get(key)
-          tmpRes.set(key, { totalInDate: (lastVal.totalInDate += 1) })
-        } else {
-          tmpRes.set(key, { totalInDate: 1 })
+
+      filteredOrders.forEach((order) => {
+        const dayStr = moment(order.startPositionDate).format('YYYY-MM-DD')
+        const zone = _getZoneName(order.startPositionDate)
+        const newDay = {
+          ...tmpRes.get(dayStr),
+          totalInDay: tmpRes.has(dayStr)
+            ? tmpRes.get(dayStr).totalInDay + 1
+            : 1,
+          [zone]:
+            tmpRes.has(dayStr) && !!tmpRes.get(dayStr)[zone]
+              ? tmpRes.get(dayStr)[zone] + 1
+              : 1,
         }
-      }
+        tmpRes.set(dayStr, newDay)
+      })
       return tmpRes
     },
+
     orderPriceTypesMap: ({ orderPriceTypes }) =>
       new Map(orderPriceTypes.map((t) => [t.value, t.text])),
   },
+}
+const _getZoneName = (date) => {
+  const hours = new Date(date).getHours()
+  if (hours < 6) return '00-06'
+  if (hours < 12) return '06-12'
+  if (hours < 18) return '12-18'
+  return '18-24'
 }
