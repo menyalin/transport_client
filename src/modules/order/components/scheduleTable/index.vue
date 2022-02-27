@@ -1,4 +1,3 @@
-/* eslint-disable vue/no-template-key */
 <template>
   <div>
     <div
@@ -12,7 +11,10 @@
         @dragleave.prevent="disabledZone"
         @dblclick.stop="dblclickHandler"
       >
-        <tr class="head-row">
+        <tr
+          class="head-row"
+          @dragover.prevent="disabledZone"
+        >
           <td
             ref="rowTitleColumn"
             class="text-center"
@@ -30,23 +32,27 @@
             :key="column.title"
             :class="{ 'today-header': column.isToday, 'text-center': true }"
           >
-            <div>{{ column.title }}</div>
-            <div class="title-time-row">
-              <div>00-06</div>
-              <div>06-12</div>
-              <div>12-18</div>
-              <div>18-00</div>
+            <div>
+              <div>{{ column.title }}</div>
+              <div class="title-time-row">
+                <div>00-06</div>
+                <div>06-12</div>
+                <div>12-18</div>
+                <div>18-00</div>
+              </div>
             </div>
           </td>
         </tr>
-
         <tr
           v-for="(truck, idx) of rows"
           :key="truck._id"
           class="truck-row"
           :class="{ 'drag-over-row': idx === overRowInd }"
         >
-          <td :style="cellStyles">
+          <td
+            :style="cellStyles"
+            @dragover.prevent="disabledZone"
+          >
             <app-truck-title-cell
               :id="truck._id"
               :title="truck.regNum"
@@ -56,6 +62,21 @@
             v-for="column of columns"
             :key="column.title"
           />
+        </tr>
+        <tr
+          :style="{ 'user-select': 'none', height: '100%' }"
+          @dragover.prevent="disabledZone"
+        >
+          <td class="text-center">
+            Итоги
+          </td>
+          <td
+            v-for="column of columns"
+            :key="column.title"
+            @dragover.prevent="disabledZone"
+          >
+            <app-result-cell :date="column.date" />
+          </td>
         </tr>
         <app-note
           v-for="note of filteredNotes"
@@ -178,6 +199,7 @@ import appOrderCell from './orderCell.vue'
 import appDowntimeCell from './downtimeCell.vue'
 import appBgGrid from './bgGrid'
 import appNote from './note.vue'
+import appResultCell from './resultCell.vue'
 
 export default {
   name: 'ScheduleTable',
@@ -187,6 +209,7 @@ export default {
     appOrderCell,
     appBgGrid,
     appNote,
+    appResultCell,
   },
   props: {
     rows: {
