@@ -61,6 +61,15 @@
       >
         Создать группу рейсов
       </v-btn>
+      <v-btn
+        v-if="accountingMode && settings.status === 'completed'"
+        color="primary"
+        text
+        small
+        @click="putTableToClipboard"
+      >
+        Поместить в буфер обмена
+      </v-btn>
     </div>
     <div class="table-wrapper">
       <v-data-table
@@ -80,9 +89,7 @@
         <template v-slot:[`item.state.status`]="{ item }">
           {{ getStatusText(item.state.status) }}
         </template>
-        <template v-slot:[`item.plannedDate`]="{ item }">
-          {{ new Date(item.route[0].plannedDate).toLocaleString() }}
-        </template>
+
         <template v-slot:[`item.truck`]="{ item }">
           {{
             !!item.confirmedCrew &&
@@ -132,6 +139,7 @@
       <v-dialog
         v-model="docDialog"
         max-width="800"
+        persistent
       >
         <app-doc-list-form
           :docs="editableDocs"
@@ -150,6 +158,7 @@ import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
+import _putTableToClipboard from './_putTableToClipboard.js'
 
 import { mapGetters } from 'vuex'
 
@@ -257,6 +266,7 @@ export default {
       if (!this.orders) return []
       return this.orders.map((order) => ({
         ...order,
+        plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
         loadingPoints: order.route
           .filter((p) => p.type === 'loading')
           .map((p) => this.$store.getters.addressMap.get(p.address)?.shortName),
@@ -312,16 +322,25 @@ export default {
   },
   methods: {
     async openDocsDialog(orderId) {
+      if (!orderId) return null
+      this.editableOrderId = orderId
       const { docs } = await service.getById(orderId)
+      this.editableDocs = docs
       this.docDialog = true
     },
     cancelDocDialog() {
+      this.editableDocs = []
+      this.editableOrderId = null
       this.docDialog = false
     },
-    saveDocDialog() {
-      console.log('save docs')
-      this.docDialog = false
+    async saveDocDialog(val) {
+      await service.updateOne(this.editableOrderId, {
+        company: this.$store.getters.directoriesProfile,
+        docs: val,
+      })
+      this.cancelDocDialog()
     },
+
     create() {
       this.$router.push({ name: 'CreateOrder' })
     },
@@ -362,6 +381,12 @@ export default {
     },
     dblClickRow(_, { item }) {
       if (item) this.$router.push(`orders/${item._id}`)
+    },
+    putTableToClipboard() {
+      _putTableToClipboard({
+        items: this.preparedOrders,
+        orderTypesMap: this.$store.getters.orderAnalyticTypesMap,
+      })
     },
   },
 }

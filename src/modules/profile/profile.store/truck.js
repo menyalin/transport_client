@@ -89,6 +89,8 @@ export default {
     loadDirection: ({ loadDirection }) => loadDirection,
     truckTypes: ({ truckTypes }) => truckTypes,
     truckKinds: ({ truckKinds }) => truckKinds,
+    truckKindsMap: ({ truckKinds }) =>
+      new Map(truckKinds.map((i) => [i.value, i.text])),
     liftCapacityTypes: ({ liftCapacityTypes }) => liftCapacityTypes,
     truckTypesHash: ({ truckTypes }) =>
       truckTypes.reduce((hash, item) => {

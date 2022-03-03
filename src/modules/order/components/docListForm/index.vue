@@ -104,6 +104,9 @@ export default {
     docTypes() {
       return this.$store.getters.documentTypes
     },
+    docStatuses() {
+      return this.$store.getters.documentStatuses
+    },
   },
   watch: {
     docs: {
