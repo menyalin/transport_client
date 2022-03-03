@@ -144,7 +144,7 @@ export default ({ items }) => {
   })
 
   let table = '<table>'
-  table += `<tr>${headers.map((h) => '<td>' + h.text + '</td>').join('')}</tr>`
+  // table += `<tr>${headers.map((h) => '<td>' + h.text + '</td>').join('')}</tr>`
   res.forEach((item) => {
     table += `<tr>
     ${headers

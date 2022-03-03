@@ -13,6 +13,7 @@
         label="Статус"
         :items="orderStatuses"
         dense
+        :disabled="accountingMode"
         hide-details
         outlined
         clearable
@@ -25,6 +26,18 @@
         dense
         only-clients
         hide-details
+        @change="settings.listOptions.page = 1"
+      />
+      <v-select
+        v-model="settings.tkName"
+        label="ТК"
+        :items="$store.getters.tkNames"
+        item-value="_id"
+        item-text="name"
+        dense
+        hide-details
+        outlined
+        clearable
         @change="settings.listOptions.page = 1"
       />
       <v-autocomplete
@@ -63,7 +76,7 @@
         Создать группу рейсов
       </v-btn>
       <v-btn
-        v-if="accountingMode && settings.status === 'completed'"
+        v-if="isVisibleCopyToClipboardButton"
         color="primary"
         text
         small
@@ -187,10 +200,11 @@ export default {
     loading: false,
     settings: {
       client: null,
+      tkName: null,
       truck: null,
       driver: null,
       status: null,
-      accountingMode: true,
+      accountingMode: false,
       period: _initPeriod(),
       listOptions: {
         page: 1,
@@ -257,6 +271,14 @@ export default {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
     accountingMode() {
       return this.settings.accountingMode
+    },
+    isVisibleCopyToClipboardButton() {
+      return (
+        this.accountingMode &&
+        ['1@1.ru', 'karina@atp-16.ru', 'kirill.brovkin@gmail.com'].includes(
+          this.$store.getters.user.email
+        )
+      )
     },
     filteredHeaders() {
       return this.allHeaders.filter((item) =>
@@ -362,11 +384,12 @@ export default {
           client: this.settings.client,
           truck: this.settings.truck,
           driver: this.settings.driver,
+          tkName: this.settings.tkName,
           status: this.settings.status,
           profile: this.directoriesProfile,
           startDate: moment(this.settings.period[0]).toISOString(),
           endDate: moment(this.settings.period[1]).toISOString(),
-          accountingMode: this.accountingMode,
+          accountingMode: this.accountingMode || null,
           skip:
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),
@@ -396,7 +419,7 @@ export default {
 .filter-wrapper {
   display: grid;
   gap: 10px;
-  grid-template-columns: 300px 250px 250px 300px 250px 150px;
+  grid-template-columns: 300px 250px 250px 250px 300px 250px 150px;
   align-items: center;
 }
 .table-wrapper {
