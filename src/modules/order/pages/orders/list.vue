@@ -130,24 +130,17 @@
           }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="primary"
-                icon
-                small
-                dark
-                v-bind="attrs"
-                v-on="on"
-                @click="openDocsDialog(item._id)"
-              >
-                <v-icon small>
-                  mdi-file-document-multiple
-                </v-icon>
-              </v-btn>
-            </template>
-            <span>Сопроводительные документы</span>
-          </v-tooltip>
+          <v-btn
+            color="primary"
+            icon
+            small
+            dark
+            @click="openDocsDialog(item._id)"
+          >
+            <v-icon small>
+              mdi-file-document-multiple
+            </v-icon>
+          </v-btn>
         </template>
       </v-data-table>
       <v-dialog

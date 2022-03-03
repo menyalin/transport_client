@@ -32,6 +32,7 @@
               <th class="text-left">
                 Статус
               </th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -68,6 +69,14 @@
                   hide-details
                   :items="docStatuses"
                 />
+              </td>
+              <td>
+                <v-icon
+                  small
+                  @click="deleteRow(idx)"
+                >
+                  mdi-delete
+                </v-icon>
               </td>
             </tr>
           </tbody>
@@ -122,7 +131,11 @@ export default {
       this.$emit('save', this.tmpDocs)
     },
     addDoc() {
-      this.tmpDocs.push({})
+      if (!Array.isArray(this.tmpDocs)) this.tmpDocs = []
+      else this.tmpDocs.push({})
+    },
+    deleteRow(idx) {
+      this.tmpDocs = this.tmpDocs.splice(idx, 1)
     },
   },
 }
