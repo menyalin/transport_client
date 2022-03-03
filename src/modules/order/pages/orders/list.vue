@@ -18,6 +18,15 @@
         clearable
         @change="settings.listOptions.page = 1"
       />
+      <app-partner-autocomplete
+        v-model="settings.client"
+        label="Клиент"
+        outlined
+        dense
+        only-clients
+        hide-details
+        @change="settings.listOptions.page = 1"
+      />
       <v-autocomplete
         v-model="settings.truck"
         dense
@@ -40,15 +49,7 @@
         label="Водитель"
         @change="settings.listOptions.page = 1"
       />
-      <app-partner-autocomplete
-        v-model="settings.client"
-        label="Клиент"
-        outlined
-        dense
-        only-clients
-        hide-details
-        @change="settings.listOptions.page = 1"
-      />
+
       <v-switch
         v-model="settings.accountingMode"
         label="Бухгалтер"
@@ -397,5 +398,8 @@ export default {
   gap: 10px;
   grid-template-columns: 300px 250px 250px 300px 250px 150px;
   align-items: center;
+}
+.table-wrapper {
+  user-select: none;
 }
 </style>
