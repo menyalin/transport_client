@@ -13,13 +13,13 @@
     <v-card
       v-for="item of staff"
       :key="item._id"
-      class="ma-2"
+      class="my-1"
     >
       <v-card-title>
         {{ item.user.name }}
         <span
           v-if="item.user._id === user._id"
-          class="text-caption-1"
+          class="text-caption-2"
         >
           (Вы)
         </span>
@@ -28,7 +28,12 @@
       <v-card-text>
         <div>Должность: {{ item.position }}</div>
         <div class="text-body-1">
-          Роли: {{ item.roles.join(', ') }}
+          Роли:
+          {{
+            item.roles
+              .map((r) => $store.getters.staffRolesMap.get(r))
+              .join(', ')
+          }}
         </div>
 
         <div
@@ -83,6 +88,7 @@ export default {
   },
   data: () => ({
     dialog: false,
+    editEmployeeDialog: false,
   }),
   computed: {
     ...mapGetters(['user']),
@@ -91,6 +97,7 @@ export default {
     addNewEmployee() {
       this.dialog = true
     },
+    editEmployeeHandler() {},
     closeDialog() {
       this.dialog = false
     },

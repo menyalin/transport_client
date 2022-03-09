@@ -2,7 +2,7 @@
   <v-simple-table dense>
     <template>
       <caption class="text-left text-subtitle-2">
-        Похожие адреса (почему похожи, не спрашивай... :))
+        Похожие адреса
       </caption>
       <thead>
         <tr>

@@ -2,14 +2,6 @@
   <div>
     <app-block-title>{{ title }}</app-block-title>
     <div class="fields-wrapper">
-      <app-date-time-input
-        id="diagnostic-card"
-        label="ДК действительна до"
-        :value="params.diagnosticCardExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'diagnosticCardExpDate')"
-      />
       <div id="platon">
         <v-text-field
           label="Платон №"
@@ -119,7 +111,6 @@ export default {
   data() {
     return {
       params: {
-        diagnosticCardExpDate: null,
         platonNumber: null,
         platonDate: null,
         tachographNumber: null,
@@ -170,19 +161,12 @@ export default {
   margin-right: 10px;
   margin-bottom: 10px;
 }
-#diagnostic-card {
-  width: 200px;
-  margin-right: 15px;
-}
 #platon {
-  display: flex;
-  flex-direction: row;
-  margin: 0px 20px;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: 220px 190px;
+  gap: 5px;
 }
-#platon > * {
-  margin-left: 5px;
-}
+
 #tachograph {
   display: grid;
   grid-template-columns: 190px 190px 350px;

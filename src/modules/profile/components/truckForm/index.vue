@@ -203,6 +203,20 @@
         />
       </div>
 
+      <div id="diagnostic-card">
+        <app-date-time-input
+          v-model="additionalDetails.diagnosticCardExpDate"
+          label="ДК действительна до"
+          hide-prepend-icon
+          hide-time-input
+        />
+        <v-text-field
+          v-model.trim="additionalDetails.diagnosticCardNote"
+          outlined
+          label="Комментарий к диагностической карте"
+          dense
+        />
+      </div>
       <div id="leaders">
         <v-autocomplete
           v-model="form.brigadier"
@@ -508,5 +522,10 @@ export default {
   display: grid;
   gap: 10px;
   grid-template-columns: 300px 300px;
+}
+#diagnostic-card {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 220px 400px;
 }
 </style>

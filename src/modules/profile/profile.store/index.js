@@ -17,11 +17,7 @@ export default {
     formSettings: new Map(),
     cacheDirectories: new Map(),
     tasks: [],
-    staffRoles: [
-      { text: 'Администратор', value: 'admin' },
-      { text: 'Менеджер', value: 'manager' },
-      { text: 'Диспетчер', value: 'dispatcher' },
-    ],
+    staffRoles: [],
   },
   mutations: {
     setFormSettings({ formSettings }, { formName, settings }) {
@@ -31,6 +27,9 @@ export default {
       items.forEach((item) => {
         state.cacheDirectories.set(item._id, item)
       })
+    },
+    setStaffRoles(state, payload) {
+      state.staffRoles = payload
     },
     addToCache(state, item) {
       if (item?._id) state.cacheDirectories.set(item._id, item)
@@ -103,6 +102,7 @@ export default {
         orderPriceTypes,
         documentTypes,
         documentStatuses,
+        staffRoles,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -120,6 +120,7 @@ export default {
       if (documentTypes?.length) commit('setDocumentTypes', documentTypes)
       if (documentStatuses?.length)
         commit('setDocumentStatuses', documentStatuses)
+      if (staffRoles?.length) commit('setStaffRoles', staffRoles)
     },
 
     async createCompany({ commit }, payload) {
@@ -204,6 +205,8 @@ export default {
     myCompanies: (state) => state.myCompanies,
 
     staffRoles: ({ staffRoles }) => staffRoles,
+    staffRolesMap: ({ staffRoles }) =>
+      new Map(staffRoles.map((s) => [s.value, s.text])),
 
     tasks: ({ tasks }) => tasks,
 
