@@ -50,9 +50,9 @@ export default {
             if (res.data.user) {
               commit('setUser', res.data.user)
               dispatch('setDirectories', res.data)
+              socket.auth = { userId: res.data.user._id }
+              socket.connect()
             } else dispatch('logOut')
-            socket.auth = { userId: res.data.user._id }
-            socket.connect()
             resolve(res)
           })
           .catch((e) => {
@@ -78,6 +78,17 @@ export default {
     isLoggedIn: ({ token }) => !!token,
     token: ({ token }) => token,
     user: ({ user }) => user,
+    userRoles: ({ user }, { myCompanies }) => {
+      if (!user?.directoriesProfile) return []
+      const currentCompany = myCompanies.find(
+        (c) => c._id === user.directoriesProfile
+      )
+      if (!currentCompany) return []
+      const emp = currentCompany.staff.find(
+        (employee) => employee.user._id === user._id
+      )
+      return emp.roles
+    },
     directoriesProfile: ({ user }) => user?.directoriesProfile,
   },
 }

@@ -66,5 +66,7 @@ export default new Vuex.Store({
     OrderModule,
     AccountingModule,
   },
-  plugins: [initPlugin],
+  plugins: [
+    // initPlugin
+  ],
 })

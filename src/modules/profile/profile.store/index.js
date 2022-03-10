@@ -203,7 +203,7 @@ export default {
     cacheDirectories: ({ cacheDirectories }) => cacheDirectories,
 
     myCompanies: (state) => state.myCompanies,
-
+    
     staffRoles: ({ staffRoles }) => staffRoles,
     staffRolesMap: ({ staffRoles }) =>
       new Map(staffRoles.map((s) => [s.value, s.text])),

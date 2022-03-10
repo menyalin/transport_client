@@ -12,6 +12,17 @@ import accountingRoutes from '@/modules/accounting/routes/index.js'
 
 import serverNotAvailablePage from '@/modules/common/pages/error'
 import HomeLayout from '@/modules/common/pages/layout'
+import PermissionService from '@/modules/common/services/permission.service'
+
+const _checkPermissions = (permissions, next, to, from) => {
+  if (permissions.length && !PermissionService.check({ permissions })) {
+    next({
+      path: '/accessDenied',
+      query: { redirect: from.fullPath, message: 'Access is denied' },
+    })
+  }
+  next()
+}
 
 Vue.use(VueRouter)
 
@@ -32,6 +43,11 @@ const routes = [
     name: 'serverNotAvailable',
     component: serverNotAvailablePage,
   },
+  {
+    path: '/accessDenied',
+    name: 'AccessDenied',
+    component: () => import('@/modules/common/pages/accessDenied'),
+  },
 ]
 
 const router = new VueRouter({
@@ -41,18 +57,38 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const permissions = to.matched
+    .map((r) => r.meta.permission)
+    .filter((p) => !!p)
+
   if (
     to.matched.some(
       (record) => record.meta.authRequired && !store.getters.isLoggedIn
     )
-  ) {
+  )
     next({
       path: '/auth/login',
       query: { redirect: to.fullPath },
     })
-  } else {
-    next()
-  }
+
+  if (!store.getters.user && store.getters.isLoggedIn) {
+    store.state.appLoading = true
+    store
+      .dispatch('getUserData')
+      .then(_checkPermissions(permissions, next, to, from))
+      .catch((e) => {
+        next({
+          name: 'serverNotAvailable',
+          query: { message: e.message },
+        })
+      })
+      .finally(() => {
+        store.state.appLoading = false
+      })
+  } else if (store.getters.user && store.getters.isLoggedIn)
+    _checkPermissions(permissions, next, to, from)
+
+  next()
 })
 
 export default router
