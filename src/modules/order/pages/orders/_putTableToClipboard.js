@@ -129,7 +129,7 @@ export default ({ items }) => {
         ? loadDepartureDate.toLocaleTimeString()
         : '-',
       unloadArrivalDate: unloadArrivalDate
-        ? loadArrivalDate.toLocaleDateString()
+        ? unloadArrivalDate.toLocaleDateString()
         : '-',
       unloadArrivalTime: unloadArrivalDate
         ? unloadArrivalDate.toLocaleTimeString()
