@@ -6,7 +6,9 @@
         <app-partner-form
           v-else
           :partner="item"
-          :displayDeleteBtn="!!id"
+          :displayDeleteBtn="
+            !!id && $store.getters.hasPermission('partner:delete')
+          "
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

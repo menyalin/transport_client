@@ -2,7 +2,11 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm || !formChanged"
+      :disabledSubmit="
+        !$store.getters.hasPermission('partner:write') ||
+          isInvalidForm ||
+          !formChanged
+      "
       @cancel="cancel"
       @submit="submit"
     />
