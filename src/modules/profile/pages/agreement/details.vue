@@ -15,7 +15,7 @@
         <app-agreement-form
           v-else
           :agreement="item"
-          :displayDeleteBtn="!!id"
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('agreement:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
