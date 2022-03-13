@@ -15,7 +15,9 @@
         <app-downtime-form
           v-else
           :downtime="item"
-          :displayDeleteBtn="!!id"
+          :displayDeleteBtn="
+            !!id && $store.getters.hasPermission('downtime:delete')
+          "
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
