@@ -6,7 +6,7 @@ export default {
   },
   mutations: {
     clearDirectories(state) {
-      state.partners = []
+      state.orderTemplates = []
     },
     setOrderTemplates(state, payload) {
       state.orderTemplates = payload

@@ -46,7 +46,7 @@
       Профиль
     </v-btn>
     <v-btn
-      v-if="isLoggedIn"
+      v-if="false"
       text
       to="/accounting"
     >
@@ -93,7 +93,7 @@ export default {
   },
   props: {
     title: {
-      type: String, 
+      type: String,
     },
     reports: {
       type: Array,

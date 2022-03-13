@@ -338,7 +338,7 @@ export default {
   methods: {
     submit() {
       this.$emit('submit', this.formState)
-      this.resetForm()
+      // this.resetForm()
     },
     cancel() {
       this.resetForm()

@@ -13,6 +13,9 @@ export default {
     addresses: [],
   },
   mutations: {
+    clearDirectories(state) {
+      state.addresses = []
+    },
     setAddresses(state, payload) {
       state.addresses = payload
     },

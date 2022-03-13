@@ -31,6 +31,7 @@ export default {
   },
   computed: {
     ordersCount() {
+      if (!this.date) return null
       const dateStr = moment(this.date).format('YYYY-MM-DD')
       if (!this.$store.getters.orderCountByDates.has(dateStr)) return null
       return this.$store.getters.orderCountByDates.get(dateStr)

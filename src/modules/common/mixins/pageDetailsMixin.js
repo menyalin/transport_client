@@ -48,7 +48,7 @@ export default {
       } catch (e) {
         this.loading = false
         this.item = this.tmpVal
-        if (e.response.status === 400) {
+        if (e.response.status === 400 || e.response.status === 403) {
           this.error.message = e.response.data
           this.error.show = true
         }

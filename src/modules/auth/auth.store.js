@@ -44,6 +44,7 @@ export default {
     },
     getUserData({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
+        commit('setAppLoading', true)
         api
           .get('/auth')
           .then((res) => {
@@ -53,10 +54,12 @@ export default {
               socket.auth = { userId: res.data.user._id }
               socket.connect()
             } else dispatch('logOut')
+            commit('setAppLoading', false)
             resolve(res)
           })
           .catch((e) => {
             if (e.response?.status === 401) dispatch('logOut')
+            commit('setAppLoading', false)
             reject(e)
           })
       })
@@ -78,6 +81,7 @@ export default {
     isLoggedIn: ({ token }) => !!token,
     token: ({ token }) => token,
     user: ({ user }) => user,
+
     userRoles: ({ user }, { myCompanies }) => {
       if (!user?.directoriesProfile) return []
       const currentCompany = myCompanies.find(
@@ -87,8 +91,16 @@ export default {
       const emp = currentCompany.staff.find(
         (employee) => employee.user._id === user._id
       )
-      return emp.roles
+      return emp.roles || []
     },
+
+    hasPermission:
+      (state, { userRoles, permissionsMap }) =>
+      (permission) => {
+        if (userRoles.includes('admin')) return true
+        return !!permissionsMap.get(permission)
+      },
+
     directoriesProfile: ({ user }) => user?.directoriesProfile,
   },
 }

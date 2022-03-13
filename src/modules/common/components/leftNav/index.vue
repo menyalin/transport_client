@@ -55,11 +55,18 @@ export default {
       user: (state) => state.AuthModule.user,
     }),
     menuItems() {
-      return this.items.filter(
-        (i) =>
-          !i.onlyWithDirectoriesProfile ||
-          !!this.$store.getters.directoriesProfile
-      )
+      return this.items
+        .filter(
+          (i) =>
+            !i.onlyWithDirectoriesProfile ||
+            !!this.$store.getters.directoriesProfile
+        )
+        .filter((i) =>
+          i.permission
+            ? this.$store.getters.userRoles.includes('admin') ||
+              this.$store.getters.permissionsMap.get(i.permission)
+            : true
+        )
     },
   },
 }

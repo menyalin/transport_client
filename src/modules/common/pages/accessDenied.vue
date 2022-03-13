@@ -13,8 +13,12 @@
             <v-alert type="error">
               Доступ к запрашиваемой странице запрещен
             </v-alert>
-            <router-link to="/">
-              Перейти на главную
+            <router-link :to="$route.query.redirect">
+              {{
+                $route.query.redirect !== '/'
+                  ? 'Вернуться назад'
+                  : 'Перейти на главную страницу'
+              }}
             </router-link>
             <br>
             <small>До автоматического перехода осталось {{ secBefore }}сек</small>

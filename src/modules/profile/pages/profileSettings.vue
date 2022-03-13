@@ -36,8 +36,8 @@ export default {
   methods: {
     async changeDirectoriesProfile(val) {
       await this.$store.dispatch('configProfile', { directoriesProfile: val })
-      if (val) this.$store.dispatch('getUserData')
-      else this.$store.commit('clearDirectories')
+      this.$store.commit('clearDirectories')
+      if (val) await this.$store.dispatch('getUserData')
     },
   },
 }

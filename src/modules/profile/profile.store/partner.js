@@ -25,21 +25,6 @@ export default {
     },
   },
   actions: {
-    // __createPartner({ commit }, payload) {
-    //   return new Promise(async (resolve, reject) => {
-    //     try {
-    //       commit('setLoading', true)
-    //       const data = await service.create(payload)
-    //       commit('addPartner', data)
-    //       commit('setLoading', false)
-    //       resolve(data)
-    //     } catch (e) {
-    //       commit('setLoading', false)
-    //       commit('setError', e)
-    //       reject(e)
-    //     }
-    //   })
-    // },
 
     async getPartners({ commit, getters }, directiveUpdate) {
       try {

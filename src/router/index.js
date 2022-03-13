@@ -14,14 +14,14 @@ import serverNotAvailablePage from '@/modules/common/pages/error'
 import HomeLayout from '@/modules/common/pages/layout'
 import PermissionService from '@/modules/common/services/permission.service'
 
-const _checkPermissions = (permissions, next, to, from) => {
-  if (permissions.length && !PermissionService.check({ permissions })) {
+const _checkPermissions = async (permissions, next, to, from) => {
+  if (!permissions.length) next()
+  else if (!PermissionService.check({ permissions })) {
     next({
       path: '/accessDenied',
-      query: { redirect: from.fullPath, message: 'Access is denied' },
+      query: { redirect: from.fullPath || '/', message: 'Access is denied' },
     })
-  }
-  next()
+  } else next()
 }
 
 Vue.use(VueRouter)
@@ -69,26 +69,22 @@ router.beforeEach((to, from, next) => {
     next({
       path: '/auth/login',
       query: { redirect: to.fullPath },
-    })
-
-  if (!store.getters.user && store.getters.isLoggedIn) {
-    store.state.appLoading = true
+    }).catch((e) => {})
+  else if (store.getters.isLoggedIn && !store.getters.user) {
     store
       .dispatch('getUserData')
-      .then(_checkPermissions(permissions, next, to, from))
+      .then(() => {
+        _checkPermissions(permissions, next, to, from)
+      })
       .catch((e) => {
         next({
           name: 'serverNotAvailable',
           query: { message: e.message },
         })
       })
-      .finally(() => {
-        store.state.appLoading = false
-      })
-  } else if (store.getters.user && store.getters.isLoggedIn)
+  } else if (store.getters.user && permissions.length)
     _checkPermissions(permissions, next, to, from)
-
-  next()
+  else next()
 })
 
 export default router
