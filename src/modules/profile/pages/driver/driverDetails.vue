@@ -8,7 +8,7 @@
         <app-driver-form
           v-else
           :driver="driver"
-          display-delete-btn
+          :displayDeleteBtn="$store.getters.hasPermission('driver:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

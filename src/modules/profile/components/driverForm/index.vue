@@ -2,7 +2,12 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm || loading || !formChanged"
+      :disabled-submit="
+        !$store.getters.hasPermission('driver:write') ||
+          isInvalidForm ||
+          loading ||
+          !formChanged
+      "
       @cancel="cancel"
       @submit="submit"
     />
@@ -418,6 +423,6 @@ export default {
 .delete-btn-row {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: start;
 }
 </style>

@@ -5,6 +5,7 @@
         <app-buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
+          :disabledSubmit="!$store.getters.hasPermission('driver:write')"
           @submit="createDriver"
           @refresh="refresh"
         />
