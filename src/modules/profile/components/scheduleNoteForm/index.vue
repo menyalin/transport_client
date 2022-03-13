@@ -2,7 +2,9 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm"
+      :disabledSubmit="
+        !$store.getters.hasPermission('scheduleNote:write') || isInvalidForm
+      "
       @cancel="cancel"
       @submit="submit"
     />
@@ -34,6 +36,7 @@
     />
     <v-btn
       v-if="displayDeleteBtn"
+      class="mt-5"
       color="error"
       @click="$emit('delete')"
     >

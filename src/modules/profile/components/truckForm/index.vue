@@ -1,28 +1,14 @@
 <template>
   <div>
     <app-buttons-panel
-      :disabled-submit="isInvalidForm || loading"
+      :disabledSubmit="
+        !$store.getters.hasPermission('truck:write') || isInvalidForm || loading
+      "
       panel-type="form"
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
-    <div
-      v-else
-      class="ma-3 text-caption"
-    >
-      Профиль настроек: {{ directoriesProfileName }}
-    </div>
-
     <div>
-      <!-- название марка модель -->
       <div class="row-wrapper first-row">
         <div class="base-info">
           <v-select
@@ -501,7 +487,7 @@ export default {
 .delete-btn-row {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: start;
 }
 .second-row {
   display: grid;

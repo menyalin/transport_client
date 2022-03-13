@@ -15,7 +15,9 @@
         <app-schedule-note-form
           v-else
           :scheduleNote="item"
-          :displayDeleteBtn="!!id"
+          :displayDeleteBtn="
+            !!id && $store.getters.hasPermission('scheduleNote:delete')
+          "
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

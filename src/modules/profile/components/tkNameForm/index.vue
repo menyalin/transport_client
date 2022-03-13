@@ -2,7 +2,11 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="isInvalidForm || loading"
+      :disabledSubmit="
+        !$store.getters.hasPermission('tkName:write') ||
+          isInvalidForm ||
+          loading
+      "
       @cancel="cancel"
       @submit="submit"
     />

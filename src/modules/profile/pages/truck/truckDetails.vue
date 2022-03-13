@@ -5,10 +5,10 @@
         <div v-if="loading">
           Загружаю...
         </div>
-        <app-driver-form
+        <app-truck-form
           v-else
           :truck="truck"
-          display-delete-btn
+          :displayDeleteBtn="$store.getters.hasPermission('truck:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -18,12 +18,12 @@
   </v-container>
 </template>
 <script>
-import AppDriverForm from '@/modules/profile/components/truckForm'
+import AppTruckForm from '@/modules/profile/components/truckForm'
 import service from '../../services/truck.service'
 export default {
   name: 'TruckDetails',
   components: {
-    AppDriverForm,
+    AppTruckForm,
   },
   props: {
     id: {

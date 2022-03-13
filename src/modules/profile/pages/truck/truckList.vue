@@ -5,6 +5,7 @@
         <app-buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
+          :disabledSubmit="!$store.getters.hasPermission('truck:write')"
           @submit="create"
           @refresh="refresh"
         />

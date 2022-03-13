@@ -8,7 +8,7 @@
         <app-tkname-form
           v-else
           :tkName="tkName"
-          display-delete-btn
+          :displayDeleteBtn="$store.getters.hasPermission('tkName:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
