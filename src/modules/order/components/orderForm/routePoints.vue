@@ -43,7 +43,7 @@
         Добавить адрес
       </v-btn>
       <v-btn
-        v-if="state.status === 'inProgress'"
+        v-if="!isTemplate && state.status === 'inProgress'"
         text
         outlined
         small
@@ -89,6 +89,7 @@ export default {
   },
   computed: {
     dragEnabled() {
+      if (this.isTemplate) return true
       if (this.state?.driverNotified || this.state?.clientNotified) return false
       return ['needGet', 'getted'].includes(this.state?.status)
     },
@@ -104,6 +105,7 @@ export default {
       return this.tmpPoints.findIndex((p) => !p.departureDate)
     },
     readonly() {
+      if (this.isTemplate) return false
       return this.state.status === 'completed'
     },
   },
