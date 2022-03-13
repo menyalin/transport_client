@@ -5,6 +5,7 @@
         <app-crew-form
           :loading="loading"
           :crew="crew.tkName ? crew : null"
+          :disabledSubmit="!$store.getters.hasPermission('crew:write')"
           @submit="submit"
           @cancel="cancel"
         />

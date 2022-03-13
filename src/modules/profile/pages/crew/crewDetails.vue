@@ -8,7 +8,7 @@
         <app-crew-form
           v-else
           :crew="crew"
-          display-delete-btn
+          :displayDeleteBtn="$store.getters.hasPermission('crew:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

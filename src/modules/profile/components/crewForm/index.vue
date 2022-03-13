@@ -3,7 +3,10 @@
     <app-buttons-panel
       panel-type="form"
       :disabledSubmit="
-        editTransportTable || !form.transport.length || $v.$invalid
+        !$store.getters.hasPermission('crew:write') ||
+          editTransportTable ||
+          !form.transport.length ||
+          $v.$invalid
       "
       @cancel="cancel"
       @submit="submit"
