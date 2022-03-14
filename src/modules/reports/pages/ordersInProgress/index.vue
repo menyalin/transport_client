@@ -184,4 +184,7 @@ export default {
 #report-settings > * {
   margin: 10px;
 }
+.v-data-table {
+  white-space: nowrap;
+}
 </style>
