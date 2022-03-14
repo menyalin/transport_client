@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "buildalfa": "vue-cli-service build --mode alfa && docker build -f ./Dockerfile.alfa -t menyalin/alfa_front:latest . && docker image push menyalin/alfa_front:latest", 
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
