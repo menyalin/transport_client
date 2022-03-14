@@ -238,11 +238,11 @@ export default {
   position: relative;
 }
 .not-confirmed-by-client {
-  background-color: red;
+  background-color: rgba(255, 28, 28, 0.7);
   color: black;
 }
 .we-refused {
-  background-color: black;
-  color: red;
+  background-color: rgb(0, 0, 0);
+  color: rgb(252, 115, 115);
 }
 </style>

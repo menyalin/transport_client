@@ -2,7 +2,7 @@
   <div>
     <div
       class="table-wrapper"
-      :style="{ 'max-height': showBufferZone ? '77vh' : '100%' }"
+      :style="{ 'max-height': settings.showBufferZone ? '77vh' : '93vh' }"
     >
       <table
         ref="tableBody"
@@ -20,12 +20,7 @@
             class="text-center"
             :style="{ width: initTitleWidth }"
           >
-            <v-icon
-              small
-              @click="showBufferZone = !showBufferZone"
-            >
-              {{ showBufferZone ? 'mdi-eye' : 'mdi-eye-off' }}
-            </v-icon>
+            <app-settings-cell v-model="settings" />
           </td>
           <td
             v-for="column of columns"
@@ -141,7 +136,7 @@
 
     <v-divider />
     <div
-      v-if="showBufferZone"
+      v-if="settings.showBufferZone"
       class="buffer-wrapper"
     >
       <table
@@ -200,6 +195,7 @@ import appDowntimeCell from './downtimeCell.vue'
 import appBgGrid from './bgGrid'
 import appNote from './note.vue'
 import appResultCell from './resultCell.vue'
+import AppSettingsCell from './settingsCell.vue'
 
 export default {
   name: 'ScheduleTable',
@@ -210,6 +206,7 @@ export default {
     appBgGrid,
     appNote,
     appResultCell,
+    AppSettingsCell,
   },
   props: {
     rows: {
@@ -228,7 +225,12 @@ export default {
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
     showMenu: false,
-    showBufferZone: false,
+    settings: {
+      showBufferZone: false,
+      controlOnly: false,
+      showDowntimes: true,
+      showNotes: true,
+    },
     menuX: 0,
     menuY: 0,
     truckId: null,
@@ -290,7 +292,11 @@ export default {
       }
     },
     filteredOrders() {
-      return this.$store.getters.ordersForSchedule
+      return (
+        this.$store.getters.ordersForSchedule
+          // Только требующие контроля
+          .filter((i) => (this.settings.controlOnly ? i.state.warning : true))
+      )
     },
     allItems() {
       // Объединяем в один массив заказы и простою, сортируем по дате отображения
@@ -314,13 +320,16 @@ export default {
       return this.filteredOrders.filter((i) => !i?.truckId)
     },
     filteredNotes() {
-      return this.$store.getters.notesForSchedule
+      if (this.settings.showNotes) return this.$store.getters.notesForSchedule
+      else return []
     },
     filteredDountimes() {
-      return this.$store.getters.downtimesForSchedule.map((item) => ({
-        ...item,
-        truckId: item.truck,
-      }))
+      if (this.settings.showDowntimes)
+        return this.$store.getters.downtimesForSchedule.map((item) => ({
+          ...item,
+          truckId: item.truck,
+        }))
+      else return []
     },
     lineForUndistributedOrdersMap() {
       let tmpMap = new Map()
