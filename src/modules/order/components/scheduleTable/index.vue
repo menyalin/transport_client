@@ -87,7 +87,9 @@
           tag="div"
           class="block"
           :draggable="
-            item.itemType === 'order' ? isDraggableOrder(item) : false
+            item.itemType === 'order' && draggableMode
+              ? isDraggableOrder(item)
+              : false
           "
           :style="getStylesForOrder(item)"
           @dragstart="dragStartHandler($event, item._id)"
@@ -162,7 +164,7 @@
             :key="order._id"
             tag="div"
             class="block"
-            :draggable="isDraggableOrder(order)"
+            :draggable="draggableMode && isDraggableOrder(order)"
             :style="getStylesForOrder(order)"
             @dragstart="dragStartHandler($event, order._id)"
             @dragend="dragEndHandler($event, order._id)"
@@ -262,6 +264,9 @@ export default {
         lengthInPx: this.tableWidth,
         dayCount: this.dayCount,
       })
+    },
+    draggableMode() {
+      return this.settings.showDowntimes && !this.settings.controlOnly
     },
     period() {
       switch (true) {
