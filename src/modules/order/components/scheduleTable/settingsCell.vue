@@ -58,6 +58,7 @@ export default {
   },
   data() {
     return {
+      settingsName: 'ScheduleSettingsCell',
       tmpSettings: {
         controlOnly: false,
         showNotes: true,
@@ -68,7 +69,6 @@ export default {
   },
   watch: {
     settings: {
-      immediate: true,
       deep: true,
       handler: function (val) {
         this.tmpSettings = val
@@ -77,9 +77,13 @@ export default {
     tmpSettings: {
       deep: true,
       handler: function (val) {
+        localStorage.setItem(this.settingsName, JSON.stringify(val))
         this.$emit('change', val)
       },
     },
+  },
+  created() {
+    this.tmpSettings = JSON.parse(localStorage.getItem(this.settingsName))
   },
 }
 </script>

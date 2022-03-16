@@ -94,7 +94,7 @@ export default {
       },
       {
         text: 'Водители',
-        icon: 'mdi-card-account-details',
+        icon: 'mdi-sheep',
         link: '/profile/drivers',
         onlyWithDirectoriesProfile: true,
         permission: 'driver:readList',
