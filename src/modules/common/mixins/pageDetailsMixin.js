@@ -65,10 +65,16 @@ export default {
         'Вы действительно хотите удалить запись? '
       )
       if (res) {
-        this.loading = true
-        await this.service.deleteById(this.id)
-        this.loading = false
-        this.$router.go(-1)
+        try {
+          this.loading = true
+          await this.service.deleteById(this.id)
+          this.loading = false
+          this.$router.go(-1)
+        } catch (e) {
+          this.loading = false
+          console.log(e)
+          this.$store.commit('setError', e.message)
+        }
       }
     },
   },
