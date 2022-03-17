@@ -68,12 +68,12 @@ export default {
     }
   },
   watch: {
-    settings: {
-      deep: true,
-      handler: function (val) {
-        this.tmpSettings = val
-      },
-    },
+    // settings: {
+    //   deep: true,
+    //   handler: function (val) {
+    //     this.tmpSettings = val
+    //   },
+    // },
     tmpSettings: {
       deep: true,
       handler: function (val) {
@@ -83,14 +83,16 @@ export default {
     },
   },
   created() {
-    if (!localStorage.getItem(this.settingsName))
+    const settings = JSON.parse(localStorage.getItem(this.settingsName))
+    if (settings) {
+      this.tmpSettings = settings
+    } else
       this.tmpSettings = {
         controlOnly: false,
         showNotes: true,
         showBufferZone: false,
         showDowntimes: true,
       }
-    this.tmpSettings = JSON.parse(localStorage.getItem(this.settingsName))
   },
 }
 </script>

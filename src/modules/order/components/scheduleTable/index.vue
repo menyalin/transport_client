@@ -227,12 +227,7 @@ export default {
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
     showMenu: false,
-    settings: {
-      showBufferZone: false,
-      controlOnly: false,
-      showDowntimes: true,
-      showNotes: true,
-    },
+    settings: {},
     menuX: 0,
     menuY: 0,
     truckId: null,
