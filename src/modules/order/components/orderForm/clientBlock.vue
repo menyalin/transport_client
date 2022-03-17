@@ -56,7 +56,6 @@ export default {
   },
   data() {
     return {
-      agreements: [],
       agreement: null,
       errorMessage: null,
       loading: false,
@@ -100,17 +99,22 @@ export default {
   },
   methods: {
     async getAgreement() {
-      this.clearAgreement()
+      // this.clearAgreement()
       if (!this.routeDate || !this.params.client) return null
 
       try {
         this.loading = true
-        this.agreement = await service.getForOrder({
-          company: this.$store.getters.directoriesProfile,
-          date: this.routeDate,
-          client: this.params.client,
-        })
-        this.params.agreement = this.agreement._id
+        if (this.params.agreement) {
+          this.agreement = await service.getById(this.params.agreement)
+        } else {
+          this.agreement = await service.getForOrder({
+            company: this.$store.getters.directoriesProfile,
+            date: this.routeDate,
+            client: this.params.client,
+          })
+          this.params.agreement = this.agreement._id
+        }
+
         this.loading = false
       } catch (e) {
         this.loading = false
