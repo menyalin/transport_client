@@ -27,6 +27,7 @@
           no-title
           :first-day-of-week="1"
           :max="endDate"
+          :min="min"
           color="primary"
           @change="changeStartDate"
           @input="startDateMenu = false"
@@ -74,6 +75,9 @@ export default {
   props: {
     period: {
       type: Array,
+    },
+    min: {
+      type: String,
     },
   },
   data() {

@@ -7,7 +7,10 @@
       @refresh="refresh"
     />
     <div class="filter-wrapper">
-      <app-date-range v-model="settings.period" />
+      <app-date-range
+        v-model="settings.period"
+        :min="minDate"
+      />
       <v-select
         v-model="settings.status"
         label="Статус"
@@ -161,6 +164,8 @@
 <script>
 import moment from 'moment'
 import service from '@/modules/order/services/order.service'
+import PermissionService from '@/modules/common/services/permission.service'
+
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
@@ -264,6 +269,11 @@ export default {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
     accountingMode() {
       return this.settings.accountingMode
+    },
+    minDate() {
+      return PermissionService.minAllowedDate({
+        operation: 'order:daysForRead',
+      })
     },
     isVisibleCopyToClipboardButton() {
       return (

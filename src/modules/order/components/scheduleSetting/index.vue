@@ -3,6 +3,7 @@
     <v-btn
       icon
       small
+      :disabled="isMinDate"
       @click="incDate(-1)"
     >
       <v-icon>mdi-arrow-left-bold</v-icon>
@@ -11,6 +12,7 @@
       :value="date"
       hideDetails
       dense
+      :minDate="minDate"
       hideTimeInput
       hidePrependIcon
       @change="setDate"
@@ -34,6 +36,8 @@
 <script>
 import moment from 'moment'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import PermissionService from '@/modules/common/services/permission.service'
+
 export default {
   name: 'ScheduleSettings',
   components: {
@@ -43,13 +47,21 @@ export default {
     date() {
       return this.$store.getters.scheduleDate
     },
+    minDate() {
+      return PermissionService.minAllowedDate({
+        operation: 'order:daysForRead',
+      })
+    },
+    isMinDate() {
+      return moment(this.date).isSameOrBefore(this.minDate, 'day')
+    },
   },
   methods: {
     incDate(count) {
       this.$store.commit('incScheduleDate', count)
     },
     setDate(date) {
-      if (!date)
+      if (!date || moment(date).isBefore(this.minDate))
         this.$store.commit('setScheduleDate', moment().format('YYYY-MM-DD'))
       else this.$store.commit('setScheduleDate', date)
     },
