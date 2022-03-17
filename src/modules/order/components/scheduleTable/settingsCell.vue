@@ -83,6 +83,13 @@ export default {
     },
   },
   created() {
+    if (!localStorage.getItem(this.settingsName))
+      this.tmpSettings = {
+        controlOnly: false,
+        showNotes: true,
+        showBufferZone: false,
+        showDowntimes: true,
+      }
     this.tmpSettings = JSON.parse(localStorage.getItem(this.settingsName))
   },
 }
