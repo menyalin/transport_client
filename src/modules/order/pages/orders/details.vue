@@ -16,7 +16,9 @@
           v-else
           :order="item"
           :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('order:delete')
+            !!id &&
+              $store.getters.hasPermission('order:delete') &&
+              item.state.status === 'needGet'
           "
           @cancel="cancel"
           @submit="submit"
