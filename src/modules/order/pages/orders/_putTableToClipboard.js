@@ -27,18 +27,18 @@ const _getAddressesName = ({ route, type }) =>
     .map((p) => store.getters.addressMap.get(p.address).name)
     .join(';')
 
-const _getBasePrice = (prices) => {
+const _getBasePrice = (prices, agreement) => {
   let res = {
     woVat: 0,
     withVat: 0,
   }
-  if (!prices || prices.length === 0) return res
+  if (!prices || prices.length === 0) return 0
   const basePrice = prices.find((p) => p.type === 'base')
   if (basePrice) {
-    res.woVat = basePrice.priceWOVat
-    res.withVat = basePrice.price
+    res.woVat = basePrice.priceWOVat || 0
+    res.withVat = basePrice.price || 0
   }
-  return res
+  return agreement.usePriceWithVAT ? res.withVat : res.woVat
 }
 const headers = [
   { val: 'plannedDate', text: 'Дата' },
@@ -57,7 +57,7 @@ const headers = [
   { val: 'loadingAddresses', text: 'Пункты погрузки' },
   { val: 'unloadingPartners', text: 'Грузополучатель' },
   { val: 'unloadingAddresses', text: 'Пункты разгрузки' },
-  { val: 'priceWoVat', text: 'Аукцион (цена без НДС)' },
+  { val: 'price', text: 'Аукцион' },
   { val: 'loadArrivalDate', text: 'Дата начала погрузки' },
   { val: 'loadArrivalTime', text: 'Время начала погрузки' },
   { val: 'loadDepartureDate', text: 'Дата окончания погрузки' },
@@ -109,13 +109,12 @@ export default ({ items }) => {
         route: row.route,
         type: 'unloading',
       }),
-      priceWithVat: Intl.NumberFormat('ru-RU').format(
-        _getBasePrice(row.prices)?.withVat
-      ),
-      priceWoVat: Intl.NumberFormat('ru-RU', {
+
+      price: Intl.NumberFormat('ru-RU', {
         style: 'decimal',
         useGrouping: false,
-      }).format(_getBasePrice(row.prices)?.woVat),
+      }).format(_getBasePrice(row.prices, row.agreement)),
+
       loadArrivalDate: loadArrivalDate
         ? loadArrivalDate.toLocaleDateString()
         : '-',

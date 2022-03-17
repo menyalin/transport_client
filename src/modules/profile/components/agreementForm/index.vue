@@ -47,7 +47,15 @@
         v-model="form.clients"
         :style="{ 'max-width': '400px' }"
       />
-      <app-zone-distances v-model="form.zones" />
+      <v-checkbox
+        v-model="form.usePriceWithVAT"
+        color="primary"
+        label="При выгрузке показывать ставку с НДС"
+      />
+      <app-zone-distances
+        v-if="false"
+        v-model="form.zones"
+      />
       <v-text-field
         v-model="form.note"
         label="Примечание"
@@ -120,6 +128,7 @@ export default {
         note: null,
         date: null,
         vatRate: null,
+        usePriceWithVAT: false,
         useCustomPrices: true,
         clients: [],
         closed: null,
