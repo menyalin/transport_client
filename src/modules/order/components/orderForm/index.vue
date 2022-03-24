@@ -4,7 +4,7 @@
       <v-col>
         <div class="top-panel">
           <app-buttons-panel
-            :disabled-submit="isInvalidForm || loading"
+            :disabled-submit="disabledSubmitForm"
             panel-type="form"
             @cancel="cancel"
             @submit="submit"
@@ -95,6 +95,7 @@
             :enableRefuse="enableRefuseOrder"
             :isExistFirstArrivalDate="isExistFirstArrivalDate"
             :isValidGrade="isValidGrade"
+            :readonly="disabledSubmitForm"
             title="Статус рейса"
             class="route-state"
           />
@@ -150,6 +151,7 @@
             v-model="prices"
             :agreementId="client.agreement"
             :analytics="analytics"
+            :route="route"
             title="Стоимость рейса"
           />
         </div>
@@ -254,6 +256,18 @@ export default {
 
   computed: {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
+    disabledSubmitForm() {
+      let hasPermission
+      if (this.state.status === 'completed') {
+        hasPermission = this.$store.getters.allowedPeriodForPermission({
+          permission: 'order:daysForWrite',
+          date: this.route[this.route.length - 1].departureDate,
+        })
+      } else
+        hasPermission = this.$store.getters.hasPermission('order:daysForWrite')
+
+      return this.isInvalidForm || this.loading || !hasPermission
+    },
     currentPointInd() {
       return this.route.findIndex((p) => !p.departureDate)
     },

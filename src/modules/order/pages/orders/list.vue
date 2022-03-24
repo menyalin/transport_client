@@ -3,6 +3,7 @@
     <app-buttons-panel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
+      :disabledSubmit="!$store.getters.hasPermission('order:daysForWrite')"
       @submit="create"
       @refresh="refresh"
     />

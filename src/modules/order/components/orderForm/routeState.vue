@@ -8,6 +8,7 @@
         <v-radio-group
           :value="params.status"
           mandatory
+          :readonly="readonly"
           @change="change($event, 'status')"
         >
           <v-radio
@@ -22,6 +23,7 @@
       <div>
         <v-checkbox
           :value="params.driverNotified"
+          :readonly="readonly"
           label="Водитель оповещен"
           class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
@@ -31,6 +33,7 @@
         <v-checkbox
           :value="params.clientNotified"
           label="Клиент оповещен"
+          :readonly="readonly"
           class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
           hide-details
@@ -39,6 +42,7 @@
         <v-checkbox
           :value="params.warning"
           label="На контроле"
+          :readonly="readonly"
           class="pt-0 mt-3 mb-2"
           hide-details
           @change="change($event, 'warning')"
@@ -67,6 +71,7 @@ export default {
     enableRefuse: Boolean,
     isExistFirstArrivalDate: Boolean,
     isValidGrade: Boolean,
+    readonly: Boolean,
   },
   data() {
     return {

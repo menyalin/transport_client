@@ -40,6 +40,7 @@
         v-model="tmpPoint.note"
         label="Примечание"
         hide-details
+        :readonly="readonly"
         outlined
         :style="{ 'min-width': '550px' }"
         dense
@@ -50,6 +51,7 @@
       <app-date-time-input
         v-model="tmpPoint.plannedDate"
         label="Плановая дата"
+        :readonly="readonly"
         hidePrependIcon
         @change="change"
       />
@@ -183,14 +185,16 @@ export default {
 .point-wrapper {
   display: grid;
   gap: 10px;
-  grid-template-columns: auto 270px 50px;
+  grid-template-columns: auto 315px 30px;
 }
 .point-wrapper > div > * {
   margin: 5px;
 }
 .remove-btn-wrapper {
+  min-width: 30px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
 }
 </style>

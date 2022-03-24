@@ -101,6 +101,20 @@ export default {
         return !!permissionsMap.get(permission)
       },
 
+    allowedPeriodForPermission:
+      (state, { permissionsMap }) =>
+      ({ date, permission }) => {
+        if (permissionsMap.has('fullAccess')) return true
+        if (!permissionsMap.has(permission)) return false
+        if (permissionsMap.get(permission) === -1) return true
+        if (!date) return false
+        const dayCount = Math.floor(
+          (new Date() - new Date(date)) / (1000 * 60 * 60 * 24)
+        )
+        if (dayCount > permissionsMap.get(permission)) return false
+        return true
+      },
+
     directoriesProfile: ({ user }) => user?.directoriesProfile,
   },
 }

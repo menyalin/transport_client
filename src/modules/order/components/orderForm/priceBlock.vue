@@ -8,6 +8,7 @@
         <v-btn
           small
           text
+          :disabled="readonly"
           outlined
           color="primary"
           @click="openDialog"
@@ -61,7 +62,10 @@
               <td class="text-center">
                 {{ item.note }}
               </td>
-              <td class="text-right">
+              <td
+                v-if="!readonly"
+                class="text-right"
+              >
                 <v-btn
                   v-if="!(item.type === 'base' && calcMethod !== 'fixed')"
                   icon
@@ -167,6 +171,7 @@ export default {
     event: 'change',
   },
   props: {
+    route: Array,
     items: Array,
     title: String,
     agreementId: String,
@@ -194,8 +199,28 @@ export default {
     isValidNewPrice() {
       return this.editedPrice.tmpPrice > 0 && !!this.editedPrice.type
     },
+    readonly() {
+      const lastDepartureDate = this.route[this.route.length - 1].departureDate
+      if (!lastDepartureDate)
+        return this.$store.getters.hasPermission('order:daysForWritePrice')
+      else
+        return this.$store.getters.allowedPeriodForPermission({
+          permission: 'order:daysForWritePrice',
+          date: lastDepartureDate,
+        })
+    },
     showPriceBlock() {
-      return this.agreement.useCustomPrices
+      const lastDepartureDate = this.route[this.route.length - 1].departureDate
+      if (!lastDepartureDate)
+        return (
+          this.agreement.useCustomPrices &&
+          this.$store.getters.hasPermission('order:daysForReadPrice')
+        )
+      const hasReadPermission = this.$store.getters.allowedPeriodForPermission({
+        date: lastDepartureDate,
+        permission: 'order:daysForReadPrice',
+      })
+      return this.agreement.useCustomPrices && hasReadPermission
     },
   },
   watch: {
@@ -230,7 +255,9 @@ export default {
       immediate: true,
       handler: async function (val) {
         if (val) {
+          this.loading = true
           const res = await AgreementService.getById(val)
+          this.loading = false
           if (res) {
             this.agreement = Object.assign({}, res)
             this.withVat = this.agreement.vatRate !== 0
