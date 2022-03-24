@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col>
         <div class="top-panel">
@@ -73,21 +73,6 @@
           Профиль справочников не выбран, сохранение не возможно
         </v-alert>
         <div class="wrapper">
-          <div
-            v-if="false"
-            class="dates-position-block"
-          >
-            <div class="text-caption px-5 py-2">
-              Период отображения рейса
-            </div>
-            <app-date-time-input
-              v-model="form.startPositionDate"
-              label="Дата начала"
-              hideDetails
-              readonly
-            />
-          </div>
-
           <app-route-state
             v-model="state"
             :enableConfirm="enableConfirmOrder"
@@ -154,6 +139,14 @@
             :route="route"
             title="Стоимость рейса"
           />
+          <div id="note">
+            <v-text-field
+              v-model="form.note"
+              outlined
+              label="Примечание"
+              dense
+            />
+          </div>
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -178,7 +171,6 @@ import OrderTemplateService from '@/modules/profile/services/orderTemplate.servi
 import OrderService from '@/modules/order/services/order.service.js'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppCargoParams from './cargoParams.vue'
 import AppRoutePoints from './routePoints.vue'
 import AppReqTransport from './reqTransport.vue'
@@ -195,7 +187,7 @@ export default {
   name: 'OrderForm',
   components: {
     AppButtonsPanel,
-    AppDateTimeInput,
+
     AppReqTransport,
     AppCargoParams,
     AppRoutePoints,
@@ -250,6 +242,7 @@ export default {
       confirmedCrew: {},
       form: {
         startPositionDate: null,
+        note: null,
       },
     }
   },
@@ -346,7 +339,7 @@ export default {
       return !!this.confirmedCrew.driver
     },
     enableRefuseOrder() {
-      return !this.confirmedCrew.truck
+      return !this.confirmedCrew.truck && !!this.form.note
     },
     orderConfirmed() {
       return this.state.driverNotified || this.state.clientNotified
@@ -647,5 +640,9 @@ export default {
 #price {
   grid-column: 3/4;
   grid-row: 2/4;
+}
+#note {
+  grid-column: 2/4;
+  grid-row: 8/8;
 }
 </style>

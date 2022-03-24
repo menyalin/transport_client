@@ -202,9 +202,9 @@ export default {
     readonly() {
       const lastDepartureDate = this.route[this.route.length - 1].departureDate
       if (!lastDepartureDate)
-        return this.$store.getters.hasPermission('order:daysForWritePrice')
+        return !this.$store.getters.hasPermission('order:daysForWritePrice')
       else
-        return this.$store.getters.allowedPeriodForPermission({
+        return !this.$store.getters.allowedPeriodForPermission({
           permission: 'order:daysForWritePrice',
           date: lastDepartureDate,
         })
