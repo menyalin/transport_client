@@ -60,7 +60,7 @@
         </tr>
         <tr
           :style="{ 'user-select': 'none', height: '100%' }"
-          @dragover.prevent="disabledZone"
+          @dragover.prevent.stop="disabledZone"
         >
           <td class="text-center">
             Итоги
@@ -68,7 +68,6 @@
           <td
             v-for="column of columns"
             :key="column.title"
-            @dragover.prevent="disabledZone"
           >
             <app-result-cell :date="column.date" />
           </td>
@@ -94,7 +93,7 @@
           :style="getStylesForOrder(item)"
           @dragstart="dragStartHandler($event, item._id)"
           @dragend="dragEndHandler($event, item._id)"
-          @dragover="disabledZone"
+          @dragover.prevent.stop="disabledZone"
         >
           <app-order-cell
             v-if="item.itemType === 'order'"
@@ -122,13 +121,22 @@
           offset-y
         >
           <v-list>
-            <v-list-item @click="createOrder">
+            <v-list-item
+              :disabled="!$store.getters.hasPermission('order:daysForWrite')"
+              @click="createOrder"
+            >
               <v-list-item-title>Создать рейс</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="createDowntime">
+            <v-list-item
+              :disabled="!$store.getters.hasPermission('downtime:write')"
+              @click="createDowntime"
+            >
               <v-list-item-title>Создать "сервис/выходной"</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="createScheduleNote">
+            <v-list-item
+              :disabled="!$store.getters.hasPermission('scheduleNote:write')"
+              @click="createScheduleNote"
+            >
               <v-list-item-title>Создать заметку</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -190,6 +198,7 @@ import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
 import { roundingHours } from './helpers'
 import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
+import getPeriodByWidthAndDate from './utils/getPeriodByWidthAndDate.js'
 
 import appTruckTitleCell from './truckTitleCell.vue'
 import appOrderCell from './orderCell.vue'
@@ -223,7 +232,7 @@ export default {
     titleRowHeight: 0,
     leftShiftInPx: 0,
     draggedOrderId: null,
-    dayCount: 5,
+    // dayCount: 5,
     movedNode: null,
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,
@@ -258,7 +267,7 @@ export default {
     secInPx() {
       return getSecInPx({
         lengthInPx: this.tableWidth,
-        dayCount: this.dayCount,
+        dayCount: this.columns.length,
       })
     },
     draggableMode() {
@@ -269,24 +278,10 @@ export default {
       )
     },
     period() {
-      switch (true) {
-        case this.tableWidth > 3000:
-          return this.getPeriodFromDate(this.date, -3, 3, 7)
-        case this.tableWidth > 1900:
-          return this.getPeriodFromDate(this.date, -2, 3, 6)
-        case this.tableWidth > 1680:
-          return this.getPeriodFromDate(this.date, -1, 3, 5)
-        case this.tableWidth > 1470:
-          return this.getPeriodFromDate(this.date, -1, 2, 4)
-        case this.tableWidth > 1100:
-          return this.getPeriodFromDate(this.date, -1, 1, 3)
-        case this.tableWidth > 660:
-          return this.getPeriodFromDate(this.date, 0, 1, 2)
-        case this.tableWidth > 500:
-          return this.getPeriodFromDate(this.date, 0, 0, 1)
-        default:
-          return this.getPeriodFromDate(this.date, 0, 0, 1)
-      }
+      return getPeriodByWidthAndDate({
+        date: this.date,
+        width: this.tableWidth,
+      })
     },
     columns() {
       return getDaysFromPeriod(this.period)
@@ -454,13 +449,6 @@ export default {
     ordersFilterByDraggedOrder(item) {
       return this.draggedOrderId ? item._id !== this.draggedOrderId : true
     },
-    getPeriodFromDate(dateStr, a, b, dayCount) {
-      this.dayCount = dayCount
-      return [
-        moment(dateStr).add(a, 'd').format('YYYY-MM-DD'),
-        moment(dateStr).add(b, 'd').format('YYYY-MM-DD'),
-      ]
-    },
     resizeScreen() {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
@@ -505,6 +493,7 @@ export default {
       let startPoint
       let endPoint
       const SEC_IN_SIX_HOURS = 6 * 60 * 60
+      const SEC_IN_THREE_HOURS = 3 * 60 * 60
       if (moment(startPositionDate).isBefore(this.period[0]))
         startPoint = moment(this.period[0])
       else {
@@ -521,6 +510,13 @@ export default {
         endPoint = moment(endPositionDate)
       }
       const dutation = endPoint.unix() - startPoint.unix()
+      // если сервис и включен режим "планиуремых дат"
+      if (type && this.$store.getters.onlyPlannedDates)
+        return (
+          (dutation > SEC_IN_THREE_HOURS ? dutation : SEC_IN_THREE_HOURS) /
+          this.secInPx
+        )
+      else
       return (
         (dutation > SEC_IN_SIX_HOURS ||
         !!type ||
@@ -542,7 +538,6 @@ export default {
     dragStartHandler(e, id) {
       const dt = e.dataTransfer
       dt.setData('text/orderId', id)
-      // dt.dropEffect = 'move'
       dt.effectAllowed = 'move'
       this.draggedOrderId = id
       e.target.style.opacity = 0.5
@@ -595,7 +590,6 @@ export default {
         return null
 
       const x = e.layerX - this.titleColumnWidth
-
       const startDate = moment.unix(
         moment(this.period[0]).unix() + x * this.secInPx
       )
@@ -651,8 +645,6 @@ table {
   user-select: auto;
 }
 td {
-  /* border-left: var(--table-border);
-  border-right: var(--table-border); */
   border-bottom: 1px dotted grey;
 }
 .head-row {
@@ -665,8 +657,6 @@ td {
 
 .block {
   position: absolute;
-
-  /* z-index: 5; */
 }
 
 .today-header {
