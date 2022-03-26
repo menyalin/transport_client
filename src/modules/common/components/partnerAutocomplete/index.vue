@@ -11,7 +11,7 @@
       clearable
       :label="label"
       :outlined="outlined"
-      :append-icon="appendIcon"
+      :append-icon="hideAppendIcon ? null : appendIcon"
       @click:append="appendClick"
       @change="changeValue"
     />
@@ -51,6 +51,7 @@ export default {
     value: String,
     onlyClients: Boolean,
     disabled: { type: Boolean, default: false },
+    hideAppendIcon: { type: Boolean, default: false },
   },
   data() {
     return {

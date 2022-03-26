@@ -19,6 +19,7 @@
             :ind="ind"
             :readonly="readonly"
             :confirmed="confirmed"
+            :fixedTimeSlots="fixedTimeSlots"
             :isActive="point.isCurrent"
             :showDeleteBtn="tmpPoints.length > 2"
             :isTemplate="isTemplate"
@@ -77,6 +78,7 @@ export default {
     confirmed: Boolean,
     isValid: Boolean,
     state: Object,
+    fixedTimeSlots: { type: Boolean, default: false },
     isTemplate: {
       type: Boolean,
       default: false,

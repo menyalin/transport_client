@@ -11,6 +11,8 @@
       <app-date-range
         v-model="settings.period"
         :min="minDate"
+        class="mx-3"
+        :style="{ 'max-width': '250px' }"
       />
       <v-select
         v-model="settings.status"
@@ -21,6 +23,7 @@
         hide-details
         outlined
         clearable
+        :style="{ 'max-width': '220px' }"
         @change="settings.listOptions.page = 1"
       />
       <app-partner-autocomplete
@@ -30,6 +33,8 @@
         dense
         only-clients
         hide-details
+        hide-append-icon
+        :style="{ 'max-width': '220px' }"
         @change="settings.listOptions.page = 1"
       />
       <v-select
@@ -42,6 +47,7 @@
         hide-details
         outlined
         clearable
+        :style="{ 'max-width': '200px' }"
         @change="settings.listOptions.page = 1"
       />
       <v-autocomplete
@@ -52,6 +58,7 @@
         outlined
         hide-details
         label="Грузовик"
+        :style="{ 'max-width': '200px' }"
         @change="settings.listOptions.page = 1"
       />
       <v-autocomplete
@@ -64,14 +71,17 @@
         outlined
         hide-details
         label="Водитель"
+        :style="{ 'max-width': '300px' }"
         @change="settings.listOptions.page = 1"
       />
 
       <v-switch
+        v-if="availableAccountantMode"
         v-model="settings.accountingMode"
         label="Бухгалтер"
       />
       <v-btn
+        v-if="$store.getters.hasPermission('order:groupCreate')"
         color="primary"
         text
         small
@@ -80,7 +90,7 @@
         Создать группу рейсов
       </v-btn>
       <v-btn
-        v-if="isVisibleCopyToClipboardButton"
+        v-if="availableAccountantMode && accountingMode"
         color="primary"
         text
         small
@@ -276,14 +286,10 @@ export default {
         operation: 'order:daysForRead',
       })
     },
-    isVisibleCopyToClipboardButton() {
-      return (
-        this.accountingMode &&
-        ['1@1.ru', 'karina@atp-16.ru', 'kirill.brovkin@gmail.com'].includes(
-          this.$store.getters.user.email
-        )
-      )
+    availableAccountantMode() {
+      return this.$store.getters.hasPermission('orderListForAccountant')
     },
+
     filteredHeaders() {
       return this.allHeaders.filter((item) =>
         this.accountingMode ? true : !item.forAccountingMode
@@ -421,10 +427,12 @@ export default {
 </script>
 <style scoped>
 .filter-wrapper {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 300px 250px 250px 250px 300px 250px 150px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
+  gap: 10px;
 }
 .table-wrapper {
   user-select: none;

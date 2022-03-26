@@ -61,15 +61,45 @@
         :minDate="tmpPoint.minArrivalDate"
         :disabled="!confirmed || tmpPoint.arrivalDateDisabled"
         :errorMessages="arrivalDateErrors"
-        @change="change"
-      />
-      {{ tmpPoint.isLastPoint }}
+        @change="change"      
+        />
       <app-date-time-input
         v-model="tmpPoint.departureDate"
         label="Факт убытия"
         :disabled="!confirmed || tmpPoint.departureDateDisabled"
         :minDate="tmpPoint.arrivalDate"
         :errorMessages="departureDateErrors"
+        @change="change"
+      />
+    </div>
+    <div
+      v-if="isTemplate && fixedTimeSlots"
+      id="fixedTime"
+    >
+      <v-text-field
+        v-model="tmpPoint.fixedTime"
+        label="Время"
+        tag="div"
+        type="time"
+        dense
+        hide-details
+        outlined
+        :style="{ 'max-width': '100px' }"
+        @change="change"
+      />
+
+      <v-text-field
+        v-if="ind !== 0"
+        v-model.number="tmpPoint.offsetDays"
+        :style="{ 'max-width': '180px' }"
+        label="Смещение в днях"
+        persistent-hint
+        hint="Смещение в днях относительно даты начала рейса"
+        type="number"
+        tag="div"
+        outlined
+        dense
+        min="0"
         @change="change"
       />
     </div>
@@ -107,6 +137,7 @@ export default {
     confirmed: Boolean,
     isActive: Boolean,
     ind: Number,
+    fixedTimeSlots: { type: Boolean, default: false },
     showDeleteBtn: {
       type: Boolean,
       default: false,
@@ -130,6 +161,7 @@ export default {
         arrivalDate: null,
         departureDate: null,
         note: null,
+        fixedTime: null,
       },
     }
   },
@@ -169,6 +201,12 @@ export default {
         }
       },
     },
+    // tmpPoint: {
+    //   deep: true,
+    //   handler: function (val) {
+    //     this.$emit('changePoint', { ...val })
+    //   },
+    // },
   },
 
   methods: {

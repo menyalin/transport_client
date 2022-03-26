@@ -2,8 +2,9 @@
   <div>
     <app-buttons-panel
       panel-type="form"
-      :disabled-submit="!$store.getters.hasPermission('orderTemplate:write') || isInvalidForm"
-
+      :disabled-submit="
+        !$store.getters.hasPermission('orderTemplate:write') || isInvalidForm
+      "
       @cancel="cancel"
       @submit="submit"
     />
@@ -38,10 +39,17 @@
         v-model="cargoParams"
         title="Параметры груза"
       />
+      <v-checkbox
+        v-model="form.fixedTimeSlots"
+        hide-details
+        color="primary"
+        label="Маршрут имеет фиксированные временные окна"
+      />
       <app-route-points
         v-model="route"
         title="Маршрут"
         :isValid="isValidRoute"
+        :fixedTimeSlots="form.fixedTimeSlots"
         is-template
       />
     </div>
@@ -99,6 +107,7 @@ export default {
       form: {
         name: null,
         client: null,
+        fixedTimeSlots: false,
       },
     }
   },

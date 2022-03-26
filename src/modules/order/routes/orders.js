@@ -7,12 +7,23 @@ export default [
     name: 'ListOrder',
     component: () => import('../pages/orders/list'),
   },
-  { path: 'create', name: 'CreateOrder', component: DetailsOrder, props: true },
+  {
+    path: 'create',
+    name: 'CreateOrder',
+    component: DetailsOrder,
+    props: true,
+    meta: {
+      permission: 'order:daysForWrite',
+    },
+  },
   {
     path: 'group',
     name: 'CreateOrderGroup',
     component: CreateOrderGroup,
     props: true,
+    meta: {
+      permission: 'order:groupCreate',
+    },
   },
   { path: ':id', name: 'DetailsOrder', component: DetailsOrder, props: true },
 ]
