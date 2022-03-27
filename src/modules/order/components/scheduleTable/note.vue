@@ -1,6 +1,7 @@
 <template>
   <span
     class="note-wrapper"
+    :class="note.priority"
     :style="styles"
     @dblclick="dblCLickHandler"
   >
@@ -37,8 +38,19 @@ export default {
   font-size: 12px;
   letter-spacing: -0.008em;
   line-height: 16px;
-  font-weight: 400;
+  font-weight: 300;
   font-style: normal;
-  background-color: rgba(202, 123, 255, 0.493);
+  background-color: rgba(202, 123, 255, 0.288);
+}
+.middle {
+  font-size: 14px;
+  font-weight: 400;
+  background-color: rgba(151, 248, 72, 0.445);
+}
+.high {
+  font-size: 18px;
+  font-weight: 400;
+  color: black;
+  z-index: 6;
 }
 </style>

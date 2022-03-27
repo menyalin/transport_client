@@ -30,6 +30,14 @@
       label="Текст"
       dense
     />
+    <v-select
+      v-model="form.priority"
+      label="Приоритет"
+      :items="priorityItems"
+      outlined
+      dense
+    />
+
     <app-date-time-input
       v-model="$v.form.startPositionDate.$model"
       label="Дата начала"
@@ -78,10 +86,16 @@ export default {
   },
   data() {
     return {
+      priorityItems: [
+        { value: 'low', text: 'Обычный' },
+        { value: 'middle', text: 'Средний' },
+        { value: 'high', text: 'Высокий' },
+      ],
       form: {
         text: null,
         truck: null,
         startPositionDate: null,
+        priority: 'low',
       },
     }
   },
