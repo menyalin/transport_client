@@ -133,11 +133,12 @@
           />
           <app-price-block
             id="price"
-            v-model="prices"
+            :prices.sync="prices"
+            :outsourceCosts.sync="outsourceCosts"
             :agreementId="client.agreement"
+            :outsourceAgreementId="confirmedCrew.outsourceAgreement"
             :analytics="analytics"
             :route="route"
-            title="Стоимость рейса"
           />
           <div id="note">
             <v-text-field
@@ -175,11 +176,11 @@ import AppCargoParams from './cargoParams.vue'
 import AppRoutePoints from './routePoints.vue'
 import AppReqTransport from './reqTransport.vue'
 import AppRouteState from './routeState.vue'
-import AppConfirmedCrew from './confirmedCrew.vue'
+import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppClientBlock from './clientBlock.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
-import AppPriceBlock from './priceBlock.vue'
+import AppPriceBlock from './priceBlock/index.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -187,7 +188,6 @@ export default {
   name: 'OrderForm',
   components: {
     AppButtonsPanel,
-
     AppReqTransport,
     AppCargoParams,
     AppRoutePoints,
@@ -216,6 +216,7 @@ export default {
       loading: false,
       orderId: null,
       prices: [],
+      outsourceCosts: [],
       client: {
         client: null,
         agreement: null,
@@ -386,6 +387,7 @@ export default {
         grade: this.grade,
         analytics: this.analytics,
         prices: this.prices,
+        outsourceCosts: this.outsourceCosts,
       }
     },
   },
@@ -554,6 +556,7 @@ export default {
       if (val.reqTransport) this.reqTransport = val.reqTransport
       if (val.analytics) this.analytics = val.analytics
       if (val.prices) this.prices = val.prices
+      if (val.outsourceCosts) this.outsourceCosts = val.outsourceCosts
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
@@ -569,6 +572,7 @@ export default {
       this.reqTransport = { ...{} }
       this.analytics = { ...{} }
       this.prices = []
+      this.outsourceCosts = []
       keys.forEach((key) => {
         this.form[key] = null
       })

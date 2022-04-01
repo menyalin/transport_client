@@ -18,10 +18,6 @@ api.interceptors.response.use(
     return config
   },
   function (error) {
-    // console.log('error in interceptor', error.response.status)
-    // if (error.response.status === 511) {
-    //   // return null
-    // } else
     return Promise.reject(error)
   }
 )

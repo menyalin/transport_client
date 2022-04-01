@@ -120,6 +120,8 @@ export default {
           .filter((item) => (tkName ? item.tkName._id === tkName : true))
           .filter((item) => (type ? item.type === type : true))
       },
+    outsourceTruckIds: ({ trucks }) =>
+      trucks.filter((t) => t.tkName.outsource).map((t) => t._id),
 
     trucksMap: ({ trucks }) => {
       let map = new Map()

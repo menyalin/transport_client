@@ -38,6 +38,7 @@
         dense
         hide-details
         label="Примечание"
+        :style="{ 'max-width': '500px' }"
         @change="change($event, 'note')"
       />
     </div>

@@ -46,12 +46,21 @@
         Скопировать данные
       </v-btn>
     </div>
+    <div
+      v-if="showOutsourceAgreementRow"
+      class="outsource-agreement-row ml-4"
+    >
+      <small>Перевозчик: {{ tkName }}</small>
+      <small>Соглашение: {{ outsourceAgreementName }}</small>
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppBlockTitle from './blockTitle.vue'
+import AppBlockTitle from '../blockTitle.vue'
 import CrewService from '@/modules/profile/services/crew.service'
+import putCrewDataToClipboard from './putCrewDataToClipboard'
+import agreementService from '@/modules/profile/services/agreement.service'
 
 export default {
   name: 'ConfirmedCrew',
@@ -71,16 +80,32 @@ export default {
   data() {
     return {
       loading: false,
-
+      outsourceAgreement: {},
       params: {
         truck: null,
         trailer: null,
         driver: null,
+        outsourceAgreement: null,
       },
     }
   },
   computed: {
     ...mapGetters([]),
+    showOutsourceAgreementRow() {
+      return (
+        this.params.truck &&
+        this.$store.getters.outsourceTruckIds.includes(this.params.truck)
+      )
+    },
+    tkName() {
+      return (
+        this.$store.getters.trucksMap.get(this.params.truck)?.tkName?.name ||
+        '-'
+      )
+    },
+    outsourceAgreementName() {
+      return this.outsourceAgreement.name
+    },
     trucks() {
       return this.$store.getters.trucks
         .filter((item) => item.type === 'truck')
@@ -121,66 +146,44 @@ export default {
   },
   async created() {
     await this.getCrew()
+    if (this.params.outsourceAgreement)
+      this.outsourceAgreement = await agreementService.getById(
+        this.params.outsourceAgreement
+      )
   },
-  /**
-
-  Рено   Х681ВТ799   ЕМ558577
-  Стародубцев Виталий Юрьевич
-  Паспорт 68 02 571679 Выдан Мичуринским ГУВД Тамбовской обл. 18.06.2002
-  тел +7 (920) 470-01-51
-
-   **/
 
   methods: {
     copyHandler() {
       if (!this.params.truck || !this.params.driver) return null
-      const d = {
-        truckMark: this.$store.getters.trucksMap.get(this.params.truck)?.brand,
-        truckRegNum: this.$store.getters.trucksMap.get(this.params.truck)
-          ?.regNum,
-        trailerRegNum: this.$store.getters.trucksMap.get(this.params.trailer)
-          ?.regNum,
-        driver: this.$store.getters.driversMap.get(this.params.driver)
-          ?.fullName,
-        passportId: this.$store.getters.driversMap.get(this.params.driver)
-          ?.passportId,
-        passportIssued: this.$store.getters.driversMap.get(this.params.driver)
-          ?.passportIssued,
-        passportDate: this.$store.getters.driversMap.get(this.params.driver)
-          ?.passportDate,
-        licenseId: this.$store.getters.driversMap.get(this.params.driver)
-          ?.licenseId,
-        licenseDate: this.$store.getters.driversMap.get(this.params.driver)
-          ?.licenseDate,
-        phone: this.$store.getters.driversMap.get(this.params.driver)?.phone,
-        phone2: this.$store.getters.driversMap.get(this.params.driver)?.phone2,
-      }
-      let resStr = `${!!d.truckMark ? d.truckMark + '\t' : ''}${
-        d.truckRegNum
-      }  ${d.trailerRegNum || ''}\n`
-      resStr += `${d.driver}\n`
-      resStr += `Паспорт ${d.passportId || '-'}, Выдан ${
-        d.passportIssued || '-'
-      }, от ${
-        d.passportDate ? new Date(d.passportDate).toLocaleDateString() : '-'
-      }\n`
-      resStr += `ВУ ${d.licenseId || '-'}, от ${
-        d.licenseDate ? new Date(d.licenseDate).toLocaleDateString() : '-'
-      }\n`
-      resStr += `тел: ${d.phone || ''}  ${d.phone2 || ''}`
-      navigator.clipboard.writeText(resStr).then()
+      const truck = this.$store.getters.trucksMap.get(this.params.truck)
+      const driver = this.$store.getters.driversMap.get(this.params.driver)
+      const trailer = this.$store.getters.trucksMap.get(this.params.trailer)
+      putCrewDataToClipboard({ truck, driver, trailer })
     },
+
     async change(val, field) {
       this.params[field] = val
       if (!val) {
         this.params.driver = null
         this.params.trailer = null
+        this.params.outsourceAgreement = null
       }
       if (field === 'truck') {
         await this.getCrew()
+        if (this.$store.getters.outsourceTruckIds.includes(val))
+          await this.getAgreement()
       } else {
         this.$emit('change', this.params)
       }
+    },
+    async getAgreement() {
+      const truck = this.$store.getters.trucksMap.get(this.params.truck)
+      this.outsourceAgreement = await agreementService.getForOrder({
+        company: this.$store.getters.directoriesProfile,
+        date: this.date,
+        tkNameId: truck?.tkName?._id || truck.tkName,
+      })
+      this.params.outsourceAgreement = this.outsourceAgreement._id
     },
     async getCrew() {
       if (!this.date || !this.params.truck || this.confirmed) return null
@@ -206,5 +209,12 @@ export default {
   margin: 10px;
   gap: 15px;
   align-items: center;
+}
+.outsource-agreement-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
 }
 </style>

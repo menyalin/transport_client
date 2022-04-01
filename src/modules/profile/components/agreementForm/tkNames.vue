@@ -1,24 +1,22 @@
 <template>
   <div class="my-2">
     <div class="text-h6">
-      Клиенты:
+      Перевозчики:
       <div
-        v-if="!clientList || !clientList.length"
+        v-if="!list || !list.length"
         class="text-caption pl-6 my-2"
       >
         нет данных
       </div>
       <v-list v-else>
         <v-list-item
-          v-for="item in clientList"
+          v-for="item in list"
           :key="item"
         >
           <v-list-item-content>
             <v-list-item-title>
               {{
-                partnersMap.has(item)
-                  ? partnersMap.get(item).name
-                  : 'запись удалена'
+                itemsMap.has(item) ? itemsMap.get(item).name : 'запись удалена'
               }}
             </v-list-item-title>
           </v-list-item-content>
@@ -26,17 +24,18 @@
             <v-icon
               small
               color="error"
-              @click="deleteClient(item)"
+              @click="deleteItem(item)"
             >
               mdi-delete
             </v-icon>
           </v-list-item-action>
         </v-list-item>
       </v-list>
-      <app-partner-autocomplete
+      <v-select
         v-if="!isVisibleBtn"
-        onlyClients
-        @change="addClient"
+        label="Перевозчик"
+        :items="itemsForSelect"
+        @change="addItem"
       />
       <v-btn
         v-else
@@ -45,44 +44,43 @@
         color="primary"
         @click="showAutocomplete"
       >
-        Добавить клиента
+        Добавить перевозчика
       </v-btn>
     </div>
   </div>
 </template>
 <script>
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
-
 export default {
-  name: 'AgreementClientList',
-  components: {
-    AppPartnerAutocomplete,
-  },
+  name: 'AgreementTkNameList',
+
   model: {
-    prop: 'clientList',
+    prop: 'list',
     event: 'change',
   },
   props: {
-    clientList: {
+    list: {
       type: Array,
     },
   },
   data() {
     return {
-      selectedClients: [],
+      selectedItems: [],
       isVisibleBtn: true,
     }
   },
   computed: {
-    partnersMap() {
-      return this.$store.getters.partnersMap
+    itemsMap() {
+      return this.$store.getters.tkNamesMap
+    },
+    itemsForSelect() {
+      return this.$store.getters.tkNamesForSelect.filter((i) => i.outsource)
     },
   },
   watch: {
-    clientList: {
+    list: {
       immediate: true,
       handler: function (val) {
-        if (!!val && val.length) this.selectedClients = val
+        if (!!val && val.length) this.selectedItems = val
       },
     },
   },
@@ -91,21 +89,21 @@ export default {
       this.isVisibleBtn = false
     },
 
-    addClient(val) {
-      if (val && !this.selectedClients.includes(val)) {
-        this.selectedClients.push(val)
-        this.$emit('change', this.selectedClients)
+    addItem(val) {
+      if (val && !this.selectedItems.includes(val)) {
+        this.selectedItems.push(val)
+        this.$emit('change', this.selectedItems)
       }
       this.isVisibleBtn = true
     },
-    async deleteClient(id) {
+    async deleteItem(id) {
       if (!id) return null
       const res = await this.$confirm('Вы уверены? ')
       if (!res) return null
-      this.selectedClients = this.selectedClients.filter((item) => item !== id)
-      this.$emit('change', this.selectedClients)
+      this.selectedItems = this.selectedItems.filter((item) => item !== id)
+      this.$emit('change', this.selectedItems)
     },
   },
 }
 </script>
-<style></style>
+<style scoped></style>

@@ -31,6 +31,10 @@
       label="Название ТК"
       dense
     />
+    <v-checkbox
+      v-model="form.outsource"
+      label="Привлеченный перевозчик"
+    />
 
     <v-btn
       v-if="displayDeleteBtn"
@@ -72,6 +76,7 @@ export default {
       loading: false,
       form: {
         name: null,
+        outsource: false,
       },
     }
   },

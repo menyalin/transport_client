@@ -106,8 +106,8 @@ export default {
       ({ date, permission }) => {
         if (permissionsMap.has('fullAccess')) return true
         if (!permissionsMap.has(permission)) return false
+        if (!date) return true
         if (permissionsMap.get(permission) === -1) return true
-        if (!date) return false
         const dayCount = Math.floor(
           (new Date() - new Date(date)) / (1000 * 60 * 60 * 24)
         )

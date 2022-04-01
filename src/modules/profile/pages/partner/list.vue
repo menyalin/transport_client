@@ -16,6 +16,7 @@
             outlined
             hide-details
             dense
+            clearable
           />
         </div>
         <v-data-table
@@ -92,7 +93,7 @@ export default {
 <style scoped>
 #settings-wrapper {
   display: grid;
-  grid-template-columns: 300px;
+  grid-template-columns: 400px;
   gap: 10px;
 }
 </style>

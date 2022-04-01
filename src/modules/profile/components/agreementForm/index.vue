@@ -42,16 +42,37 @@
           outlined
           :style="{ 'max-width': '130px' }"
         />
+        <v-checkbox
+          v-model="form.isOutsourceAgreement"
+          label="Соглашение с перевозчиком"
+          color="primary"
+        />
       </div>
-      <app-clients
-        v-model="form.clients"
-        :style="{ 'max-width': '400px' }"
-      />
-      <v-checkbox
-        v-model="form.usePriceWithVAT"
-        color="primary"
-        label="При выгрузке показывать ставку с НДС"
-      />
+      <div v-if="form.isOutsourceAgreement">
+        <v-divider />
+        <app-tknames
+          v-model="form.outsourceCarriers"
+          :style="{ 'max-width': '400px' }"
+        />
+        <v-checkbox
+          v-model="form.cashPayment"
+          label="Оплата наличными"
+          color="primary"
+        />
+      </div>
+      <div v-else>
+        <v-divider />
+        <app-clients
+          v-model="form.clients"
+          :style="{ 'max-width': '400px' }"
+        />
+        <v-checkbox
+          v-model="form.usePriceWithVAT"
+          color="primary"
+          label="При выгрузке показывать ставку с НДС"
+        />
+      </div>
+
       <app-zone-distances
         v-if="false"
         v-model="form.zones"
@@ -98,6 +119,7 @@ import { required } from 'vuelidate/lib/validators'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppClients from './clients.vue'
+import AppTknames from './tkNames.vue'
 import AppZoneDistances from './zones.vue'
 
 export default {
@@ -106,6 +128,7 @@ export default {
     AppButtonsPanel,
     AppDateTimeInput,
     AppClients,
+    AppTknames,
     AppZoneDistances,
   },
   props: {
@@ -125,12 +148,15 @@ export default {
     return {
       form: {
         name: null,
+        isOutsourceAgreement: false,
+        cashPayment: false,
         note: null,
         date: null,
         vatRate: null,
         usePriceWithVAT: false,
         useCustomPrices: true,
         clients: [],
+        outsourceCarriers: [],
         closed: null,
         zones: [],
       },
