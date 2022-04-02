@@ -23,14 +23,29 @@
         label="Название шаблона"
         dense
       />
-      <app-partner-autocomplete
-        v-model="$v.form.client.$model"
-        label="Заказчик"
-        outlined
-        dense
-        only-clients
-        hide-details
-      />
+      <div id="client-row">
+        <app-partner-autocomplete
+          v-model="$v.form.client.$model"
+          label="Заказчик"
+          outlined
+          dense
+          only-clients
+          hide-details
+          :style="{ 'max-width': '350px' }"
+        />
+
+        <v-select
+          v-model="analytics.type"
+          label="Тип рейса"
+          :items="$store.getters.orderAnalyticTypes"
+          clearable
+          hide-details
+          dense
+          outlined
+          :style="{ 'max-width': '180px' }"
+        />
+      </div>
+
       <app-req-transport
         v-model="reqTransport"
         title="Требования к транспорту"
@@ -104,6 +119,9 @@ export default {
       route: [{ type: 'loading' }, { type: 'unloading' }],
       cargoParams: {},
       reqTransport: {},
+      analytics: {
+        type: null,
+      },
       form: {
         name: null,
         client: null,
@@ -141,6 +159,7 @@ export default {
         reqTransport: this.reqTransport,
         route: this.route,
         cargoParams: this.cargoParams,
+        analytics: this.analytics,
       }
     },
   },
@@ -175,6 +194,7 @@ export default {
       if (val.cargoParams) this.cargoParams = val.cargoParams
       if (val.reqTransport) this.reqTransport = val.reqTransport
       if (val.route.length) this.route = val.route
+      if (val.analytics) this.analytics = val.analytics
       const keys = Object.keys(this.form)
       keys.forEach((key) => {
         this.form[key] = val[key]
@@ -184,6 +204,7 @@ export default {
       this.reqTransport = Object.assign({})
       this.route = []
       this.cargoParams = Object.assign({})
+      this.analytics = Object.assign({})
       const keys = Object.keys(this.form)
       keys.forEach((key) => {
         this.form[key] = null
@@ -203,5 +224,12 @@ export default {
 .row-input {
   display: flex;
   flex-direction: row;
+}
+#client-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
 }
 </style>
