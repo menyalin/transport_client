@@ -61,8 +61,8 @@
         :minDate="tmpPoint.minArrivalDate"
         :disabled="!confirmed || tmpPoint.arrivalDateDisabled"
         :errorMessages="arrivalDateErrors"
-        @change="change"      
-        />
+        @change="change"
+      />
       <app-date-time-input
         v-model="tmpPoint.departureDate"
         label="Факт убытия"
@@ -201,12 +201,6 @@ export default {
         }
       },
     },
-    // tmpPoint: {
-    //   deep: true,
-    //   handler: function (val) {
-    //     this.$emit('changePoint', { ...val })
-    //   },
-    // },
   },
 
   methods: {

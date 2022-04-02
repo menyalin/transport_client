@@ -48,9 +48,10 @@ export default {
   background-color: rgba(151, 248, 72, 0.445);
 }
 .high {
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 500;
   color: black;
   z-index: 6;
+  background-color: rgba(235, 255, 56, 0.7);
 }
 </style>
