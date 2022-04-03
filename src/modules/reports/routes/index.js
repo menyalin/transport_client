@@ -28,6 +28,14 @@ export default [
         name: 'TruckStateOnDate',
         component: () => import('../pages/truckStateOnDate'),
       },
+      {
+        path: 'drivers_grades',
+        name: 'DriversGrades',
+        component: () => import('../pages/driversGrades'),
+        meta: {
+          permission: 'report:drivers_grades',
+        },
+      },
     ],
   },
 ]

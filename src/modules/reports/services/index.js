@@ -31,6 +31,18 @@ class ReportService {
       return []
     }
   }
+
+  async driversGradesGetLink(body) {
+    try {
+      const { data } = await api.post(BASE_PATH + '/drivers_grades', {
+        ...body,
+      })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      return data
+    }
+  }
 }
 
 export default new ReportService()

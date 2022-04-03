@@ -5,10 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build && docker build -t menyalin/front:latest . && docker image push menyalin/front:latest",
-    "buildalfa": "vue-cli-service build --mode alfa && docker build -f ./Dockerfile.alfa -t menyalin/alfa_front:latest . && docker image push menyalin/alfa_front:latest", 
+    "buildalfa": "vue-cli-service build --mode alfa && docker build -f ./Dockerfile.alfa -t menyalin/alfa_front:latest . && docker image push menyalin/alfa_front:latest",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vue/composition-api": "^1.4.9",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",

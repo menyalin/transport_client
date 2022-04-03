@@ -15,7 +15,7 @@
 
     <v-list dense>
       <v-list-item
-        v-for="item of reports"
+        v-for="item of filteredReports"
         :key="item.link"
         :to="item.link"
       >
@@ -37,8 +37,22 @@ export default {
         { link: '/reports/crews', title: 'Использование транспорта' },
         { link: '/reports/daysControl', title: 'Контроль сроков' },
         { link: '/reports/ordersInProgress', title: 'Простой транспорта' },
+        {
+          link: '/reports/drivers_grades',
+          title: 'Оценки водителей',
+          permission: 'report:drivers_grades',
+        },
       ],
     }
+  },
+  computed: {
+    filteredReports() {
+      return this.reports.filter((i) =>
+        i.permission
+          ? this.$store.getters.hasPermission('report:drivers_grades')
+          : true
+      )
+    },
   },
 }
 </script>

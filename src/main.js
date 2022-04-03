@@ -7,12 +7,14 @@ import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate'
 import VuetifyConfirm from 'vuetify-confirm'
 import moment from 'moment'
+import VueCompositionAPI from '@vue/composition-api'
 
 moment.locale('ru')
 
 Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
+Vue.use(VueCompositionAPI)
 
 Vue.use(VuetifyConfirm, {
   vuetify,

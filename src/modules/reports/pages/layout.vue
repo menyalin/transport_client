@@ -1,9 +1,6 @@
 <template>
   <v-app>
-    <app-bar
-      title="Отчеты"
-      
-    />
+    <app-bar title="Отчеты" />
     <v-main>
       <router-view />
       <app-snackbar />
@@ -20,9 +17,7 @@ export default {
     AppBar,
     AppSnackbar,
   },
-  data: () => ({
-    
-  }),
+  data: () => ({}),
 }
 </script>
 <style></style>
