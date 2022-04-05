@@ -3,27 +3,20 @@ import TruckService from '@/modules/profile/services/truck.service'
 export default {
   state: {
     trucks: [],
-    truckTypes: [
-      { text: 'Грузовик', value: 'truck' },
-      { text: 'Прицеп', value: 'trailer' },
-    ],
-    truckKinds: [
-      { text: 'Реф', value: 'ref' },
-      { text: 'Изотерм', value: 'isoterm' },
-      { text: 'Тент', value: 'tent' },
-    ],
-    loadDirection: [
-      { text: 'Задняя', value: 'rear' },
-      { text: 'Боковая', value: 'side' },
-      { text: 'Верхняя', value: 'top' },
-    ],
-    liftCapacityTypes: [20, 10, 5, 3.5, 1.5],
+    allTruckParams: {
+      truckTypes: [],
+      truckKinds: [],
+      loadDirection: [],
+      liftCapacityTypes: [],
+    },
   },
   mutations: {
     clearDirectories(state) {
       state.trucks = []
     },
-
+    setAllTruckParams(state, payload) {
+      state.allTruckParams = Object.assign({}, payload)
+    },
     setTrucks(state, payload) {
       state.trucks = payload
     },
@@ -86,14 +79,14 @@ export default {
         .filter((item) => item.company === directoriesProfile)
         .sort(_trucksSortHandler)
         .map(_prepareTruck),
-    loadDirection: ({ loadDirection }) => loadDirection,
-    truckTypes: ({ truckTypes }) => truckTypes,
-    truckKinds: ({ truckKinds }) => truckKinds,
-    truckKindsMap: ({ truckKinds }) =>
-      new Map(truckKinds.map((i) => [i.value, i.text])),
-    liftCapacityTypes: ({ liftCapacityTypes }) => liftCapacityTypes,
-    truckTypesHash: ({ truckTypes }) =>
-      truckTypes.reduce((hash, item) => {
+    loadDirection: ({ allTruckParams }) => allTruckParams.loadDirection,
+    truckTypes: ({ allTruckParams }) => allTruckParams.truckTypes,
+    truckKinds: ({ allTruckParams }) => allTruckParams.truckKinds,
+    truckKindsMap: ({ allTruckParams }) =>
+      new Map(allTruckParams.truckKinds.map((i) => [i.value, i.text])),
+    liftCapacityTypes: ({ allTruckParams }) => allTruckParams.liftCapacityTypes,
+    truckTypesHash: ({ allTruckParams }) =>
+      allTruckParams.truckTypes.reduce((hash, item) => {
         hash[item.value] = item.text
         return hash
       }, {}),

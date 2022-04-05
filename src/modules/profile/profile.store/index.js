@@ -106,12 +106,12 @@ export default {
         orderStatuses,
         orderTemplates,
         orderAnalyticTypes,
-        calcMethods,
         orderPriceTypes,
         documentTypes,
         documentStatuses,
         staffRoles,
         permissions,
+        allTruckParams,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -124,13 +124,13 @@ export default {
       if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
       if (orderAnalyticTypes?.length)
         commit('setOrderAnalyticTypes', orderAnalyticTypes)
-      if (calcMethods?.length) commit('setCalcMethods', calcMethods)
       if (orderPriceTypes?.length) commit('setOrderPriceTypes', orderPriceTypes)
       if (documentTypes?.length) commit('setDocumentTypes', documentTypes)
       if (documentStatuses?.length)
         commit('setDocumentStatuses', documentStatuses)
       if (staffRoles?.length) commit('setStaffRoles', staffRoles)
       if (permissions) commit('setPermissionsMap', permissions)
+      if (allTruckParams) commit('setAllTruckParams', allTruckParams)
     },
 
     async createCompany({ commit }, payload) {
