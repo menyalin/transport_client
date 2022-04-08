@@ -9,6 +9,7 @@
           ИНН: {{ company.inn }}
         </div>
         <v-divider />
+        <app-company-settings :companyId="id" />
         <app-company-staff
           :staff="company.staff"
           :company-id="company._id"
@@ -19,12 +20,13 @@
 </template>
 <script>
 import AppCompanyStaff from '@/modules/profile/components/companyStaff'
-
+import AppCompanySettings from '@/modules/profile/components/companySettings'
 
 export default {
   name: 'CompanyDetails',
   components: {
     AppCompanyStaff,
+    AppCompanySettings,
   },
   props: {
     id: {
@@ -33,7 +35,6 @@ export default {
     },
   },
   computed: {
-    
     company() {
       return this.$store.state.ProfileModule.myCompanies.find(
         (item) => item._id === this.id

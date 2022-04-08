@@ -14,8 +14,8 @@
         <v-list>
           <v-subheader>Мои компании</v-subheader>
           <v-list-item
-            v-for="item in myCompanies"
-            :key="item._id"
+            v-for="(item, ind) in myCompanies"
+            :key="ind"
             two-line
             :to="{ name: 'companyDetails', params: { id: item._id } }"
           >
@@ -33,12 +33,17 @@
 </template>
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'CompanyList',
   components: {
     AppButtonsPanel,
+  },
+  data() {
+    return {
+      selectedItem: 0,
+    }
   },
   computed: {
     ...mapGetters(['myCompanies']),
@@ -54,4 +59,8 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.current {
+  background-color: rgb(222, 245, 253);
+}
+</style>

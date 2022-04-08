@@ -1,7 +1,4 @@
 import Layout from '../pages/layout'
-import Companies from '../pages/companyList'
-import CompanyEdit from '../pages/companyEdit'
-import CompanyDetails from '../pages/companyDetails'
 import TaskList from '../pages/taskList'
 
 import crewRoutes from './crews.js'
@@ -15,6 +12,7 @@ import ProfileSettings from '../pages/profileSettings'
 import orderTemplateRoutes from './orderTemplates.js'
 import scheduleNoteRoutes from './scheduleNotes.js'
 import agreementRoutes from './agreement'
+import companyRouter from './company'
 
 export default [
   {
@@ -34,18 +32,7 @@ export default [
       ...downtimeRoutes,
       ...orderTemplateRoutes,
       ...scheduleNoteRoutes,
-      { path: 'companies', name: 'companyList', component: Companies },
-      {
-        path: 'companies/create',
-        name: 'createNewCompany',
-        component: CompanyEdit,
-      },
-      {
-        path: 'companies/:id',
-        name: 'companyDetails',
-        component: CompanyDetails,
-        props: true,
-      },
+      ...companyRouter, 
       { path: 'tasks', name: 'taskList', component: TaskList },
 
       /// Настройки профиля

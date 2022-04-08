@@ -5,6 +5,7 @@
     </div>
     <div class="req-transport-block">
       <v-select
+        v-if="!hideTruckKindField"
         :value="reqTransport.kind"
         :items="truckKinds"
         outlined
@@ -14,6 +15,7 @@
         @change="change($event, 'kind')"
       />
       <v-select
+        v-if="!hideLiftCapacityField"
         :value="reqTransport.liftCapacity"
         :items="liftCapacityTypes"
         outlined
@@ -23,6 +25,7 @@
         @change="change($event, 'liftCapacity')"
       />
       <v-select
+        v-if="!hideLoadDirectionField"
         :value="reqTransport.loadDirection"
         :items="loadDirection"
         outlined
@@ -62,15 +65,42 @@ export default {
   },
   computed: {
     ...mapGetters(['liftCapacityTypes', 'truckKinds', 'loadDirection']),
+    companySettings() {
+      return this.$store.getters.companySettings
+    },
+    hideLoadDirectionField() {
+      return (
+        this.companySettings.loadDirections.length === 1 &&
+        !!this.companySettings.defaultLoadDirection
+      )
+    },
+    hideLiftCapacityField() {
+      return (
+        this.companySettings.liftCapacityTypes.length === 1 &&
+        !!this.companySettings.defaultLiftCapacity
+      )
+    },
+    hideTruckKindField() {
+      return (
+        this.companySettings.truckKinds.length === 1 &&
+        !!this.companySettings.defaultTruckKind
+      )
+    },
   },
   watch: {
     reqTransport: {
       immediate: true,
       handler: function (val) {
-        if (val) {
+        if (val.kind || val.liftCapacity) { 
           this.params.kind = val.kind
           this.params.liftCapacity = val.liftCapacity
           this.params.loadDirection = val.loadDirection || 'rear'
+        } else {
+          this.$emit('change', {
+            kind: this.companySettings?.defaultTruckKind || null,
+            liftCapacity: this.companySettings?.defaultLiftCapacity || null,
+            loadDirection: this.companySettings?.defaultLoadDirection || null,
+          })
         }
       },
     },
@@ -86,7 +116,7 @@ export default {
 <style scoped>
 .req-transport-block {
   display: grid;
-  grid-template-columns: 160px 160px 160px;
+  grid-template-columns: 180px 160px 160px;
   margin: 10px;
   gap: 15px;
 }

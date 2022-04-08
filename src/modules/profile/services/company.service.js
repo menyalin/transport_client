@@ -11,6 +11,12 @@ class CompanyService {
     socket.on('company:deleteEmployeeById', (payload) => {
       store.commit('deleteEmployee', payload)
     })
+    socket.on('company:updateSettings', ({ settings, companyId }) => {
+      store.commit('updateCompanySettings', {
+        settings,
+        companyId,
+      })
+    })
   }
 
   getMyCompanies() {
@@ -47,6 +53,19 @@ class CompanyService {
     const { data } = await api.post(
       BASE_PATH + '/' + companyId + '/staff',
       employee
+    )
+    return data
+  }
+
+  async updateSettings({ settings }) {
+    if (!store.getters.hasPermission('fullAccess')) {
+      commit('setError', 'Нет прав на выполнение операции')
+      return null
+    }
+    const companyId = store.getters.directoriesProfile
+    const { data } = await api.put(
+      BASE_PATH + '/settings/' + companyId,
+      settings
     )
     return data
   }

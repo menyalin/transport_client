@@ -51,10 +51,7 @@ export default {
     setMyCompanies(state, companies) {
       state.myCompanies = companies
     },
-    clearDirectories({ addresses, drivers }) {
-      addresses = []
-      drivers = []
-    },
+
     addCompany(state, company) {
       state.myCompanies.push(company)
     },
@@ -79,6 +76,11 @@ export default {
         (item) => item._id !== company._id
       )
       state.myCompanies.push(company)
+    },
+    updateCompanySettings(state, { settings, companyId }) {
+      const company = state.myCompanies.find((i) => i._id === companyId)
+      if (!company) return
+      company.settings = Object.assign(company.settings, settings)
     },
   },
   actions: {
@@ -188,32 +190,13 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
-
-    async getAddresses({ commit, getters }, directiveUpdate) {
-      try {
-        commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.addresses.length === 0 && getters.directoriesProfile)
-        ) {
-          commit('setAddresses', [])
-          const addressList = await AddressService.getByDerictoriesProfile(
-            getters.directoriesProfile
-          )
-          commit('setAddresses', addressList)
-        }
-        commit('setLoading', false)
-      } catch (e) {
-        commit('setLoading', false)
-        commit('setError', e.response?.data?.message)
-      }
-    },
   },
   getters: {
     cacheDirectories: ({ cacheDirectories }) => cacheDirectories,
 
     myCompanies: (state) => state.myCompanies,
-
+    companySettings: ({ myCompanies }, { directoriesProfile }) =>
+      myCompanies.find((i) => i._id === directoriesProfile)?.settings,
     staffRoles: ({ staffRoles }) => staffRoles,
     staffRolesMap: ({ staffRoles }) =>
       new Map(staffRoles.map((s) => [s.value, s.text])),

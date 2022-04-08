@@ -79,12 +79,35 @@ export default {
         .filter((item) => item.company === directoriesProfile)
         .sort(_trucksSortHandler)
         .map(_prepareTruck),
-    loadDirection: ({ allTruckParams }) => allTruckParams.loadDirection,
+    loadDirection: ({ allTruckParams }, { companySettings }) => {
+      return allTruckParams.loadDirection.filter((i) =>
+        companySettings.loadDirections.length
+          ? companySettings.loadDirections.includes(i.value)
+          : true
+      )
+    },
+    allLoadDirection: ({ allTruckParams }) => allTruckParams.loadDirection,
     truckTypes: ({ allTruckParams }) => allTruckParams.truckTypes,
-    truckKinds: ({ allTruckParams }) => allTruckParams.truckKinds,
+    truckKinds: ({ allTruckParams }, { companySettings }) => {
+      return allTruckParams.truckKinds.filter((i) =>
+        companySettings.truckKinds.length
+          ? companySettings.truckKinds.includes(i.value)
+          : true
+      )
+    },
+    allTruckKinds: ({ allTruckParams }) => allTruckParams.truckKinds,
     truckKindsMap: ({ allTruckParams }) =>
       new Map(allTruckParams.truckKinds.map((i) => [i.value, i.text])),
-    liftCapacityTypes: ({ allTruckParams }) => allTruckParams.liftCapacityTypes,
+    liftCapacityTypes: ({ allTruckParams }, { companySettings }) => {
+      return allTruckParams.liftCapacityTypes.filter((i) =>
+        companySettings.liftCapacityTypes.length
+          ? companySettings.liftCapacityTypes.includes(i)
+          : true
+      )
+    },
+
+    allLiftCapacityTypes: ({ allTruckParams }) =>
+      allTruckParams.liftCapacityTypes,
     truckTypesHash: ({ allTruckParams }) =>
       allTruckParams.truckTypes.reduce((hash, item) => {
         hash[item.value] = item.text

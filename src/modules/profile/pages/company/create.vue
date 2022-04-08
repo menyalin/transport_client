@@ -18,7 +18,7 @@ import AppCompanyForm from '@/modules/profile/components/companyForm'
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'CompanyEdit',
+  name: 'CreateCompany',
   components: {
     AppCompanyForm,
   },

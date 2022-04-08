@@ -237,7 +237,8 @@ export default {
 .tooltip-wrapper {
   position: relative;
 }
-.not-confirmed-by-client {
+.not-confirmed-by-client,
+.clientRefused {
   background-color: rgba(255, 28, 28, 0.7);
   color: black;
 }
