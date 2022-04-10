@@ -13,6 +13,7 @@ import orderTemplateRoutes from './orderTemplates.js'
 import scheduleNoteRoutes from './scheduleNotes.js'
 import agreementRoutes from './agreement'
 import companyRouter from './company'
+import tariffRouter from './tariff'
 
 export default [
   {
@@ -32,7 +33,8 @@ export default [
       ...downtimeRoutes,
       ...orderTemplateRoutes,
       ...scheduleNoteRoutes,
-      ...companyRouter, 
+      ...companyRouter,
+      ...tariffRouter,
       { path: 'tasks', name: 'taskList', component: TaskList },
 
       /// Настройки профиля

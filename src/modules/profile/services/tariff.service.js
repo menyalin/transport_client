@@ -1,24 +1,19 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-const BASE_PATH = '/agreements'
+const BASE_PATH = '/tariffs'
 
-class AgreementService {
-  MODEL_NAME = 'agreement'
-  allAgreements = []
-  allAgreementsExpiresMs = 1000 * 60 * 5 // 5 минут
+class TariffService {
+  MODEL_NAME = 'tariff'
   constructor() {
     socket.on(this.MODEL_NAME + ':created', (data) => {
-      store.commit('addAgreement', data)
       store.commit('addToCache', data)
     })
 
     socket.on(this.MODEL_NAME + ':updated', (data) => {
-      store.commit('updateAgreement', data)
       store.commit('addToCache', data)
     })
     socket.on(this.MODEL_NAME + ':deleted', (id) => {
-      store.commit('deleteAgreement', id)
       store.commit('deleteFromCache', id)
     })
   }
@@ -40,30 +35,6 @@ class AgreementService {
     return data
   }
 
-  async getForOrder(params) {
-    let { data } = await api.get(BASE_PATH + '/get_for_order', { params })
-    return data
-  }
-
-  async getActiveAgreements() {
-    if (this.allAgreements.length) {
-      return this.allAgreements
-    } else {
-      let { data } = await api.get(BASE_PATH, {
-        params: {
-          company: store.getters.directoriesProfile,
-          limit: 1000,
-          skip: 0,
-        },
-      })
-      this.allAgreements = data.items
-      setTimeout(() => {
-        this.allAgreements = []
-      }, this.allAgreementsExpiresMs)
-      return data.items
-    }
-  }
-
   async getById(id) {
     if (store.getters.cacheDirectories.has(id))
       return store.getters.cacheDirectories.get(id)
@@ -80,4 +51,4 @@ class AgreementService {
   }
 }
 
-export default new AgreementService()
+export default new TariffService()

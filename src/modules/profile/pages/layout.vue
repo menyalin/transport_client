@@ -44,6 +44,13 @@ export default {
         permission: 'agreement:readList',
       },
       {
+        text: 'Тарифы',
+        icon: 'mdi-cash-multiple',
+        link: '/profile/tariffs',
+        onlyWithDirectoriesProfile: true,
+        permission: 'tariff:readList',
+      },
+      {
         text: 'Перевозчики',
         icon: 'mdi-alien',
         link: '/profile/tk_names',

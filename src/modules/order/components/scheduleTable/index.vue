@@ -232,7 +232,6 @@ export default {
     titleRowHeight: 0,
     leftShiftInPx: 0,
     draggedOrderId: null,
-    // dayCount: 5,
     movedNode: null,
     overRowInd: null,
     initTitleWidth: ROW_TITLE_COLUMN_WIDTH,

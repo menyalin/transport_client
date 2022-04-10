@@ -15,9 +15,7 @@
         <app-agreement-form
           v-else
           :agreement="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('agreement:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('agreement:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -33,7 +31,7 @@ import service from '../../services/agreement.service'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {
-  name: 'AgreementDetails',
+  name: 'DowntimeDetails',
   components: {
     AppAgreementForm,
     AppLoadSpinner,
