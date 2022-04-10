@@ -1,18 +1,18 @@
-export class TariffDTO {
-  REQUIRED_FIELDS = [
-    'date',
-    'loading',
-    'unloading',
-    'truckKind',
-    'liftCapacity',
-    'price',
-    'group',
-    'groupVat',
-    'agreementVatRate',
-  ]
+const _REQUIRED_FIELDS = [
+  'date',
+  'loading',
+  'unloading',
+  'truckKind',
+  'liftCapacity',
+  'price',
+  'group',
+  'groupVat',
+  'agreementVatRate',
+]
 
+export class TariffDTO {
   constructor(item) {
-    this.REQUIRED_FIELDS.forEach((field) => {
+    _REQUIRED_FIELDS.forEach((field) => {
       if (item[field] === undefined)
         throw new Error(`Not exist required field: ${field}`)
     })
@@ -20,14 +20,19 @@ export class TariffDTO {
     keys.forEach((key) => {
       this[key] = item[key]
     })
+    const vatKoef = parseFloat(1 + item.agreementVatRate / 100)
+    const price = item.price
     // this.date = new Date(item.date).toISOString()
     if (item.agreementVatRate !== 0 && item.groupVat) {
       // если цену вносят с НДС
-      this.price = item.price
-      this.priceWOVat =
-        (item.price * 100) / (1 + item.agreementVatRate / 100) / 100
+      this.price = price
+      this.priceWOVat = price / vatKoef
+      this.sumVat = price - price / vatKoef
     } else if (item.agreementVatRate !== 0) {
       // если цену вносят без НДС
+      this.priceWOVat = item.price
+      this.sumVat = price * ((vatKoef * 10 - 10) / 10)
+      this.price = price + price * ((vatKoef * 10 - 10) / 10)
     } else {
       this.priceWOVat = item.price
       this.sumVat = 0

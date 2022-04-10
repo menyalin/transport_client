@@ -106,7 +106,7 @@ export default {
     },
     save() {
       try {
-        console.log(new TariffDTO({ ...this.tmpItem }))
+        console.log({ ...new TariffDTO(this.tmpItem) })
       } catch (e) {
         console.log(e)
       }
