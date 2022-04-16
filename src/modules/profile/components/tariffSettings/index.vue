@@ -4,6 +4,7 @@
       v-model="tmpSettings.date"
       label="Дата"
       outlined
+      :disabled="disabled"
       type="date"
       hide-details
       dense
@@ -13,6 +14,7 @@
       v-model="tmpSettings.agreement"
       label="Соглашение"
       dense
+      :disabled="disabled"
       :items="agreements"
       outlined
       hide-details
@@ -21,11 +23,21 @@
       :style="{ 'max-width': '400px' }"
     />
     <v-select
+      v-model="tmpSettings.type"
+      label="Тип тарифа"
+      :items="$store.getters.tariffTypes"
+      dense
+      outlined
+      hide-details
+      :style="{ 'max-width': '220px' }"
+    />
+    <v-select
       v-model="tmpSettings.truckKind"
       :items="$store.getters.truckKinds"
       label="Вид транспорта"
       :style="{ 'max-width': '200px' }"
       outlined
+      clearable
       dense
       hide-details
     />
@@ -35,12 +47,14 @@
       label="Грузоподъемность"
       :style="{ 'max-width': '200px' }"
       outlined
+      clearable
       dense
       hide-details
     />
     <v-checkbox
       v-model="tmpSettings.groupVat"
       label="Тариф c НДС"
+      :disabled="disabled"
       dense
       hide-details
     />
@@ -60,6 +74,10 @@ export default {
   props: {
     settings: {
       type: Object,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -104,7 +122,7 @@ export default {
         this.$store.getters.companySettings?.defaultTruckKind || null
       this.tmpSettings.liftCapacity =
         this.$store.getters.companySettings?.defaultLiftCapacity || null
-      this.tmpSettings.date = moment().format('YYYY-DD-MM')
+      this.tmpSettings.date = moment().format('YYYY-MM-DD')
     }
     this.getAgreements()
   },

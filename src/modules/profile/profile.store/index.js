@@ -7,7 +7,9 @@ import PartnerModule from './partner'
 import DowntimeModule from './downtime'
 import OrderTemplateModule from './orderTemplate'
 import ScheduleNotes from './scheduleNote'
-import agreementModule from './agreement'
+import AgreementModule from './agreement'
+import TariffModule from './tariff'
+
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 
@@ -114,6 +116,7 @@ export default {
         staffRoles,
         permissions,
         allTruckParams,
+        tariffTypes,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -133,6 +136,7 @@ export default {
       if (staffRoles?.length) commit('setStaffRoles', staffRoles)
       if (permissions) commit('setPermissionsMap', permissions)
       if (allTruckParams) commit('setAllTruckParams', allTruckParams)
+      if (tariffTypes) commit('setTariffTypes', tariffTypes)
     },
 
     async createCompany({ commit }, payload) {
@@ -217,6 +221,7 @@ export default {
     DowntimeModule,
     OrderTemplateModule,
     ScheduleNotes,
-    agreementModule,
+    AgreementModule,
+    TariffModule,
   },
 }

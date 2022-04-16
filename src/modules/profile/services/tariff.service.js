@@ -20,13 +20,11 @@ class TariffService {
 
   async create(body) {
     let { data } = await api.post(BASE_PATH, body)
-    store.commit('addToCache', data)
     return data
   }
 
-  async updateOne(id, body) {
-    let { data } = await api.put(BASE_PATH + '/' + id, body)
-    store.commit('addToCache', data)
+  async updateOne({ _id, body }) {
+    let { data } = await api.put(BASE_PATH + '/' + _id, body)
     return data
   }
 

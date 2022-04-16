@@ -13,21 +13,46 @@
           <v-text-field
             outlined
             dense
+            disabled
             hide-details
             label="Тарифы на дату"
             type="date"
             :style="{ 'max-width': '180px' }"
           />
+          <v-select
+            v-model="settings.type"
+            :items="$store.getters.tariffTypes"
+            outlined
+            clearable
+            dense
+            hide-details
+            label="Тип тарифа"
+            :style="{ 'max-width': '180px' }"
+          />
+
           <v-autocomplete
             v-model="settings.agreement"
             label="Соглашение"
             outlined
+            clearable
             dense
             :items="agreements"
             item-value="_id"
             item-text="name"
             hide-details
             :style="{ 'max-width': '400px' }"
+          />
+          <v-autocomplete
+            v-model="settings.client"
+            label="Заказчик"
+            outlined
+            clearable
+            dense
+            :items="clients"
+            item-value="_id"
+            item-text="name"
+            hide-details
+            :style="{ 'max-width': '250px' }"
           />
         </div>
 
@@ -44,17 +69,21 @@
           }"
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
-        >
-          <template v-slot:[`item.type`]="{ item }">
-            <span>{{ downtimeTypesHash[item.type] }}</span>
-          </template>
-        </v-data-table>
+        />
+        <app-tariff-form
+          v-model="editableItem"
+          :dialog="dialog"
+          @cancel="cancelDialog"
+          @update="updateItem"
+          @deletedItem="deletedItem"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppTariffForm from '@/modules/profile/components/tariffForm'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/tariff.service'
 import AgreementService from '@/modules/profile/services/agreement.service'
@@ -63,12 +92,16 @@ export default {
   name: 'TariffList',
   components: {
     AppButtonsPanel,
+    AppTariffForm,
   },
   data: () => ({
     formName: 'tariffList',
+    dialog: false,
+    editableItem: {},
     agreements: [],
     loading: false,
     settings: {
+      type: null,
       agreement: null,
       listOptions: {
         page: 1,
@@ -78,15 +111,64 @@ export default {
     count: 0,
     list: [],
     headers: [
-      { value: 'date', text: 'Дата начала действия', sortable: true },
+      {
+        value: '_date',
+        text: 'Дата начала действия',
+        sortable: false,
+        align: 'center',
+      },
+      { value: '_type', text: 'Тип', sortable: false },
       { value: 'agreement.name', text: 'Соглашение', sortable: false },
+      { value: '_result', sortable: false },
+
+      {
+        value: '_truckKind',
+        text: 'Вид ТС',
+        sortable: false,
+        align: 'center',
+      },
+      {
+        value: 'liftCapacity',
+        text: 'Грузоподъемность',
+        sortable: false,
+        align: 'center',
+      },
+      {
+        value: '_price',
+        text: 'Тариф с НДС',
+        sortable: false,
+        align: 'center',
+      },
+      {
+        value: '_priceWOVat',
+        text: 'Тариф без НДС',
+        sortable: false,
+        align: 'center',
+      },
       { value: 'note', text: 'Примечание', sortable: false },
     ],
   }),
   computed: {
     ...mapGetters(['directoriesProfile']),
     filteredList() {
-      return this.list
+      return this.list.map((i) => ({
+        ...i,
+        _type: this.$store.getters.tariffTypesMap.get(i.type),
+        _date: new Date(i.date).toLocaleDateString(),
+        _truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
+        _price: new Intl.NumberFormat('ru-RU', {
+          style: 'currency',
+          currency: 'RUB',
+        }).format(i.price),
+        _priceWOVat: new Intl.NumberFormat('ru-RU', {
+          style: 'currency',
+          currency: 'RUB',
+        }).format(i.priceWOVat),
+        _result: this.getResultStrByType(i),
+      }))
+    },
+    clients() {
+      return this.$store.getters.partners.filter((i) => i.isClient)
     },
   },
   watch: {
@@ -110,15 +192,44 @@ export default {
     next()
   },
   methods: {
+    getResultStrByType(item) {
+      switch (item.type) {
+        case 'points':
+          const _loadingStr =
+            this.$store.getters.addressMap.get(item.loading)?.shortName ||
+            this.$store.getters.addressMap.get(item.loading)?.name
+          const _unloadingStr =
+            this.$store.getters.addressMap.get(item.unloading)?.shortName ||
+            this.$store.getters.addressMap.get(item.unloading)?.name
+
+          return _loadingStr + '  >>>  ' + _unloadingStr
+        case 'additionalPoints':
+          return (
+            'Рейс: ' +
+            this.$store.getters.orderAnalyticTypesMap.get(item.orderType) +
+            ', Кол-во адресов, включенных в тариф: ' +
+            item.includedPoints
+          )
+        default:
+          return '-'
+      }
+    },
     create() {
       this.$router.push({ name: 'TariffCreate' })
     },
+
     refresh() {
       this.getData()
     },
+
     dblClickRow(_, { item }) {
-      this.$router.push(`tariffs/${item._id}`)
+      const cleanItem = this.list.find((i) => i._id === item._id)
+      this.editableItem = { ...cleanItem }
+      this.$nextTick(() => {
+        this.dialog = true
+      })
     },
+
     async getData() {
       if (!this.directoriesProfile) {
         this.$router.push('/profile')
@@ -128,7 +239,9 @@ export default {
         this.loading = true
         const data = await service.getList({
           company: this.directoriesProfile,
-
+          type: this.settings.type,
+          agreement: this.settings.agreement,
+          client: this.settings.client,
           skip:
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),
@@ -140,16 +253,49 @@ export default {
             ? this.settings.listOptions.sortDesc[0]
             : null,
         })
-        this.list = data.items
-        this.count = data.count
+        if (data.count) {
+          this.list = data.items
+          this.count = data.count
+        } else {
+          this.list = []
+          this.count = 0
+        }
+
         this.loading = false
       } catch (e) {
         this.loading = false
         this.$store.commit('setError', e.message)
       }
     },
+
     async getAgreements() {
       this.agreements = await AgreementService.getActiveAgreements()
+    },
+
+    cancelDialog() {
+      this.dialog = false
+    },
+    deletedItem(id) {
+      this.list = this.list.filter((i) => i._id !== id)
+      this.$nextTick(() => {
+        this.cancelDialog()
+      })
+    },
+    async updateItem(item) {
+      try {
+        this.loading = true
+        const updatedItem = await service.updateOne({
+          _id: item._id,
+          body: item,
+        })
+        this.loading = false
+        const idx = this.list.findIndex((i) => i._id === item._id)
+        if (idx !== -1) this.list.splice(idx, 1, updatedItem)
+        this.dialog = false
+      } catch (e) {
+        this.loading = false
+        this.$store.commit('setError', e.message)
+      }
     },
   },
 }

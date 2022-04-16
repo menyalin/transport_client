@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-autocomplete
+      ref="input"
       :value="value"
       dense
       :hide-details="hideDetails"
@@ -78,6 +79,9 @@ export default {
     },
   },
   methods: {
+    focus() {
+      this.$refs.input.focus()
+    },
     itemsFilter(item) {
       if (!this.pointType) return true
       return item[this.pointType]

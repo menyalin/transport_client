@@ -19,14 +19,25 @@
           v-else
           class="pt-2"
         >
-          <app-tariff-common-settings v-model="settings" />
+          <app-buttons-panel
+            panel-type="form"
+            :disabled-submit="
+              !$store.getters.hasPermission('tariff:write') || disabledSubmit
+            "
+            @cancel="cancel"
+            @submit="submit"
+          />
+          <app-tariff-settings
+            v-model="settings"
+            :disabled="disabledSettings"
+          />
           <v-btn
             color="primary"
             small
             class="ma-2"
             hint="alt + N"
             :disabled="!allowCreateTariffItem"
-            @click="addTariff"
+            @click="addBtnHandler"
           >
             Добавить тариф alt+N
           </v-btn>
@@ -34,25 +45,31 @@
             v-model="editableTariff"
             :dialog="dialog"
             @cancel="closeDialog"
+            @push="pushItem"
           />
-          <app-tariff-group-list v-model="items" />
+          <app-tariff-group-list
+            v-model="items"
+            @removeItem="deleteItem"
+          />
         </div>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import AppTariffCommonSettings from '@/modules/profile/components/tariffCommonSettings'
+import AppTariffSettings from '@/modules/profile/components/tariffSettings'
 import AppTariffGroupList from '@/modules/profile/components/tariffGroupList'
 import AppTariffForm from '@/modules/profile/components/tariffForm'
 import service from '../../services/tariff.service'
 
 export default {
-  name: 'DowntimeDetails',
+  name: 'CreateTariff',
   components: {
+    AppButtonsPanel,
     AppLoadSpinner,
-    AppTariffCommonSettings,
+    AppTariffSettings,
     AppTariffGroupList,
     AppTariffForm,
   },
@@ -79,6 +96,12 @@ export default {
     allowCreateTariffItem() {
       return this.settings.date && this.settings.agreement
     },
+    disabledSettings() {
+      return this.items.length > 0
+    },
+    disabledSubmit() {
+      return this.items.length === 0
+    },
   },
   watch: {
     id: {
@@ -91,6 +114,10 @@ export default {
         }
       },
     },
+    editableTariff: {
+      deep: true,
+      handler: function (val) {},
+    },
   },
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
@@ -99,13 +126,23 @@ export default {
     document.removeEventListener('keyup', this.keypressEventHandler)
   },
   methods: {
-    keypressEventHandler(e) {
-      if (e.altKey && (e.key === 'n' || e.key === 'т')) this.addTariff()
+    deleteItem(ind) {
+      this.items.splice(ind, 1)
     },
-    addTariff() {
+    keypressEventHandler(e) {
+      if (e.altKey && (e.key === 'n' || e.key === 'т')) this.addBtnHandler()
+    },
+    addBtnHandler() {
       if (!this.allowCreateTariffItem) return null
       this.editableTariff = { ...this.settings }
-      this.dialog = true
+      this.dialog = false
+      this.$nextTick(() => {
+        this.dialog = true
+      })
+    },
+    pushItem(item) {
+      this.items.push(item)
+      this.editableTariff = { ...this.settings }
     },
     closeDialog() {
       this.dialog = false
@@ -116,23 +153,24 @@ export default {
         message: null,
       }
     },
+    cancel() {
+      this.$router.go(-1)
+    },
 
-    async submit(val) {
-      this.tmpVal = val
+    async submit() {
       try {
         this.loading = true
-        if (this.id) this.item = await service.updateOne(this.id, val)
-        else this.item = await service.create(val)
+        const data = await service.create(
+          this.items.map((i) => ({
+            ...i,
+            company: this.$store.getters.directoriesProfile,
+          }))
+        )
         this.loading = false
-        this.tmpVal = null
         this.$router.go(-1)
       } catch (e) {
         this.loading = false
-        this.item = this.tmpVal
-        if (e.response.status === 400 || e.response.status === 403) {
-          this.error.message = e.response.data
-          this.error.show = true
-        }
+        this.$store.commit('setError', e.message)
       }
     },
 

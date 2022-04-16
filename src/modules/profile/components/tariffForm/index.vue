@@ -3,12 +3,32 @@
     <v-dialog
       v-model="tmpDialog"
       max-width="800px"
+      persistent
     >
       <v-card>
-        <v-card-title>Добавить тариф</v-card-title>
-        <v-card-text>
-          <p>tariff: {{ item }}</p>
+        <v-card-title>
+          {{ tmpItem._id ? 'Редактировать тариф' : 'Добавить тариф' }}
+        </v-card-title>
+        <v-card-text id="fields-wrapper">
           <v-select
+            v-model="tmpItem.type"
+            label="Тип"
+            :items="$store.getters.tariffTypes"
+            dense
+            outlined
+            hide-details
+          />
+          <v-text-field
+            v-model="tmpItem.date"
+            type="date"
+            label="Дата"
+            dense
+            outlined
+            hide-details
+            readonly
+          />
+          <v-select
+            ref="truckKindEl"
             v-model="tmpItem.truckKind"
             :items="$store.getters.truckKinds"
             label="Вид ТС"
@@ -24,21 +44,17 @@
             dense
             hide-details
           />
-          <app-address-autocomplete
-            v-model="tmpItem.loading"
-            label="Погрузка"
-            dense
+          <app-points
+            v-if="tmpItem.type === 'points'"
+            ref="points"
+            v-model="points"
             :style="{ 'min-width': '550px' }"
-            outlined
-            hide-details
           />
-          <app-address-autocomplete
-            v-model="tmpItem.unloading"
-            label="Разгрузка"
-            dense
+          <app-additional-points
+            v-if="tmpItem.type === 'additionalPoints'"
+            ref="additionalPoints"
+            v-model="additionalPoints"
             :style="{ 'min-width': '550px' }"
-            outlined
-            hide-details
           />
           <v-text-field
             v-model.number="tmpItem.price"
@@ -48,14 +64,38 @@
             outlined
             hide-details
           />
-          tmpItem: {{ tmpItem }}
+          <v-text-field
+            v-model.trim="tmpItem.note"
+            dense
+            outlined
+            hide-details
+          />
         </v-card-text>
         <v-card-actions>
           <v-btn @click="tmpDialog = false">
             Отмена
           </v-btn>
-          <v-btn @click="save">
-            Сохранить
+          <v-btn
+            v-if="tmpItem._id"
+            :disabled="invalidItem"
+            @click="update"
+          >
+            Обновить
+          </v-btn>
+          <v-btn
+            v-else
+            :disabled="invalidItem"
+            @click="pushItem"
+          >
+            Добавить в список
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            v-if="showDeleteBtn"
+            color="error"
+            @click="deleteItem"
+          >
+            Удалить
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -63,13 +103,16 @@
   </div>
 </template>
 <script>
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
+import AppPoints from './points.vue'
+import AppAdditionalPoints from './additionalPoints.vue'
+import TariffService from '../../services/tariff.service.js'
 import { TariffDTO } from './tariff.dto'
 
 export default {
   name: 'TariffForm',
   components: {
-    AppAddressAutocomplete,
+    AppPoints,
+    AppAdditionalPoints,
   },
   model: {
     prop: 'item',
@@ -82,12 +125,34 @@ export default {
   data() {
     return {
       tmpDialog: false,
+      elem: null,
+      points: {},
+      additionalPoints: {},
       tmpItem: {},
     }
   },
+  computed: {
+    invalidItem() {
+      return TariffDTO.invalidItem({
+        ...this.tmpItem,
+        ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
+      })
+    },
+    showDeleteBtn() {
+      return this.item._id && this.$store.getters.hasPermission('tariff:delete')
+    },
+    formState() {
+      return {
+        ...new TariffDTO({
+          ...this.tmpItem,
+          ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
+        }),
+      }
+    },
+  },
   watch: {
     dialog: function (val) {
-      if (val) this.tmpDialog = true
+      this.tmpDialog = val
     },
     tmpDialog: function (val) {
       if (!val) this.cancel()
@@ -96,24 +161,63 @@ export default {
       deep: true,
       immediate: true,
       handler: function (val) {
-        this.tmpItem = { ...val }
+        if (val) {
+          const item = TariffDTO.tariffFromDBItem(val)
+          const itemKeys = Object.keys(item)
+          itemKeys.forEach((key) => (this[key] = { ...item[key] }))
+        }
       },
     },
   },
+  created() {
+    document.addEventListener('keyup', this.keypressEventHandler)
+  },
+  mounted() {
+    this.elem = this.$refs
+  },
+  beforeDestroy() {
+    document.removeEventListener('keyup', this.keypressEventHandler)
+  },
   methods: {
+    keypressEventHandler(e) {
+      if (e.altKey && e.key === 'Enter') this.pushItem()
+    },
+
     cancel() {
       this.$emit('cancel')
     },
-    save() {
-      try {
-        console.log({ ...new TariffDTO(this.tmpItem) })
-      } catch (e) {
-        console.log(e)
+    pushItem() {
+      if (!this.invalidItem) {
+        this.$emit('push', this.formState)
+        this.$nextTick(() => {
+          this.$refs[this.tmpItem.type].focus()
+        })
       }
-
-      // this.emit('save', { ...this.tmpItem })
+    },
+    update() {
+      this.$emit('update', this.formState)
+      this.tmpDialog = false
+    },
+    async deleteItem() {
+      const res = await this.$confirm('Вы уверены? Запись будет удалена')
+      if (!res) return null
+      try {
+        this.loading = true
+        await TariffService.deleteById(this.item._id)
+        this.loading = false
+        this.$emit('deletedItem', this.item._id)
+      } catch (e) {
+        this.loading = false
+        this.$store.commit('setError', e.message)
+      }
     },
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+#fields-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+</style>
