@@ -135,6 +135,8 @@ export default {
     addBtnHandler() {
       if (!this.allowCreateTariffItem) return null
       this.editableTariff = { ...this.settings }
+      if (this.editableTariff.type === 'additionalPoints')
+        this.editableTariff.includedPoints = 2
       this.dialog = false
       this.$nextTick(() => {
         this.dialog = true
@@ -160,7 +162,7 @@ export default {
     async submit() {
       try {
         this.loading = true
-        const data = await service.create(
+        await service.create(
           this.items.map((i) => ({
             ...i,
             company: this.$store.getters.directoriesProfile,

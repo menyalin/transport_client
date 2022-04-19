@@ -3,6 +3,7 @@
     <app-address-autocomplete
       ref="loadingEl"
       v-model="tmpPoints.loading"
+      pointType="loading"
       label="Погрузка"
       dense
       outlined
@@ -11,6 +12,7 @@
     <app-address-autocomplete
       v-model="tmpPoints.unloading"
       label="Разгрузка"
+      pointType="unloading"
       dense
       outlined
       hide-details
@@ -52,7 +54,6 @@ export default {
     tmpPoints: {
       deep: true,
       handler: function (val) {
-        
         this.$emit('change', val)
       },
     },

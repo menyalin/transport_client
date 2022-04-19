@@ -4,9 +4,7 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-center">
-              Тип
-            </th>
+            <th>Тип</th>
             <th class="text-center" />
             <th class="text-center">
               Вид ТС
@@ -14,10 +12,10 @@
             <th class="text-center">
               Грузоподъемность
             </th>
-            <th class="text-center">
+            <th class="text-right">
               Цена с НДС
             </th>
-            <th class="text-center">
+            <th class="text-right">
               Цена без НДС
             </th>
             <th class="text-left">
@@ -31,12 +29,12 @@
             v-for="(item, ind) of items"
             :key="ind"
           >
-            <td class="text-center">
+            <td>
               {{ tariffTypesMap.get(item.type) }}
             </td>
-            <td class="text-center">
+            <td>
               <div v-if="item.type === 'points'">
-                {{ addressMap.get(item.loading).shortName }} ->
+                {{ addressMap.get(item.loading).shortName }} >>>
                 {{ addressMap.get(item.unloading).shortName }}
               </div>
               <div v-if="item.type === 'additionalPoints'">
@@ -54,10 +52,10 @@
             <td class="text-center">
               {{ item.liftCapacity }}
             </td>
-            <td class="text-center">
+            <td class="text-right">
               {{ Intl.NumberFormat().format(item.price) }}
             </td>
-            <td class="text-center">
+            <td class="text-right">
               {{ Intl.NumberFormat().format(item.priceWOVat) }}
             </td>
             <td>{{ item.note }}</td>
