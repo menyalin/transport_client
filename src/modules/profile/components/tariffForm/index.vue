@@ -56,8 +56,27 @@
             v-model="additionalPoints"
             :style="{ 'min-width': '550px' }"
           />
+          <app-direct-distance-zones
+            v-if="tmpItem.type === 'directDistanceZones'"
+            ref="directDistanceZones"
+            v-model="directDistanceZones"
+            :style="{ 'min-width': '550px' }"
+          />
+          <app-waiting
+            v-if="tmpItem.type === 'waiting'"
+            ref="waiting"
+            v-model="waiting"
+            :style="{ 'min-width': '550px' }"
+          />
+          <app-return
+            v-if="tmpItem.type === 'return'"
+            ref="return"
+            v-model="returnTariff"
+            :style="{ 'min-width': '550px' }"
+          />
           <v-text-field
             v-model.number="tmpItem.price"
+            :disabled="tmpItem.type === 'return'"
             dense
             type="number"
             :label="tmpItem.groupVat ? 'Тариф c НДС' : 'Тариф без НДС'"
@@ -66,6 +85,7 @@
           />
           <v-text-field
             v-model.trim="tmpItem.note"
+            label="Примечание"
             dense
             outlined
             hide-details
@@ -78,6 +98,7 @@
           <v-btn
             v-if="tmpItem._id"
             :disabled="invalidItem"
+            color="primary"
             @click="update"
           >
             Обновить
@@ -85,6 +106,7 @@
           <v-btn
             v-else
             :disabled="invalidItem"
+            color="primary"
             @click="pushItem"
           >
             Добавить в список
@@ -105,6 +127,9 @@
 <script>
 import AppPoints from './points.vue'
 import AppAdditionalPoints from './additionalPoints.vue'
+import AppDirectDistanceZones from './directDistanceZones.vue'
+import AppWaiting from './waiting.vue'
+import AppReturn from './return.vue'
 import TariffService from '../../services/tariff.service.js'
 import { TariffDTO } from './tariff.dto'
 
@@ -113,6 +138,9 @@ export default {
   components: {
     AppPoints,
     AppAdditionalPoints,
+    AppDirectDistanceZones,
+    AppWaiting,
+    AppReturn,
   },
   model: {
     prop: 'item',
@@ -125,10 +153,12 @@ export default {
   data() {
     return {
       tmpDialog: false,
-      elem: null,
       points: {},
       additionalPoints: {},
       tmpItem: {},
+      directDistanceZones: {},
+      waiting: {},
+      returnTariff: {},
     }
   },
   computed: {
@@ -136,6 +166,9 @@ export default {
       return TariffDTO.invalidItem({
         ...this.tmpItem,
         ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
+        ...(this.tmpItem.type && this.tmpItem.type === 'return'
+          ? this.returnTariff
+          : {}),
       })
     },
     showDeleteBtn() {
@@ -146,6 +179,9 @@ export default {
         ...new TariffDTO({
           ...this.tmpItem,
           ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
+          ...(this.tmpItem.type && this.tmpItem.type === 'return'
+            ? this.returnTariff
+            : {}),
         }),
       }
     },
@@ -165,15 +201,13 @@ export default {
           const item = TariffDTO.tariffFromDBItem(val)
           const itemKeys = Object.keys(item)
           itemKeys.forEach((key) => (this[key] = { ...item[key] }))
+          if (val.type === 'return') this.returnTariff = item.return
         }
       },
     },
   },
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
-  },
-  mounted() {
-    this.elem = this.$refs
   },
   beforeDestroy() {
     document.removeEventListener('keyup', this.keypressEventHandler)
@@ -190,6 +224,7 @@ export default {
       if (!this.invalidItem) {
         this.$emit('push', this.formState)
         this.$nextTick(() => {
+          // if (this.tmpItem.type === 'return') this.$refs.return.focus()
           this.$refs[this.tmpItem.type].focus()
         })
       }

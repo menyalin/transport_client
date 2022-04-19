@@ -117,6 +117,7 @@ export default {
         permissions,
         allTruckParams,
         tariffTypes,
+        roundingWaitingByHours,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -137,6 +138,8 @@ export default {
       if (permissions) commit('setPermissionsMap', permissions)
       if (allTruckParams) commit('setAllTruckParams', allTruckParams)
       if (tariffTypes) commit('setTariffTypes', tariffTypes)
+      if (roundingWaitingByHours)
+        commit('setRoundingWaitingByHours', roundingWaitingByHours)
     },
 
     async createCompany({ commit }, payload) {

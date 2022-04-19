@@ -19,6 +19,7 @@
               dense
               hide-details
               :items="$store.getters.orderTemplatesForSelect"
+              :style="{ width: '350px' }"
             />
             <v-btn
               color="primary"
@@ -32,6 +33,13 @@
               @click="copyTimestamptsToClipboard"
             >
               <v-icon>mdi-clock</v-icon>
+            </v-btn>
+            <v-btn
+              color="green"
+              icon
+              @click="copyTimestamptsToClipboard"
+            >
+              <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
             <v-dialog
               v-model="templateDialog"
@@ -556,9 +564,9 @@ export default {
   align-items: center;
 }
 .template-panel {
-  display: grid;
-  grid-template-columns: 300px 200px 30px;
-  gap: 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 .dates-position-block {
   display: flex;

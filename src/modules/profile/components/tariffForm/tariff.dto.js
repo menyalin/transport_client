@@ -7,6 +7,20 @@ const _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE = [
   'includedPoints',
 ]
 
+const _REQUIRED_FIELDS_FOR_RETURN_TYPE = ['percentOfTariff']
+
+const _REQUIRED_FIELDS_FOR_WAITING_TYPE = [
+  'orderType',
+  'includeHours',
+  'roundByHours',
+  'tariffBy',
+]
+
+const _REQUIRED_FIELDS_FOR_DIRECT_DISTANCE_ZONES_TYPE = [
+  'loading',
+  'maxDistance',
+]
+
 const _REQUIRED_FIELDS = [
   'date',
   'type',
@@ -28,10 +42,21 @@ const _getRequiredFieldsByType = (type) => {
     case 'additionalPoints':
       typedFields = _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE
       break
+    case 'directDistanceZones':
+      typedFields = _REQUIRED_FIELDS_FOR_DIRECT_DISTANCE_ZONES_TYPE
+      break
+    case 'waiting':
+      typedFields = _REQUIRED_FIELDS_FOR_WAITING_TYPE
+      break
+    case 'return':
+      typedFields = _REQUIRED_FIELDS_FOR_RETURN_TYPE
+      break
     default:
-      throw new Error('incorrect tariff type')
+      throw new Error(`"${type}" - incorrect tariff type`)
   }
-  return _REQUIRED_FIELDS.concat(typedFields)
+  return _REQUIRED_FIELDS
+    .concat(typedFields)
+    .filter((i) => (type !== 'return' ? true : i !== 'price')) // Для возврата Price  не нужен
 }
 
 export class TariffDTO {
@@ -48,6 +73,13 @@ export class TariffDTO {
     })
     const vatKoef = parseFloat(1 + item.agreementVatRate / 100)
     const price = item.price
+    if (item.type === 'return') {
+      // для "Возврата" цена не имеет смысла
+      this.price = 0
+      this.priceWOVat = 0
+      this.sumVat = 0
+      return null
+    }
     if (item.agreementVatRate !== 0 && item.groupVat) {
       // если цену вносят с НДС
       this.price = price
@@ -65,7 +97,6 @@ export class TariffDTO {
     }
   }
   static invalidItem(item) {
-    
     if (!item.type) return true
     return _getRequiredFieldsByType(item.type).some(
       (field) => item[field] === undefined
@@ -87,6 +118,19 @@ export class TariffDTO {
       additionalPoints: {
         includedPoints: item.includedPoints,
         orderType: item.orderType,
+      },
+      directDistanceZones: {
+        loading: item.loading,
+        maxDistance: item.maxDistance,
+      },
+      waiting: {
+        includeHours: item.includeHours,
+        roundByHours: item.roundByHours,
+        orderType: item.orderType,
+        tariffBy: item.tariffBy,
+      },
+      return: {
+        percentOfTariff: item.percentOfTariff,
       },
     }
   }
@@ -114,6 +158,13 @@ export class TariffDTO {
     unloading: { type: Types.ObjectId, ref: 'Address', required: true },
     
     // for 'additionalPoints' type
-    routeType: { type: String, enum: ORDER_ANALYTIC_TYPES_ENUM },
+    orderType: { type: String, enum: ORDER_ANALYTIC_TYPES_ENUM },
     includedPoints: { type: Number },
+
+    // for 'directDistanceZones' type, and "loading" 
+    maxDistance: { type: Number },
+    
+    //for 'waiting' type, and 'orderType'
+    includeHours: { type: Number },
+    roundByHours: { type: Number, enum: TARIFF_ROUND_BY_HOURS_ENUM }, // Кратность округления по часам
 */

@@ -69,7 +69,25 @@
           }"
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
-        />
+        >
+          <template v-slot:[`item._result`]="{ item }">
+            <app-waiting-cell
+              v-if="item.type === 'waiting'"
+              :item="item"
+            />
+            <app-additional-points-cell
+              v-else-if="item.type === 'additionalPoints'"
+              :item="item"
+            />
+            <app-return-cell
+              v-else-if="item.type === 'return'"
+              :item="item"
+            />
+            <div v-else>
+              {{ item._result }}
+            </div>
+          </template>
+        </v-data-table>
         <app-tariff-form
           v-model="editableItem"
           :dialog="dialog"
@@ -84,6 +102,9 @@
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppTariffForm from '@/modules/profile/components/tariffForm'
+import AppWaitingCell from '@/modules/profile/components/tariffGroupList/waiting.vue'
+import AppReturnCell from '@/modules/profile/components/tariffGroupList/return.vue'
+import AppAdditionalPointsCell from '@/modules/profile/components/tariffGroupList/additionalPoints.vue'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/tariff.service'
 import AgreementService from '@/modules/profile/services/agreement.service'
@@ -93,6 +114,9 @@ export default {
   components: {
     AppButtonsPanel,
     AppTariffForm,
+    AppWaitingCell,
+    AppAdditionalPointsCell,
+    AppReturnCell,
   },
   data: () => ({
     formName: 'tariffList',
@@ -117,8 +141,8 @@ export default {
         sortable: false,
         align: 'right',
       },
-      { value: '_type', text: 'Тип', sortable: false },
       { value: 'agreement.name', text: 'Соглашение', sortable: false },
+      { value: '_type', text: 'Тип', sortable: false },
       { value: '_result', sortable: false },
 
       {
@@ -201,13 +225,11 @@ export default {
             this.$store.getters.addressMap.get(item.unloading)?.name
 
           return _loadingStr + '  >>>  ' + _unloadingStr
-        case 'additionalPoints':
-          return (
-            'Рейс: ' +
-            this.$store.getters.orderAnalyticTypesMap.get(item.orderType) +
-            ', Кол-во адресов, включенных в тариф: ' +
-            item.includedPoints
-          )
+
+        case 'directDistanceZones':
+          return `Погрузка: ${
+            this.$store.getters.addressMap.get(item.loading).shortName
+          } , до ${item.maxDistance}км`
         default:
           return '-'
       }

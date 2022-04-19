@@ -33,13 +33,13 @@
                 : '-'
             }}
           </td>
-          <td class="text-center">
+          <td class="text-right">
             {{ new Intl.NumberFormat().format(item.priceWOVat) }}
           </td>
-          <td class="text-center">
+          <td class="text-right">
             {{ new Intl.NumberFormat().format(item.sumVat) }}
           </td>
-          <td class="text-center">
+          <td class="text-right">
             {{ new Intl.NumberFormat().format(item.price) }}
           </td>
           <td>

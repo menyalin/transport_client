@@ -37,13 +37,25 @@
                 {{ addressMap.get(item.loading).shortName }} >>>
                 {{ addressMap.get(item.unloading).shortName }}
               </div>
-              <div v-if="item.type === 'additionalPoints'">
+              <div v-if="item.type === 'directDistanceZones'">
                 {{
-                  `Рейс: ${orderAnalyticTypesMap.get(
-                    item.orderType
-                  )}, Кол-во точек в тарифе: ${item.includedPoints}`
+                  `Погрузка: ${addressMap.get(item.loading).shortName} , до ${
+                    item.maxDistance
+                  }км`
                 }}
               </div>
+              <app-additional-points-cell
+                v-if="item.type === 'additionalPoints'"
+                :item="item"
+              />
+              <app-waiting-cell
+                v-if="item.type === 'waiting'"
+                :item="item"
+              />
+              <app-return-cell
+                v-if="item.type === 'return'"
+                :item="item"
+              />
             </td>
 
             <td class="text-center">
@@ -80,9 +92,17 @@
   </div>
 </template>
 <script>
+import AppWaitingCell from './waiting.vue'
+import AppAdditionalPointsCell from './additionalPoints.vue'
+import AppReturnCell from './return.vue'
+
 export default {
   name: 'TariffGroupList',
-
+  components: {
+    AppAdditionalPointsCell,
+    AppWaitingCell,
+    AppReturnCell,
+  },
   model: {
     prop: 'items',
     event: 'change',
