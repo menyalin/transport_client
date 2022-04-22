@@ -35,6 +35,11 @@
     <v-checkbox
       v-model="form.isClient"
       label="Клиент"
+      hide-details
+    />
+    <v-checkbox
+      v-model="form.isService"
+      label="Сервис"
     />
 
     <v-btn
@@ -83,6 +88,7 @@ export default {
         name: null,
         inn: null,
         isClient: false,
+        isService: false,
       },
     }
   },

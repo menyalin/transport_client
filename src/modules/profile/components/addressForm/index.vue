@@ -82,13 +82,20 @@
       label="Место разгрузки"
       dense
     />
+    <v-checkbox
+      v-model="form.isService"
+      label="Сервис"
+      dense
+    />
     <app-similar-addresses
       v-if="!displayDeleteBtn && similarAddresses.length"
       :addresses="similarAddresses"
     />
+    <v-divider />
     <v-btn
       v-if="displayDeleteBtn"
       color="error"
+      class="mt-4"
       @click="$emit('delete')"
     >
       <v-icon
@@ -159,6 +166,7 @@ export default {
         note: null,
         isShipmentPlace: false,
         isDeliveryPlace: false,
+        isService: false,
         partner: null,
       },
     }
@@ -247,6 +255,7 @@ export default {
       this.form.isShipmentPlace = val.isShipmentPlace
       this.form.isDeliveryPlace = val.isDeliveryPlace
       this.form.partner = val.partner
+      this.form.isService = val.isService
     },
     resetForm() {
       this.form.name = null
@@ -257,6 +266,7 @@ export default {
       this.form.isShipmentPlace = false
       this.form.isDeliveryPlace = false
       this.form.partner = null
+      this.form.isService = false
     },
     getParsedAddress(val) {
       if (!val) {

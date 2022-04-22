@@ -50,6 +50,7 @@ export default {
     dense: { type: Boolean, default: false },
     value: String,
     onlyClients: Boolean,
+    onlyServices: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     hideAppendIcon: { type: Boolean, default: false },
   },
@@ -63,16 +64,16 @@ export default {
       return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
     },
     items() {
-      return this.$store.getters.partnersForAutocomplete.filter((p) =>
-        this.onlyClients ? p.isClient : true
-      )
+      return this.$store.getters.partnersForAutocomplete
+        .filter((p) => (this.onlyClients ? p.isClient : true))
+        .filter((p) => (this.onlyServices ? p.isService : true))
     },
   },
   methods: {
-    appendClick(val) {
+    appendClick() {
       this.dialog = true
     },
-    cancelDialog(val) {
+    cancelDialog() {
       this.dialog = false
     },
     submit(val) {

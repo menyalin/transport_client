@@ -37,6 +37,13 @@
       label="Заголовок"
       dense
     />
+    <app-partner-autocomplete
+      v-if="form.type === 'service'"
+      v-model="form.partner"
+      label="Партнер"
+      onlyServices
+      outlined
+    />
     <div class="row-input mb-4">
       <app-date-time-input
         v-model="$v.form.startPositionDate.$model"
@@ -81,25 +88,19 @@ import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
 export default {
   name: 'DowntimeForm',
   components: {
     AppButtonsPanel,
     AppDateTimeInput,
+    AppPartnerAutocomplete,
   },
   props: {
-    downtime: {
-      type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    openInModal: {
-      type: Boolean,
-      default: false,
-    },
+    downtime: { type: Object },
+    displayDeleteBtn: { type: Boolean, default: false },
+    openInModal: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -108,6 +109,7 @@ export default {
         truck: null,
         type: null,
         note: null,
+        partner: null,
         startPositionDate: null,
         endPositionDate: null,
         inOrderTime: false,
