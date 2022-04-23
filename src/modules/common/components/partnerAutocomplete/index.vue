@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'mb-4': showHint && hint }">
     <v-autocomplete
       :value="value"
       dense

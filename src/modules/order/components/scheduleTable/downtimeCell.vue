@@ -4,11 +4,19 @@
     @dblclick.stop="dblclickHandler"
   >
     <div class="row-text">
+      <b>{{ downtimeStartTime }}</b>
       {{ downtime.title }}
+    </div>
+    <div
+      v-if="downtime.type === 'repair' && partner"
+      class="row-text text-subtitle-2"
+    >
+      <b>{{ partner.name }}</b>
     </div>
   </div>
 </template>
 <script>
+import moment from 'moment'
 export default {
   name: 'DowntimeCell',
   props: {
@@ -16,11 +24,17 @@ export default {
   },
   computed: {
     classes() {
-      let classes = ['downtime-wrapper', this.downtime.type]
-      return classes
+      return ['downtime-wrapper', this.downtime.type]
+    },
+    downtimeStartTime() {
+      return moment(this.downtime.startPositionDate).format('HH:mm')
     },
     downtime() {
       return this.$store.getters.downtimesMap.get(this.itemId)
+    },
+    partner() {
+      if (!this.downtime.partner) return null
+      return this.$store.getters.partnersMap.get(this.downtime.partner)
     },
     downtimeUrl() {
       return '/profile/downtimes/' + this.itemId
@@ -51,6 +65,8 @@ export default {
   font-weight: 300;
   overflow: hidden;
   user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .holiday {
   background-color: sandybrown;
