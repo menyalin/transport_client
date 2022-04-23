@@ -21,6 +21,7 @@
       v-model="$v.form.truck.$model"
       label="Грузовик"
       :items="trucks"
+      auto-select-first
       outlined
       dense
     />
@@ -38,13 +39,22 @@
       dense
     />
     <app-partner-autocomplete
-      v-if="form.type === 'service'"
+      v-if="form.type === 'repair'"
       v-model="form.partner"
       label="Партнер"
+      showHint
       onlyServices
       outlined
     />
-    <div class="row-input mb-4">
+    <app-address-autocomplete
+      v-if="form.type === 'repair'"
+      v-model="form.address"
+      pointType="service"
+      label="Адрес"
+      outlined
+      dense
+    />
+    <div class="row-input my-4">
       <app-date-time-input
         v-model="$v.form.startPositionDate.$model"
         label="Дата начала"
@@ -85,9 +95,9 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
-
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
 export default {
@@ -96,6 +106,7 @@ export default {
     AppButtonsPanel,
     AppDateTimeInput,
     AppPartnerAutocomplete,
+    AppAddressAutocomplete,
   },
   props: {
     downtime: { type: Object },
@@ -110,6 +121,7 @@ export default {
         type: null,
         note: null,
         partner: null,
+        address: null,
         startPositionDate: null,
         endPositionDate: null,
         inOrderTime: false,

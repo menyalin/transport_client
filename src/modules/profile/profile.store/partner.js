@@ -25,7 +25,6 @@ export default {
     },
   },
   actions: {
-
     async getPartners({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
@@ -62,7 +61,7 @@ export default {
         .map((item) => ({
           value: item._id,
           text: item.name,
-          isClient: item.isClient,
+          ...item,
         })),
   },
 }

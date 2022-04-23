@@ -50,7 +50,7 @@ export default {
     pointType: {
       type: String,
       validator: function (val) {
-        return ['loading', 'unloading'].includes(val)
+        return ['loading', 'unloading', 'service'].includes(val)
       },
     },
     hideAppendIcon: { type: Boolean, default: false },

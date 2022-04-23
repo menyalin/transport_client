@@ -9,6 +9,8 @@
       :disabled="disabled"
       auto-select-first
       clearable
+      persistent-hint
+      :hint="showHint && hint ? hint : null"
       :label="label"
       :outlined="outlined"
       :append-icon="hideAppendIcon ? null : appendIcon"
@@ -49,10 +51,11 @@ export default {
     outlined: { type: Boolean, default: false },
     dense: { type: Boolean, default: false },
     value: String,
-    onlyClients: Boolean,
+    onlyClients: { type: Boolean, default: false },
     onlyServices: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     hideAppendIcon: { type: Boolean, default: false },
+    showHint: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -60,6 +63,9 @@ export default {
     }
   },
   computed: {
+    hint() {
+      return this.$store.getters.partnersMap.get(this.value)?.contacts || null
+    },
     appendIcon() {
       return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
     },
