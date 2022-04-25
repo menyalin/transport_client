@@ -28,13 +28,25 @@
     <v-text-field
       v-model.trim="$v.form.inn.$model"
       outlined
-      hide-details
       label="ИНН"
+      dense
+    />
+    <v-text-field
+      v-model.trim="form.contacts"
+      outlined
+      label="Контакты"
       dense
     />
     <v-checkbox
       v-model="form.isClient"
       label="Клиент"
+      hide-details
+      dense
+    />
+    <v-checkbox
+      v-model="form.isService"
+      label="Сервис"
+      dense
     />
 
     <v-btn
@@ -82,7 +94,9 @@ export default {
       form: {
         name: null,
         inn: null,
+        contacts: null,
         isClient: false,
+        isService: false,
       },
     }
   },
@@ -154,9 +168,3 @@ export default {
   },
 }
 </script>
-<style>
-.row-input {
-  display: flex;
-  flex-direction: row;
-}
-</style>

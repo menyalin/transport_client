@@ -62,6 +62,17 @@
         @change="settings.listOptions.page = 1"
       />
       <v-autocomplete
+        v-model="settings.trailer"
+        dense
+        clearable
+        :items="trailers"
+        outlined
+        hide-details
+        label="Прицеп"
+        :style="{ 'max-width': '200px' }"
+        @change="settings.listOptions.page = 1"
+      />
+      <v-autocomplete
         v-model="settings.driver"
         dense
         item-value="_id"
@@ -75,6 +86,15 @@
         @change="settings.listOptions.page = 1"
       />
 
+      <app-address-autocomplete
+        v-model="settings.address"
+        label="Адрес"
+        dense
+        hideAppendIcon
+        outlined
+        hide-details
+        :style="{ 'min-width': '550px', 'max-width': '900px' }"
+      />
       <v-switch
         v-if="availableAccountantMode"
         v-model="settings.accountingMode"
@@ -106,7 +126,7 @@
         :loading="loading"
         :items="preparedOrders"
         fixed-header
-        height="72vh"
+        height="68vh"
         :serverItemsLength="count"
         :footer-props="{
           'items-per-page-options': [50, 100, 200],
@@ -125,6 +145,15 @@
               trucksMap.has(item.confirmedCrew.truck)
               ? trucksMap.get(item.confirmedCrew.truck).regNum
               : '-'
+          }}
+        </template>
+        <template v-slot:[`item.trailer`]="{ item }">
+          {{
+            !!item.confirmedCrew &&
+              !!item.confirmedCrew.trailer &&
+              trucksMap.has(item.confirmedCrew.trailer)
+              ? trucksMap.get(item.confirmedCrew.trailer).regNum
+              : ''
           }}
         </template>
         <template v-slot:[`item.client.client`]="{ item }">
@@ -180,6 +209,7 @@ import PermissionService from '@/modules/common/services/permission.service'
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 
@@ -199,6 +229,7 @@ export default {
     AppDateRange,
     AppButtonsPanel,
     AppPartnerAutocomplete,
+    AppAddressAutocomplete,
     AppDocListForm,
   },
   data: () => ({
@@ -211,6 +242,8 @@ export default {
       client: null,
       tkName: null,
       truck: null,
+      trailer: null,
+      address: null,
       driver: null,
       status: null,
       accountingMode: false,
@@ -238,6 +271,13 @@ export default {
       {
         value: 'truck',
         text: 'Грузовик',
+        sortable: false,
+        align: 'center',
+        width: '10rem',
+      },
+      {
+        value: 'trailer',
+        text: 'Прицеп',
         sortable: false,
         align: 'center',
         width: '10rem',
@@ -317,6 +357,18 @@ export default {
     trucksMap() {
       return this.$store.getters.trucksMap
     },
+    trailers() {
+      return this.$store.getters
+        .trucksForSelect({
+          type: 'trailer',
+          tkName: this.settings.tkName,
+        })
+        .map((t) => ({
+          ...t,
+          value: t._id,
+          text: t.regNum,
+        }))
+    },
     trucks() {
       return this.$store.getters
         .trucksForSelect({
@@ -393,6 +445,8 @@ export default {
         const data = await service.getList({
           client: this.settings.client,
           truck: this.settings.truck,
+          trailer: this.settings.trailer,
+          address: this.settings.address,
           driver: this.settings.driver,
           tkName: this.settings.tkName,
           status: this.settings.status,
@@ -427,6 +481,7 @@ export default {
 </script>
 <style scoped>
 .filter-wrapper {
+  margin: 10px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;

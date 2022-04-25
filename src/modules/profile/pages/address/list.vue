@@ -45,6 +45,17 @@
               mdi-minus
             </v-icon>
           </template>
+          <template v-slot:[`item.isService`]="{ item }">
+            <v-icon
+              v-if="item.isService"
+              color="green"
+            >
+              mdi-check
+            </v-icon>
+            <v-icon v-else>
+              mdi-minus
+            </v-icon>
+          </template>
 
           <template v-slot:top>
             <v-text-field
@@ -52,6 +63,7 @@
               outlined
               hide-details
               dense
+              clearable
               label="Быстрый поиск"
             />
           </template>
@@ -90,6 +102,12 @@ export default {
       {
         value: 'isDeliveryPlace',
         text: 'Разгрузка',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        value: 'isService',
+        text: 'Сервис',
         align: 'center',
         sortable: false,
       },

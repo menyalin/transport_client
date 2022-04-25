@@ -65,6 +65,7 @@ export default {
           text: _getAddressTextForAutocomplete(item, partnersMap),
           loading: item.isShipmentPlace,
           unloading: item.isDeliveryPlace,
+          service: item.isService,
         })),
 
     addresses: ({ addresses }, { directoriesProfile, partnersMap }) =>

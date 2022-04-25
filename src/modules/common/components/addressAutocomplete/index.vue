@@ -13,7 +13,7 @@
       :clearable="!readonly"
       :label="label"
       :outlined="outlined"
-      :append-icon="!readonly ? appendIcon : null"
+      :append-icon="!readonly && !hideAppendIcon ? appendIcon : null"
       @click:append="appendClick"
       @change="changeValue"
     />
@@ -50,9 +50,10 @@ export default {
     pointType: {
       type: String,
       validator: function (val) {
-        return ['loading', 'unloading'].includes(val)
+        return ['loading', 'unloading', 'service'].includes(val)
       },
     },
+    hideAppendIcon: { type: Boolean, default: false },
     hideDetails: { type: Boolean, default: false },
     outlined: { type: Boolean, default: false },
     dense: { type: Boolean, default: false },
