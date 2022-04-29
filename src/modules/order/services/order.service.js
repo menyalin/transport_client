@@ -57,11 +57,6 @@ class OrderService {
       startDate: moment(store.getters.schedulePeriod[0]).toISOString(),
       endDate: moment(store.getters.schedulePeriod[1]).toISOString(),
     })
-
-    // let { data } = await api.get(BASE_PATH + '/schedule', { params })
-    // if (!Array.isArray(data))
-    //   throw new Error('Нужен массив!! пришло что-то другое!')
-    // return data
   }
 
   async getList(params) {

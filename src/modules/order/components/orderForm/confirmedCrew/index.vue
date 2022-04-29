@@ -5,18 +5,16 @@
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
+        v-model="params.truck"
         label="Грузовик"
         :loading="loading"
-        :value="params.truck"
         dense
         :clearable="!confirmed"
         :readonly="confirmed"
         :items="trucks"
         outlined
         hide-details
-        @change="change($event, 'truck')"
       />
-
       <v-autocomplete
         label="Водитель"
         :value="params.driver"
@@ -25,7 +23,6 @@
         hide-details
         dense
         outlined
-        @change="change($event, 'driver')"
       />
       <v-autocomplete
         label="Прицеп"
@@ -35,7 +32,6 @@
         dense
         hide-details
         outlined
-        @change="change($event, 'trailer')"
       />
       <v-btn
         text
@@ -143,6 +139,22 @@ export default {
         }
       },
     },
+    ['params.truck']: {
+      handler: async function (val) {
+        if (!val) {
+          this.params.driver = null
+          this.params.trailer = null
+          this.params.outsourceAgreement = null
+        }
+        await this.getCrew()
+        
+        if (this.$store.getters.outsourceTruckIds.includes(val))
+          await this.getAgreement()
+        else this.params.outsourceAgreement = null
+
+        this.$emit('change', this.params)
+      },
+    },
   },
   async created() {
     await this.getCrew()
@@ -159,22 +171,6 @@ export default {
       const driver = this.$store.getters.driversMap.get(this.params.driver)
       const trailer = this.$store.getters.trucksMap.get(this.params.trailer)
       putCrewDataToClipboard({ truck, driver, trailer })
-    },
-
-    async change(val, field) {
-      this.params[field] = val
-      if (!val) {
-        this.params.driver = null
-        this.params.trailer = null
-        this.params.outsourceAgreement = null
-      }
-      if (field === 'truck') {
-        await this.getCrew()
-        if (this.$store.getters.outsourceTruckIds.includes(val))
-          await this.getAgreement()
-      } else {
-        this.$emit('change', this.params)
-      }
     },
     async getAgreement() {
       const truck = this.$store.getters.trucksMap.get(this.params.truck)

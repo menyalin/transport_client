@@ -1,3 +1,5 @@
+import store from '@/store/index'
+
 class Price {
   constructor({ price, withVat, type, note, cashPayment }, vatRate) {
     const parsedVal = parseFloat(price)
@@ -12,6 +14,17 @@ class Price {
     this.price = withVat
       ? parsedVal
       : parsedVal + parsedVal * ((vatKoef * 10 - 10) / 10)
+  }
+
+  static prepareOrderForPrePriceQuery(order) {
+    return {
+      company: store.getters.directoriesProfile,
+      date: new Date(order.route[0].plannedDate).toISOString(),
+      agreement: order.client.agreement,
+      truckKind: order.reqTransport.kind,
+      liftCapacity: order.reqTransport.liftCapacity,
+      route: order.route,
+    }
   }
 }
 

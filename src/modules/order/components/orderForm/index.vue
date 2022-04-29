@@ -37,7 +37,7 @@
             <v-btn
               color="green"
               icon
-              @click="copyTimestamptsToClipboard"
+              @click="openPriceDialog"
             >
               <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
@@ -148,6 +148,12 @@
             :analytics="analytics"
             :route="route"
           />
+          <app-price-dialog
+            :order="formState"
+            :dialog.sync="priceDialog"
+            :prePrices.sync="prePrices"
+            :agreementVatRate="20"
+          />
           <div id="note">
             <v-text-field
               v-model="form.note"
@@ -177,6 +183,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import AgreementService from '@/modules/profile/services/agreement.service'
 import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
 import OrderService from '@/modules/order/services/order.service.js'
 
@@ -190,7 +197,7 @@ import AppClientBlock from './clientBlock.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
-
+import AppPriceDialog from './priceDialog'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 export default {
@@ -206,6 +213,7 @@ export default {
     AppGradeBlock,
     AppAnalyticBlock,
     AppPriceBlock,
+    AppPriceDialog,
   },
   props: {
     order: {
@@ -216,15 +224,25 @@ export default {
       default: false,
     },
   },
+  provide() {
+    return {
+      updateFinalPrices: (val) => {
+        this.finalPrices = val
+      },
+    }
+  },
   data() {
     return {
+      priceDialog: true,
       createTemplateLoading: false,
       templateDialog: false,
       templateName: null,
       templateSelector: null,
       loading: false,
       orderId: null,
+      prePrices: [],
       prices: [],
+      finalPrices: [],
       outsourceCosts: [],
       client: {
         client: null,
@@ -396,6 +414,8 @@ export default {
         grade: this.grade,
         analytics: this.analytics,
         prices: this.prices,
+        prePrices: this.prePrices,
+        finalPrices: this.finalPrices,
         outsourceCosts: this.outsourceCosts,
       }
     },
@@ -460,6 +480,9 @@ export default {
   },
 
   methods: {
+    openPriceDialog() {
+      this.priceDialog = true
+    },
     copyTimestamptsToClipboard() {
       _putRouteDatesToClipboard(this.route)
     },
@@ -532,7 +555,9 @@ export default {
       if (val.reqTransport) this.reqTransport = val.reqTransport
       if (val.analytics) this.analytics = val.analytics
       if (val.prices) this.prices = val.prices
+      if (val.prePrices) this.prePrices = val.prePrices
       if (val.outsourceCosts) this.outsourceCosts = val.outsourceCosts
+      if (val.finalPrices) this.finalPrices = val.finalPrices
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
@@ -548,6 +573,8 @@ export default {
       this.reqTransport = { ...{} }
       this.analytics = { ...{} }
       this.prices = []
+      this.prePrices = []
+      this.finalPrices = []
       this.outsourceCosts = []
       keys.forEach((key) => {
         this.form[key] = null
