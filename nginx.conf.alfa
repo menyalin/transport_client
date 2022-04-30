@@ -58,15 +58,8 @@ http {
             proxy_set_header Host $host;
             proxy_pass http://api_nodes;
       }
-
-        
+      location /static {
+            root /var/html;
+        }   
     }
-    server {
-        listen 443 ssl;
-        server_name alfa.s4log.ru;
-        ssl_certificate     /var/certs/live/alfa.s4log.ru/cert.pem;
-        ssl_certificate_key /var/certs/live/alfa.s4log.ru/privkey.pem;
-        ssl_protocols       TLSv1.1 TLSv1.2;
-        return 301 https://alfa.s4log.ru$request_uri;
-    } 
 }
