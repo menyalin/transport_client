@@ -51,6 +51,11 @@ class OrderService {
     return data
   }
 
+  async updateFinalPrices(body) {
+    const { data } = await api.post(BASE_PATH + '/save_final_prices', body)
+    return data
+  }
+
   async getListForSchedule() {
     socket.emit('ordersForSchedule', {
       profile: store.getters.directoriesProfile,

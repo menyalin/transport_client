@@ -46,11 +46,19 @@
               <input
                 v-show="priceType.value === editableRowType"
                 :ref="priceType.value"
+                :value="
+                  finalPricesMap.has(priceType.value)
+                    ? finalPricesMap.get(priceType.value)[priceField]
+                    : null
+                "
                 class="input"
                 align="right"
                 type="number"
                 @blur="blurHandler"
                 @change="changeFinalPrice($event, priceType.value)"
+                @keypress.prevent.enter="
+                  changeFinalPrice($event, priceType.value)
+                "
               >
               <div
                 v-if="priceType.value !== editableRowType"
@@ -129,7 +137,7 @@ export default {
       return new Map(this.prices.map((item) => [item.type, item]))
     },
     finalPricesMap() {
-      if (!this.finalPrices) return new Map()
+      if (this.finalPrices.length === 0) return new Map()
       return new Map(this.finalPrices.map((item) => [item.type, item]))
     },
     priceField() {
@@ -153,11 +161,12 @@ export default {
         .filter((i) => i.type !== type)
       newFinalPrices.push({
         ...new Price(
-          { price: e.target.value, withVat: this.priceWithVat, type },
+          { price: e.target.value || 0, withVat: this.priceWithVat, type },
           this.agreementVatRate
         ),
       })
       this.updateFinalPrices(newFinalPrices)
+      if (e.key === 'Enter') this.blurHandler()
     },
   },
 }

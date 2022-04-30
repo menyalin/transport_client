@@ -35,6 +35,7 @@
               <v-icon>mdi-clock</v-icon>
             </v-btn>
             <v-btn
+              v-if="showFinalPriceDialog"
               color="green"
               icon
               @click="openPriceDialog"
@@ -149,10 +150,9 @@
             :route="route"
           />
           <app-price-dialog
-            :order="formState"
+            :order="order"
             :dialog.sync="priceDialog"
-            :prePrices.sync="prePrices"
-            :agreementVatRate="20"
+            :finalPrices.sync="finalPrices"
           />
           <div id="note">
             <v-text-field
@@ -227,7 +227,14 @@ export default {
   provide() {
     return {
       updateFinalPrices: (val) => {
-        this.finalPrices = val
+        console.log('final prices:', this.finalPrices)
+        console.log('val:', val)
+        this.finalPrices = [...val]
+      },
+      getOrderAgreement: async () => {
+        if (!this.client.agreement) return null
+        const agreement = await AgreementService.getById(this.client.agreement)
+        return agreement
       },
     }
   },
@@ -277,6 +284,12 @@ export default {
 
   computed: {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
+    showFinalPriceDialog() {
+      return (
+        !!this.$store.getters.hasPermission('readFinalPrices') &&
+        !!this.client.agreement
+      )
+    },
     disabledSubmitForm() {
       let hasPermission
       if (this.state.status === 'completed') {
@@ -415,7 +428,6 @@ export default {
         analytics: this.analytics,
         prices: this.prices,
         prePrices: this.prePrices,
-        finalPrices: this.finalPrices,
         outsourceCosts: this.outsourceCosts,
       }
     },

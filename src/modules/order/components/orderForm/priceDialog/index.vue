@@ -21,16 +21,29 @@
 
       <v-card-text>
         <app-final-price-table
-          :prePrices="prePrices"
+          :prePrices="order.prePrices"
           :prices="order.prices"
           :priceWithVat="priceWithVat"
-          :finalPrices="order.finalPrices"
-          :agreementVatRate="20"
+          :finalPrices="finalPrices"
+          :agreementVatRate="agreement.vatRate"
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="getPrePrices">
-          Обновить цены
+        <v-btn
+          small
+          color="primary"
+          text
+          @click="getPrePrices"
+        >
+          обновить предв. цены
+        </v-btn>
+        <v-btn
+          small
+          color="primary"
+          text
+          @click="setFinalPrices"
+        >
+          Заполнить итоговые цены
         </v-btn>
         <v-spacer />
 
@@ -40,6 +53,8 @@
 
         <v-btn
           color="primary"
+          :disabled="saveBtnDisabled || !isChangedFinalPrices"
+          :loading="loading"
           @click="save"
         >
           Сохранить
@@ -50,25 +65,56 @@
 </template>
 <script>
 import tariffService from '@/modules/profile/services/tariff.service'
+import orderService from '@/modules/order/services/order.service'
 import appFinalPriceTable from './finalPriceTable.vue'
 
 import DTO from '../priceBlock/Price.class'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PriceDialog',
+  inject: ['getOrderAgreement', 'updateFinalPrices'],
   components: {
     appFinalPriceTable,
   },
   props: {
     order: Object,
     dialog: Boolean,
-    prePrices: Array,
-    agreementVatRate: { type: Number, required: true },
+    finalPrices: Array,
   },
   data() {
     return {
+      loading: false,
+      agreement: {
+        vatRate: 0,
+      },
       priceWithVat: false,
     }
+  },
+  computed: {
+    ...mapGetters(['orderPriceTypes']),
+    saveBtnDisabled() {
+      return (
+        this.loading ||
+        !this.$store.getters.hasPermission('order:writeFinalPrices')
+      )
+    },
+    isChangedFinalPrices() {
+      const orderFinalPricesMap = new Map(
+        this.order.finalPrices.map((p) => [p.type, p.price])
+      )
+      const finalPricesMap = new Map(
+        this.finalPrices.map((p) => [p.type, p.price])
+      )
+      return this.orderPriceTypes.some(
+        ({ value }) =>
+          orderFinalPricesMap.get(value) !== finalPricesMap.get(value)
+      )
+    },
+  },
+  async created() {
+    this.agreement = await this.getOrderAgreement()
+    if (this.agreement) this.priceWithVat = this.agreement.usePriceWithVAT
   },
   methods: {
     async getPrePrices() {
@@ -83,8 +129,33 @@ export default {
     cancel() {
       this.$emit('update:dialog', false)
     },
-    save() {
-      this.$emit('update:dialog', false)
+    setFinalPrices() {
+      const tmpFinalPrices = []
+      this.orderPriceTypes.forEach((item) => {
+        const priceType = item.value
+        const price = this.order.prices.find((i) => i.type === priceType)
+        const prePrice = this.order.prePrices.find((i) => i.type === priceType)
+
+        if (price) tmpFinalPrices.push(price)
+        else if (prePrice) tmpFinalPrices.push(prePrice)
+      })
+      this.updateFinalPrices(tmpFinalPrices)
+    },
+
+    async save() {
+      try {
+        this.loading = true
+        await orderService.updateFinalPrices({
+          orderId: this.order._id,
+          company: this.$store.getters.directoriesProfile,
+          finalPrices: this.finalPrices,
+        })
+        this.loading = false
+        this.$emit('update:dialog', false)
+      } catch (e) {
+        this.loading = false
+        this.$store.commit('setError', e.message)
+      }
     },
   },
 }
