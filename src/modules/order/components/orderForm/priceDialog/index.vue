@@ -41,6 +41,7 @@
           small
           color="primary"
           text
+          :disabled="setFinalPricesDisabled"
           @click="setFinalPrices"
         >
           Заполнить итоговые цены
@@ -95,6 +96,9 @@ export default {
 
   computed: {
     ...mapGetters(['orderPriceTypes']),
+    setFinalPricesDisabled() {
+      return !this.order.prePrices.length && !this.order.prices.length
+    },
     saveBtnDisabled() {
       return (
         this.loading ||
@@ -102,12 +106,10 @@ export default {
       )
     },
     isChangedFinalPrices() {
-      if (
-        !Array.isArray(this.order.finalPrices) ||
-        !Array.isArray(this.finalPrices) ||
-        this.finalPrices.length === 0
-      )
+      if (!Array.isArray(this.finalPrices) || this.finalPrices.length === 0)
         return false
+      if (!Array.isArray(this.order.finalPrices) && this.finalPrices.length > 0)
+        return true
       const orderFinalPricesMap = new Map(
         this.order.finalPrices.map((p) => [p.type, p.price])
       )

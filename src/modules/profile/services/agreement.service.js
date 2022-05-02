@@ -1,4 +1,5 @@
 import api from '@/api'
+import { EventObserver } from '@/modules/common/helpers/EventObserver.class'
 import socket from '@/socket'
 import store from '@/store'
 const BASE_PATH = '/agreements'
@@ -8,6 +9,7 @@ class AgreementService {
   allAgreements = []
   allAgreementsExpiresMs = 1000 * 60 * 5 // 5 минут
   constructor() {
+    this.eo = new EventObserver()
     socket.on(this.MODEL_NAME + ':created', (data) => {
       store.commit('addAgreement', data)
       store.commit('addToCache', data)
@@ -67,8 +69,17 @@ class AgreementService {
   async getById(id) {
     if (store.getters.cacheDirectories.has(id))
       return store.getters.cacheDirectories.get(id)
-    else {
+    else if (this.eo.pending(id)) {
+      const promise = new Promise((resolve) => {
+        this.eo.subscribe(id, (data) => {
+          resolve(data)
+        })
+      })
+      return await promise
+    } else {
+      this.eo.add(id)
       let { data } = await api.get(BASE_PATH + '/' + id)
+      this.eo.broadcast(id, data)
       store.commit('addToCache', data)
       return data
     }

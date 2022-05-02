@@ -19,16 +19,6 @@
             type="date"
             :style="{ 'max-width': '180px' }"
           />
-          <v-select
-            v-model="settings.type"
-            :items="$store.getters.tariffTypes"
-            outlined
-            clearable
-            dense
-            hide-details
-            label="Тип тарифа"
-            :style="{ 'max-width': '180px' }"
-          />
 
           <v-autocomplete
             v-model="settings.agreement"
@@ -41,6 +31,16 @@
             item-text="name"
             hide-details
             :style="{ 'max-width': '400px' }"
+          />
+          <v-select
+            v-model="settings.type"
+            :items="$store.getters.tariffTypes"
+            outlined
+            clearable
+            dense
+            hide-details
+            label="Тип тарифа"
+            :style="{ 'max-width': '180px' }"
           />
           <v-autocomplete
             v-model="settings.client"
@@ -143,7 +143,7 @@ export default {
       },
       { value: 'agreement.name', text: 'Соглашение', sortable: false },
       { value: '_type', text: 'Тип', sortable: false },
-      { value: '_result', sortable: false },
+      { value: '_result', text: 'Параметры', sortable: false },
 
       {
         value: '_truckKind',
