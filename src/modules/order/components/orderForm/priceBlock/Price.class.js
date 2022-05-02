@@ -24,6 +24,7 @@ class Price {
       truckKind: order.reqTransport.kind,
       liftCapacity: order.reqTransport.liftCapacity,
       route: order.route,
+      orderType: order.analytics.type,
     }
   }
 }

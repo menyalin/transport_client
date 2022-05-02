@@ -150,9 +150,11 @@
             :route="route"
           />
           <app-price-dialog
+            v-if="showFinalPriceDialog"
             :order="order"
+            :prePrices.sync="prePrices"
+            :finalPrices="finalPrices"
             :dialog.sync="priceDialog"
-            :finalPrices.sync="finalPrices"
           />
           <div id="note">
             <v-text-field
@@ -227,8 +229,6 @@ export default {
   provide() {
     return {
       updateFinalPrices: (val) => {
-        console.log('final prices:', this.finalPrices)
-        console.log('val:', val)
         this.finalPrices = [...val]
       },
       getOrderAgreement: async () => {
@@ -240,7 +240,7 @@ export default {
   },
   data() {
     return {
-      priceDialog: true,
+      priceDialog: false,
       createTemplateLoading: false,
       templateDialog: false,
       templateName: null,
@@ -287,7 +287,8 @@ export default {
     showFinalPriceDialog() {
       return (
         !!this.$store.getters.hasPermission('readFinalPrices') &&
-        !!this.client.agreement
+        !!this.client.agreement &&
+        !!this.isValidRoute
       )
     },
     disabledSubmitForm() {
@@ -570,6 +571,7 @@ export default {
       if (val.prePrices) this.prePrices = val.prePrices
       if (val.outsourceCosts) this.outsourceCosts = val.outsourceCosts
       if (val.finalPrices) this.finalPrices = val.finalPrices
+
       keys.forEach((key) => {
         this.form[key] = val[key]
       })

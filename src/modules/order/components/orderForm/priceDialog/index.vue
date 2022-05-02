@@ -21,7 +21,7 @@
 
       <v-card-text>
         <app-final-price-table
-          :prePrices="order.prePrices"
+          :prePrices="prePrices"
           :prices="order.prices"
           :priceWithVat="priceWithVat"
           :finalPrices="finalPrices"
@@ -81,6 +81,7 @@ export default {
     order: Object,
     dialog: Boolean,
     finalPrices: Array,
+    prePrices: Array,
   },
   data() {
     return {
@@ -91,6 +92,7 @@ export default {
       priceWithVat: false,
     }
   },
+
   computed: {
     ...mapGetters(['orderPriceTypes']),
     saveBtnDisabled() {
@@ -100,6 +102,12 @@ export default {
       )
     },
     isChangedFinalPrices() {
+      if (
+        !Array.isArray(this.order.finalPrices) ||
+        !Array.isArray(this.finalPrices) ||
+        this.finalPrices.length === 0
+      )
+        return false
       const orderFinalPricesMap = new Map(
         this.order.finalPrices.map((p) => [p.type, p.price])
       )
@@ -119,9 +127,14 @@ export default {
   methods: {
     async getPrePrices() {
       const data = await tariffService.getOrderPrePrices(
-        DTO.prepareOrderForPrePriceQuery(this.order)
+        DTO.prepareOrderForPrePriceQuery({
+          ...this.order,
+          orderId: this.order._id,
+        })
       )
-      if (data) this.$emit('update:prePrices', data)
+      if (data) {
+        this.$emit('update:prePrices', data)
+      }
     },
     inputDialog(val) {
       if (!val) this.cancel()
@@ -134,7 +147,7 @@ export default {
       this.orderPriceTypes.forEach((item) => {
         const priceType = item.value
         const price = this.order.prices.find((i) => i.type === priceType)
-        const prePrice = this.order.prePrices.find((i) => i.type === priceType)
+        const prePrice = this.prePrices.find((i) => i.type === priceType)
 
         if (price) tmpFinalPrices.push(price)
         else if (prePrice) tmpFinalPrices.push(prePrice)

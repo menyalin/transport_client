@@ -33,6 +33,7 @@ import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import service from '../../services/order.service'
 import AppOrderForm from '../../components/orderForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import socket from '@/socket'
 
 export default {
   name: 'DetailsOrder',
@@ -51,6 +52,11 @@ export default {
     }
   },
   created() {
+    if (this.id) {
+      socket.on(`order:${this.id}:finalPriceUpdated`, ({ finalPrices }) => {
+        this.item = Object.assign({}, this.item, { finalPrices })
+      })
+    }
     if (this.startDate) {
       this.item = {
         startPositionDate: this.startDate,
