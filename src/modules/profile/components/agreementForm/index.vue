@@ -38,6 +38,7 @@
           v-model="$v.form.vatRate.$model"
           label="Ставка НДС"
           :items="vatRates"
+          :readonly="!!agreement && !!agreement._id"
           dense
           outlined
           :style="{ 'max-width': '130px' }"
@@ -46,6 +47,7 @@
           v-model="form.isOutsourceAgreement"
           label="Соглашение с перевозчиком"
           color="primary"
+          :readonly="!!agreement && !!agreement._id"
         />
       </div>
       <div v-if="form.isOutsourceAgreement">
@@ -60,7 +62,10 @@
           color="primary"
         />
       </div>
-      <div v-else>
+      <div
+        v-else
+        class="mb-4"
+      >
         <v-divider />
         <app-clients
           v-model="form.clients"
@@ -71,12 +76,21 @@
           color="primary"
           label="При выгрузке показывать ставку с НДС"
         />
+        <v-checkbox
+          v-model="form.calcWaitingByArrivalDate"
+          color="primary"
+          label="Расчет простоя по фактическому времени"
+          hint="При прибытии раньше планового времени погрузки, простой расчитывается по факту прибытия"
+          persistent-hint
+        />
+        <v-checkbox
+          v-model="form.noWaitingPaymentForAreLate"
+          color="primary"
+          label="Запрет оплаты простоя при опоздании"
+          persistent-hint
+        />
       </div>
 
-      <app-zone-distances
-        v-if="false"
-        v-model="form.zones"
-      />
       <v-text-field
         v-model="form.note"
         label="Примечание"
@@ -120,7 +134,6 @@ import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppClients from './clients.vue'
 import AppTknames from './tkNames.vue'
-import AppZoneDistances from './zones.vue'
 
 export default {
   name: 'AgreementForm',
@@ -129,7 +142,6 @@ export default {
     AppDateTimeInput,
     AppClients,
     AppTknames,
-    AppZoneDistances,
   },
   props: {
     agreement: {
@@ -155,6 +167,8 @@ export default {
         vatRate: null,
         usePriceWithVAT: false,
         useCustomPrices: true,
+        calcWaitingByArrivalDate: false,
+        noWaitingPaymentForAreLate: false,
         clients: [],
         outsourceCarriers: [],
         closed: null,

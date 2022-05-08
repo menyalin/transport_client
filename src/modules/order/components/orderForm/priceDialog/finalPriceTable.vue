@@ -80,26 +80,35 @@
             <th>Итого:</th>
             <th class="text-right">
               {{
-                Intl.NumberFormat().format(
-                  prePrices.reduce((sum, item) => (sum += item[priceField]), 0)
-                )
-              }}
-            </th>
-            <th class="text-right">
-              {{
-                Intl.NumberFormat().format(
-                  prices.reduce((sum, item) => (sum += item[priceField]), 0)
-                )
-              }}
-            </th>
-            <th class="text-right">
-              {{
-                Intl.NumberFormat().format(
-                  finalPrices.reduce(
-                    (sum, item) => (sum += item[priceField]),
-                    0
+                Array.isArray(prePrices)
+                  ? Intl.NumberFormat().format(
+                    prePrices.reduce(
+                      (sum, item) => (sum += item[priceField]),
+                      0
+                    )
                   )
-                )
+                  : 0
+              }}
+            </th>
+            <th class="text-right">
+              {{
+                Array.isArray(prices)
+                  ? Intl.NumberFormat().format(
+                    prices.reduce((sum, item) => (sum += item[priceField]), 0)
+                  )
+                  : 0
+              }}
+            </th>
+            <th class="text-right">
+              {{
+                Array.isArray(finalPrices)
+                  ? Intl.NumberFormat().format(
+                    finalPrices.reduce(
+                      (sum, item) => (sum += item[priceField]),
+                      0
+                    )
+                  )
+                  : 0
               }}
             </th>
           </tr>
@@ -116,9 +125,9 @@ export default {
   inject: ['updateFinalPrices'],
   props: {
     priceWithVat: { type: Boolean, default: true, required: true },
-    prePrices: { type: Array, required: true },
-    prices: { type: Array, required: true },
-    finalPrices: { type: Array, required: true },
+    prePrices: { type: Array },
+    prices: { type: Array },
+    finalPrices: { type: Array },
     agreementVatRate: { type: Number, required: true },
   },
   data() {

@@ -21,6 +21,7 @@
 
       <v-card-text>
         <app-final-price-table
+          v-if="agreement"
           :prePrices="prePrices"
           :prices="order.prices"
           :priceWithVat="priceWithVat"
@@ -83,6 +84,7 @@ export default {
     dialog: Boolean,
     finalPrices: Array,
     prePrices: Array,
+    agreementId: String,
   },
   data() {
     return {
@@ -97,7 +99,7 @@ export default {
   computed: {
     ...mapGetters(['orderPriceTypes']),
     setFinalPricesDisabled() {
-      return !this.order.prePrices.length && !this.order.prices.length
+      return !this.order.prePrices?.length && !this.order.prices?.length
     },
     saveBtnDisabled() {
       return (
@@ -122,12 +124,26 @@ export default {
       )
     },
   },
-  async created() {
-    this.agreement = await this.getOrderAgreement()
-    if (this.agreement) this.priceWithVat = this.agreement.usePriceWithVAT
+  watch: {
+    agreementId: {
+      immediate: true,
+      handler: async function (val) {
+        if (val) {
+          this.agreement = await this.getOrderAgreement(val)
+          if (this.agreement) this.priceWithVat = this.agreement.usePriceWithVAT
+        } else this.agreement = null
+      },
+    },
   },
   methods: {
     async getPrePrices() {
+      if (!this.order._id) {
+        this.$store.commit(
+          'setError',
+          'Запрос цен возможен для сохраненного рейса'
+        )
+        return null
+      }
       const data = await tariffService.getOrderPrePrices(
         DTO.prepareOrderForPrePriceQuery({
           ...this.order,

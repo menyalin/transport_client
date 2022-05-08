@@ -299,18 +299,20 @@ export default {
     },
     allItems() {
       // Объединяем в один массив заказы и простою, сортируем по дате отображения
-      return this.distributedOrders
-        .map((o) => ({
-          ...o,
-          itemType: 'order',
-        }))
-        .concat(
-          this.filteredDountimes.map((d) => ({ ...d, itemType: 'downtime' }))
-        )
-        .sort(
-          (a, b) =>
-            new Date(a.startPositionDate) - new Date(b.startPositionDate)
-        )
+      return (
+        this.distributedOrders
+          .map((o) => ({
+            ...o,
+            itemType: 'order',
+          }))
+          .concat(
+            this.filteredDountimes.map((d) => ({ ...d, itemType: 'downtime' }))
+          )
+          .sort(
+            (a, b) =>
+              new Date(a.startPositionDate) - new Date(b.startPositionDate)
+          ) || []
+      )
     },
     distributedOrders() {
       return this.filteredOrders.filter((i) => !!i?.truckId)
@@ -516,13 +518,13 @@ export default {
           this.secInPx
         )
       else
-      return (
-        (dutation > SEC_IN_SIX_HOURS ||
-        !!type ||
-        (isCompleted && !this.$store.getters.onlyPlannedDates)
-          ? dutation
-          : SEC_IN_SIX_HOURS) / this.secInPx
-      )
+        return (
+          (dutation > SEC_IN_SIX_HOURS ||
+          !!type ||
+          (isCompleted && !this.$store.getters.onlyPlannedDates)
+            ? dutation
+            : SEC_IN_SIX_HOURS) / this.secInPx
+        )
     },
     getStylesForOrder(order) {
       return {

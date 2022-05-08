@@ -25,6 +25,7 @@ class Price {
       liftCapacity: order.reqTransport.liftCapacity,
       route: order.route,
       orderType: order.analytics.type,
+      prices: order.prices,
     }
   }
 }

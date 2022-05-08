@@ -152,6 +152,7 @@
           <app-price-dialog
             v-if="showFinalPriceDialog"
             :order="order"
+            :agreementId="client.agreement"
             :prePrices.sync="prePrices"
             :finalPrices="finalPrices"
             :dialog.sync="priceDialog"
@@ -231,9 +232,11 @@ export default {
       updateFinalPrices: (val) => {
         this.finalPrices = [...val]
       },
-      getOrderAgreement: async () => {
-        if (!this.client.agreement) return null
-        const agreement = await AgreementService.getById(this.client.agreement)
+      getOrderAgreement: async (val) => {
+        if (!val && !this.client.agreement) return null
+        const agreement = await AgreementService.getById(
+          val || this.client.agreement
+        )
         return agreement
       },
     }
@@ -288,6 +291,7 @@ export default {
       return (
         !!this.$store.getters.hasPermission('readFinalPrices') &&
         !!this.client.agreement &&
+        !!this.order._id &&
         !!this.isValidRoute
       )
     },
