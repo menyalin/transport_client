@@ -16,6 +16,7 @@
       dense
       :disabled="disabled"
       :items="agreements"
+      auto-select-first
       outlined
       hide-details
       item-value="_id"
