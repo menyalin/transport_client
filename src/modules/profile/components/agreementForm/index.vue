@@ -73,6 +73,7 @@
         />
         <v-checkbox
           v-model="form.usePriceWithVAT"
+          :disabled="form.vatRate === 0"
           color="primary"
           label="При выгрузке показывать ставку с НДС"
         />
@@ -202,6 +203,11 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) this.setFormFields(val)
+      },
+    },
+    ['form.vatRate']: {
+      handler: function (val) {
+        if (val === 0) this.form.usePriceWithVAT = false
       },
     },
   },
