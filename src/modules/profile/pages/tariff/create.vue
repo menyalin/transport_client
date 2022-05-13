@@ -114,10 +114,6 @@ export default {
         }
       },
     },
-    editableTariff: {
-      deep: true,
-      handler: function (val) {},
-    },
   },
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)

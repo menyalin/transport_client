@@ -14,6 +14,7 @@ import scheduleNoteRoutes from './scheduleNotes.js'
 import agreementRoutes from './agreement'
 import companyRouter from './company'
 import tariffRouter from './tariff'
+import documentRouter from './document'
 
 export default [
   {
@@ -35,6 +36,7 @@ export default [
       ...scheduleNoteRoutes,
       ...companyRouter,
       ...tariffRouter,
+      ...documentRouter,
       { path: 'tasks', name: 'taskList', component: TaskList },
 
       /// Настройки профиля

@@ -44,6 +44,13 @@ export default {
         permission: 'agreement:readList',
       },
       {
+        text: 'Документы',
+        icon: 'mdi-file-document-multiple',
+        link: '/profile/documents',
+        onlyWithDirectoriesProfile: true,
+        permission: 'document:readList',
+      },
+      {
         text: 'Тарифы',
         icon: 'mdi-cash-multiple',
         link: '/profile/tariffs',

@@ -36,7 +36,7 @@ class TruckService {
     }
   }
 
-  async getByDerictoriesProfile(profile) {
+  async getByDirectoriesProfile(profile) {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
     if (!Array.isArray(data))
       throw new Error('Нужен массив!! пришло что-то другое!')

@@ -50,27 +50,6 @@ export default {
         }
       })
     },
-
-    // async getCrews({ commit, getters }, { directiveUpdate, date }) {
-    //   try {
-    //     commit('setLoading', true)
-    //     if (
-    //       directiveUpdate ||
-    //       (getters.crews.length === 0 && getters.directoriesProfile)
-    //     ) {
-    //       commit('setCrews', [])
-    //       const data = await service.getByDerictoriesProfile(
-    //         getters.directoriesProfile,
-    //         date
-    //       )
-    //       commit('setCrews', data)
-    //     }
-    //     commit('setLoading', false)
-    //   } catch (e) {
-    //     commit('setLoading', false)
-    //     commit('setError', e.response?.data?.message)
-    //   }
-    // },
   },
   getters: {
     tkNameForCrews: ({ tkNameForCrews }) => tkNameForCrews,

@@ -23,6 +23,18 @@
       item-text="name"
       :style="{ 'max-width': '400px' }"
     />
+    <v-autocomplete
+      v-model="tmpSettings.document"
+      :disabled="!tmpSettings.agreement"
+      label="Документ"
+      :items="documents"
+      item-value="_id"
+      item-text="name"
+      outlined
+      dense
+      hide-details
+      auto-select-first
+    />
     <v-select
       v-model="tmpSettings.type"
       label="Тип тарифа"
@@ -87,6 +99,7 @@ export default {
       tmpSettings: {
         group: uuid.v4(),
         groupVat: false,
+        document: null,
         agreement: null,
         agreementVatRate: null,
         date: null,
@@ -94,6 +107,19 @@ export default {
         liftCapacity: null,
       },
     }
+  },
+  computed: {
+    documents() {
+      if (this.tmpSettings.agreement) {
+        const { clients, outsourceCarriers } = this.agreements.find(
+          (i) => i._id === this.tmpSettings.agreement
+        )
+        const partners = [...(clients || []), ...(outsourceCarriers || [])]
+        return this.$store.getters.documents.filter((i) =>
+          partners.includes(i.partner)
+        )
+      } else return []
+    },
   },
   watch: {
     ['tmpSettings.agreement']: function (val) {

@@ -30,7 +30,19 @@
             item-value="_id"
             item-text="name"
             hide-details
-            :style="{ 'max-width': '400px' }"
+            :style="{ 'max-width': '300px' }"
+          />
+          <v-autocomplete
+            v-model="settings.document"
+            label="Документ"
+            outlined
+            clearable
+            dense
+            :items="$store.getters.documents"
+            item-value="_id"
+            item-text="name"
+            hide-details
+            :style="{ 'max-width': '300px' }"
           />
           <v-select
             v-model="settings.type"
@@ -126,6 +138,7 @@ export default {
     loading: false,
     settings: {
       type: null,
+      document: null,
       agreement: null,
       listOptions: {
         page: 1,
@@ -142,6 +155,7 @@ export default {
         align: 'right',
       },
       { value: 'agreement.name', text: 'Соглашение', sortable: false },
+      { value: '_document', text: 'Документ', sortable: false },
       { value: '_type', text: 'Тип', sortable: false },
       { value: '_result', text: 'Параметры', sortable: false },
 
@@ -176,6 +190,8 @@ export default {
       return this.list.map((i) => ({
         ...i,
         _type: this.$store.getters.tariffTypesMap.get(i.type),
+        _document:
+          this.$store.getters.documentsMap.get(i.document)?.name || null,
         _date: new Date(i.date).toLocaleDateString(),
         _truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
         _price: new Intl.NumberFormat('ru-RU', {
@@ -261,6 +277,7 @@ export default {
           company: this.directoriesProfile,
           type: this.settings.type,
           agreement: this.settings.agreement,
+          document: this.settings.document,
           client: this.settings.client,
           skip:
             this.settings.listOptions.itemsPerPage *

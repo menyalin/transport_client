@@ -1,21 +1,21 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-const BASE_PATH = '/partners'
+const BASE_PATH = '/documents'
 
-class PartnerService {
+class DocumentService {
   constructor() {
-    socket.on('partner:created', (data) => {
-      store.commit('addPartner', data)
+    socket.on('document:created', (data) => {
+      store.commit('addDocument', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('partner:updated', (data) => {
-      store.commit('updatePartner', data)
+    socket.on('document:updated', (data) => {
+      store.commit('updateDocument', data)
       store.commit('addToCache', data)
     })
-    socket.on('partner:deleted', (id) => {
-      store.commit('deletePartner', id)
+    socket.on('document:deleted', (id) => {
+      store.commit('deleteDocument', id)
       store.commit('deleteFromCache', id)
     })
   }
@@ -55,4 +55,4 @@ class PartnerService {
   }
 }
 
-export default new PartnerService()
+export default new DocumentService()

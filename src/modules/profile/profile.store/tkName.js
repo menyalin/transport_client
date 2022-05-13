@@ -49,7 +49,7 @@ export default {
           (getters.routeSheets.length === 0 && getters.directoriesProfile)
         ) {
           commit('setTkNames', [])
-          const data = await service.getByDerictoriesProfile(
+          const data = await service.getByDirectoriesProfile(
             getters.directoriesProfile
           )
           commit('setTkNames', data)

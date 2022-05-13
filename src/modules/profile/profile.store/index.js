@@ -9,6 +9,7 @@ import OrderTemplateModule from './orderTemplate'
 import ScheduleNotes from './scheduleNote'
 import AgreementModule from './agreement'
 import TariffModule from './tariff'
+import DocumentModule from './document'
 
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
@@ -118,6 +119,7 @@ export default {
         allTruckParams,
         tariffTypes,
         roundingWaitingByHours,
+        documents,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -140,6 +142,7 @@ export default {
       if (tariffTypes) commit('setTariffTypes', tariffTypes)
       if (roundingWaitingByHours)
         commit('setRoundingWaitingByHours', roundingWaitingByHours)
+      if (documents?.length) commit('setDocuments', documents)
     },
 
     async createCompany({ commit }, payload) {
@@ -226,5 +229,6 @@ export default {
     ScheduleNotes,
     AgreementModule,
     TariffModule,
+    DocumentModule,
   },
 }

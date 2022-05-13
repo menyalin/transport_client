@@ -10,6 +10,18 @@
           {{ tmpItem._id ? 'Редактировать тариф' : 'Добавить тариф' }}
         </v-card-title>
         <v-card-text id="fields-wrapper">
+          <v-autocomplete
+            v-if="tmpItem.agreement"
+            v-model="tmpItem.document"
+            :items="documents"
+            label="Документ"
+            item-value="_id"
+            clearable
+            item-text="name"
+            dense
+            outlined
+            hide-details
+          />
           <v-select
             v-model="tmpItem.type"
             label="Тип"
@@ -132,6 +144,7 @@ import AppWaiting from './waiting.vue'
 import AppReturn from './return.vue'
 import TariffService from '../../services/tariff.service.js'
 import { TariffDTO } from './tariff.dto'
+import agreementService from '../../services/agreement.service'
 
 export default {
   name: 'TariffForm',
@@ -152,6 +165,7 @@ export default {
   },
   data() {
     return {
+      agreement: null,
       tmpDialog: false,
       points: {},
       additionalPoints: {},
@@ -162,6 +176,14 @@ export default {
     }
   },
   computed: {
+    documents() {
+      if (!this.tmpItem.agreement || !this.agreement) return []
+      const { clients, outsourceCarriers } = this.agreement
+      const partners = [...(clients || []), ...(outsourceCarriers || [])]
+      return this.$store.getters.documents.filter((i) =>
+        partners.includes(i.partner)
+      )
+    },
     invalidItem() {
       return TariffDTO.invalidItem({
         ...this.tmpItem,
@@ -205,6 +227,16 @@ export default {
         }
       },
     },
+    ['tmpItem.agreement']: {
+      immediate: true,
+      handler: async function (val) {
+        if (!val) this.agreement = null
+        else
+          this.agreement = await agreementService.getById(
+            this.tmpItem.agreement
+          )
+      },
+    },
   },
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
@@ -224,7 +256,6 @@ export default {
       if (!this.invalidItem) {
         this.$emit('push', this.formState)
         this.$nextTick(() => {
-          // if (this.tmpItem.type === 'return') this.$refs.return.focus()
           this.$refs[this.tmpItem.type].focus()
         })
       }

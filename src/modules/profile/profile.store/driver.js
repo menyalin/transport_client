@@ -48,7 +48,7 @@ export default {
           const profile = getters.directoriesProfile
           const date = moment().format()
           commit('setDrivers', [])
-          const drivers = await DriverService.getByDerictoriesProfile(profile)
+          const drivers = await DriverService.getByDirectoriesProfile(profile)
           const actualCrews = await CrewService.getActualCrews(profile, date)
           commit('setActualCrews', actualCrews)
           commit('setDrivers', drivers)

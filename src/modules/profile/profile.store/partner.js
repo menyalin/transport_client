@@ -33,7 +33,7 @@ export default {
           (getters.partners.length === 0 && getters.directoriesProfile)
         ) {
           commit('setPartners', [])
-          const data = await service.getByDerictoriesProfile(
+          const data = await service.getByDirectoriesProfile(
             getters.directoriesProfile
           )
           commit('setPartners', data)

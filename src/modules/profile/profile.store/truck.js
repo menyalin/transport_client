@@ -61,7 +61,7 @@ export default {
           (getters.trucks.length === 0 && getters.directoriesProfile)
         ) {
           commit('setTrucks', [])
-          const data = await TruckService.getByDerictoriesProfile(
+          const data = await TruckService.getByDirectoriesProfile(
             getters.directoriesProfile
           )
           commit('setTrucks', data)

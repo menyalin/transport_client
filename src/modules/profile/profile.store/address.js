@@ -41,7 +41,7 @@ export default {
           (getters.addresses.length === 0 && getters.directoriesProfile)
         ) {
           commit('setAddresses', [])
-          const addressList = await service.getByDerictoriesProfile(
+          const addressList = await service.getByDirectoriesProfile(
             getters.directoriesProfile
           )
           commit('setAddresses', addressList)
