@@ -11,13 +11,14 @@
         />
         <div class="filter-wrapper">
           <v-text-field
+            v-model="settings.date"
             outlined
             dense
-            disabled
+            clearable
             hide-details
             label="Тарифы на дату"
             type="date"
-            :style="{ 'max-width': '180px' }"
+            :style="{ 'max-width': '220px' }"
           />
 
           <v-autocomplete
@@ -138,6 +139,7 @@ export default {
     loading: false,
     settings: {
       type: null,
+      date: null,
       document: null,
       agreement: null,
       listOptions: {
@@ -275,6 +277,7 @@ export default {
         this.loading = true
         const data = await service.getList({
           company: this.directoriesProfile,
+          date: this.settings.date,
           type: this.settings.type,
           agreement: this.settings.agreement,
           document: this.settings.document,
