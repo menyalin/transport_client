@@ -37,13 +37,10 @@
                 {{ addressMap.get(item.loading).shortName }} >>>
                 {{ addressMap.get(item.unloading).shortName }}
               </div>
-              <div v-if="item.type === 'directDistanceZones'">
-                {{
-                  `Погрузка: ${addressMap.get(item.loading).shortName} , до ${
-                    item.maxDistance
-                  }км`
-                }}
-              </div>
+              <app-direct-distance-zones
+                v-if="item.type === 'directDistanceZones'"
+                :item="item"
+              />
               <app-additional-points-cell
                 v-if="item.type === 'additionalPoints'"
                 :item="item"
@@ -95,6 +92,7 @@
 import AppWaitingCell from './waiting.vue'
 import AppAdditionalPointsCell from './additionalPoints.vue'
 import AppReturnCell from './return.vue'
+import AppDirectDistanceZones from './directDistanceZones.vue'
 
 export default {
   name: 'TariffGroupList',
@@ -102,6 +100,7 @@ export default {
     AppAdditionalPointsCell,
     AppWaitingCell,
     AppReturnCell,
+    AppDirectDistanceZones,
   },
   model: {
     prop: 'items',

@@ -72,6 +72,7 @@
             v-if="tmpItem.type === 'directDistanceZones'"
             ref="directDistanceZones"
             v-model="directDistanceZones"
+            :groupVat="tmpItem.groupVat"
             :style="{ 'min-width': '550px' }"
           />
           <app-waiting
@@ -87,8 +88,8 @@
             :style="{ 'min-width': '550px' }"
           />
           <v-text-field
+            v-if="!['return', 'directDistanceZones'].includes(tmpItem.type)"
             v-model.number="tmpItem.price"
-            :disabled="tmpItem.type === 'return'"
             dense
             type="number"
             :label="tmpItem.groupVat ? 'Тариф c НДС' : 'Тариф без НДС'"

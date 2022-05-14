@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     documents() {
-      if (this.tmpSettings.agreement) {
+      if (this.tmpSettings.agreement && this.agreements.length) {
         const { clients, outsourceCarriers } = this.agreements.find(
           (i) => i._id === this.tmpSettings.agreement
         )
