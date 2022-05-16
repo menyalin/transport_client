@@ -18,6 +18,13 @@
     </template>
     <v-list class="px-3">
       <v-switch
+        label="Планируемые даты"
+        dense
+        hide-details
+        :value="$store.getters.onlyPlannedDates"
+        @change="$store.commit('changeOnlyPlannedDates')"
+      />
+      <v-switch
         v-model="tmpSettings.showBufferZone"
         label="Показать буферную зону"
         dense

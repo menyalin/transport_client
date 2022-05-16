@@ -45,13 +45,14 @@ export default {
     ],
     orderStatuses: [],
     scheduleDate: moment().format('YYYY-MM-DD'),
-    onlyPlannedDates: false,
+    onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') || false,
     orderAnalyticTypes: [],
     orderPriceTypes: [],
   },
   mutations: {
     changeOnlyPlannedDates(state) {
       state.onlyPlannedDates = !state.onlyPlannedDates
+      localStorage.setItem('orders:onlyPlannedDates', state.onlyPlannedDates)
     },
     setPeriod(state, payload) {
       state.period = payload

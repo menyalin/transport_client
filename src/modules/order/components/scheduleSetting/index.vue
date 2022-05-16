@@ -24,13 +24,6 @@
     >
       <v-icon>mdi-arrow-right-bold</v-icon>
     </v-btn>
-    <v-checkbox
-      :value="$store.getters.onlyPlannedDates"
-      label="Планируемые даты"
-      hideDetails
-      class="ml-3"
-      @change="$store.commit('changeOnlyPlannedDates')"
-    />
   </div>
 </template>
 <script>
