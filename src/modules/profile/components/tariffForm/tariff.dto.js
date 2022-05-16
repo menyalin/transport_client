@@ -106,7 +106,9 @@ export class TariffDTO {
     if (item.type === 'directDistanceZones' && !item.zones?.length) return true
     if (
       item.type === 'directDistanceZones' &&
-      item.zones.some((i) => !i.distance || !i.price)
+      item.zones.some(
+        (i) => !i.distance || i.distance <= 0 || !i.price || i.price <= 0
+      )
     )
       return true
 

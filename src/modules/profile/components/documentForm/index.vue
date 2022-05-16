@@ -21,7 +21,8 @@
       />
 
       <v-text-field
-        v-model="form.date"
+        v-model="$v.form.date.$model"
+        :error-messages="dateErrors"
         outlined
         type="date"
         label="Дата"
@@ -33,6 +34,7 @@
     <app-partner-autocomplete
       v-model="form.partner"
       label="Партнер"
+      onlyClients
       outlined
       dense
     />
@@ -71,15 +73,6 @@ import { required } from 'vuelidate/lib/validators'
 
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
-
-/*
-    name: String,
-    date: Date,
-    note: String,
-    company: { type: Types.ObjectId, ref: 'Company' },
-    partner: { type: Types.ObjectId, ref: 'Partner' },
-    useInTariff: { type: Boolean, default: false },
-*/
 
 export default {
   name: 'PartnerForm',
@@ -134,6 +127,12 @@ export default {
         errors.push('Название не может быть пустым')
       return errors
     },
+    dateErrors() {
+      const errors = []
+      if (this.$v.form.date.$dirty && this.$v.form.date.$invalid)
+        errors.push('Дата не может быть пустой')
+      return errors
+    },
     formState() {
       return { ...this.form, company: this.directoriesProfile }
     },
@@ -153,6 +152,7 @@ export default {
   validations: {
     form: {
       name: { required },
+      date: { required },
     },
   },
   mounted() {
