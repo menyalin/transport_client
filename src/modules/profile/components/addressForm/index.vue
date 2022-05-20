@@ -65,6 +65,19 @@
       :hint="addressGeoHint"
       :error-messages="geoErrors"
     />
+    <app-zone-autocomplete
+      v-model="$v.form.zones.$model"
+      dense
+      multiple
+      outlined
+      label="Зоны"
+    />
+    <v-text-field
+      v-model="$v.form.contacts.$model"
+      outlined
+      dense
+      label="Контакты"
+    />
     <v-text-field
       v-model="$v.form.label.$model"
       outlined
@@ -115,6 +128,7 @@ import { required } from 'vuelidate/lib/validators'
 import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
 import AppSimilarAddresses from './similarAddresses.vue'
 import addressService from '../../services/address.service'
 
@@ -137,6 +151,7 @@ export default {
     AppButtonsPanel,
     AppPartnerAutocomplete,
     AppSimilarAddresses,
+    AppZoneAutocomplete,
   },
   props: {
     address: {
@@ -168,6 +183,8 @@ export default {
         isDeliveryPlace: false,
         isService: false,
         partner: null,
+        zones: [],
+        contacts: null,
       },
     }
   },
@@ -227,6 +244,8 @@ export default {
       shortName: {},
       note: {},
       partner: {},
+      zones: {},
+      contacts: {},
     },
   },
 
@@ -240,10 +259,11 @@ export default {
     submit() {
       const address = { ...this.form, company: this.directoriesProfile }
       this.$emit('submit', address)
-      this.resetForm()
+      this.$nextTick(() => {
+        this.resetForm()
+      })
     },
     cancel() {
-      // this.resetForm()
       this.$emit('cancel')
     },
     setFormFields(val) {
@@ -256,6 +276,8 @@ export default {
       this.form.isDeliveryPlace = val.isDeliveryPlace
       this.form.partner = val.partner
       this.form.isService = val.isService
+      this.form.zones = val.zones
+      this.form.contacts = val.contacts
     },
     resetForm() {
       this.form.name = null
@@ -267,18 +289,17 @@ export default {
       this.form.isDeliveryPlace = false
       this.form.partner = null
       this.form.isService = false
+      this.form.zones = []
+      this.form.contacts = null
     },
     getParsedAddress(val) {
-      if (!val) {
-        this.resetForm()
-      } else {
-        // ---------------------------
+      if (!val) this.resetForm()
+      else {
         this.parsedAddress = Object.assign({}, val)
         this.form.name = val.value
         if (val.geo) this.geo = val.geo
         else if (!!val.data.geo_lat && val.data.geo_lon)
           this.form.geo = `${val.data.geo_lat}, ${val.data.geo_lon}`
-        // ---------------------------
       }
     },
   },

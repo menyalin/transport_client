@@ -290,8 +290,8 @@ export default {
     showFinalPriceDialog() {
       return (
         !!this.$store.getters.hasPermission('readFinalPrices') &&
-        !!this.client.agreement &&
-        !!this.order._id &&
+        !!this.client?.agreement &&
+        !!this.order?._id &&
         !!this.isValidRoute
       )
     },

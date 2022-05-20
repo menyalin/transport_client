@@ -49,6 +49,10 @@
                 v-if="item.type === 'waiting'"
                 :item="item"
               />
+              <app-zones-cell
+                v-if="item.type === 'zones'"
+                :item="item"
+              />
               <app-return-cell
                 v-if="item.type === 'return'"
                 :item="item"
@@ -92,6 +96,7 @@
 import AppWaitingCell from './waiting.vue'
 import AppAdditionalPointsCell from './additionalPoints.vue'
 import AppReturnCell from './return.vue'
+import AppZonesCell from './zones.vue'
 import AppDirectDistanceZones from './directDistanceZones.vue'
 
 export default {
@@ -101,6 +106,7 @@ export default {
     AppWaitingCell,
     AppReturnCell,
     AppDirectDistanceZones,
+    AppZonesCell,
   },
   model: {
     prop: 'items',

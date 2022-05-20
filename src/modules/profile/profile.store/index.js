@@ -10,7 +10,7 @@ import ScheduleNotes from './scheduleNote'
 import AgreementModule from './agreement'
 import TariffModule from './tariff'
 import DocumentModule from './document'
-
+import ZoneModule from './zone'
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 
@@ -120,6 +120,7 @@ export default {
         tariffTypes,
         roundingWaitingByHours,
         documents,
+        zones,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -143,6 +144,7 @@ export default {
       if (roundingWaitingByHours)
         commit('setRoundingWaitingByHours', roundingWaitingByHours)
       if (documents?.length) commit('setDocuments', documents)
+      if (zones?.length) commit('setZones', zones)
     },
 
     async createCompany({ commit }, payload) {
@@ -230,5 +232,6 @@ export default {
     AgreementModule,
     TariffModule,
     DocumentModule,
+    ZoneModule,
   },
 }

@@ -3,6 +3,7 @@ import moment from 'moment'
 const TYPES_WITHOUT_PRICE = ['directDistanceZones', 'return']
 
 const _REQUIRED_FIELDS_FOR_POINTS_TYPE = ['loading', 'unloading']
+const _REQUIRED_FIELDS_FOR_ZONES_TYPE = ['loadingZone', 'unloadingZone']
 
 const _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE = [
   'orderType',
@@ -37,6 +38,9 @@ const _getRequiredFieldsByType = (type) => {
   switch (type) {
     case 'points':
       typedFields = _REQUIRED_FIELDS_FOR_POINTS_TYPE
+      break
+    case 'zones':
+      typedFields = _REQUIRED_FIELDS_FOR_ZONES_TYPE
       break
     case 'additionalPoints':
       typedFields = _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE
@@ -124,6 +128,10 @@ export class TariffDTO {
         date: moment(item.date).format('YYYY-MM-DD'),
         price: item.groupVat ? item.price : item.priceWOVat,
         agreement: item.agreement?._id || item.agreement,
+      },
+      zones: {
+        loadingZone: item.loadingZone,
+        unloadingZone: item.unloadingZone,
       },
       points: {
         loading: item.loading,

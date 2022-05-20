@@ -62,6 +62,12 @@
             v-model="points"
             :style="{ 'min-width': '550px' }"
           />
+          <app-zones
+            v-if="tmpItem.type === 'zones'"
+            ref="zones"
+            v-model="zones"
+            :style="{ 'min-width': '550px' }"
+          />
           <app-additional-points
             v-if="tmpItem.type === 'additionalPoints'"
             ref="additionalPoints"
@@ -142,6 +148,7 @@ import AppPoints from './points.vue'
 import AppAdditionalPoints from './additionalPoints.vue'
 import AppDirectDistanceZones from './directDistanceZones.vue'
 import AppWaiting from './waiting.vue'
+import AppZones from './zones.vue'
 import AppReturn from './return.vue'
 import TariffService from '../../services/tariff.service.js'
 import { TariffDTO } from './tariff.dto'
@@ -155,6 +162,7 @@ export default {
     AppDirectDistanceZones,
     AppWaiting,
     AppReturn,
+    AppZones,
   },
   model: {
     prop: 'item',
@@ -174,6 +182,7 @@ export default {
       directDistanceZones: {},
       waiting: {},
       returnTariff: {},
+      zones: {},
     }
   },
   computed: {

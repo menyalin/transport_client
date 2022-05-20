@@ -52,7 +52,9 @@ export default {
   mutations: {
     changeOnlyPlannedDates(state) {
       state.onlyPlannedDates = !state.onlyPlannedDates
-      localStorage.setItem('orders:onlyPlannedDates', state.onlyPlannedDates)
+      if (!state.onlyPlannedDates)
+        localStorage.removeItem('orders:onlyPlannedDates')
+      else localStorage.setItem('orders:onlyPlannedDates', true)
     },
     setPeriod(state, payload) {
       state.period = payload

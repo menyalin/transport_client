@@ -72,6 +72,13 @@ export default {
         permission: 'address:readList',
       },
       {
+        text: 'Зоны',
+        icon: 'mdi-map-marker',
+        link: '/profile/zones',
+        onlyWithDirectoriesProfile: true,
+        permission: 'zone:readList',
+      },
+      {
         text: 'Простои/Выходные',
         icon: 'mdi-car-wrench',
         link: '/profile/downtimes',

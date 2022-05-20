@@ -15,6 +15,7 @@ import agreementRoutes from './agreement'
 import companyRouter from './company'
 import tariffRouter from './tariff'
 import documentRouter from './document'
+import zoneRouter from './zone'
 
 export default [
   {
@@ -37,6 +38,7 @@ export default [
       ...companyRouter,
       ...tariffRouter,
       ...documentRouter,
+      ...zoneRouter,
       { path: 'tasks', name: 'taskList', component: TaskList },
 
       /// Настройки профиля

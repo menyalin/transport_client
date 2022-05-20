@@ -75,12 +75,6 @@ export default {
     }
   },
   watch: {
-    // settings: {
-    //   deep: true,
-    //   handler: function (val) {
-    //     this.tmpSettings = val
-    //   },
-    // },
     tmpSettings: {
       deep: true,
       handler: function (val) {

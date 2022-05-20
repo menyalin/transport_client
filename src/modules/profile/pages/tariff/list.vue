@@ -92,6 +92,10 @@
               v-else-if="item.type === 'additionalPoints'"
               :item="item"
             />
+            <app-zones-cell
+              v-else-if="item.type === 'zones'"
+              :item="item"
+            />
             <app-return-cell
               v-else-if="item.type === 'return'"
               :item="item"
@@ -122,6 +126,7 @@ import AppTariffForm from '@/modules/profile/components/tariffForm'
 import AppWaitingCell from '@/modules/profile/components/tariffGroupList/waiting.vue'
 import AppReturnCell from '@/modules/profile/components/tariffGroupList/return.vue'
 import AppAdditionalPointsCell from '@/modules/profile/components/tariffGroupList/additionalPoints.vue'
+import AppZonesCell from '@/modules/profile/components/tariffGroupList/zones.vue'
 import AppDirectDistanceZones from '@/modules/profile/components/tariffGroupList/directDistanceZones.vue'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/tariff.service'
@@ -136,6 +141,7 @@ export default {
     AppAdditionalPointsCell,
     AppReturnCell,
     AppDirectDistanceZones,
+    AppZonesCell,
   },
   data: () => ({
     formName: 'tariffList',
