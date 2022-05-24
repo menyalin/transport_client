@@ -130,6 +130,15 @@ export default {
         (i) => i._id === val
       )?.vatRate
     },
+
+    ['tmpSettings.document']: function (val) {
+      if (!val || !this.$store.getters.documentsMap.has(val)) return null
+      const dateValue = this.$store.getters.documentsMap.get(val)?.date
+      if (!dateValue) return null
+
+      this.tmpSettings.date = moment(dateValue).format('YYYY-MM-DD')
+    },
+
     tmpSettings: {
       deep: true,
       immediate: true,
