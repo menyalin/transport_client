@@ -4,14 +4,14 @@
     @dblclick.stop="dblclickHandler"
   >
     <div class="row-text">
-      <b>{{ downtimeStartTime }}</b>
+      {{ downtimeStartTime }}
       {{ downtime.title }}
     </div>
     <div
       v-if="downtime.type === 'repair' && partner"
       class="row-text text-subtitle-2"
     >
-      <b>{{ partner.name }}</b>
+      {{ partner.name }}
     </div>
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
   font-size: 12px;
   line-height: 13px;
   letter-spacing: -0.023em;
-  font-weight: 300;
+  font-weight: 400;
   overflow: hidden;
   user-select: none;
   white-space: nowrap;
