@@ -44,6 +44,18 @@
       label="Сокращенное наименование адреса"
       :hint="addressShortNameHint"
     />
+    <v-text-field
+      v-model="$v.form.region.$model"
+      outlined
+      dense
+      label="Регион (область)"
+    />
+    <v-text-field
+      v-model="$v.form.city.$model"
+      outlined
+      dense
+      label="Город (населенный пункт)"
+    />
     <app-partner-autocomplete
       v-model="$v.form.partner.$model"
       dense
@@ -176,6 +188,8 @@ export default {
       form: {
         name: null,
         label: null,
+        region: null,
+        city: null,
         geo: null,
         shortName: null,
         note: null,
@@ -243,6 +257,8 @@ export default {
       },
       shortName: {},
       note: {},
+      region: {},
+      city: {},
       partner: {},
       zones: {},
       contacts: {},
@@ -278,6 +294,8 @@ export default {
       this.form.isService = val.isService
       this.form.zones = val.zones
       this.form.contacts = val.contacts
+      this.form.region = val.region
+      this.form.city = val.city
     },
     resetForm() {
       this.form.name = null
@@ -291,12 +309,16 @@ export default {
       this.form.isService = false
       this.form.zones = []
       this.form.contacts = null
+      this.form.region = null
+      this.form.city = null
     },
     getParsedAddress(val) {
       if (!val) this.resetForm()
       else {
         this.parsedAddress = Object.assign({}, val)
         this.form.name = val.value
+        this.form.region = val.data?.region_with_type
+        this.form.city = val.data.city || val.data.settlement
         if (val.geo) this.geo = val.geo
         else if (!!val.data.geo_lat && val.data.geo_lon)
           this.form.geo = `${val.data.geo_lat}, ${val.data.geo_lon}`
