@@ -31,9 +31,18 @@
       label="ИНН"
       dense
     />
+    <v-select
+      v-model="form.group"
+      label="Группа"
+      :items="$store.getters.partnerGroups"
+      outlined
+      dense
+      clearable
+    />
     <v-text-field
       v-model.trim="form.contacts"
       outlined
+      clearable
       label="Контакты"
       dense
     />
@@ -94,6 +103,7 @@ export default {
       form: {
         name: null,
         inn: null,
+        group: null,
         contacts: null,
         isClient: false,
         isService: false,

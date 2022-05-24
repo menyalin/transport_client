@@ -108,6 +108,7 @@ export default {
         trucks,
         tkNames,
         partners,
+        partnerGroups,
         orderStatuses,
         orderTemplates,
         orderAnalyticTypes,
@@ -145,6 +146,7 @@ export default {
         commit('setRoundingWaitingByHours', roundingWaitingByHours)
       if (documents?.length) commit('setDocuments', documents)
       if (zones?.length) commit('setZones', zones)
+      if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
     },
 
     async createCompany({ commit }, payload) {

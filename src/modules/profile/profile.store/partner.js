@@ -3,6 +3,7 @@ import service from '@/modules/profile/services/partner.service'
 export default {
   state: {
     partners: [],
+    partnerGroups: [],
   },
   mutations: {
     clearDirectories(state) {
@@ -10,6 +11,9 @@ export default {
     },
     setPartners(state, payload) {
       state.partners = payload
+    },
+    setPartnerGroups(state, payload) {
+      state.partnerGroups = payload
     },
     addPartner(state, payload) {
       if (state.partners.findIndex((item) => item._id === payload._id) === -1) {
@@ -63,5 +67,6 @@ export default {
           text: item.name,
           ...item,
         })),
+    partnerGroups: ({ partnerGroups }) => partnerGroups,
   },
 }
