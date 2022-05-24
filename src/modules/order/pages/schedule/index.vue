@@ -26,8 +26,17 @@ export default {
       return this.$store.getters.scheduleDate
     },
     scheduleRows() {
+      const trucksInOrdersSet = new Set(
+        this.$store.getters.ordersForSchedule
+          .map((i) => i.truckId)
+          .filter((i) => !!i)
+      )
       return this.$store.getters.trucks
-        .filter((item) => item.type === 'truck' && !item.endServiceDate)
+        .filter(
+          (item) =>
+            item.type === 'truck' &&
+            (!item.endServiceDate || trucksInOrdersSet.has(item._id))
+        )
         .sort((a, b) => a.order - b.order)
     },
   },

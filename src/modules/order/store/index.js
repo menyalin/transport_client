@@ -134,8 +134,8 @@ export default {
           const eP = moment(schedulePeriod[1])
           return (
             eP.isAfter(order.startPositionDate) &&
-            sP.isSameOrBefore(order.endPositionDate) &&
-            (!order.truckId || !hiddenTruckIds.includes(order.truckId))
+            sP.isSameOrBefore(order.endPositionDate)
+            // &&            !order.truckId
           )
         })
 

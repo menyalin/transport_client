@@ -51,8 +51,9 @@ export default {
         const eP = moment(schedulePeriod[1])
         return (
           eP.isAfter(n.startPositionDate) &&
-          sP.isSameOrBefore(n.startPositionDate) &&
-          !hiddenTruckIds.includes(n.truck)
+          sP.isSameOrBefore(n.startPositionDate)
+
+          //  && !hiddenTruckIds.includes(n.truck)
         )
       })
     },
