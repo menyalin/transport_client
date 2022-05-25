@@ -87,7 +87,6 @@
             <v-text-field
               v-model="settings.search"
               outlined
-              hide-details
               dense
               clearable
               label="Быстрый поиск"

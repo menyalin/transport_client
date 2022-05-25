@@ -50,7 +50,10 @@ export default {
     zonesForAutocomplete: ({ zones }) =>
       zones
         .map((i) => ({ text: i.name, value: i._id }))
-        .sort((a, b) => a.name - b.name),
+        .sort((a, b) => {
+          if (a.text.toLowerCase() < b.text.toLowerCase()) return -1
+          if (a.text.toLowerCase() > b.text.toLowerCase()) return 1
+        }),
     zones: ({ zones }, { directoriesProfile }) =>
       zones
         .filter((item) => item.company === directoriesProfile)
