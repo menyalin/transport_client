@@ -341,7 +341,7 @@ tbody td:first-child {
   position: sticky;
   box-sizing: content-box;
   left: 0;
-  z-index: 1;
+  z-index: 5;
   background: white;
   min-width: 110px;
   max-width: 180px;

@@ -651,7 +651,7 @@ td {
 .head-row {
   position: sticky;
   top: 0;
-  z-index: 4;
+  z-index: 10;
   background-color: white;
   user-select: none;
 }

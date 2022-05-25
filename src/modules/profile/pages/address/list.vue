@@ -45,6 +45,32 @@
               mdi-minus
             </v-icon>
           </template>
+          <template v-slot:[`item.region`]="{ item }">
+            {{
+              $store.getters.regionsMap.has(item.region)
+                ? $store.getters.regionsMap.get(item.region).name
+                : null
+            }}
+          </template>
+          <template v-slot:[`item.city`]="{ item }">
+            {{
+              $store.getters.citiesMap.has(item.city)
+                ? $store.getters.citiesMap.get(item.city).name
+                : null
+            }}
+          </template>
+          <template v-slot:[`item.zones`]="{ item }">
+            <span v-if="Array.isArray(item.zones)">{{
+              item.zones
+                .map((i) =>
+                  $store.getters.zonesMap.has(i)
+                    ? $store.getters.zonesMap.get(i).name
+                    : null
+                )
+                .filter((i) => !!i)
+                .join(', ')
+            }}</span>
+          </template>
           <template v-slot:[`item.isService`]="{ item }">
             <v-icon
               v-if="item.isService"
@@ -91,8 +117,12 @@ export default {
       { value: 'shortName', text: 'Сокращенный адрес' },
       { value: 'partnerName', text: 'Партнер' },
       { value: 'name', text: 'Адрес' },
+      { value: 'region', text: 'Регион' },
+      { value: 'city', text: 'Город' },
+      { value: 'zones', text: 'Зоны' },
+
       { value: 'note', text: 'Примечание' },
-      { value: 'label', text: 'Метки' },
+      //   { value: 'label', text: 'Метки' },
       {
         value: 'isShipmentPlace',
         text: 'Погрузка',
@@ -105,13 +135,13 @@ export default {
         align: 'center',
         sortable: false,
       },
-      {
-        value: 'isService',
-        text: 'Сервис',
-        align: 'center',
-        sortable: false,
-      },
-      { value: 'geo', text: 'Координаты' },
+      // {
+      //   value: 'isService',
+      //   text: 'Сервис',
+      //   align: 'center',
+      //   sortable: false,
+      // },
+      // { value: 'geo', text: 'Координаты' },
     ],
   }),
   computed: {

@@ -1,7 +1,7 @@
 <template>
   <div class="mt-2">
-    <v-card :disabled="disabledSettings">
-      <v-card-title> Настройки компании:</v-card-title>
+    <v-card v-if="!disabledSettings">
+      <v-card-title>Настройки компании:</v-card-title>
       <v-card-text>
         <div id="truck-kinds">
           <v-select
