@@ -78,6 +78,20 @@ export default {
         onlyWithDirectoriesProfile: true,
         permission: 'zone:readList',
       },
+        {
+        text: 'Регионы',
+        icon: 'mdi-map-marker',
+        link: '/profile/regions',
+        onlyWithDirectoriesProfile: true,
+        permission: 'region:readList',
+      },
+        {
+        text: 'Города',
+        icon: 'mdi-map-marker',
+        link: '/profile/cities',
+        onlyWithDirectoriesProfile: true,
+        permission: 'city:readList',
+      },
       {
         text: 'Простои/Выходные',
         icon: 'mdi-car-wrench',

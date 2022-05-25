@@ -11,6 +11,8 @@ import AgreementModule from './agreement'
 import TariffModule from './tariff'
 import DocumentModule from './document'
 import ZoneModule from './zone'
+import RegionModule from './region'
+import CityModule from './city'
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 
@@ -122,6 +124,8 @@ export default {
         roundingWaitingByHours,
         documents,
         zones,
+        regions,
+        cities,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -146,6 +150,9 @@ export default {
         commit('setRoundingWaitingByHours', roundingWaitingByHours)
       if (documents?.length) commit('setDocuments', documents)
       if (zones?.length) commit('setZones', zones)
+      if (regions?.length) commit('setRegions', regions)
+      if (cities?.length) commit('setCities', cities)
+
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
     },
 
@@ -235,5 +242,7 @@ export default {
     TariffModule,
     DocumentModule,
     ZoneModule,
+    RegionModule,
+    CityModule,
   },
 }

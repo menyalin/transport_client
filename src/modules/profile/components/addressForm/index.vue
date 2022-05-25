@@ -44,17 +44,21 @@
       label="Сокращенное наименование адреса"
       :hint="addressShortNameHint"
     />
-    <v-text-field
-      v-model="$v.form.region.$model"
+    <v-autocomplete
+      v-model="form.region"
+      :items="$store.getters.regionsForAutocomplete"
+      auto-select-first
       outlined
       dense
-      label="Регион (область)"
+      label="Регион"
     />
-    <v-text-field
-      v-model="$v.form.city.$model"
+    <v-autocomplete
+      v-model="form.city"
+      :items="$store.getters.citiesForAutocomplete"
+      auto-select-first
       outlined
       dense
-      label="Город (населенный пункт)"
+      label="Город"
     />
     <app-partner-autocomplete
       v-model="$v.form.partner.$model"
