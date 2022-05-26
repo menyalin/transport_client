@@ -471,6 +471,9 @@ export default {
       // редактирование маршрута
       deep: true,
       handler: function (newRouteValue, oldVal) {
+        // при изменении маршрута определяется тип рейса город / регион
+        if (this.isValidRoute) this.updateOrderType()
+
         // при создании рейса
         if (
           // !this.orderId &&
@@ -497,6 +500,19 @@ export default {
   },
 
   methods: {
+    updateOrderType() {
+      const regions = this.route
+        .map((i) =>
+          !!i.address
+            ? this.$store.getters.addressMap.get(i.address)?.region
+            : null
+        )
+        .filter((i) => !!i)
+      console.log(regions)
+      this.$nextTick(() => {
+        this.analytics.type = new Set(regions).size >= 2 ? 'region' : 'city'
+      })
+    },
     openPriceDialog() {
       this.priceDialog = true
     },

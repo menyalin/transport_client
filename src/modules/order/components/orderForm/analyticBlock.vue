@@ -69,6 +69,7 @@ export default {
   watch: {
     item: {
       immediate: true,
+      deep: true,
       handler: function (val) {
         if (val) {
           this.params.type = val.type
