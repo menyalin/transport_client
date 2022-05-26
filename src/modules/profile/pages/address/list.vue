@@ -11,7 +11,7 @@
         />
         <v-data-table
           :search="settings.search"
-          :headers="headers"
+          :headers="filteredHeaders"
           :items="prepareAddresses"
           :loading="loading"
           fixed-header
@@ -84,13 +84,22 @@
           </template>
 
           <template v-slot:top>
-            <v-text-field
-              v-model="settings.search"
-              outlined
-              dense
-              clearable
-              label="Быстрый поиск"
-            />
+            <div class="settings-wrapper">
+              <app-table-column-settings
+                v-model="activeHeaders"
+                :allHeaders="allHeaders"
+                :listSettingsName="listSettingsName"
+              />
+              <v-text-field
+                v-model="settings.search"
+                outlined
+                dense
+                hide-details
+                clearable
+                label="Быстрый поиск"
+                :style="{ 'max-width': '500px' }"
+              />
+            </div>
           </template>
         </v-data-table>
       </v-col>
@@ -99,20 +108,36 @@
 </template>
 <script>
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+
 import { mapGetters } from 'vuex'
 export default {
   name: 'AddressList',
   components: {
     AppButtonsPanel,
+    AppTableColumnSettings,
   },
   data: () => ({
     formName: 'AddressList',
+    listSettingsName: 'addressListFields',
     settings: {
       search: null,
       listOptions: {},
     },
-
-    headers: [
+    activeHeaders: [],
+    defaultHeaders: [
+      'shortName',
+      'partnerName',
+      'name',
+      'region',
+      'city',
+      'zones',
+      'note',
+      'isShipmentPlace',
+      'isDeliveryPlace',
+      // 'updated',
+    ],
+    allHeaders: [
       { value: 'shortName', text: 'Сокращенный адрес' },
       { value: 'partnerName', text: 'Партнер' },
       { value: 'name', text: 'Адрес' },
@@ -120,7 +145,7 @@ export default {
       { value: 'city', text: 'Город' },
       { value: 'zones', text: 'Зоны' },
       { value: 'note', text: 'Примечание' },
-      //   { value: 'label', text: 'Метки' },
+      { value: 'label', text: 'Метки' },
       {
         value: 'isShipmentPlace',
         text: 'Погрузка',
@@ -135,13 +160,8 @@ export default {
       },
       { value: 'created', text: 'Дата создания', sortable: false },
       { value: 'updated', text: 'Дата изменения', sortable: false },
-      // {
-      //   value: 'isService',
-      //   text: 'Сервис',
-      //   align: 'center',
-      //   sortable: false,
-      // },
-      // { value: 'geo', text: 'Координаты' },
+      { value: 'isService', text: 'Сервис', align: 'center', sortable: false },
+      { value: 'geo', text: 'Координаты' },
     ],
   }),
   computed: {
@@ -153,9 +173,16 @@ export default {
         updated: new Date(i.updatedAt).toLocaleString(),
       }))
     },
+    filteredHeaders() {
+      return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
+    },
   },
 
   created() {
+    const fields = JSON.parse(localStorage.getItem(this.listSettingsName))
+    if (!fields || fields.length === 0) this.activeHeaders = this.defaultHeaders
+    else this.activeHeaders = fields
+
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getAddresses')
@@ -180,4 +207,13 @@ export default {
   },
 }
 </script>
-<style></style>
+<style scoped>
+.settings-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 15px;
+}
+</style>
