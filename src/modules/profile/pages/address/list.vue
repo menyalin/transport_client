@@ -12,7 +12,7 @@
         <v-data-table
           :search="settings.search"
           :headers="headers"
-          :items="addresses"
+          :items="prepareAddresses"
           :loading="loading"
           fixed-header
           :options.sync="settings.listOptions"
@@ -119,7 +119,6 @@ export default {
       { value: 'region', text: 'Регион' },
       { value: 'city', text: 'Город' },
       { value: 'zones', text: 'Зоны' },
-
       { value: 'note', text: 'Примечание' },
       //   { value: 'label', text: 'Метки' },
       {
@@ -134,6 +133,8 @@ export default {
         align: 'center',
         sortable: false,
       },
+      { value: 'created', text: 'Дата создания', sortable: false },
+      { value: 'updated', text: 'Дата изменения', sortable: false },
       // {
       //   value: 'isService',
       //   text: 'Сервис',
@@ -145,6 +146,13 @@ export default {
   }),
   computed: {
     ...mapGetters(['addresses', 'loading', 'directoriesProfile']),
+    prepareAddresses() {
+      return this.addresses.map((i) => ({
+        ...i,
+        created: new Date(i.createdAt).toLocaleString(),
+        updated: new Date(i.updatedAt).toLocaleString(),
+      }))
+    },
   },
 
   created() {
