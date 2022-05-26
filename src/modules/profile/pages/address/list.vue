@@ -59,6 +59,7 @@
                 : null
             }}
           </template>
+
           <template v-slot:[`item.zones`]="{ item }">
             <span v-if="Array.isArray(item.zones)">{{
               item.zones
@@ -71,6 +72,7 @@
                 .join(', ')
             }}</span>
           </template>
+
           <template v-slot:[`item.isService`]="{ item }">
             <v-icon
               v-if="item.isService"
@@ -81,6 +83,14 @@
             <v-icon v-else>
               mdi-minus
             </v-icon>
+          </template>
+
+          <template v-slot:[`item.created`]="{ item }">
+            {{ new Date(item.createdAt).toLocaleString() }}
+          </template>
+
+          <template v-slot:[`item.updated`]="{ item }">
+            {{ new Date(item.updatedAt).toLocaleString() }}
           </template>
 
           <template v-slot:top>
@@ -143,7 +153,7 @@ export default {
       { value: 'name', text: 'Адрес' },
       { value: 'region', text: 'Регион' },
       { value: 'city', text: 'Город' },
-      { value: 'zones', text: 'Зоны' },
+      { value: 'zones', text: 'Зоны', sortable: false },
       { value: 'note', text: 'Примечание' },
       { value: 'label', text: 'Метки' },
       {
@@ -158,8 +168,8 @@ export default {
         align: 'center',
         sortable: false,
       },
-      { value: 'created', text: 'Дата создания', sortable: false },
-      { value: 'updated', text: 'Дата изменения', sortable: false },
+      { value: 'created', text: 'Дата создания', sortable: true },
+      { value: 'updated', text: 'Дата изменения', sortable: true },
       { value: 'isService', text: 'Сервис', align: 'center', sortable: false },
       { value: 'geo', text: 'Координаты' },
     ],
@@ -169,8 +179,8 @@ export default {
     prepareAddresses() {
       return this.addresses.map((i) => ({
         ...i,
-        created: new Date(i.createdAt).toLocaleString(),
-        updated: new Date(i.updatedAt).toLocaleString(),
+        created: new Date(i.createdAt),
+        updated: new Date(i.updatedAt),
       }))
     },
     filteredHeaders() {

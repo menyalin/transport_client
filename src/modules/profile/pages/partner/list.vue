@@ -58,7 +58,6 @@ export default {
     headers: [
       { value: 'name', text: 'Наименование' },
       { value: 'group', text: 'Группа' },
-
       { value: 'inn', text: 'ИНН' },
       { value: 'isClient', text: 'Клиент' },
     ],
