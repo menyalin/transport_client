@@ -21,7 +21,7 @@
         </div>
         <v-data-table
           :headers="headers"
-          :items="partners"
+          :items="preparedPartners"
           :loading="loading"
           fixed-header
           :search="settings.search"
@@ -57,14 +57,21 @@ export default {
     },
     headers: [
       { value: 'name', text: 'Наименование' },
+      { value: 'group', text: 'Группа' },
+
       { value: 'inn', text: 'ИНН' },
       { value: 'isClient', text: 'Клиент' },
     ],
   }),
   computed: {
     ...mapGetters(['partners', 'loading', 'directoriesProfile']),
+    preparedPartners() {
+      return this.partners.map((i) => ({
+        ...i,
+        group: this.$store.getters.partnerGroupsMap.get(i.group),
+      }))
+    },
   },
-  created() {},
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)

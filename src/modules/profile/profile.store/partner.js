@@ -68,5 +68,7 @@ export default {
           ...item,
         })),
     partnerGroups: ({ partnerGroups }) => partnerGroups,
+    partnerGroupsMap: ({ partnerGroups }) =>
+      new Map(partnerGroups.map((i) => [i.value, i.text])),
   },
 }

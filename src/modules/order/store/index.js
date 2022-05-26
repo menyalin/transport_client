@@ -108,7 +108,7 @@ export default {
   getters: {
     pointTypes: ({ pointTypes }) => pointTypes,
     ordersForSchedule: (
-      { orders },
+      { orders, period },
       { schedulePeriod, onlyPlannedDates, hiddenTruckIds }
     ) =>
       orders
@@ -130,6 +130,7 @@ export default {
           route: item.route,
         }))
         .filter((order) => {
+          if (period.length !== 2) return true
           const sP = moment(schedulePeriod[0])
           const eP = moment(schedulePeriod[1])
           return (
