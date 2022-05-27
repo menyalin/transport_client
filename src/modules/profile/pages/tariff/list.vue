@@ -27,7 +27,7 @@
             outlined
             clearable
             dense
-            :items="agreements"
+            :items="filteredAgreements"
             item-value="_id"
             item-text="name"
             hide-details
@@ -39,7 +39,7 @@
             outlined
             clearable
             dense
-            :items="$store.getters.documents"
+            :items="filteredDocuments"
             item-value="_id"
             item-text="name"
             hide-details
@@ -200,6 +200,19 @@ export default {
   }),
   computed: {
     ...mapGetters(['directoriesProfile']),
+    filteredAgreements() {
+      return this.agreements.filter((i) => true)
+    },
+    filteredDocuments() {
+      if (!this.settings.agreement) return this.$store.getters.documents
+
+      const { clients } = this.agreements.find(
+        (i) => i._id === this.settings.agreement
+      )
+      return this.$store.getters.documents.filter((i) =>
+        !!clients ? clients.includes(i.partner) : true
+      )
+    },
     filteredList() {
       return this.list.map((i) => ({
         ...i,
@@ -229,6 +242,9 @@ export default {
       handler: function () {
         this.getData()
       },
+    },
+    ['settings.agreement']: function () {
+      this.settings.document = null
     },
   },
   async created() {
