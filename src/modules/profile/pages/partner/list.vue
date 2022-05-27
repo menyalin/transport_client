@@ -36,6 +36,13 @@
           <template v-slot:[`item.isClient`]="{ item }">
             <div>{{ item.isClient ? 'Да' : 'Нет' }}</div>
           </template>
+          <template v-slot:[`item.created`]="{ item }">
+            {{ new Date(item.createdAt).toLocaleString() }}
+          </template>
+
+          <template v-slot:[`item.updated`]="{ item }">
+            {{ new Date(item.updatedAt).toLocaleString() }}
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -60,6 +67,8 @@ export default {
       { value: 'group', text: 'Группа' },
       { value: 'inn', text: 'ИНН' },
       { value: 'isClient', text: 'Клиент' },
+      { value: 'created', text: 'Дата создания', sortable: true },
+      { value: 'updated', text: 'Дата изменения', sortable: true },
     ],
   }),
   computed: {
@@ -68,6 +77,8 @@ export default {
       return this.partners.map((i) => ({
         ...i,
         group: this.$store.getters.partnerGroupsMap.get(i.group),
+        created: new Date(i.createdAt),
+        updated: new Date(i.updatedAt),
       }))
     },
   },
