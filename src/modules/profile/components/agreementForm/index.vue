@@ -78,17 +78,29 @@
           label="При выгрузке показывать ставку с НДС"
         />
         <v-checkbox
-          v-model="form.calcWaitingByArrivalDate"
+          v-model="form.calcWaitingByArrivalDateLoading"
           color="primary"
-          label="Расчет простоя по фактическому времени"
-          hint="При прибытии раньше планового времени погрузки, простой расчитывается по факту прибытия"
-          persistent-hint
+          label="Расчет простоя по фактическому времени прибытия на погрузку"
+          hide-details
         />
         <v-checkbox
-          v-model="form.noWaitingPaymentForAreLate"
+          v-model="form.calcWaitingByArrivalDateUnloading"
           color="primary"
-          label="Запрет оплаты простоя при опоздании"
-          persistent-hint
+          label="Расчет простоя по фактическому времени прибытия на выгрузку"
+          hide-details
+        />
+
+        <v-checkbox
+          v-model="form.noWaitingPaymentForAreLateLoading"
+          color="primary"
+          label="Запрет оплаты простоя при опоздании на погрузку"
+          hide-details
+        />
+
+        <v-checkbox
+          v-model="form.noWaitingPaymentForAreLateUnloading"
+          color="primary"
+          label="Запрет оплаты простоя при опоздании на выгрузку"
         />
       </div>
 
@@ -168,8 +180,10 @@ export default {
         vatRate: null,
         usePriceWithVAT: false,
         useCustomPrices: true,
-        calcWaitingByArrivalDate: false,
-        noWaitingPaymentForAreLate: false,
+        calcWaitingByArrivalDateLoading: false,
+        calcWaitingByArrivalDateUnloading: false,
+        noWaitingPaymentForAreLateLoading: false,
+        noWaitingPaymentForAreLateUnloading: false,
         clients: [],
         outsourceCarriers: [],
         closed: null,
