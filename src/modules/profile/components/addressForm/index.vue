@@ -321,8 +321,6 @@ export default {
       else {
         this.parsedAddress = Object.assign({}, val)
         this.form.name = val.value
-        this.form.region = val.data?.region_with_type
-        this.form.city = val.data.city || val.data.settlement
         if (val.geo) this.geo = val.geo
         else if (!!val.data.geo_lat && val.data.geo_lon)
           this.form.geo = `${val.data.geo_lat}, ${val.data.geo_lon}`

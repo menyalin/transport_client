@@ -27,6 +27,7 @@
             outlined
             clearable
             dense
+            :disabled="!!settings.document"
             :items="filteredAgreements"
             item-value="_id"
             item-text="name"
