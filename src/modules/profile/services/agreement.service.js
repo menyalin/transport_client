@@ -48,7 +48,7 @@ class AgreementService {
   }
 
   async getActiveAgreements() {
-    if (this.allAgreements.length) {
+    if (this.allAgreements?.length) {
       return this.allAgreements
     } else {
       let { data } = await api.get(BASE_PATH, {
@@ -58,7 +58,7 @@ class AgreementService {
           skip: 0,
         },
       })
-      this.allAgreements = data.items
+      this.allAgreements = data.items || []
       setTimeout(() => {
         this.allAgreements = []
       }, this.allAgreementsExpiresMs)

@@ -202,7 +202,7 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile']),
     filteredAgreements() {
-      return this.agreements.filter((i) => true)
+      return this.agreements ? this.agreements.filter((i) => true) : []
     },
     filteredDocuments() {
       if (!this.settings.agreement) return this.$store.getters.documents
