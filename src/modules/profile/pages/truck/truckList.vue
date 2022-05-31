@@ -55,6 +55,7 @@
               <v-select
                 v-model="settings.truckFilter"
                 dense
+                multiple
                 outlined
                 hide-details
                 label="Тип транспорта"
@@ -113,7 +114,7 @@ export default {
       tkNameFilter: null,
       serviceStatus: 'active',
       search: null,
-      truckFilter: null,
+      truckFilter: [],
       listOptions: {},
     },
     truckFilterOptions: [
@@ -177,6 +178,10 @@ export default {
         text: 'Год выпуска',
         align: 'center',
       },
+      {
+        value: 'brigadier',
+        text: 'Бригадир',
+      },
     ],
   }),
   computed: {
@@ -197,16 +202,17 @@ export default {
             : true
         )
         .filter((item) => {
-          switch (this.settings.truckFilter) {
-            case '20tn':
-              return item.type === 'truck' && item.liftCapacityType === 20
-            case '10tn':
-              return item.type === 'truck' && item.liftCapacityType === 10
-            case 'trailers':
-              return item.type === 'trailer'
-            default:
-              return true
-          }
+          if (this.settings.truckFilter.length === 0) return true
+          return this.settings.truckFilter.some((tFilter) => {
+            switch (tFilter) {
+              case '20tn':
+                return item.type === 'truck' && item.liftCapacityType === 20
+              case '10tn':
+                return item.type === 'truck' && item.liftCapacityType === 10
+              case 'trailers':
+                return item.type === 'trailer'
+            }
+          })
         })
         .filter((item) => {
           switch (this.settings.serviceStatus) {
@@ -221,6 +227,7 @@ export default {
         .map((t) => ({
           ...t,
           currentDriver: this.getDriverName(t._id),
+          brigadier: this.$store.getters.driversMap.get(t.brigadier)?.surname,
         }))
     },
     crewsMapByTruck() {
