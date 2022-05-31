@@ -181,7 +181,6 @@ export default {
       {
         value: 'brigadier',
         text: 'Бригадир',
-        align: 'center',
       },
     ],
   }),

@@ -40,6 +40,13 @@
           <template v-slot:[`item.type`]="{ item }">
             <span>{{ downtimeTypesHash[item.type] }}</span>
           </template>
+          <template v-slot:[`item.partner`]="{ item }">
+            <span>{{
+              $store.getters.partnersMap.has(item.partner)
+                ? $store.getters.partnersMap.get(item.partner).name
+                : null
+            }}</span>
+          </template>
           <template v-slot:[`item.truck`]="{ item }">
             <span>{{
               trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
@@ -92,6 +99,7 @@ export default {
     list: [],
     headers: [
       { value: 'title', text: 'Заголовок', sortable: false },
+      { value: 'partner', text: 'Партнер', sortable: false },
       { value: 'type', text: 'Тип', sortable: false },
       { value: 'truck', text: 'Грузовик', sortable: true },
       { value: 'startPositionDate', text: 'Начало', sortable: true },
