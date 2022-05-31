@@ -36,6 +36,14 @@ export default [
           permission: 'report:drivers_grades',
         },
       },
+      {
+        path: 'gross_profit',
+        name: 'GrossProfit',
+        component: () => import('../pages/grossProfitForPeriod'),
+        meta: {
+          permission: 'report:gross_profit',
+        },
+      },
     ],
   },
 ]

@@ -42,15 +42,18 @@ export default {
           title: 'Оценки водителей',
           permission: 'report:drivers_grades',
         },
+        {
+          link: '/reports/gross_profit',
+          title: 'Валовая прибыль',
+          permission: 'report:gross_profit',
+        },
       ],
     }
   },
   computed: {
     filteredReports() {
       return this.reports.filter((i) =>
-        i.permission
-          ? this.$store.getters.hasPermission('report:drivers_grades')
-          : true
+        i.permission ? this.$store.getters.hasPermission(i.permission) : true
       )
     },
   },
