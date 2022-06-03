@@ -53,13 +53,17 @@
             </td>
             <td>
               {{
-                $store.getters.driversMap.has(item.driverId)
+                item.driverId && $store.getters.driversMap.has(item.driverId)
                   ? $store.getters.driversMap.get(item.driverId).fullName
                   : null
               }}
             </td>
             <td>
-              {{ $store.getters.driversMap.get(item.driverId).tkName.name }}
+              {{
+                item.driverId && $store.getters.driversMap.has(item.driverId)
+                  ? $store.getters.driversMap.get(item.driverId).tkName.name
+                  : null
+              }}
             </td>
             <td>
               {{
