@@ -9,7 +9,7 @@
     </div>
     <div
       v-if="downtime.type === 'repair' && partner"
-      class="row-text text-subtitle-2"
+      class="row-text"
     >
       {{ partner.name }}
     </div>
@@ -54,19 +54,20 @@ export default {
   border: 1px dotted rgb(80, 80, 80);
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: space-around;
   user-select: none;
 }
 .row-text {
   padding-left: 3px;
-  font-size: 12px;
-  line-height: 13px;
-  letter-spacing: -0.023em;
-  font-weight: 400;
   overflow: hidden;
   user-select: none;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 11px;
+  line-height: 11px;
+  letter-spacing: -0.023em;
+  white-space: nowrap;
+  font-weight: 300;
 }
 .holiday {
   background-color: sandybrown;

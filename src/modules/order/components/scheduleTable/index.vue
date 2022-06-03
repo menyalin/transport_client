@@ -50,6 +50,7 @@
           >
             <app-truck-title-cell
               :id="truck._id"
+              :idx="idx"
               :title="truck.regNum"
             />
           </td>
