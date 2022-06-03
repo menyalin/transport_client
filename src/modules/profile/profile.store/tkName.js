@@ -75,6 +75,7 @@ export default {
       })
       return map
     },
+    
     tkNamesForSelect: ({ tkNames }) =>
       tkNames.map((i) => ({ ...i, value: i._id, text: i.name })),
   },

@@ -5,12 +5,18 @@
     outlined
     :style="{ width: '100%' }"
   >
-    Всего рейсов: 24, Сумма: 1,135 млн руб
+    Всего рейсов: <b>{{ ordersCount }}</b>, Сумма:
+    <b>{{ Intl.NumberFormat().format(Math.ceil(totalPrice / 1000)) }}</b>
+    тыс.руб
   </v-alert>
 </template>
 <script>
 export default {
   name: 'ReportSummary',
+  props: {
+    ordersCount: Number,
+    totalPrice: Number,
+  },
 }
 </script>
 <style scoped></style>
