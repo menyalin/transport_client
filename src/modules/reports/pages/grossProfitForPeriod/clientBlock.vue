@@ -3,7 +3,7 @@
     <div class="block-header">
       <span class="text-h6">{{ clientName }}</span>
       рейсов: <b>{{ totalCount }}</b>, Сумма:
-      <b>{{ Intl.NumberFormat().format(Math.ceil(totalWithVat / 1000)) }}</b>
+      <b>{{ Intl.NumberFormat().format(Math.round(totalWithVat / 1000)) }}</b>
       тыс.руб
     </div>
     <v-simple-table dense>
@@ -77,7 +77,7 @@
             </td>
             <td class="text-right">
               {{
-                Intl.NumberFormat().format(Math.ceil(item.totalWithVat / 1000))
+                Intl.NumberFormat().format(Math.round(item.totalWithVat / 1000))
               }}
             </td>
           </tr>

@@ -6,7 +6,7 @@
     :style="{ width: '100%' }"
   >
     Всего рейсов: <b>{{ ordersCount }}</b>, Сумма:
-    <b>{{ Intl.NumberFormat().format(Math.ceil(totalPrice / 1000)) }}</b>
+    <b>{{ Intl.NumberFormat().format(Math.round(totalPrice / 1000)) }}</b>
     тыс.руб
   </v-alert>
 </template>
