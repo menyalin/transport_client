@@ -8,9 +8,9 @@
         v-if="!hideTruckKindField"
         :value="reqTransport.kind"
         :items="truckKinds"
+        :error-messages="truckKindErrors"
         outlined
         dense
-        hide-details
         label="Вид ТС"
         @change="change($event, 'kind')"
       />
@@ -18,9 +18,9 @@
         v-if="!hideLiftCapacityField"
         :value="reqTransport.liftCapacity"
         :items="liftCapacityTypes"
+        :error-messages="liftCapacityErrors"
         outlined
         dense
-        hide-details
         label="Груз-ть"
         @change="change($event, 'liftCapacity')"
       />
@@ -65,6 +65,17 @@ export default {
   },
   computed: {
     ...mapGetters(['liftCapacityTypes', 'truckKinds', 'loadDirection']),
+    truckKindErrors() {
+      const errors = []
+      if (!this.reqTransport?.kind) errors.push('Поле не может быть пустым')
+      return errors
+    },
+    liftCapacityErrors() {
+      const errors = []
+      if (!this.reqTransport?.liftCapacity)
+        errors.push('Поле не может быть пустым')
+      return errors
+    },
     companySettings() {
       return this.$store.getters.companySettings
     },
@@ -91,7 +102,7 @@ export default {
     reqTransport: {
       immediate: true,
       handler: function (val) {
-        if (val.kind || val.liftCapacity) { 
+        if (val.kind || val.liftCapacity) {
           this.params.kind = val.kind
           this.params.liftCapacity = val.liftCapacity
           this.params.loadDirection = val.loadDirection || 'rear'
@@ -116,8 +127,9 @@ export default {
 <style scoped>
 .req-transport-block {
   display: grid;
-  grid-template-columns: 180px 160px 160px;
-  margin: 10px;
+  grid-template-columns: 200px 200px 160px;
+  margin: 10px 0 0 10px;
+
   gap: 15px;
 }
 </style>

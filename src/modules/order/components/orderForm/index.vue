@@ -334,7 +334,9 @@ export default {
       return (
         !this.form.startPositionDate ||
         !this.isValidRoute ||
-        !this.isValidClientInfo
+        !this.isValidClientInfo ||
+        !this.reqTransport.kind ||
+        !this.reqTransport.liftCapacity
       )
     },
     isValidDatesInRoute() {
@@ -643,7 +645,7 @@ export default {
   align-content: start;
   justify-content: start;
   grid-template-columns: 1fr 4fr;
-  gap: 10px;
+  gap: 1px;
 }
 .route-state {
   grid-column: 1/2;
@@ -685,5 +687,6 @@ export default {
 #note {
   grid-column: 2/4;
   grid-row: 8/8;
+  margin-top: 10px;
 }
 </style>
