@@ -510,7 +510,6 @@ export default {
             : null
         )
         .filter((i) => !!i)
-      console.log(regions)
       this.$nextTick(() => {
         this.analytics.type = new Set(regions).size >= 2 ? 'region' : 'city'
       })

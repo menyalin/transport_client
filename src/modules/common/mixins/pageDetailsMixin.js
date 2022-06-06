@@ -72,7 +72,6 @@ export default {
           this.$router.go(-1)
         } catch (e) {
           this.loading = false
-          console.log(e)
           this.$store.commit('setError', e.message)
         }
       }

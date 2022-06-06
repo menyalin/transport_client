@@ -141,10 +141,7 @@ export default {
     next()
   },
   methods: {
-    dblClickRow(_, { item }) {
-      // this.$router.push(`/orders/${item._id}`)
-      console.log(item)
-    },
+    dblClickRow(_, { item }) {},
     async getData() {
       this.loading = true
       this.rows = await ReportService.truckStateOnDate({

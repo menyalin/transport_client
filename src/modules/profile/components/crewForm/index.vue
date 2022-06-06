@@ -298,10 +298,6 @@ export default {
       }
       this.form.transport.push(val)
     },
-
-    truckChange() {
-      // console.log('change truck')
-    },
     tkNameChange() {
       this.form.driver = null
     },
