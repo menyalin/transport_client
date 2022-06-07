@@ -26,7 +26,10 @@
       striped
       rounded
     />
-    <div class="report-body">
+    <div
+      v-else
+      class="report-body"
+    >
       <app-pivot-table
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
@@ -57,8 +60,8 @@ export default {
       groupItems: [
         { text: 'Клиент', value: 'client', disabled: false },
         { text: 'ТК', value: 'tkName', disabled: true },
-        { text: 'Город/Регион', value: 'orderType', disabled: false },
-        { text: 'Грузовик', value: 'truck', disabled: false },
+        { text: 'Регион', value: 'orderType', disabled: false },
+        { text: 'ТС', value: 'truck', disabled: false },
         { text: 'Водитель', value: 'driver', disabled: false },
       ],
       settings: {

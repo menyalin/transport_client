@@ -1,67 +1,39 @@
 <template>
-  <v-simple-table dense>
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">
-            {{ groupName }}
-          </th>
-          <th class="text-right">
-            Кол-во
-          </th>
-          <th class="text-right">
-            Сумма
-          </th>
-          <th class="text-right">
-            Сред.сумма
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(item, idx) in pivotData.items"
-          :key="idx"
-        >
-          <td>
-            {{ titlesMap.has(item._id) ? titlesMap.get(item._id) : '--' }}
-          </td>
-          <td class="text-right">
-            {{ item.totalCount }}
-          </td>
-          <td class="text-right">
-            {{
-              Intl.NumberFormat().format(Math.round(item.totalWithVat / 1000))
-            }}
-          </td>
-          <td class="text-right">
-            {{ Intl.NumberFormat().format(Math.round(item.avgWithVat / 1000)) }}
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>Итого:</th>
-          <th class="text-right">
-            {{ pivotData.totalCount }}
-          </th>
-          <th class="text-right">
-            {{
-              Intl.NumberFormat().format(
-                Math.round(pivotData.totalWithVat / 1000)
-              )
-            }}
-          </th>
-          <th class="text-right">
-            {{
-              Intl.NumberFormat().format(
-                Math.round(pivotData.totalWithVat / pivotData.totalCount / 1000)
-              )
-            }}
-          </th>
-        </tr>
-      </tfoot>
+  <v-data-table
+    v-model="selected"
+    :headers="headers"
+    :items="items"
+    color="primary"
+    dense
+    item-key="_id"
+    show-select
+    hide-default-footer
+    :itemsPerPage="-1"
+  >
+    <template v-slot:[`body.append`]="{}">
+      <tr>
+        <th />
+        <th>Итого:</th>
+        <th class="text-right">
+          {{ pivotData.totalCount }}
+        </th>
+        <th class="text-right">
+          {{
+            Intl.NumberFormat().format(
+              Math.round(pivotData.totalWithVat / 1000)
+            )
+          }}
+        </th>
+        <th class="text-right">
+          {{
+            Intl.NumberFormat().format(
+              Math.round(pivotData.totalWithVat / pivotData.totalCount / 1000)
+            )
+          }}
+        </th>
+      </tr>
     </template>
-  </v-simple-table>
+  </v-data-table>
 </template>
 <script>
 export default {
@@ -71,7 +43,31 @@ export default {
     groupBy: { type: String, required: true },
     pivotData: { type: Object },
   },
+  data() {
+    return {
+      selected: [],
+    }
+  },
   computed: {
+    headers() {
+      return [
+        { text: this.groupName, value: 'titleColumn' },
+        { text: 'Кол-во', value: 'count', align: 'right' },
+        { text: 'Сумма', value: 'sum', align: 'right' },
+        { text: 'Сред. сумма', value: 'avg', align: 'right' },
+      ]
+    },
+    items() {
+      return this.pivotData.items.map((i) => ({
+        _id: i._id,
+        titleColumn: this.titlesMap.has(i._id)
+          ? this.titlesMap.get(i._id)
+          : '--',
+        count: i.totalCount,
+        sum: Intl.NumberFormat().format(Math.round(i.totalWithVat / 1000)),
+        avg: Intl.NumberFormat().format(Math.round(i.avgWithVat / 1000)),
+      }))
+    },
     groupName() {
       const group = this.groupItems.find((i) => i.value === this.groupBy)
       return group?.text || '--'
