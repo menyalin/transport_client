@@ -55,6 +55,18 @@ class ReportService {
       return data
     }
   }
+
+  async grossProfitPivot(body) {
+    try {
+      const { data } = await api.post(BASE_PATH + '/gross_profit_pivot', {
+        ...body,
+      })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      return data
+    }
+  }
 }
 
 export default new ReportService()

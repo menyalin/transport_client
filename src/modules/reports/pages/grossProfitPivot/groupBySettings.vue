@@ -12,6 +12,7 @@
       <v-radio
         v-for="item in items"
         :key="item.value"
+        :disabled="item.disabled"
         class="mt-2"
         :label="item.text"
         :value="item.value"

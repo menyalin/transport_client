@@ -27,7 +27,11 @@
       rounded
     />
     <div class="report-body">
-      <app-pivot-table />
+      <app-pivot-table
+        :groupItems="groupItems"
+        :groupBy="settings.groupBy"
+        :pivotData="pivotData"
+      />
       <div>Детализация с рейсами</div>
     </div>
   </div>
@@ -49,12 +53,13 @@ export default {
   },
   data() {
     return {
+      pivotData: {},
       groupItems: [
-        { text: 'Клиент', value: 'client' },
-        { text: 'ТК', value: 'tkName' },
-        { text: 'Город/Регион', value: 'orderType' },
-        { text: 'Грузовик', value: 'truck' },
-        { text: 'Водитель', value: 'driver' },
+        { text: 'Клиент', value: 'client', disabled: false },
+        { text: 'ТК', value: 'tkName', disabled: true },
+        { text: 'Город/Регион', value: 'orderType', disabled: false },
+        { text: 'Грузовик', value: 'truck', disabled: false },
+        { text: 'Водитель', value: 'driver', disabled: false },
       ],
       settings: {
         dateRange: null,
@@ -68,8 +73,7 @@ export default {
     settings: {
       deep: true,
       handler: function (val) {
-        console.log(val)
-        // this.getData()
+        this.getData()
       },
     },
   },
@@ -89,18 +93,19 @@ export default {
     next()
   },
   methods: {
+    setPivotData(data) {
+      this.pivotData = data
+    },
     async getData() {
       try {
         this.loading = true
-        // const { clients, totalCount, totalWithVat, totalWOVat } =
-        //   await ReportService.grossProfit({
-        //     dateRange: this.settings.dateRange,
-        //     company: this.$store.getters.directoriesProfile,
-        //   })
-        // this.clients = clients
-        // this.totalCount = totalCount
-        // this.totalWithVat = totalWithVat
-        // this.totalWOVat = totalWOVat
+        const { pivot, list } = await ReportService.grossProfitPivot({
+          dateRange: this.settings.dateRange,
+          company: this.$store.getters.directoriesProfile,
+          groupBy: this.settings.groupBy,
+        })
+        this.setPivotData(pivot)
+
         this.loading = false
       } catch (e) {
         this.$store.commit('setError', e.message)
