@@ -44,6 +44,14 @@ export default [
           permission: 'report:gross_profit',
         },
       },
+      {
+        path: 'gross_profit_pivot',
+        name: 'GrossProfitPivot',
+        component: () => import('../pages/grossProfitPivot'),
+        meta: {
+          permission: 'report:gross_profit',
+        },
+      },
     ],
   },
 ]

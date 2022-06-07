@@ -47,6 +47,11 @@ export default {
           title: 'Валовая прибыль',
           permission: 'report:gross_profit',
         },
+        {
+          link: '/reports/gross_profit_pivot',
+          title: 'Валовая прибыль свод',
+          permission: 'report:gross_profit',
+        },
       ],
     }
   },
