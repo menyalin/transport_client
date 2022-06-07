@@ -82,6 +82,7 @@ export default {
         trailer: null,
         driver: null,
         outsourceAgreement: null,
+        tkName: null,
       },
     }
   },
@@ -145,9 +146,10 @@ export default {
           this.params.driver = null
           this.params.trailer = null
           this.params.outsourceAgreement = null
+          this.params.tkName = null
         }
         await this.getCrew()
-        
+
         if (this.$store.getters.outsourceTruckIds.includes(val))
           await this.getAgreement()
         else this.params.outsourceAgreement = null
@@ -186,12 +188,16 @@ export default {
       this.loading = true
       this.params.driver = null
       this.params.trailer = null
+      this.params.tkName = null
       const crew = await CrewService.getCrewByTruckAndDate({
         truck: this.params.truck,
         date: new Date(this.date),
       })
       this.params.driver = crew?.driver
       this.params.trailer = crew?.transport?.trailer
+      this.params.tkName = this.$store.getters.trucksMap.get(
+        this.params.truck
+      )?.tkName?._id
       this.loading = false
       this.$emit('change', this.params)
     },

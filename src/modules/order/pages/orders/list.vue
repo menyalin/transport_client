@@ -269,6 +269,11 @@ export default {
         width: '10rem',
       },
       {
+        value: 'tk',
+        text: 'TK',
+        sortable: false,
+      },
+      {
         value: 'truck',
         text: 'Грузовик',
         sortable: false,
@@ -339,6 +344,12 @@ export default {
       if (!this.orders) return []
       return this.orders.map((order) => ({
         ...order,
+        tk:
+          order.confirmedCrew.tkName &&
+          this.$store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
+            ? this.$store.getters.tkNamesMap.get(order.confirmedCrew.tkName)
+                .name
+            : '-',
         plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
         loadingPoints: order.route
           .filter((p) => p.type === 'loading')
