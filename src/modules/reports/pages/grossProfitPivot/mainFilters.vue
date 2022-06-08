@@ -1,9 +1,13 @@
 <template>
   <div class="main-filter-wrapper">
     <h5>Основной отбор</h5>
-    <div class="filter-row mt-3">
+    <div
+      v-for="(filter, idx) of filterItems"
+      :key="idx"
+      class="filter-row mt-3"
+    >
       <v-select
-        v-model="tmpFilters.clients.cond"
+        v-model="tmpFilters[filter.value].cond"
         label="Сравнение"
         :items="condItems"
         dense
@@ -12,11 +16,9 @@
         :style="{ 'max-width': '180px' }"
       />
       <v-autocomplete
-        v-model="tmpFilters.clients.values"
-        label="Клиенты"
-        :items="clients"
-        item-value="_id"
-        item-text="name"
+        v-model="tmpFilters[filter.value].values"
+        :label="filter.title"
+        :items="filter.items()"
         multiple
         clearable
         dense
@@ -43,8 +45,16 @@ export default {
         { value: 'in', text: 'Содержит' },
         { value: 'notIn', text: 'Не содержит' },
       ],
+      filterItems: [
+        { value: 'clients', title: 'Клиенты', items: () => this.clients },
+        { value: 'tkNames', title: 'ТК', items: () => this.tkNames },
+      ],
       tmpFilters: {
         clients: {
+          values: [],
+          cond: 'in',
+        },
+        tkNames: {
           values: [],
           cond: 'in',
         },
@@ -56,6 +66,13 @@ export default {
       return this.$store.getters.partners
         .filter((i) => i.isClient)
         .sort((a, b) => a.name - b.name)
+        .map((i) => ({ value: i._id, text: i.name }))
+    },
+    tkNames() {
+      return this.$store.getters.tkNames.map((i) => ({
+        value: i._id,
+        text: i.name,
+      }))
     },
   },
   watch: {

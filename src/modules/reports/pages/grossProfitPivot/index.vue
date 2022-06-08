@@ -80,6 +80,10 @@ export default {
           values: [],
           cond: 'in',
         },
+        tkNames: {
+          values: [],
+          cond: 'in',
+        },
       },
       formName: 'grossProfitPivotReport',
       loading: false,
@@ -167,12 +171,12 @@ export default {
   width: 100%;
   gap: 10px;
 }
-
-#main-filters {
-  grid-column: 2/3;
+#group-settings {
+  grid-column: 1/3;
   grid-row: 2;
 }
-#group-settings {
+
+#main-filters {
   grid-column: 2/3;
   grid-row: 1;
 }
