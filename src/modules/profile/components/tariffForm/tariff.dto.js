@@ -97,6 +97,7 @@ export class TariffDTO {
     }
     Object.assign(
       this,
+      { date: new Date(this.date + ' 00:00:00').toISOString() },
       this._getPrices({
         price: item.price,
         vatRate: item.agreementVatRate,
