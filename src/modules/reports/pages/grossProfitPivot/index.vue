@@ -15,8 +15,13 @@
       </div>
 
       <app-group-by-settings
+        id="group-settings"
         v-model="settings.groupBy"
         :items="groupItems"
+      />
+      <app-main-filters
+        id="main-filters"
+        v-model="mainFilters"
       />
     </div>
     <v-progress-linear
@@ -46,6 +51,7 @@ import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
 import AppGroupBySettings from './groupBySettings.vue'
 import AppPivotTable from './pivotTable.vue'
+import AppMainFilters from './mainFilters.vue'
 
 export default {
   name: 'GrossProfitReport',
@@ -53,13 +59,14 @@ export default {
     AppDateRange,
     AppGroupBySettings,
     AppPivotTable,
+    AppMainFilters,
   },
   data() {
     return {
       pivotData: {},
       groupItems: [
         { text: 'Клиент', value: 'client', disabled: false },
-        { text: 'ТК', value: 'tkName', disabled: true },
+        { text: 'ТК', value: 'tkName', disabled: false },
         { text: 'Регион', value: 'orderType', disabled: false },
         { text: 'ТС', value: 'truck', disabled: false },
         { text: 'Водитель', value: 'driver', disabled: false },
@@ -67,6 +74,12 @@ export default {
       settings: {
         dateRange: null,
         groupBy: 'client',
+      },
+      mainFilters: {
+        clients: {
+          values: [],
+          cond: 'in',
+        },
       },
       formName: 'grossProfitPivotReport',
       loading: false,
@@ -79,7 +92,14 @@ export default {
         this.getData()
       },
     },
+    mainFilters: {
+      deep: true,
+      handler: function () {
+        this.getData()
+      },
+    },
   },
+
   async created() {
     if (this.$store.getters.formSettingsMap.has(this.formName)) {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
@@ -106,6 +126,7 @@ export default {
           dateRange: this.settings.dateRange,
           company: this.$store.getters.directoriesProfile,
           groupBy: this.settings.groupBy,
+          mainFilters: this.mainFilters,
         })
         this.setPivotData(pivot)
 
@@ -128,6 +149,7 @@ export default {
 #settings {
   display: grid;
   margin: 0 30px;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
@@ -144,5 +166,14 @@ export default {
   align-items: start;
   width: 100%;
   gap: 10px;
+}
+
+#main-filters {
+  grid-column: 2/3;
+  grid-row: 2;
+}
+#group-settings {
+  grid-column: 2/3;
+  grid-row: 1;
 }
 </style>

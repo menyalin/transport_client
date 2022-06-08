@@ -19,16 +19,22 @@
         </th>
         <th class="text-right">
           {{
-            Intl.NumberFormat().format(
-              Math.round(pivotData.totalWithVat / 1000)
-            )
+            !isNaN(pivotData.totalWithVat / 1000)
+              ? Intl.NumberFormat().format(
+                Math.round(pivotData.totalWithVat / 1000)
+              )
+              : null
           }}
         </th>
         <th class="text-right">
           {{
-            Intl.NumberFormat().format(
-              Math.round(pivotData.totalWithVat / pivotData.totalCount / 1000)
-            )
+            !isNaN(pivotData.totalWithVat / pivotData.totalCount / 1000)
+              ? Intl.NumberFormat().format(
+                Math.round(
+                  pivotData.totalWithVat / pivotData.totalCount / 1000
+                )
+              )
+              : null
           }}
         </th>
       </tr>
@@ -58,6 +64,7 @@ export default {
       ]
     },
     items() {
+      if (!this.pivotData?.items) return []
       return this.pivotData.items.map((i) => ({
         _id: i._id,
         titleColumn: this.titlesMap.has(i._id)
@@ -93,6 +100,11 @@ export default {
         case 'driver':
           this.$store.getters.drivers.forEach((p) => {
             res.set(p._id, p.fullName)
+          })
+          break
+        case 'tkName':
+          this.$store.getters.tkNames.forEach((p) => {
+            res.set(p._id, p.name)
           })
           break
       }
