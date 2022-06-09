@@ -75,16 +75,7 @@ export default {
         dateRange: null,
         groupBy: 'client',
       },
-      mainFilters: {
-        clients: {
-          values: [],
-          cond: 'in',
-        },
-        tkNames: {
-          values: [],
-          cond: 'in',
-        },
-      },
+      mainFilters: {},
       formName: 'grossProfitPivotReport',
       loading: false,
     }
@@ -172,7 +163,7 @@ export default {
   gap: 10px;
 }
 #group-settings {
-  grid-column: 1/3;
+  grid-column: 1/2;
   grid-row: 2;
 }
 

@@ -20,6 +20,7 @@
         :label="filter.title"
         :items="filter.items()"
         multiple
+        auto-select-first 
         clearable
         dense
         outlined
@@ -48,6 +49,8 @@ export default {
       filterItems: [
         { value: 'clients', title: 'Клиенты', items: () => this.clients },
         { value: 'tkNames', title: 'ТК', items: () => this.tkNames },
+        { value: 'trucks', title: 'ТС', items: () => this.trucks },
+        { value: 'drivers', title: 'Водители', items: () => this.drivers },
       ],
       tmpFilters: {
         clients: {
@@ -55,6 +58,14 @@ export default {
           cond: 'in',
         },
         tkNames: {
+          values: [],
+          cond: 'in',
+        },
+        trucks: {
+          values: [],
+          cond: 'in',
+        },
+        drivers: {
           values: [],
           cond: 'in',
         },
@@ -74,10 +85,24 @@ export default {
         text: i.name,
       }))
     },
+    trucks() {
+      return this.$store.getters.trucks
+        .filter((i) => i.type === 'truck')
+        .map((i) => ({
+          value: i._id,
+          text: i.regNum,
+        }))
+    },
+    drivers() {
+      return this.$store.getters.drivers.map((i) => ({
+        value: i._id,
+        text: i.fullName,
+      }))
+    },
   },
   watch: {
     filters: {
-      immediate: true,
+      // immediate: true,
       deep: true,
       handler: function (val) {
         this.tmpFilters = val
