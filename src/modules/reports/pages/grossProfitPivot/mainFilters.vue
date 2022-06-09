@@ -62,6 +62,16 @@ export default {
           title: 'Регион разгрузки',
           items: () => this.regions,
         },
+        {
+          value: 'loadingZones',
+          title: 'Зоны погрузки',
+          items: () => this.zones,
+        },
+        {
+          value: 'unloadingZones',
+          title: 'Зоны разгрузки',
+          items: () => this.zones,
+        },
       ],
       tmpFilters: {
         clients: {
@@ -89,6 +99,14 @@ export default {
           cond: 'in',
         },
         unloadingRegions: {
+          values: [],
+          cond: 'in',
+        },
+        loadingZones: {
+          values: [],
+          cond: 'in',
+        },
+        unloadingZones: {
           values: [],
           cond: 'in',
         },
@@ -127,6 +145,12 @@ export default {
     },
     regions() {
       return this.$store.getters.regions.map((i) => ({
+        value: i._id,
+        text: i.name,
+      }))
+    },
+    zones() {
+      return this.$store.getters.zones.map((i) => ({
         value: i._id,
         text: i.name,
       }))
