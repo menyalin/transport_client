@@ -101,7 +101,6 @@ export default {
     } else {
       this.settings.dateRange = initDateRange()
     }
-    await this.getData()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -169,6 +168,6 @@ export default {
 
 #main-filters {
   grid-column: 2/3;
-  grid-row: 1;
+  grid-row: 1/5;
 }
 </style>
