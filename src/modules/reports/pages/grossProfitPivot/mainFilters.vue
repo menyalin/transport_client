@@ -20,7 +20,7 @@
         :label="filter.title"
         :items="filter.items()"
         multiple
-        auto-select-first 
+        auto-select-first
         clearable
         dense
         outlined
@@ -48,9 +48,20 @@ export default {
       ],
       filterItems: [
         { value: 'clients', title: 'Клиенты', items: () => this.clients },
+        { value: 'orderTypes', title: 'Регионы', items: () => this.orderTypes },
         { value: 'tkNames', title: 'ТК', items: () => this.tkNames },
         { value: 'trucks', title: 'ТС', items: () => this.trucks },
         { value: 'drivers', title: 'Водители', items: () => this.drivers },
+        {
+          value: 'loadingRegions',
+          title: 'Регион погрузки',
+          items: () => this.regions,
+        },
+        {
+          value: 'unloadingRegions',
+          title: 'Регион разгрузки',
+          items: () => this.regions,
+        },
       ],
       tmpFilters: {
         clients: {
@@ -66,6 +77,18 @@ export default {
           cond: 'in',
         },
         drivers: {
+          values: [],
+          cond: 'in',
+        },
+        orderTypes: {
+          values: [],
+          cond: 'in',
+        },
+        loadingRegions: {
+          values: [],
+          cond: 'in',
+        },
+        unloadingRegions: {
           values: [],
           cond: 'in',
         },
@@ -98,6 +121,9 @@ export default {
         value: i._id,
         text: i.fullName,
       }))
+    },
+    orderTypes() {
+      return this.$store.getters.orderAnalyticTypes
     },
   },
   watch: {
