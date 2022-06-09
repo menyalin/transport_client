@@ -125,6 +125,12 @@ export default {
     orderTypes() {
       return this.$store.getters.orderAnalyticTypes
     },
+    regions() {
+      return this.$store.getters.regions.map((i) => ({
+        value: i._id,
+        text: i.name,
+      }))
+    },
   },
   watch: {
     filters: {
