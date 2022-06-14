@@ -31,10 +31,7 @@
       striped
       rounded
     />
-    <div
-      v-else
-      class="report-body"
-    >
+    <div class="report-body">
       <app-pivot-table
         :groupItems="groupItems"
         :groupBy="settings.groupBy"

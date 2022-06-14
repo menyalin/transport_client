@@ -53,7 +53,7 @@ export default {
     return {
       loading: false,
       items: [],
-      totalCount: null,
+      totalCount: 0,
       formName: 'ordersDetailReport',
       listSettingsName: 'ordersDetailReportFields',
       listOptions: {},
@@ -109,8 +109,20 @@ export default {
     },
   },
   watch: {
-    listOptions: {
+    dateRange: {
       deep: true,
+      handler: function () {
+        this.clearItems()
+      },
+    },
+    mainFilters: {
+      deep: true,
+      handler: function () {
+        this.clearItems()
+      },
+    },
+    listOptions: {
+      // deep: true,
       handler: function () {
         this.getData()
       },
@@ -132,6 +144,10 @@ export default {
     next()
   },
   methods: {
+    clearItems() {
+      this.items = []
+      this.totalCount = 0
+    },
     async getData() {
       try {
         this.loading = true
@@ -146,7 +162,7 @@ export default {
         this.loading = false
       } catch (e) {
         this.loading = false
-        this.$store.getters.commit('setError', e.message)
+        this.$store.commit('setError', e.message)
       }
     },
     dblClickRow(_, { item }) {
