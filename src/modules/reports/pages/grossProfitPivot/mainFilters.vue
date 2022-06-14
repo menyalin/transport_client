@@ -1,33 +1,41 @@
 <template>
   <div class="main-filter-wrapper">
-    <h5>Основной отбор</h5>
-    <div
-      v-for="(filter, idx) of filterItems"
-      :key="idx"
-      class="filter-row mt-3"
-    >
-      <v-select
-        v-model="tmpFilters[filter.value].cond"
-        label="Сравнение"
-        :items="condItems"
-        dense
-        outlined
-        hide-details
-        :style="{ 'max-width': '180px' }"
-      />
-      <v-autocomplete
-        v-model="tmpFilters[filter.value].values"
-        :label="filter.title"
-        :items="filter.items()"
-        multiple
-        auto-select-first
-        clearable
-        dense
-        outlined
-        hide-details
-        :style="{ 'max-width': '400px' }"
-      />
-    </div>
+    <v-expansion-panels focusable>
+      <v-expansion-panel>
+        <v-expansion-panel-header>
+          <h5>Основной отбор</h5>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div
+            v-for="(filter, idx) of filterItems"
+            :key="idx"
+            class="filter-row mt-3"
+          >
+            <v-select
+              v-model="tmpFilters[filter.value].cond"
+              label="Сравнение"
+              :items="condItems"
+              dense
+              outlined
+              hide-details
+              :style="{ 'max-width': '180px' }"
+            />
+            <v-autocomplete
+              v-model="tmpFilters[filter.value].values"
+              :label="filter.title"
+              :items="filter.items()"
+              multiple
+              auto-select-first
+              clearable
+              dense
+              outlined
+              hide-details
+              :style="{ 'max-width': '400px' }"
+            />
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </div>
 </template>
 <script>
