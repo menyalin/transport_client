@@ -64,7 +64,18 @@ class ReportService {
       return data
     } catch (e) {
       store.commit('setError', e.message)
+      return null
+    }
+  }
+  async grossProfitDetailsData(body) {
+    try {
+      const { data } = await api.post(BASE_PATH + '/gross_profit_details', {
+        ...body,
+      })
       return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      return null
     }
   }
 }

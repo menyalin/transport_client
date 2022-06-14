@@ -40,7 +40,11 @@
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
       />
-      <div>Детализация с рейсами</div>
+      <v-divider />
+      <app-orders-table
+        :mainFilters="mainFilters"
+        :dateRange="settings.dateRange"
+      />
     </div>
   </div>
 </template>
@@ -51,6 +55,7 @@ import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
 import AppGroupBySettings from './groupBySettings.vue'
 import AppPivotTable from './pivotTable.vue'
+import AppOrdersTable from './ordersTable.vue'
 import AppMainFilters from './mainFilters.vue'
 
 export default {
@@ -60,6 +65,7 @@ export default {
     AppGroupBySettings,
     AppPivotTable,
     AppMainFilters,
+    AppOrdersTable,
   },
   data() {
     return {

@@ -3,7 +3,7 @@
     v-model="selected"
     :headers="headers"
     :items="items"
-    color="primary"
+    checkbox-color="primary"
     dense
     item-key="_id"
     show-select
