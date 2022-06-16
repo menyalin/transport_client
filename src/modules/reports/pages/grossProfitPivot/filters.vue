@@ -1,9 +1,12 @@
 <template>
   <div class="main-filter-wrapper">
-    <v-expansion-panels focusable>
+    <v-expansion-panels
+      v-if="Object.keys(tmpFilters).length > 0"
+      focusable
+    >
       <v-expansion-panel>
         <v-expansion-panel-header>
-          <h5>Основной отбор</h5>
+          <h5>{{ title }}</h5>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div
@@ -47,6 +50,7 @@ export default {
   },
   props: {
     filters: { type: Object },
+    title: String,
   },
   data() {
     return {
@@ -54,6 +58,7 @@ export default {
         { value: 'in', text: 'Содержит' },
         { value: 'notIn', text: 'Не содержит' },
       ],
+      tmpFilters: [],
       filterItems: [
         { value: 'clients', title: 'Клиенты', items: () => this.clients },
         { value: 'orderTypes', title: 'Регионы', items: () => this.orderTypes },
@@ -81,44 +86,6 @@ export default {
           items: () => this.zones,
         },
       ],
-      tmpFilters: {
-        clients: {
-          values: [],
-          cond: 'in',
-        },
-        tkNames: {
-          values: [],
-          cond: 'in',
-        },
-        trucks: {
-          values: [],
-          cond: 'in',
-        },
-        drivers: {
-          values: [],
-          cond: 'in',
-        },
-        orderTypes: {
-          values: [],
-          cond: 'in',
-        },
-        loadingRegions: {
-          values: [],
-          cond: 'in',
-        },
-        unloadingRegions: {
-          values: [],
-          cond: 'in',
-        },
-        loadingZones: {
-          values: [],
-          cond: 'in',
-        },
-        unloadingZones: {
-          values: [],
-          cond: 'in',
-        },
-      },
     }
   },
   computed: {
@@ -166,7 +133,7 @@ export default {
   },
   watch: {
     filters: {
-      // immediate: true,
+      immediate: true,
       deep: true,
       handler: function (val) {
         this.tmpFilters = val

@@ -18,24 +18,10 @@
           {{ pivotData.totalCount }}
         </th>
         <th class="text-right">
-          {{
-            !isNaN(pivotData.totalWithVat / 1000)
-              ? Intl.NumberFormat().format(
-                Math.round(pivotData.totalWithVat / 1000)
-              )
-              : null
-          }}
+          {{ totalSum }}
         </th>
         <th class="text-right">
-          {{
-            !isNaN(pivotData.totalWithVat / pivotData.totalCount / 1000)
-              ? Intl.NumberFormat().format(
-                Math.round(
-                  pivotData.totalWithVat / pivotData.totalCount / 1000
-                )
-              )
-              : null
-          }}
+          {{ totalAvg }}
         </th>
       </tr>
     </template>
@@ -47,6 +33,7 @@ export default {
   props: {
     groupItems: { type: Array, required: true },
     groupBy: { type: String, required: true },
+    priceWithVat: Boolean,
     pivotData: { type: Object },
   },
   data() {
@@ -55,12 +42,28 @@ export default {
     }
   },
   computed: {
+    totalSum() {
+      const sum =
+        this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+      if (isNaN(sum)) return null
+      return Intl.NumberFormat().format(Math.round(sum))
+    },
+
+    totalAvg() {
+      const avg =
+        this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
+        this.pivotData.totalCount /
+        1000
+      if (isNaN(avg)) return null
+      return Intl.NumberFormat().format(Math.round(avg))
+    },
+
     headers() {
       return [
         { text: this.groupName, value: 'titleColumn' },
         { text: 'Кол-во', value: 'count', align: 'right' },
         { text: 'Сумма', value: 'sum', align: 'right' },
-        { text: 'Сред. сумма', value: 'avg', align: 'right' },
+        { text: 'Сред.сумма', value: 'avg', align: 'right' },
       ]
     },
     items() {
@@ -71,8 +74,14 @@ export default {
           ? this.titlesMap.get(i._id)
           : '--',
         count: i.totalCount,
-        sum: Intl.NumberFormat().format(Math.round(i.totalWithVat / 1000)),
-        avg: Intl.NumberFormat().format(Math.round(i.avgWithVat / 1000)),
+        sum: Intl.NumberFormat().format(
+          Math.round(
+            i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+          )
+        ),
+        avg: Intl.NumberFormat().format(
+          Math.round(i[this.priceWithVat ? 'avgWithVat' : 'avgWOVat'] / 1000)
+        ),
       }))
     },
     groupName() {
@@ -109,6 +118,17 @@ export default {
           break
       }
       return res
+    },
+  },
+  watch: {
+    selected: {
+      deep: true,
+      handler: function (val) {
+        this.$emit(
+          'updateSelected',
+          val.map((i) => i._id)
+        )
+      },
     },
   },
 }

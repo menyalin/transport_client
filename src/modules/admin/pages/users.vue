@@ -6,6 +6,7 @@
           dense
           :headers="headers"
           :items="activeConnection"
+          :items-per-page="-1"
         >
           <template v-slot:top>
             <v-subheader>Active connections</v-subheader>

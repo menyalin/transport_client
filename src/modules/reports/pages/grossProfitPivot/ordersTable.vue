@@ -47,7 +47,9 @@ export default {
   components: { AppTableColumnSettings },
   props: {
     mainFilters: Object,
+    additionalFilters: Object,
     dateRange: { type: Array, required: true },
+    priceWithVat: Boolean,
   },
   data() {
     return {
@@ -103,8 +105,14 @@ export default {
           .join(', '),
         capacityType: i.capacityType,
         truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
-        priceWithVat: Intl.NumberFormat().format(i.totalWithVat),
-        priceWOVat: Intl.NumberFormat().format(i.totalWOVat),
+        price: Intl.NumberFormat().format(
+          Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
+        ),
+        kPrice: Intl.NumberFormat().format(
+          Math.round(
+            i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+          )
+        ),
       }))
     },
   },
@@ -113,16 +121,24 @@ export default {
       deep: true,
       handler: function () {
         this.clearItems()
+        this.getData()
       },
     },
     mainFilters: {
       deep: true,
-      handler: function () {
+      handler: async function () {
         this.clearItems()
+        await this.getData()
+      },
+    },
+    additionalFilters: {
+      deep: true,
+      handler: function () {
+        this.listOptions.page = 1
+        this.getData()
       },
     },
     listOptions: {
-      // deep: true,
       handler: function () {
         this.getData()
       },
@@ -155,6 +171,7 @@ export default {
           company: this.$store.getters.directoriesProfile,
           dateRange: this.dateRange,
           mainFilters: this.mainFilters,
+          additionalFilters: this.additionalFilters,
           listOptions: this.listOptions,
         })
         this.items = items

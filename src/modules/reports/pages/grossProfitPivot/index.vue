@@ -12,6 +12,12 @@
           <v-icon> mdi-cached </v-icon>
         </v-btn>
         <app-date-range v-model="settings.dateRange" />
+        <v-checkbox
+          v-model="usePriceWithVat"
+          label="Цены с НДС"
+          hide-details
+          class="ml-3"
+        />
       </div>
 
       <app-group-by-settings
@@ -19,9 +25,15 @@
         v-model="settings.groupBy"
         :items="groupItems"
       />
-      <app-main-filters
+      <app-filters
         id="main-filters"
         v-model="mainFilters"
+        title="Основной отбор"
+      />
+      <app-filters
+        id="additional-filters"
+        v-model="additionalFilters"
+        title="Дополнительный отбор"
       />
     </div>
     <v-progress-linear
@@ -36,10 +48,14 @@
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
+        :priceWithVat="usePriceWithVat"
+        @updateSelected="updateSelected"
       />
       <v-divider />
       <app-orders-table
         :mainFilters="mainFilters"
+        :additionalFilters="additionalFilters"
+        :priceWithVat="usePriceWithVat"
         :dateRange="settings.dateRange"
       />
     </div>
@@ -53,7 +69,13 @@ import ReportService from '../../services/index.js'
 import AppGroupBySettings from './groupBySettings.vue'
 import AppPivotTable from './pivotTable.vue'
 import AppOrdersTable from './ordersTable.vue'
-import AppMainFilters from './mainFilters.vue'
+import AppFilters from './filters.vue'
+
+import {
+  ADDITIONAL_FILTER_LIST,
+  MAIN_FILTER_LIST,
+  GROUP_BY_ITEMS,
+} from './constants.js'
 
 export default {
   name: 'GrossProfitReport',
@@ -61,26 +83,22 @@ export default {
     AppDateRange,
     AppGroupBySettings,
     AppPivotTable,
-    AppMainFilters,
+    AppFilters,
     AppOrdersTable,
   },
   data() {
     return {
+      loading: false,
+      formName: 'grossProfitPivotReport',
       pivotData: {},
-      groupItems: [
-        { text: 'Клиент', value: 'client', disabled: false },
-        { text: 'ТК', value: 'tkName', disabled: false },
-        { text: 'Регион', value: 'orderType', disabled: false },
-        { text: 'ТС', value: 'truck', disabled: false },
-        { text: 'Водитель', value: 'driver', disabled: false },
-      ],
+      groupItems: GROUP_BY_ITEMS,
+      usePriceWithVat: true,
       settings: {
         dateRange: null,
         groupBy: 'client',
       },
-      mainFilters: {},
-      formName: 'grossProfitPivotReport',
-      loading: false,
+      mainFilters: MAIN_FILTER_LIST,
+      additionalFilters: ADDITIONAL_FILTER_LIST,
     }
   },
   watch: {
@@ -100,7 +118,10 @@ export default {
 
   async created() {
     if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+      const { settings, usePriceWithVat } =
+        this.$store.getters.formSettingsMap.get(this.formName)
+      this.settings = settings
+      this.usePriceWithVat = usePriceWithVat
     } else {
       this.settings.dateRange = initDateRange()
     }
@@ -108,13 +129,24 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
       formName: this.formName,
-      settings: this.settings,
+      settings: {
+        settings: this.settings,
+        usePriceWithVat: this.usePriceWithVat,
+      },
     })
     next()
   },
   methods: {
-    setPivotData(data) {
-      this.pivotData = data
+    updateSelected(val) {
+      const groupItem = GROUP_BY_ITEMS.find(
+        (i) => i.value === this.settings.groupBy
+      )
+      this.additionalFilters = Object.assign(this.additionalFilters, {
+        [groupItem.filterName]: {
+          values: val,
+          cond: 'in',
+        },
+      })
     },
     async getData() {
       try {
@@ -125,8 +157,7 @@ export default {
           groupBy: this.settings.groupBy,
           mainFilters: this.mainFilters,
         })
-        this.setPivotData(pivot)
-
+        this.pivotData = pivot
         this.loading = false
       } catch (e) {
         this.$store.commit('setError', e.message)
@@ -170,7 +201,11 @@ export default {
 }
 
 #main-filters {
-  grid-column: 2/3;
+  grid-column: 2/2;
+  grid-row: 1/5;
+}
+#additional-filters {
+  grid-column: 3/3;
   grid-row: 1/5;
 }
 </style>
