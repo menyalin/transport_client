@@ -22,7 +22,7 @@ export const GROUP_BY_ITEMS = [
 export const ALL_ORDER_TABLE_HEADERS = [
   { value: '_id', text: '_id', sortable: false },
   { value: 'status', text: 'Статус', sortable: false },
-  { value: 'orderDate', text: 'Дата', sortable: false },
+  { value: 'orderDate', text: 'Дата', sortable: true },
   { value: 'client', text: 'Клиент', sortable: false },
   { value: 'truck', text: 'ТС', sortable: false },
   { value: 'driver', text: 'Водитель', sortable: false },
@@ -43,13 +43,13 @@ export const ALL_ORDER_TABLE_HEADERS = [
     value: 'price',
     text: 'Цена',
     align: 'right',
-    sortable: false,
+    sortable: true,
   },
   {
     value: 'kPrice',
     text: 'Цена, тыс',
     align: 'right',
-    sortable: false,
+    sortable: true,
   },
   { value: 'note', text: 'Примечание', sortable: false },
 ]
