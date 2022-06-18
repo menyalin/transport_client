@@ -3,6 +3,7 @@
     v-model="selected"
     :headers="headers"
     :items="items"
+    selectable-key="isSelectable"
     checkbox-color="primary"
     dense
     item-key="_id"
@@ -82,11 +83,12 @@ export default {
         avg: Intl.NumberFormat().format(
           Math.round(i[this.priceWithVat ? 'avgWithVat' : 'avgWOVat'] / 1000)
         ),
+        isSelectable: !!i._id,
       }))
     },
     groupName() {
       const group = this.groupItems.find((i) => i.value === this.groupBy)
-      return group?.text || '--'
+      return group?.text || '-'
     },
     titlesMap() {
       const res = new Map()

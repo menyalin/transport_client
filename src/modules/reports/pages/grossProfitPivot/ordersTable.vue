@@ -70,6 +70,7 @@ export default {
       return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
     },
     preparedItems() {
+      if (!Array.isArray(this.items)) return []
       return this.items.map((i) => ({
         ...i,
         status: this.$store.getters.orderStatusesMap.get(i.status),
@@ -80,28 +81,28 @@ export default {
         tk: this.$store.getters.tkNamesMap.get(i.tkName)?.name || '-',
         orderType: this.$store.getters.orderAnalyticTypesMap.get(i.orderType),
         addressesLoading: i.loadingAddressIds
-          .map((a) => this.$store.getters.addressMap.get(a)?.shortName)
+          ?.map((a) => this.$store.getters.addressMap.get(a)?.shortName)
           .join(', '),
         addressesUnloading: i.unloadingAddressIds
-          .map((a) => this.$store.getters.addressMap.get(a)?.shortName)
+          ?.map((a) => this.$store.getters.addressMap.get(a)?.shortName)
           .join(', '),
         regionsLoading: i.loadingRegions
-          .map((r) => this.$store.getters.regionsMap.get(r)?.name)
+          ?.map((r) => this.$store.getters.regionsMap.get(r)?.name)
           .join(', '),
         regionsUnloading: i.unloadingRegions
-          .map((r) => this.$store.getters.regionsMap.get(r)?.name)
+          ?.map((r) => this.$store.getters.regionsMap.get(r)?.name)
           .join(', '),
         zonesLoading: i.loadingZones
-          .map((r) => this.$store.getters.zonesMap.get(r)?.name)
+          ?.map((r) => this.$store.getters.zonesMap.get(r)?.name)
           .join(', '),
         zonesUnloading: i.unloadingZones
-          .map((r) => this.$store.getters.zonesMap.get(r)?.name)
+          ?.map((r) => this.$store.getters.zonesMap.get(r)?.name)
           .join(', '),
         citiesLoading: i.loadingCities
-          .map((r) => this.$store.getters.citiesMap.get(r)?.name)
+          ?.map((r) => this.$store.getters.citiesMap.get(r)?.name)
           .join(', '),
         citiesUnloading: i.unloadingCities
-          .map((r) => this.$store.getters.citiesMap.get(r)?.name)
+          ?.map((r) => this.$store.getters.citiesMap.get(r)?.name)
           .join(', '),
         capacityType: i.capacityType,
         truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
@@ -137,7 +138,7 @@ export default {
         this.listOptions.page = 1
         this.getData()
       },
-    },
+    },  
     listOptions: {
       handler: function () {
         this.getData()
