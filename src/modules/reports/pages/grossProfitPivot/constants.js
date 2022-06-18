@@ -11,6 +11,12 @@ export const GROUP_BY_ITEMS = [
   },
   { text: 'ТС', value: 'truck', disabled: false, filterName: 'trucks' },
   { text: 'Водитель', value: 'driver', disabled: false, filterName: 'drivers' },
+  {
+    text: 'Регион погрузки',
+    value: 'loadingRegion',
+    disabled: false,
+    filterName: 'loadingRegions',
+  },
 ]
 
 export const ALL_ORDER_TABLE_HEADERS = [

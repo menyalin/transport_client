@@ -141,17 +141,15 @@ export default {
       const groupItem = GROUP_BY_ITEMS.find(
         (i) => i.value === this.settings.groupBy
       )
-      this.additionalFilters = Object.assign(this.additionalFilters, {
-        [groupItem.filterName]: {
-          values: val,
-          cond: 'in',
-        },
-      })
+      this.additionalFilters[groupItem.filterName] = {
+        values: val,
+        cond: 'in',
+      }
     },
     async getData() {
       try {
         this.loading = true
-        const { pivot, list } = await ReportService.grossProfitPivot({
+        const { pivot } = await ReportService.grossProfitPivot({
           dateRange: this.settings.dateRange,
           company: this.$store.getters.directoriesProfile,
           groupBy: this.settings.groupBy,

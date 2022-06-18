@@ -61,6 +61,7 @@ export default {
 
     headers() {
       return [
+        //{ value: '_id' },
         { text: this.groupName, value: 'titleColumn' },
         { text: 'Кол-во', value: 'count', align: 'right' },
         { text: 'Сумма', value: 'sum', align: 'right' },
@@ -70,10 +71,9 @@ export default {
     items() {
       if (!this.pivotData?.items) return []
       return this.pivotData.items.map((i) => ({
-        _id: i._id,
-        titleColumn: this.titlesMap.has(i._id)
-          ? this.titlesMap.get(i._id)
-          : '--',
+        _id: i._id.toString(),
+        titleColumn: this.setTitleColumn(i._id),
+
         count: i.totalCount,
         sum: Intl.NumberFormat().format(
           Math.round(
@@ -118,6 +118,11 @@ export default {
             res.set(p._id, p.name)
           })
           break
+        case 'loadingRegion':
+          this.$store.getters.regions.forEach((p) => {
+            res.set(p._id, p.name)
+          })
+          break
       }
       return res
     },
@@ -131,6 +136,15 @@ export default {
           val.map((i) => i._id)
         )
       },
+    },
+  },
+  methods: {
+    setTitleColumn(id) {
+      if (Array.isArray(id))
+        return id.map((i) =>
+          this.titlesMap.has(i) ? this.titlesMap.get(i) : '-'
+        )
+      return this.titlesMap.has(id) ? this.titlesMap.get(id) : '-'
     },
   },
 }
