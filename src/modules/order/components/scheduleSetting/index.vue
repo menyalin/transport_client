@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import PermissionService from '@/modules/common/services/permission.service'
 
@@ -46,7 +46,7 @@ export default {
       })
     },
     isMinDate() {
-      return moment(this.date).isSameOrBefore(this.minDate, 'day')
+      return dayjs(this.date).isSameOrBefore(this.minDate, 'day')
     },
   },
   methods: {
@@ -54,8 +54,8 @@ export default {
       this.$store.commit('incScheduleDate', count)
     },
     setDate(date) {
-      if (!date || moment(date).isBefore(this.minDate))
-        this.$store.commit('setScheduleDate', moment().format('YYYY-MM-DD'))
+      if (!date || dayjs(date).isBefore(this.minDate))
+        this.$store.commit('setScheduleDate', dayjs().format('YYYY-MM-DD'))
       else this.$store.commit('setScheduleDate', date)
     },
   },

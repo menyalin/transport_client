@@ -187,13 +187,14 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import CrewService from '@/modules/profile/services/crew.service'
 import AppCrewMessage from './crewMessage.vue'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
-import moment from 'moment'
+
 
 export default {
   name: 'TransportTable',
@@ -323,7 +324,7 @@ export default {
         return false
       if (
         !!this.actualTrailerCrew.transport.endDate &&
-        moment(this.actualTrailerCrew.transport.endDate).isSameOrBefore(
+        dayjs(this.actualTrailerCrew.transport.endDate).isSameOrBefore(
           this.newItem.startDate
         )
       )

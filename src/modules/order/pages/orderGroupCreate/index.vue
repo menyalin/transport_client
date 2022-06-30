@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import AppDateRange from '@/modules/common/components/dateRange'
 import service from '@/modules/order/services/order.service'
@@ -204,7 +204,7 @@ export default {
     },
     initDateRange() {
       const dateFormat = 'YYYY-MM-DD'
-      const today = moment()
+      const today = dayjs()
       return [
         today.add(1, 'd').format(dateFormat),
         today.add(8, 'd').format(dateFormat),

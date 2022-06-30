@@ -140,7 +140,7 @@ import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 
 import AppTransportTable from './transportTable.vue'
 import AppCrewMessage from './crewMessage'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'CrewForm',
@@ -229,7 +229,7 @@ export default {
         this.$v.form.startDate.$dirty &&
         !this.$v.form.startDate.isLaterThan
       ) {
-        const dateStr = moment(
+        const dateStr = dayjs(
           this.$v.form.startDate.$params.isLaterThan.eq
         ).format('DD.MM.YYYY HH:mm')
         errors.push(`Дата должна быть больше ${dateStr}`)
@@ -314,7 +314,7 @@ export default {
       this.form.tkName = val.tkName?._id || val.tkName
       this.form.transport = val.transport
       this.form.driver = val.driver?._id || val.driver
-      this.form.startDate = val.startDate || moment().format()
+      this.form.startDate = val.startDate || new Date().toISOString()
       this.form.endDate = val.endDate
       this.form.note = val.note
     },

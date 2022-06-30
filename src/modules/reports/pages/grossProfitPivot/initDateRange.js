@@ -1,7 +1,6 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default () => {
-  const dateM = moment()
-  dateM.add(-1, 'day')
+  const dateM = dayjs().add(-1, 'day')
   return [dateM.startOf('day').format(), dateM.endOf('day').format()]
 }

@@ -51,8 +51,10 @@
     </div>
   </v-tooltip>
 </template>
+
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
+
 import { roundingHours } from './helpers'
 export default {
   name: 'OrderCell',
@@ -65,11 +67,11 @@ export default {
   computed: {
     breakingSchedule() {
       if (this.order.route[0].arrivalDate) return false
-      const roundedPlannedDate = moment(this.order?.route[0]?.plannedDate)
-      roundedPlannedDate.hours(roundingHours(roundedPlannedDate.hours()))
-      const roundedStartPositionDate = moment(this.order.startPositionDate)
-      roundedStartPositionDate.hours(
-        roundingHours(roundedStartPositionDate.hours())
+      let roundedPlannedDate = dayjs(this.order?.route[0]?.plannedDate)
+      roundedPlannedDate = roundedPlannedDate.hour(roundingHours(roundedPlannedDate.hour()))
+      let roundedStartPositionDate = dayjs(this.order.startPositionDate)
+      roundedStartPositionDate = roundedStartPositionDate.hour(
+        roundingHours(roundedStartPositionDate.hour())
       )
       return !roundedPlannedDate.isSame(roundedStartPositionDate, 'hour')
     },
@@ -93,7 +95,7 @@ export default {
 
     firstRow() {
       const addressId = this.order.route[0].address
-      const hours = moment(this.order.route[0].plannedDate).format('HH')
+      const hours = dayjs(this.order.route[0].plannedDate).format('HH')
       const addressName =
         this.$store.getters.addressMap.get(addressId)?.shortName || ' - '
       return `${addressName} - ${hours}`
@@ -163,10 +165,9 @@ export default {
       res.push(address)
       let plannedTime = null
       if (!!this.order.route[idx]?.plannedDate) {
-        plannedTime = moment(this.order.route[idx].plannedDate).format('HH')
+        plannedTime = dayjs(this.order.route[idx].plannedDate).format('HH')
         res.push(plannedTime)
       }
-
       return res.join(' ')
     },
   },

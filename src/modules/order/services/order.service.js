@@ -1,8 +1,9 @@
+import dayjs from 'dayjs'
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
-import moment from 'moment'
 import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
+
 
 const BASE_PATH = '/orders'
 
@@ -14,7 +15,7 @@ class OrderService {
     })
 
     socket.on('ordersForSchedule', (orders) => {
-      store.commit('setOrders', orders)
+      store.commit('addOrdersToSchedule', orders)
     })
 
     socket.on('order:updated', (data) => {
@@ -56,11 +57,13 @@ class OrderService {
     return data
   }
 
-  async getListForSchedule() {
+  async getListForSchedule(startDate, endDate) {
+    if (!startDate && !store.getters.schedulePeriod ) return null
+    
     socket.emit('ordersForSchedule', {
       profile: store.getters.directoriesProfile,
-      startDate: moment(store.getters.schedulePeriod[0]).toISOString(),
-      endDate: moment(store.getters.schedulePeriod[1]).toISOString(),
+      startDate: dayjs(startDate || store.getters.schedulePeriod[0]).add(-1, 'd').toISOString(),
+      endDate: dayjs(endDate || store.getters.schedulePeriod[1]).endOf('day').toISOString(),
     })
   }
 

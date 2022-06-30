@@ -1,5 +1,6 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import service from '@/modules/profile/services/crew.service'
+
 
 export default {
   state: {
@@ -12,7 +13,7 @@ export default {
       state.activeCrews = []
     },
     setDateForCrews(state, payload) {
-      if (payload) state.dateForCrews = moment(payload)
+      if (payload) state.dateForCrews = dayjs(payload)
       else state.dateForCrews = null
     },
     setTkNameForCrews(state, payload) {

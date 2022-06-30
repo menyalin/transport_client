@@ -64,17 +64,19 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/downtime.service'
-import moment from 'moment'
+
+import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateRange from '@/modules/common/components/dateRange'
 
+
 const _initPeriod = () => {
-  const todayM = moment()
+  const todayM = dayjs()
   return [
     todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(20, 'd').format('YYYY-MM-DD'),
+    todayM.add(10, 'd').format('YYYY-MM-DD'),
   ]
 }
 

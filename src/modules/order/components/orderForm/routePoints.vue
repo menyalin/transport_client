@@ -8,26 +8,24 @@
       v-model="xPoints"
       :disabled="!dragEnabled"
     >
-      <transition-group name="route">
-        <div
-          v-for="(point, ind) of tmpPoints"
-          :key="ind"
-          class="point-wrapper-outer"
-        >
-          <app-point-detail
-            :point="point"
-            :ind="ind"
-            :readonly="readonly"
-            :confirmed="confirmed"
-            :fixedTimeSlots="fixedTimeSlots"
-            :isActive="point.isCurrent"
-            :showDeleteBtn="tmpPoints.length > 2"
-            :isTemplate="isTemplate"
-            @changePoint="change($event, ind)"
-            @delete="deleteHandler"
-          />
-        </div>
-      </transition-group>
+      <div
+        v-for="(point, ind) of tmpPoints"
+        :key="ind"
+        class="point-wrapper-outer"
+      >
+        <app-point-detail
+          :point="point"
+          :ind="ind"
+          :readonly="readonly"
+          :confirmed="confirmed"
+          :fixedTimeSlots="fixedTimeSlots"
+          :isActive="point.isCurrent"
+          :showDeleteBtn="tmpPoints.length > 2"
+          :isTemplate="isTemplate"
+          @changePoint="change($event, ind)"
+          @delete="deleteHandler"
+        />
+      </div>
     </draggable>
     <div
       v-if="!readonly"

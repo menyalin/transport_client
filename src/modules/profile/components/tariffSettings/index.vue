@@ -76,7 +76,7 @@
 <script>
 import uuid from 'uuid'
 import AgreementService from '@/modules/profile/services/agreement.service'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'TariffCommonSettings',
@@ -136,7 +136,7 @@ export default {
       const dateValue = this.$store.getters.documentsMap.get(val)?.date
       if (!dateValue) return null
 
-      this.tmpSettings.date = moment(dateValue).format('YYYY-MM-DD')
+      this.tmpSettings.date = dayjs(dateValue).format('YYYY-MM-DD')
     },
 
     tmpSettings: {
@@ -158,7 +158,7 @@ export default {
         this.$store.getters.companySettings?.defaultTruckKind || null
       this.tmpSettings.liftCapacity =
         this.$store.getters.companySettings?.defaultLiftCapacity || null
-      this.tmpSettings.date = moment().format('YYYY-MM-DD')
+      this.tmpSettings.date = dayjs().format('YYYY-MM-DD')
     }
     this.getAgreements()
   },

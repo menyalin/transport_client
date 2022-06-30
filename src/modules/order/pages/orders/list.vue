@@ -202,7 +202,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import service from '@/modules/order/services/order.service'
 import PermissionService from '@/modules/common/services/permission.service'
 
@@ -216,10 +216,10 @@ import _putTableToClipboard from './_putTableToClipboard.js'
 import { mapGetters } from 'vuex'
 
 const _initPeriod = () => {
-  const todayM = moment()
+  const todayM = dayjs()
   return [
     todayM.add(-3, 'd').format('YYYY-MM-DD'),
-    todayM.add(6, 'd').format('YYYY-MM-DD'),
+    todayM.add(3, 'd').format('YYYY-MM-DD'),
   ]
 }
 
@@ -462,8 +462,8 @@ export default {
           tkName: this.settings.tkName,
           status: this.settings.status,
           profile: this.directoriesProfile,
-          startDate: moment(this.settings.period[0]).toISOString(),
-          endDate: moment(this.settings.period[1]).toISOString(),
+          startDate: new Date(this.settings.period[0]).toISOString(),
+          endDate: new Date(this.settings.period[1]).toISOString(),
           accountingMode: this.accountingMode || null,
           skip:
             this.settings.listOptions.itemsPerPage *

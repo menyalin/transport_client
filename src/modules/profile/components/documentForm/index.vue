@@ -67,7 +67,8 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
+
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
@@ -171,7 +172,7 @@ export default {
       const keys = Object.keys(this.form)
       keys.forEach((key) => {
         if (key === 'date' && !!val[key]) {
-          this.form[key] = moment(val[key]).format('YYYY-MM-DD')
+          this.form[key] = dayjs(val[key]).format('YYYY-MM-DD')
         } else this.form[key] = val[key]
       })
     },

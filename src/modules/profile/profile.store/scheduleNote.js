@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import service from '@/modules/profile/services/scheduleNote.service'
 
 export default {
@@ -33,8 +33,8 @@ export default {
       }
       service.getListForSchedule({
         company: getters.directoriesProfile,
-        startDate: moment(getters.schedulePeriod[0]).toISOString(),
-        endDate: moment(getters.schedulePeriod[1]).toISOString(),
+        startDate: new Date(getters.schedulePeriod[0]).toISOString(),
+        endDate: new Date(getters.schedulePeriod[1]).toISOString(),
       })
     },
   },
@@ -47,13 +47,11 @@ export default {
     notesForSchedule: ({ notes }, { schedulePeriod, hiddenTruckIds }) => {
       if (!schedulePeriod) return []
       return notes.filter((n) => {
-        const sP = moment(schedulePeriod[0])
-        const eP = moment(schedulePeriod[1])
+        const sP = dayjs(schedulePeriod[0])
+        const eP = dayjs(schedulePeriod[1])
         return (
           eP.isAfter(n.startPositionDate) &&
           sP.isSameOrBefore(n.startPositionDate)
-
-          //  && !hiddenTruckIds.includes(n.truck)
         )
       })
     },

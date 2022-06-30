@@ -9,6 +9,7 @@
 <script>
 import AppScheduleTable from '../../components/scheduleTable'
 import service from '../../services/order.service'
+import periodDifferernce from '../../utils/periodDifference'
 
 export default {
   name: 'Schedule',
@@ -41,9 +42,13 @@ export default {
     },
   },
   watch: {
-    '$store.getters.schedulePeriod': function (val) {
-      if (!val) return null
-      this.getData()
+    '$store.getters.schedulePeriod': function (newPeriod, oldPeriod) {
+      if (!newPeriod) return null
+      if (!oldPeriod) this.getData()
+      else {
+      const { added, deleted } = periodDifferernce(newPeriod, oldPeriod) 
+          this.getData(added)
+      } 
     },
   },
   mounted() {
@@ -52,12 +57,14 @@ export default {
     }
   },
   methods: {
-    getData() {
+    getData(period) {
       if (!this.$store.getters.directoriesProfile) {
         this.$router.push('/profile')
         return null
       }
-      this.$store.dispatch('getOrdersForSchedule')
+      if (period) service.getListForSchedule(period[0], period[1])
+      else service.getListForSchedule()
+      // this.$store.dispatch('getOrdersForSchedule')
       this.$store.dispatch('getDowntimesForSchedule')
       this.$store.dispatch('getNotesForSchedule')
     },
@@ -68,20 +75,7 @@ export default {
       await service.disable({ orderId, state: false })
     },
     async updateOrderHandler({ orderId, truckId, startDate }) {
-      // const editedOrder = this.$store.getters.ordersForSchedule.find(
-      //   (item) => item._id == orderId
-      // )
-      // if (
-      //   !!editedOrder.lastPlannedDate &&
-      //   new Date(startDate) > new Date(editedOrder.lastPlannedDate)
-      // ) {
-      //   this.$store.commit(
-      //     'setError',
-      //     'Начало рейса не может быть позднее планируемой даты завершения'
-      //   )
-      //   service.disable({ orderId, state: false })
-      //   return null
-      // }
+      
       await service.moveOrderInSchedule({
         orderId,
         truck: truckId,

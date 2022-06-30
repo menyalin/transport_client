@@ -6,10 +6,16 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate'
 import VuetifyConfirm from 'vuetify-confirm'
-import moment from 'moment'
 import VueCompositionAPI from '@vue/composition-api'
+import dayjs from 'dayjs'
+import 'dayjs/locale/ru'
+import isSameOrBefore  from 'dayjs/plugin/isSameOrBefore'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 
-moment.locale('ru')
+dayjs.extend(isSameOrBefore)
+dayjs.extend(isSameOrAfter)
+dayjs.locale('ru')
+
 
 Vue.config.productionTip = false
 

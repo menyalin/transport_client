@@ -64,10 +64,11 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import AppBlockTitle from './blockTitle.vue'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import moment from 'moment'
+
 
 export default {
   name: 'MedBook',
@@ -101,16 +102,16 @@ export default {
     },
     certificateValidityPeriod() {
       if (!this.params.certifiedBeforeDate) return null
-      const todaySec = moment().unix()
-      const certDateSec = moment(this.params.certifiedBeforeDate).unix()
+      const todaySec = dayjs().unix()
+      const certDateSec = dayjs(this.params.certifiedBeforeDate).unix()
       return Math.floor((certDateSec - todaySec) / (60 * 60 * 24))
     },
     daysBeforeMedExamination() {
       if (!this.params.annualCommisionDate) return null
-      const lastDate = moment(this.params.annualCommisionDate)
+      const lastDate = dayjs(this.params.annualCommisionDate)
         .add(1, 'year')
         .unix()
-      const todaySec = moment().unix()
+      const todaySec = dayjs().unix()
       return Math.floor((lastDate - todaySec) / (60 * 60 * 24))
     },
   },

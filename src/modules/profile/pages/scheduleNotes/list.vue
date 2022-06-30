@@ -54,14 +54,16 @@
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/scheduleNote.service'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import AppDateRange from '@/modules/common/components/dateRange'
 
+
+
 const _initPeriod = () => {
-  const todayM = moment()
+  const todayM = dayjs()
   return [
     todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(20, 'd').format('YYYY-MM-DD'),
+    todayM.add(10, 'd').format('YYYY-MM-DD'),
   ]
 }
 
@@ -138,8 +140,8 @@ export default {
         this.loading = true
         const data = await service.getList({
           company: this.directoriesProfile,
-          startDate: moment(this.settings.period[0]).toISOString(),
-          endDate: moment(this.settings.period[1]).toISOString(),
+          startDate: new Date(this.settings.period[0]).toISOString(),
+          endDate: new Date(this.settings.period[1]).toISOString(),
           truckFilter: this.settings.truckFilter,
           skip:
             this.settings.listOptions.itemsPerPage *

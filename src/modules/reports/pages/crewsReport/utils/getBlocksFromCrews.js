@@ -1,11 +1,11 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 const ALLOWED_TYPES_GROUP = ['truck', 'trailer', 'driver']
 
 const _getBlockTitle = ({ crew, type }) => {
-  let intervalStr = moment(crew.startDate).format('DD.MM.YY HH:mm') + ' - '
+  let intervalStr = dayjs(crew.startDate).format('DD.MM.YY HH:mm') + ' - '
   if (crew.endDate)
     intervalStr = intervalStr.concat(
-      moment(crew.endDate).format('DD.MM.YY HH:mm')
+      dayjs(crew.endDate).format('DD.MM.YY HH:mm')
     )
   switch (type) {
     case 'truck': {
@@ -40,9 +40,9 @@ export default ({ crews, group, displayPeriod, analitic }) => {
     )
   if (!crews.length) return []
   for (let i = 0; i < crews.length; i++) {
-    if (crews[i].endDate && moment(crews[i].endDate).isBefore(displayPeriod[0]))
+    if (crews[i].endDate && dayjs(crews[i].endDate).isBefore(displayPeriod[0]))
       continue
-    if (moment(crews[i].startDate).isAfter(displayPeriod[1])) continue
+    if (dayjs(crews[i].startDate).isAfter(displayPeriod[1])) continue
     if ((analitic === 'trailer' || group === 'trailer') && !crews[i].trailer)
       continue
     blocks.push(_createBlock({ crew: crews[i], type: analitic, group }))

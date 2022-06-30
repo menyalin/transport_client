@@ -1,5 +1,5 @@
-import moment from 'moment'
 import service from '../services/order.service'
+import dayjs  from 'dayjs'
 
 const _getStartPositionDate = (order) => {
   return order.route[0]?.arrivalDate
@@ -44,7 +44,7 @@ export default {
       { value: 'unloading', text: 'Выгрузка' },
     ],
     orderStatuses: [],
-    scheduleDate: moment().format('YYYY-MM-DD'),
+    scheduleDate: dayjs().format('YYYY-MM-DD'),
     onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') || false,
     orderAnalyticTypes: [],
     orderPriceTypes: [],
@@ -69,6 +69,9 @@ export default {
       if (orders.findIndex((item) => item._id === payload._id) === -1)
         orders.push(payload)
     },
+    addOrdersToSchedule(state, payload) {
+      state.orders = state.orders.concat(payload.filter(i => !state.orders.some(order => order._id === i._id)))
+    },
     updateOrder(state, payload) {
       const ind = state.orders.findIndex((item) => item._id === payload._id)
       if (ind !== -1) state.orders.splice(ind, 1, payload)
@@ -87,7 +90,7 @@ export default {
       state.orderPriceTypes = payload
     },
     incScheduleDate(state, count) {
-      state.scheduleDate = moment(state.scheduleDate)
+      state.scheduleDate = dayjs(state.scheduleDate)
         .add(count, 'day')
         .format('YYYY-MM-DD')
     },
@@ -131,22 +134,21 @@ export default {
         }))
         .filter((order) => {
           if (period.length !== 2) return true
-          const sP = moment(schedulePeriod[0])
-          const eP = moment(schedulePeriod[1])
+          const sP = dayjs(schedulePeriod[0])
+          const eP = dayjs(schedulePeriod[1])
           return (
             eP.isAfter(order.startPositionDate) &&
             sP.isSameOrBefore(order.endPositionDate)
             // &&            !order.truckId
           )
         })
-
         .sort(
           (a, b) =>
             new Date(a.startPositionDate) - new Date(b.startPositionDate)
         ),
     schedulePeriod: ({ period }) => {
       if (period.length !== 2) return null
-      return [period[0], moment(period[1]).add(1, 'd').format('YYYY-MM-DD')]
+      return [period[0], dayjs(period[1]).add(1, 'd').format('YYYY-MM-DD')]
     },
     scheduleDate: ({ scheduleDate }) => scheduleDate,
     orderStatuses: ({ orderStatuses }) => orderStatuses,
@@ -166,7 +168,7 @@ export default {
       const filteredOrders = orders.filter((o) => o.confirmedCrew?.truck)
 
       filteredOrders.forEach((order) => {
-        const dayStr = moment(order.startPositionDate).format('YYYY-MM-DD')
+        const dayStr = dayjs(order.startPositionDate).format('YYYY-MM-DD')
         const zone = _getZoneName(order.startPositionDate)
         const newDay = {
           ...tmpRes.get(dayStr),

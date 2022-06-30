@@ -1,8 +1,8 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
-const _getPeriodFromDate = (dateStr, a, b, dayCount) => [
-  moment(dateStr).add(a, 'd').format('YYYY-MM-DD'),
-  moment(dateStr).add(b, 'd').format('YYYY-MM-DD'),
+const _getPeriodFromDate = (dateStr, a, b) => [
+  dayjs(dateStr).add(a, 'd').format('YYYY-MM-DD'),
+  dayjs(dateStr).add(b, 'd').format('YYYY-MM-DD'),
 ]
 
 export default ({ width, date }) => {

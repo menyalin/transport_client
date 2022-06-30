@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'ResultCell',
@@ -32,7 +32,7 @@ export default {
   computed: {
     ordersCount() {
       if (!this.date) return null
-      const dateStr = moment(this.date).format('YYYY-MM-DD')
+      const dateStr = dayjs(this.date).format('YYYY-MM-DD')
       if (!this.$store.getters.orderCountByDates.has(dateStr)) return null
       return this.$store.getters.orderCountByDates.get(dateStr)
     },

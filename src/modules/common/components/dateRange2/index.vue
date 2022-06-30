@@ -70,7 +70,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'DateRange',
@@ -106,8 +106,8 @@ export default {
       immediate: true,
       handler: function (val) {
         this.tmpPeriod = [
-          val[0] ? moment(val[0]).startOf('day').format() : null,
-          val[1] ? moment(val[1]).endOf('day').format() : null,
+          val[0] ? dayjs(val[0]).startOf('day').format() : null,
+          val[1] ? dayjs(val[1]).endOf('day').format() : null,
         ]
       },
     },
@@ -115,12 +115,12 @@ export default {
   methods: {
     changeStartDate(val) {
       this.$emit('change', [
-        moment(val).startOf('day').format(),
+        dayjs(val).startOf('day').format(),
         this.tmpPeriod[1],
       ])
     },
     changeEndDate(val) {
-      this.$emit('change', [this.period[0], moment(val).endOf('day').format()])
+      this.$emit('change', [this.period[0],dayjs(val).endOf('day').format()])
     },
   },
 }

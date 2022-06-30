@@ -194,7 +194,8 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
+
 import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
 import { roundingHours } from './helpers'
 import getSecInPx from '@/modules/common/helpers/getSecInPx'
@@ -390,7 +391,7 @@ export default {
       const offsetX = e.layerX - this.titleColumnWidth
       if (offsetX < 0 || offsetY < 0) return null
 
-      const startDateM = moment(this.period[0]).add(this.secInPx * offsetX, 's')
+      const startDateM = dayjs(this.period[0]).add(this.secInPx * offsetX, 's')
       startDateM.hour(roundingHours(startDateM.hour()))
       this.tmpStartDate = startDateM.format('YYYY-MM-DD HH:00')
 
@@ -436,16 +437,8 @@ export default {
     },
     notesFilterByPeriod(item) {
       return (
-        moment(item.startPositionDate).isSameOrAfter(this.period[0]) &&
-        moment(this.period[1]).add('24', 'h').isAfter(item.startPositionDate)
-      )
-    },
-    ordersFilterByPeriod(item) {
-      return !(
-        moment(item.endPositionDate).isBefore(this.period[0]) ||
-        moment(this.period[1])
-          .add('24', 'h')
-          .isSameOrBefore(item.startPositionDate)
+        dayjs(item.startPositionDate).isBefore(this.period[0]) &&
+        dayjs(this.period[1]).add('24', 'h').isAfter(item.startPositionDate)
       )
     },
     ordersFilterByDraggedOrder(item) {
@@ -463,15 +456,15 @@ export default {
 
       let sPositionMoment
       if (needRoundTime) {
-        sPositionMoment = moment(startPositionDate)
-        sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
-        sPositionMoment.minute(0)
+        sPositionMoment = dayjs(startPositionDate)
+        sPositionMoment = sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
+        sPositionMoment = sPositionMoment.minute(0)
       } else {
         // если это downtime
-        sPositionMoment = moment(startPositionDate)
+        sPositionMoment = dayjs(startPositionDate)
       }
 
-      const sPeriod = moment(this.period[0]).unix()
+      const sPeriod = dayjs(this.period[0]).unix()
       const sOrder = sPositionMoment.unix()
       let leftShift = 0
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
@@ -496,20 +489,20 @@ export default {
       let endPoint
       const SEC_IN_SIX_HOURS = 6 * 60 * 60
       const SEC_IN_THREE_HOURS = 3 * 60 * 60
-      if (moment(startPositionDate).isBefore(this.period[0]))
-        startPoint = moment(this.period[0])
+      if (dayjs(startPositionDate).isBefore(this.period[0]))
+        startPoint = dayjs(this.period[0])
       else {
-        startPoint = moment(startPositionDate)
+        startPoint = dayjs(startPositionDate)
       }
 
       if (needRoundTime) {
-        startPoint.hour(roundingHours(startPoint.hour()))
-        startPoint.minute(0)
+        startPoint = startPoint.hour(roundingHours(startPoint.hour()))
+        startPoint = startPoint.minute(0)
       }
-      if (moment(this.period[1]).add(24, 'h').isBefore(endPositionDate))
-        endPoint = moment(this.period[1]).add(1, 'd')
+      if (dayjs(this.period[1]).add(24, 'h').isBefore(endPositionDate))
+        endPoint = dayjs(this.period[1]).add(1, 'd')
       else {
-        endPoint = moment(endPositionDate)
+        endPoint = dayjs(endPositionDate)
       }
       const dutation = endPoint.unix() - startPoint.unix()
       // если сервис и включен режим "планиуремых дат"
@@ -572,8 +565,8 @@ export default {
     dropOnBufferHandler(e) {
       this.draggedOrderId = null
       const x = e.layerX - this.titleColumnWidth
-      const startDate = moment.unix(
-        moment(this.period[0]).unix() + x * this.secInPx
+      const startDate = dayjs.unix(
+        dayjs(this.period[0]).unix() + x * this.secInPx
       )
       startDate.hour(roundingHours(startDate.hour()))
       this.$emit('updateOrder', {
@@ -592,8 +585,8 @@ export default {
         return null
 
       const x = e.layerX - this.titleColumnWidth
-      const startDate = moment.unix(
-        moment(this.period[0]).unix() + x * this.secInPx
+      const startDate = dayjs.unix(
+        dayjs(this.period[0]).unix() + x * this.secInPx
       )
       startDate.hour(roundingHours(startDate.hour()))
 

@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 const TYPES_WITHOUT_PRICE = ['directDistanceZones', 'return']
 
@@ -126,7 +126,7 @@ export class TariffDTO {
     return {
       tmpItem: {
         ...item,
-        date: moment(item.date).format('YYYY-MM-DD'),
+        date: dayjs(item.date).format('YYYY-MM-DD'),
         price: item.groupVat ? item.price : item.priceWOVat,
         agreement: item.agreement?._id || item.agreement,
       },

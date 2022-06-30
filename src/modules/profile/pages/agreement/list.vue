@@ -48,7 +48,7 @@
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/agreement.service'
-import moment from 'moment'
+
 
 export default {
   name: 'AgreementList',

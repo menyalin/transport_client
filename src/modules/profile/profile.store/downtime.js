@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import service from '@/modules/profile/services/downtime.service'
 
 export default {
@@ -37,8 +37,8 @@ export default {
       }
       service.getListForSchedule({
         company: getters.directoriesProfile,
-        startDate: moment(getters.schedulePeriod[0]).toISOString(),
-        endDate: moment(getters.schedulePeriod[1]).toISOString(),
+        startDate: new Date(getters.schedulePeriod[0]).toISOString(),
+        endDate: new Date(getters.schedulePeriod[1]).toISOString(),
       })
     },
   },
@@ -55,8 +55,8 @@ export default {
 
     downtimesForSchedule: ({ downtimes }, { schedulePeriod, hiddenTruckIds }) =>
       downtimes.filter((d) => {
-        const sP = moment(schedulePeriod[0])
-        const eP = moment(schedulePeriod[1])
+        const sP = dayjs(schedulePeriod[0])
+        const eP = dayjs(schedulePeriod[1])
         return (
           eP.isAfter(d.startPositionDate) &&
           sP.isSameOrBefore(d.endPositionDate) &&

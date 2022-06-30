@@ -44,7 +44,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'DateTimeInput',
@@ -118,15 +118,15 @@ export default {
     },
     minDateValue() {
       if (!this.minDate) return null
-      return moment(this.minDate).format('YYYY-MM-DD')
+      return dayjs(this.minDate).format('YYYY-MM-DD')
     },
   },
   watch: {
     value: {
       immediate: true,
       handler: function (val) {
-        if (val?.trim() && moment(val.trim()).isValid()) {
-          this.dateValue = moment(val.trim())
+        if (val?.trim() && dayjs(val.trim()).isValid()) {
+          this.dateValue = dayjs(val.trim())
         } else {
           this.dateValue = null
           if (val?.trim()) {
@@ -139,7 +139,7 @@ export default {
   methods: {
     setDate() {
       if (this.readonly) return null
-      this.dateValue = moment()
+      this.dateValue = dayjs()
       this.emitValue()
     },
     emitValue() {
@@ -151,11 +151,11 @@ export default {
       )
     },
     changeDate(dateStr) {
-      if (dateStr && moment(dateStr).isValid()) {
+      if (dateStr && dayjs(dateStr).isValid()) {
         this.fullTimeStr = this.dateValue?.format().split('T')[1]
         if (this.fullTimeStr)
-          this.dateValue = moment(dateStr + 'T' + this.fullTimeStr)
-        else this.dateValue = moment(dateStr)
+          this.dateValue = dayjs(dateStr + 'T' + this.fullTimeStr)
+        else this.dateValue = dayjs(dateStr)
         this.emitValue()
       } else {
         this.dateValue = null
@@ -165,10 +165,8 @@ export default {
     },
     changeTime(timeStr) {
       let dateStr = this.dateValue.format(this.dateFormat)
-      this.dateValue = moment(
-        dateStr + 'T' + timeStr || '00:00',
-        moment.HTML5_FMT.DATETIME_LOCAL
-      )
+      this.dateValue = dayjs(
+        dateStr + 'T' + timeStr || '00:00')
       this.emitValue()
     },
   },

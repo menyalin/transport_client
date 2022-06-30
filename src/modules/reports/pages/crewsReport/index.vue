@@ -102,7 +102,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import CrewService from '@/modules/profile/services/crew.service'
 
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
@@ -227,14 +227,13 @@ export default {
     },
     resizeHandler() {
       this.tableColumns = getDaysFromPeriod(this.settings.period)
-      //  if (!this.$refs.tableBody) return null
       this.tableRows = getRowsFromCrews(this.filteredCrews, this.settings.group)
       this.$nextTick(() => {
         this.tableWidth =
           this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
         const dSec =
-          moment(this.settings.period[1]).add(24, 'hour').unix() -
-          moment(this.settings.period[0]).unix()
+          dayjs(this.settings.period[1]).add(24, 'hour').unix() -
+          dayjs(this.settings.period[0]).unix()
         this.secInPx = dSec / this.tableWidth
 
         this.$nextTick(() => {
@@ -249,27 +248,26 @@ export default {
     getWidthInPxForBlock(block) {
       if (!this.secInPx) return null
       let endM = null
-      let startM = moment(block.startDate).unix()
-      if (moment(this.settings.period[0]).isSameOrAfter(block.startDate))
-        startM = moment(this.settings.period[0]).unix()
+      let startM = dayjs(block.startDate).unix()
+      if (dayjs(this.settings.period[0]).isSameOrAfter(block.startDate))
+        startM = dayjs(this.settings.period[0]).unix()
       if (
         !block.endDate ||
-        moment(this.settings.period[1])
+        dayjs(this.settings.period[1])
           .add('24', 'hour')
           .isSameOrBefore(block.endDate)
       )
-        endM = moment(this.settings.period[1]).add(24, 'hour').unix()
-      else endM = moment(block.endDate).unix()
+        endM = dayjs(this.settings.period[1]).add(24, 'hour').unix()
+      else endM = dayjs(block.endDate).unix()
       const widthPx = (endM - startM) / this.secInPx
       return widthPx > 10 ? widthPx + 'px' : '10px'
     },
 
     getLeftShiftInPxForBlock(crew) {
-      // dates in seconds
       if (!this.$refs?.titleCell) return null
       let leftShift = null
-      const startPeriod = moment(this.settings.period[0]).unix()
-      const startCrew = moment(crew.startDate).unix()
+      const startPeriod =dayjs(this.settings.period[0]).unix()
+      const startCrew = dayjs(crew.startDate).unix()
       if (startCrew <= startPeriod) leftShift = 0
       else leftShift = startCrew - startPeriod
       return leftShift / this.secInPx + this.$refs.titleCell.offsetWidth + 'px'
@@ -282,12 +280,13 @@ export default {
       )
       return rowIndex * ROW_HEIGTH + 'px'
     },
+
     initDateRange() {
       const dateFormat = 'YYYY-MM-DD'
-      const today = moment()
+      const today = dayjs()
       return [
         today.add(-7, 'd').format(dateFormat),
-        today.add(12, 'd').format(dateFormat),
+        today.add(5, 'd').format(dateFormat),
       ]
     },
   },

@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { helpers } from 'vuelidate/lib/validators'
 
 export const isLaterThan = (startDate) =>
@@ -6,9 +6,9 @@ export const isLaterThan = (startDate) =>
     if (
       startDate &&
       val &&
-      moment(val).isValid() &&
-      moment(startDate).isValid()
+      dayjs(val).isValid() &&
+      dayjs(startDate).isValid()
     )
-      return moment(startDate).isSameOrBefore(val)
+      return dayjs(startDate).isSameOrBefore(val)
     else return true
   })

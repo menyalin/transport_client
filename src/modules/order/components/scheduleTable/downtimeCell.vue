@@ -16,7 +16,8 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
+
 export default {
   name: 'DowntimeCell',
   props: {
@@ -27,7 +28,7 @@ export default {
       return ['downtime-wrapper', this.downtime.type]
     },
     downtimeStartTime() {
-      return moment(this.downtime.startPositionDate).format('HH:mm')
+      return dayjs(this.downtime.startPositionDate).format('HH:mm')
     },
     downtime() {
       return this.$store.getters.downtimesMap.get(this.itemId)
