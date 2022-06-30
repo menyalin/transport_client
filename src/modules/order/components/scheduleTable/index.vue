@@ -565,14 +565,14 @@ export default {
     dropOnBufferHandler(e) {
       this.draggedOrderId = null
       const x = e.layerX - this.titleColumnWidth
-      const startDate = dayjs.unix(
+      let startDate = dayjs.unix(
         dayjs(this.period[0]).unix() + x * this.secInPx
       )
-      startDate.hour(roundingHours(startDate.hour()))
+      startDate = startDate.hour(roundingHours(startDate.hour()))
       this.$emit('updateOrder', {
         truckId: null,
         orderId: e.dataTransfer.getData('text/orderId'),
-        startDate: startDate.format('YYYY-MM-DD HH:00'),
+        startDate: startDate.toISOString(),
       })
     },
     dropHandler(e) {
