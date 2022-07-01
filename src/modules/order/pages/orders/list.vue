@@ -212,6 +212,7 @@ import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocompl
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
+import { ALL_ORDER_LIST_HEADERS } from './constants.js'
 
 import { mapGetters } from 'vuex'
 
@@ -255,71 +256,7 @@ export default {
     },
     count: 0,
     orders: [],
-    allHeaders: [
-      {
-        value: 'plannedDate',
-        text: 'Дата погрузки',
-        sortable: false,
-        width: '12rem',
-      },
-      {
-        value: 'analytics.type',
-        text: 'Тип рейса',
-        sortable: false,
-        width: '10rem',
-      },
-      {
-        value: 'tk',
-        text: 'TK',
-        sortable: false,
-      },
-      {
-        value: 'truck',
-        text: 'Грузовик',
-        sortable: false,
-        align: 'center',
-        width: '10rem',
-      },
-      {
-        value: 'trailer',
-        text: 'Прицеп',
-        sortable: false,
-        align: 'center',
-        width: '10rem',
-      },
-      {
-        value: 'loadingPoints',
-        text: 'Погрузка',
-        sortable: false,
-        //width: '10rem',
-      },
-      {
-        value: 'unloadingPoints',
-        text: 'Разгрузка',
-        sortable: false,
-        //width: '10rem',
-      },
-      { value: 'state.status', text: 'Статус', sortable: false },
-      { value: 'client.client', text: 'Клиент', sortable: false },
-      {
-        value: 'client.num',
-        text: 'Номер клиента',
-        sortable: false,
-        forAccountingMode: true,
-      },
-      {
-        value: 'agreement.name',
-        text: 'Соглашение',
-        sortable: false,
-        forAccountingMode: true,
-      },
-      {
-        value: 'actions',
-        text: 'Действия',
-        sortable: false,
-        forAccountingMode: true,
-      },
-    ],
+    allHeaders: ALL_ORDER_LIST_HEADERS,
   }),
   computed: {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
@@ -407,7 +344,6 @@ export default {
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-    // this.getData()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -462,8 +398,8 @@ export default {
           tkName: this.settings.tkName,
           status: this.settings.status,
           profile: this.directoriesProfile,
-          startDate: new Date(this.settings.period[0]).toISOString(),
-          endDate: new Date(this.settings.period[1]).toISOString(),
+          startDate: dayjs(this.settings.period[0]).toISOString(),
+          endDate: dayjs(this.settings.period[1]).toISOString(),
           accountingMode: this.accountingMode || null,
           skip:
             this.settings.listOptions.itemsPerPage *
