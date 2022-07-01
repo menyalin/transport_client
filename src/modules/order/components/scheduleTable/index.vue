@@ -585,10 +585,10 @@ export default {
         return null
 
       const x = e.layerX - this.titleColumnWidth
-      const startDate = dayjs.unix(
+      let startDate = dayjs.unix(
         dayjs(this.period[0]).unix() + x * this.secInPx
       )
-      startDate.hour(roundingHours(startDate.hour()))
+      startDate = startDate.hour(roundingHours(startDate.hour()))
 
       this.$emit('updateOrder', {
         truckId: this.rows[this.overRowInd]._id,

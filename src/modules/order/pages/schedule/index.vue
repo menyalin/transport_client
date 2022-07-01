@@ -69,14 +69,14 @@ export default {
       this.$store.dispatch('getNotesForSchedule')
     },
     async startDragOrder(orderId) {
-      await service.disable({ orderId, state: true })
+      service.disable({ orderId, state: true })
     },
     async endDragOrder(orderId) {
-      await service.disable({ orderId, state: false })
+      service.disable({ orderId, state: false })
     },
     async updateOrderHandler({ orderId, truckId, startDate }) {
-      
-      await service.moveOrderInSchedule({
+
+      service.moveOrderInSchedule({
         orderId,
         truck: truckId,
         startPositionDate: startDate,
