@@ -391,8 +391,8 @@ export default {
       const offsetX = e.layerX - this.titleColumnWidth
       if (offsetX < 0 || offsetY < 0) return null
 
-      const startDateM = dayjs(this.period[0]).add(this.secInPx * offsetX, 's')
-      startDateM.hour(roundingHours(startDateM.hour()))
+      let startDateM = dayjs(this.period[0]).add(this.secInPx * offsetX, 's')
+      startDateM = startDateM.hour(roundingHours(startDateM.hour()))
       this.tmpStartDate = startDateM.format('YYYY-MM-DD HH:00')
 
       if (isBuffer) this.createOrder()
