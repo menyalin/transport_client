@@ -37,7 +37,7 @@ export default {
       })
     },
     logOut({ commit }) {
-      localStorage.removeItem('token')
+      localStorage.clear()
       commit('logOut')
       socket.disconnect()
       router.push('/auth/login')
