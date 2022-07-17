@@ -124,6 +124,7 @@ export default {
       return this.$store.getters.companySettings
     },
     changed() {
+      if (!this.storedSettings) return null
       const keys = Object.keys(this.settings)
       for (let i = 0; i < keys.length; i++) {
         if (
@@ -174,10 +175,13 @@ export default {
       this.setSettings()
     },
     setSettings() {
-      const keys = Object.keys(this.settings)
-      keys.forEach((key) => {
-        this.settings[key] = this.storedSettings[key]
-      })
+      if (this.storedSettings){
+          const keys = Object.keys(this.settings)
+          keys.forEach((key) => {
+             this.settings[key] = this.storedSettings[key]
+          })
+      } 
+      
     },
   },
 }

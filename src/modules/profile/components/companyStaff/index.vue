@@ -5,6 +5,7 @@
       <v-btn
         color="secondary"
         small
+        :disabled="!isActiveDirectioriesProfile"
         @click="addNewEmployee"
       >
         Пригласить сотрудника
@@ -92,6 +93,9 @@ export default {
   }),
   computed: {
     ...mapGetters(['user']),
+    isActiveDirectioriesProfile() {
+      return !!this.companyId && this.companyId === this.$store.getters.directoriesProfile
+    }
   },
   methods: {
     addNewEmployee() {

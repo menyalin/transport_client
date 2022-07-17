@@ -16,6 +16,7 @@
           </div>
           <v-text-field
             v-model.trim="$v.email.$model"
+            сlearable
             :loading="emailLoading"
             :disabled="emailLoading"
             :error-messages="emailErrors"
@@ -55,9 +56,10 @@
         <v-btn
           color="green darken-1"
           text
+          :disabled="isdisableSaveBtn"
           @click="save"
         >
-          Сохранить
+          Пригласить
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -94,11 +96,13 @@ export default {
   computed: {
     ...mapGetters(['staffRoles']),
     emailErrors() {
-      if (this.$v.email.$dirty && this.$v.email.$invalid) {
+      if (this.$v.email.$dirty && this.$v.email.$invalid) 
         return 'Введите корректный email'
-      }
       return null
     },
+    isdisableSaveBtn() {
+      return !this.user || !this.position ||  !this.roles.length
+    }
   },
   methods: {
     ...mapActions(['userByEmail', 'addEmployee']),

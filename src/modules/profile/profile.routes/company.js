@@ -6,7 +6,7 @@ export default [
   },
   {
     path: 'companies/create',
-    name: 'CreateCompany',
+    name: 'createNewCompany',
     component: () => import('../pages/company/create.vue'),
   },
   {
