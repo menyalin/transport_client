@@ -3,7 +3,7 @@
     <app-admin-bar title="User profile" />
     <v-main>
       <div class="layout">
-        <app-left-nav :items="navButtons" />
+        <app-left-nav :items="navButtonsWithBadges" />
         <router-view />
       </div>
       <app-snackbar />
@@ -35,6 +35,13 @@ export default {
         icon: 'mdi-factory',
         link: '/profile/companies',
         onlyWithDirectoriesProfile: false,
+      },
+      {
+        text: 'Cотрудники',
+        icon: 'mdi-account-hard-hat',
+        link: '/profile/workers',
+        onlyWithDirectoriesProfile: true,
+        permission: 'worker:readList',
       },
       {
         text: 'Соглашения',
@@ -149,6 +156,14 @@ export default {
       },
     ],
   }),
+  computed: {
+    navButtonsWithBadges() {
+      return this.navButtons.map(i => {
+        if (i.link === '/profile/settings') return { ...i, badge: this.$store.getters.companyInvites.length}
+        else return i
+      })
+    }
+  }
 }
 </script>
 <style scoped>

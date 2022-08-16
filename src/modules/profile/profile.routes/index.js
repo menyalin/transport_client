@@ -18,6 +18,7 @@ import documentRouter from './document'
 import zoneRouter from './zone'
 import regionRouter from './region.js'
 import cityRouter from './city.js'
+import workerRouter from './worker.js'
 
 export default [
   {
@@ -43,6 +44,7 @@ export default [
       ...zoneRouter,
       ...regionRouter,
       ...cityRouter,
+      ...workerRouter,
       { path: 'tasks', name: 'taskList', component: TaskList },
 
       /// Настройки профиля
