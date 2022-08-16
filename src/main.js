@@ -11,6 +11,8 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import isSameOrBefore  from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import { VueQueryPlugin } from 'vue-query'
+import queryClient from './queryClient'
 
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
@@ -21,6 +23,7 @@ Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
 Vue.use(VueCompositionAPI)
+Vue.use(VueQueryPlugin, {queryClient})
 
 Vue.use(VuetifyConfirm, {
   vuetify,
