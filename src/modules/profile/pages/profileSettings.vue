@@ -2,8 +2,13 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div>
-          Использовать справочники компании:
+        <app-company-invites
+          v-if="companyInvites.length" 
+          class="my-3" 
+          :invites="companyInvites"
+        />
+        <div class="mt-3">
+          <h4>Использовать справочники компании:</h4>
           <v-select
             class="ma-4"
             solo
@@ -20,10 +25,15 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import AppCompanyInvites from '../components/companyInvites'
+
 export default {
   name: 'ProfileSettingsPage',
+  components: {
+    AppCompanyInvites
+  },
   computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile']),
+    ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites']),
     companies() {
       return this.myCompanies
         .filter((item) => item.hasOwnDirectories)

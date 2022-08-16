@@ -21,18 +21,27 @@
         v-model="selectedItem"
         color="primary"
       >
-        <v-list-item
+        <v-badge
           v-for="item in menuItems"
           :key="item.link"
-          :to="item.link"
+          color="error"
+          :content="item.badge ? item.badge : null"
+          :value="item.badge ? item.badge : null"
+          :style="{width: '100%'}"
+          offset-x="20"
+          offset-y="10"
+          overlap
+          bordered
         >
-          <v-list-item-icon>
-            <v-icon v-text="item.icon" />
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.text" />
-          </v-list-item-content>
-        </v-list-item>
+          <v-list-item :to="item.link">   
+            <v-list-item-icon>
+              <v-icon v-text="item.icon" />
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.text" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-badge>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>

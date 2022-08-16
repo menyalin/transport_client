@@ -8,6 +8,9 @@ export default {
     user: null,
   }),
   mutations: {
+    clearDirectoriesProfile(state) {
+      state.user.directoriesProfile = null
+    },
     setToken(state, payload) {
       state.token = payload
       localStorage.setItem('token', payload)

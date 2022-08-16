@@ -16,6 +16,7 @@ import CityModule from './city'
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 
+
 export default {
   state: {
     myCompanies: [],
@@ -24,19 +25,35 @@ export default {
     tasks: [],
     staffRoles: [],
     permissionsMap: new Map(),
+    companyInvites : []
   },
   mutations: {
+    setCompanyInvites(state, payload) {
+      state.companyInvites = payload
+    },
+    
+    addCompanyInvite(state, payload) {
+      state.companyInvites.push(payload)
+    },
+
+    deleteInvite(state, id) {
+      state.companyInvites = state.companyInvites.filter(i => i._id !== id)
+    },
+
     setFormSettings({ formSettings }, { formName, settings }) {
       formSettings.set(formName, settings)
     },
+
     addArrayToCache(state, items) {
       items.forEach((item) => {
         state.cacheDirectories.set(item._id, item)
       })
     },
+
     setStaffRoles(state, payload) {
       state.staffRoles = payload
     },
+    
     setPermissionsMap(state, payload) {
       state.permissionsMap.clear()
       Object.entries(payload).forEach((i) => {
@@ -126,6 +143,7 @@ export default {
         zones,
         regions,
         cities,
+        companyInvites
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -152,8 +170,10 @@ export default {
       if (zones?.length) commit('setZones', zones)
       if (regions?.length) commit('setRegions', regions)
       if (cities?.length) commit('setCities', cities)
-
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
+
+      if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
+
     },
 
     async createCompany({ commit }, payload) {
@@ -214,6 +234,8 @@ export default {
   },
   getters: {
     cacheDirectories: ({ cacheDirectories }) => cacheDirectories,
+
+    companyInvites: ({ companyInvites }) => companyInvites,
 
     myCompanies: (state) => state.myCompanies,
     companySettings: ({ myCompanies }, { directoriesProfile }) =>
