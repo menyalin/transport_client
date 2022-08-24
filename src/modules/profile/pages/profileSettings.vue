@@ -36,7 +36,7 @@ export default {
     ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites']),
     companies() {
       return this.myCompanies
-        .filter((item) => item.hasOwnDirectories)
+        // .filter((item) => item.hasOwnDirectories)
         .map((item) => ({
           value: item._id,
           text: item.name,

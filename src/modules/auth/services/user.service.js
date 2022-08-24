@@ -11,11 +11,14 @@ class UserService {
        socket.connect()
     })
 
-    socket.on('user:clearDirectoriesProfile', () => {
-      store.commit('setError', 'Доступ к данным компании заблокирован!')
-      store.commit('clearDirectories')
-      store.commit('clearDirectoriesProfile')
-      router.push('/')
+    socket.on('user:clearDirectoriesProfile', (companyId) => {
+      store.commit('deleteCompany', companyId)
+      if (store.getters.directoriesProfile === companyId) {
+        store.commit('setError', 'Доступ к данным компании заблокирован!')
+        store.commit('clearDirectories')
+        store.commit('clearDirectoriesProfile')
+        router.push('/')
+      }      
     })
   }
 

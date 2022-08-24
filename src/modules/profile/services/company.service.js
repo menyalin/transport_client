@@ -41,21 +41,7 @@ class CompanyService {
     })
     return data
   }
-  // TODO: убрать метод, поиск по email должен быть внутри workerService 
-  async userByEmail(email) {
-    const { data } = await api.get(BASE_PATH + '/user_by_email', {
-      params: { email },
-    })
-    return data
-  }
 
-  async addEmployee(employee, companyId) {
-    const { data } = await api.post(
-      BASE_PATH + '/' + companyId + '/staff',
-      employee
-    )
-    return data
-  }
 
   async updateSettings({ settings }) {
     if (!store.getters.hasPermission('fullAccess')) {

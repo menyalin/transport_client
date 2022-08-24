@@ -61,11 +61,11 @@ export default {
   methods: {
     async handleAccept(workerId, accepted) {
       try {
-        await WorkerService.updateOne(workerId, {accepted, pending: false})
+        await WorkerService.acceptInvite({ workerId, accepted })
         this.$store.commit('deleteInvite', workerId)
-
+        if (accepted) this.$store.dispatch('getUserData')
       } catch (e) {
-
+        this.$store.commit('setError', e.message)
       }
       
     }

@@ -1,4 +1,5 @@
 import DriverService from '@/modules/profile/services/driver.service'
+import dayjs from 'dayjs'
 
 export default {
   state: {
@@ -74,6 +75,15 @@ export default {
       })
       return map
     },
+    
+    activeDriversOnDate: ({ drivers }) => (date) => {
+      if (!date || !dayjs(date).isValid) return drivers
+      return drivers.filter(item => {
+        const startPeriodCond = !item.employmentDate || new Date(item.employmentDate) <= new Date(date)
+        const endPeriodCond = !item.dismissalDate || new Date(item.dismissalDate) > new Date(date)
+        return startPeriodCond && endPeriodCond
+      })
+    },
 
     brigadiersForSelect: ({ drivers }) =>
       drivers
@@ -83,6 +93,7 @@ export default {
           value: d._id,
           text: d.fullName,
         })),
+    
     mechanicsForSelect: ({ drivers }) =>
       drivers
         .filter((d) => d.isMechanic)

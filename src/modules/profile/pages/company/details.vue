@@ -10,22 +10,17 @@
         </div>
         <v-divider />
         <app-company-settings :companyId="id" />
-        <app-company-staff
-          :staff="company.staff"
-          :company-id="company._id"
-        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
-import AppCompanyStaff from '@/modules/profile/components/companyStaff'
+
 import AppCompanySettings from '@/modules/profile/components/companySettings'
 
 export default {
   name: 'CompanyDetails',
   components: {
-    AppCompanyStaff,
     AppCompanySettings,
   },
   props: {

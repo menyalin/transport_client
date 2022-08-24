@@ -48,9 +48,6 @@ export default {
   computed: {
     ...mapGetters(['myCompanies']),
   },
-  created() {
-    this.getMyCompanies()
-  },
   methods: {
     ...mapActions(['getMyCompanies']),
     refresh() {

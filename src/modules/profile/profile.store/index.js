@@ -22,7 +22,6 @@ export default {
     myCompanies: [],
     formSettings: new Map(),
     cacheDirectories: new Map(),
-    tasks: [],
     staffRoles: [],
     permissionsMap: new Map(),
     companyInvites : []
@@ -77,22 +76,10 @@ export default {
     addCompany(state, company) {
       state.myCompanies.push(company)
     },
-    addEmployee(state, { companyId, newEmployee }) {
-      const company = state.myCompanies.find((item) => item._id === companyId)
-      company.staff.push(newEmployee)
+    deleteCompany(state, companyId) {
+      state.myCompanies = state.myCompanies.filter(i => i._id !== companyId)
     },
-    addTask(state, task) {
-      state.tasks.push(task)
-    },
-    completeTask(state, taskId) {
-      const taskIndex = state.tasks.findIndex((item) => item._id === taskId)
-      if (taskIndex !== -1) state.tasks.splice(taskIndex, 1)
-    },
-    deleteEmployee(state, { companyId, employeeId }) {
-      const company = state.myCompanies.find((item) => item._id === companyId)
-      if (company)
-        company.staff = company.staff.filter((item) => item._id !== employeeId)
-    },
+
     updateCompany(state, company) {
       state.myCompanies = state.myCompanies.filter(
         (item) => item._id !== company._id
@@ -147,6 +134,7 @@ export default {
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
+      
       if (addresses?.length) commit('setAddresses', addresses)
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
@@ -197,26 +185,6 @@ export default {
       }
     },
 
-    async userByEmail({ commit }, email) {
-      try {
-        const tmp = await CompanyService.userByEmail(email)
-        return tmp
-      } catch (e) {
-        commit('setError', e.response?.data?.message)
-      }
-    },
-
-    async addEmployee({ commit }, { newEmployee, companyId }) {
-      try {
-        commit('setLoading', true)
-        const newEmpl = await CompanyService.addEmployee(newEmployee, companyId)
-        commit('addEmployee', { companyId, newEmployee: newEmpl })
-        commit('setLoading', false)
-      } catch (e) {
-        commit('setLoading', false)
-        commit('setError', e.response?.data?.message)
-      }
-    },
 
     async configProfile({ commit }, payload) {
       try {

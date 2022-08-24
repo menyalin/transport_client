@@ -58,11 +58,15 @@ export default {
     },
     headers: [
       { value: 'name', text: 'Имя' },
+      { value: 'fullName', text: 'Полное имя' },
+      { value: 'position', text: 'Должность' },
+      { value: 'roles', text: 'Роли' },
+      { value: 'note', text: 'Примечание' },
     ],
   }),
   setup() {
-    const {data: workers, isLoading: loading} = useQuery(WORKERS, workerService.getByDirectoriesProfile)
-    return { workers, loading }
+    const {data: workers, isLoading: loading, refetch: refetchWorkers} = useQuery(WORKERS, workerService.getByDirectoriesProfile, {staleTime: Infinity})
+    return { workers, loading, refetchWorkers }
   },
   computed: {
     ...mapGetters(['directoriesProfile']),
@@ -71,7 +75,7 @@ export default {
       return this.workers
         .map((i) => ({
           ...i,
-          // date: i.date ? new Date(i.date).toLocaleDateString() : null,
+          roles: i.roles.map(role => this.$store.getters.staffRolesMap.get(role)).join(', ')
         }))
     },
   },
@@ -91,7 +95,7 @@ export default {
       this.$router.push({ name: 'WorkerCreate' })
     },
     refresh() {
-      // todo: add refresh worckers
+      this.refetchWorkers()
     },
     dblClickRow(_, { item }) {
       this.$router.push(`workers/${item._id}`)

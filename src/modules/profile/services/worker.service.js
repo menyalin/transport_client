@@ -8,8 +8,9 @@ const BASE_PATH = '/workers'
  
 
 class WorkerService {
-  constructor() {
 
+  constructor() {
+    this.cache =  new Map()
     socket.on('worker:created', (data) => {
       queryClient.setQueryData([WORKERS, data._id], data)
       const workers = queryClient.getQueryData([WORKERS])
@@ -50,6 +51,11 @@ class WorkerService {
     return data
   }
 
+  async getForAutocomplete(params) {
+    const { data } = await api.get(BASE_PATH + '/get_for_autocomplete', { params: params })
+    return data
+  }
+
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
     return data
@@ -66,6 +72,12 @@ class WorkerService {
     const { data } = await api.put(BASE_PATH + `/${workerId}/addUser`, {user: userId, roles})
     return data
   }
+
+  async acceptInvite({workerId, accepted}) {
+    const { data } = await api.put(BASE_PATH + `/${workerId}/acceptInvite`, { accepted })
+    return data
+  }
+
 
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)

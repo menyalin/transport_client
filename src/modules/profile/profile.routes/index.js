@@ -1,5 +1,4 @@
 import Layout from '../pages/layout'
-import TaskList from '../pages/taskList'
 
 import crewRoutes from './crews.js'
 import truckRoutes from './trucks.js'
@@ -19,6 +18,7 @@ import zoneRouter from './zone'
 import regionRouter from './region.js'
 import cityRouter from './city.js'
 import workerRouter from './worker.js'
+import fineRouter from './fine.js'
 
 export default [
   {
@@ -45,7 +45,7 @@ export default [
       ...regionRouter,
       ...cityRouter,
       ...workerRouter,
-      { path: 'tasks', name: 'taskList', component: TaskList },
+      ...fineRouter,
 
       /// Настройки профиля
       {

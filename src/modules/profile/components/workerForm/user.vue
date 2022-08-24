@@ -59,13 +59,14 @@
           class="buttons-row" 
         >
           <v-btn 
+            v-if="$store.getters.hasPermission('worker:userAdmin')"
             :disabled="tmpRoles.length === 0 || (!worker.accepted && !worker.pending)"
             @click="updateRoles"
           >
             Обновить роли
           </v-btn>
           <v-btn 
-            v-if="worker.accepted"
+            v-if="worker.accepted && $store.getters.hasPermission('worker:userAdmin')"
             @click="toggleDisableStatus" 
           >
             {{ worker.disabled ? 'Открыть доступ' : 'заблокировать доступ' }}
@@ -199,7 +200,7 @@ export default {
     },
 
     async toggleDisableStatus() {
-      if (!this.workerId) return 
+      if (!this.workerId || !this.$store.getters.hasPermission('worker:userAdmin')) return 
       await service.updateOne(this.workerId, { disabled: !this.worker.disabled })
     }
   }

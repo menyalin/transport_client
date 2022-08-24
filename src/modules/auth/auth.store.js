@@ -90,11 +90,7 @@ export default {
       const currentCompany = myCompanies.find(
         (c) => c._id === user.directoriesProfile
       )
-      if (!currentCompany) return []
-      const emp = currentCompany.staff.find(
-        (employee) => employee.user._id === user._id
-      )
-      return emp.roles || []
+      return currentCompany?.roles || []
     },
 
     hasPermission:
