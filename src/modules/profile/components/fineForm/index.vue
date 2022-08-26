@@ -36,6 +36,14 @@
         dense
         :style="{maxWidth: '350px'}"
       />
+      <v-select 
+        v-model.trim="$v.form.category.$model"
+        :items="$store.getters.fineCategories"
+        label="Категория"
+        outlined
+        dense
+        :style="{maxWidth: '450px'}"
+      />
     </div>
 
     <div class="row-input mt-2"> 
@@ -55,6 +63,15 @@
         outlined
         dense
         :style="{maxWidth: '300px'}"
+      />
+
+      <v-text-field 
+        v-model="$v.form.expiryDateOfDiscount.$model"
+        type="date"
+        label="Скидка до"
+        outlined
+        dense
+        :style="{maxWidth: '250px'}"
       />
     </div>  
     
@@ -117,7 +134,6 @@
       class="row-input" 
     >
       <v-text-field 
-        
         v-model.number="$v.form.paymentSum.$model"
         type="number"
         label="Сумма оплаты"
@@ -126,7 +142,6 @@
         :style="{maxWidth: '300px'}"
       />
       <v-text-field
-        
         v-model="$v.form.paymentDate.$model"
         type="date"
         outlined
@@ -204,15 +219,17 @@ export default {
   },
   data() {
     return {
-      dateFields: ['date', 'paymentDate'],
+      dateFields: ['date', 'paymentDate', 'expiryDateOfDiscount'],
       dateTimeFields: ['violationDate'],
       form: {
         date: null,
         number: null,
+        category: null,
         truck: null,
         driver: null,
         totalSum: null,
         discountedSum: null,
+        expiryDateOfDiscount: null,
         violationDate: null,
         address: null,
         paymentDate: null,
@@ -297,7 +314,9 @@ export default {
         number: { required },
         truck: { required },
         totalSum: { required },
+        category: { required },
         discountedSum: { required },
+        expiryDateOfDiscount: {},
         driver: {},
         violationDate: {},
         address: {},

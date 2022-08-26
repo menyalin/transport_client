@@ -104,6 +104,7 @@ export default {
   watch: {
     period: {
       immediate: true,
+      deep: true,
       handler: function (val) {
         this.tmpPeriod = [
           val[0] ? dayjs(val[0]).startOf('day').format() : null,

@@ -23,10 +23,14 @@ export default {
     formSettings: new Map(),
     cacheDirectories: new Map(),
     staffRoles: [],
+    fineCategories: [],
     permissionsMap: new Map(),
     companyInvites : []
   },
   mutations: {
+    setFineCategories(state, payload) {
+      state.fineCategories = payload
+    },
     setCompanyInvites(state, payload) {
       state.companyInvites = payload
     },
@@ -130,7 +134,8 @@ export default {
         zones,
         regions,
         cities,
-        companyInvites
+        companyInvites,
+        fineCategories,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -159,6 +164,8 @@ export default {
       if (regions?.length) commit('setRegions', regions)
       if (cities?.length) commit('setCities', cities)
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
+      if (fineCategories?.length) commit('setFineCategories', fineCategories)
+
 
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
 
@@ -212,10 +219,13 @@ export default {
     staffRolesMap: ({ staffRoles }) =>
       new Map(staffRoles.map((s) => [s.value, s.text])),
 
-    tasks: ({ tasks }) => tasks,
+    // tasks: ({ tasks }) => tasks,
 
     formSettingsMap: ({ formSettings }) => formSettings,
     permissionsMap: ({ permissionsMap }) => permissionsMap,
+    fineCategories: ({ fineCategories}) => fineCategories,
+    fineCategoriesMap: ({ fineCategories }) =>
+      new Map(fineCategories.map((i) => [i.value, i.text])),
   },
 
   modules: {
