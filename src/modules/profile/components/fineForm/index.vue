@@ -27,7 +27,8 @@
         outlined
         dense
         :style="{maxWidth: '250px'}"
-      />
+        @paste="pasteDate"
+      />  
 
       <v-text-field 
         v-model.trim="$v.form.number.$model"
@@ -72,6 +73,7 @@
         outlined
         dense
         :style="{maxWidth: '250px'}"
+        @paste="pasteDate"
       />
     </div>  
     
@@ -83,6 +85,7 @@
         dense 
         label="Дата и время нарушения"
         :style="{maxWidth: '250px'}"
+        @paste="pasteDate"
       />
       
       <v-autocomplete
@@ -130,7 +133,7 @@
     </div>
 
     <div 
-      v-if="isNeedWithheldFromDriver"
+      v-if="showPaymentBlock"
       class="row-input" 
     >
       <v-text-field 
@@ -148,6 +151,7 @@
         dense 
         label="Дата оплаты"
         :style="{maxWidth: '250px'}"
+        @paste="pasteDate"
       />
       
       <app-worker-autocomplete 
@@ -157,7 +161,8 @@
         outlined
         :style="{maxWidth: '350px'}"
       />
-      <v-select 
+      <v-select
+        v-if="isNeedWithheldFromDriver"
         v-model="$v.form.kX.$model"
         :items="[1, 2, 4]"
         label="kX"
@@ -166,6 +171,7 @@
         :style="{maxWidth: '80px'}"
       />
       <v-text-field
+        v-if="isNeedWithheldFromDriver"
         v-model.number="$v.form.withheldSum.$model"
         type="number"
         outlined
@@ -205,6 +211,8 @@ import { required } from 'vuelidate/lib/validators'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
 import crewService from '../../services/crew.service'
+import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
+
 
 export default {
   name: 'FineForm',
@@ -216,6 +224,10 @@ export default {
     item: { type: Object },
     displayDeleteBtn: { type: Boolean, default: false },
     openInModal: { type: Boolean, default: false },
+  },
+  setup() {
+    const { pasteDate } = usePasteDateInput()
+    return { pasteDate }
   },
   data() {
     return {
@@ -252,6 +264,9 @@ export default {
     },
     isNeedWithheldFromDriver () {
       return this.form.isCulpritDriver && !this.form.isPaydByDriver
+    },
+    showPaymentBlock() {
+      return !this.form.isPaydByDriver
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
@@ -296,7 +311,7 @@ export default {
     'form.paymentSum': {
       immediate: true,
       handler: function(val) {
-        if (!val ) this.form.withheldSum = 0
+        if (!val || !this.isNeedWithheldFromDriver) this.form.withheldSum = 0
         else this.form.withheldSum = this.form.kX * this.form.paymentSum
       },
     },

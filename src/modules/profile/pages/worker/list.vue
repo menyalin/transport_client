@@ -77,6 +77,10 @@ export default {
           ...i,
           roles: i.roles.map(role => this.$store.getters.staffRolesMap.get(role)).join(', ')
         }))
+        .sort((a, b) => {
+          if (a.name < b.name) return -1
+          else return 1 
+        })
     },
   },
   created() {

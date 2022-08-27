@@ -11,11 +11,13 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import isSameOrBefore  from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { VueQueryPlugin } from 'vue-query'
 import queryClient from './queryClient'
 
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
+dayjs.extend(customParseFormat)
 dayjs.locale('ru')
 
 
