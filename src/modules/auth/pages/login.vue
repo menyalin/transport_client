@@ -104,14 +104,9 @@ export default {
     submit() {
       this.loading = true
       const user = { email: this.email, password: this.password }
-      //this.signIn(user)
       this.$store
         .dispatch('signIn', user)
-        .then((res) => {
-          if (res.status === 201 && res.data.token) {
-            this.$router.push(this.$route.query.redirect || '/')
-          }
-        })
+        .then(() => { this.$router.push(this.$route.query.redirect || '/') })
         .catch((e) => {
           if (e.response.status === 404) {
             this.showMessage('User not found', 'error')

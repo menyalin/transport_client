@@ -121,7 +121,7 @@ export default {
       name: { required },
       password: {
         required,
-        minLength: minLength(4),
+        minLength: minLength(6),
       },
       confirmPassword: {
         required,

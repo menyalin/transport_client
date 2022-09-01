@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
+        <app-user-info />
         <app-company-invites
           v-if="companyInvites.length" 
           class="my-3" 
@@ -25,12 +26,14 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppCompanyInvites from '../components/companyInvites'
+import AppCompanyInvites from '../components/companyInvites/index.vue'
+import AppUserInfo from '../components/userInfo/index.vue'
 
 export default {
   name: 'ProfileSettingsPage',
   components: {
-    AppCompanyInvites
+    AppCompanyInvites,
+    AppUserInfo,
   },
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites']),

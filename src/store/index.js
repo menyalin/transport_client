@@ -7,21 +7,21 @@ import OrderModule from '@/modules/order/store/index.js'
 import AccountingModule from '@/modules/accounting/store.js'
 import router from '../router'
 
-const initPlugin = (store) => {
-  if (store.getters.token) {
-    store.state.appLoading = true
-    Promise.all([store.dispatch('getUserData')])
-      .catch((e) => {
-        router.push({
-          name: 'serverNotAvailable',
-          query: { message: e.message },
-        })
-      })
-      .finally(() => {
-        store.state.appLoading = false
-      })
-  }
-}
+// const initPlugin = (store) => {
+//   if (store.getters.token) {
+//     store.state.appLoading = true
+//     Promise.all([store.dispatch('getUserData')])
+//       .catch((e) => {
+//         router.push({
+//           name: 'serverNotAvailable',
+//           query: { message: e.message },
+//         })
+//       })
+//       .finally(() => {
+//         store.state.appLoading = false
+//       })
+//   }
+// }
 
 Vue.use(Vuex)
 
@@ -30,7 +30,7 @@ export default new Vuex.Store({
     loading: false,
     appLoading: false,
     error: null,
-    baseUrl: process.env.VUE_APP_API_URL,
+    // baseUrl: process.env.VUE_APP_API_URL,
   }),
   mutations: {
     setAppLoading(state, payload) {
@@ -54,7 +54,7 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    baseUrl: ({ baseUrl }) => baseUrl,
+    // baseUrl: ({ baseUrl }) => baseUrl,
     error: ({ error }) => error,
     appLoading: ({ appLoading }) => appLoading,
     loading: ({ loading }) => loading,

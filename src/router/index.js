@@ -56,7 +56,13 @@ const router = new VueRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  if (!!localStorage.getItem('token') && !store.getters.isLoggedIn)
+    await store.dispatch('getUserData')
+  
+
+
+  
   const permissions = to.matched
     .map((r) => r.meta.permission)
     .filter((p) => !!p)
@@ -69,20 +75,21 @@ router.beforeEach((to, from, next) => {
     next({
       path: '/auth/login',
       query: { redirect: to.fullPath },
-    }).catch((e) => {})
-  else if (store.getters.isLoggedIn && !store.getters.user) {
-    store
-      .dispatch('getUserData')
-      .then(() => {
-        _checkPermissions(permissions, next, to, from)
-      })
-      .catch((e) => {
-        next({
-          name: 'serverNotAvailable',
-          query: { message: e.message },
-        })
-      })
-  } else if (store.getters.user && permissions.length)
+    })
+  // else if (store.getters.isLoggedIn && !store.getters.user) {
+  //   store
+  //     .dispatch('getUserData')
+  //     .then(() => {
+  //       _checkPermissions(permissions, next, to, from)
+  //     })
+  //     .catch((e) => {
+  //       next({
+  //         name: 'serverNotAvailable',
+  //         query: { message: e.message },
+  //       })
+  //     })
+  //  }
+   else if (store.getters.user && permissions.length)
     _checkPermissions(permissions, next, to, from)
   else next()
 })

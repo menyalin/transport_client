@@ -1,6 +1,7 @@
 import api from '@/api'
 import router from '@/router'
 import socket from '@/socket'
+import userService from './services/user.service'
 
 export default {
   state: () => ({
@@ -10,10 +11,6 @@ export default {
   mutations: {
     clearDirectoriesProfile(state) {
       state.user.directoriesProfile = null
-    },
-    setToken(state, payload) {
-      state.token = payload
-      localStorage.setItem('token', payload)
     },
     setUser(state, payload) {
       state.user = payload
@@ -27,24 +24,41 @@ export default {
     },
   },
   actions: {
-    signUp({ commit, dispatch }, payload) {
+    signIn({ dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        api
+          .post('/auth/login', payload)
+          .then((res) => {
+            localStorage.setItem('token', `Bearer ${res.data.accessToken}` )
+            dispatch('getUserData')
+            resolve(res)
+          })
+          .catch((e) => reject(e))
+      })
+    },
+
+    signUp({ dispatch }, payload) {
       return new Promise((resolve, reject) => {
         api
           .post('/auth/registration', payload)
           .then(({ data }) => {
-            commit('setToken', data.token)
+            localStorage.setItem('token', `Bearer ${data.accessToken}` )
             dispatch('getUserData')
             resolve(data)
           })
           .catch((e) => reject(e))
       })
     },
-    logOut({ commit }) {
+    async logOut({ commit }) {
+      await userService.logout()
       localStorage.clear()
       commit('logOut')
       socket.disconnect()
       router.push('/auth/login')
     },
+
+
+
     getUserData({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         commit('setAppLoading', true)
@@ -60,28 +74,15 @@ export default {
             commit('setAppLoading', false)
             resolve(res)
           })
-          .catch((e) => {
-            if (e.response?.status === 401) dispatch('logOut')
+          .finally(() => {
             commit('setAppLoading', false)
-            reject(e)
           })
       })
     },
-    signIn({ commit, dispatch }, payload) {
-      return new Promise((resolve, reject) => {
-        api
-          .post('/auth/login', payload)
-          .then((res) => {
-            commit('setToken', res.data.token)
-            dispatch('getUserData')
-            resolve(res)
-          })
-          .catch((e) => reject(e))
-      })
-    },
+  
   },
   getters: {
-    isLoggedIn: ({ token }) => !!token,
+    isLoggedIn: ({ user }) => !!user,
     token: ({ token }) => token,
     user: ({ user }) => user,
 
