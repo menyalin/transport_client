@@ -65,7 +65,7 @@ export default {
         api
           .get('/auth')
           .then((res) => {
-            if (res.data.user) {
+            if (res?.data?.user) {
               commit('setUser', res.data.user)
               dispatch('setDirectories', res.data)
               socket.auth = { userId: res.data.user._id }

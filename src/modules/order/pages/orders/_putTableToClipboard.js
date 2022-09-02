@@ -1,5 +1,36 @@
 import store from '@/store/index.js'
 
+const getOrderNotes = (item) => {
+  return {
+    'cargoParams.note': item.cargoParams.note || '',
+    orderNote: item.note || '',
+    pointNotes: item.route.map(i => i.note).filter( i => !!i).join('; '),
+  }
+}
+
+const getPriceFields = () => {
+  const prices = ['prePrices', 'prices', 'finalPrices']
+  const fields = [...store.getters.orderPriceTypes.map(i => i.value), 'note']
+  return prices.reduce((res, current) => [...res, ...fields.map(f => ({ title: current + '.' +f, group: current, type: f }))], [])
+}
+
+
+const getPrices = (item) => {
+  const { agreement } = item
+  const fields = getPriceFields()
+  const res = {}
+  let price
+  fields.forEach((i) => {
+    price = null 
+    if (i.type !== 'note') {
+      price = item[i.group].find(p => p.type === i.type)
+      if (!price) res[i.title] = 0
+      else res[i.title] = agreement.usePriceWithVAT ? price.price : price.priceWOVat
+    } else res[i.title] = item[i.group].find(p => p.type === 'other')?.note || ''
+  })
+  return res
+}
+
 const _getTruckKind = (req) => {
   if (!req?.kind) return '-'
   return (
@@ -7,6 +38,8 @@ const _getTruckKind = (req) => {
     (req?.liftCapacity ? ` ${req.liftCapacity}т` : '')
   )
 }
+
+
 
 const _getDriverName = (driverId) => {
   if (!driverId || !store.getters.driversMap.has(driverId)) return '-'
@@ -66,6 +99,10 @@ const headers = [
   { val: 'unloadArrivalTime', text: 'Время начала разгрузки' },
   { val: 'unloadDepartureDate', text: 'Дата окончания разгрузки' },
   { val: 'unloadDepartureTime', text: 'Время окончания разгрузки' },
+  ...getPriceFields().map(i => ({val: i.title, text: i.title})),
+  { val: 'cargoParams.note', text: 'Комментарий к грузу' }, 
+  { val: 'orderNote', text: 'Комментарий к рейсу' },
+  { val: 'pointNotes', text: 'Комментарии к адресам'},
 ]
 
 export default ({ items }) => {
@@ -139,6 +176,8 @@ export default ({ items }) => {
       unloadDepartureTime: unloadDepartureDate
         ? unloadDepartureDate.toLocaleTimeString()
         : '-',
+      ...getPrices(row),
+      ...getOrderNotes(row),
     }
   })
 

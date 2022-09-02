@@ -15,11 +15,6 @@
                   Профиль пользователя
                 </router-link>
               </div>
-              <div class="ma-3">
-                <router-link to="/admin">
-                  Админка
-                </router-link>
-              </div>
             </div>
             <div
               v-else
