@@ -90,7 +90,7 @@
       
       <v-autocomplete
         v-model="$v.form.truck.$model"
-        label="Грузовик"
+        label="Грузовик / Прицеп"
         :items="trucks"
         auto-select-first
         outlined
@@ -213,7 +213,6 @@ import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplet
 import crewService from '../../services/crew.service'
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
-
 export default {
   name: 'FineForm',
   components: {
@@ -289,8 +288,9 @@ export default {
     },
     
     trucks() {
-      return this.$store.getters.trucks
-        .filter((item) => item.type === 'truck')
+      return this.$store.getters.activeTrucksOnDate(this.form.violationDate)
+        .filter((item) => ['truck', 'trailer'].includes(item.type))
+        .filter((item) => !item.hideInFines)
         .map((item) => ({ value: item._id, text: item.regNum }))
     },
 
@@ -308,6 +308,13 @@ export default {
         if (val) this.setFormFields(val)
       },
     },
+    'form.violationDate': {
+      handler: function() {
+        this.form.truck = null
+        this.form.driver = null
+      } 
+    },
+
     'form.paymentSum': {
       immediate: true,
       handler: function(val) {

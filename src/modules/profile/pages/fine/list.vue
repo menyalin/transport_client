@@ -61,7 +61,7 @@ export default {
       { value: 'number', text: 'Номер постановления', sortable: false },
       { value: 'category', text: 'Категория', sortable: false },
       { value: 'violationDate', text: 'Дата нарушения', sortable: false},
-      { value: 'truck', text: 'Грузовик', sortable: false },
+      { value: 'truck', text: 'Грузовик / Прицеп', sortable: false },
       { value: 'driver', text: 'Водитель', sortable: false },
       { value: 'isPayment', text: 'Оплачен', sortable: false },
       { value: 'note', text: 'Примечание', sortable: false },

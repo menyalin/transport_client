@@ -238,6 +238,12 @@
           "
         />
       </v-row>
+      <div class="row-wrapper my-3">
+        <v-checkbox 
+          v-model="form.hideInFines"
+          label="Не показывать в штрафах"
+        />
+      </div>
       <v-divider />
     </div>
     <div class="delete-btn-row mt-3">
@@ -323,6 +329,7 @@ export default {
         note: null,
         allowedDrivers: null,
         order: 50,
+        hideInFines: false,
       },
     }
   },
