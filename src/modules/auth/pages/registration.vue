@@ -163,7 +163,6 @@ export default {
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.form.confirmPassword.$dirty) return errors
-
       !this.$v.form.confirmPassword.required &&
         errors.push('Confirm password is required')
       !this.$v.form.confirmPassword.sameAs && errors.push('Password mismatch')

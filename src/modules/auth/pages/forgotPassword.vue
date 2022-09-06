@@ -38,33 +38,19 @@
                 prepend-icon="mdi-at"
                 type="email"
               />
-              <v-text-field
-                id="password"
-                v-model="password"
-                label="Пароль"
-                name="password"
-                prepend-icon="mdi-lock"
-                type="password"
-              />
             </v-card-text>
             <v-card-actions>
-              <router-link to="/auth/registration">
-                <small>Зарегистрироваться</small>
-              </router-link>
-              <router-link 
-                to="/auth/forgot_password" 
-                class="ml-3"
-              >
-                <small>Забыли пароль?</small>
+              <router-link to="/auth/login">
+                <small>Войти в систему</small>
               </router-link>
               <v-spacer />
               <v-btn
                 color="primary"
                 type="submit"
                 :loading="loading"
-                :disabled="!isFormValid && loading"
+                :disabled="!isFormValid || loading"
               >
-                Войти
+                Восстановить пароль
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -74,13 +60,13 @@
   </v-container>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import userService from '../services/user.service'
+
 export default {
   data: () => ({
-    formTitle: 'Войти в систему',
+    formTitle: 'Забыли пароль?',
     loading: false,
-    email: '',
-    password: '',
+    email: null,
     message: null,
     messageType: null,
     errorTimeoutMs: 5000,
@@ -94,33 +80,35 @@ export default {
   },
   computed: {
     isFormValid() {
-      return !!this.email && this.password
+      return !!this.email
     },
   },
   methods: {
-    ...mapActions(['signIn']),
-    showMessage(message, messageType) {
+    showMessage(message, messageType, cb) {
       this.message = message
       this.messageType = messageType
       setTimeout(() => {
         this.message = null
         this.messageType = null
+        if (cb) cb()
       }, this.errorTimeoutMs)
     },
-    submit() {
-      this.loading = true
-      const user = { email: this.email, password: this.password }
-      this.$store
-        .dispatch('signIn', user)
-        .then(() => { this.$router.push(this.$route.query.redirect || '/') })
-        .catch((e) => {
-          if (e.response.status === 404) {
-            this.showMessage('User not found', 'error')
-          } else {
-            this.showMessage(e.message, 'error')
-          }
-        })
-        .finally(() => (this.loading = false))
+    async submit() {
+      try {
+        this.loading = true
+        await userService.forgotPassword(this.email)
+        this.showMessage('На указанный адрес отправлено письмо с ссылкой', 'info' )
+        this.email = null
+        this.loading = false
+      } catch (e) {
+        if (e?.response?.status === 404) 
+          this.showMessage('Email не найден', 'error')
+        else if (e?.response?.data)  this.showMessage(e.response.data, 'error')
+        else this.showMessage(e.message, 'error')
+        this.loading = false
+      }
+      
+
     },
   },
 }

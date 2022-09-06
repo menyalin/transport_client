@@ -33,6 +33,12 @@ class UserService {
     return true
   }
 
+  async setPassword(payload) {
+    const { data } = await api.post(BASE_PATH + '/set_password', payload)
+    if (data.accessToken) localStorage.setItem('token', `Bearer ${ data.accessToken }`)
+    return data
+  }
+
   async getById(id) {
     const { data } = await api.get(BASE_PATH + `/${id}`)
     return data
@@ -42,6 +48,13 @@ class UserService {
     await api.post(BASE_PATH + '/logout')
     return null
   }
+
+  async forgotPassword(email) {
+    await api.post(BASE_PATH + '/restore_password', { email })
+    return true
+  }
+
+
 }
 
 export default new UserService()
