@@ -54,6 +54,16 @@ class UserService {
     return true
   }
 
+  async confirmEmail(token) {
+    await api.post(BASE_PATH + '/confirm_email', { token })
+    return true
+  }
+
+  async retryConfirmationEmail(email) {
+    if (!email) return null
+    await api.post(BASE_PATH + '/retry_confirmation_email', { email })
+    return true
+  } 
 
 }
 

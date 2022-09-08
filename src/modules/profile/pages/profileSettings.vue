@@ -8,7 +8,10 @@
           class="my-3" 
           :invites="companyInvites"
         />
-        <div class="mt-3">
+        <div 
+          v-if="user && user.emailConfirmed"
+          class="mt-3"
+        >
           <h4>Использовать справочники компании:</h4>
           <v-select
             class="ma-4"
@@ -36,7 +39,7 @@ export default {
     AppUserInfo,
   },
   computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites']),
+    ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites', 'user']),
     companies() {
       return this.myCompanies
         // .filter((item) => item.hasOwnDirectories)

@@ -143,28 +143,28 @@ export default {
     nameErrors() {
       const errors = []
       if (!this.$v.form.name.$dirty) return errors
-      !this.$v.form.name.required && errors.push('Name is required')
+      !this.$v.form.name.required && errors.push('Имя не может быть пустым')
       return errors
     },
     emailErrors() {
       const errors = []
       if (!this.$v.form.email.$dirty) return errors
-      !this.$v.form.email.email && errors.push('Must be valid e-mail')
-      !this.$v.form.email.required && errors.push('E-mail is required')
+      !this.$v.form.email.email && errors.push('Не корректный email')
+      !this.$v.form.email.required && errors.push('Email не может быть пустым')
       return errors
     },
     passwordErrors() {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
-      !this.$v.form.password.minLength && errors.push('To short password')
-      !this.$v.form.password.required && errors.push('Password is required')
+      !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
+      !this.$v.form.password.required && errors.push('Пароль не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.form.confirmPassword.$dirty) return errors
       !this.$v.form.confirmPassword.required &&
-        errors.push('Confirm password is required')
+        errors.push('Подтверждение пароля не может быть пустым')
       !this.$v.form.confirmPassword.sameAs && errors.push('Password mismatch')
       return errors
     },
@@ -188,16 +188,15 @@ export default {
       }
       this.signUp(newUser)
         .then((res) => {
-          if (res.token) {
-            this.showMessage('Registration success', 'success')
-            this.$router.push('/')
+          if (res.accessToken) {
+            this.$router.push('/profile/settings?status=need_email_confirmation')
           } else this.showMessage(res.message, 'warning')
         })
         .catch((e) => {
           if (e.response.data.message === 'validation fail') {
             this.showMessage('Incorrect data entered :( ', 'error')
           } else if (e.response.status === 406) {
-            this.showMessage('The entered email is already registered', 'error')
+            this.showMessage('Пользователь с таким email уже зарегистрирован', 'error')
           } else {
             this.showMessage(e.message, 'error')
           }

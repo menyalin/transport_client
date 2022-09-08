@@ -4,6 +4,8 @@
       <v-col>
         <app-buttons-panel
           panel-type="list"
+          :disabledRefresh="!user || !user.emailConfirmed "
+          :disabledSubmit="!user || !user.emailConfirmed "
           @refresh="refresh"
           @submit="create"
         />
@@ -46,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['myCompanies']),
+    ...mapGetters(['myCompanies', 'user']),
   },
   methods: {
     ...mapActions(['getMyCompanies']),

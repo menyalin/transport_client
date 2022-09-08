@@ -24,6 +24,12 @@ export default [
         name: 'RestorePassword',
         props: true,
         component: () => import('./pages/restorePassword.vue'),
+      },
+      {
+        path: 'confirm_email/:token',
+        name: 'ConfirmEmail',
+        props: true,
+        component: () => import('./pages/confirmEmail.vue'),
       }
     ],
   },
