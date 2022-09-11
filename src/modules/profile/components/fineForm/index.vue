@@ -9,85 +9,83 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
 
-    
     <div class="row-input">
-      <v-text-field 
+      <v-text-field
         v-model="$v.form.date.$model"
         type="date"
         label="Дата постановления"
         outlined
         dense
-        :style="{maxWidth: '250px'}"
+        :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
-      />  
+      />
 
-      <v-text-field 
+      <v-text-field
         v-model.trim="$v.form.number.$model"
         label="Номер постановления"
         outlined
         dense
-        :style="{maxWidth: '350px'}"
+        :style="{ maxWidth: '350px' }"
       />
-      <v-select 
+      <v-select
         v-model.trim="$v.form.category.$model"
         :items="$store.getters.fineCategories"
         label="Категория"
         outlined
+        clearable
         dense
-        :style="{maxWidth: '450px'}"
+        :style="{ maxWidth: '450px' }"
       />
     </div>
+    <v-text-field
+      v-model.trim="$v.form.violation.$model"
+      label="Нарушение"
+      outlined
+      dense
+    />
 
-    <div class="row-input mt-2"> 
-      <v-text-field 
+    <div class="row-input mt-2">
+      <v-text-field
         v-model.number="$v.form.discountedSum.$model"
         type="number"
         label="Сумма штрафа со скидкой"
         outlined
         dense
-        :style="{maxWidth: '300px'}"
+        :style="{ maxWidth: '300px' }"
       />
 
-      <v-text-field 
+      <v-text-field
         v-model.number="$v.form.totalSum.$model"
         type="number"
         label="Общая сумма штрафа"
         outlined
         dense
-        :style="{maxWidth: '300px'}"
+        :style="{ maxWidth: '300px' }"
       />
 
-      <v-text-field 
+      <v-text-field
         v-model="$v.form.expiryDateOfDiscount.$model"
         type="date"
         label="Скидка до"
         outlined
         dense
-        :style="{maxWidth: '250px'}"
+        :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
-    </div>  
-    
+    </div>
+
     <div class="row-input">
       <v-text-field
         v-model="form.violationDate"
         type="datetime-local"
         outlined
-        dense 
+        dense
         label="Дата и время нарушения"
-        :style="{maxWidth: '250px'}"
+        :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
-      
+
       <v-autocomplete
         v-model="$v.form.truck.$model"
         label="Грузовик / Прицеп"
@@ -95,7 +93,7 @@
         auto-select-first
         outlined
         dense
-        :style="{maxWidth: '250px'}"
+        :style="{ maxWidth: '250px' }"
       />
       <v-autocomplete
         v-model="$v.form.driver.$model"
@@ -104,62 +102,64 @@
         auto-select-first
         outlined
         dense
-        :style="{maxWidth: '350px'}"
-        :append-outer-icon="form.truck && form.violationDate ? 'mdi-crosshairs' : null"
+        :style="{ maxWidth: '350px' }"
+        :append-outer-icon="
+          form.truck && form.violationDate ? 'mdi-crosshairs' : null
+        "
         @click:append-outer="getDriver"
       />
     </div>
-    
+
     <v-text-field
       v-model="$v.form.address.$model"
       label="Место нарушения"
       outlined
-      
       dense
     />
     <div class="row-input">
-      <v-checkbox 
+      <v-checkbox
         v-model="$v.form.isCulpritDriver.$model"
         dense
         label="Виноват водитель"
       />
-      <v-checkbox 
+      <v-checkbox
         v-if="form.isCulpritDriver"
         v-model="$v.form.isPaydByDriver.$model"
         :disabled="!!form.payingByWorker"
         dense
         label="Оплачен водителем"
-      /> 
+      />
     </div>
 
     <div 
-      v-if="showPaymentBlock"
-      class="row-input" 
+      v-if="showPaymentBlock" 
+      class="row-input"
     >
-      <v-text-field 
+      <v-text-field
         v-model.number="$v.form.paymentSum.$model"
         type="number"
         label="Сумма оплаты"
         outlined
         dense
-        :style="{maxWidth: '300px'}"
+        :style="{ maxWidth: '300px' }"
       />
+
       <v-text-field
         v-model="$v.form.paymentDate.$model"
         type="date"
         outlined
-        dense 
+        dense
         label="Дата оплаты"
-        :style="{maxWidth: '250px'}"
+        :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
-      
-      <app-worker-autocomplete 
+
+      <app-worker-autocomplete
         v-model="form.payingByWorker"
         label="Кто оплатил"
         dense
         outlined
-        :style="{maxWidth: '350px'}"
+        :style="{ maxWidth: '350px' }"
       />
       <v-select
         v-if="isNeedWithheldFromDriver"
@@ -168,7 +168,7 @@
         label="kX"
         outlined
         dense
-        :style="{maxWidth: '80px'}"
+        :style="{ maxWidth: '80px' }"
       />
       <v-text-field
         v-if="isNeedWithheldFromDriver"
@@ -176,9 +176,9 @@
         type="number"
         outlined
         readonly
-        dense 
+        dense
         label="Удержано"
-        :style="{maxWidth: '250px'}"
+        :style="{ maxWidth: '250px' }"
       />
     </div>
     <v-text-field
@@ -188,17 +188,16 @@
       dense
     />
 
-
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
+    <v-btn 
+      v-if="displayDeleteBtn" 
+      color="error" 
       @click="$emit('delete')"
     >
-      <v-icon
-        left
+      <v-icon 
+        left 
         dark
-      >
-        mdi-delete
+      > 
+        mdi-delete 
       </v-icon>
       Удалить
     </v-btn>
@@ -236,12 +235,13 @@ export default {
         date: null,
         number: null,
         category: null,
+        violation: null,
+        violationDate: null,
         truck: null,
         driver: null,
         totalSum: null,
         discountedSum: null,
         expiryDateOfDiscount: null,
-        violationDate: null,
         address: null,
         paymentDate: null,
         paymentSum: null,
@@ -261,7 +261,7 @@ export default {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
     },
-    isNeedWithheldFromDriver () {
+    isNeedWithheldFromDriver() {
       return this.form.isCulpritDriver && !this.form.isPaydByDriver
     },
     showPaymentBlock() {
@@ -276,30 +276,38 @@ export default {
 
     formState() {
       const dates = {}
-      this.dateFields.forEach(item => {        
-          dates[item] = this.form[item] ? dayjs(this.form[item]).toISOString() : null
+      this.dateFields.forEach((item) => {
+        dates[item] = this.form[item]
+          ? dayjs(this.form[item]).toISOString()
+          : null
       })
       const withheldParams = {}
       if (this.form.isPaydByDriver) {
         withheldParams.withheldSum = 0
         withheldParams.payingByWorker = null
       }
-      return { ...this.form, company: this.directoriesProfile, ...dates, ...withheldParams }
+      return {
+        ...this.form,
+        company: this.directoriesProfile,
+        ...dates,
+        ...withheldParams,
+      }
     },
-    
+
     trucks() {
-      return this.$store.getters.activeTrucksOnDate(this.form.violationDate)
+      return this.$store.getters
+        .activeTrucksOnDate(this.form.violationDate)
         .filter((item) => ['truck', 'trailer'].includes(item.type))
         .filter((item) => !item.hideInFines)
         .map((item) => ({ value: item._id, text: item.regNum }))
     },
 
     drivers() {
-      return this.$store.getters.activeDriversOnDate(this.form.violationDate)
-      .map((item) => ({ value: item._id, text: item.fullName }))
-    }
-    
-    
+      return this.$store.getters
+        .activeDriversOnDate(this.form.violationDate)
+        .filter((item) => !item.hideInFines)
+        .map((item) => ({ value: item._id, text: item.fullName }))
+    },
   },
   watch: {
     item: {
@@ -309,24 +317,24 @@ export default {
       },
     },
     'form.violationDate': {
-      handler: function() {
+      handler: function () {
         this.form.truck = null
         this.form.driver = null
-      } 
+      },
     },
 
     'form.paymentSum': {
       immediate: true,
-      handler: function(val) {
+      handler: function (val) {
         if (!val || !this.isNeedWithheldFromDriver) this.form.withheldSum = 0
         else this.form.withheldSum = this.form.kX * this.form.paymentSum
       },
     },
     'form.kX': {
-      handler: function() {
+      handler: function () {
         this.form.withheldSum = this.form.kX * this.form.paymentSum
-      }
-    }
+      },
+    },
   },
 
   validations() {
@@ -336,10 +344,11 @@ export default {
         number: { required },
         truck: { required },
         totalSum: { required },
-        category: { required },
+        category: {},
         discountedSum: { required },
         expiryDateOfDiscount: {},
         driver: {},
+        violation: {},
         violationDate: {},
         address: {},
         paymentDate: {},
@@ -356,13 +365,15 @@ export default {
   methods: {
     async getDriver() {
       if (!this.form.truck || !this.form.violationDate) return null
-      const crew = await crewService.getCrewByTruckAndDate({ truck: this.form.truck, date: this.form.violationDate})
+      const crew = await crewService.getCrewByTruckAndDate({
+        truck: this.form.truck,
+        date: this.form.violationDate,
+      })
       if (crew) this.form.driver = crew.driver
-      else { 
+      else {
         this.form.driver = null
         this.$store.commit('setError', 'Экипаж не найден')
       }
-
     },
     submit() {
       this.$emit('submit', this.formState)
@@ -399,4 +410,3 @@ export default {
   gap: 20px;
 }
 </style>
- 

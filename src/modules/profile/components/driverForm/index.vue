@@ -193,6 +193,11 @@
         label="Есть сканы документов"
         dense
       />
+      <v-checkbox
+        v-model="form.hideInFines"
+        label="Не показывать в штрафах"
+        dense
+      />
     </div>
     <div
       v-if="displayDeleteBtn"
@@ -267,6 +272,7 @@ export default {
         birthday: null,
         isBrigadier: false,
         isMechanic: false,
+        hideInFines: false,
       },
     }
   },
