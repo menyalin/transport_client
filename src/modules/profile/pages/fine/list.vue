@@ -103,18 +103,14 @@ export default {
     const headers = [
       { value: 'date', text: 'Дата постановления', sortable: true },
       { value: 'number', text: 'Номер постановления', sortable: false },
-      { value: 'category', text: 'Категория', sortable: false },
       { value: 'violationDate', text: 'Дата нарушения', sortable: true },
       { value: 'truck', text: 'Грузовик / Прицеп', sortable: false },
       { value: 'driver', text: 'Водитель', sortable: false },
-      { value: 'isPayment', text: 'Оплачен', sortable: false },
       { value: 'totalSum', text: 'Общая сумма штрафа', sortable: true },
-      {
-        value: 'discountedSum',
-        text: 'Сумма, с учетом скидки',
-        sortable: true,
-      },
+      { value: 'discountedSum', text: 'Сумма, с учетом скидки',   sortable: true },
       { value: 'expiryDateOfDiscount', text: 'Скидка до', sortable: true },
+      { value: 'isPayment', text: 'Оплачен', sortable: false },
+      { value: 'category', text: 'Категория', sortable: false },
       { value: 'note', text: 'Примечание', sortable: false },
     ]
     const formName = 'fineList'
@@ -185,9 +181,9 @@ export default {
         category: i.category
           ? this.$store.getters.fineCategoriesMap.get(i.category)
           : null,
-        expiryDateOfDiscount: new Date(
-          i.expiryDateOfDiscount
-        ).toLocaleDateString(),
+        expiryDateOfDiscount: i.expiryDateOfDiscount
+          ? new Date(i.expiryDateOfDiscount).toLocaleDateString()
+          : null,
       }))
     },
     trucks() {
