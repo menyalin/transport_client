@@ -16,7 +16,6 @@ class UserService {
       if (store.getters.directoriesProfile === companyId) {
         store.commit('setError', 'Доступ к данным компании заблокирован!')
         store.commit('clearDirectories')
-        store.commit('clearDirectoriesProfile')
         router.push('/')
       }      
     })

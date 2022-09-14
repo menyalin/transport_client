@@ -281,6 +281,7 @@ export default {
       if (!this.orders) return []
       return this.orders.map((order) => ({
         ...order,
+        driver: this.$store.getters.driversMap.get(order.confirmedCrew.driver)?.fullName || null,
         tk:
           order.confirmedCrew.tkName &&
           this.$store.getters.tkNamesMap.has(order.confirmedCrew.tkName)

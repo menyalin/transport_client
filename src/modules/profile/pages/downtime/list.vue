@@ -21,6 +21,20 @@
             outlined
             hide-details
             clearable
+            :style="{maxWidth: '250px'}"
+          />
+          <v-autocomplete
+            v-model="settings.partner"
+            label="Партнер"
+            :items="partners"
+            item-text="name"
+            item-value="_id"
+            auto-select-first
+            dense
+            outlined
+            hide-details
+            clearable
+            :style="{maxWidth: '350px'}"
           />
         </div>
         <v-data-table
@@ -91,6 +105,7 @@ export default {
     loading: false,
     settings: {
       truckFilter: null,
+      partner: null,
       period: _initPeriod(),
       listOptions: {
         page: 1,
@@ -117,7 +132,10 @@ export default {
     trucks() {
       return this.$store.getters.trucksForSelect({ type: 'truck' })
     },
-    trucksHash() {
+    partners() {
+      return this.$store.getters.partners.filter(i => i.isService)
+    },
+   trucksHash() {
       return this.$store.getters.trucksHash
     },
   },
@@ -162,6 +180,7 @@ export default {
           startDate: this.settings.period[0],
           endDate: this.settings.period[1],
           truckFilter: this.settings.truckFilter,
+          partner: this.settings.partner,
           skip:
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),
@@ -186,8 +205,10 @@ export default {
 </script>
 <style scoped>
 .filter-wrapper {
-  display: grid;
-  grid-template-columns: 300px 280px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 </style>

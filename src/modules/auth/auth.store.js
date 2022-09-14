@@ -9,7 +9,8 @@ export default {
     user: null,
   }),
   mutations: {
-    clearDirectoriesProfile(state) {
+    clearDirectories(state) {
+      if (state.user?.directoriesProfile)
       state.user.directoriesProfile = null
     },
     setUser(state, payload) {
@@ -52,6 +53,7 @@ export default {
     async logOut({ commit }) {
       await userService.logout()
       localStorage.clear()
+      commit('clearDirectories')
       commit('logOut')
       socket.disconnect()
       router.push('/auth/login')

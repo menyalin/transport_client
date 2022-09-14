@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: process.env.VUE_APP_API_URL || 'http://localhost:3000/api',
-  // withCredentials: true,
+  withCredentials: true,
 })
 
 
@@ -37,15 +37,15 @@ api.interceptors.response.use(
           { withCredentials: true }
           )
         localStorage.setItem('token', `Bearer ${response.data.accessToken}`)
-        return api.request(originalRequest)
+        return await api.request(originalRequest)
       } catch (e) {
         console.log('error in refresh request')
-        console.dir(e)
+        console.dir(e.response)
         localStorage.removeItem('token')
         router.push('/')
       }
     } else if (error.response.status == 401 && error.config._isRetry) {
-      
+      console.log('api auth error')
       store.dispatch('logOut')
       localStorage.removeItem('token')
     }
