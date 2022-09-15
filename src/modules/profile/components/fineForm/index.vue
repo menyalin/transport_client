@@ -276,7 +276,7 @@ export default {
 
     formState() {
       const dates = {}
-      this.dateFields.forEach((item) => {
+      this.dateFields.concat(this.dateTimeFields).forEach((item) => {
         dates[item] = this.form[item]
           ? dayjs(this.form[item]).toISOString()
           : null
