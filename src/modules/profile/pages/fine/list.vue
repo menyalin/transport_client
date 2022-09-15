@@ -10,11 +10,7 @@
           @refresh="refetch"
         />
         <div class="filter-wrapper">
-          <app-date-range
-            :period="settings.period"
-            @change="setSettingsPeriod"
-          />
-  
+          <app-date-range v-model="settings.period" />
           <v-select
             v-model="settings.status"
             :items="fineStatuses"
@@ -56,16 +52,16 @@
             dense
             :style="{ maxWidth: '450px' }"
           />
-          <v-checkbox 
-            v-model="settings.showOnlySelected"
+          <v-checkbox
+            v-model="showOnlySelected"
             label="Только отмеченные"
             hide-details
             dense
           />
         </div>
         <v-data-table
-          v-model="settings.selected"
-          item-key="_id"  
+          v-model="selected"
+          item-key="_id"
           show-select
           :headers="headers"
           :items="preparedList"
@@ -81,7 +77,6 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         />
-        {{ settings.selected }}
       </v-col>
     </v-row>
   </v-container>
@@ -104,11 +99,12 @@ export default {
       fineStatuses,
       settings,
       headers,
+      selected,
+      showOnlySelected,
       formName,
       loading,
       refetch,
       count,
-      setSettingsPeriod,
       preparedList,
     } = useFineList()
 
@@ -120,8 +116,9 @@ export default {
       loading,
       refetch,
       count,
-      setSettingsPeriod,
       preparedList,
+      selected,
+      showOnlySelected,
     }
   },
   computed: {
@@ -145,7 +142,7 @@ export default {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
   },
-  
+
   methods: {
     create() {
       this.$router.push({ name: 'FineCreate' })

@@ -24,9 +24,10 @@ export const useFineList = () => {
     { value: 'note', text: 'Примечание', sortable: false },
   ]
   const loading = ref(false)
+  const selected = ref([])
+  const showOnlySelected = ref(false)
+
   const settings = reactive({
-    selected: [],
-    showOnlySelected: false,
     period: [
       dayjs().add(-45, 'd').format('YYYY-MM-DD'),
       dayjs().add(5, 'd').format('YYYY-MM-DD'),
@@ -40,9 +41,6 @@ export const useFineList = () => {
       itemsPerPage: 50,
     },
   })
-  const setSettingsPeriod = (period) => {
-    if (period) settings.period = period
-  }
 
   const queryParams = computed(() => ({
     company: store.getters.directoriesProfile,
@@ -75,13 +73,15 @@ export const useFineList = () => {
     }
   }
 
-  const refetch = () => getData(queryParams.value)
+  const refetch =  () => { 
+    getData(queryParams.value)
+  }
 
   const preparedList = computed(() => {
     return list.value
     .filter(i => {
-      if (!settings.showOnlySelected) return true
-      else return settings.selected.map((s) => s._id).includes(i._id)
+      if (!showOnlySelected.value) return true
+      else return selected.value.map((s) => s._id).includes(i._id)
     })
     .map((i) => ({
       ...i,
@@ -108,6 +108,8 @@ export const useFineList = () => {
   })
 
   return {
+    selected,
+    showOnlySelected,
     fineStatuses,
     formName,
     settings,
@@ -116,7 +118,6 @@ export const useFineList = () => {
     loading,
     list,
     count,
-    setSettingsPeriod,
     preparedList,
   }
 }
