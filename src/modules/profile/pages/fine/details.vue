@@ -21,10 +21,9 @@
 import AppForm from '@/modules/profile/components/fineForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import service from '../../services/fine.service'
-import { useQuery } from 'vue-query'
-import { FINES } from '@/constants/queryKeys'
 import router from '@/router'
 import store from '@/store'
+import { watch } from '@vue/composition-api'
 
 export default {
   name: 'FineDetails',
@@ -36,7 +35,21 @@ export default {
     id: String,
   },
   setup({ id }) {
-    const { data: item, isLoading: loading } = useQuery([FINES, id], () => service.getById(id), {enabled: !!id, staleTime: Infinity} )
+    const loading = ref(false)
+    const item = reactive({})
+    
+    async function getItem () {
+      if (!id) return null
+      try {
+        loading.value = true
+        item = await service.getById(id)
+        loading.value = false
+      } catch(e) {
+        loading.value = false
+        store.commit('setError', e.message)
+      }
+    }
+
     const submit = async (formState) => {
       try {
         let res 
@@ -49,7 +62,9 @@ export default {
     }
 
 
-
+    getItem()
+    watch(id, getItem)
+    
     return { item, loading, submit }
   },
 

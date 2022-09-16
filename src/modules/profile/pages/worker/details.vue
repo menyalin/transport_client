@@ -21,9 +21,7 @@
 import AppForm from '@/modules/profile/components/workerForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import service from '../../services/worker.service'
-import { WORKERS } from '@/constants/queryKeys'
-import { useQuery, useMutation } from 'vue-query'
-import { ref, computed } from '@vue/composition-api'
+import { ref, computed, reactive } from '@vue/composition-api'
 import store from '@/store'
 import router from '@/router'
 
@@ -36,37 +34,35 @@ export default {
   setup() {
     const { id } = router.currentRoute.params
     const tmpVal = ref()
-    const { data: worker, isLoading: loading } = useQuery([WORKERS, id], () => service.getById(id), { enabled: !!id, staleTime: 10000 })
+    const loading = ref(false)
+    const worker = reactive({})
+
+    async function getWorker() {
+      if (!id) return null
+      try {
+        loading.value = true
+        worker = await service.getById(id)
+        loading.value = false
+      } catch(e) {
+        loading.value = false
+        store.commit('setError', e.message)
+      }
+    }
+
     const formItem = computed(() => !!tmpVal.value ? tmpVal.value : worker.value) 
-
-    const createWorkerMutation = useMutation((val) => service.create(val), {
-      onMutate: (val) => {
-        tmpVal.value = val
-      },
-      onSuccess: () => {
-        router.go(-1)
-      }
-    })
-
-    const updateWorkerMutation = useMutation(({ id, val }) => service.updateOne(id, val), {
-      onMutate: (val) => {
-        tmpVal.value = val
-      },
-      onSuccess: () => {
-        router.go(-1)
-      }
-    })
 
     const submit = async(val) => {
       try {
-        if (id) await updateWorkerMutation.mutateAsync({id, val})
-        else
-        await createWorkerMutation.mutateAsync(val)
+        tmpVal.value = val
+        if (id) await service.updateOne(id, val)
+        else await service.create(val)
+        router.go(-1)
       } catch (e) {
         store.commit('setError', e)
       }
     }
 
+    getWorker()
     return { submit, loading, id, tmpVal, formItem, }
   },
   

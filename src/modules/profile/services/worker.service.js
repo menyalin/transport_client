@@ -1,7 +1,5 @@
 import api from '@/api'
 import socket from '@/socket'
-import queryClient from '@/queryClient'
-import { WORKERS } from '@/constants/queryKeys'
 import store from '@/store'
 
 const BASE_PATH = '/workers'
@@ -12,21 +10,21 @@ class WorkerService {
   constructor() {
     this.cache =  new Map()
     socket.on('worker:created', (data) => {
-      queryClient.setQueryData([WORKERS, data._id], data)
-      const workers = queryClient.getQueryData([WORKERS])
-      queryClient.setQueryData([WORKERS], [...workers, data])
+      //queryClient.setQueryData([WORKERS, data._id], data)
+      // const workers = queryClient.getQueryData([WORKERS])
+      // queryClient.setQueryData([WORKERS], [...workers, data])
     })
 
     socket.on('worker:updated', (data) => {
-      queryClient.setQueryData([WORKERS, data._id], data)
-      const workers = queryClient.getQueryData([WORKERS])
-      if (workers) queryClient.setQueryData([WORKERS], [...workers.filter(i => i._id !== data._id), data])
-      else  queryClient.setQueryData([WORKERS], [data])
+      // queryClient.setQueryData([WORKERS, data._id], data)
+      // const workers = queryClient.getQueryData([WORKERS])
+      // if (workers) queryClient.setQueryData([WORKERS], [...workers.filter(i => i._id !== data._id), data])
+      // else  queryClient.setQueryData([WORKERS], [data])
     })
 
     socket.on('worker:deleted', (id) => {
-      const workers = queryClient.getQueryData([WORKERS])
-      if (workers) queryClient.setQueryData([WORKERS], [...workers.filter(i => i._id !== id)])
+      // const workers = queryClient.getQueryData([WORKERS])
+      // if (workers) queryClient.setQueryData([WORKERS], [...workers.filter(i => i._id !== id)])
     })
 
     socket.on('worker:inviteGetted', (data) => {
