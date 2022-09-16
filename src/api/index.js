@@ -37,7 +37,7 @@ api.interceptors.response.use(
           { withCredentials: true }
           )
         localStorage.setItem('token', `Bearer ${response?.data?.accessToken}`)
-        return await api.request(originalRequest)
+        return api.request(originalRequest)
       } catch (e) {
         console.log('error in refresh request')
         console.dir(e.response)
