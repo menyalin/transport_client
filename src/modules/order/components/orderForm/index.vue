@@ -120,8 +120,10 @@
           />
           <app-route-points
             v-model="preparedRoute"
+            :driverId="confirmedCrew.driver"
             title="Маршрут"
             :state="state"
+            :cargoParams="cargoParams"
             :confirmed="orderInProgress"
             class="route-points"
             :isValid="isValidRoute"

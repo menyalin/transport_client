@@ -118,7 +118,7 @@ export default {
         .map((item) => ({
           _id: item._id,
           company: item.company,
-          needRoundTime: !item.route[0].arrivalDate || onlyPlannedDates,
+          needRoundTime: !item.route[0].arrivalDate || onlyPlannedDates || !item.confirmedCrew?.truck,
           isCompleted: !!item.route[item.route.length - 1]?.departureDate,
           startPositionDate: onlyPlannedDates
             ? item.startPositionDate

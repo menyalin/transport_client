@@ -52,6 +52,16 @@
       >
         Добавить возврат
       </v-btn>
+      <v-btn   
+        text
+        outlined
+        small
+        color="primary"
+        class="ma-2"
+        @click="getDriverRouteHandler"
+      >
+        Маршрут для водителя
+      </v-btn>
     </div>
   </div>
 </template>
@@ -59,6 +69,8 @@
 import draggable from 'vuedraggable'
 import AppPointDetail from './pointDetail'
 import AppBlockTitle from './blockTitle.vue'
+import putRouteForDriverToClipboard from './_putRouteForDriverToClipboard'
+
 export default {
   name: 'RoutePoints',
   components: {
@@ -71,8 +83,10 @@ export default {
     event: 'changePoints',
   },
   props: {
+    driverId: String,
     points: Array,
     title: String,
+    cargoParams: Object,
     confirmed: Boolean,
     isValid: Boolean,
     state: Object,
@@ -120,6 +134,9 @@ export default {
     },
   },
   methods: {
+    async getDriverRouteHandler() {
+      await putRouteForDriverToClipboard( this.driverId, this.points, this.cargoParams )
+    },  
     change(val, ind) {
       this.tmpPoints.splice(ind, 1, val)
       this.$emit('changePoints', this.tmpPoints)
