@@ -1,5 +1,5 @@
 import store from '@/store'
-import { reactive, computed, watch, ref, onMounted} from '@vue/composition-api'
+import { reactive, computed, watch, ref, onMounted } from '@vue/composition-api'
 import service from '@/modules/profile/services/fine.service'
 import dayjs from 'dayjs'
 
@@ -27,7 +27,7 @@ export const useFineList = () => {
   const selected = ref([])
   const showOnlySelected = ref(false)
 
-  const settings = reactive({
+  let settings = ref({
     period: [
       dayjs().add(-45, 'd').format('YYYY-MM-DD'),
       dayjs().add(5, 'd').format('YYYY-MM-DD'),
@@ -44,16 +44,18 @@ export const useFineList = () => {
 
   const queryParams = computed(() => ({
     company: store.getters.directoriesProfile,
-    startDate: settings.period[0],
-    endDate: settings.period[1],
-    status: settings.status,
-    truck: settings.truck,
-    driver: settings.driver,
-    category: settings.category,
-    sortBy: settings.listOptions?.sortBy,
-    sortDesc: settings.listOptions.sortDesc,
-    skip: settings.listOptions.itemsPerPage * (settings.listOptions.page - 1),
-    limit: settings.listOptions.itemsPerPage,
+    startDate: settings.value.period[0],
+    endDate: settings.value.period[1],
+    status: settings.value.status,
+    truck: settings.value.truck,
+    driver: settings.value.driver,
+    category: settings.value.category,
+    sortBy: settings.value.listOptions?.sortBy,
+    sortDesc: settings.value.listOptions.sortDesc,
+    skip:
+      settings.value.listOptions.itemsPerPage *
+      (settings.value.listOptions.page - 1),
+    limit: settings.value.listOptions.itemsPerPage,
   }))
 
   const list = ref([])
@@ -73,39 +75,43 @@ export const useFineList = () => {
     }
   }
 
-  const refetch =  () => { 
+  const refetch = () => {
     getData(queryParams.value)
   }
 
   const preparedList = computed(() => {
     return list.value
-    .filter(i => {
-      if (!showOnlySelected.value) return true
-      else return selected.value.map((s) => s._id).includes(i._id)
-    })
-    .map((i) => ({
-      ...i,
-      date: new Date(i.date).toLocaleDateString(),
-      truck: store.getters.trucksMap.get(i.truck)?.regNum || '-',
-      driver: store.getters.driversMap.get(i.driver)?.fullName || '-',
-      violationDate: i.violationDate
-        ? new Date(i.violationDate).toLocaleString()
-        : null,
-      isPayment: i.paymentDate || i.isPaydByDriver ? 'Да' : 'Нет',
-      category: i.category
-        ? store.getters.fineCategoriesMap.get(i.category)
-        : null,
-      expiryDateOfDiscount: i.expiryDateOfDiscount
-        ? new Date(i.expiryDateOfDiscount).toLocaleDateString()
-        : null,
-    }))
+      .filter((i) => {
+        if (!showOnlySelected.value) return true
+        else return selected.value.map((s) => s._id).includes(i._id)
+      })
+      .map((i) => ({
+        ...i,
+        date: new Date(i.date).toLocaleDateString(),
+        truck: store.getters.trucksMap.get(i.truck)?.regNum || '-',
+        driver: store.getters.driversMap.get(i.driver)?.fullName || '-',
+        violationDate: i.violationDate
+          ? new Date(i.violationDate).toLocaleString()
+          : null,
+        isPayment: i.paymentDate || i.isPaydByDriver ? 'Да' : 'Нет',
+        category: i.category
+          ? store.getters.fineCategoriesMap.get(i.category)
+          : null,
+        expiryDateOfDiscount: i.expiryDateOfDiscount
+          ? new Date(i.expiryDateOfDiscount).toLocaleDateString()
+          : null,
+      }))
   })
 
-  watch(settings, () => getData(queryParams.value))
-  
+  watch(settings.value, () => getData(queryParams.value))
+
   onMounted(() => {
     getData(queryParams.value)
   })
+
+  function setInitSettings(initSettings) {
+    settings.value = Object.assign(settings.value, initSettings)
+  }
 
   return {
     selected,
@@ -119,6 +125,6 @@ export const useFineList = () => {
     list,
     count,
     preparedList,
+    setInitSettings,
   }
 }
-

@@ -31,12 +31,14 @@ export default {
     AppForm,
     AppLoadSpinner,
   },
+  props: {
+    id: String
+  },
   setup() {
     const { id } = router.currentRoute.params
-    const tmpVal = ref()
-    const loading = ref(false)
-    const worker = reactive({})
-
+    let tmpVal = ref()
+    let loading = ref(false)
+    let worker = reactive({})
     async function getWorker() {
       if (!id) return null
       try {
@@ -49,8 +51,8 @@ export default {
       }
     }
 
-    const formItem = computed(() => !!tmpVal.value ? tmpVal.value : worker.value) 
-
+    const formItem = computed(() => !!tmpVal.value ? tmpVal.value : worker) 
+    
     const submit = async(val) => {
       try {
         tmpVal.value = val
@@ -61,9 +63,8 @@ export default {
         store.commit('setError', e)
       }
     }
-
     getWorker()
-    return { submit, loading, id, tmpVal, formItem, }
+    return { submit, loading, tmpVal, formItem }
   },
   
   methods: {
@@ -77,12 +78,9 @@ export default {
       )
       if (res) {
         try {
-          this.loading = true
           await service.deleteById(this.id)
-          this.loading = false
           this.$router.go(-1)
         } catch (e) {
-          this.loading = false
           this.$store.commit('setError', e.message)
         }
       }

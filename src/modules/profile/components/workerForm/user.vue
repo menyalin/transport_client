@@ -12,10 +12,10 @@
         label="Найти пользователя по email"
         @change="searchUser"
       />
-      <div v-if="isLoading.value">
+      <div v-if="isLoading">
         ...loading: {{ isLoading }}
       </div>
-      <div v-else-if="user">
+      <div v-else-if="userId && user">
         <app-user-info
           :user="user"
           :worker="worker"
@@ -95,7 +95,6 @@
           outlined
           :disabled="isInviteSended"
         />
-        {{ !!isInviteSended }}
         <v-btn
           v-if="!isInviteSended"
           small
@@ -120,8 +119,9 @@
   </v-card>
 </template>
 <script>
+import store from '@/store'
 import AppUserInfo from './_userInfo.vue'
-import service from '../../services/worker.service'
+import workerService from '../../services/worker.service'
 import userService from '../../../auth/services/user.service'
 import { computed, ref, reactive, watch } from '@vue/composition-api'
 
@@ -148,26 +148,49 @@ export default {
   },
 
   setup({ userId, workerId }) {
-    const tmpUser = ref({})
-    const user = reactive({})
-    const worker = reactive({})
-    const isUserLoading = ref(false)
-    const isWorkerLoading = ref(false)
-
+    let tmpUser = ref()
+    let user = ref()
+    let worker = ref()
+    let isUserLoading = ref(false)
+    let isWorkerLoading = ref(false)
+    
     const getUserById = async () => {
       if (!userId) return null
-      user = await userService.getById(userId)
+      user.value = await userService.getById(userId)
     }
 
     const getWorkerById = async () => {
       if (!workerId) return null
-      worker = await service.getById(workerId)
+      try {
+        isWorkerLoading.value = true
+        worker.value = await workerService.getById(workerId)
+        isWorkerLoading.value = false
+      } catch (e) {
+        isWorkerLoading.value = false
+      }
+    }
+    const toggleDisableStatus = async () => {
+      if (
+        !workerId ||
+        !store.getters.hasPermission('worker:userAdmin')
+      )
+        return null
+      worker.value = await workerService.updateOne(workerId, {
+        disabled: !worker.value?.disabled,
+      })
+    }
+
+    const resendInvite = async() => {
+      if (!workerId) return null
+      worker.value = await workerService.sendInvite({
+        workerId: workerId,
+        userId: userId,
+        roles: worker.value.roles,
+      })
     }
 
     getUserById()
     getWorkerById()
-    watch(userId, getUserById)
-    watch(userId, getWorkerById)
 
     const isLoading = computed(
       () => isUserLoading.value || isWorkerLoading.value
@@ -175,15 +198,20 @@ export default {
 
     const sendInvite = async ({ userId, roles, workerId }) => {
       if (roles.length === 0 || !workerId) return
-      await service.sendInvite({ userId, roles, workerId })
+      try {
+        worker.value = await workerService.sendInvite({ userId, roles, workerId })
+      } catch (e) {
+        store.commit('setError', e.message)
+      }
     }
 
     const isInviteSended = computed(
-      () => worker?.value.pending && worker?.value.accepted
+      () => worker?.value?.pending && worker?.value?.accepted
     )
     const setTmpUser = (data) => {
       tmpUser.value = Object.assign({}, data)
     }
+
     return {
       user,
       tmpUser,
@@ -192,6 +220,8 @@ export default {
       sendInvite,
       worker,
       isInviteSended,
+      toggleDisableStatus,
+      resendInvite,
     }
   },
 
@@ -201,7 +231,7 @@ export default {
         this.setTmpUser({})
         return
       }
-      const data = await service.getUserByEmail(this.emailSearch)
+      const data = await workerService.getUserByEmail(this.emailSearch)
       if (!data) {
         this.setTmpUser({})
         this.$store.commit('setError', 'Пользователь не найден')
@@ -214,7 +244,7 @@ export default {
 
     async updateRoles() {
       if (this.tmpRoles.length === 0 || !this.workerId) return
-      const res = await service.updateOne(this.workerId, {
+      const res = await workerService.updateOne(this.workerId, {
         roles: this.tmpRoles,
       })
       if (res) {
@@ -223,25 +253,6 @@ export default {
       }
     },
 
-    async resendInvite() {
-      if (!this.workerId) return
-      await service.sendInvite({
-        workerId: this.workerId,
-        userId: this.userId,
-        roles: this.worker.roles,
-      })
-    },
-
-    async toggleDisableStatus() {
-      if (
-        !this.workerId ||
-        !this.$store.getters.hasPermission('worker:userAdmin')
-      )
-        return
-      await service.updateOne(this.workerId, {
-        disabled: !this.worker.disabled,
-      })
-    },
   },
 }
 </script>

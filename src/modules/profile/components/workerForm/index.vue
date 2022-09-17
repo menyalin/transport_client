@@ -10,7 +10,7 @@
       class="mb-4"
       @cancel="cancel"
       @submit="submit"
-    />    
+    />
 
     <div class="input-row">
       <v-text-field
@@ -19,7 +19,7 @@
         outlined
         label="Сокращенное имя"
         dense
-        :style="{'max-width': '330px'}"
+        :style="{ 'max-width': '330px' }"
       />
       <v-text-field
         v-model.trim="$v.form.fullName.$model"
@@ -30,28 +30,24 @@
       />
     </div>
     <div class="input-row">
-      <v-text-field 
+      <v-text-field
         v-model="form.employmentDate"
-        type="date" 
+        type="date"
         dense
         outlined
         label="Дата приема на работу"
-        :style="{'max-width': '260px'}"
+        :style="{ 'max-width': '260px' }"
       />
 
-      <v-text-field 
+      <v-text-field
         v-model="form.dismissalDate"
-        type="date" 
+        type="date"
         dense
         outlined
         label="Дата увольнения"
-        :style="{'max-width': '260px'}"
+        :style="{ 'max-width': '260px' }"
       />
-      <div>
-        {{ form.dismissalDate }}
-      </div>
     </div>
-
 
     <v-text-field
       v-model.trim="$v.form.position.$model"
@@ -69,11 +65,11 @@
     <app-user
       v-if="item && item._id"
       :workerId="item._id"
-      :userId="item.user" 
+      :userId="item.user"
       :roles="item.roles"
     />
-    <div 
-      v-else 
+    <div
+      v-else
       class="text-caption mx-3"
     >
       *Для сопоставления сотрудника с пользователем, запись необходимо сохранить
@@ -95,10 +91,8 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppUser from './user'
 
@@ -106,7 +100,7 @@ export default {
   name: 'WorkerForm',
   components: {
     AppButtonsPanel,
-    AppUser
+    AppUser,
   },
   props: {
     item: {
@@ -143,7 +137,7 @@ export default {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
     },
-    
+
     nameErrors() {
       const errors = []
       if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
@@ -157,11 +151,13 @@ export default {
         errors.push('Полное имя не может быть пустым')
       return errors
     },
-    
+
     formState() {
       const dates = {}
-      this.dateFields.forEach(item => {        
-          dates[item] = this.form[item] ? dayjs(this.form[item]).toISOString() : null
+      this.dateFields.forEach((item) => {
+        dates[item] = this.form[item]
+          ? dayjs(this.form[item]).toISOString()
+          : null
       })
       return { ...this.form, company: this.directoriesProfile, ...dates }
     },
@@ -190,7 +186,6 @@ export default {
     this.initialFormState = JSON.stringify(this.formState)
   },
   methods: {
-
     submit() {
       this.$emit('submit', this.formState)
       this.resetForm()

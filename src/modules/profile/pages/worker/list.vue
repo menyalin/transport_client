@@ -4,7 +4,7 @@
       <v-col>
         <app-buttons-panel
           panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+          :disabled-refresh="!$store.getters.directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('worker:write')"
           @submit="create"
           @refresh="refresh"
@@ -39,11 +39,10 @@
   </v-container>
 </template>
 <script>
+import store from '@/store'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
-import { useQuery } from 'vue-query'
-import { mapGetters } from 'vuex'
-import { WORKERS } from '@/constants/queryKeys'
 import workerService from '../../services/worker.service'
+import { computed, ref } from '@vue/composition-api'
 
 export default {
   name: 'WorkerList',
@@ -65,23 +64,33 @@ export default {
     ],
   }),
   setup() {
-    const {data: workers, isLoading: loading, refetch: refetchWorkers} = useQuery(WORKERS, workerService.getByDirectoriesProfile, {staleTime: Infinity})
-    return { workers, loading, refetchWorkers }
-  },
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-    prepareDocuments() {
-      if (!this.workers) return []
-      return this.workers
+    const workers = ref([])
+    const loading = ref(false)
+    const getWorkers = async () => {
+      try {
+        loading.value = true
+        workers.value = await workerService.getByDirectoriesProfile()
+        loading.value = false
+      } catch (e) {
+        loading.value = false
+        store.commit('setError', e.message)
+      }
+    }
+    const prepareDocuments = computed(() =>
+      workers.value
         .map((i) => ({
           ...i,
-          roles: i.roles.map(role => this.$store.getters.staffRolesMap.get(role)).join(', ')
+          roles: i.roles
+            .map((role) => store.getters.staffRolesMap.get(role))
+            .join(', '),
         }))
         .sort((a, b) => {
           if (a.name < b.name) return -1
-          else return 1 
+          else return 1
         })
-    },
+    )
+    getWorkers()
+    return { prepareDocuments, loading, refetchWorkers: getWorkers }
   },
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))

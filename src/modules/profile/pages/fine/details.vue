@@ -23,7 +23,7 @@ import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import service from '../../services/fine.service'
 import router from '@/router'
 import store from '@/store'
-import { watch } from '@vue/composition-api'
+import { watch, ref, reactive } from '@vue/composition-api'
 
 export default {
   name: 'FineDetails',
@@ -35,14 +35,15 @@ export default {
     id: String,
   },
   setup({ id }) {
-    const loading = ref(false)
-    const item = reactive({})
+    const _id = ref(id)
+    let loading = ref(false)
+    let item = ref()
     
     async function getItem () {
       if (!id) return null
       try {
         loading.value = true
-        item = await service.getById(id)
+        item.value = await service.getById(id)
         loading.value = false
       } catch(e) {
         loading.value = false
@@ -63,7 +64,7 @@ export default {
 
 
     getItem()
-    watch(id, getItem)
+    watch(_id, getItem)
     
     return { item, loading, submit }
   },
