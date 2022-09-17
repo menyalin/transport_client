@@ -248,6 +248,7 @@ export default {
     date() {
       return this.$store.getters.scheduleDate
     },
+
     notesStyle() {
       const styles = {}
       this.filteredNotes.forEach((note) => {
@@ -265,12 +266,14 @@ export default {
       })
       return styles
     },
+
     secInPx() {
       return getSecInPx({
         lengthInPx: this.tableWidth,
         dayCount: this.columns.length,
       })
     },
+
     draggableMode() {
       return (
         permissionService.check({ permissions: ['order:move'] }) &&
@@ -278,20 +281,24 @@ export default {
         !this.settings.controlOnly
       )
     },
+
     period() {
       return getPeriodByWidthAndDate({
         date: this.date,
         width: this.tableWidth,
       })
     },
+
     columns() {
       return getDaysFromPeriod(this.period)
     },
+
     cellStyles() {
       return {
         height: LINE_HEIGHT + 'px',
       }
     },
+
     filteredOrders() {
       return (
         this.$store.getters.ordersForSchedule
@@ -299,6 +306,7 @@ export default {
           .filter((i) => (this.settings.controlOnly ? i.state.warning : true))
       )
     },
+
     allItems() {
       // Объединяем в один массив заказы и простою, сортируем по дате отображения
       return (
@@ -334,11 +342,12 @@ export default {
         }))
       else return []
     },
+
     lineForUndistributedOrdersMap() {
       let tmpMap = new Map()
       // группируем рейсы по дате начала и определяем кол-во строк для отображения буферной зоны
       for (let order of this.unDistributedOrders) {
-        const group = this.getLeftShiftForOrder(order)
+        const group = Math.floor(this.getLeftShiftForOrder(order))
         if (tmpMap.has(group)) {
           const arr = tmpMap.get(group)
           arr.push(order._id)
@@ -356,6 +365,7 @@ export default {
       }
       return orderLinesMap
     },
+
     bufferHeight() {
       let arr = []
       if (this.lineForUndistributedOrdersMap.size === 0)
@@ -380,6 +390,9 @@ export default {
   mounted() {
     window.addEventListener('resize', this.resizeScreen)
     this.resizeScreen()
+  },
+  setup() {
+
   },
   methods: {
     dblclickHandler(e, isBuffer) {
@@ -408,6 +421,7 @@ export default {
         })
       }
     },
+
     createDowntime() {
       this.$router.push({
         name: 'DowntimeCreate',
@@ -417,6 +431,7 @@ export default {
         },
       })
     },
+
     createOrder() {
       this.$router.push({
         name: 'CreateOrder',
@@ -426,6 +441,7 @@ export default {
         },
       })
     },
+
     createScheduleNote() {
       this.$router.push({
         name: 'ScheduleNoteCreate',
@@ -435,21 +451,25 @@ export default {
         },
       })
     },
+
     notesFilterByPeriod(item) {
       return (
         dayjs(item.startPositionDate).isBefore(this.period[0]) &&
         dayjs(this.period[1]).add('24', 'h').isAfter(item.startPositionDate)
       )
     },
+
     ordersFilterByDraggedOrder(item) {
       return this.draggedOrderId ? item._id !== this.draggedOrderId : true
     },
+
     resizeScreen() {
       if (!this.$refs.tableBody) return null
       this.titleColumnWidth = this.$refs.rowTitleColumn.offsetWidth
       this.titleRowHeight = this.$refs.rowTitleColumn.offsetHeight
       this.tableWidth = this.$refs.tableBody.offsetWidth - this.titleColumnWidth
     },
+
     getLeftShiftForOrder({ startPositionDate, needRoundTime }) {
       // Округляем время отображения до 00, 06, 12, 18
       if (!this.tableWidth) return null
@@ -470,6 +490,7 @@ export default {
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
       return leftShift / this.secInPx + this.titleColumnWidth
     },
+    
     getTopShiftForOrder({ truckId, _id }) {
       if (!truckId)
         return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
@@ -478,6 +499,7 @@ export default {
       if (rowIdx === -1) return null
       return rowIdx * LINE_HEIGHT + this.titleRowHeight
     },
+
     getOrderWidth({
       startPositionDate,
       endPositionDate,
@@ -520,6 +542,7 @@ export default {
             : SEC_IN_SIX_HOURS) / this.secInPx
         )
     },
+
     getStylesForOrder(order) {
       return {
         height: LINE_HEIGHT + 'px',
@@ -562,6 +585,7 @@ export default {
         this.overRowInd = Math.floor((y - this.titleRowHeight) / LINE_HEIGHT)
       }
     },
+
     dropOnBufferHandler(e) {
       this.draggedOrderId = null
       const x = e.layerX - this.titleColumnWidth
@@ -575,6 +599,7 @@ export default {
         startDate: startDate.toISOString(),
       })
     },
+
     dropHandler(e) {
       this.draggedOrderId = null
       if (
@@ -603,6 +628,7 @@ export default {
       this.overRowInd = null
       return true
     },
+
     isDraggableOrder(order) {
       const disabled = order.isDisabled
       const confirmed =
