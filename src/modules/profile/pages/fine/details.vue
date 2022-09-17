@@ -23,7 +23,7 @@ import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import service from '../../services/fine.service'
 import router from '@/router'
 import store from '@/store'
-import { watch, ref, reactive } from '@vue/composition-api'
+import { watch, ref } from 'vue'
 
 export default {
   name: 'FineDetails',

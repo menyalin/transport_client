@@ -6,7 +6,6 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate'
 import VuetifyConfirm from 'vuetify-confirm'
-import VueCompositionAPI from '@vue/composition-api'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import isSameOrBefore  from 'dayjs/plugin/isSameOrBefore'
@@ -23,7 +22,6 @@ dayjs.locale('ru')
 Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
-Vue.use(VueCompositionAPI)
 
 Vue.use(VuetifyConfirm, {
   vuetify,

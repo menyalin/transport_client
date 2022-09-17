@@ -1,5 +1,5 @@
 import store from '@/store'
-import { reactive, computed, watch, ref, onMounted } from '@vue/composition-api'
+import { computed, watch, ref, onMounted } from 'vue'
 import service from '@/modules/profile/services/fine.service'
 import dayjs from 'dayjs'
 

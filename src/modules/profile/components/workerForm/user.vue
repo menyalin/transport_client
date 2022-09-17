@@ -123,7 +123,7 @@ import store from '@/store'
 import AppUserInfo from './_userInfo.vue'
 import workerService from '../../services/worker.service'
 import userService from '../../../auth/services/user.service'
-import { computed, ref, reactive, watch } from '@vue/composition-api'
+import { computed, ref } from 'vue'
 
 export default {
   name: 'User',

@@ -21,7 +21,7 @@
 import AppForm from '@/modules/profile/components/workerForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import service from '../../services/worker.service'
-import { ref, computed, reactive } from '@vue/composition-api'
+import { ref, computed, reactive } from 'vue'
 import store from '@/store'
 import router from '@/router'
 

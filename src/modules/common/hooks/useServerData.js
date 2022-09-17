@@ -1,4 +1,4 @@
-import { ref, onMounted } from '@vue/composition-api'
+import { ref, onMounted } from 'vue'
 
 export const  useServerData = ({ ctx, service, propValue }) => {
   let itemSelected = !!propValue

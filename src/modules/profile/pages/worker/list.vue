@@ -42,7 +42,7 @@
 import store from '@/store'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import workerService from '../../services/worker.service'
-import { computed, ref } from '@vue/composition-api'
+import { computed, ref } from 'vue'
 
 export default {
   name: 'WorkerList',

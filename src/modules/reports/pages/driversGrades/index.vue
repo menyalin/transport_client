@@ -37,8 +37,7 @@
   </div>
 </template>
 <script>
-import { reactive, ref, computed } from '@vue/composition-api'
-
+import { reactive, ref, computed } from 'vue'
 import AppDateRange from '@/modules/common/components/dateRange2'
 import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
