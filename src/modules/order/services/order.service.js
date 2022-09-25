@@ -59,7 +59,6 @@ class OrderService {
 
   async getListForSchedule(startDate, endDate) {
     if (!startDate && !store.getters.schedulePeriod ) return null
-    
     socket.emit('ordersForSchedule', {
       profile: store.getters.directoriesProfile,
       startDate: dayjs(startDate || store.getters.schedulePeriod[0]).add(-1, 'd').toISOString(),
@@ -93,6 +92,11 @@ class OrderService {
   }
   getDirectDistance(coords) {
     return getMaxDistance(coords)
+  }
+
+  async setDocs(orderId, docs) {
+    let { data } = await api.put(`${BASE_PATH}/${orderId}/setDocs`, { docs })
+    return data
   }
 }
 

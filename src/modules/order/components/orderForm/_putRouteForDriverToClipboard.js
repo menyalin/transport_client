@@ -9,7 +9,7 @@ const getCargoParams = (params) => {
 
 const getPointStr = (point) => {
   const address = store.getters.addressMap.get(point.address)  
-  let res = `**${point.type === 'loading' ? 'Погрузка': 'Разгрузка'}**${point.isReturn ? ' (возврат)' : ''}: \n`
+  let res = `**${point.type === 'loading' ? 'Погрузка': 'Разгрузка'}:**${point.isReturn ? ' (возврат)' : ''}\n`
   // дата
   if (point.plannedDate)  res += `**${new Date(point.plannedDate).toLocaleString()}** \n`
   res +=`**${store.getters.partnersMap.get(address.partner)?.name}** \n`

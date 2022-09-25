@@ -11,6 +11,7 @@
           small
           color="primary"
           outlined
+          :disabled="readonly"
           @click="addDoc"
         >
           Добавить
@@ -21,7 +22,7 @@
           <thead>
             <tr>
               <th class="text-left">
-                Тип
+                Тип*
               </th>
               <th class="text-left">
                 Номер
@@ -30,7 +31,10 @@
                 Комментарий
               </th>
               <th class="text-left">
-                Статус
+                Статус*
+              </th>
+              <th class="text-left">
+                Дата получения
               </th>
               <th />
             </tr>
@@ -46,6 +50,7 @@
                   dense
                   hide-details
                   :items="docTypes"
+                  class="my-2"
                 />
               </td>
               <td>
@@ -71,8 +76,17 @@
                 />
               </td>
               <td>
+                <v-text-field
+                  v-model="item.date"
+                  type="date"
+                  dense
+                  hide-details
+                />
+              </td>
+              <td>
                 <v-icon
                   small
+                  :disabled="readonly"
                   @click="deleteRow(idx)"
                 >
                   mdi-delete
@@ -91,6 +105,7 @@
 
       <v-btn
         color="primary"
+        :disabled="readonly || invalidItems"
         @click="saveHandler"
       >
         Сохранить
@@ -99,8 +114,11 @@
   </v-card>
 </template>
 <script>
+import dayjs from 'dayjs'
+
+const DATE_FORMAT = 'YYYY-MM-DD'
 export default {
-  name: 'DocListForm',
+    name: 'DocListForm',
   props: {
     docs: Array,
   },
@@ -116,26 +134,38 @@ export default {
     docStatuses() {
       return this.$store.getters.documentStatuses
     },
+    readonly() {
+      return !this.$store.getters.hasPermission('order:setDocs')
+    },
+    invalidItems() {
+      return !!this.tmpDocs.filter(item => !item.type || !item.status).length
+    }
   },
   watch: {
     docs: {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpDocs = val
+        this.tmpDocs = val.map(i => ({
+          ...i,
+          date: dayjs(i.date).format(DATE_FORMAT)
+        }))
       },
     },
   },
   methods: {
     saveHandler() {
-      this.$emit('save', this.tmpDocs)
+      this.$emit('save', this.tmpDocs.map(i => ({
+        ...i,
+        date: i.date ? new Date(i.date).toISOString() : new Date().toISOString()
+      })))
     },
     addDoc() {
       if (!Array.isArray(this.tmpDocs)) this.tmpDocs = []
-      else this.tmpDocs.push({})
+      else this.tmpDocs.push({date: dayjs().format(DATE_FORMAT)})
     },
     deleteRow(idx) {
-      this.tmpDocs = this.tmpDocs.splice(idx, 1)
+      this.tmpDocs.splice(idx, 1)
     },
   },
 }

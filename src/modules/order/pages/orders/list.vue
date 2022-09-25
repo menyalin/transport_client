@@ -188,7 +188,7 @@
       </v-data-table>
       <v-dialog
         v-model="docDialog"
-        max-width="800"
+        max-width="1300"
         persistent
       >
         <app-doc-list-form
@@ -366,11 +366,9 @@ export default {
       this.editableOrderId = null
       this.docDialog = false
     },
+    
     async saveDocDialog(val) {
-      await service.updateOne(this.editableOrderId, {
-        company: this.$store.getters.directoriesProfile,
-        docs: val,
-      })
+      await service.setDocs(this.editableOrderId, val)
       this.cancelDocDialog()
     },
 
