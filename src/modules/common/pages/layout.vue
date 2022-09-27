@@ -15,6 +15,22 @@
                   Профиль пользователя
                 </router-link>
               </div>
+              <app-date-time-input 
+                v-model="date1"
+                min="2022-09-21"
+                dense
+                hide-details
+                type="date"
+                label="Инпут 1" 
+              />
+              date1: {{ date1 }}
+
+              <app-date-time-input 
+                v-model="date2"
+                type="datetime-local"
+                label="Инпут 2" 
+              />
+              date2: {{ date2 }}
             </div>
             <div
               v-else
@@ -33,14 +49,19 @@
 import AppAdminBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
 import { mapGetters } from 'vuex'
+import appDateTimeInput from '@/modules/common/components/dateTimeInput2'
 
 export default {
   name: 'ProfileLayout',
   components: {
     AppAdminBar,
     AppSnackbar,
+    appDateTimeInput,
   },
-  data: () => ({}),
+  data: () => ({
+    date1: '2022-09-21T21:00:00.000Z',
+    date2: '2022-09-23T15:00:00.000Z',
+  }),
   computed: {
     ...mapGetters(['isLoggedIn', 'user']),
   },
