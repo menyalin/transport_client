@@ -42,6 +42,15 @@
             >
               <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
+            
+            <v-btn
+              v-if="$store.getters.hasPermission('order:setDocs')"
+              color="primary"
+              icon
+              @click="openDocDialog"
+            >
+              <v-icon>mdi-file-document-multiple</v-icon>
+            </v-btn>
             <v-dialog
               v-model="templateDialog"
               persistent
@@ -167,6 +176,18 @@
               dense
             />
           </div>
+          <v-dialog
+            v-model="docDialog"
+            max-width="1300"
+            persistent
+          >
+            <app-doc-list-form
+              :docs="order.docs"
+              :orderId="orderId"
+              @cancel="cancelDocDialog"
+              @save="saveDocDialog"
+            />
+          </v-dialog>
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -203,6 +224,7 @@ import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
+import AppDocListForm from '../docListForm/index.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 export default {
@@ -219,6 +241,7 @@ export default {
     AppAnalyticBlock,
     AppPriceBlock,
     AppPriceDialog,
+    AppDocListForm,
   },
   props: {
     order: {
@@ -245,6 +268,7 @@ export default {
   },
   data() {
     return {
+      docDialog: false,
       priceDialog: false,
       createTemplateLoading: false,
       templateDialog: false,
@@ -291,7 +315,7 @@ export default {
     ...mapGetters(['directoriesProfile', 'myCompanies']),
     showFinalPriceDialog() {
       return (
-        !!this.$store.getters.hasPermission('readFinalPrices') &&
+        !!this.$store.getters.hasPermission('order:readFinalPrices') &&
         !!this.client?.agreement &&
         !!this.order?._id &&
         !!this.isValidRoute
@@ -477,7 +501,6 @@ export default {
       handler: function (newRouteValue, oldVal) {
         // при изменении маршрута определяется тип рейса город / регион
         if (this.isValidRoute) this.updateOrderType()
-
         // при создании рейса
         if (
           // !this.orderId &&
@@ -504,6 +527,18 @@ export default {
   },
 
   methods: {
+    openDocDialog() {
+      this.docDialog = true
+    },
+    cancelDocDialog() {
+      this.docDialog = false 
+    },
+    
+    async saveDocDialog(val) {
+      await OrderService.setDocs(this.orderId, val)
+      this.cancelDocDialog()
+    },
+
     updateOrderType() {
       const regions = this.route
         .map((i) =>

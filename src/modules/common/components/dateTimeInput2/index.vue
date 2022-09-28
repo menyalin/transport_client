@@ -1,20 +1,27 @@
 <template>
   <v-text-field
+    :label="label"
     :type="type"
     :disabled="disabled"
-    :hide-details="hideDetails"
+    :hide-details="!errors.length && hideDetails"
+    :prepend-inner-icon="showPrependIcon ? 'mdi-chevron-right' : null"
     :readonly="readonly"
     :dense="dense"
+    contenteditable
     :min="min"
+    :max="max"
     :outlined="outlined"
     :value="tmpDate"
-    :error="Array.isArray(errorMessages) && errorMessages.length >= 1"
+    :error="!!errors.length"
+    :error-messages="errors"
+    @paste="pasteDate"
     @change="change"
     @click:prepend-inner="setDate"
   />
 </template>
 <script>
 import dayjs from 'dayjs'
+import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput.js'
 
 export default {
   name: 'DateTimeInput2',
@@ -22,7 +29,10 @@ export default {
     prop: 'value',
     event: 'change',
   },
-
+  setup() {
+    const { pasteDate } = usePasteDateInput()
+    return { pasteDate }
+  },
   props: {
     min: String, 
     max: String,
@@ -42,7 +52,7 @@ export default {
       default: false,
     },
 
-    hidePrependIcon: {
+    showPrependIcon: {
       type: Boolean,
       default: false,
     },
@@ -71,11 +81,16 @@ export default {
   },
   data: () => ({    
     tmpDate: null,
+    innerErrorMessage: [],
   }),
   computed: {
     dateFormat() {
       if (this.type === 'datetime-local') return 'YYYY-MM-DDTHH:mm'
       return 'YYYY-MM-DD'
+    },
+    errors() {
+      if (this.errorMessages) return this.errorMessages
+      else return this.innerErrorMessage
     }
   },
   watch: {
@@ -90,23 +105,23 @@ export default {
   methods: {
     setDate() {
       if (this.readonly) return null
-      this.dateValue = dayjs()
-      this.emitValue()
-    },
-
-    emitValue() {
-      this.$emit(
-        'change',
-        this.hideTimeInput
-          ? this.dateValue?.format('YYYY-MM-DD')
-          : this.dateValue?.format()
-      )
+      this.$emit('change', dayjs().toISOString())
     },
 
     change(dateStr) {
+      if (!dateStr) { 
+        this.$emit('change', null)
+        return
+      }
+
       if (this.min && new Date(dateStr) < new Date(this.min)) {
-        this.innerErrorMessage = [`Дата должна быть больше ${new Date(this.min).toLocaleString()}`]
-      } else {
+        this.innerErrorMessage = [`Дата должна быть больше ${dayjs(this.min).format(this.dateFormat)}`]
+
+      } else if (this.max && new Date(dateStr) > new Date(this.max)) {
+        this.innerErrorMessage = [`Дата должна быть меньше ${dayjs(this.max).format(this.dateFormat)}`]
+
+      } 
+      else {
         this.innerErrorMessage = []
         this.$emit('change', dayjs(dateStr).toISOString())
       }

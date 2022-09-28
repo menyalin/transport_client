@@ -1,6 +1,6 @@
 <template>
   <div class="pa-3 point-wrapper">
-    <div>
+    <div class="main-column-wrapper">
       <div class="row">
         <v-select
           v-model="tmpPoint.type"
@@ -10,7 +10,6 @@
           hide-details
           outlined
           :style="{ 'max-width': '150px' }"
-          @change="change"
         />
         <v-checkbox
           v-if="tmpPoint.isReturn"
@@ -34,7 +33,6 @@
         :style="{ 'min-width': '550px' }"
         outlined
         hide-details
-        @change="change"
       />
       <v-text-field
         v-model="tmpPoint.note"
@@ -44,32 +42,79 @@
         outlined
         :style="{ 'min-width': '550px' }"
         dense
-        @change="change"
       />
     </div>
-    <div v-if="!isTemplate">
+    <div 
+      v-if="!isTemplate" 
+      class="dates-column"
+    >
       <app-date-time-input
         v-model="tmpPoint.plannedDate"
+        type="datetime-local"
         label="Плановая дата"
+        dense
+        outlined
+        hide-details
         :readonly="readonly"
-        hidePrependIcon
-        @change="change"
+        @change="change($event, 'plannedDate')"
       />
       <app-date-time-input
         v-model="tmpPoint.arrivalDate"
+        type="datetime-local"
         label="Факт прибытия"
+        showPrependIcon
+        hide-details
+        dense
+        outlined
         :minDate="tmpPoint.minArrivalDate"
-        :disabled="!confirmed || tmpPoint.arrivalDateDisabled"
+        :disabled="!confirmed || point.arrivalDateDisabled"
         :errorMessages="arrivalDateErrors"
-        @change="change"
+        @change="change($event, 'arrivalDate')"
       />
       <app-date-time-input
         v-model="tmpPoint.departureDate"
+        type="datetime-local"
         label="Факт убытия"
-        :disabled="!confirmed || tmpPoint.departureDateDisabled"
+        dense
+        outlined
+        showPrependIcon
+        hide-details
+        :disabled="!confirmed || point.departureDateDisabled"
         :minDate="tmpPoint.arrivalDate"
         :errorMessages="departureDateErrors"
-        @change="change"
+        @change="change($event, 'departureDate')"
+      />
+    </div>
+    <div 
+      v-if="!isTemplate && isShowDocDates"
+      class="dates-column"
+    >
+      <app-date-time-input
+        v-model="tmpPoint.plannedDateDoc"
+        type="datetime-local"
+        label="Плановая дата (док)"
+        dense
+        outlined
+        hide-details
+        :readonly="readonlyDocDates"
+      />
+      <app-date-time-input
+        v-model="tmpPoint.arrivalDateDoc"
+        type="datetime-local"
+        label="Факт прибытия (док)"
+        :readonly="readonlyDocDates"
+        hide-details
+        dense
+        outlined
+      />
+      <app-date-time-input
+        v-model="tmpPoint.departureDateDoc"
+        type="datetime-local"
+        label="Факт убытия (док)"
+        :readonly="readonlyDocDates"
+        dense
+        outlined
+        hide-details
       />
     </div>
     <div
@@ -85,7 +130,6 @@
         hide-details
         outlined
         :style="{ 'max-width': '100px' }"
-        @change="change"
       />
 
       <v-text-field
@@ -100,7 +144,6 @@
         outlined
         dense
         min="0"
-        @change="change"
       />
     </div>
     <div
@@ -122,7 +165,7 @@
 import { mapGetters } from 'vuex'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import AppDateTimeInput from '@/modules/common/components/dateTimeInput2'
 
 export default {
   name: 'PointDetail',
@@ -160,6 +203,9 @@ export default {
         plannedDate: null,
         arrivalDate: null,
         departureDate: null,
+        plannedDateDoc: null,
+        arrivalDateDoc: null,
+        departureDateDoc: null,
         note: null,
         fixedTime: null,
       },
@@ -179,6 +225,12 @@ export default {
         errors.push('Дата не корректна')
       return errors
     },
+    isShowDocDates() {
+      return this.$store.getters.hasPermission('order:showDocDates') 
+    },
+    readonlyDocDates() {
+      return !this.$store.getters.hasPermission('order:writeDocDates') 
+    }
   },
   validations() {
     return {
@@ -192,35 +244,52 @@ export default {
       },
     }
   },
-  watch: {
-    point: {
-      immediate: true,
-      handler: function (val) {
-        if (!!val) {
-          this.setFields(val)
-        }
-      },
-    },
-  },
 
+  watch: {
+    watch: {
+      deep: true,
+      handler: function(val) {
+        this.$emit('changePoint', val)  
+      }
+    },
+    tmpPoint: {
+      deep: true,
+      handler: function (val) {
+        this.$emit('changePoint', { ...val})  
+      }
+    }
+  },
+  created() {
+    this.setFields(this.point)
+    if (this.point.plannedDate && !this.point.plannedDateDoc) 
+      this.tmpPoint.plannedDateDoc = this.point.plannedDate
+  },
   methods: {
     setFields(point) {
       this.tmpPoint = point
     },
-    change() {
-      this.$emit('changePoint', { ...this.tmpPoint })
+    change(val, field) {
+      this.tmpPoint[field+'Doc'] = val
+      
     },
   },
 }
 </script>
 <style scoped>
 .point-wrapper {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: auto 315px 30px;
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 .point-wrapper > div > * {
   margin: 5px;
+}
+.main-column-wrapper {
+  flex-grow: 1;
+}
+.dates-column {
+  flex-basis: 270px;
 }
 .remove-btn-wrapper {
   min-width: 30px;

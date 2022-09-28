@@ -3,8 +3,8 @@ import dayjs from 'dayjs'
 export const usePasteDateInput = () => {
 
   const pasteDate = (e) => {
-    e.preventDefault()
-      const inputDate = e.clipboardData.getData('text/plain')
+       e.preventDefault()
+      const inputDate = (e.clipboardData || window.clipboardData).getData('text/plain')
       let inputFormats
       let resultFormat
       if (e.target.type === 'date') { 
