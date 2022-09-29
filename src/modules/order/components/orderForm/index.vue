@@ -43,14 +43,7 @@
               <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
             
-            <v-btn
-              v-if="$store.getters.hasPermission('order:setDocs')"
-              color="primary"
-              icon
-              @click="openDocDialog"
-            >
-              <v-icon>mdi-file-document-multiple</v-icon>
-            </v-btn>
+            
             <v-dialog
               v-model="templateDialog"
               persistent
@@ -176,18 +169,11 @@
               dense
             />
           </div>
-          <v-dialog
-            v-model="docDialog"
-            max-width="1300"
-            persistent
-          >
-            <app-doc-list-form
-              :docs="order.docs"
-              :orderId="orderId"
-              @cancel="cancelDocDialog"
-              @save="saveDocDialog"
-            />
-          </v-dialog>
+          
+          <app-doc-list-form
+            v-model="docs"
+            :readonly="$store.getters.hasPermission('order:setDocs')"
+          />
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -224,7 +210,7 @@ import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
-import AppDocListForm from '../docListForm/index.vue'
+import AppDocListForm from '../docListForm/form.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 export default {
@@ -268,7 +254,7 @@ export default {
   },
   data() {
     return {
-      docDialog: false,
+      docs:[],
       priceDialog: false,
       createTemplateLoading: false,
       templateDialog: false,
@@ -462,6 +448,7 @@ export default {
         prices: this.prices,
         prePrices: this.prePrices,
         outsourceCosts: this.outsourceCosts,
+        docs: this.docs,
       }
     },
   },
@@ -527,18 +514,6 @@ export default {
   },
 
   methods: {
-    openDocDialog() {
-      this.docDialog = true
-    },
-    cancelDocDialog() {
-      this.docDialog = false 
-    },
-    
-    async saveDocDialog(val) {
-      await OrderService.setDocs(this.orderId, val)
-      this.cancelDocDialog()
-    },
-
     updateOrderType() {
       const regions = this.route
         .map((i) =>
@@ -551,12 +526,15 @@ export default {
         this.analytics.type = new Set(regions).size >= 2 ? 'region' : 'city'
       })
     },
+
     openPriceDialog() {
       this.priceDialog = true
     },
+
     copyTimestamptsToClipboard() {
       _putRouteDatesToClipboard(this.route)
     },
+
     async createTemplateHandler() {
       try {
         this.createTemplateLoading = true
@@ -574,6 +552,7 @@ export default {
         this.$store.commit('setError', e.message)
       }
     },
+
     cancelCreateTemplate() {
       this.templateDialog = false
       this.templateName = null
@@ -629,6 +608,7 @@ export default {
       if (val.prePrices) this.prePrices = val.prePrices
       if (val.outsourceCosts) this.outsourceCosts = val.outsourceCosts
       if (val.finalPrices) this.finalPrices = val.finalPrices
+      if (val.docs) this.docs = val.docs
 
       keys.forEach((key) => {
         this.form[key] = val[key]
@@ -648,6 +628,7 @@ export default {
       this.prePrices = []
       this.finalPrices = []
       this.outsourceCosts = []
+      this.docs = []
       keys.forEach((key) => {
         this.form[key] = null
       })
@@ -724,5 +705,9 @@ export default {
   grid-column: 2/4;
   grid-row: 8/8;
   margin-top: 10px;
+}
+#docs {
+  grid-column: 2/4;
+  grid-row: 9/9;
 }
 </style>
