@@ -112,6 +112,11 @@ export default {
       required: true,
     }
   },
+  data() {
+    return {
+      docs: []
+    }
+  },
   computed: {
     docTypes() {
       return this.$store.getters.documentTypes
@@ -124,25 +129,30 @@ export default {
       return !!this.value.filter(item => !item.type || !item.status).length
     }
   },
-  watch: {
-    value: {
-      immediate: true,
+  watch: {  
+    docs: {
       deep: true,
-      handler: function (val) {
-        this.docs = val.map(i => ({
+      handler: function(val) {
+        console.log( 'val', val)
+        this.$emit('change', [ ...val.map(i => ({
+          ...i,
+          date: !!i.date ?  new Date(i.date).toISOString() : null         
+        }))])
+      }
+    }
+  },
+  created() {
+    this.docs = this.value.map(i => ({
           ...i,
           date: dayjs(i.date).format(DATE_FORMAT)
         }))
-      },
-    },
   },
   methods: {
     addDoc() {
-      if (!Array.isArray(this.value)) this.value = []
-      else this.value.push({date: dayjs().format(DATE_FORMAT)})
+      this.docs.push({date: dayjs().format(DATE_FORMAT)})
     },
     deleteRow(idx) {
-      this.value.splice(idx, 1)
+      this.docs.splice(idx, 1)
     },
   }
 }

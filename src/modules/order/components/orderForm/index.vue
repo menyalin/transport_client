@@ -171,8 +171,11 @@
           </div>
           
           <app-doc-list-form
+            v-if="$store.getters.hasPermission('order:readDocs')"
+            id="docs"
             v-model="docs"
-            :readonly="$store.getters.hasPermission('order:setDocs')"
+            title="Документы"
+            :readonly="!$store.getters.hasPermission('order:setDocs')"
           />
         </div>
         <v-btn
