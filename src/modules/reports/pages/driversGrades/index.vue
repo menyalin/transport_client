@@ -37,10 +37,11 @@
   </div>
 </template>
 <script>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, nextTick } from 'vue'
 import AppDateRange from '@/modules/common/components/dateRange2'
 import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
+import store from '@/store'
 
 export default {
   name: 'DriversGradesReport',
@@ -65,14 +66,14 @@ export default {
         state.loading = true
         state.link = await ReportService.driversGradesGetLink({
           dateRange: state.dateRange,
-          company: this.$store.getters.directoriesProfile,
+          company: store.getters.directoriesProfile,
         })
         state.loading = false
-        this.$nextTick(() => {
+        nextTick(() => {
           if (linkEl && state.link) linkEl.value.click()
         })
       } catch (e) {
-        this.$store.commit('setError', e.message)
+        store.commit('setError', e.message)
       }
     }
     return {

@@ -1,12 +1,15 @@
 <template>
-  <div>
+  <div 
+    class="docs-wrapper"
+    :class="{invalid: !isValid}"
+  >
     <div>
       <v-btn
         text
         small
         color="primary"
         outlined
-        :disabled="readonly"
+        :disabled="readonly || !isValid"
         @click="addDoc"
       >
         Добавить
@@ -107,6 +110,10 @@ export default {
     value: {
       type: Array
     },
+    isValid: {
+      type: Boolean,
+      required: true,
+    },
     readonly: {
       type: Boolean,
       required: true,
@@ -133,7 +140,6 @@ export default {
     docs: {
       deep: true,
       handler: function(val) {
-        console.log( 'val', val)
         this.$emit('change', [ ...val.map(i => ({
           ...i,
           date: !!i.date ?  new Date(i.date).toISOString() : null         
@@ -158,5 +164,12 @@ export default {
 }
 </script>
 <style scoped>
-  
+.docs-wrapper {
+  margin: 5px;
+  padding: 15px;
+}
+.invalid {
+  border: tomato 2px solid;
+  border-radius: 5px;
+}
 </style>

@@ -357,8 +357,9 @@ export default {
     async openDocsDialog(orderId) {
       if (!orderId) return null
       this.editableOrderId = orderId
-      const { docs } = await service.getById(orderId)
-      this.editableDocs = docs
+      const order = await service.getById(orderId)
+      console.log('order', order)
+      this.editableDocs = order.docs
       this.docDialog = true
     },
     cancelDocDialog() {

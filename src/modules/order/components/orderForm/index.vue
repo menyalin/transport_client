@@ -171,11 +171,12 @@
           </div>
           
           <app-doc-list-form
-            v-if="$store.getters.hasPermission('order:readDocs')"
+            v-if="isShowDocs"
             id="docs"
             v-model="docs"
             title="Документы"
-            :readonly="!$store.getters.hasPermission('order:setDocs')"
+            :isValid="isValidDocs(docs)"
+            :readonly="isReadonlyDocs"
           />
         </div>
         <v-btn
@@ -215,6 +216,7 @@ import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
 import AppDocListForm from '../docListForm/form.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
+import { useOrderDocs } from '../../hooks/useOrderDocs.js'
 
 export default {
   name: 'OrderForm',
@@ -253,6 +255,12 @@ export default {
         )
         return agreement
       },
+    }
+  },
+  setup() {
+    const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
+    return {
+      isValidDocs, isReadonlyDocs, isShowDocs
     }
   },
   data() {
@@ -349,6 +357,7 @@ export default {
       return (
         !this.form.startPositionDate ||
         !this.isValidRoute ||
+        !this.isValidDocs(this.docs) ||
         !this.isValidClientInfo ||
         !this.reqTransport.kind ||
         !this.reqTransport.liftCapacity
