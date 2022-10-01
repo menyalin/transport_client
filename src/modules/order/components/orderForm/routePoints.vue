@@ -168,7 +168,6 @@ export default {
 }
 .invalid {
   border: tomato 2px solid;
-
   border-radius: 5px;
 }
 .point-wrapper-outer {

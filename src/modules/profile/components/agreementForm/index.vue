@@ -101,6 +101,20 @@
           v-model="form.noWaitingPaymentForAreLateUnloading"
           color="primary"
           label="Запрет оплаты простоя при опоздании на выгрузку"
+          hide-details
+        />
+        <v-divider class="mt-5" />
+        <v-checkbox
+          v-model="form.priceRequired"
+          color="primary"
+          label="Обязательно заполнение аукционной цены"
+          hide-details
+        />
+        <v-checkbox
+          v-model="form.clientNumRequired"
+          color="primary"
+          hide-details
+          label="Обязательно заполнение номера заказа клиента"
         />
       </div>
 
@@ -187,7 +201,8 @@ export default {
         clients: [],
         outsourceCarriers: [],
         closed: null,
-        zones: [],
+        priceRequired: false,
+        clientNumRequired: false,
       },
     }
   },

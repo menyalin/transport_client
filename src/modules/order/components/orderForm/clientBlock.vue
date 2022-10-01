@@ -8,29 +8,19 @@
         v-model="params.client"
         label="Клиент"
         outlined
+        :loading="loading"
+        :messages="agreement ? [agreement.name] : ['Соглашение отсутствует']"
+        :error="!agreement"
         dense
         only-clients
-        hide-details
       />
       <v-text-field
         v-model="params.num"
-        hide-details
         outlined
         dense
         label="Номер заказа клиента"
+        :errorMessages="numErrorMessages"
       />
-    </div>
-    <div
-      v-if="loading"
-      class="text-caption"
-    >
-      Загружаю...
-    </div>
-    <div
-      v-else
-      class="text-caption"
-    >
-      {{ agreement ? agreement.name : 'Соглашение отсутствует' }}
     </div>
   </div>
 </template>
@@ -53,6 +43,10 @@ export default {
     item: Object,
     title: String,
     routeDate: String,
+    isValidNum: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -64,6 +58,11 @@ export default {
         num: null,
         agreement: null,
       },
+    }
+  },
+  computed: {
+    numErrorMessages() {
+      return this.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
     }
   },
   watch: {
@@ -99,7 +98,6 @@ export default {
   },
   methods: {
     async getAgreement() {
-      // this.clearAgreement()
       if (!this.routeDate || !this.params.client) return null
 
       try {

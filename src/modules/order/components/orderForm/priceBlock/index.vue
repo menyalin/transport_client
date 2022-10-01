@@ -3,6 +3,7 @@
     <app-price-wrapper
       v-if="showPriceBlock"
       v-model="tmpPrices"
+      :isValid="isValidPrices"
       :readonly="readonlyPrice"
       :agreement="agreement"
       title="Стоимость рейса"
@@ -28,6 +29,10 @@ export default {
   },
   props: {
     route: Array,
+    isValidPrices: { 
+      type: Boolean,
+      default: true,
+    },
     prices: Array,
     outsourceCosts: Array,
     agreementId: String,

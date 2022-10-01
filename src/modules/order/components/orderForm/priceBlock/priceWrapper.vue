@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    class="wrapper" 
+    :class="{invalid: !isValid}"
+  >
     <div id="button-panel">
       <app-block-title>{{ title }}</app-block-title>
       <v-btn
@@ -49,6 +52,7 @@ export default {
   props: {
     title: String,
     items: Array,
+    isValid: Boolean,
     agreement: Object,
     readonly: { type: Boolean, default: false },
   },
@@ -145,4 +149,11 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+.invalid {
+  border: tomato 2px solid;
+  border-radius: 5px;
+}
+.wrapper{
+  padding: 10px;
+} 
 </style>

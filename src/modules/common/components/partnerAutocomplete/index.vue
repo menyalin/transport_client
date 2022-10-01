@@ -10,9 +10,12 @@
       auto-select-first
       clearable
       persistent-hint
+      :messages="messages"
       :hint="showHint && hint ? hint : null"
       :label="label"
       :outlined="outlined"
+      :loading="loading"
+      :error="error"
       :append-icon="hideAppendIcon ? null : appendIcon"
       @click:append="appendClick"
       @change="changeValue"
@@ -56,6 +59,9 @@ export default {
     disabled: { type: Boolean, default: false },
     hideAppendIcon: { type: Boolean, default: false },
     showHint: { type: Boolean, default: false },
+    loading: { type: Boolean, default: false },
+    messages: Array,
+    error: Boolean,
   },
   data() {
     return {

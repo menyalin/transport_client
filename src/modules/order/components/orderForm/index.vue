@@ -99,6 +99,7 @@
             v-model="client"
             title="Информация о клиенте"
             class="client"
+            :isValidNum="isValidClientNum(agreement, client, state)"
             :routeDate="routeDate"
           />
           <app-cargo-params
@@ -146,6 +147,7 @@
           />
           <app-price-block
             id="price"
+            :isValidPrices="isValidPrices(agreement, prices, state)"
             :prices.sync="prices"
             :outsourceCosts.sync="outsourceCosts"
             :agreementId="client.agreement"
@@ -217,6 +219,8 @@ import AppPriceDialog from './priceDialog'
 import AppDocListForm from '../docListForm/form.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 import { useOrderDocs } from '../../hooks/useOrderDocs.js'
+import { useOrderValidations } from '../../hooks/useOrderValidations.js'
+import agreement from '@/modules/profile/profile.store/agreement'
 
 export default {
   name: 'OrderForm',
@@ -250,21 +254,22 @@ export default {
       },
       getOrderAgreement: async (val) => {
         if (!val && !this.client.agreement) return null
-        const agreement = await AgreementService.getById(
-          val || this.client.agreement
-        )
+        const agreement = await AgreementService.getById( val || this.client.agreement )
         return agreement
       },
     }
   },
-  setup() {
+  setup({ order }) {
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
+    const { isValidPrices, isValidClientNum } = useOrderValidations()
+
     return {
-      isValidDocs, isReadonlyDocs, isShowDocs
+      isValidDocs, isReadonlyDocs, isShowDocs, isValidPrices, isValidClientNum
     }
   },
   data() {
     return {
+      agreement: null,
       docs:[],
       priceDialog: false,
       createTemplateLoading: false,
@@ -358,11 +363,14 @@ export default {
         !this.form.startPositionDate ||
         !this.isValidRoute ||
         !this.isValidDocs(this.docs) ||
+        !this.isValidPrices(this.agreement, this.prices, this.state) ||
+        !this.isValidClientNum(this.agreement, this.client, this.state) ||
         !this.isValidClientInfo ||
         !this.reqTransport.kind ||
         !this.reqTransport.liftCapacity
       )
     },
+
     isValidDatesInRoute() {
       let dates = []
       this.route.forEach((p) => {
@@ -375,6 +383,7 @@ export default {
       }
       return true
     },
+
     isValidRoute() {
       if (!this.route) return false
       const length = this.route.length >= 2
@@ -465,6 +474,13 @@ export default {
     },
   },
   watch: {
+    ['client.agreement']: {
+      immediate: true,
+      handler: async function(val) {
+        if (!val) this.agreement = null
+        else this.agreement = await AgreementService.getById(val) 
+      }
+    },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)
