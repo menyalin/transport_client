@@ -1,9 +1,9 @@
 <template>
-  <div 
+  <div
     class="docs-wrapper"
-    :class="{invalid: !isValid}"
+    :class="{ invalid: !isValid }"
   >
-    <div>
+    <div class="btn-wrapper">
       <v-btn
         text
         small
@@ -13,6 +13,16 @@
         @click="addDoc"
       >
         Добавить
+      </v-btn>
+      <v-btn
+        text
+        small
+        color="primary"
+        outlined
+        :disabled="readonly || !isValid"
+        @click="openGroupDocDialog"
+      >
+        Добавить группу
       </v-btn>
     </div>
     <v-simple-table dense>
@@ -94,21 +104,31 @@
         </tbody>
       </template>
     </v-simple-table>
+    <app-group-dialog
+      :dialog="groupDialog"
+      @close="closeGroupDocDialog"
+      @pushDocs="addGroup"
+    />
   </div>
 </template>
 <script>
 import dayjs from 'dayjs'
+import appGroupDialog from './groupDialog.vue'
+
 const DATE_FORMAT = 'YYYY-MM-DD'
 
 export default {
   name: 'DocListForm',
+  components: {
+    appGroupDialog
+  },
   model: {
     prop: 'value',
-    event: 'change'
+    event: 'change',
   },
   props: {
     value: {
-      type: Array
+      type: Array,
     },
     isValid: {
       type: Boolean,
@@ -117,11 +137,12 @@ export default {
     readonly: {
       type: Boolean,
       required: true,
-    }
+    },
   },
   data() {
     return {
-      docs: []
+      docs: [],
+      groupDialog: false,
     }
   },
   computed: {
@@ -131,36 +152,48 @@ export default {
     docStatuses() {
       return this.$store.getters.documentStatuses
     },
-    
+
     invalidItems() {
-      return !!this.value.filter(item => !item.type || !item.status).length
-    }
+      return !!this.value.filter((item) => !item.type || !item.status).length
+    },
   },
-  watch: {  
+  watch: {
     docs: {
       deep: true,
-      handler: function(val) {
-        this.$emit('change', [ ...val.map(i => ({
-          ...i,
-          date: !!i.date ?  new Date(i.date).toISOString() : null         
-        }))])
-      }
-    }
+      handler: function (val) {
+        this.$emit('change', [
+          ...val.map((i) => ({
+            ...i,
+            date: !!i.date ? new Date(i.date).toISOString() : null,
+          })),
+        ])
+      },
+    },
   },
   created() {
-    this.docs = this.value.map(i => ({
-          ...i,
-          date: dayjs(i.date).format(DATE_FORMAT)
-        }))
+    this.docs = this.value.map((i) => ({
+      ...i,
+      date: dayjs(i.date).format(DATE_FORMAT),
+    }))
   },
   methods: {
     addDoc() {
-      this.docs.push({date: dayjs().format(DATE_FORMAT)})
+      this.docs.push({ date: dayjs().format(DATE_FORMAT) })
+    },
+    addGroup(val) {
+      this.docs.push(...val)
+      this.groupDialog = false
+    },
+    openGroupDocDialog() {
+      this.groupDialog = true
+    },
+    closeGroupDocDialog() {
+      this.groupDialog = false
     },
     deleteRow(idx) {
       this.docs.splice(idx, 1)
     },
-  }
+  },
 }
 </script>
 <style scoped>
@@ -171,5 +204,11 @@ export default {
 .invalid {
   border: tomato 2px solid;
   border-radius: 5px;
+}
+.btn-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 15px;
 }
 </style>
