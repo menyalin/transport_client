@@ -3,28 +3,30 @@
     <div class="main-column-wrapper">
       <div class="row">
         <v-select
-          v-model="tmpPoint.type"
+          :value="tmpPoint.type"
           :items="pointTypes"
           dense
           :readonly="readonly"
           hide-details
           outlined
           :style="{ 'max-width': '150px' }"
+          @change="setField($event, 'type')"
         />
         <v-checkbox
           v-if="tmpPoint.isReturn"
-          v-model="tmpPoint.isReturn"
+          :value="tmpPoint.isReturn"
           label="Возврат"
           readonly
           hide-details
           dense
           color="red"
           class="ml-4"
+          @change="setField($event, 'isReturn')"
         />
       </div>
 
       <app-address-autocomplete
-        v-model="tmpPoint.address"
+        :value="tmpPoint.address"
         :pointType="!tmpPoint.isReturn ? tmpPoint.type : null"
         :disabled="!tmpPoint.type"
         label="Адрес"
@@ -33,15 +35,17 @@
         :style="{ 'min-width': '550px' }"
         outlined
         hide-details
+        @change="setField($event, 'address')"
       />
       <v-text-field
-        v-model="tmpPoint.note"
+        :value="tmpPoint.note"
         label="Примечание"
         hide-details
         :readonly="readonly"
         outlined
         :style="{ 'min-width': '550px' }"
         dense
+        @change="setField($event, 'note')"
       />
     </div>
     <div 
@@ -49,17 +53,17 @@
       class="dates-column"
     >
       <app-date-time-input
-        v-model="tmpPoint.plannedDate"
+        :value="tmpPoint.plannedDate"
         type="datetime-local"
         label="Плановая дата"
         dense
         outlined
         hide-details
         :readonly="readonly"
-        @change="change($event, 'plannedDate')"
+        @change="setField($event, 'plannedDate')"
       />
       <app-date-time-input
-        v-model="tmpPoint.arrivalDate"
+        :value="tmpPoint.arrivalDate"
         type="datetime-local"
         label="Факт прибытия"
         showPrependIcon
@@ -69,10 +73,10 @@
         :minDate="tmpPoint.minArrivalDate"
         :disabled="!confirmed || point.arrivalDateDisabled"
         :errorMessages="arrivalDateErrors"
-        @change="change($event, 'arrivalDate')"
+        @change="setField($event, 'arrivalDate')"
       />
       <app-date-time-input
-        v-model="tmpPoint.departureDate"
+        :value="tmpPoint.departureDate"
         type="datetime-local"
         label="Факт убытия"
         dense
@@ -82,7 +86,7 @@
         :disabled="!confirmed || point.departureDateDisabled"
         :minDate="tmpPoint.arrivalDate"
         :errorMessages="departureDateErrors"
-        @change="change($event, 'departureDate')"
+        @change="setField($event, 'departureDate')"
       />
     </div>
     <div 
@@ -90,31 +94,34 @@
       class="dates-column"
     >
       <app-date-time-input
-        v-model="tmpPoint.plannedDateDoc"
+        :value="tmpPoint.plannedDateDoc"
         type="datetime-local"
         label="Плановая дата (док)"
         dense
         outlined
         hide-details
         :readonly="readonlyDocDates"
+        @change="setField($event, 'plannedDateDoc')"
       />
       <app-date-time-input
-        v-model="tmpPoint.arrivalDateDoc"
+        :value="tmpPoint.arrivalDateDoc"
         type="datetime-local"
         label="Факт прибытия (док)"
         :readonly="readonlyDocDates"
         hide-details
         dense
         outlined
+        @change="setField($event, 'arrivalDateDoc')"
       />
       <app-date-time-input
-        v-model="tmpPoint.departureDateDoc"
+        :value="tmpPoint.departureDateDoc"
         type="datetime-local"
         label="Факт убытия (док)"
         :readonly="readonlyDocDates"
         dense
         outlined
         hide-details
+        @change="setField($event, 'departureDateDoc')"
       />
     </div>
     <div
@@ -122,7 +129,7 @@
       id="fixedTime"
     >
       <v-text-field
-        v-model="tmpPoint.fixedTime"
+        :value="tmpPoint.fixedTime"
         label="Время"
         tag="div"
         type="time"
@@ -130,6 +137,7 @@
         hide-details
         outlined
         :style="{ 'max-width': '100px' }"
+        @change="setField($event, 'fixedTime')"
       />
 
       <v-text-field
@@ -144,6 +152,7 @@
         outlined
         dense
         min="0"
+        @change="setField($event, 'offsetDays')"
       />
     </div>
     <div
@@ -246,18 +255,14 @@ export default {
   },
 
   watch: {
-    watch: {
+    point: {
       deep: true,
-      handler: function(val) {
-        this.$emit('changePoint', val)  
+      immediate: true,  
+      handler: function(val, oldVal) {
+        
+        this.setFields(val)
       }
     },
-    tmpPoint: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('changePoint', { ...val})  
-      }
-    }
   },
   created() {
     this.setFields(this.point)
@@ -268,10 +273,17 @@ export default {
     setFields(point) {
       this.tmpPoint = point
     },
-    change(val, field) {
-      this.tmpPoint[field+'Doc'] = val
+
+    setField(val, field) {
+      const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate' ]
+      this.tmpPoint[field] = val
+      if (DATE_FIELDS.includes(field)) {
+        this.tmpPoint[field+'Doc'] = val
+      }
+      this.$emit('changePoint', { ...this.tmpPoint})
       
-    },
+    }
+
   },
 }
 </script>

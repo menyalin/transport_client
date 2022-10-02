@@ -52,7 +52,7 @@ export default {
   props: {
     title: String,
     items: Array,
-    isValid: Boolean,
+    isValid: { type: Boolean, default: true },
     agreement: Object,
     readonly: { type: Boolean, default: false },
   },

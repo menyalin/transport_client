@@ -52,7 +52,8 @@
       >
         Добавить возврат
       </v-btn>
-      <v-btn   
+      <v-btn 
+        v-if="!isTemplate"  
         text
         outlined
         small
@@ -126,9 +127,10 @@ export default {
   watch: {
     points: {
       immediate: true,
+      deep: true,
       handler: function (val) {
         if (val && val.length) {
-          this.tmpPoints = val.slice()
+          this.tmpPoints = val
         }
       },
     },

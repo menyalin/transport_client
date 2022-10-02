@@ -491,9 +491,16 @@ export default {
         this.reqTransport,
         template.reqTransport
       )
-      const plannedDate = this.route[0].plannedDate
+      const plannedDate = this.route[0]?.plannedDate
       this.analytics = { ...template.analytics }
-      this.route = template.route
+      this.route = template.route.map((item, idx) => {
+        return {  
+          type: item.type,
+          isReturn: item.isReturn,
+          address: item.address,
+          note: item.note
+        }
+      })
       this.route[0].plannedDate = plannedDate
       this.cargoParams = Object.assign(
         {},
