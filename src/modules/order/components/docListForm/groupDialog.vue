@@ -114,6 +114,12 @@ export default {
       else return 0
     })
 
+    function clear() {
+      docType.value = null
+      docTypes.value =  []
+      numberStr.value = '' 
+    }
+
     function addHandler() {
       if (!docCount.value) return null
         const res = []
@@ -130,7 +136,8 @@ export default {
         })
       } else return null
     
-      emit('pushDocs', res)  
+      emit('pushDocs', res)
+      clear()
     }
 
 
