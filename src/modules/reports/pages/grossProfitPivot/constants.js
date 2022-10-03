@@ -38,7 +38,10 @@ export const ALL_ORDER_TABLE_HEADERS = [
   { value: 'addressesUnloading', text: 'Адреса разгрузки', sortable: false },
   { value: 'capacityType', text: 'Тип ТС', sortable: false },
   { value: 'truckKind', text: 'Вид ТС', sortable: false },
+  
   { value: 'tRegime', text: 'Т-режим', sortable: false },
+  { value: 'outsourceCostsWithVat', text: 'Наемники с НДС', sortable: false,   align: 'right' },
+  { value: 'outsourceCostsWOVat', text: 'Наемники без НДС', sortable: false,   align: 'right' },
   {
     value: 'price',
     text: 'Цена',
