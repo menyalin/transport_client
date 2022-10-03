@@ -75,9 +75,13 @@ class OrderService {
     if (store.getters.cacheDirectories.has(id))
       return store.getters.cacheDirectories.get(id)
     else {
-      let { data } = await api.get(BASE_PATH + '/' + id)
-      store.commit('addToCache', data)
-      return data
+      try {
+        const { data } = await api.get(BASE_PATH + '/' + id)
+        store.commit('addToCache', data)
+        return data
+      } catch(e) {
+        store.commit('setError', e.message)
+      }
     }
   }
 

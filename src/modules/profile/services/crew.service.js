@@ -44,8 +44,8 @@ class CrewService {
   async getActualCrewByDriver(driver) {
     try {
       const params = { driver }
-      const { data } = await api.get(BASE_PATH + '/by_driver', { params })
-      return data
+      const response = await api.get(BASE_PATH + '/by_driver', { params })
+      return response?.data
     } catch (e) {
       store.commit('setError', e.message)
     }
@@ -61,9 +61,14 @@ class CrewService {
   }
 
   async getCrewByTruckAndDate({ truck, date }) {
-    const params = { truck, date }
-    const { data } = await api.get(BASE_PATH + '/by_truck_and_date', { params })
-    return data
+    try {
+      const params = { truck, date }
+      const response = await api.get(BASE_PATH + '/by_truck_and_date', { params })
+      return response?.data
+    } catch (e) {
+
+      store.commit('setError', 'getCrewByTruckAndDate: ' + e.message)
+    }
   }
 
   async closeCrew(id, date, type = 'crew') {
@@ -73,10 +78,15 @@ class CrewService {
     })
     return data
   }
+
   async getById({ id, forEdit }) {
-    const params = { forEdit }
-    let { data } = await api.get(BASE_PATH + '/' + id, { params })
-    return data
+    try {
+      const params = { forEdit }
+      let { data } = await api.get(BASE_PATH + '/' + id, { params })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+    }
   }
 
   async deleteById(id) {

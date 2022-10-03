@@ -110,11 +110,19 @@
           label="Обязательно заполнение аукционной цены"
           hide-details
         />
+        
         <v-checkbox
           v-model="form.clientNumRequired"
           color="primary"
           hide-details
           label="Обязательно заполнение номера заказа клиента"
+        />
+        
+        <v-checkbox
+          v-model="form.auctionNumRequired"
+          color="primary"
+          hide-details
+          label="Обязательно заполнение номера аукциона"
         />
       </div>
 
@@ -203,6 +211,7 @@ export default {
         closed: null,
         priceRequired: false,
         clientNumRequired: false,
+        auctionNumRequired: false,
       },
     }
   },

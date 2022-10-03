@@ -16,9 +16,19 @@ export const useOrderValidations = () => {
     return !!num
   }
 
+  function isValidAuctionNum(agreement, { auctionNum }, { status }) {
+    const STATUSES_WITH_CLIENT_NUM = ['inProgress', 'completed']
+    if (!agreement)  return true
+    if (!agreement.auctionNumRequired) return true
+    if (!STATUSES_WITH_CLIENT_NUM.includes(status)) return true
+    return !!auctionNum
+  }
+
+
 
   return {
     isValidPrices,
     isValidClientNum,
+    isValidAuctionNum,
   }
 }

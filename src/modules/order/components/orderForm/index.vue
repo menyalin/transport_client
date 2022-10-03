@@ -100,6 +100,7 @@
             title="Информация о клиенте"
             class="client"
             :isValidNum="isValidClientNum(agreement, client, state)"
+            :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
             :routeDate="routeDate"
           />
           <app-cargo-params
@@ -261,10 +262,10 @@ export default {
   },
   setup({ order }) {
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
-    const { isValidPrices, isValidClientNum } = useOrderValidations()
+    const { isValidPrices, isValidClientNum, isValidAuctionNum } = useOrderValidations()
 
     return {
-      isValidDocs, isReadonlyDocs, isShowDocs, isValidPrices, isValidClientNum
+      isValidDocs, isReadonlyDocs, isShowDocs, isValidPrices, isValidClientNum, isValidAuctionNum
     }
   },
   data() {
@@ -365,6 +366,7 @@ export default {
         !this.isValidDocs(this.docs) ||
         !this.isValidPrices(this.agreement, this.prices, this.state) ||
         !this.isValidClientNum(this.agreement, this.client, this.state) ||
+        !this.isValidAuctionNum(this.agreement, this.client, this.state) ||
         !this.isValidClientInfo ||
         !this.reqTransport.kind ||
         !this.reqTransport.liftCapacity

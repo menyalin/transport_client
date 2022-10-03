@@ -21,6 +21,13 @@
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
       />
+      <v-text-field
+        v-model="params.auctionNum"
+        outlined
+        dense
+        label="Номер аукциона"
+        :errorMessages="auctionNumErrorMessages"
+      />
     </div>
   </div>
 </template>
@@ -46,6 +53,10 @@ export default {
     isValidNum: {
       type: Boolean,
       default: true
+    },
+    isValidAuctionNum: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -56,6 +67,7 @@ export default {
       params: {
         client: null,
         num: null,
+        auctionNum: null,
         agreement: null,
       },
     }
@@ -63,6 +75,9 @@ export default {
   computed: {
     numErrorMessages() {
       return this.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
+    },
+    auctionNumErrorMessages() {
+      return this.isValidAuctionNum ? [] : ['Номер аукциона не может быть пустым']
     }
   },
   watch: {
@@ -72,6 +87,7 @@ export default {
         if (val) {
           this.params.client = val.client
           this.params.num = val.num
+          this.params.auctionNum = val.auctionNum
           this.params.agreement = val.agreement
         }
         if (val?.agreement) {
@@ -99,7 +115,6 @@ export default {
   methods: {
     async getAgreement() {
       if (!this.routeDate || !this.params.client) return null
-
       try {
         this.loading = true
         if (this.params.agreement) {
@@ -129,7 +144,7 @@ export default {
 <style scoped>
 .client-block {
   display: grid;
-  grid-template-columns: 280px 230px;
+  grid-template-columns: 280px 230px 230px;
   margin: 10px;
   gap: 10px;
 }
