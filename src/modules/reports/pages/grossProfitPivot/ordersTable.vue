@@ -106,6 +106,8 @@ export default {
           .join(', '),
         capacityType: i.capacityType,
         truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
+        outsourceCostsWithVat: Intl.NumberFormat().format(i.outsourceCostsWithVat),
+        outsourceCostsWOVat: Intl.NumberFormat().format(i.outsourceCostsWOVat),
         price: Intl.NumberFormat().format(
           Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
         ),

@@ -358,14 +358,18 @@ export default {
       if (!orderId) return null
       this.editableOrderId = orderId
       const order = await service.getById(orderId)
-      console.log('order', order)
       this.editableDocs = order.docs
-      this.docDialog = true
+      this.$nextTick(() => {
+        this.docDialog = true
+      })
     },
+
     cancelDocDialog() {
       this.editableDocs = []
       this.editableOrderId = null
-      this.docDialog = false
+      this.$nextTick(() => {
+        this.docDialog = false
+      })
     },
     
     async saveDocDialog(val) {

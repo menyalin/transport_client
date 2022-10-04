@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="docs-wrapper"
-    :class="{ invalid: !isValid }"
-  >
+  <div class="docs-wrapper" :class="{ invalid: !isValid }">
     <div class="btn-wrapper">
       <v-btn
         text
@@ -29,29 +26,16 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left">
-              Тип*
-            </th>
-            <th class="text-left">
-              Номер
-            </th>
-            <th class="text-left">
-              Комментарий
-            </th>
-            <th class="text-left">
-              Статус*
-            </th>
-            <th class="text-left">
-              Дата получения
-            </th>
+            <th class="text-left">Тип*</th>
+            <th class="text-left">Номер</th>
+            <th class="text-left">Комментарий</th>
+            <th class="text-left">Статус*</th>
+            <th class="text-left">Дата получения</th>
             <th />
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, idx) in docs"
-            :key="idx"
-          >
+          <tr v-for="(item, idx) in docs" :key="idx">
             <td>
               <v-select
                 v-model="item.type"
@@ -62,18 +46,10 @@
               />
             </td>
             <td>
-              <v-text-field
-                v-model.trim="item.number"
-                dense
-                hide-details
-              />
+              <v-text-field v-model.trim="item.number" dense hide-details />
             </td>
             <td>
-              <v-text-field
-                v-model.trim="item.note"
-                dense
-                hide-details
-              />
+              <v-text-field v-model.trim="item.note" dense hide-details />
             </td>
             <td>
               <v-select
@@ -92,11 +68,7 @@
               />
             </td>
             <td>
-              <v-icon
-                small
-                :disabled="readonly"
-                @click="deleteRow(idx)"
-              >
+              <v-icon small :disabled="readonly" @click="deleteRow(idx)">
                 mdi-delete
               </v-icon>
             </td>
@@ -120,7 +92,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 export default {
   name: 'DocListForm',
   components: {
-    appGroupDialog
+    appGroupDialog,
   },
   model: {
     prop: 'value',
@@ -152,29 +124,36 @@ export default {
     docStatuses() {
       return this.$store.getters.documentStatuses
     },
-
     invalidItems() {
       return !!this.value.filter((item) => !item.type || !item.status).length
     },
   },
   watch: {
-    docs: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', [
-          ...val.map((i) => ({
-            ...i,
-            date: !!i.date ? new Date(i.date).toISOString() : null,
-          })),
-        ])
+    value: {
+      // deep: true,
+      immediate: true,
+      handler: function (val, oldVal) {
+        if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
+        this.docs = val.map((i) => ({
+          ...i,
+          date: dayjs(i.date).format(DATE_FORMAT),
+        }))
       },
     },
-  },
-  created() {
-    this.docs = this.value.map((i) => ({
-      ...i,
-      date: dayjs(i.date).format(DATE_FORMAT),
-    }))
+    docs: {
+      deep: true,
+      handler: function (val, oldVal) {
+        if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
+        else
+          this.$emit(
+            'change',
+            val.map((i) => ({
+              ...i,
+              date: !!i.date ? new Date(i.date).toISOString() : null,
+            }))
+          )
+      },
+    },
   },
   methods: {
     addDoc() {

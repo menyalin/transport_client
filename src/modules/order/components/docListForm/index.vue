@@ -54,9 +54,9 @@ export default {
   },
   watch: {
     docs: {
-      deep: true,
       immediate: true,
-      handler: function (val) {  
+      deep: true,
+      handler: function (val) {
         this.tmpDocs = [ ...val]
       },
     },
