@@ -185,11 +185,11 @@ export default {
   },
   methods: {
     addDoc() {
-      this.docs.push({ date: dayjs().format(DATE_FORMAT) })
+      this.docs.push({ date: dayjs().format(DATE_FORMAT), status: 'accepted' })
     },
     addGroup(val) {
       this.docs.push(...val)
-      this.groupDialog = false
+      // this.groupDialog = false
     },
     openGroupDocDialog() {
       this.groupDialog = true

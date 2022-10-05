@@ -1,6 +1,6 @@
 <template>
-  <v-dialog 
-    :value="dialog" 
+  <v-dialog
+    :value="dialog"
     max-width="800"
     persistent
   >
@@ -10,60 +10,55 @@
       </v-card-title>
 
       <v-card-text class="form-wrapper">
-        <v-select 
-          v-model="variant"
-          :items="variantItems"
-          label="Вариант создания группы"
-          outlined
-          
-          :style="{maxWidth: '400px'}"
-        />
-        
-        <v-select 
-
-          v-if="variant==='oneNumber'"
+        <v-checkbox
+          v-for="item of docTypeItems"
+          :key="item.value"
           v-model="docTypes"
-          label="Типы документа"
-          :items="docTypeItems"
-          outlined
-          multiple
+          :label="item.text"
+          :value="item.value"
+          color="primary"
+          hide-details
+          dense
         />
-        <v-select 
-          v-else-if="variant==='oneType'"
-          v-model="docType"
-          label="Тип документа"
-          :items="docTypeItems"
-          outlined
-        />
+
         <v-text-field
           v-model="numberStr"
-          :label="variant === 'oneNumber' ? 'Номер документа' : 'Номера документов'"
-          :hint="variant === 'oneType' ? 'Номера документов через запятую' : null"
+          label="Номера документов"
+          hint="Номера документов через запятую"
+          class="mt-5"
           outlined
         />
-        <v-select
-          v-model="docStatus" 
-          :items="docStatusItems"
-          label="Статус документа"
-          outlined
-        />
+        <v-radio-group 
+          v-model="radioGroup" 
+          label="Статус документов"
+        >
+          <v-radio
+            v-for="item in docStatusItems"
+            :key="item.value"
+            :label="item.text"
+            :value="item.value"
+            color="primary"
+          />
+        </v-radio-group>
+
+        
         <span>Будет создано документов: </span>{{ docCount }}
       </v-card-text>
 
       <v-card-actions>
         <v-spacer />
 
-        <v-btn 
-          color="primary" 
-          text 
+        <v-btn
+          color="primary"
+          text
           @click="closeDialog"
-        > 
-          Отмена 
+        >
+          Отмена
         </v-btn>
 
-        <v-btn 
-          color="primary" 
-          text 
+        <v-btn
+          color="primary"
+          text
           :disabled="!docCount"
           @click="addHandler"
         >
@@ -87,71 +82,57 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const variantItems = [
-      {value: 'oneType', text: 'Один тип с разными номерами'},
-      {value: 'oneNumber', text: 'Разные типы с одним номером'},
-    ]
-    
     const numberStr = ref('')
     const docTypes = ref([])
-    const docType = ref(null)
     const docStatus = ref('accepted')
     const docTypeItems = computed(() => store.getters.documentTypes)
     const docStatusItems = computed(() => store.getters.documentStatuses)
-    const variant = ref('oneType')
 
     function closeDialog() {
       emit('close')
     }
 
     const docCount = computed(() => {
-      if (variant.value === 'oneType' && !!docType.value) 
-        return numberStr.value.split(',').map(i => i.trim()).filter(i => !!i).length
-      
-      else if (variant.value === 'oneNumber' && !!numberStr.value.trim()) 
-        return docTypes.value.length
-      
-      else return 0
+      return (
+        docTypes.value.length *
+        numberStr.value
+          .split(',')
+          .map((i) => i.trim())
+          .filter((i) => !!i).length
+      )
     })
 
     function clear() {
-      docType.value = null
-      docTypes.value =  []
-      numberStr.value = '' 
+      docTypes.value = []
+      numberStr.value = ''
     }
 
     function addHandler() {
       if (!docCount.value) return null
-        const res = []
-        const date = dayjs().format('YYYY-MM-DD')
-        
-      if (variant.value === 'oneType') {
-        const numbers = numberStr.value.split(',').map(i => i.trim()).filter(i => !!i)
-        numbers.forEach(number => {
-          res.push({type: docType.value, number, status: docStatus.value, date})
+      const res = []
+      const date = dayjs().format('YYYY-MM-DD')
+      const numbers = numberStr.value
+        .split(',')
+        .map((i) => i.trim())
+        .filter((i) => !!i)
+
+      numbers.forEach((number) => {
+        docTypes.value.forEach((type) => {
+          res.push({ type, number, status: docStatus.value, date })
         })
-      } else if (variant.value === 'oneNumber') {
-        docTypes.value.forEach(type => {
-          res.push({ type, number: numberStr.value.trim(), status: docStatus.value, date })
-        })
-      } else return null
-    
+      })
       emit('pushDocs', res)
       clear()
     }
-
 
     return {
       addHandler,
       numberStr,
       docTypes,
-      docType,
       docStatus,
       docTypeItems,
       docCount,
       docStatusItems,
-      variant,
-      variantItems,
       closeDialog,
     }
   },
