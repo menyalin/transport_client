@@ -1,5 +1,8 @@
 <template>
-  <div class="docs-wrapper" :class="{ invalid: !isValid }">
+  <div
+    class="docs-wrapper"
+    :class="{ invalid: !isValid }"
+  >
     <div class="btn-wrapper">
       <v-btn
         text
@@ -26,16 +29,29 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left">Тип*</th>
-            <th class="text-left">Номер</th>
-            <th class="text-left">Комментарий</th>
-            <th class="text-left">Статус*</th>
-            <th class="text-left">Дата получения</th>
+            <th class="text-left">
+              Тип*
+            </th>
+            <th class="text-left">
+              Номер
+            </th>
+            <th class="text-left">
+              Комментарий
+            </th>
+            <th class="text-left">
+              Статус*
+            </th>
+            <th class="text-left">
+              Дата получения
+            </th>
             <th />
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, idx) in docs" :key="idx">
+          <tr
+            v-for="(item, idx) in docs"
+            :key="idx"
+          >
             <td>
               <v-select
                 v-model="item.type"
@@ -46,10 +62,18 @@
               />
             </td>
             <td>
-              <v-text-field v-model.trim="item.number" dense hide-details />
+              <v-text-field
+                v-model.trim="item.number"
+                dense
+                hide-details
+              />
             </td>
             <td>
-              <v-text-field v-model.trim="item.note" dense hide-details />
+              <v-text-field
+                v-model.trim="item.note"
+                dense
+                hide-details
+              />
             </td>
             <td>
               <v-select
@@ -68,7 +92,11 @@
               />
             </td>
             <td>
-              <v-icon small :disabled="readonly" @click="deleteRow(idx)">
+              <v-icon
+                small
+                :disabled="readonly"
+                @click="deleteRow(idx)"
+              >
                 mdi-delete
               </v-icon>
             </td>
@@ -130,7 +158,7 @@ export default {
   },
   watch: {
     value: {
-      // deep: true,
+      deep: true,
       immediate: true,
       handler: function (val, oldVal) {
         if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
@@ -143,8 +171,8 @@ export default {
     docs: {
       deep: true,
       handler: function (val, oldVal) {
-        if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
-        else
+        // if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
+        // else
           this.$emit(
             'change',
             val.map((i) => ({

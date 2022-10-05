@@ -247,7 +247,7 @@ export default {
       address: null,
       driver: null,
       status: null,
-      accountingMode: false,
+      accountingMode: !!parseInt(localStorage.getItem('orders:accontingMode')),
       period: _initPeriod(),
       listOptions: {
         page: 1,
@@ -341,7 +341,13 @@ export default {
         await this.getData()
       },
     },
+    ['settings.accountingMode']: {
+      handler: function(val) {
+        localStorage.setItem('orders:accontingMode', val ? '1': '0')
+      }
+    }
   },
+  
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
