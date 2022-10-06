@@ -34,7 +34,7 @@ export default {
     return { pasteDate }
   },
   props: {
-    min: String, 
+    min: String,
     max: String,
     value: {
       type: [String, Date],
@@ -44,7 +44,7 @@ export default {
       required: true,
       validator: function (value) {
         return ['date', 'datetime-local'].includes(value)
-      }
+      },
     },
     label: String,
     hideDetails: {
@@ -79,7 +79,7 @@ export default {
       default: false,
     },
   },
-  data: () => ({    
+  data: () => ({
     tmpDate: null,
     innerErrorMessage: [],
   }),
@@ -91,14 +91,14 @@ export default {
     errors() {
       if (this.errorMessages) return this.errorMessages
       else return this.innerErrorMessage
-    }
+    },
   },
   watch: {
     value: {
       immediate: true,
       handler: function (val) {
         if (!val) return null
-        this.tmpDate = dayjs(val).format(this.dateFormat)       
+        this.tmpDate = dayjs(val).format(this.dateFormat)
       },
     },
   },
@@ -109,26 +109,24 @@ export default {
     },
 
     change(dateStr) {
-      if (!dateStr) { 
+      if (!dateStr) {
         this.$emit('change', null)
         return
       }
 
       if (this.min && new Date(dateStr) < new Date(this.min)) {
-        this.innerErrorMessage = [`Дата должна быть больше ${dayjs(this.min).format(this.dateFormat)}`]
-
+        this.innerErrorMessage = [
+          `Дата должна быть больше ${dayjs(this.min).format(this.dateFormat)}`,
+        ]
       } else if (this.max && new Date(dateStr) > new Date(this.max)) {
-        this.innerErrorMessage = [`Дата должна быть меньше ${dayjs(this.max).format(this.dateFormat)}`]
-
-      } 
-      else {
+        this.innerErrorMessage = [
+          `Дата должна быть меньше ${dayjs(this.max).format(this.dateFormat)}`,
+        ]
+      } else {
         this.innerErrorMessage = []
         this.$emit('change', dayjs(dateStr).toISOString())
       }
-      
     },
-  
   },
 }
 </script>
-

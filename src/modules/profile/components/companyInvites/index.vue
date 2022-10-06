@@ -16,8 +16,8 @@ export default {
     invites: {
       type: Array,
       required: true,
-    }
-  }
+    },
+  },
 }
 </script>
 <style scoped>

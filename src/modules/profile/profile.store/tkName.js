@@ -26,18 +26,20 @@ export default {
   },
   actions: {
     createTkName({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const data = await service.create(payload)
-          commit('addTkName', data)
-          commit('setLoading', false)
-          resolve(data)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        service
+          .create(payload)
+          .then((data) => {
+            commit('addTkName', data)
+            commit('setLoading', false)
+            resolve(data)
+          })
+          .catch((e) => {
+            commit('setLoading', false)
+            commit('setError', e)
+            reject(e)
+          })
       })
     },
 
@@ -75,7 +77,7 @@ export default {
       })
       return map
     },
-    
+
     tkNamesForSelect: ({ tkNames }) =>
       tkNames.map((i) => ({ ...i, value: i._id, text: i.name })),
   },

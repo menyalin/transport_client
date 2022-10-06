@@ -8,30 +8,37 @@ const getCargoParams = (params) => {
 }
 
 const getPointStr = (point) => {
-  const address = store.getters.addressMap.get(point.address)  
-  let res = `**${point.type === 'loading' ? 'Погрузка': 'Разгрузка'}:**${point.isReturn ? ' (возврат)' : ''}\n`
+  const address = store.getters.addressMap.get(point.address)
+  let res = `**${point.type === 'loading' ? 'Погрузка' : 'Разгрузка'}:**${
+    point.isReturn ? ' (возврат)' : ''
+  }\n`
   // дата
-  if (point.plannedDate)  res += `**${new Date(point.plannedDate).toLocaleString()}** \n`
-  res +=`**${store.getters.partnersMap.get(address.partner)?.name}** \n`
-  res +=`${address.name}\n`
-  if (point.note) res +=`__${point.note}__ \n`
-  res +='**Координаты: ** `' + address.geo + '`'
+  if (point.plannedDate)
+    res += `**${new Date(point.plannedDate).toLocaleString()}** \n`
+  res += `**${store.getters.partnersMap.get(address.partner)?.name}** \n`
+  res += `${address.name}\n`
+  if (point.note) res += `__${point.note}__ \n`
+  res += '**Координаты: ** `' + address.geo + '`'
   return res + '\n'
 }
 
 export default async (userId, route, params) => {
-  if (!userId) { 
-    store.commit('setError', 'Водитель не определен') 
+  if (!userId) {
+    store.commit('setError', 'Водитель не определен')
     return null
-  } 
-  if (!route && route.length < 2) { 
-    store.commit('setError', 'не корректный маршрут') 
+  }
+  if (!route && route.length < 2) {
+    store.commit('setError', 'не корректный маршрут')
     return null
-  } 
+  }
   const user = store.getters.driversMap.get(userId)
   const title = '__' + user.name + ', Ваш рейс:__ \n'
-  const points = route.reduce((res, item, idx) => res + `\n${ idx + 1 }. ` +  getPointStr(item), '' )
+  const points = route.reduce(
+    (res, item, idx) => res + `\n${idx + 1}. ` + getPointStr(item),
+    ''
+  )
 
-  await  navigator.clipboard.writeText(title + getCargoParams(params) + points + '\n')
+  await navigator.clipboard.writeText(
+    title + getCargoParams(params) + points + '\n'
+  )
 }
-

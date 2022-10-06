@@ -8,12 +8,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
+    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
     <div>
@@ -62,15 +57,9 @@
           color="primary"
         />
       </div>
-      <div
-        v-else
-        class="mb-4"
-      >
+      <div v-else class="mb-4">
         <v-divider />
-        <app-clients
-          v-model="form.clients"
-          :style="{ 'max-width': '400px' }"
-        />
+        <app-clients v-model="form.clients" :style="{ 'max-width': '400px' }" />
         <v-checkbox
           v-model="form.usePriceWithVAT"
           :disabled="form.vatRate === 0"
@@ -110,14 +99,14 @@
           label="Обязательно заполнение аукционной цены"
           hide-details
         />
-        
+
         <v-checkbox
           v-model="form.clientNumRequired"
           color="primary"
           hide-details
           label="Обязательно заполнение номера заказа клиента"
         />
-        
+
         <v-checkbox
           v-model="form.auctionNumRequired"
           color="primary"
@@ -126,12 +115,7 @@
         />
       </div>
 
-      <v-text-field
-        v-model="form.note"
-        label="Примечание"
-        outlined
-        dense
-      />
+      <v-text-field v-model="form.note" label="Примечание" outlined dense />
       <div class="row mb-2">
         <v-checkbox
           v-model="form.useCustomPrices"
@@ -146,17 +130,8 @@
       </div>
     </div>
 
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

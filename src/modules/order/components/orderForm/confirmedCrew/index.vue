@@ -33,19 +33,11 @@
         hide-details
         outlined
       />
-      <v-btn
-        text
-        small
-        color="primary"
-        @click="copyHandler"
-      >
+      <v-btn text small color="primary" @click="copyHandler">
         Скопировать данные
       </v-btn>
     </div>
-    <div
-      v-if="showOutsourceAgreementRow"
-      class="outsource-agreement-row ml-4"
-    >
+    <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
       <small>Перевозчик: {{ tkName }}</small>
       <small>Соглашение: {{ outsourceAgreementName }}</small>
     </div>

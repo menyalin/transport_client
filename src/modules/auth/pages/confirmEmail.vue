@@ -1,16 +1,11 @@
 <template>
   <div>
-    <div v-if="!error">
-      ...Подтверждение электройнной почты пользователя
-    </div>
-    <div v-else>
-      Ошибка подтверждения: {{ error }}  
-    </div>
+    <div v-if="!error">...Подтверждение электройнной почты пользователя</div>
+    <div v-else>Ошибка подтверждения: {{ error }}</div>
   </div>
 </template>
 <script>
 import UserService from '../services/user.service'
-
 
 export default {
   name: 'ConfirmEmail',
@@ -18,11 +13,11 @@ export default {
     token: {
       type: String,
       required: true,
-    }
+    },
   },
   data() {
     return {
-      error: null
+      error: null,
     }
   },
   async mounted() {
@@ -33,9 +28,7 @@ export default {
     } catch (e) {
       this.error = e?.response?.data || e.message
     }
-  }
+  },
 }
 </script>
-<style>
-  
-</style>
+<style />

@@ -1,4 +1,5 @@
 import DriverService from '@/modules/profile/services/driver.service'
+import CrewService from '@/modules/profile/services/crew.service.js'
 import dayjs from 'dayjs'
 
 export default {
@@ -24,18 +25,19 @@ export default {
   },
   actions: {
     driverCreate({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const data = await DriverService.create(payload)
-          commit('addDriver', data)
-          commit('setLoading', false)
-          resolve(data)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        DriverService.create(payload)
+          .then((data) => {
+            commit('addDriver', data)
+            commit('setLoading', false)
+            resolve(data)
+          })
+          .catch((e) => {
+            commit('setLoading', false)
+            commit('setError', e)
+            reject(e)
+          })
       })
     },
 
@@ -47,7 +49,7 @@ export default {
           (getters.drivers.length === 0 && getters.directoriesProfile)
         ) {
           const profile = getters.directoriesProfile
-          const date = moment().format()
+          const date = dayjs().format()
           commit('setDrivers', [])
           const drivers = await DriverService.getByDirectoriesProfile(profile)
           const actualCrews = await CrewService.getActualCrews(profile, date)
@@ -75,15 +77,20 @@ export default {
       })
       return map
     },
-    
-    activeDriversOnDate: ({ drivers }) => (date) => {
-      if (!date || !dayjs(date).isValid) return drivers
-      return drivers.filter(item => {
-        const startPeriodCond = !item.employmentDate || new Date(item.employmentDate) <= new Date(date)
-        const endPeriodCond = !item.dismissalDate || new Date(item.dismissalDate) > new Date(date)
-        return startPeriodCond && endPeriodCond
-      })
-    },
+
+    activeDriversOnDate:
+      ({ drivers }) =>
+      (date) => {
+        if (!date || !dayjs(date).isValid) return drivers
+        return drivers.filter((item) => {
+          const startPeriodCond =
+            !item.employmentDate ||
+            new Date(item.employmentDate) <= new Date(date)
+          const endPeriodCond =
+            !item.dismissalDate || new Date(item.dismissalDate) > new Date(date)
+          return startPeriodCond && endPeriodCond
+        })
+      },
 
     brigadiersForSelect: ({ drivers }) =>
       drivers
@@ -93,7 +100,7 @@ export default {
           value: d._id,
           text: d.fullName,
         })),
-    
+
     mechanicsForSelect: ({ drivers }) =>
       drivers
         .filter((d) => d.isMechanic)
@@ -108,7 +115,7 @@ export default {
       (tkName) =>
         drivers
 
-          .filter((item) => (!!tkName ? item.tkName._id === tkName : true))
+          .filter((item) => (tkName ? item.tkName._id === tkName : true))
           .sort(_sortDriversByFullName),
   },
 }

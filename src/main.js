@@ -8,16 +8,14 @@ import Vuelidate from 'vuelidate'
 import VuetifyConfirm from 'vuetify-confirm'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
-import isSameOrBefore  from 'dayjs/plugin/isSameOrBefore'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-
 
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(customParseFormat)
 dayjs.locale('ru')
-
 
 Vue.config.productionTip = false
 

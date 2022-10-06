@@ -3,16 +3,10 @@
     <v-row>
       <v-col>
         <div id="report-settings">
-          <v-btn
-            icon
-            @click.stop="getData"
-          >
+          <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
           </v-btn>
-          <app-date-time-input
-            v-model="settings.date"
-            label="Отчет на дату"
-          />
+          <app-date-time-input v-model="settings.date" label="Отчет на дату" />
           <v-select
             v-model="settings.tkName"
             :items="$store.getters.tkNames"
@@ -141,7 +135,7 @@ export default {
     next()
   },
   methods: {
-    dblClickRow(_, { item }) {},
+    dblClickRow(_, { _item }) {},
     async getData() {
       this.loading = true
       this.rows = await ReportService.truckStateOnDate({

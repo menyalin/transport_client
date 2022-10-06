@@ -2,11 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-tkname-form
-          :loading="loading"
-          @submit="submit"
-          @cancel="cancel"
-        />
+        <app-tkname-form :loading="loading" @submit="submit" @cancel="cancel" />
       </v-col>
     </v-row>
   </v-container>

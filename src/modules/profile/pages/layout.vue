@@ -85,14 +85,14 @@ export default {
         onlyWithDirectoriesProfile: true,
         permission: 'zone:readList',
       },
-        {
+      {
         text: 'Регионы',
         icon: 'mdi-map-marker',
         link: '/profile/regions',
         onlyWithDirectoriesProfile: true,
         permission: 'region:readList',
       },
-        {
+      {
         text: 'Города',
         icon: 'mdi-map-marker',
         link: '/profile/cities',
@@ -159,12 +159,13 @@ export default {
   }),
   computed: {
     navButtonsWithBadges() {
-      return this.navButtons.map(i => {
-        if (i.link === '/profile/settings') return { ...i, badge: this.$store.getters.companyInvites.length}
+      return this.navButtons.map((i) => {
+        if (i.link === '/profile/settings')
+          return { ...i, badge: this.$store.getters.companyInvites.length }
         else return i
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style scoped>

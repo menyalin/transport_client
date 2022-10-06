@@ -59,10 +59,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   if (!!localStorage.getItem('token') && !store.getters.isLoggedIn)
     await store.dispatch('getUserData')
-  
 
-
-  
   const permissions = to.matched
     .map((r) => r.meta.permission)
     .filter((p) => !!p)
@@ -89,7 +86,7 @@ router.beforeEach(async (to, from, next) => {
   //       })
   //     })
   //  }
-   else if (store.getters.user && permissions.length)
+  else if (store.getters.user && permissions.length)
     _checkPermissions(permissions, next, to, from)
   else next()
 })

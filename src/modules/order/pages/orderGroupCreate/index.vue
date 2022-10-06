@@ -32,17 +32,12 @@
         Создать рейсы
       </v-btn>
     </div>
-    <div
-      v-if="isValidPeriod"
-      class="table-wrapper"
-    >
+    <div v-if="isValidPeriod" class="table-wrapper">
       <v-simple-table dense>
         <template v-slot:default>
           <thead>
             <tr>
-              <th class="text-center">
-                Шаблон
-              </th>
+              <th class="text-center">Шаблон</th>
               <th
                 v-for="day of periodDays"
                 :key="day.title"
@@ -53,10 +48,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="t of templates"
-              :key="t"
-            >
+            <tr v-for="t of templates" :key="t">
               <td>
                 {{ templatesMap.get(t).name }}
                 <v-icon
@@ -68,10 +60,7 @@
                   mdi-delete
                 </v-icon>
               </td>
-              <td
-                v-for="day of periodDays"
-                :key="day.title"
-              >
+              <td v-for="day of periodDays" :key="day.title">
                 <input
                   :value="orders[[t, day.date]]"
                   class="input"
@@ -92,11 +81,7 @@
           hide-details
           :items="$store.getters.orderTemplatesForSelect"
         />
-        <v-btn
-          small
-          color="primary"
-          @click="addAllTemplates"
-        >
+        <v-btn small color="primary" @click="addAllTemplates">
           Добавить все шаблоны
         </v-btn>
       </div>

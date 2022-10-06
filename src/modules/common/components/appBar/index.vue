@@ -1,15 +1,7 @@
 <template>
-  <v-app-bar
-    app
-    color="primary"
-    dark
-    dense
-  >
+  <v-app-bar app color="primary" dark dense>
     <v-app-bar-nav-icon />
-    <v-toolbar-title
-      class="app-title"
-      @click="toHomePage"
-    >
+    <v-toolbar-title class="app-title" @click="toHomePage">
       {{ title || 's4log' }}
     </v-toolbar-title>
     <slot />
@@ -19,40 +11,20 @@
       :to="{ name: 'Schedule' }"
       text
     >
-      <v-icon left>
-        mdi-pac-man
-      </v-icon>
+      <v-icon left> mdi-pac-man </v-icon>
       Распределение
     </v-btn>
-    <v-btn
-      v-if="isLoggedIn && directoriesProfile"
-      to="/orders"
-      text
-    >
-      <v-icon left>
-        mdi-truck-fast
-      </v-icon>
+    <v-btn v-if="isLoggedIn && directoriesProfile" to="/orders" text>
+      <v-icon left> mdi-truck-fast </v-icon>
       Рейсы
     </v-btn>
     <app-reports-menu v-if="isLoggedIn && directoriesProfile" />
-    <v-btn
-      v-if="isLoggedIn"
-      to="/profile"
-      text
-    >
-      <v-icon left>
-        mdi-account-outline
-      </v-icon>
+    <v-btn v-if="isLoggedIn" to="/profile" text>
+      <v-icon left> mdi-account-outline </v-icon>
       Профиль
     </v-btn>
-    <v-btn
-      v-if="false"
-      text
-      to="/accounting"
-    >
-      <v-icon left>
-        mdi-calculator-variant
-      </v-icon>
+    <v-btn v-if="false" text to="/accounting">
+      <v-icon left> mdi-calculator-variant </v-icon>
       Учет
     </v-btn>
     <v-btn
@@ -66,19 +38,11 @@
     >
       Админка
     </v-btn>
-    <v-btn
-      v-if="!isLoggedIn"
-      icon
-      to="/auth/login"
-    >
+    <v-btn v-if="!isLoggedIn" icon to="/auth/login">
       <v-icon>mdi-import</v-icon>
     </v-btn>
 
-    <v-btn
-      v-else
-      icon
-      @click="logoutClick"
-    >
+    <v-btn v-else icon @click="logoutClick">
       <v-icon>mdi-export</v-icon>
     </v-btn>
   </v-app-bar>

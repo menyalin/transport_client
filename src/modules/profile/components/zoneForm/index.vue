@@ -18,17 +18,8 @@
       dense
     />
 
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

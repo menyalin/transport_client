@@ -29,13 +29,14 @@ export default (crews, type) => {
   if (!type || !ALLOWED_TYPES_GROUP.includes(type))
     throw new Error('required argument not existed')
   if (!crews || !crews.length) return []
-
+  
   const tmpCrews = crews.slice()
 
   let rows = []
   for (let i = 0; i < tmpCrews.length; i++) {
     if (rows.findIndex((item) => item._id === tmpCrews[i][type]?._id) === -1) {
       if (type === 'trailer' && !tmpCrews[i].trailer) {
+        // console.log('12')
       } else {
         rows.push({
           ...tmpCrews[i][type],

@@ -10,8 +10,7 @@ export default {
   }),
   mutations: {
     clearDirectories(state) {
-      if (state.user?.directoriesProfile)
-      state.user.directoriesProfile = null
+      if (state.user?.directoriesProfile) state.user.directoriesProfile = null
     },
     setUser(state, payload) {
       state.user = payload
@@ -30,7 +29,7 @@ export default {
         api
           .post('/auth/login', payload)
           .then((res) => {
-            localStorage.setItem('token', `Bearer ${res.data.accessToken}` )
+            localStorage.setItem('token', `Bearer ${res.data.accessToken}`)
             dispatch('getUserData')
             resolve(res)
           })
@@ -43,7 +42,7 @@ export default {
         api
           .post('/auth/registration', payload)
           .then(({ data }) => {
-            localStorage.setItem('token', `Bearer ${data.accessToken}` )
+            localStorage.setItem('token', `Bearer ${data.accessToken}`)
             dispatch('getUserData')
             resolve(data)
           })
@@ -59,10 +58,8 @@ export default {
       router.push('/auth/login')
     },
 
-
-
     getUserData({ commit, dispatch }) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, _reject) => {
         commit('setAppLoading', true)
         api
           .get('/auth')
@@ -81,7 +78,6 @@ export default {
           })
       })
     },
-  
   },
   getters: {
     isLoggedIn: ({ user }) => !!user,

@@ -18,11 +18,7 @@
       @click:append="appendClick"
       @change="changeValue"
     />
-    <v-dialog
-      v-model="dialog"
-      max-width="700"
-      persistent
-    >
+    <v-dialog v-model="dialog" max-width="700" persistent>
       <v-card>
         <app-details-zone
           :id="value"

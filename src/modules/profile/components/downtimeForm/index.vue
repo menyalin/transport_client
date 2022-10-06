@@ -8,12 +8,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
+    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
 
@@ -76,17 +71,8 @@
       v-model="form.inOrderTime"
       label="Разрешить пересечение с рейсом"
     />
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

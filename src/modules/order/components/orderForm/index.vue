@@ -28,10 +28,7 @@
             >
               Создать шаблон
             </v-btn>
-            <v-btn
-              icon
-              @click="copyTimestamptsToClipboard"
-            >
+            <v-btn icon @click="copyTimestamptsToClipboard">
               <v-icon>mdi-clock</v-icon>
             </v-btn>
             <v-btn
@@ -42,13 +39,8 @@
             >
               <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
-            
-            
-            <v-dialog
-              v-model="templateDialog"
-              persistent
-              max-width="600"
-            >
+
+            <v-dialog v-model="templateDialog" persistent max-width="600">
               <v-card>
                 <v-card-title> Создать новый шаблон </v-card-title>
                 <v-card-text>
@@ -58,9 +50,7 @@
                   />
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn @click="cancelCreateTemplate">
-                    Отмена
-                  </v-btn>
+                  <v-btn @click="cancelCreateTemplate"> Отмена </v-btn>
                   <v-btn
                     color="secondary"
                     :disabled="!templateName"
@@ -172,7 +162,7 @@
               dense
             />
           </div>
-          
+
           <app-doc-list-form
             v-if="isShowDocs"
             id="docs"
@@ -188,12 +178,7 @@
           class="ma-4"
           @click="$emit('delete')"
         >
-          <v-icon
-            left
-            dark
-          >
-            mdi-delete
-          </v-icon>
+          <v-icon left dark> mdi-delete </v-icon>
           Удалить
         </v-btn>
       </v-col>
@@ -221,7 +206,7 @@ import AppDocListForm from '../docListForm/form.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 import { useOrderDocs } from '../../hooks/useOrderDocs.js'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
-import agreement from '@/modules/profile/profile.store/agreement'
+// import agreement from '@/modules/profile/profile.store/agreement'
 
 export default {
   name: 'OrderForm',
@@ -255,23 +240,31 @@ export default {
       },
       getOrderAgreement: async (val) => {
         if (!val && !this.client.agreement) return null
-        const agreement = await AgreementService.getById( val || this.client.agreement )
+        const agreement = await AgreementService.getById(
+          val || this.client.agreement
+        )
         return agreement
       },
     }
   },
-  setup({ order }) {
+  setup() {
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
-    const { isValidPrices, isValidClientNum, isValidAuctionNum } = useOrderValidations()
+    const { isValidPrices, isValidClientNum, isValidAuctionNum } =
+      useOrderValidations()
 
     return {
-      isValidDocs, isReadonlyDocs, isShowDocs, isValidPrices, isValidClientNum, isValidAuctionNum
+      isValidDocs,
+      isReadonlyDocs,
+      isShowDocs,
+      isValidPrices,
+      isValidClientNum,
+      isValidAuctionNum,
     }
   },
   data() {
     return {
       agreement: null,
-      docs:[],
+      docs: [],
       priceDialog: false,
       createTemplateLoading: false,
       templateDialog: false,
@@ -478,10 +471,10 @@ export default {
   watch: {
     ['client.agreement']: {
       immediate: true,
-      handler: async function(val) {
+      handler: async function (val) {
         if (!val) this.agreement = null
-        else this.agreement = await AgreementService.getById(val) 
-      }
+        else this.agreement = await AgreementService.getById(val)
+      },
     },
     templateSelector(value) {
       if (!value) return null
@@ -495,12 +488,12 @@ export default {
       )
       const plannedDate = this.route[0]?.plannedDate
       this.analytics = { ...template.analytics }
-      this.route = template.route.map((item, idx) => {
-        return {  
+      this.route = template.route.map((item) => {
+        return {
           type: item.type,
           isReturn: item.isReturn,
           address: item.address,
-          note: item.note
+          note: item.note,
         }
       })
       this.route[0].plannedDate = plannedDate
@@ -554,7 +547,7 @@ export default {
     updateOrderType() {
       const regions = this.route
         .map((i) =>
-          !!i.address
+          i.address
             ? this.$store.getters.addressMap.get(i.address)?.region
             : null
         )

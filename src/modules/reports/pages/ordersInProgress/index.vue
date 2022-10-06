@@ -3,10 +3,7 @@
     <v-row>
       <v-col>
         <div id="report-settings">
-          <v-btn
-            icon
-            @click.stop="getData"
-          >
+          <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
           </v-btn>
           <v-text-field
@@ -166,6 +163,7 @@ export default {
     copyHandler() {
       const text = this.getTableForClipboard()
       var data = [
+        // eslint-disable-next-line no-undef
         new ClipboardItem({
           'text/html': new Blob([text], { type: 'text/html' }),
         }),

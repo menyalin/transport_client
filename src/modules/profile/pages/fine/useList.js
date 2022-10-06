@@ -20,7 +20,7 @@ export const useFineList = () => {
     { value: 'discountedSum', text: 'Сумма, с учетом скидки', sortable: true },
     { value: 'expiryDateOfDiscount', text: 'Скидка до', sortable: true },
     { value: 'isPayment', text: 'Оплачен', sortable: false },
-    { value: 'paymentDate', text: 'Дата оплаты', sortable: false},
+    { value: 'paymentDate', text: 'Дата оплаты', sortable: false },
     // { value: 'payingByWorker', text: 'Оплатил', sortable: false},
     { value: 'category', text: 'Категория', sortable: false },
     { value: 'note', text: 'Примечание', sortable: false },
@@ -99,7 +99,9 @@ export const useFineList = () => {
         category: i.category
           ? store.getters.fineCategoriesMap.get(i.category)
           : null,
-        paymentDate: i.paymentDate ? new Date(i.paymentDate).toLocaleDateString() : null,
+        paymentDate: i.paymentDate
+          ? new Date(i.paymentDate).toLocaleDateString()
+          : null,
         expiryDateOfDiscount: i.expiryDateOfDiscount
           ? new Date(i.expiryDateOfDiscount).toLocaleDateString()
           : null,

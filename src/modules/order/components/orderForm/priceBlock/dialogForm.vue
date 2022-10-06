@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    v-model="tmpDialog"
-    max-width="800"
-    persistent
-  >
+  <v-dialog v-model="tmpDialog" max-width="800" persistent>
     <v-card>
       <v-card-title>Редактировать сумму</v-card-title>
       <v-card-text>
@@ -54,14 +50,8 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="tmpDialog = false">
-          Отмена
-        </v-btn>
-        <v-btn
-          color="primary"
-          :disabled="!isValidNewPrice"
-          @click="submit"
-        >
+        <v-btn @click="tmpDialog = false"> Отмена </v-btn>
+        <v-btn color="primary" :disabled="!isValidNewPrice" @click="submit">
           Сохранить
         </v-btn>
       </v-card-actions>

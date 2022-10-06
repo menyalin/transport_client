@@ -11,15 +11,10 @@
               </div>
               <v-divider />
               <div class="my-3">
-                <router-link to="/profile">
-                  Профиль пользователя
-                </router-link>
+                <router-link to="/profile"> Профиль пользователя </router-link>
               </div>
             </div>
-            <div 
-              v-else 
-              class="text-center text-h3 ma-6"
-            >
+            <div v-else class="text-center text-h3 ma-6">
               Необходима авторизация
             </div>
           </v-col>
@@ -39,7 +34,6 @@ export default {
   components: {
     AppAdminBar,
     AppSnackbar,
-    
   },
   data: () => ({}),
   computed: {

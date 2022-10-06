@@ -5,14 +5,8 @@
     </div>
     <div id="settings">
       <app-date-range v-model="state.dateRange" />
-      <v-btn
-        small
-        color="primary"
-        @click="getLink"
-      >
-        <v-icon left>
-          mdi-download
-        </v-icon> Скачать отчет
+      <v-btn small color="primary" @click="getLink">
+        <v-icon left> mdi-download </v-icon> Скачать отчет
       </v-btn>
     </div>
     <div id="report-body">
@@ -24,12 +18,7 @@
           striped
           rounded
         />
-        <a
-          v-show="false"
-          ref="linkEl"
-          :href="staticUrl + state.link"
-          download
-        >
+        <a v-show="false" ref="linkEl" :href="staticUrl + state.link" download>
           Скачать отчет
         </a>
       </div>

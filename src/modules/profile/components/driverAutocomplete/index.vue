@@ -108,7 +108,7 @@ export default {
       }
     },
     change(val) {
-      if (!!val) {
+      if (val) {
         this.tmpItems = []
         this.tmpItems.push(val)
         this.model = val

@@ -15,10 +15,7 @@
           {{ id ? 'Редактировать группу тарифов' : 'Создать группу тарифов' }}
         </div>
         <app-load-spinner v-if="loading" />
-        <div
-          v-else
-          class="pt-2"
-        >
+        <div v-else class="pt-2">
           <app-buttons-panel
             panel-type="form"
             :disabled-submit="
@@ -47,10 +44,7 @@
             @cancel="closeDialog"
             @push="pushItem"
           />
-          <app-tariff-group-list
-            v-model="items"
-            @removeItem="deleteItem"
-          />
+          <app-tariff-group-list v-model="items" @removeItem="deleteItem" />
         </div>
       </v-col>
     </v-row>

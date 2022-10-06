@@ -63,10 +63,11 @@ class CrewService {
   async getCrewByTruckAndDate({ truck, date }) {
     try {
       const params = { truck, date }
-      const response = await api.get(BASE_PATH + '/by_truck_and_date', { params })
+      const response = await api.get(BASE_PATH + '/by_truck_and_date', {
+        params,
+      })
       return response?.data
     } catch (e) {
-
       store.commit('setError', 'getCrewByTruckAndDate: ' + e.message)
     }
   }

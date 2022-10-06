@@ -4,25 +4,14 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-center">
-              Тип тарифа
-            </th>
-            <th class="text-center">
-              Предварительные цены
-            </th>
-            <th class="text-center">
-              Аукционная цена
-            </th>
-            <th class="text-center">
-              Итоговые
-            </th>
+            <th class="text-center">Тип тарифа</th>
+            <th class="text-center">Предварительные цены</th>
+            <th class="text-center">Аукционная цена</th>
+            <th class="text-center">Итоговые</th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="priceType of orderPriceTypes"
-            :key="priceType.value"
-          >
+          <tr v-for="priceType of orderPriceTypes" :key="priceType.value">
             <td>{{ priceType.text }}</td>
             <td class="text-right price-column">
               {{

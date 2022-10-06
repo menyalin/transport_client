@@ -44,24 +44,10 @@
       label="Используется при создании тарифов"
     />
 
-    <v-text-field
-      v-model.trim="form.note"
-      outlined
-      label="Примечание"
-      dense
-    />
+    <v-text-field v-model.trim="form.note" outlined label="Примечание" dense />
 
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

@@ -3,11 +3,7 @@
     <div class="row-number">
       <small>{{ idx + 1 }}</small>
     </div>
-    <router-link
-      :to="baseUrl + id"
-      draggable="false"
-      class="router-link"
-    >
+    <router-link :to="baseUrl + id" draggable="false" class="router-link">
       {{ title.toLowerCase() }}
     </router-link>
   </div>

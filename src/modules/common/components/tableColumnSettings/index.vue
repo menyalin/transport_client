@@ -1,25 +1,11 @@
 <template>
-  <v-menu
-    offset-y
-    :close-on-content-click="false"
-  >
+  <v-menu offset-y :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        color="primary"
-        dark
-        v-bind="attrs"
-        icon
-        v-on="on"
-      >
-        <v-icon small>
-          mdi-cog
-        </v-icon>
+      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
+        <v-icon small> mdi-cog </v-icon>
       </v-btn>
     </template>
-    <v-list
-      v-if="activeHeaders"
-      class="px-2"
-    >
+    <v-list v-if="activeHeaders" class="px-2">
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"

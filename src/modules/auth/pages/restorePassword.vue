@@ -1,34 +1,16 @@
 <template>
-  <v-container
-    class="fill-height"
-    fluid
-  >
-    <v-row
-      align="center"
-      justify="center"
-    >
-      <v-col
-        cols="12"
-        sm="8"
-        md="4"
-        lg="4"
-      >
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="4" lg="4">
         <v-card class="elevation-4">
-          <v-toolbar
-            color="primary"
-            dark
-            flat
-          >
+          <v-toolbar color="primary" dark flat>
             <v-toolbar-title>Введите новый пароль</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
               <transition name="fade">
-                <v-alert
-                  v-if="!!message"
-                  :type="messageType"
-                >
+                <v-alert v-if="!!message" :type="messageType">
                   {{ message }}
                 </v-alert>
               </transition>
@@ -75,7 +57,7 @@
   </v-container>
 </template>
 <script>
-import { required, minLength, sameAs  } from 'vuelidate/lib/validators'
+import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 import userService from '../services/user.service'
 
 export default {
@@ -84,7 +66,7 @@ export default {
     token: {
       type: String,
       required: true,
-    }
+    },
   },
   data() {
     return {
@@ -95,7 +77,7 @@ export default {
       form: {
         password: '',
         confirmPassword: '',
-      }
+      },
     }
   },
   computed: {
@@ -103,7 +85,8 @@ export default {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
       !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required && errors.push('Поле не может быть пустым')
+      !this.$v.form.password.required &&
+        errors.push('Поле не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
@@ -148,23 +131,25 @@ export default {
       if (this.$v.$invalid) return null
       try {
         this.loading = true
-        await userService.setPassword({ token: this.token, password: this.form.password })
+        await userService.setPassword({
+          token: this.token,
+          password: this.form.password,
+        })
         this.email = null
         this.loading = false
         this.$store.dispatch('getUserData')
         this.$router.push('/')
       } catch (e) {
-        if (e?.response?.status === 404) 
+        if (e?.response?.status === 404)
           this.showMessage('Email не найден', 'error')
-        else if (e?.response?.data === 'jwt expired')  this.showMessage('Время жизни ссылки истекло', 'error')
-        else if (e?.response?.data)  this.showMessage(e.response.data, 'error')
+        else if (e?.response?.data === 'jwt expired')
+          this.showMessage('Время жизни ссылки истекло', 'error')
+        else if (e?.response?.data) this.showMessage(e.response.data, 'error')
         else this.showMessage(e.message, 'error')
         this.loading = false
       }
     },
-  }
+  },
 }
 </script>
-<style>
-  
-</style>
+<style></style>

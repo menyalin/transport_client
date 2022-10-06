@@ -8,12 +8,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
+    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
     <div class="body-wrapper">
@@ -50,10 +45,7 @@
         v-model="reqTransport"
         title="Требования к транспорту"
       />
-      <app-cargo-params
-        v-model="cargoParams"
-        title="Параметры груза"
-      />
+      <app-cargo-params v-model="cargoParams" title="Параметры груза" />
       <v-checkbox
         v-model="form.fixedTimeSlots"
         hide-details
@@ -69,17 +61,8 @@
       />
     </div>
 
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

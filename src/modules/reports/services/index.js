@@ -40,7 +40,7 @@ class ReportService {
       return data
     } catch (e) {
       store.commit('setError', e.message)
-      return data
+      return null
     }
   }
 
@@ -52,7 +52,7 @@ class ReportService {
       return data
     } catch (e) {
       store.commit('setError', e.message)
-      return data
+      return null
     }
   }
 

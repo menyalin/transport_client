@@ -14,10 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(row, ind) in items"
-          :key="ind"
-        >
+        <tr v-for="(row, ind) in items" :key="ind">
           <td>{{ row.title }}</td>
           <td class="text-center">
             {{ new Date(row.expDate).toLocaleDateString() }}
@@ -27,19 +24,10 @@
           </td>
           <td>{{ row.note }}</td>
           <td>
-            <v-icon
-              color="orange"
-              class="mr-3"
-              @click="openDialog(ind)"
-            >
+            <v-icon color="orange" class="mr-3" @click="openDialog(ind)">
               mdi-pencil
             </v-icon>
-            <v-icon
-              color="red"
-              @click="deleteItem(ind)"
-            >
-              mdi-delete
-            </v-icon>
+            <v-icon color="red" @click="deleteItem(ind)"> mdi-delete </v-icon>
           </td>
         </tr>
       </tbody>
@@ -55,11 +43,7 @@
         </v-btn>
       </tfoot>
 
-      <v-dialog
-        v-model="dialog"
-        max-width="1000"
-        persistent
-      >
+      <v-dialog v-model="dialog" max-width="1000" persistent>
         <v-card>
           <v-card-title> Новое напоминание </v-card-title>
           <v-card-text class="notification-form">
@@ -98,12 +82,7 @@
             </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn
-              class="mr-3"
-              @click="cancelHandler"
-            >
-              Отмена
-            </v-btn>
+            <v-btn class="mr-3" @click="cancelHandler"> Отмена </v-btn>
             <v-btn
               color="primary"
               :disabled="isInvalidEditableItem"

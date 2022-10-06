@@ -21,7 +21,7 @@
             outlined
             hide-details
             clearable
-            :style="{maxWidth: '250px'}"
+            :style="{ maxWidth: '250px' }"
           />
           <v-autocomplete
             v-model="settings.partner"
@@ -34,7 +34,7 @@
             outlined
             hide-details
             clearable
-            :style="{maxWidth: '350px'}"
+            :style="{ maxWidth: '350px' }"
           />
         </div>
         <v-data-table
@@ -85,7 +85,6 @@ import service from '@/modules/profile/services/downtime.service'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppDateRange from '@/modules/common/components/dateRange'
 
-
 const _initPeriod = () => {
   const todayM = dayjs()
   return [
@@ -133,9 +132,9 @@ export default {
       return this.$store.getters.trucksForSelect({ type: 'truck' })
     },
     partners() {
-      return this.$store.getters.partners.filter(i => i.isService)
+      return this.$store.getters.partners.filter((i) => i.isService)
     },
-   trucksHash() {
+    trucksHash() {
       return this.$store.getters.trucksHash
     },
   },

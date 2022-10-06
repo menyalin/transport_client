@@ -1,34 +1,16 @@
 <template>
-  <v-container
-    class="fill-height"
-    fluid
-  >
-    <v-row
-      align="center"
-      justify="center"
-    >
-      <v-col
-        cols="12"
-        sm="8"
-        md="6"
-        lg="4"
-      >
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-4">
-          <v-toolbar
-            color="primary"
-            dark
-            flat
-          >
+          <v-toolbar color="primary" dark flat>
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
               <transition name="fade">
-                <v-alert
-                  v-if="!!message"
-                  :type="messageType"
-                >
+                <v-alert v-if="!!message" :type="messageType">
                   {{ message }}
                 </v-alert>
               </transition>
@@ -51,10 +33,7 @@
               <router-link to="/auth/registration">
                 <small>Зарегистрироваться</small>
               </router-link>
-              <router-link 
-                to="/auth/forgot_password" 
-                class="ml-3"
-              >
+              <router-link to="/auth/forgot_password" class="ml-3">
                 <small>Забыли пароль?</small>
               </router-link>
               <v-spacer />
@@ -112,7 +91,9 @@ export default {
       const user = { email: this.email, password: this.password }
       this.$store
         .dispatch('signIn', user)
-        .then(() => { this.$router.push(this.$route.query.redirect || '/') })
+        .then(() => {
+          this.$router.push(this.$route.query.redirect || '/')
+        })
         .catch((e) => {
           if (e.response.status === 404) {
             this.showMessage('User not found', 'error')

@@ -239,7 +239,7 @@
         />
       </v-row>
       <div class="row-wrapper my-3">
-        <v-checkbox 
+        <v-checkbox
           v-model="form.hideInFines"
           label="Не показывать в штрафах"
         />
@@ -247,17 +247,8 @@
       <v-divider />
     </div>
     <div class="delete-btn-row mt-3">
-      <v-btn
-        v-if="displayDeleteBtn"
-        color="error"
-        @click="$emit('delete')"
-      >
-        <v-icon
-          left
-          dark
-        >
-          mdi-delete
-        </v-icon>
+      <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+        <v-icon left dark> mdi-delete </v-icon>
         Удалить
       </v-btn>
     </div>
@@ -394,7 +385,7 @@ export default {
     truck: {
       immediate: true,
       handler: function (val) {
-        if (!!val) this.setFormFields(val)
+        if (val) this.setFormFields(val)
       },
     },
   },

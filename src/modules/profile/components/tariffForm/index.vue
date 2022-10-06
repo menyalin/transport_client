@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-dialog
-      v-model="tmpDialog"
-      max-width="800px"
-      persistent
-    >
+    <v-dialog v-model="tmpDialog" max-width="800px" persistent>
       <v-card>
         <v-card-title>
           {{ tmpItem._id ? 'Редактировать тариф' : 'Добавить тариф' }}
@@ -111,9 +107,7 @@
           />
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="tmpDialog = false">
-            Отмена
-          </v-btn>
+          <v-btn @click="tmpDialog = false"> Отмена </v-btn>
           <v-btn
             v-if="tmpItem._id"
             :disabled="invalidItem"
@@ -131,11 +125,7 @@
             Добавить в список
           </v-btn>
           <v-spacer />
-          <v-btn
-            v-if="showDeleteBtn"
-            color="error"
-            @click="deleteItem"
-          >
+          <v-btn v-if="showDeleteBtn" color="error" @click="deleteItem">
             Удалить
           </v-btn>
         </v-card-actions>

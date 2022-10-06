@@ -9,11 +9,7 @@
       outlined
       hide-details
     />
-    <div
-      v-for="(zone, idx) of tmpItem.zones"
-      :key="idx"
-      class="zone-row"
-    >
+    <div v-for="(zone, idx) of tmpItem.zones" :key="idx" class="zone-row">
       <v-text-field
         v-model.number="tmpItem.zones[idx].distance"
         type="number"
@@ -39,9 +35,7 @@
         color="red"
         @click="deleteRow"
       >
-        <v-icon small>
-          mdi-delete
-        </v-icon>
+        <v-icon small> mdi-delete </v-icon>
       </v-btn>
       <v-btn
         v-if="showAddBtn(idx) && !invalidZones"

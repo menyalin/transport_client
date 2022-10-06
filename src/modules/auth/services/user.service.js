@@ -7,8 +7,8 @@ const BASE_PATH = '/auth'
 class UserService {
   constructor() {
     socket.on('user:changeDirectoriesProfile', () => {
-       socket.disconnect()
-       socket.connect()
+      socket.disconnect()
+      socket.connect()
     })
 
     socket.on('user:clearDirectoriesProfile', (companyId) => {
@@ -17,7 +17,7 @@ class UserService {
         store.commit('setError', 'Доступ к данным компании заблокирован!')
         store.commit('clearDirectories')
         router.push('/')
-      }      
+      }
     })
   }
 
@@ -28,13 +28,15 @@ class UserService {
 
   async changePassword(payload) {
     const { data } = await api.post(BASE_PATH + '/change_password', payload)
-    if (data.accessToken) localStorage.setItem('token', `Bearer ${ data.accessToken }`)
+    if (data.accessToken)
+      localStorage.setItem('token', `Bearer ${data.accessToken}`)
     return true
   }
 
   async setPassword(payload) {
     const { data } = await api.post(BASE_PATH + '/set_password', payload)
-    if (data.accessToken) localStorage.setItem('token', `Bearer ${ data.accessToken }`)
+    if (data.accessToken)
+      localStorage.setItem('token', `Bearer ${data.accessToken}`)
     return data
   }
 
@@ -62,8 +64,7 @@ class UserService {
     if (!email) return null
     await api.post(BASE_PATH + '/retry_confirmation_email', { email })
     return true
-  } 
-
+  }
 }
 
 export default new UserService()

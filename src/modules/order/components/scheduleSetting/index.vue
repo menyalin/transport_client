@@ -1,11 +1,6 @@
 <template>
   <div class="date-settings">
-    <v-btn
-      icon
-      small
-      :disabled="isMinDate"
-      @click="incDate(-1)"
-    >
+    <v-btn icon small :disabled="isMinDate" @click="incDate(-1)">
       <v-icon>mdi-arrow-left-bold</v-icon>
     </v-btn>
     <app-date-time-input
@@ -17,11 +12,7 @@
       hidePrependIcon
       @change="setDate"
     />
-    <v-btn
-      icon
-      small
-      @click="incDate(1)"
-    >
+    <v-btn icon small @click="incDate(1)">
       <v-icon>mdi-arrow-right-bold</v-icon>
     </v-btn>
   </div>

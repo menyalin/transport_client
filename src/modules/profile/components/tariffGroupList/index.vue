@@ -6,29 +6,16 @@
           <tr>
             <th>Тип</th>
             <th class="text-center" />
-            <th class="text-center">
-              Вид ТС
-            </th>
-            <th class="text-center">
-              Грузоподъемность
-            </th>
-            <th class="text-right">
-              Цена с НДС
-            </th>
-            <th class="text-right">
-              Цена без НДС
-            </th>
-            <th class="text-left">
-              Примечание
-            </th>
+            <th class="text-center">Вид ТС</th>
+            <th class="text-center">Грузоподъемность</th>
+            <th class="text-right">Цена с НДС</th>
+            <th class="text-right">Цена без НДС</th>
+            <th class="text-left">Примечание</th>
             <th />
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, ind) of items"
-            :key="ind"
-          >
+          <tr v-for="(item, ind) of items" :key="ind">
             <td>
               {{ tariffTypesMap.get(item.type) }}
             </td>
@@ -45,18 +32,9 @@
                 v-if="item.type === 'additionalPoints'"
                 :item="item"
               />
-              <app-waiting-cell
-                v-if="item.type === 'waiting'"
-                :item="item"
-              />
-              <app-zones-cell
-                v-if="item.type === 'zones'"
-                :item="item"
-              />
-              <app-return-cell
-                v-if="item.type === 'return'"
-                :item="item"
-              />
+              <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
+              <app-zones-cell v-if="item.type === 'zones'" :item="item" />
+              <app-return-cell v-if="item.type === 'return'" :item="item" />
             </td>
 
             <td class="text-center">
@@ -73,17 +51,8 @@
             </td>
             <td>{{ item.note }}</td>
             <td class="text-right">
-              <v-btn
-                small
-                icon
-                @click="removeHandler(ind)"
-              >
-                <v-icon
-                  small
-                  color="red"
-                >
-                  mdi-delete
-                </v-icon>
+              <v-btn small icon @click="removeHandler(ind)">
+                <v-icon small color="red"> mdi-delete </v-icon>
               </v-btn>
             </td>
           </tr>

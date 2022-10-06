@@ -11,18 +11,10 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
+    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
-    <div
-      v-else
-      class="ma-3 text-caption"
-    >
+    <div v-else class="ma-3 text-caption">
       Профиль настроек: {{ directoriesProfileName }}
     </div>
     <div>
@@ -148,11 +140,7 @@
         />
       </div>
 
-      <app-med-book
-        v-model="medBook"
-        title="Мед.книжка"
-        class="mb-5"
-      />
+      <app-med-book v-model="medBook" title="Мед.книжка" class="mb-5" />
       <div class="work-status">
         <div>
           <v-checkbox
@@ -188,31 +176,16 @@
         />
       </div>
       <app-additional-notifications v-model="additionalNotifications" />
-      <v-checkbox
-        v-model="form.hasScans"
-        label="Есть сканы документов"
-        dense
-      />
+      <v-checkbox v-model="form.hasScans" label="Есть сканы документов" dense />
       <v-checkbox
         v-model="form.hideInFines"
         label="Не показывать в штрафах"
         dense
       />
     </div>
-    <div
-      v-if="displayDeleteBtn"
-      class="delete-btn-row mt-3"
-    >
-      <v-btn
-        color="error"
-        @click="$emit('delete')"
-      >
-        <v-icon
-          left
-          dark
-        >
-          mdi-delete
-        </v-icon>
+    <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
+      <v-btn color="error" @click="$emit('delete')">
+        <v-icon left dark> mdi-delete </v-icon>
         Удалить
       </v-btn>
     </div>

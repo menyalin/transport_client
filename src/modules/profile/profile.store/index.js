@@ -16,7 +16,6 @@ import CityModule from './city'
 import CompanyService from '../services/company.service'
 import UserService from '@/modules/auth/services/user.service'
 
-
 export default {
   state: {
     myCompanies: [],
@@ -25,7 +24,7 @@ export default {
     staffRoles: [],
     fineCategories: [],
     permissionsMap: new Map(),
-    companyInvites : []
+    companyInvites: [],
   },
   mutations: {
     setFineCategories(state, payload) {
@@ -34,13 +33,13 @@ export default {
     setCompanyInvites(state, payload) {
       state.companyInvites = payload
     },
-    
+
     addCompanyInvite(state, payload) {
       state.companyInvites.push(payload)
     },
 
     deleteInvite(state, id) {
-      state.companyInvites = state.companyInvites.filter(i => i._id !== id)
+      state.companyInvites = state.companyInvites.filter((i) => i._id !== id)
     },
 
     setFormSettings({ formSettings }, { formName, settings }) {
@@ -56,7 +55,7 @@ export default {
     setStaffRoles(state, payload) {
       state.staffRoles = payload
     },
-    
+
     setPermissionsMap(state, payload) {
       state.permissionsMap.clear()
       Object.entries(payload).forEach((i) => {
@@ -81,7 +80,7 @@ export default {
       state.myCompanies.push(company)
     },
     deleteCompany(state, companyId) {
-      state.myCompanies = state.myCompanies.filter(i => i._id !== companyId)
+      state.myCompanies = state.myCompanies.filter((i) => i._id !== companyId)
     },
 
     updateCompany(state, company) {
@@ -139,7 +138,7 @@ export default {
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
-      
+
       if (addresses?.length) commit('setAddresses', addresses)
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
@@ -166,9 +165,7 @@ export default {
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
       if (fineCategories?.length) commit('setFineCategories', fineCategories)
 
-
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
-
     },
 
     async createCompany({ commit }, payload) {
@@ -191,7 +188,6 @@ export default {
         commit('setError', e.response?.data?.message)
       }
     },
-
 
     async configProfile({ commit }, payload) {
       try {
@@ -223,7 +219,7 @@ export default {
 
     formSettingsMap: ({ formSettings }) => formSettings,
     permissionsMap: ({ permissionsMap }) => permissionsMap,
-    fineCategories: ({ fineCategories}) => fineCategories,
+    fineCategories: ({ fineCategories }) => fineCategories,
     fineCategoriesMap: ({ fineCategories }) =>
       new Map(fineCategories.map((i) => [i.value, i.text])),
   },

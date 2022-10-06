@@ -10,24 +10,13 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
+    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
       Профиль справочников не выбран, сохранение адреса не возможно
     </v-alert>
-    <div
-      v-else
-      class="ma-3 text-caption"
-    >
+    <div v-else class="ma-3 text-caption">
       Профиль настроек: {{ directoriesProfileName }}
     </div>
-    <app-address-suggestion
-      class="mt-3"
-      @change="getParsedAddress"
-    />
+    <app-address-suggestion class="mt-3" @change="getParsedAddress" />
 
     <v-text-field
       v-model.trim="$v.form.name.$model"
@@ -101,21 +90,9 @@
       label="Метки для поиска"
       :hint="addressLabelHint"
     />
-    <v-checkbox
-      v-model="form.isShipmentPlace"
-      label="Место погрузки"
-      dense
-    />
-    <v-checkbox
-      v-model="form.isDeliveryPlace"
-      label="Место разгрузки"
-      dense
-    />
-    <v-checkbox
-      v-model="form.isService"
-      label="Сервис"
-      dense
-    />
+    <v-checkbox v-model="form.isShipmentPlace" label="Место погрузки" dense />
+    <v-checkbox v-model="form.isDeliveryPlace" label="Место разгрузки" dense />
+    <v-checkbox v-model="form.isService" label="Сервис" dense />
     <app-similar-addresses
       v-if="!displayDeleteBtn && similarAddresses.length"
       :addresses="similarAddresses"
@@ -127,12 +104,7 @@
       class="mt-4"
       @click="$emit('delete')"
     >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
@@ -239,7 +211,7 @@ export default {
     address: {
       immediate: true,
       handler: function (val) {
-        if (!!val) this.setFormFields(val)
+        if (val) this.setFormFields(val)
       },
     },
     ['form.name']: {

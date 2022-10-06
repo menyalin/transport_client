@@ -1,5 +1,5 @@
 import service from '../services/order.service'
-import dayjs  from 'dayjs'
+import dayjs from 'dayjs'
 
 const _getStartPositionDate = (order) => {
   return order.route[0]?.arrivalDate
@@ -22,7 +22,7 @@ const _getLastPlannedDate = (order) => {
 
 const _getLastPositionDate = (order) => {
   const tmpRoute = order.route.slice()
-  if (!!tmpRoute[tmpRoute.length - 1].departureDate)
+  if (tmpRoute[tmpRoute.length - 1].departureDate)
     return tmpRoute[tmpRoute.length - 1].departureDate
   let routeDates = []
   routeDates.push(order.startPositionDate)
@@ -70,7 +70,11 @@ export default {
         orders.push(payload)
     },
     addOrdersToSchedule(state, payload) {
-      state.orders = state.orders.concat(payload.filter(i => !state.orders.some(order => order._id === i._id)))
+      state.orders = state.orders.concat(
+        payload.filter(
+          (i) => !state.orders.some((order) => order._id === i._id)
+        )
+      )
     },
     updateOrder(state, payload) {
       const ind = state.orders.findIndex((item) => item._id === payload._id)
@@ -112,13 +116,16 @@ export default {
     pointTypes: ({ pointTypes }) => pointTypes,
     ordersForSchedule: (
       { orders, period },
-      { schedulePeriod, onlyPlannedDates, hiddenTruckIds }
+      { schedulePeriod, onlyPlannedDates }
     ) =>
       orders
         .map((item) => ({
           _id: item._id,
           company: item.company,
-          needRoundTime: !item.route[0].arrivalDate || onlyPlannedDates || !item.confirmedCrew?.truck,
+          needRoundTime:
+            !item.route[0].arrivalDate ||
+            onlyPlannedDates ||
+            !item.confirmedCrew?.truck,
           isCompleted: !!item.route[item.route.length - 1]?.departureDate,
           startPositionDate: onlyPlannedDates
             ? item.startPositionDate

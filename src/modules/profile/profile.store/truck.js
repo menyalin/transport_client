@@ -1,7 +1,6 @@
 import TruckService from '@/modules/profile/services/truck.service'
 import dayjs from 'dayjs'
 
-
 const _trucksSortHandler = (a, b) => {
   if (a.tkName.name > b.tkName.name) return 1
   if (a.tkName.name < b.tkName.name) return -1
@@ -31,7 +30,6 @@ const _prepareTruck = (truck) => {
     temporaryDriverCount: _getTemporaryDriverFromTruck(truck),
   }
 }
-
 
 export default {
   state: {
@@ -71,18 +69,19 @@ export default {
   },
   actions: {
     truckCreate({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const data = await TruckService.create(payload)
-          commit('addTruck', data)
-          commit('setLoading', false)
-          resolve(data)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        TruckService.create(payload)
+          .then((data) => {
+            commit('addTruck', data)
+            commit('setLoading', false)
+            resolve(data)
+          })
+          .catch((e) => {
+            commit('setLoading', false)
+            commit('setError', e)
+            reject(e)
+          })
       })
     },
 
@@ -107,14 +106,13 @@ export default {
     },
   },
   getters: {
-    
     trucks: ({ trucks }, { directoriesProfile }) =>
       trucks
         .filter((item) => item.company === directoriesProfile)
         .sort(_trucksSortHandler)
         .map(_prepareTruck),
-    
-        loadDirection: ({ allTruckParams }, { companySettings }) => {
+
+    loadDirection: ({ allTruckParams }, { companySettings }) => {
       return allTruckParams.loadDirection.filter((i) =>
         companySettings.loadDirections.length
           ? companySettings.loadDirections.includes(i.value)
@@ -191,19 +189,25 @@ export default {
       return map
     },
 
-    activeTrucksOnDate: ({ trucks }) => (date) => {
-      if (!date || !dayjs(date).isValid) return trucks
-      return trucks.filter(item => {
-        const startPeriodCond = !item.startServiceDate || new Date(item.startServiceDate) <= new Date(date)
-        const endPeriodCond = !item.endServiceDate || new Date(item.endServiceDate) > new Date(date)
-        return startPeriodCond && endPeriodCond
-      })
-    },
+    activeTrucksOnDate:
+      ({ trucks }) =>
+      (date) => {
+        if (!date || !dayjs(date).isValid) return trucks
+        return trucks.filter((item) => {
+          const startPeriodCond =
+            !item.startServiceDate ||
+            new Date(item.startServiceDate) <= new Date(date)
+          const endPeriodCond =
+            !item.endServiceDate ||
+            new Date(item.endServiceDate) > new Date(date)
+          return startPeriodCond && endPeriodCond
+        })
+      },
 
     hiddenTruckIds: ({ trucks }) => {
       return trucks.filter((t) => t.endServiceDate).map((t) => t._id)
     },
-    
+
     truckById:
       ({ trucks }) =>
       (id) =>

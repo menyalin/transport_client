@@ -7,7 +7,6 @@ const api = axios.create({
   withCredentials: true,
 })
 
-
 api.interceptors.request.use(
   function (config) {
     config.headers.Authorization = localStorage.getItem('token')
@@ -35,7 +34,7 @@ api.interceptors.response.use(
           `${process.env.VUE_APP_API_URL}/auth/refresh`,
           {},
           { withCredentials: true }
-          )
+        )
         localStorage.setItem('token', `Bearer ${response?.data?.accessToken}`)
         return api.request(originalRequest)
       } catch (e) {
@@ -48,10 +47,7 @@ api.interceptors.response.use(
       console.log('api auth error')
       store.dispatch('logOut')
       localStorage.removeItem('token')
-    }
-    else throw error
+    } else throw error
   }
 )
 export default api
-
-

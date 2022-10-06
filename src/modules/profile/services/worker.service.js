@@ -3,26 +3,24 @@ import socket from '@/socket'
 import store from '@/store'
 
 const BASE_PATH = '/workers'
- 
 
 class WorkerService {
-
   constructor() {
-    this.cache =  new Map()
-    socket.on('worker:created', (data) => {
+    this.cache = new Map()
+    socket.on('worker:created', (_data) => {
       //queryClient.setQueryData([WORKERS, data._id], data)
       // const workers = queryClient.getQueryData([WORKERS])
       // queryClient.setQueryData([WORKERS], [...workers, data])
     })
 
-    socket.on('worker:updated', (data) => {
+    socket.on('worker:updated', (_data) => {
       // queryClient.setQueryData([WORKERS, data._id], data)
       // const workers = queryClient.getQueryData([WORKERS])
       // if (workers) queryClient.setQueryData([WORKERS], [...workers.filter(i => i._id !== data._id), data])
       // else  queryClient.setQueryData([WORKERS], [data])
     })
 
-    socket.on('worker:deleted', (id) => {
+    socket.on('worker:deleted', (_id) => {
       // const workers = queryClient.getQueryData([WORKERS])
       // if (workers) queryClient.setQueryData([WORKERS], [...workers.filter(i => i._id !== id)])
     })
@@ -43,14 +41,18 @@ class WorkerService {
   }
 
   async getByDirectoriesProfile() {
-    let { data } = await api.get(BASE_PATH, { params: { profile: store.getters.directoriesProfile } })
+    let { data } = await api.get(BASE_PATH, {
+      params: { profile: store.getters.directoriesProfile },
+    })
     if (!Array.isArray(data))
       throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
   async getForAutocomplete(params) {
-    const { data } = await api.get(BASE_PATH + '/get_for_autocomplete', { params: params })
+    const { data } = await api.get(BASE_PATH + '/get_for_autocomplete', {
+      params: params,
+    })
     return data
   }
 
@@ -66,16 +68,20 @@ class WorkerService {
     return data
   }
 
-  async sendInvite({workerId, userId, roles}) {
-    const { data } = await api.put(BASE_PATH + `/${workerId}/addUser`, {user: userId, roles})
+  async sendInvite({ workerId, userId, roles }) {
+    const { data } = await api.put(BASE_PATH + `/${workerId}/addUser`, {
+      user: userId,
+      roles,
+    })
     return data
   }
 
-  async acceptInvite({workerId, accepted}) {
-    const { data } = await api.put(BASE_PATH + `/${workerId}/acceptInvite`, { accepted })
+  async acceptInvite({ workerId, accepted }) {
+    const { data } = await api.put(BASE_PATH + `/${workerId}/acceptInvite`, {
+      accepted,
+    })
     return data
   }
-
 
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)

@@ -1,34 +1,16 @@
 <template>
-  <v-container
-    class="fill-height"
-    fluid
-  >
-    <v-row
-      align="center"
-      justify="center"
-    >
-      <v-col
-        cols="12"
-        sm="8"
-        md="6"
-        lg="4"
-      >
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-4">
-          <v-toolbar
-            color="primary"
-            dark
-            flat
-          >
+          <v-toolbar color="primary" dark flat>
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
               <transition name="fade">
-                <v-alert
-                  v-if="!!message"
-                  :type="messageType"
-                >
+                <v-alert v-if="!!message" :type="messageType">
                   {{ message }}
                 </v-alert>
               </transition>
@@ -157,7 +139,8 @@ export default {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
       !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required && errors.push('Пароль не может быть пустым')
+      !this.$v.form.password.required &&
+        errors.push('Пароль не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
@@ -189,14 +172,19 @@ export default {
       this.signUp(newUser)
         .then((res) => {
           if (res.accessToken) {
-            this.$router.push('/profile/settings?status=need_email_confirmation')
+            this.$router.push(
+              '/profile/settings?status=need_email_confirmation'
+            )
           } else this.showMessage(res.message, 'warning')
         })
         .catch((e) => {
           if (e.response.data.message === 'validation fail') {
             this.showMessage('Incorrect data entered :( ', 'error')
           } else if (e.response.status === 406) {
-            this.showMessage('Пользователь с таким email уже зарегистрирован', 'error')
+            this.showMessage(
+              'Пользователь с таким email уже зарегистрирован',
+              'error'
+            )
           } else {
             this.showMessage(e.message, 'error')
           }

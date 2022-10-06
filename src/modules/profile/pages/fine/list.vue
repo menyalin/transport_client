@@ -106,7 +106,7 @@ export default {
       refetch,
       count,
       preparedList,
-      setInitSettings
+      setInitSettings,
     } = useFineList()
 
     return {
@@ -142,7 +142,9 @@ export default {
   },
   mounted() {
     if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      const storedSettings = this.$store.getters.formSettingsMap.get(this.formName)
+      const storedSettings = this.$store.getters.formSettingsMap.get(
+        this.formName
+      )
       this.setInitSettings(storedSettings)
     }
   },

@@ -3,10 +3,7 @@
     <v-row>
       <v-col>
         <div id="report-settings">
-          <v-btn
-            icon
-            @click.stop="getData"
-          >
+          <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
           </v-btn>
           <v-text-field

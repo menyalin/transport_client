@@ -1,8 +1,6 @@
 <template>
   <div class="date-range-wrapper">
-    <div class="text-caption">
-      Выбор периода
-    </div>
+    <div class="text-caption">Выбор периода</div>
     <div class="inputs-row">
       <v-menu
         v-model="startDateMenu"
@@ -13,11 +11,7 @@
         min-width="auto"
       >
         <template v-slot:activator="{ on, attrs }">
-          <span
-            class="date-text"
-            v-bind="attrs"
-            v-on="on"
-          >
+          <span class="date-text" v-bind="attrs" v-on="on">
             c:
             {{
               tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-'
@@ -44,11 +38,7 @@
         min-width="auto"
       >
         <template v-slot:activator="{ on, attrs }">
-          <span
-            class="date-text"
-            v-bind="attrs"
-            v-on="on"
-          >
+          <span class="date-text" v-bind="attrs" v-on="on">
             по:
             {{
               tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-'
@@ -121,7 +111,7 @@ export default {
       ])
     },
     changeEndDate(val) {
-      this.$emit('change', [this.period[0],dayjs(val).endOf('day').format()])
+      this.$emit('change', [this.period[0], dayjs(val).endOf('day').format()])
     },
   },
 }

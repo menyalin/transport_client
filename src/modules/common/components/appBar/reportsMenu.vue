@@ -1,16 +1,7 @@
 <template>
-  <v-menu
-    bottom
-    offset-y
-  >
+  <v-menu bottom offset-y>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        v-bind="attrs"
-        text
-        v-on="on"
-      >
-        Отчеты
-      </v-btn>
+      <v-btn v-bind="attrs" text v-on="on"> Отчеты </v-btn>
     </template>
 
     <v-list dense>

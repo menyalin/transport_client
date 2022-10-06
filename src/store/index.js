@@ -5,23 +5,6 @@ import AdminModule from '@/modules/admin/admin.store'
 import ProfileModule from '@/modules/profile/profile.store/index.js'
 import OrderModule from '@/modules/order/store/index.js'
 import AccountingModule from '@/modules/accounting/store.js'
-import router from '../router'
-
-// const initPlugin = (store) => {
-//   if (store.getters.token) {
-//     store.state.appLoading = true
-//     Promise.all([store.dispatch('getUserData')])
-//       .catch((e) => {
-//         router.push({
-//           name: 'serverNotAvailable',
-//           query: { message: e.message },
-//         })
-//       })
-//       .finally(() => {
-//         store.state.appLoading = false
-//       })
-//   }
-// }
 
 Vue.use(Vuex)
 

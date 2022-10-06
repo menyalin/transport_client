@@ -1,9 +1,6 @@
 <template>
   <div class="main-filter-wrapper">
-    <v-expansion-panels
-      v-if="Object.keys(tmpFilters).length > 0"
-      focusable
-    >
+    <v-expansion-panels v-if="Object.keys(tmpFilters).length > 0" focusable>
       <v-expansion-panel>
         <v-expansion-panel-header>
           <h5>{{ title }}</h5>

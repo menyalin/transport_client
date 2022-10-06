@@ -1,14 +1,8 @@
 <template>
-  <v-dialog
-    :value="dialog"
-    max-width="800"
-    @input="inputDialog"
-  >
+  <v-dialog :value="dialog" max-width="800" @input="inputDialog">
     <v-card>
       <v-card-title>
-        <div class="text-h6">
-          Итоговые цены рейса
-        </div>
+        <div class="text-h6">Итоговые цены рейса</div>
         <v-spacer />
         <v-switch
           v-model="priceWithVat"
@@ -30,12 +24,7 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          small
-          color="primary"
-          text
-          @click="getPrePrices"
-        >
+        <v-btn small color="primary" text @click="getPrePrices">
           обновить предв. цены
         </v-btn>
         <v-btn
@@ -49,9 +38,7 @@
         </v-btn>
         <v-spacer />
 
-        <v-btn @click="cancel">
-          Отмена
-        </v-btn>
+        <v-btn @click="cancel"> Отмена </v-btn>
 
         <v-btn
           color="primary"

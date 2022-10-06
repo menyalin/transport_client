@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import getDaysFromPeriod from './getDaysFromPeriod'
 
 describe('getDaysFromPeriod', () => {

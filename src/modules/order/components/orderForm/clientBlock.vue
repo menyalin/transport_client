@@ -52,12 +52,12 @@ export default {
     routeDate: String,
     isValidNum: {
       type: Boolean,
-      default: true
+      default: true,
     },
     isValidAuctionNum: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
@@ -74,11 +74,15 @@ export default {
   },
   computed: {
     numErrorMessages() {
-      return this.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
+      return this.isValidNum
+        ? []
+        : ['Номер заказа клиента не может быть пустым']
     },
     auctionNumErrorMessages() {
-      return this.isValidAuctionNum ? [] : ['Номер аукциона не может быть пустым']
-    }
+      return this.isValidAuctionNum
+        ? []
+        : ['Номер аукциона не может быть пустым']
+    },
   },
   watch: {
     item: {

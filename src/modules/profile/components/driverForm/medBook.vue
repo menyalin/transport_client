@@ -69,7 +69,6 @@ import { mapGetters } from 'vuex'
 import AppBlockTitle from './blockTitle.vue'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
-
 export default {
   name: 'MedBook',
   components: {

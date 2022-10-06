@@ -44,7 +44,7 @@ export default {
 
     scheduleNotes: ({ notes }) => notes,
 
-    notesForSchedule: ({ notes }, { schedulePeriod, hiddenTruckIds }) => {
+    notesForSchedule: ({ notes }, { schedulePeriod }) => {
       if (!schedulePeriod) return []
       return notes.filter((n) => {
         const sP = dayjs(schedulePeriod[0])

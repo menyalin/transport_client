@@ -2,10 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-driver-form
-          @submit="submit"
-          @cancel="cancel"
-        />
+        <app-driver-form @submit="submit" @cancel="cancel" />
       </v-col>
     </v-row>
   </v-container>

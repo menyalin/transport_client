@@ -11,10 +11,7 @@
         @dragleave.prevent="disabledZone"
         @dblclick.stop="dblclickHandler"
       >
-        <tr
-          class="head-row"
-          @dragover.prevent="disabledZone"
-        >
+        <tr class="head-row" @dragover.prevent="disabledZone">
           <td
             ref="rowTitleColumn"
             class="text-center"
@@ -44,32 +41,21 @@
           class="truck-row"
           :class="{ 'drag-over-row': idx === overRowInd }"
         >
-          <td
-            :style="cellStyles"
-            @dragover.prevent="disabledZone"
-          >
+          <td :style="cellStyles" @dragover.prevent="disabledZone">
             <app-truck-title-cell
               :id="truck._id"
               :idx="idx"
               :title="truck.regNum"
             />
           </td>
-          <td
-            v-for="column of columns"
-            :key="column.title"
-          />
+          <td v-for="column of columns" :key="column.title" />
         </tr>
         <tr
           :style="{ 'user-select': 'none', height: '100%' }"
           @dragover.prevent.stop="disabledZone"
         >
-          <td class="text-center">
-            Итоги
-          </td>
-          <td
-            v-for="column of columns"
-            :key="column.title"
-          >
+          <td class="text-center">Итоги</td>
+          <td v-for="column of columns" :key="column.title">
             <app-result-cell :date="column.date" />
           </td>
         </tr>
@@ -100,10 +86,7 @@
             v-if="item.itemType === 'order'"
             :orderId="item._id"
           />
-          <app-downtime-cell
-            v-else
-            :itemId="item._id"
-          />
+          <app-downtime-cell v-else :itemId="item._id" />
         </div>
 
         <app-bg-grid
@@ -146,10 +129,7 @@
     </div>
 
     <v-divider />
-    <div
-      v-if="settings.showBufferZone"
-      class="buffer-wrapper"
-    >
+    <div v-if="settings.showBufferZone" class="buffer-wrapper">
       <table
         @dragover.prevent
         @drop.prevent="dropOnBufferHandler"
@@ -162,10 +142,7 @@
               height: bufferHeight,
             }"
           />
-          <td
-            v-for="column of columns"
-            :key="column.title"
-          />
+          <td v-for="column of columns" :key="column.title" />
         </tr>
         <template v-if="tableWidth">
           <div
@@ -380,7 +357,7 @@ export default {
     period: {
       immediate: false,
       handler: function (val) {
-        if (!!val) this.$store.commit('setPeriod', val)
+        if (val) this.$store.commit('setPeriod', val)
       },
     },
   },
@@ -391,9 +368,7 @@ export default {
     window.addEventListener('resize', this.resizeScreen)
     this.resizeScreen()
   },
-  setup() {
-
-  },
+  setup() {},
   methods: {
     dblclickHandler(e, isBuffer) {
       e.preventDefault()
@@ -477,7 +452,9 @@ export default {
       let sPositionMoment
       if (needRoundTime) {
         sPositionMoment = dayjs(startPositionDate)
-        sPositionMoment = sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
+        sPositionMoment = sPositionMoment.hour(
+          roundingHours(sPositionMoment.hour())
+        )
         sPositionMoment = sPositionMoment.minute(0)
       } else {
         // если это downtime
@@ -490,7 +467,7 @@ export default {
       if (sPeriod <= sOrder) leftShift = sOrder - sPeriod
       return leftShift / this.secInPx + this.titleColumnWidth
     },
-    
+
     getTopShiftForOrder({ truckId, _id }) {
       if (!truckId)
         return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT

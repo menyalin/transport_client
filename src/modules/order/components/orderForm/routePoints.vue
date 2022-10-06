@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="route-wrapper"
-    :class="{ invalid: !isValid }"
-  >
+  <div class="route-wrapper" :class="{ invalid: !isValid }">
     <app-block-title>{{ title }}</app-block-title>
-    <draggable
-      v-model="xPoints"
-      :disabled="!dragEnabled"
-    >
+    <draggable v-model="xPoints" :disabled="!dragEnabled">
       <div
         v-for="(point, ind) of tmpPoints"
         :key="ind"
@@ -27,18 +21,8 @@
         />
       </div>
     </draggable>
-    <div
-      v-if="!readonly"
-      class="row py-3"
-    >
-      <v-btn
-        text
-        color="primary"
-        small
-        outlined
-        class="ma-2"
-        @click="addPoint"
-      >
+    <div v-if="!readonly" class="row py-3">
+      <v-btn text color="primary" small outlined class="ma-2" @click="addPoint">
         Добавить адрес
       </v-btn>
       <v-btn
@@ -52,8 +36,8 @@
       >
         Добавить возврат
       </v-btn>
-      <v-btn 
-        v-if="!isTemplate"  
+      <v-btn
+        v-if="!isTemplate"
         text
         outlined
         small
@@ -137,8 +121,12 @@ export default {
   },
   methods: {
     async getDriverRouteHandler() {
-      await putRouteForDriverToClipboard( this.driverId, this.points, this.cargoParams )
-    },  
+      await putRouteForDriverToClipboard(
+        this.driverId,
+        this.points,
+        this.cargoParams
+      )
+    },
     change(val, ind) {
       this.tmpPoints.splice(ind, 1, val)
       this.$emit('changePoints', this.tmpPoints)

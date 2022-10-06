@@ -1,7 +1,5 @@
 import dayjs from 'dayjs'
 
-
-
 const TITLE_FORMAT = 'DD.MM.YY, dd'
 
 export default (period) => {
@@ -14,7 +12,7 @@ export default (period) => {
   const endDate = dayjs(period[1])
 
   if (startDate > endDate) throw new Error('wrong period')
-  
+
   let res = []
   while (startDate.isSameOrBefore(endDate, 'day')) {
     res.push({

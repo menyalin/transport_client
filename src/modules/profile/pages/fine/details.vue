@@ -38,14 +38,14 @@ export default {
     const _id = ref(id)
     let loading = ref(false)
     let item = ref()
-    
-    async function getItem () {
+
+    async function getItem() {
       if (!id) return null
       try {
         loading.value = true
         item.value = await service.getById(id)
         loading.value = false
-      } catch(e) {
+      } catch (e) {
         loading.value = false
         store.commit('setError', e.message)
       }
@@ -53,19 +53,17 @@ export default {
 
     const submit = async (formState) => {
       try {
-        let res 
-        if (id) res = await service.updateOne(id, formState)
-        else res = await service.create(formState)
+        if (id) await service.updateOne(id, formState)
+        else await service.create(formState)
         router.push('/profile/fines')
       } catch (e) {
         store.commit('setError', e.message)
       }
     }
 
-
     getItem()
     watch(_id, getItem)
-    
+
     return { item, loading, submit }
   },
 
@@ -75,8 +73,10 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
-            if (res) {
+      const res = await this.$confirm(
+        'Вы действительно хотите удалить запись? '
+      )
+      if (res) {
         try {
           await service.deleteById(this.id)
           this.$router.go(-1)
@@ -85,7 +85,7 @@ export default {
         }
       }
     },
-  }
+  },
 }
 </script>
 <style></style>

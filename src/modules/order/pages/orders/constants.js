@@ -16,7 +16,7 @@ export const ALL_ORDER_LIST_HEADERS = [
     text: 'TK',
     sortable: false,
   },
-  
+
   {
     value: 'truck',
     text: 'Грузовик',
@@ -36,14 +36,13 @@ export const ALL_ORDER_LIST_HEADERS = [
     text: 'Водитель',
     sortable: false,
     align: 'left',
-    
   },
   {
     value: 'loadingPoints',
     text: 'Погрузка',
     sortable: false,
   },
-  { value: 'unloadingPoints',    text: 'Разгрузка',    sortable: false },
+  { value: 'unloadingPoints', text: 'Разгрузка', sortable: false },
   { value: 'state.status', text: 'Статус', sortable: false },
   { value: 'client.client', text: 'Клиент', sortable: false },
   {

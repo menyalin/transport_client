@@ -127,8 +127,20 @@ export default {
       { value: 'tkName.name', text: 'ТК' },
       { value: 'type', text: 'Тип' },
       { value: 'regNum', text: 'Гос.номер', width: '10rem' },
-      { value: 'liftCapacityType', text: 'Груз-cть, т', width: '6rem', sortable: false, align: 'center' },
-      { value: 'pltCount', text: 'Плт', width: '6rem', sortable: false, align: 'center' },
+      {
+        value: 'liftCapacityType',
+        text: 'Груз-cть, т',
+        width: '6rem',
+        sortable: false,
+        align: 'center',
+      },
+      {
+        value: 'pltCount',
+        text: 'Плт',
+        width: '6rem',
+        sortable: false,
+        align: 'center',
+      },
       { value: 'brand', text: 'Марка' },
       { value: 'currentDriver', text: 'Водитель' },
       {

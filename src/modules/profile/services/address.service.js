@@ -55,10 +55,7 @@ class AddressService {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
     if (!Array.isArray(data))
       throw new Error('Нужен массив!! пришло что-то другое!')
-    data.forEach((item) => {
-      item = this._prepareData(item)
-    })
-    return data
+    return data.map((i) => this._prepareData(i))
   }
 
   async getById(id) {

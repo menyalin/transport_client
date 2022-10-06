@@ -85,22 +85,13 @@
           @dblclick:row="dblClickRow"
         >
           <template v-slot:[`item._result`]="{ item }">
-            <app-waiting-cell
-              v-if="item.type === 'waiting'"
-              :item="item"
-            />
+            <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
             <app-additional-points-cell
               v-else-if="item.type === 'additionalPoints'"
               :item="item"
             />
-            <app-zones-cell
-              v-else-if="item.type === 'zones'"
-              :item="item"
-            />
-            <app-return-cell
-              v-else-if="item.type === 'return'"
-              :item="item"
-            />
+            <app-zones-cell v-else-if="item.type === 'zones'" :item="item" />
+            <app-return-cell v-else-if="item.type === 'return'" :item="item" />
             <app-direct-distance-zones
               v-else-if="item.type === 'directDistanceZones'"
               :item="item"
@@ -202,7 +193,7 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile']),
     filteredAgreements() {
-      return this.agreements ? this.agreements.filter((i) => true) : []
+      return this.agreements ? this.agreements.filter(() => true) : []
     },
     filteredDocuments() {
       if (!this.settings.agreement) return this.$store.getters.documents
@@ -211,7 +202,7 @@ export default {
         (i) => i._id === this.settings.agreement
       )
       return this.$store.getters.documents.filter((i) =>
-        !!clients ? clients.includes(i.partner) : true
+        clients ? clients.includes(i.partner) : true
       )
     },
     filteredList() {
@@ -263,15 +254,16 @@ export default {
   methods: {
     getResultStrByType(item) {
       switch (item.type) {
-        case 'points':
-          const _loadingStr =
+        case 'points': {
+          const loadingStr =
             this.$store.getters.addressMap.get(item.loading)?.shortName ||
             this.$store.getters.addressMap.get(item.loading)?.name
-          const _unloadingStr =
+          const unloadingStr =
             this.$store.getters.addressMap.get(item.unloading)?.shortName ||
             this.$store.getters.addressMap.get(item.unloading)?.name
 
-          return _loadingStr + '  >>>  ' + _unloadingStr
+          return loadingStr + '  >>>  ' + unloadingStr
+        }
 
         case 'directDistanceZones':
           return `Погрузка: ${

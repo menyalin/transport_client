@@ -1,4 +1,3 @@
-import truckService from '../profile/services/truck.service'
 import AuthLayout from './pages/layout'
 import loginPage from './pages/login'
 import registrationPage from './pages/registration'
@@ -30,7 +29,7 @@ export default [
         name: 'ConfirmEmail',
         props: true,
         component: () => import('./pages/confirmEmail.vue'),
-      }
+      },
     ],
   },
 ]

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="wrapper" 
-    :class="{invalid: !isValid}"
-  >
+  <div class="wrapper" :class="{ invalid: !isValid }">
     <div id="button-panel">
       <app-block-title>{{ title }}</app-block-title>
       <v-btn
@@ -67,7 +64,7 @@ export default {
   },
   computed: {
     availibleTypes() {
-      if (!!this.editedItem.type) return [this.editedItem.type]
+      if (this.editedItem.type) return [this.editedItem.type]
       const usedTypes = this.tmpItems.map((i) => i.type)
       return this.$store.getters.orderPriceTypes
         .map((t) => t.value)
@@ -153,7 +150,7 @@ export default {
   border: tomato 2px solid;
   border-radius: 5px;
 }
-.wrapper{
+.wrapper {
   padding: 10px;
-} 
+}
 </style>

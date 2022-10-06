@@ -1,10 +1,7 @@
 <template>
   <div>
     <div class="settings-wrapper">
-      <v-btn
-        icon
-        @click.stop="getData"
-      >
+      <v-btn icon @click.stop="getData">
         <v-icon> mdi-cached </v-icon>
       </v-btn>
       <app-date-range v-model="settings.period" />
@@ -37,23 +34,12 @@
         dense
       />
     </div>
-    <div
-      v-if="!filteredCrews.length"
-      class="text-center"
-    >
+    <div v-if="!filteredCrews.length" class="text-center">
       <app-load-spinner v-if="false" />
-      <h4 v-else>
-        Нет данных для отображния
-      </h4>
+      <h4 v-else>Нет данных для отображния</h4>
     </div>
-    <div
-      v-else
-      class="table-wrapper"
-    >
-      <table
-        ref="tableBody"
-        class="background-table"
-      >
+    <div v-else class="table-wrapper">
+      <table ref="tableBody" class="background-table">
         <thead>
           <tr>
             <th ref="titleCell" />
@@ -67,10 +53,7 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <tr
-            v-for="row in tableRows"
-            :key="row._id"
-          >
+          <tr v-for="row in tableRows" :key="row._id">
             <td>
               <div class="px-2 row-title-text">
                 <router-link :to="getUrlForRowTitle(row._id)">
@@ -168,7 +151,7 @@ export default {
       if (val === 'truck') this.settings.analitic = 'driver'
       this.resizeHandler()
     },
-    ['settings.period']: async function (val) {
+    ['settings.period']: async function () {
       await this.getData()
       this.resizeHandler()
     },
@@ -266,7 +249,7 @@ export default {
     getLeftShiftInPxForBlock(crew) {
       if (!this.$refs?.titleCell) return null
       let leftShift = null
-      const startPeriod =dayjs(this.settings.period[0]).unix()
+      const startPeriod = dayjs(this.settings.period[0]).unix()
       const startCrew = dayjs(crew.startDate).unix()
       if (startCrew <= startPeriod) leftShift = 0
       else leftShift = startCrew - startPeriod

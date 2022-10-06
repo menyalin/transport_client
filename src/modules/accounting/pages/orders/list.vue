@@ -9,16 +9,14 @@
   </div>
 </template>
 <script>
-import OrderService from '@/modules/order/services/order.service'
+// import OrderService from '@/modules/order/services/order.service'
 
 export default {
   name: 'OrdersListAccounting',
   data() {
     return {
       orders: [],
-      settings: {
-        
-      }
+      settings: {},
     }
   },
 }

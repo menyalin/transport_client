@@ -1,10 +1,6 @@
 <template>
   <v-card>
-    <v-card-title 
-      class="text-h6"
-    > 
-      Список документов 
-    </v-card-title>
+    <v-card-title class="text-h6"> Список документов </v-card-title>
     <v-card-text>
       <app-form
         v-model="tmpDocs"
@@ -13,11 +9,7 @@
       />
     </v-card-text>
     <v-card-actions>
-      <v-btn 
-        @click="$emit('cancel')"
-      > 
-        Отмена 
-      </v-btn>
+      <v-btn @click="$emit('cancel')"> Отмена </v-btn>
       <v-btn
         color="primary"
         :disabled="isReadonlyDocs || !isValidDocs(tmpDocs)"
@@ -57,7 +49,7 @@ export default {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpDocs = [ ...val]
+        this.tmpDocs = [...val]
       },
     },
   },

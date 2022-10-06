@@ -4,7 +4,6 @@ import socket from '@/socket'
 import store from '@/store'
 import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
 
-
 const BASE_PATH = '/orders'
 
 class OrderService {
@@ -58,11 +57,15 @@ class OrderService {
   }
 
   async getListForSchedule(startDate, endDate) {
-    if (!startDate && !store.getters.schedulePeriod ) return null
+    if (!startDate && !store.getters.schedulePeriod) return null
     socket.emit('ordersForSchedule', {
       profile: store.getters.directoriesProfile,
-      startDate: dayjs(startDate || store.getters.schedulePeriod[0]).add(-1, 'd').toISOString(),
-      endDate: dayjs(endDate || store.getters.schedulePeriod[1]).endOf('day').toISOString(),
+      startDate: dayjs(startDate || store.getters.schedulePeriod[0])
+        .add(-1, 'd')
+        .toISOString(),
+      endDate: dayjs(endDate || store.getters.schedulePeriod[1])
+        .endOf('day')
+        .toISOString(),
     })
   }
 
@@ -79,7 +82,7 @@ class OrderService {
         const { data } = await api.get(BASE_PATH + '/' + id)
         store.commit('addToCache', data)
         return data
-      } catch(e) {
+      } catch (e) {
         store.commit('setError', e.message)
       }
     }

@@ -11,18 +11,10 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert
-      v-if="!directoriesProfile"
-      outlined
-      class="ma-3 mb-5"
-      type="error"
-    >
+    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
-    <div
-      v-else
-      class="ma-3 text-caption"
-    >
+    <div v-else class="ma-3 text-caption">
       Профиль настроек: {{ directoriesProfileName }}
     </div>
     <v-select
@@ -64,9 +56,7 @@
         :minDate="form.startDate"
         @blur="$v.form.endDate.$touch()"
       />
-      <div v-if="crew">
-        crewEditable: {{ crewEditable }}
-      </div>
+      <div v-if="crew">crewEditable: {{ crewEditable }}</div>
     </div>
 
     <app-crew-message
@@ -101,10 +91,7 @@
       dense
       class="mt-6"
     />
-    <div
-      v-if="crew && crew.manager"
-      class="pb-4 text-caption"
-    >
+    <div v-if="crew && crew.manager" class="pb-4 text-caption">
       Отв.пользователь: {{ crew.manager.name }},
       {{ crew.manager.email }}
       <br>
@@ -113,17 +100,8 @@
         Обновлен: {{ new Date(crew.updatedAt).toLocaleString() }}
       </span>
     </div>
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      @click="$emit('delete')"
-    >
-      <v-icon
-        left
-        dark
-      >
-        mdi-delete
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

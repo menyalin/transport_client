@@ -180,17 +180,11 @@
             dark
             @click="openDocsDialog(item._id)"
           >
-            <v-icon small>
-              mdi-file-document-multiple
-            </v-icon>
+            <v-icon small> mdi-file-document-multiple </v-icon>
           </v-btn>
         </template>
       </v-data-table>
-      <v-dialog
-        v-model="docDialog"
-        max-width="1300"
-        persistent
-      >
+      <v-dialog v-model="docDialog" max-width="1300" persistent>
         <app-doc-list-form
           :docs="editableDocs"
           :orderId="editableOrderId"
@@ -281,7 +275,9 @@ export default {
       if (!this.orders) return []
       return this.orders.map((order) => ({
         ...order,
-        driver: this.$store.getters.driversMap.get(order.confirmedCrew.driver)?.fullName || null,
+        driver:
+          this.$store.getters.driversMap.get(order.confirmedCrew.driver)
+            ?.fullName || null,
         tk:
           order.confirmedCrew.tkName &&
           this.$store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
@@ -337,17 +333,17 @@ export default {
   watch: {
     settings: {
       deep: true,
-      handler: async function (newVal, oldVal) {
+      handler: async function () {
         await this.getData()
       },
     },
     ['settings.accountingMode']: {
-      handler: function(val) {
-        localStorage.setItem('orders:accontingMode', val ? '1': '0')
-      }
-    }
+      handler: function (val) {
+        localStorage.setItem('orders:accontingMode', val ? '1' : '0')
+      },
+    },
   },
-  
+
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
@@ -377,7 +373,7 @@ export default {
         this.docDialog = false
       })
     },
-    
+
     async saveDocDialog(val) {
       await service.setDocs(this.editableOrderId, val)
       this.cancelDocDialog()

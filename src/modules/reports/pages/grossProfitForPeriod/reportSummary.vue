@@ -1,10 +1,5 @@
 <template>
-  <v-alert
-    color="blue"
-    dense
-    outlined
-    :style="{ width: '100%' }"
-  >
+  <v-alert color="blue" dense outlined :style="{ width: '100%' }">
     Всего рейсов: <b>{{ ordersCount }}</b>, Сумма:
     <b>{{ Intl.NumberFormat().format(Math.round(totalPrice / 1000)) }}</b>
     тыс.руб

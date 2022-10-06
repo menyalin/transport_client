@@ -2,9 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div v-if="loading">
-          Загружаю...
-        </div>
+        <div v-if="loading">Загружаю...</div>
         <app-crew-form
           v-else
           :crew="crew"

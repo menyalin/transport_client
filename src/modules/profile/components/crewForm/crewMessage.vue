@@ -1,10 +1,7 @@
 <template>
   <div class="field-hint text-caption px-6">
     {{ `${text} ${new Date(visibleDate).toLocaleDateString()}` }}
-    <span
-      class="link-text"
-      @click="goto(crew._id)"
-    > Перейти </span>
+    <span class="link-text" @click="goto(crew._id)"> Перейти </span>
     ,
     <span
       class="link-text"

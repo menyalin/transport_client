@@ -12,7 +12,7 @@ export default ({ truck, trailer, driver }) => {
     phone: driver?.phone,
     phone2: driver?.phone2,
   }
-  let resStr = `${!!d.truckMark ? d.truckMark + '\t' : ''}${d.truckRegNum}  ${
+  let resStr = `${d.truckMark ? d.truckMark + '\t' : ''}${d.truckRegNum}  ${
     d.trailerRegNum || ''
   }\n`
   resStr += `${d.driver}\n`

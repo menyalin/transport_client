@@ -46,9 +46,9 @@ export default {
       if (!newPeriod) return null
       if (!oldPeriod) this.getData()
       else {
-      const { added, deleted } = periodDifferernce(newPeriod, oldPeriod) 
-          this.getData(added)
-      } 
+        const { added } = periodDifferernce(newPeriod, oldPeriod)
+        this.getData(added)
+      }
     },
   },
   mounted() {
@@ -75,7 +75,6 @@ export default {
       service.disable({ orderId, state: false })
     },
     async updateOrderHandler({ orderId, truckId, startDate }) {
-
       service.moveOrderInSchedule({
         orderId,
         truck: truckId,

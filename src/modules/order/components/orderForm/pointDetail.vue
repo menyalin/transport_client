@@ -48,10 +48,7 @@
         @change="setField($event, 'note')"
       />
     </div>
-    <div 
-      v-if="!isTemplate" 
-      class="dates-column"
-    >
+    <div v-if="!isTemplate" class="dates-column">
       <app-date-time-input
         :value="tmpPoint.plannedDate"
         type="datetime-local"
@@ -89,10 +86,7 @@
         @change="setField($event, 'departureDate')"
       />
     </div>
-    <div 
-      v-if="!isTemplate && isShowDocDates"
-      class="dates-column"
-    >
+    <div v-if="!isTemplate && isShowDocDates" class="dates-column">
       <app-date-time-input
         :value="tmpPoint.plannedDateDoc"
         type="datetime-local"
@@ -124,10 +118,7 @@
         @change="setField($event, 'departureDateDoc')"
       />
     </div>
-    <div
-      v-if="isTemplate && fixedTimeSlots"
-      id="fixedTime"
-    >
+    <div v-if="isTemplate && fixedTimeSlots" id="fixedTime">
       <v-text-field
         :value="tmpPoint.fixedTime"
         label="Время"
@@ -155,16 +146,8 @@
         @change="setField($event, 'offsetDays')"
       />
     </div>
-    <div
-      v-if="showDeleteBtn && !readonly"
-      class="remove-btn-wrapper"
-    >
-      <v-btn
-        icon
-        dark
-        color="error"
-        @click="$emit('delete', ind)"
-      >
+    <div v-if="showDeleteBtn && !readonly" class="remove-btn-wrapper">
+      <v-btn icon dark color="error" @click="$emit('delete', ind)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
@@ -235,11 +218,11 @@ export default {
       return errors
     },
     isShowDocDates() {
-      return this.$store.getters.hasPermission('order:showDocDates') 
+      return this.$store.getters.hasPermission('order:showDocDates')
     },
     readonlyDocDates() {
-      return !this.$store.getters.hasPermission('order:writeDocDates') 
-    }
+      return !this.$store.getters.hasPermission('order:writeDocDates')
+    },
   },
   validations() {
     return {
@@ -257,16 +240,15 @@ export default {
   watch: {
     point: {
       deep: true,
-      immediate: true,  
-      handler: function(val, oldVal) {
-        
+      immediate: true,
+      handler: function (val) {
         this.setFields(val)
-      }
+      },
     },
   },
   created() {
     this.setFields(this.point)
-    if (this.point.plannedDate && !this.point.plannedDateDoc) 
+    if (this.point.plannedDate && !this.point.plannedDateDoc)
       this.tmpPoint.plannedDateDoc = this.point.plannedDate
   },
   methods: {
@@ -275,15 +257,13 @@ export default {
     },
 
     setField(val, field) {
-      const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate' ]
+      const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate']
       this.tmpPoint[field] = val
       if (DATE_FIELDS.includes(field)) {
-        this.tmpPoint[field+'Doc'] = val
+        this.tmpPoint[field + 'Doc'] = val
       }
-      this.$emit('changePoint', { ...this.tmpPoint})
-      
-    }
-
+      this.$emit('changePoint', { ...this.tmpPoint })
+    },
   },
 }
 </script>

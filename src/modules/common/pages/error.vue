@@ -2,14 +2,8 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col
-            cols="12"
-            md="6"
-          >
+        <v-row align="center" justify="center">
+          <v-col cols="12" md="6">
             <v-subheader>
               Что-то пошло не так, скорее всего не доступен сервер или
               отсутствует подключение к интернету
@@ -17,9 +11,7 @@
             <v-alert type="error">
               {{ $route.query.message }}
             </v-alert>
-            <router-link to="/">
-              Перейти на главную
-            </router-link>
+            <router-link to="/"> Перейти на главную </router-link>
             <br>
             <small>До автоматического перехода осталось {{ secBefore }}сек</small>
           </v-col>

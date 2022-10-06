@@ -1,49 +1,38 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    max-width="600"
-    persistent
-  >
+  <v-dialog v-model="dialog" max-width="600" persistent>
     <v-card>
-      <v-card-title class="text-h5">
-        Изменение пароля
-      </v-card-title>
+      <v-card-title class="text-h5"> Изменение пароля </v-card-title>
       <v-card-text>
-        <form @submit.prevent>  
-          <v-text-field 
+        <form @submit.prevent>
+          <v-text-field
             v-model="$v.password.$model"
-            type="password" 
+            type="password"
             autocomplete="off"
-            label="Действующий пароль" 
+            label="Действующий пароль"
           />
-          <v-text-field 
+          <v-text-field
             v-model="$v.newPassword.$model"
-            type="password" 
+            type="password"
             label="Новый пароль"
             autocomplete="off"
             :error-messages="newPasswordErrors"
             @input="$v.newPassword.$touch()"
             @blur="$v.newPassword.$touch()"
           />
-          <v-text-field 
+          <v-text-field
             v-model="$v.confirmPassword.$model"
-            type="password" 
+            type="password"
             label="Новый пароль"
             autocomplete="off"
             :error-messages="confirmPasswordErrors"
             @input="$v.confirmPassword.$touch()"
-            @blur="$v.confirmPassword.$touch()" 
+            @blur="$v.confirmPassword.$touch()"
           />
         </form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          text
-          @click="cancel"
-        >
-          Отмена
-        </v-btn>
+        <v-btn text @click="cancel"> Отмена </v-btn>
 
         <v-btn
           :disabled="$v.$invalid"
@@ -63,7 +52,7 @@ import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
   name: 'ChangePasswordDialog',
   props: {
-    dialog: Boolean
+    dialog: Boolean,
   },
   data() {
     return {
@@ -105,9 +94,9 @@ export default {
       this.$emit('cancel')
     },
     async saveHandler() {
-      const body = { 
-        oldPassword: this.password, 
-        newPassword : this.newPassword 
+      const body = {
+        oldPassword: this.password,
+        newPassword: this.newPassword,
       }
       try {
         await userService.changePassword(body)
@@ -117,10 +106,8 @@ export default {
       } catch (e) {
         this.$store.commit('setError', e)
       }
-    }
-  }
+    },
+  },
 }
 </script>
-<style>
-  
-</style>
+<style></style>

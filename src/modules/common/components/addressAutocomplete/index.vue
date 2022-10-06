@@ -17,11 +17,7 @@
       @click:append="appendClick"
       @change="changeValue"
     />
-    <v-dialog
-      v-model="dialog"
-      max-width="1100"
-      persistent
-    >
+    <v-dialog v-model="dialog" max-width="1100" persistent>
       <v-card>
         <app-details-address
           :id="value"
@@ -88,10 +84,10 @@ export default {
       return item[this.pointType]
     },
 
-    appendClick(val) {
+    appendClick() {
       this.dialog = true
     },
-    cancelDialog(val) {
+    cancelDialog() {
       this.dialog = false
     },
     submit(val) {

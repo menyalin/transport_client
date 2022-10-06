@@ -1,14 +1,14 @@
 <template>
-  <v-autocomplete 
+  <v-autocomplete
     :value="value"
     :label="label"
-    :outlined="outlined" 
+    :outlined="outlined"
     clearable
     :loading="loading"
-    :dense="dense" 
+    :dense="dense"
     no-filter
     :items="items"
-    :filter="()=> true"
+    :filter="() => true"
     :search-input="searchString"
     @update:search-input="handleSearchInputUpdate"
     @change="handleChange"
@@ -31,11 +31,21 @@ export default {
     dense: Boolean,
   },
   setup({ value }, ctx) {
-    const { handleChange, items, handleSearchInputUpdate, searchString, loading } = useServerData({ctx, service: workerService, propValue: value})
-    return { searchString, handleChange, items, handleSearchInputUpdate, loading  }
+    const {
+      handleChange,
+      items,
+      handleSearchInputUpdate,
+      searchString,
+      loading,
+    } = useServerData({ ctx, service: workerService, propValue: value })
+    return {
+      searchString,
+      handleChange,
+      items,
+      handleSearchInputUpdate,
+      loading,
+    }
   },
 }
 </script>
-<style>
-  
-</style>
+<style></style>

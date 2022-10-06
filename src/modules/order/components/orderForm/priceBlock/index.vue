@@ -29,7 +29,7 @@ export default {
   },
   props: {
     route: Array,
-    isValidPrices: { 
+    isValidPrices: {
       type: Boolean,
       default: true,
     },

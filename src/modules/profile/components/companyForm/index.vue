@@ -36,10 +36,7 @@
           v-model="form.hasOwnDirectories"
           label="У компании есть свои справочники"
         />
-        <v-alert
-          type="info"
-          outlined
-        >
+        <v-alert type="info" outlined>
           <p>ИНН - Должен быть уникален</p>
           <p>
             Пользователь может работать со справочниками только одной компании.
@@ -119,9 +116,14 @@ export default {
         required,
         existInn(val) {
           if (val === '') return true
-          return new Promise(async (resolve) => {
-            const res = await this.isExistInn(val)
-            resolve(!res)
+          return new Promise((resolve) => {
+            this.isExistInn(val)
+              .then((res) => {
+                resolve(!res)
+              })
+              .catch((e) => {
+                this.$store.commit('setError', e)
+              })
           })
         },
       },

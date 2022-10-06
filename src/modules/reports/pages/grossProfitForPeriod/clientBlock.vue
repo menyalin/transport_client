@@ -1,7 +1,9 @@
 <template>
   <div class="client-block-wrapper">
     <div class="block-header">
-      <span class="text-h6">{{ clientName }}</span>
+      <span class="text-h6">
+        {{ clientName }}
+      </span>
       рейсов: <b>{{ totalCount }}</b>, Сумма:
       <b>{{ Intl.NumberFormat().format(Math.round(totalWithVat / 1000)) }}</b>
       тыс.руб
@@ -10,30 +12,14 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left">
-              №
-            </th>
-            <th class="text-left">
-              Клиент
-            </th>
-            <th class="text-left">
-              ТС
-            </th>
-            <th class="text-left">
-              Водитель
-            </th>
-            <th class="text-left">
-              ТК
-            </th>
-            <th class="text-left">
-              Погрузка
-            </th>
-            <th class="text-left">
-              Выгрузка
-            </th>
-            <th class="text-right">
-              Стоимость с НДС
-            </th>
+            <th class="text-left">№</th>
+            <th class="text-left">Клиент</th>
+            <th class="text-left">ТС</th>
+            <th class="text-left">Водитель</th>
+            <th class="text-left">ТК</th>
+            <th class="text-left">Погрузка</th>
+            <th class="text-left">Выгрузка</th>
+            <th class="text-right">Стоимость с НДС</th>
           </tr>
         </thead>
         <tbody>

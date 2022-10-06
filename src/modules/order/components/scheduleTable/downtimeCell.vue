@@ -1,16 +1,10 @@
 <template>
-  <div
-    :class="classes"
-    @dblclick.stop="dblclickHandler"
-  >
+  <div :class="classes" @dblclick.stop="dblclickHandler">
     <div class="row-text">
       {{ downtimeStartTime }}
       {{ downtime.title }}
     </div>
-    <div
-      v-if="downtime.type === 'repair' && partner"
-      class="row-text"
-    >
+    <div v-if="downtime.type === 'repair' && partner" class="row-text">
       {{ partner.name }}
     </div>
   </div>

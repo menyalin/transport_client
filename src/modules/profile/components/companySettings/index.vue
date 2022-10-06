@@ -45,10 +45,7 @@
             :style="{ 'max-width': '220px' }"
           />
         </div>
-        <div
-          v-if="showLoadDirectionSettings"
-          id="load-directions"
-        >
+        <div v-if="showLoadDirectionSettings" id="load-directions">
           <v-select
             v-model="settings.loadDirections"
             label="Варианты загрузки"
@@ -71,17 +68,8 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          :disabled="!changed"
-          @click="cancel"
-        >
-          Отмена
-        </v-btn>
-        <v-btn
-          color="primary"
-          :disabled="!changed"
-          @click="submit"
-        >
+        <v-btn :disabled="!changed" @click="cancel"> Отмена </v-btn>
+        <v-btn color="primary" :disabled="!changed" @click="submit">
           Сохранить
         </v-btn>
       </v-card-actions>
@@ -175,13 +163,12 @@ export default {
       this.setSettings()
     },
     setSettings() {
-      if (this.storedSettings){
-          const keys = Object.keys(this.settings)
-          keys.forEach((key) => {
-             this.settings[key] = this.storedSettings[key]
-          })
-      } 
-      
+      if (this.storedSettings) {
+        const keys = Object.keys(this.settings)
+        keys.forEach((key) => {
+          this.settings[key] = this.storedSettings[key]
+        })
+      }
     },
   },
 }

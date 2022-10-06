@@ -68,7 +68,9 @@ export default {
     breakingSchedule() {
       if (this.order.route[0].arrivalDate) return false
       let roundedPlannedDate = dayjs(this.order?.route[0]?.plannedDate)
-      roundedPlannedDate = roundedPlannedDate.hour(roundingHours(roundedPlannedDate.hour()))
+      roundedPlannedDate = roundedPlannedDate.hour(
+        roundingHours(roundedPlannedDate.hour())
+      )
       let roundedStartPositionDate = dayjs(this.order.startPositionDate)
       roundedStartPositionDate = roundedStartPositionDate.hour(
         roundingHours(roundedStartPositionDate.hour())
@@ -164,7 +166,7 @@ export default {
       )?.shortName
       res.push(address)
       let plannedTime = null
-      if (!!this.order.route[idx]?.plannedDate) {
+      if (this.order.route[idx]?.plannedDate) {
         plannedTime = dayjs(this.order.route[idx].plannedDate).format('HH')
         res.push(plannedTime)
       }

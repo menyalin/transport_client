@@ -32,7 +32,7 @@ export default {
     AppLoadSpinner,
   },
   props: {
-    id: String
+    id: String,
   },
   setup() {
     const { id } = router.currentRoute.params
@@ -45,15 +45,15 @@ export default {
         loading.value = true
         worker = await service.getById(id)
         loading.value = false
-      } catch(e) {
+      } catch (e) {
         loading.value = false
         store.commit('setError', e.message)
       }
     }
 
-    const formItem = computed(() => !!tmpVal.value ? tmpVal.value : worker) 
-    
-    const submit = async(val) => {
+    const formItem = computed(() => (tmpVal.value ? tmpVal.value : worker))
+
+    const submit = async (val) => {
       try {
         tmpVal.value = val
         if (id) await service.updateOne(id, val)
@@ -66,7 +66,7 @@ export default {
     getWorker()
     return { submit, loading, tmpVal, formItem }
   },
-  
+
   methods: {
     cancel() {
       this.$router.go(-1)

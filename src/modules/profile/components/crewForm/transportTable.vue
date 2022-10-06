@@ -1,24 +1,15 @@
 <template>
   <div>
-    <v-simple-table
-      dense
-      class="mb-3"
-    >
+    <v-simple-table dense class="mb-3">
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="date-col">
-              Дата начала
-            </th>
-            <th class="date-col">
-              Дата завершения
-            </th>
+            <th class="date-col">Дата начала</th>
+            <th class="date-col">Дата завершения</th>
             <th>Грузовик</th>
             <th>Прицеп</th>
             <th>Примечание</th>
-            <th class="text-center">
-              Действия
-            </th>
+            <th class="text-center">Действия</th>
           </tr>
         </thead>
         <tbody>
@@ -134,9 +125,7 @@
               >
                 mdi-content-save
               </v-icon>
-              <v-icon @click="cancelAddRow">
-                mdi-cancel
-              </v-icon>
+              <v-icon @click="cancelAddRow"> mdi-cancel </v-icon>
             </td>
           </tr>
         </tbody>
@@ -194,7 +183,6 @@ import CrewService from '@/modules/profile/services/crew.service'
 import AppCrewMessage from './crewMessage.vue'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
-
 
 export default {
   name: 'TransportTable',

@@ -13,27 +13,21 @@
       </v-list-item>
     </v-list>
     <v-divider />
-    <v-list
-      nav
-      dense
-    >
-      <v-list-item-group
-        v-model="selectedItem"
-        color="primary"
-      >
+    <v-list nav dense>
+      <v-list-item-group v-model="selectedItem" color="primary">
         <v-badge
           v-for="item in menuItems"
           :key="item.link"
           color="error"
           :content="item.badge ? item.badge : null"
           :value="item.badge ? item.badge : null"
-          :style="{width: '100%'}"
+          :style="{ width: '100%' }"
           offset-x="20"
           offset-y="10"
           overlap
           bordered
         >
-          <v-list-item :to="item.link">   
+          <v-list-item :to="item.link">
             <v-list-item-icon>
               <v-icon v-text="item.icon" />
             </v-list-item-icon>

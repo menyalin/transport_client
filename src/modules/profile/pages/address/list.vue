@@ -24,26 +24,16 @@
           @dblclick:row="dblClickRow"
         >
           <template v-slot:[`item.isShipmentPlace`]="{ item }">
-            <v-icon
-              v-if="item.isShipmentPlace"
-              color="green"
-            >
+            <v-icon v-if="item.isShipmentPlace" color="green">
               mdi-check
             </v-icon>
-            <v-icon v-else>
-              mdi-minus
-            </v-icon>
+            <v-icon v-else> mdi-minus </v-icon>
           </template>
           <template v-slot:[`item.isDeliveryPlace`]="{ item }">
-            <v-icon
-              v-if="item.isDeliveryPlace"
-              color="green"
-            >
+            <v-icon v-if="item.isDeliveryPlace" color="green">
               mdi-check
             </v-icon>
-            <v-icon v-else>
-              mdi-minus
-            </v-icon>
+            <v-icon v-else> mdi-minus </v-icon>
           </template>
           <template v-slot:[`item.region`]="{ item }">
             {{
@@ -74,15 +64,8 @@
           </template>
 
           <template v-slot:[`item.isService`]="{ item }">
-            <v-icon
-              v-if="item.isService"
-              color="green"
-            >
-              mdi-check
-            </v-icon>
-            <v-icon v-else>
-              mdi-minus
-            </v-icon>
+            <v-icon v-if="item.isService" color="green"> mdi-check </v-icon>
+            <v-icon v-else> mdi-minus </v-icon>
           </template>
 
           <template v-slot:[`item.created`]="{ item }">

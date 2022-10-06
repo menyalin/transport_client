@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import service from '@/modules/profile/services/crew.service'
 
-
 export default {
   state: {
     crews: [],
@@ -37,18 +36,20 @@ export default {
   },
   actions: {
     createCrew({ commit }, payload) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          commit('setLoading', true)
-          const data = await service.create(payload)
-          commit('addCrew', data)
-          commit('setLoading', false)
-          resolve(data)
-        } catch (e) {
-          commit('setLoading', false)
-          commit('setError', e)
-          reject(e)
-        }
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        service
+          .create(payload)
+          .then((data) => {
+            commit('addCrew', data)
+            commit('setLoading', false)
+            resolve(data)
+          })
+          .catch((e) => {
+            commit('setLoading', false)
+            commit('setError', e)
+            reject(e)
+          })
       })
     },
   },

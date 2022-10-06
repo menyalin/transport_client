@@ -1,70 +1,51 @@
 <template>
-  <v-dialog
-    :value="dialog"
-    max-width="800"
-    persistent
-  >
+  <v-dialog :value="dialog" max-width="800" @input="closeDialog">
     <v-card>
-      <v-card-title class="text-h5">
-        Добавить группу документов
-      </v-card-title>
+      <v-card-title class="text-h5"> Добавить группу документов </v-card-title>
 
-      <v-card-text class="form-wrapper">
-        <v-checkbox
-          v-for="item of docTypeItems"
-          :key="item.value"
-          v-model="docTypes"
-          :label="item.text"
-          :value="item.value"
-          color="primary"
-          hide-details
-          dense
-        />
-
-        <v-text-field
-          v-model="numberStr"
-          label="Номера документов"
-          hint="Номера документов через запятую"
-          class="mt-5"
-          outlined
-        />
-        <v-radio-group 
-          v-model="radioGroup" 
-          label="Статус документов"
-        >
-          <v-radio
-            v-for="item in docStatusItems"
+      <form @submit.prevent="addHandler">
+        <v-card-text class="form-wrapper">
+          <v-checkbox
+            v-for="item of docTypeItems"
             :key="item.value"
+            v-model="docTypes"
             :label="item.text"
             :value="item.value"
             color="primary"
+            hide-details
+            dense
           />
-        </v-radio-group>
 
-        
-        <span>Будет создано документов: </span>{{ docCount }}
-      </v-card-text>
+          <v-text-field
+            v-model="numberStr"
+            label="Номера документов"
+            hint="Номера документов через запятую"
+            class="mt-5"
+            outlined
+          />
+          <v-radio-group v-model="docStatus" label="Статус документов">
+            <v-radio
+              v-for="item in docStatusItems"
+              :key="item.value"
+              :label="item.text"
+              :value="item.value"
+              color="primary"
+            />
+          </v-radio-group>
 
-      <v-card-actions>
-        <v-spacer />
+          <span>Будет создано документов: </span>{{ docCount }}
+        </v-card-text>
 
-        <v-btn
-          color="primary"
-          text
-          @click="closeDialog"
-        >
-          Отмена
-        </v-btn>
+        <v-card-actions>
+          <v-spacer />
 
-        <v-btn
-          color="primary"
-          text
-          :disabled="!docCount"
-          @click="addHandler"
-        >
-          Добавить
-        </v-btn>
-      </v-card-actions>
+          <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
+
+          <v-btn color="primary" text :disabled="!docCount" type="submit">
+            Добавить
+          </v-btn>
+        </v-card-actions>
+      </form>
     </v-card>
   </v-dialog>
 </template>
@@ -89,6 +70,7 @@ export default {
     const docStatusItems = computed(() => store.getters.documentStatuses)
 
     function closeDialog() {
+      clear()
       emit('close')
     }
 

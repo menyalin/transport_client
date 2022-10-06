@@ -2,9 +2,7 @@
   <v-container fluid>
     <v-row v-if="panelType === 'form'">
       <v-col cols="auto">
-        <v-btn @click="$emit('cancel')">
-          Отмена
-        </v-btn>
+        <v-btn @click="$emit('cancel')"> Отмена </v-btn>
       </v-col>
       <v-col cols="auto">
         <v-btn
@@ -18,10 +16,7 @@
     </v-row>
     <v-row v-else-if="panelType === 'list'">
       <v-col cols="auto">
-        <v-btn
-          :disabled="disabledRefresh"
-          @click="$emit('refresh')"
-        >
+        <v-btn :disabled="disabledRefresh" @click="$emit('refresh')">
           Обновить
         </v-btn>
       </v-col>

@@ -5,9 +5,7 @@
         <div class="text-h4">
           {{ company.name }}
         </div>
-        <div class="text-caption">
-          ИНН: {{ company.inn }}
-        </div>
+        <div class="text-caption">ИНН: {{ company.inn }}</div>
         <v-divider />
         <app-company-settings :companyId="id" />
       </v-col>
@@ -15,7 +13,6 @@
   </v-container>
 </template>
 <script>
-
 import AppCompanySettings from '@/modules/profile/components/companySettings'
 
 export default {

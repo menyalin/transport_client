@@ -1,26 +1,23 @@
 import api from '@/api'
 import socket from '@/socket'
-// import queryClient from '@/queryClient'
-// import { FINES } from '@/constants/queryKeys'
 const BASE_PATH = '/fines'
 
 class FineService {
   constructor() {
-    socket.on('fine:created', (data) => {
+    socket.on('fine:created', (_data) => {
       // queryClient.setQueryData([FINES, data._id], data)
       // const fines = queryClient.getQueryData([FINES]) || []
       // queryClient.setQueryData([FINES], [...fines, data])
     })
 
-
-    socket.on('fine:updated', (data) => {
+    socket.on('fine:updated', (_data) => {
       // queryClient.setQueryData([FINES, data._id], data)
       // const fines = queryClient.getQueryData([FINES])
       // if (fines) queryClient.setQueryData([FINES], [...fines.filter(i => i._id !== data._id), data])
       // else  queryClient.setQueryData([FINES], [data])
     })
 
-    socket.on('fine:deleted', (id) => {
+    socket.on('fine:deleted', (_id) => {
       // const fines = queryClient.getQueryData([FINES])
       // if (fines) queryClient.setQueryData([FINES], [...fines.filter(i => i._id !== id)])
     })

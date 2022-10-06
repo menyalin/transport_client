@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="ma-3 mb-6"
-    max-width="800px"
-  >
+  <v-card class="ma-3 mb-6" max-width="800px">
     <v-card-title> Пользователь: </v-card-title>
     <v-card-text>
       <v-text-field
@@ -12,14 +9,9 @@
         label="Найти пользователя по email"
         @change="searchUser"
       />
-      <div v-if="isLoading">
-        ...loading: {{ isLoading }}
-      </div>
+      <div v-if="isLoading">...loading: {{ isLoading }}</div>
       <div v-else-if="userId && user">
-        <app-user-info
-          :user="user"
-          :worker="worker"
-        />
+        <app-user-info :user="user" :worker="worker" />
         <v-select
           :value="worker.roles"
           class="mt-8"
@@ -38,11 +30,7 @@
           Приглашение отправлено, но пользователь еще не подтвердил приглашение
         </v-alert>
 
-        <v-alert
-          v-if="worker && worker.disabled"
-          type="error"
-          outlined
-        >
+        <v-alert v-if="worker && worker.disabled" type="error" outlined>
           Доступ для пользователя закрыт!
         </v-alert>
         <v-alert
@@ -52,10 +40,7 @@
         >
           Пользователь отклонил приглашение
         </v-alert>
-        <div 
-          v-if="worker" 
-          class="buttons-row"
-        >
+        <div v-if="worker" class="buttons-row">
           <v-btn
             v-if="$store.getters.hasPermission('worker:userAdmin')"
             :disabled="
@@ -108,10 +93,7 @@
         >
           Пригласить
         </v-btn>
-        <v-alert
-          v-if="isInviteSended"
-          type="info"
-        >
+        <v-alert v-if="isInviteSended" type="info">
           Приглашение отправлено
         </v-alert>
       </div>
@@ -153,7 +135,7 @@ export default {
     let worker = ref()
     let isUserLoading = ref(false)
     let isWorkerLoading = ref(false)
-    
+
     const getUserById = async () => {
       if (!userId) return null
       user.value = await userService.getById(userId)
@@ -170,17 +152,14 @@ export default {
       }
     }
     const toggleDisableStatus = async () => {
-      if (
-        !workerId ||
-        !store.getters.hasPermission('worker:userAdmin')
-      )
+      if (!workerId || !store.getters.hasPermission('worker:userAdmin'))
         return null
       worker.value = await workerService.updateOne(workerId, {
         disabled: !worker.value?.disabled,
       })
     }
 
-    const resendInvite = async() => {
+    const resendInvite = async () => {
       if (!workerId) return null
       worker.value = await workerService.sendInvite({
         workerId: workerId,
@@ -199,7 +178,11 @@ export default {
     const sendInvite = async ({ userId, roles, workerId }) => {
       if (roles.length === 0 || !workerId) return
       try {
-        worker.value = await workerService.sendInvite({ userId, roles, workerId })
+        worker.value = await workerService.sendInvite({
+          userId,
+          roles,
+          workerId,
+        })
       } catch (e) {
         store.commit('setError', e.message)
       }
@@ -252,7 +235,6 @@ export default {
         this.$store.commit('setError', 'Роли обновлены')
       }
     },
-
   },
 }
 </script>

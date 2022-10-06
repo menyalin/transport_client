@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      class="input_wrapper_row"
-      @blur="$emit('blur')"
-    >
+    <div class="input_wrapper_row" @blur="$emit('blur')">
       <v-text-field
         type="date"
         :min="minDateValue"
@@ -165,8 +162,7 @@ export default {
     },
     changeTime(timeStr) {
       let dateStr = this.dateValue.format(this.dateFormat)
-      this.dateValue = dayjs(
-        dateStr + 'T' + timeStr || '00:00')
+      this.dateValue = dayjs(dateStr + 'T' + timeStr || '00:00')
       this.emitValue()
     },
   },

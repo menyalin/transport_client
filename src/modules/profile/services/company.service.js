@@ -42,10 +42,9 @@ class CompanyService {
     return data
   }
 
-
   async updateSettings({ settings }) {
     if (!store.getters.hasPermission('fullAccess')) {
-      commit('setError', 'Нет прав на выполнение операции')
+      store.commit('setError', 'Нет прав на выполнение операции')
       return null
     }
     const companyId = store.getters.directoriesProfile

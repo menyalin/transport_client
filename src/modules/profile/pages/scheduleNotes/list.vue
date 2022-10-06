@@ -57,8 +57,6 @@ import service from '@/modules/profile/services/scheduleNote.service'
 import dayjs from 'dayjs'
 import AppDateRange from '@/modules/common/components/dateRange'
 
-
-
 const _initPeriod = () => {
   const todayM = dayjs()
   return [

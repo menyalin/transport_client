@@ -131,10 +131,7 @@
       />
     </div>
 
-    <div 
-      v-if="showPaymentBlock" 
-      class="row-input"
-    >
+    <div v-if="showPaymentBlock" class="row-input">
       <v-text-field
         v-model.number="$v.form.paymentSum.$model"
         type="number"
@@ -188,17 +185,8 @@
       dense
     />
 
-    <v-btn 
-      v-if="displayDeleteBtn" 
-      color="error" 
-      @click="$emit('delete')"
-    >
-      <v-icon 
-        left 
-        dark
-      > 
-        mdi-delete 
-      </v-icon>
+    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+      <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
