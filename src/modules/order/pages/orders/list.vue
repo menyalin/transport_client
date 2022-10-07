@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-indent -->
 <template>
   <div>
     <app-buttons-panel
@@ -20,6 +21,18 @@
         :items="orderStatuses"
         dense
         :disabled="accountingMode"
+        hide-details
+        outlined
+        clearable
+        :style="{ 'max-width': '220px' }"
+        @change="settings.listOptions.page = 1"
+      />
+      <v-select
+        v-if="accountingMode"
+        v-model="settings.docStatus"
+        label="Документы"
+        :items="docStatuses"
+        dense
         hide-details
         outlined
         clearable
@@ -141,8 +154,8 @@
         <template v-slot:[`item.truck`]="{ item }">
           {{
             !!item.confirmedCrew &&
-              !!item.confirmedCrew.truck &&
-              trucksMap.has(item.confirmedCrew.truck)
+            !!item.confirmedCrew.truck &&
+            trucksMap.has(item.confirmedCrew.truck)
               ? trucksMap.get(item.confirmedCrew.truck).regNum
               : '-'
           }}
@@ -150,8 +163,8 @@
         <template v-slot:[`item.trailer`]="{ item }">
           {{
             !!item.confirmedCrew &&
-              !!item.confirmedCrew.trailer &&
-              trucksMap.has(item.confirmedCrew.trailer)
+            !!item.confirmedCrew.trailer &&
+            trucksMap.has(item.confirmedCrew.trailer)
               ? trucksMap.get(item.confirmedCrew.trailer).regNum
               : ''
           }}
@@ -166,8 +179,8 @@
         <template v-slot:[`item.analytics.type`]="{ item }">
           {{
             !!item.analytics &&
-              !!item.analytics.type &&
-              orderAnalyticTypeMap.has(item.analytics.type)
+            !!item.analytics.type &&
+            orderAnalyticTypeMap.has(item.analytics.type)
               ? orderAnalyticTypeMap.get(item.analytics.type)
               : ''
           }}
@@ -207,13 +220,14 @@ import AppAddressAutocomplete from '@/modules/common/components/addressAutocompl
 import AppDocListForm from '../../components/docListForm/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 import { ALL_ORDER_LIST_HEADERS } from './constants.js'
+import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
 
 import { mapGetters } from 'vuex'
 
 const _initPeriod = () => {
   const todayM = dayjs()
   return [
-    todayM.add(-3, 'd').format('YYYY-MM-DD'),
+    todayM.add(-5, 'd').format('YYYY-MM-DD'),
     todayM.add(3, 'd').format('YYYY-MM-DD'),
   ]
 }
@@ -241,6 +255,7 @@ export default {
       address: null,
       driver: null,
       status: null,
+      docStatus: null,
       accountingMode: !!parseInt(localStorage.getItem('orders:accontingMode')),
       period: _initPeriod(),
       listOptions: {
@@ -252,6 +267,10 @@ export default {
     orders: [],
     allHeaders: ALL_ORDER_LIST_HEADERS,
   }),
+  setup() {
+    const { getOrderDocStatus, docStatuses } = useOrderListUtils()
+    return { getOrderDocStatus, docStatuses }
+  },
   computed: {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
     accountingMode() {
@@ -284,6 +303,7 @@ export default {
             ? this.$store.getters.tkNamesMap.get(order.confirmedCrew.tkName)
                 .name
             : '-',
+        docStatus: this.getOrderDocStatus(order.docs),
         plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
         loadingPoints: order.route
           .filter((p) => p.type === 'loading')
@@ -401,6 +421,7 @@ export default {
           trailer: this.settings.trailer,
           address: this.settings.address,
           driver: this.settings.driver,
+          docStatus: this.settings.docStatus,
           tkName: this.settings.tkName,
           status: this.settings.status,
           profile: this.directoriesProfile,

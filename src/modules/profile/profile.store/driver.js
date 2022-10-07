@@ -1,4 +1,4 @@
-import DriverService from '@/modules/profile/services/driver.service'
+import DriverService from '@/modules/profile/services/driver.service.js'
 import CrewService from '@/modules/profile/services/crew.service.js'
 import dayjs from 'dayjs'
 
@@ -50,7 +50,7 @@ export default {
         ) {
           const profile = getters.directoriesProfile
           const date = dayjs().format()
-          commit('setDrivers', [])
+          // commit('setDrivers', [])
           const drivers = await DriverService.getByDirectoriesProfile(profile)
           const actualCrews = await CrewService.getActualCrews(profile, date)
           commit('setActualCrews', actualCrews)

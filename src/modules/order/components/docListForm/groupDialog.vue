@@ -22,6 +22,7 @@
             hint="Номера документов через запятую"
             class="mt-5"
             outlined
+            autofocus
           />
           <v-radio-group v-model="docStatus" label="Статус документов">
             <v-radio
@@ -38,9 +39,7 @@
 
         <v-card-actions>
           <v-spacer />
-
           <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-
           <v-btn color="primary" text :disabled="!docCount" type="submit">
             Добавить
           </v-btn>
@@ -75,13 +74,12 @@ export default {
     }
 
     const docCount = computed(() => {
-      return (
-        docTypes.value.length *
-        numberStr.value
-          .split(',')
-          .map((i) => i.trim())
-          .filter((i) => !!i).length
-      )
+      const numbers = numberStr.value
+        .split(',')
+        .map((i) => i.trim())
+        .filter((i) => !!i).length
+
+      return docTypes.value.length * (numbers || 1)
     })
 
     function clear() {
@@ -98,11 +96,18 @@ export default {
         .map((i) => i.trim())
         .filter((i) => !!i)
 
-      numbers.forEach((number) => {
-        docTypes.value.forEach((type) => {
-          res.push({ type, number, status: docStatus.value, date })
+      if (numbers.length) {
+        numbers.forEach((number) => {
+          docTypes.value.forEach((type) => {
+            res.push({ type, number, status: docStatus.value, date })
+          })
         })
-      })
+      } else {
+        docTypes.value.forEach((type) => {
+          res.push({ type, number: '', status: docStatus.value, date })
+        })
+      }
+
       emit('pushDocs', res)
       clear()
     }

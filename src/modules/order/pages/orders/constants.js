@@ -9,12 +9,13 @@ export const ALL_ORDER_LIST_HEADERS = [
     value: 'analytics.type',
     text: 'Тип рейса',
     sortable: false,
-    width: '10rem',
+    width: '7rem',
   },
   {
     value: 'tk',
     text: 'TK',
     sortable: false,
+    width: '9rem',
   },
 
   {
@@ -22,14 +23,14 @@ export const ALL_ORDER_LIST_HEADERS = [
     text: 'Грузовик',
     sortable: false,
     align: 'center',
-    width: '10rem',
+    width: '9rem',
   },
   {
     value: 'trailer',
     text: 'Прицеп',
     sortable: false,
     align: 'center',
-    width: '10rem',
+    width: '9rem',
   },
   {
     value: 'driver',
@@ -58,9 +59,16 @@ export const ALL_ORDER_LIST_HEADERS = [
     forAccountingMode: true,
   },
   {
-    value: 'actions',
-    text: 'Действия',
+    value: 'docStatus',
+    text: 'Документы',
     sortable: false,
     forAccountingMode: true,
+  },
+  {
+    value: 'actions',
+    // text: 'Действия',
+    sortable: false,
+    forAccountingMode: true,
+    width: '3rem',
   },
 ]
