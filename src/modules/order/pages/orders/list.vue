@@ -30,13 +30,25 @@
       <v-select
         v-if="accountingMode"
         v-model="settings.docStatus"
-        label="Документы"
+        label="Документ"
         :items="docStatuses"
         dense
         hide-details
         outlined
         clearable
         :style="{ 'max-width': '220px' }"
+        @change="settings.listOptions.page = 1"
+      />
+      <v-select
+        v-if="accountingMode"
+        v-model="settings.docsGetted"
+        label="Докумены сданы"
+        :items="docsGettedItems"
+        dense
+        hide-details
+        outlined
+        clearable
+        :style="{ 'max-width': '190px' }"
         @change="settings.listOptions.page = 1"
       />
       <app-partner-autocomplete
@@ -185,6 +197,14 @@
               : ''
           }}
         </template>
+        <template v-slot:[`item.docsGetted`]="{ item }">
+          <v-simple-checkbox
+            :value="item.docsState ? item.docsState.getted : false"
+            :disabled="!!item.docs && !!item.docs.length"
+            color="primary"
+            @input="setDocStateStatus($event, item._id)"
+          />
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
             color="primary"
@@ -211,7 +231,6 @@
 <script>
 import dayjs from 'dayjs'
 import service from '@/modules/order/services/order.service'
-import PermissionService from '@/modules/common/services/permission.service'
 
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
@@ -223,6 +242,7 @@ import { ALL_ORDER_LIST_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
 
 import { mapGetters } from 'vuex'
+import socket from '@/socket'
 
 const _initPeriod = () => {
   const todayM = dayjs()
@@ -268,19 +288,27 @@ export default {
     allHeaders: ALL_ORDER_LIST_HEADERS,
   }),
   setup() {
-    const { getOrderDocStatus, docStatuses } = useOrderListUtils()
-    return { getOrderDocStatus, docStatuses }
+    const {
+      getOrderDocStatus,
+      docStatuses,
+      setDocStateStatus,
+      docsGettedItems,
+      minDate,
+    } = useOrderListUtils()
+    return {
+      getOrderDocStatus,
+      docStatuses,
+      setDocStateStatus,
+      docsGettedItems,
+      minDate,
+    }
   },
   computed: {
     ...mapGetters(['directoriesProfile', 'orderStatuses']),
     accountingMode() {
       return this.settings.accountingMode
     },
-    minDate() {
-      return PermissionService.minAllowedDate({
-        operation: 'order:daysForRead',
-      })
-    },
+
     availableAccountantMode() {
       return this.$store.getters.hasPermission('orderListForAccountant')
     },
@@ -367,6 +395,11 @@ export default {
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    socket.on('order:updated', (data) => {
+      // eslint-disable-next-line no-unused-vars
+      let order = this.orders.find((item) => item._id === data._id)
+      order = Object.assign(order, data)
+    })
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -424,6 +457,7 @@ export default {
           docStatus: this.settings.docStatus,
           tkName: this.settings.tkName,
           status: this.settings.status,
+          docsGetted: this.settings.docsGetted,
           profile: this.directoriesProfile,
           startDate: dayjs(this.settings.period[0]).toISOString(),
           endDate: dayjs(this.settings.period[1]).toISOString(),

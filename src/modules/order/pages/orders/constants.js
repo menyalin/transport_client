@@ -59,6 +59,12 @@ export const ALL_ORDER_LIST_HEADERS = [
     forAccountingMode: true,
   },
   {
+    value: 'docsGetted',
+    text: 'Сданы',
+    sortable: false,
+    forAccountingMode: true,
+  },
+  {
     value: 'docStatus',
     text: 'Документы',
     sortable: false,

@@ -1,7 +1,20 @@
-import store from '@/store'
 import { computed } from 'vue'
+import store from '@/store'
+import PermissionService from '@/modules/common/services/permission.service'
+import orderService from '../services/order.service.js'
 
 export const useOrderListUtils = () => {
+  const docsGettedItems = [
+    { value: 'yes', text: 'Да' },
+    { value: 'no', text: 'Нет' },
+  ]
+
+  const minDate = computed(() =>
+    PermissionService.minAllowedDate({
+      operation: 'order:daysForRead',
+    })
+  )
+
   const docStatuses = computed(() => {
     return store.getters.documentStatuses
   })
@@ -16,8 +29,15 @@ export const useOrderListUtils = () => {
     else return 'Приняты'
   }
 
+  async function setDocStateStatus(val, id) {
+    await orderService.setDocState(id, val)
+  }
+
   return {
     getOrderDocStatus,
     docStatuses,
+    setDocStateStatus,
+    docsGettedItems,
+    minDate,
   }
 }

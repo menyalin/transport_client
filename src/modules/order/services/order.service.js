@@ -105,6 +105,13 @@ class OrderService {
     let { data } = await api.put(`${BASE_PATH}/${orderId}/setDocs`, { docs })
     return data
   }
+
+  async setDocState(orderId, state) {
+    let { data } = await api.put(`${BASE_PATH}/${orderId}/setDocsState`, {
+      state,
+    })
+    return data
+  }
 }
 
 export default new OrderService()
