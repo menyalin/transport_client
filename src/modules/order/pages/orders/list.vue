@@ -9,6 +9,11 @@
       @refresh="refresh"
     />
     <div class="filter-wrapper">
+      <app-table-column-settings
+        v-model="activeHeaders"
+        :allHeaders="allHeaders"
+        :listSettingsName="listSettingsName"
+      />
       <app-date-range
         v-model="settings.period"
         :min="minDate"
@@ -16,6 +21,7 @@
         :style="{ 'max-width': '250px' }"
       />
       <v-select
+        v-if="!accountingMode"
         v-model="settings.status"
         label="Статус"
         :items="orderStatuses"
@@ -110,6 +116,19 @@
         :style="{ 'max-width': '300px' }"
         @change="settings.listOptions.page = 1"
       />
+      <v-autocomplete
+        v-model="settings.loadingZone"
+        label="Зона погрузки"
+        dense
+        :items="$store.getters.zones"
+        clearable
+        item-value="_id"
+        item-text="name"
+        outlined
+        hide-details
+        :style="{ 'max-width': '210px' }"
+        @change="settings.listOptions.page = 1"
+      />
 
       <app-address-autocomplete
         v-model="settings.address"
@@ -119,6 +138,17 @@
         outlined
         hide-details
         :style="{ 'min-width': '550px', 'max-width': '900px' }"
+        @change="settings.listOptions.page = 1"
+      />
+      <v-text-field
+        v-model.lazy="settings.searchNum"
+        label="Поиск по номеру"
+        dense
+        hideAppendIcon
+        outlined
+        hide-details
+        :style="{ 'max-width': '300px' }"
+        @change="settings.listOptions.page = 1"
       />
       <v-switch
         v-if="availableAccountantMode"
@@ -197,6 +227,11 @@
               : ''
           }}
         </template>
+        <template v-slot:[`item.docStatus`]="{ item }">
+          <b :style="{ color: item.docStatus.fontColor }">
+            {{ item.docStatus.text }}
+          </b>
+        </template>
         <template v-slot:[`item.docsGetted`]="{ item }">
           <v-simple-checkbox
             :value="item.docsState ? item.docsState.getted : false"
@@ -231,16 +266,17 @@
 <script>
 import dayjs from 'dayjs'
 import service from '@/modules/order/services/order.service'
-
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
-import { ALL_ORDER_LIST_HEADERS } from './constants.js'
+import { ALL_ORDER_LIST_HEADERS, DEFAULT_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
-
+import { useListColumnSettings } from '@/modules/common/hooks/useListColumnSettings.js'
+import { debounce } from '@/modules/common/helpers/utils.js'
 import { mapGetters } from 'vuex'
 import socket from '@/socket'
 
@@ -255,6 +291,7 @@ const _initPeriod = () => {
 export default {
   name: 'ListOrder',
   components: {
+    AppTableColumnSettings,
     AppDateRange,
     AppButtonsPanel,
     AppPartnerAutocomplete,
@@ -273,7 +310,9 @@ export default {
       truck: null,
       trailer: null,
       address: null,
+      loadingZone: null,
       driver: null,
+      searchNum: null,
       status: null,
       docStatus: null,
       accountingMode: !!parseInt(localStorage.getItem('orders:accontingMode')),
@@ -285,7 +324,6 @@ export default {
     },
     count: 0,
     orders: [],
-    allHeaders: ALL_ORDER_LIST_HEADERS,
   }),
   setup() {
     const {
@@ -295,12 +333,29 @@ export default {
       docsGettedItems,
       minDate,
     } = useOrderListUtils()
+
+    const {
+      defaultHeaders,
+      listSettingsName,
+      activeHeaders,
+      allHeaders,
+      headers,
+    } = useListColumnSettings({
+      listSettingsName: 'orderList',
+      allHeaders: ALL_ORDER_LIST_HEADERS,
+      defaultHeaders: DEFAULT_HEADERS,
+    })
     return {
       getOrderDocStatus,
       docStatuses,
       setDocStateStatus,
       docsGettedItems,
       minDate,
+      defaultHeaders,
+      listSettingsName,
+      activeHeaders,
+      allHeaders,
+      headers,
     }
   },
   computed: {
@@ -314,7 +369,7 @@ export default {
     },
 
     filteredHeaders() {
-      return this.allHeaders.filter((item) =>
+      return this.headers.filter((item) =>
         this.accountingMode ? true : !item.forAccountingMode
       )
     },
@@ -333,6 +388,7 @@ export default {
             : '-',
         docStatus: this.getOrderDocStatus(order.docs),
         plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
+        loadingZones: order._loadingZones.map((i) => i.name).join(', '),
         loadingPoints: order.route
           .filter((p) => p.type === 'loading')
           .map((p) => this.$store.getters.addressMap.get(p.address)?.shortName),
@@ -382,7 +438,7 @@ export default {
     settings: {
       deep: true,
       handler: async function () {
-        await this.getData()
+        await this.debounceGetData()
       },
     },
     ['settings.accountingMode']: {
@@ -393,6 +449,7 @@ export default {
   },
 
   created() {
+    this.debounceGetData = debounce(async () => await this.getData(), 300)
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     socket.on('order:updated', (data) => {
@@ -457,6 +514,8 @@ export default {
           docStatus: this.settings.docStatus,
           tkName: this.settings.tkName,
           status: this.settings.status,
+          searchNum: this.settings.searchNum,
+          loadingZone: this.settings.loadingZone,
           docsGetted: this.settings.docsGetted,
           profile: this.directoriesProfile,
           startDate: dayjs(this.settings.period[0]).toISOString(),

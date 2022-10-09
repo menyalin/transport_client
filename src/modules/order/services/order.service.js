@@ -4,6 +4,7 @@ import socket from '@/socket'
 import store from '@/store'
 import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
 
+
 const BASE_PATH = '/orders'
 
 class OrderService {

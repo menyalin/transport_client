@@ -25,7 +25,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, idx) in docs" :key="idx">
+          <tr
+            v-for="(item, idx) in docs"
+            :key="idx"
+            :class="{ 'not-accepted': item.status !== 'accepted' }"
+          >
             <td>
               <v-select
                 v-model="item.type"
@@ -173,5 +177,8 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 15px;
+}
+.not-accepted {
+  background-color: rgba(255, 0, 0, 0.4);
 }
 </style>
