@@ -4,11 +4,6 @@ import PermissionService from '@/modules/common/services/permission.service'
 import orderService from '../services/order.service.js'
 
 export const useOrderListUtils = () => {
-  const docsGettedItems = [
-    { value: 'yes', text: 'Да' },
-    { value: 'no', text: 'Нет' },
-  ]
-
   const minDate = computed(() =>
     PermissionService.minAllowedDate({
       operation: 'order:daysForRead',
@@ -18,8 +13,9 @@ export const useOrderListUtils = () => {
   const docStatuses = computed(() => {
     const docStatusesWithCustomNames = [
       { value: 'accepted', text: 'Приняты' },
-      { value: 'needFix', text: 'Доработка' },
-      { value: 'missing', text: 'Не приняты' },
+      { value: 'needFix', text: 'На исправлении' },
+      { value: 'onCheck', text: 'На проверке' },
+      { value: 'missing', text: 'Не получены' },
     ]
 
     store.getters.documentStatuses
@@ -35,10 +31,13 @@ export const useOrderListUtils = () => {
     return doc.status !== 'accepted'
   }
 
-  function getOrderDocStatus(docs) {
-    if (!docs || !docs.length) return { text: 'Не приняты', fontColor: 'red' }
-    else if (docs.some(isNotAccepted))
-      return { text: 'Доработка', fontColor: 'red' }
+  function getOrderDocStatus(docs, isGetted) {
+    if (!isGetted && (!docs || !docs.length))
+      return { text: 'Не получены', fontColor: 'red' }
+    else if (isGetted && (!docs || !docs.length))
+      return { text: 'На проверке', fontColor: 'red' }
+    else if (isGetted && docs.some(isNotAccepted))
+      return { text: 'На исправлении', fontColor: 'orange' }
     else return { text: 'Приняты', fontColor: 'green' }
   }
 
@@ -50,7 +49,6 @@ export const useOrderListUtils = () => {
     getOrderDocStatus,
     docStatuses,
     setDocStateStatus,
-    docsGettedItems,
     minDate,
   }
 }

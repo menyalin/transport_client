@@ -33,10 +33,11 @@
         :style="{ 'max-width': '220px' }"
         @change="settings.listOptions.page = 1"
       />
+
       <v-select
         v-if="accountingMode"
         v-model="settings.docStatus"
-        label="Документ"
+        label="Документы"
         :items="docStatuses"
         dense
         hide-details
@@ -45,18 +46,7 @@
         :style="{ 'max-width': '220px' }"
         @change="settings.listOptions.page = 1"
       />
-      <v-select
-        v-if="accountingMode"
-        v-model="settings.docsGetted"
-        label="Докумены сданы"
-        :items="docsGettedItems"
-        dense
-        hide-details
-        outlined
-        clearable
-        :style="{ 'max-width': '190px' }"
-        @change="settings.listOptions.page = 1"
-      />
+
       <app-partner-autocomplete
         v-model="settings.client"
         label="Клиент"
@@ -240,6 +230,15 @@
             @input="setDocStateStatus($event, item._id)"
           />
         </template>
+        <template v-slot:footer.prepend>
+          <app-footer-details
+            :total="count"
+            :accepted="acceptedOrders"
+            :needFix="needFixOrders"
+            :onCheck="onCheckOrders"
+            :missing="missingOrders"
+          />
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
             color="primary"
@@ -272,6 +271,7 @@ import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
+import AppFooterDetails from '../../components/orderListFooterDetails/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 import { ALL_ORDER_LIST_HEADERS, DEFAULT_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
@@ -297,6 +297,7 @@ export default {
     AppPartnerAutocomplete,
     AppAddressAutocomplete,
     AppDocListForm,
+    AppFooterDetails,
   },
   data: () => ({
     formName: 'orderList',
@@ -323,6 +324,10 @@ export default {
       },
     },
     count: 0,
+    acceptedOrders: 0,
+    needFixOrders: 0,
+    onCheckOrders: 0,
+    missingOrders: 0,
     orders: [],
   }),
   setup() {
@@ -330,7 +335,7 @@ export default {
       getOrderDocStatus,
       docStatuses,
       setDocStateStatus,
-      docsGettedItems,
+
       minDate,
     } = useOrderListUtils()
 
@@ -349,7 +354,7 @@ export default {
       getOrderDocStatus,
       docStatuses,
       setDocStateStatus,
-      docsGettedItems,
+
       minDate,
       defaultHeaders,
       listSettingsName,
@@ -386,7 +391,7 @@ export default {
             ? this.$store.getters.tkNamesMap.get(order.confirmedCrew.tkName)
                 .name
             : '-',
-        docStatus: this.getOrderDocStatus(order.docs),
+        docStatus: this.getOrderDocStatus(order.docs, order.docsState?.getted),
         plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
         loadingZones: order._loadingZones.map((i) => i.name).join(', '),
         loadingPoints: order.route
@@ -516,7 +521,6 @@ export default {
           status: this.settings.status,
           searchNum: this.settings.searchNum,
           loadingZone: this.settings.loadingZone,
-          docsGetted: this.settings.docsGetted,
           profile: this.directoriesProfile,
           startDate: dayjs(this.settings.period[0]).toISOString(),
           endDate: dayjs(this.settings.period[1]).toISOString(),
@@ -528,6 +532,10 @@ export default {
         })
         this.orders = data.items
         this.count = data.count
+        this.acceptedOrders = data.acceptedDocs
+        this.needFixOrders = data.needFixDocs
+        this.onCheckOrders = data.onCheckDocs
+        this.missingOrders = data.missingDocs
         this.loading = false
       } catch (e) {
         this.loading = false

@@ -49,7 +49,8 @@ export default {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpDocs = [...val]
+        if (!val) this.tmpDocs = []
+        else this.tmpDocs = [...val]
       },
     },
   },
