@@ -30,6 +30,7 @@ export default {
   flex-direction: row;
   justify-content: end;
   gap: 20px;
-  margin: 20px;
+  margin: 10px;
+  font-size: 0.8rem;
 }
 </style>
