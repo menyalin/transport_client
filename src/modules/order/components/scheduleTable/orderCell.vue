@@ -231,7 +231,7 @@ export default {
   font-size: 13px;
 }
 .warning-state {
-  box-shadow: 0px 0px 3px 1px #f97509;
+  box-shadow: 0px 0px 3px 1px #f97509 inset;
 }
 
 .completed {
