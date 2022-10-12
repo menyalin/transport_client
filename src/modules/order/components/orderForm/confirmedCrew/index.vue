@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-indent -->
 <template>
   <div>
     <div>
@@ -10,7 +11,10 @@
         :loading="loading"
         dense
         :clearable="!confirmed"
-        :readonly="confirmed"
+        :readonly="
+          confirmed &&
+          !$store.getters.hasPermission('fake permission. only for admin!')
+        "
         :items="trucks"
         outlined
         hide-details
@@ -19,7 +23,9 @@
         label="Водитель"
         :value="params.driver"
         :items="drivers"
-        readonly
+        :readonly="
+          !$store.getters.hasPermission('fake permission. only for admin!')
+        "
         hide-details
         dense
         outlined
@@ -28,7 +34,9 @@
         label="Прицеп"
         :value="params.trailer"
         :items="trailers"
-        readonly
+        :readonly="
+          !$store.getters.hasPermission('fake permission. only for admin!')
+        "
         dense
         hide-details
         outlined

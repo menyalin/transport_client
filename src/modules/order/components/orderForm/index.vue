@@ -465,6 +465,11 @@ export default {
         prePrices: this.prePrices,
         outsourceCosts: this.outsourceCosts,
         docs: this.docs,
+        isAdmin: this.$store.getters.hasPermission(
+          'fake permission. for admin only'
+        )
+          ? true
+          : null,
       }
     },
   },
