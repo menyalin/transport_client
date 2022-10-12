@@ -6,9 +6,9 @@ export default [
     component: Layout,
     children: [
       {
-        path: 'orders',
-        name: 'OrdersListAccounting',
-        component: () => import('@/modules/accounting/pages/orders/list.vue'),
+        path: 'driversSalary',
+        name: 'DriversSalary',
+        component: () => import('@/modules/accounting/pages/salary/index.vue'),
       },
     ],
     meta: {

@@ -27,9 +27,9 @@ export default {
   data: () => ({
     navButtons: [
       {
-        text: 'Список рейсов',
-        icon: 'mdi-truck-fast',
-        link: '/accounting/orders',
+        text: 'ЗП Водителей',
+        icon: 'mdi-cash ',
+        link: '/accounting/driversSalary',
         onlyWithDirectoriesProfile: true,
       },
     ],

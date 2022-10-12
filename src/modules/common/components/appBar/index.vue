@@ -23,7 +23,7 @@
       <v-icon left> mdi-account-outline </v-icon>
       Профиль
     </v-btn>
-    <v-btn v-if="false" text to="/accounting">
+    <v-btn v-if="$store.getters.hasPermission('modules:accounting')" text to="/accounting">
       <v-icon left> mdi-calculator-variant </v-icon>
       Учет
     </v-btn>
