@@ -4,9 +4,9 @@
       panel-type="form"
       :disabled-submit="
         !$store.getters.hasPermission('driver:write') ||
-          isInvalidForm ||
-          loading ||
-          !formChanged
+        isInvalidForm ||
+        loading ||
+        !formChanged
       "
       @cancel="cancel"
       @submit="submit"
@@ -182,6 +182,8 @@
         label="Не показывать в штрафах"
         dense
       />
+
+      <v-checkbox v-model="form.isCalcSalary" dense label="Расчет ЗП" />
     </div>
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
       <v-btn color="error" @click="$emit('delete')">
@@ -246,6 +248,7 @@ export default {
         isBrigadier: false,
         isMechanic: false,
         hideInFines: false,
+        isCalcSalary: false,
       },
     }
   },

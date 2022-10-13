@@ -21,7 +21,7 @@
       />
       <v-autocomplete
         label="Водитель"
-        :value="params.driver"
+        v-model="params.driver"
         :items="drivers"
         :readonly="
           !$store.getters.hasPermission('fake permission. only for admin!')
@@ -32,7 +32,7 @@
       />
       <v-autocomplete
         label="Прицеп"
-        :value="params.trailer"
+        v-model="params.trailer"
         :items="trailers"
         :readonly="
           !$store.getters.hasPermission('fake permission. only for admin!')
@@ -153,8 +153,25 @@ export default {
         if (this.$store.getters.outsourceTruckIds.includes(val))
           await this.getAgreement()
         else this.params.outsourceAgreement = null
-
         this.$emit('change', this.params)
+      },
+    },
+    ['params.driver']: {
+      handler: function () {
+        if (
+          this.$store.getters.hasPermission('fake permission. only for admin!')
+        ) {
+          this.$emit('change', this.params)
+        }
+      },
+    },
+    ['params.trailer']: {
+      handler: function () {
+        if (
+          this.$store.getters.hasPermission('fake permission. only for admin!')
+        ) {
+          this.$emit('change', this.params)
+        }
       },
     },
   },

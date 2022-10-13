@@ -129,31 +129,40 @@
             title="Экипаж"
             class="crew"
           />
-          <app-analytic-block
-            id="analytic"
-            v-model="analytics"
-            :isValidRoute="isValidRoute"
-            :coords="coords"
-            title="Аналитика"
-          />
-          <app-price-block
-            id="price"
-            :isValidPrices="isValidPrices(agreement, prices, state)"
-            :prices.sync="prices"
-            :outsourceCosts.sync="outsourceCosts"
-            :agreementId="client.agreement"
-            :outsourceAgreementId="confirmedCrew.outsourceAgreement"
-            :analytics="analytics"
-            :route="route"
-          />
-          <app-price-dialog
-            v-if="showFinalPriceDialog"
-            :order="order"
-            :agreementId="client.agreement"
-            :prePrices.sync="prePrices"
-            :finalPrices="finalPrices"
-            :dialog.sync="priceDialog"
-          />
+
+          <div id="price">
+            <app-analytic-block
+              v-model="analytics"
+              :isValidRoute="isValidRoute"
+              :coords="coords"
+              title="Аналитика"
+            />
+
+            <app-payment-to-driver
+              id="payment-to-driver"
+              v-model="paymentToDriver"
+            />
+
+            <app-price-block
+              :isValidPrices="isValidPrices(agreement, prices, state)"
+              :prices.sync="prices"
+              :outsourceCosts.sync="outsourceCosts"
+              :agreementId="client.agreement"
+              :outsourceAgreementId="confirmedCrew.outsourceAgreement"
+              :analytics="analytics"
+              :route="route"
+            />
+
+            <app-price-dialog
+              v-if="showFinalPriceDialog"
+              :order="order"
+              :agreementId="client.agreement"
+              :prePrices.sync="prePrices"
+              :finalPrices="finalPrices"
+              :dialog.sync="priceDialog"
+            />
+          </div>
+
           <div id="note">
             <v-text-field
               v-model="form.note"
@@ -206,6 +215,7 @@ import AppDocListForm from '../docListForm/form.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 import { useOrderDocs } from '../../hooks/useOrderDocs.js'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
+import AppPaymentToDriver from './paymentToDriver.vue'
 // import agreement from '@/modules/profile/profile.store/agreement'
 
 export default {
@@ -223,6 +233,7 @@ export default {
     AppPriceBlock,
     AppPriceDialog,
     AppDocListForm,
+    AppPaymentToDriver,
   },
   props: {
     order: {
@@ -265,6 +276,7 @@ export default {
     return {
       agreement: null,
       docs: [],
+      paymentToDriver: {},
       priceDialog: false,
       createTemplateLoading: false,
       templateDialog: false,
@@ -465,6 +477,7 @@ export default {
         prePrices: this.prePrices,
         outsourceCosts: this.outsourceCosts,
         docs: this.docs,
+        paymentToDriver: this.paymentToDriver,
         isAdmin: this.$store.getters.hasPermission(
           'fake permission. for admin only'
         )
@@ -644,6 +657,7 @@ export default {
       if (val.outsourceCosts) this.outsourceCosts = val.outsourceCosts
       if (val.finalPrices) this.finalPrices = val.finalPrices
       if (val.docs) this.docs = val.docs
+      if (val.paymentToDriver) this.paymentToDriver = val.paymentToDriver
 
       keys.forEach((key) => {
         this.form[key] = val[key]
@@ -659,10 +673,12 @@ export default {
       this.cargoParams = { ...{} }
       this.reqTransport = { ...{} }
       this.analytics = { ...{} }
+      this.paymentToDriver = { ...{} }
       this.prices = []
       this.prePrices = []
       this.finalPrices = []
       this.outsourceCosts = []
+
       this.docs = []
       keys.forEach((key) => {
         this.form[key] = null
@@ -734,7 +750,7 @@ export default {
 }
 #price {
   grid-column: 3/4;
-  grid-row: 2/4;
+  grid-row: 1/4;
 }
 #note {
   grid-column: 2/4;
