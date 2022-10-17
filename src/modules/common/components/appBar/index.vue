@@ -23,21 +23,11 @@
       <v-icon left> mdi-account-outline </v-icon>
       Профиль
     </v-btn>
-    <v-btn v-if="$store.getters.hasPermission('modules:accounting')" text to="/accounting">
+    <v-btn v-if="showAccountingModule" text to="/accounting">
       <v-icon left> mdi-calculator-variant </v-icon>
       Учет
     </v-btn>
-    <v-btn
-      v-if="
-        isLoggedIn &&
-          !!$store.getters.user &&
-          $store.getters.user.email == '1@1.ru'
-      "
-      to="/admin"
-      text
-    >
-      Админка
-    </v-btn>
+    <v-btn v-if="showAdminModule" to="/admin" text> Админка </v-btn>
     <v-btn v-if="!isLoggedIn" icon to="/auth/login">
       <v-icon>mdi-import</v-icon>
     </v-btn>
@@ -65,6 +55,12 @@ export default {
   },
   computed: {
     ...mapGetters(['user', 'isLoggedIn', 'directoriesProfile']),
+    showAccountingModule() {
+      return this.$store.getters.hasPermission('modules:accounting')
+    },
+    showAdminModule() {
+      return this.isLoggedIn && !!this.$store.getters.user.isAdmin
+    },
   },
   methods: {
     ...mapActions(['logOut']),

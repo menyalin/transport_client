@@ -6,8 +6,7 @@ export const useListColumnSettings = ({
   allHeaders,
 }) => {
   let activeHeaders = ref([])
-  
-  
+
   onMounted(() => {
     const fields = JSON.parse(localStorage.getItem(listSettingsName))
     if (!fields || fields.length === 0) activeHeaders.value = defaultHeaders
@@ -19,7 +18,6 @@ export const useListColumnSettings = ({
   })
 
   return {
-    defaultHeaders,
     listSettingsName,
     activeHeaders,
     allHeaders,

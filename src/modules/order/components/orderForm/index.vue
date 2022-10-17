@@ -139,6 +139,7 @@
             />
 
             <app-payment-to-driver
+              v-if="$store.getters.hasPermission('order:readPaymentToDriver')"
               id="payment-to-driver"
               v-model="paymentToDriver"
             />
@@ -749,6 +750,9 @@ export default {
   grid-row: 1/2;
 }
 #price {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   grid-column: 3/4;
   grid-row: 1/4;
 }

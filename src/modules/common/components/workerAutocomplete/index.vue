@@ -1,5 +1,6 @@
 <template>
   <v-autocomplete
+    v-if="!labelOnly"
     :value="value"
     :label="label"
     :outlined="outlined"
@@ -13,8 +14,10 @@
     @update:search-input="handleSearchInputUpdate"
     @change="handleChange"
   />
+  <span v-else> {{ title }} </span>
 </template>
 <script>
+import { computed } from 'vue'
 import workerService from '@/modules/profile/services/worker.service'
 import { useServerData } from '@/modules/common/hooks/useServerData'
 
@@ -29,6 +32,7 @@ export default {
     label: String,
     outlined: Boolean,
     dense: Boolean,
+    labelOnly: { type: Boolean, default: false },
   },
   setup({ value }, ctx) {
     const {
@@ -38,12 +42,21 @@ export default {
       searchString,
       loading,
     } = useServerData({ ctx, service: workerService, propValue: value })
+
+    const title = computed(() => {
+      if (!value) return ''
+      // if (!items || !Array.isArray(items)) return ''
+      const item = items.value.find((i) => i.value === value)
+      return item?.text
+    })
+
     return {
       searchString,
       handleChange,
       items,
       handleSearchInputUpdate,
       loading,
+      title,
     }
   },
 }

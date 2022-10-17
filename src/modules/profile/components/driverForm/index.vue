@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-indent -->
 <template>
   <div>
     <app-buttons-panel

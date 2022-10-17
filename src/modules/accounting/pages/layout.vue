@@ -32,6 +32,12 @@ export default {
         link: '/accounting/driversSalary',
         onlyWithDirectoriesProfile: true,
       },
+      {
+        text: 'Зарплатные тарифы',
+        icon: 'mdi-cash ',
+        link: '/accounting/salaryTariffs',
+        onlyWithDirectoriesProfile: true,
+      },
     ],
   }),
 }

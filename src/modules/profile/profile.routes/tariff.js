@@ -18,13 +18,4 @@ export default [
       permission: 'tariff:write',
     },
   },
-  {
-    path: BASE_PATH + '/:id',
-    name: 'TariffDetails',
-    component: () => import('../pages/tariff/details'),
-    props: true,
-    meta: {
-      permission: 'tariff:readItem',
-    },
-  },
 ]

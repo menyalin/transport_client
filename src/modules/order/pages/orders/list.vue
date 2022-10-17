@@ -340,7 +340,6 @@ export default {
     } = useOrderListUtils()
 
     const {
-      defaultHeaders,
       listSettingsName,
       activeHeaders,
       allHeaders,
@@ -354,9 +353,7 @@ export default {
       getOrderDocStatus,
       docStatuses,
       setDocStateStatus,
-
       minDate,
-      defaultHeaders,
       listSettingsName,
       activeHeaders,
       allHeaders,

@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 export const useServerData = ({ ctx, service, propValue }) => {
   let itemSelected = !!propValue
   let loading = ref(false)
-  const items = ref(['1', '2', '3', '5', '6'])
+  const items = ref([])
 
   const searchString = ref('')
 

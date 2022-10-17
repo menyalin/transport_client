@@ -150,7 +150,4 @@ export default {
   border: tomato 2px solid;
   border-radius: 5px;
 }
-.wrapper {
-  padding: 10px;
-}
 </style>
