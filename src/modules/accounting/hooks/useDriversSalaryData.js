@@ -1,17 +1,24 @@
 import { ref, watch } from 'vue'
-import { debounce } from '@/modules/common/helpers/utils.js'
+import SalaryTariffService from '../services/salaryTariff.service.js'
 
 export const useDriversSalaryData = (period) => {
-  const drivers = ref([])
+  const items = ref([])
   const isLoading = ref(false)
 
-  function getData() {
-    console.log(period)
+  async function getData() {
+    isLoading.value = true
+    items.value = await SalaryTariffService.getDriversSalaryByPeriod({
+      period: period.value,
+    })
+    isLoading.value = false
   }
 
-  watch(period, debounce(getData, 500))
+  watch(period, async () => {
+    await getData()
+  })
+
   return {
-    drivers,
+    items,
     isLoading,
   }
 }

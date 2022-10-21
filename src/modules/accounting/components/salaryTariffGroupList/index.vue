@@ -22,6 +22,7 @@
                 {{ addressMap.get(item.loading).shortName }} >>>
                 {{ addressMap.get(item.unloading).shortName }}
               </div>
+
               <app-direct-distance-zones
                 v-if="item.type === 'directDistanceZones'"
                 :item="item"
@@ -31,6 +32,7 @@
                 :item="item"
               />
               <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
+              <app-regions-cell v-if="item.type === 'regions'" :item="item" />
               <app-zones-cell v-if="item.type === 'zones'" :item="item" />
               <app-return-cell v-if="item.type === 'return'" :item="item" />
             </td>
@@ -63,6 +65,7 @@ import AppWaitingCell from './waiting.vue'
 import AppAdditionalPointsCell from './additionalPoints.vue'
 import AppReturnCell from './return.vue'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
+import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
 import AppDirectDistanceZones from './directDistanceZones.vue'
 
 export default {
@@ -73,6 +76,7 @@ export default {
     AppReturnCell,
     AppDirectDistanceZones,
     AppZonesCell,
+    AppRegionsCell,
   },
   model: {
     prop: 'items',
@@ -89,7 +93,7 @@ export default {
       return this.$store.getters.truckKindsMap
     },
     tariffTypesMap() {
-      return this.$store.getters.tariffTypesMap
+      return this.$store.getters.salaryTariffTypesMap
     },
     orderAnalyticTypesMap() {
       return this.$store.getters.orderAnalyticTypesMap

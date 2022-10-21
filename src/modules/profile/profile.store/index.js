@@ -135,6 +135,7 @@ export default {
         cities,
         companyInvites,
         fineCategories,
+        salaryTariffTypes,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -164,7 +165,8 @@ export default {
       if (cities?.length) commit('setCities', cities)
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
       if (fineCategories?.length) commit('setFineCategories', fineCategories)
-
+      if (salaryTariffTypes.length)
+        commit('setSalaryTariffTypes', salaryTariffTypes)
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
     },
 

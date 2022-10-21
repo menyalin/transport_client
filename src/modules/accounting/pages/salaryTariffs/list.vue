@@ -36,13 +36,13 @@
           />
           <v-select
             v-model="settings.type"
-            :items="$store.getters.tariffTypes"
+            :items="$store.getters.salaryTariffTypes"
             outlined
             clearable
             dense
             hide-details
             label="Тип тарифа"
-            :style="{ 'max-width': '180px' }"
+            :style="{ 'max-width': '250px' }"
           />
           <v-select
             v-model="settings.liftCapacity"
@@ -72,6 +72,10 @@
         >
           <template v-slot:[`item._result`]="{ item }">
             <app-zones-cell v-if="item.type === 'zones'" :item="item" />
+            <app-regions-cell
+              v-else-if="item.type === 'regions'"
+              :item="item"
+            />
             <div v-else>
               {{ item._result }}
             </div>
@@ -110,6 +114,7 @@ import { mapGetters } from 'vuex'
 import { useListColumnSettings } from '@/modules/common/hooks/useListColumnSettings'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
+import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
 
 export default {
   name: 'SalaryTariffList',
@@ -118,6 +123,7 @@ export default {
     AppTableColumnSettings,
     AppSalaryTariffForm,
     AppZonesCell,
+    AppRegionsCell,
   },
   setup() {
     const { listSettingsName, activeHeaders, allHeaders, headers } =
@@ -158,7 +164,7 @@ export default {
     filteredList() {
       return this.list.map((i) => ({
         ...i,
-        _type: this.$store.getters.tariffTypesMap.get(i.type),
+        _type: this.$store.getters.salaryTariffTypesMap.get(i.type),
         _date: new Date(i.date).toLocaleDateString(),
         _result: this.getResultStrByType(i),
         _tks: i.tks

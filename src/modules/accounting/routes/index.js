@@ -10,7 +10,8 @@ export default [
       {
         path: 'driversSalary',
         name: 'DriversSalary',
-        component: () => import('@/modules/accounting/pages/salary/index.vue'),
+        component: () =>
+          import('@/modules/accounting/pages/salaryByPeriod/index.vue'),
       },
     ],
     meta: {

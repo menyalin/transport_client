@@ -43,6 +43,14 @@ class SalaryTariffService {
     }
   }
 
+  async getDriversSalaryByPeriod(body) {
+    let { data } = await api.post(BASE_PATH + '/get_drivers_salary_by_period', {
+      ...body,
+      company: store.getters.directoriesProfile,
+    })
+    return data
+  }
+
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data

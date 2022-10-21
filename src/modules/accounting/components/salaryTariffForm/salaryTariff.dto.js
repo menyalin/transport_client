@@ -6,6 +6,9 @@ const TYPES_WITHOUT_PRICE = ['directDistanceZones', 'return']
 
 const _REQUIRED_FIELDS_FOR_POINTS_TYPE = ['loading', 'unloading']
 const _REQUIRED_FIELDS_FOR_ZONES_TYPE = ['loadingZone', 'unloadingZone']
+const _REQUIRED_FIELDS_FOR_REGIONS_TYPE = ['loadingRegion', 'unloadingRegion']
+
+
 
 const _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE = [
   'orderType',
@@ -31,6 +34,9 @@ const _getRequiredFieldsByType = (type) => {
       break
     case 'zones':
       typedFields = _REQUIRED_FIELDS_FOR_ZONES_TYPE
+      break
+    case 'regions':
+      typedFields = _REQUIRED_FIELDS_FOR_REGIONS_TYPE
       break
     case 'additionalPoints':
       typedFields = _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE
@@ -65,26 +71,6 @@ export class SalaryTariffDTO {
       this[key] = item[key]
     })
 
-    if (item.type === 'directDistanceZones') {
-      this.zones = item.zones
-        .sort((a, b) => a.distance - b.distance)
-        .map((i) => ({
-          distance: i.distance,
-          ...this._getPrices({
-            price: i.price,
-            vatRate: item.agreementVatRate,
-            groupVat: item.groupVat,
-          }),
-        }))
-    }
-
-    if (TYPES_WITHOUT_PRICE.includes(item.type)) {
-      // для "Возврата" и "Цен по линейке" цена не имеет смысла
-      this.price = 0
-      this.priceWOVat = 0
-      this.sumVat = 0
-      return null
-    }
 
     Object.assign(this, {
       date: dayjs(this.date).toISOString(),
@@ -120,6 +106,11 @@ export class SalaryTariffDTO {
         loadingZone: item.loadingZone,
         unloadingZone: item.unloadingZone,
       },
+      regions: {
+        loadingRegion: item.loadingRegion,
+        unloadingRegion: item.unloadingRegion
+      },
+
       points: {
         loading: item.loading,
         unloading: item.unloading,

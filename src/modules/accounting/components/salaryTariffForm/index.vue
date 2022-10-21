@@ -9,7 +9,7 @@
           <v-select
             v-model="tmpItem.type"
             label="Тип"
-            :items="$store.getters.tariffTypes"
+            :items="$store.getters.salaryTariffTypes"
             dense
             outlined
             hide-details
@@ -62,6 +62,13 @@
             v-model="additionalPoints"
             :style="{ 'min-width': '550px' }"
           />
+          <app-regions
+            v-if="tmpItem.type === 'regions'"
+            ref="regions"
+            v-model="regions"
+            :style="{ 'min-width': '550px' }"
+          />
+
           <app-direct-distance-zones
             v-if="tmpItem.type === 'directDistanceZones'"
             ref="directDistanceZones"
@@ -127,10 +134,12 @@
 </template>
 <script>
 import AppPoints from './points.vue'
+import AppZones from './zones.vue'
+import AppRegions from './regions.vue'
+
 import AppAdditionalPoints from './additionalPoints.vue'
 import AppDirectDistanceZones from './directDistanceZones.vue'
 import AppWaiting from './waiting.vue'
-import AppZones from './zones.vue'
 import AppReturn from './return.vue'
 import SalaryTariffService from '../../services/salaryTariff.service.js'
 import { SalaryTariffDTO } from './salaryTariff.dto'
@@ -144,6 +153,7 @@ export default {
     AppWaiting,
     AppReturn,
     AppZones,
+    AppRegions,
   },
   model: {
     prop: 'item',
@@ -158,6 +168,8 @@ export default {
       tks: [],
       tmpDialog: false,
       points: {},
+      zones: {},
+      regions: {},
       additionalPoints: {},
       tmpItem: {
         liftCapacity: [],
@@ -165,7 +177,6 @@ export default {
       directDistanceZones: {},
       waiting: {},
       returnTariff: {},
-      zones: {},
     }
   },
   computed: {
@@ -233,9 +244,9 @@ export default {
     pushItem() {
       if (!this.invalidItem) {
         this.$emit('push', this.formState)
-        // this.$nextTick(() => {
-        //   this.$refs[this.tmpItem.type].focus()
-        // })
+        this.$nextTick(() => {
+          this.$refs[this.tmpItem.type].focus()
+        })
       }
     },
     update() {

@@ -25,7 +25,7 @@
     <v-select
       v-model="tmpSettings.type"
       label="Тип тарифа"
-      :items="$store.getters.tariffTypes"
+      :items="$store.getters.salaryTariffTypes"
       dense
       outlined
       hide-details
