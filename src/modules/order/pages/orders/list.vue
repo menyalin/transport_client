@@ -171,7 +171,7 @@
         :loading="loading"
         :items="preparedOrders"
         fixed-header
-        height="68vh"
+        height="65vh"
         :serverItemsLength="count"
         :footer-props="{
           'items-per-page-options': [50, 100, 200],
@@ -429,7 +429,9 @@ export default {
         }))
     },
     drivers() {
-      return this.$store.getters.drivers
+      return this.$store.getters.drivers.filter((i) =>
+        this.settings.tkName ? i.tkName._id === this.settings.tkName : true
+      )
     },
   },
   watch: {
