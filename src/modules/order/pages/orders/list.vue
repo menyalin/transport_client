@@ -35,7 +35,6 @@
       />
 
       <v-select
-        v-if="accountingMode"
         v-model="settings.docStatus"
         label="Документы"
         :items="docStatuses"

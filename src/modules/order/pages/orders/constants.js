@@ -95,7 +95,6 @@ export const ALL_ORDER_LIST_HEADERS = [
     value: 'docStatus',
     text: 'Документы',
     sortable: false,
-    forAccountingMode: true,
     default: true,
   },
   {

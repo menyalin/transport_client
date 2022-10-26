@@ -35,15 +35,26 @@
                 v-model="item.type"
                 dense
                 hide-details
+                :disabled="readonly"
                 :items="docTypes"
                 class="my-2"
               />
             </td>
             <td>
-              <v-text-field v-model.trim="item.number" dense hide-details />
+              <v-text-field
+                v-model.trim="item.number"
+                dense
+                hide-details
+                :disabled="readonly"
+              />
             </td>
             <td>
-              <v-text-field v-model.trim="item.note" dense hide-details />
+              <v-text-field
+                v-model.trim="item.note"
+                dense
+                hide-details
+                :disabled="readonly"
+              />
             </td>
             <td>
               <v-select
@@ -51,6 +62,7 @@
                 dense
                 hide-details
                 :items="docStatuses"
+                :disabled="readonly"
               />
             </td>
             <td>
@@ -59,6 +71,7 @@
                 type="date"
                 dense
                 hide-details
+                :disabled="readonly"
               />
             </td>
             <td>
