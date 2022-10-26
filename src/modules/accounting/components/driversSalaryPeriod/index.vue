@@ -13,7 +13,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 export default {
   name: 'DriversSalaryPeriod',
   model: {
@@ -21,26 +21,28 @@ export default {
     event: 'change',
   },
   // eslint-disable-next-line vue/require-prop-types
-  props: ['value'],
-  setup({ value }, ctx) {
-    const baseDate = ref(dayjs())
-    function getPeriod() {
-      return [baseDate.value.startOf('month'), baseDate.value.endOf('month')]
-    }
-
+  props: {
+    value: String,
+  },
+  setup(props, ctx) {
+    const baseDate = ref(dayjs(props.value))
     function changePeriod(val) {
       baseDate.value = baseDate.value.add(val, 'month')
-      ctx.emit('change', getPeriod())
+      ctx.emit('change', baseDate.value.toISOString())
     }
 
     const periodTitle = computed(() => {
       return baseDate.value.format('MMMM, YYYY').toUpperCase()
     })
-    onMounted(() => {
-      if (!value) {
-        ctx.emit('change', getPeriod())
+
+    watch(
+      () => props.value,
+      (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+          baseDate.value = dayjs(newVal)
+        }
       }
-    })
+    )
 
     return {
       periodTitle,
@@ -51,7 +53,6 @@ export default {
 </script>
 <style scoped>
 .period-wrapper {
-  padding: 20px;
   display: flex;
   flex-direction: row;
   gap: 15px;

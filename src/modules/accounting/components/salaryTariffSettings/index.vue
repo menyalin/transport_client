@@ -78,6 +78,7 @@ export default {
       deep: true,
       immediate: true,
       handler: function (val) {
+      
         this.$emit('change', {
           ...val,
           date: val.date ? new Date(val.date).toISOString() : null,

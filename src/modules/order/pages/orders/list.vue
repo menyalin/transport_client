@@ -339,16 +339,12 @@ export default {
       minDate,
     } = useOrderListUtils()
 
-    const {
-      listSettingsName,
-      activeHeaders,
-      allHeaders,
-      headers,
-    } = useListColumnSettings({
-      listSettingsName: 'orderList',
-      allHeaders: ALL_ORDER_LIST_HEADERS,
-      defaultHeaders: DEFAULT_HEADERS,
-    })
+    const { listSettingsName, activeHeaders, allHeaders, headers } =
+      useListColumnSettings({
+        listSettingsName: 'orderList',
+        allHeaders: ALL_ORDER_LIST_HEADERS,
+        defaultHeaders: DEFAULT_HEADERS,
+      })
     return {
       getOrderDocStatus,
       docStatuses,
@@ -540,7 +536,7 @@ export default {
       }
     },
     dblClickRow(_, { item }) {
-      if (item) this.$router.push(`orders/${item._id}`)
+      if (item) this.$router.push(`/orders/${item._id}`)
     },
     putTableToClipboard() {
       _putTableToClipboard({
