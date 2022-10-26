@@ -52,6 +52,7 @@ export default {
         sortable: false,
       },
       { text: 'Доплата', value: '_paymentSum', sortable: false },
+      { text: 'Прод-ть рейса, ч', value: '_routeDuration', sortable: false },
       { text: 'Оценка', value: 'grade.grade', sortable: false },
       { text: 'Комментарий к оценке', value: 'grade.note', sortable: false },
     ]
@@ -67,7 +68,9 @@ export default {
       if (props.driver)
         return props.items.map((i) => ({
           ...i,
-          _orderDate: new Date(i.orderDate).toLocaleString(),
+          _orderDate: i.orderDate
+            ? new Date(i.orderDate).toLocaleString()
+            : null,
         }))
       else
         return props.items.map((i) => ({
