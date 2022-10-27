@@ -20,7 +20,7 @@ export const ALL_LIST_HEADERS = [
   },
   {
     value: '_sum',
-    text: 'Сумма',
+    text: 'Тариф',
     sortable: false,
     align: 'right',
     default: true,

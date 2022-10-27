@@ -1,5 +1,16 @@
 <template>
   <div id="wrapper">
+    <v-autocomplete
+      label="Клиенты"
+      dense
+      :items="clients"
+      item-value="_id"
+      item-text="name"
+      multiple
+      outlined
+      hide-details
+      v-model="tmpItem.clients"
+    />
     <v-select
       ref="first_field"
       v-model="tmpItem.orderType"
@@ -48,6 +59,7 @@ export default {
   data() {
     return {
       tmpItem: {
+        clients: [],
         orderType: null,
         includeHours: null,
         roundByHours: null,
@@ -55,7 +67,11 @@ export default {
       },
     }
   },
-
+  computed: {
+    clients() {
+      return this.$store.getters.partners.filter((i) => i.isClient)
+    },
+  },
   watch: {
     item: {
       immediate: true,

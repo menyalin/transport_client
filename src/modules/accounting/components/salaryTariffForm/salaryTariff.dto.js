@@ -8,8 +8,6 @@ const _REQUIRED_FIELDS_FOR_POINTS_TYPE = ['loading', 'unloading']
 const _REQUIRED_FIELDS_FOR_ZONES_TYPE = ['loadingZone', 'unloadingZone']
 const _REQUIRED_FIELDS_FOR_REGIONS_TYPE = ['loadingRegion', 'unloadingRegion']
 
-
-
 const _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE = [
   'orderType',
   'includedPoints',
@@ -22,6 +20,7 @@ const _REQUIRED_FIELDS_FOR_WAITING_TYPE = [
   'includeHours',
   'roundByHours',
   'tariffBy',
+  'clients',
 ]
 
 const _REQUIRED_FIELDS_FOR_DIRECT_DISTANCE_ZONES_TYPE = ['loading', 'zones']
@@ -71,7 +70,6 @@ export class SalaryTariffDTO {
       this[key] = item[key]
     })
 
-
     Object.assign(this, {
       date: dayjs(this.date).toISOString(),
     })
@@ -79,6 +77,11 @@ export class SalaryTariffDTO {
 
   static invalidItem(item) {
     if (!item.type) return true
+    if (
+      item.type === 'waiting' &&
+      (!Array.isArray(item.clients) || item.clients.length === 0)
+    )
+      return true
     if (!Array.isArray(item.tks) || item.tks.length === 0) return true
     if (!Array.isArray(item.liftCapacity) || item.liftCapacity.length === 0)
       return true
@@ -108,7 +111,7 @@ export class SalaryTariffDTO {
       },
       regions: {
         loadingRegion: item.loadingRegion,
-        unloadingRegion: item.unloadingRegion
+        unloadingRegion: item.unloadingRegion,
       },
 
       points: {

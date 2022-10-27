@@ -76,6 +76,10 @@
               v-else-if="item.type === 'regions'"
               :item="item"
             />
+            <app-waiting-cell
+              v-else-if="item.type === 'waiting'"
+              :item="item"
+            />
             <div v-else>
               {{ item._result }}
             </div>
@@ -115,7 +119,7 @@ import { useListColumnSettings } from '@/modules/common/hooks/useListColumnSetti
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
-
+import AppWaitingCell from '../../components/salaryTariffGroupList/waiting.vue'
 export default {
   name: 'SalaryTariffList',
   components: {
@@ -124,7 +128,9 @@ export default {
     AppSalaryTariffForm,
     AppZonesCell,
     AppRegionsCell,
+    AppWaitingCell,
   },
+
   setup() {
     const { listSettingsName, activeHeaders, allHeaders, headers } =
       useListColumnSettings({
