@@ -14,7 +14,7 @@
         />
         <v-checkbox
           v-if="tmpPoint.isReturn"
-          :value="tmpPoint.isReturn"
+          v-model="tmpPoint.isReturn"
           label="Возврат"
           readonly
           hide-details
