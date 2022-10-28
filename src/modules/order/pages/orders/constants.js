@@ -2,7 +2,7 @@ export const ALL_ORDER_LIST_HEADERS = [
   {
     value: 'plannedDate',
     text: 'Дата погрузки',
-    sortable: false,
+    sortable: true,
     width: '12rem',
     default: true,
   },
@@ -24,7 +24,7 @@ export const ALL_ORDER_LIST_HEADERS = [
   {
     value: 'truck',
     text: 'Грузовик',
-    sortable: false,
+    sortable: true,
     align: 'center',
     width: '9rem',
     default: true,
@@ -40,7 +40,7 @@ export const ALL_ORDER_LIST_HEADERS = [
   {
     value: 'driver',
     text: 'Водитель',
-    sortable: false,
+    sortable: true,
     align: 'left',
     default: true,
   },

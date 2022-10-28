@@ -171,6 +171,7 @@
         :items="preparedOrders"
         fixed-header
         height="65vh"
+        multi-sort
         :serverItemsLength="count"
         :footer-props="{
           'items-per-page-options': [50, 100, 200],
@@ -282,7 +283,7 @@ import socket from '@/socket'
 const _initPeriod = () => {
   const todayM = dayjs()
   return [
-    todayM.add(-5, 'd').format('YYYY-MM-DD'),
+    todayM.add(-10, 'd').format('YYYY-MM-DD'),
     todayM.add(3, 'd').format('YYYY-MM-DD'),
   ]
 }
@@ -330,13 +331,8 @@ export default {
     orders: [],
   }),
   setup() {
-    const {
-      getOrderDocStatus,
-      docStatuses,
-      setDocStateStatus,
-
-      minDate,
-    } = useOrderListUtils()
+    const { getOrderDocStatus, docStatuses, setDocStateStatus, minDate } =
+      useOrderListUtils()
 
     const { listSettingsName, activeHeaders, allHeaders, headers } =
       useListColumnSettings({
@@ -523,6 +519,8 @@ export default {
             this.settings.listOptions.itemsPerPage *
             (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
+          sortBy: this.settings.listOptions.sortBy,
+          sortDesc: this.settings.listOptions.sortDesc,
         })
         this.orders = data.items
         this.count = data.count
