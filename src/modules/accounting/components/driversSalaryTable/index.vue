@@ -33,6 +33,7 @@ export default {
       { text: 'Водитель', value: '_driverName', sortable: false },
       { text: 'Кол-во рейсов', value: '_count', sortable: false },
       { text: 'База', value: '_base', sortable: false },
+      { text: 'Простой', value: '_waiting', sortable: false },
       { text: 'Доплата', value: '_payment', sortable: false },
       { text: 'Средняя оценка', value: 'avgGrade', sortable: false },
     ]
@@ -51,6 +52,7 @@ export default {
         value: '_baseTariffTypeStr',
         sortable: false,
       },
+      { text: 'Простой', value: 'waitingSum', sortable: false },
       { text: 'Доплата', value: '_paymentSum', sortable: false },
       { text: 'Прод-ть рейса, ч', value: '_routeDuration', sortable: false },
       { text: 'Оценка', value: 'grade.grade', sortable: false },
@@ -78,6 +80,7 @@ export default {
           _driverName: store.getters.driversMap.get(i._id)?.fullName,
           _count: i?.totalCount,
           _base: i?.base ? new Intl.NumberFormat().format(i.base) : null,
+          _waiting: i?.base ? new Intl.NumberFormat().format(i.waiting) : null,
           _payment: i?.payment
             ? new Intl.NumberFormat().format(i.payment)
             : null,

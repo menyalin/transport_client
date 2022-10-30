@@ -134,6 +134,7 @@ export class SalaryTariffDTO {
         roundByHours: item.roundByHours,
         orderType: item.orderType,
         tariffBy: item.tariffBy,
+        clients: item.clients,
       },
       return: {
         percentOfTariff: item.percentOfTariff,
