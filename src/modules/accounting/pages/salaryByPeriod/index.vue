@@ -19,9 +19,17 @@
         label="Клиент"
         dense
         hide-details
-        hideappend
         onlyClients
         hideAppendIcon
+      />
+      <v-select
+        v-model="consigneeType"
+        :items="$store.getters.partnerGroups"
+        label="Тип грузополучателя"
+        dense
+        clearable
+        hide-details
+        :style="{ 'max-width': '250px' }"
       />
     </div>
 
@@ -60,6 +68,7 @@ export default {
     const historyState = window.history.state
     const driver = ref(historyState.driver)
     const client = ref(historyState.client)
+    const consigneeType = ref(historyState.consigneeType)
     const period = useDebouncedRef(getInitialPeriod(historyState), 500)
     const drivers = computed(() => {
       return store.getters.drivers.filter((i) => i.isCalcSalary)
@@ -69,14 +78,16 @@ export default {
       period,
       driver,
       client,
+      consigneeType,
     })
 
-    watch([period, driver], () => {
+    watch([period, driver, client, consigneeType], () => {
       window.history.pushState(
         {
           period: period.value,
           driver: driver.value,
           client: client.value,
+          consigneeType: consigneeType.value,
         },
         ''
       )
@@ -86,6 +97,7 @@ export default {
       period.value = e.state.period
       driver.value = e.state.driver
       client.value = e.state.client
+      consigneeType.value = e.state.consigneeType
     })
 
     function setDriver(driverId) {
@@ -101,6 +113,7 @@ export default {
       drivers,
       setDriver,
       setListSettings,
+      consigneeType,
     }
   },
 }
@@ -110,7 +123,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 50%;
+  min-width: 60%;
   padding: 20px;
 }
 .driver-mode {
@@ -118,7 +131,7 @@ export default {
 }
 
 .pivot-mode {
-  min-width: 50%;
+  min-width: 70%;
 }
 .filters-wrapper {
   padding-top: 20px;

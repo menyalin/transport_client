@@ -2,7 +2,12 @@ import { ref, watch } from 'vue'
 import SalaryTariffService from '../services/salaryTariff.service.js'
 import dayjs from 'dayjs'
 
-export const useDriversSalaryData = ({ period, driver, client }) => {
+export const useDriversSalaryData = ({
+  period,
+  driver,
+  client,
+  consigneeType,
+}) => {
   const items = ref([])
   const isLoading = ref(false)
   const listSettings = ref({})
@@ -25,13 +30,14 @@ export const useDriversSalaryData = ({ period, driver, client }) => {
       period: getPeriod(),
       driver: driver.value,
       client: client.value,
+      consigneeType: consigneeType.value,
       options: listSettings.value,
     })
     isLoading.value = false
   }
 
   watch(
-    [period, driver, client],
+    [period, driver, client, consigneeType],
     async () => {
       if (period.value) await getData()
     },

@@ -62,7 +62,12 @@ export default {
       if (props.driver)
         return props.items.map((i, idx) => ({
           ...i,
-          // _payment: i._payment ? new Intl.NumberFormat().format(i._payment) : 0,
+          _paymentSum: i._paymentSum
+            ? new Intl.NumberFormat().format(i._paymentSum)
+            : 0,
+          _totalSum: i.totalSum
+            ? new Intl.NumberFormat().format(i.totalSum)
+            : 0,
           _rowNumber: idx + 1,
           _orderDate: i.orderDate
             ? new Date(i.orderDate).toLocaleString()
@@ -76,6 +81,9 @@ export default {
           _count: i?.totalCount,
           _base: i?.base ? new Intl.NumberFormat().format(i.base) : 0,
           _waiting: i?.base ? new Intl.NumberFormat().format(i.waiting) : 0,
+          _totalSum: i?.totalSum
+            ? new Intl.NumberFormat().format(i.totalSum)
+            : 0,
           _payment: i?.payment ? new Intl.NumberFormat().format(i.payment) : 0,
         }))
     })
