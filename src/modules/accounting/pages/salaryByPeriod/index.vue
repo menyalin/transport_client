@@ -1,5 +1,5 @@
 <template>
-  <div class="page-wrapper" :class="!!driver ? 'driver-mode' : 'pivot-mode'">
+  <div class="page-wrapper">
     <div class="filters-wrapper">
       <app-drivers-salary-period v-model="period" />
       <v-autocomplete
@@ -14,9 +14,19 @@
         clearable
         :style="{ maxWidth: '300px' }"
       />
+      <app-partners-autocomplete
+        v-model="client"
+        label="Клиент"
+        dense
+        hide-details
+        hideappend
+        onlyClients
+        hideAppendIcon
+      />
     </div>
 
     <app-drivers-salary-table
+      :class="!!driver ? 'driver-mode' : 'pivot-mode'"
       :items="items"
       :loading="isLoading"
       :driver="driver"
@@ -30,6 +40,7 @@ import { computed, ref, watch } from 'vue'
 import store from '@/store'
 import AppDriversSalaryPeriod from '../../components/driversSalaryPeriod/index.vue'
 import AppDriversSalaryTable from '../../components/driversSalaryTable/index.vue'
+import AppPartnersAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import { useDriversSalaryData } from '@/modules/accounting/hooks/useDriversSalaryData.js'
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
 
@@ -43,25 +54,29 @@ export default {
   components: {
     AppDriversSalaryPeriod,
     AppDriversSalaryTable,
+    AppPartnersAutocomplete,
   },
   setup(_props, _ctx) {
     const historyState = window.history.state
     const driver = ref(historyState.driver)
+    const client = ref(historyState.client)
     const period = useDebouncedRef(getInitialPeriod(historyState), 500)
     const drivers = computed(() => {
       return store.getters.drivers.filter((i) => i.isCalcSalary)
     })
 
-    const { items, isLoading, setListSettings } = useDriversSalaryData(
+    const { items, isLoading, setListSettings } = useDriversSalaryData({
       period,
-      driver
-    )
+      driver,
+      client,
+    })
 
     watch([period, driver], () => {
       window.history.pushState(
         {
           period: period.value,
           driver: driver.value,
+          client: client.value,
         },
         ''
       )
@@ -70,6 +85,7 @@ export default {
     addEventListener('popstate', (e) => {
       period.value = e.state.period
       driver.value = e.state.driver
+      client.value = e.state.client
     })
 
     function setDriver(driverId) {
@@ -81,6 +97,7 @@ export default {
       items,
       isLoading,
       driver,
+      client,
       drivers,
       setDriver,
       setListSettings,

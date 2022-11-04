@@ -48,7 +48,7 @@
                 @keypress.prevent.enter="
                   changeFinalPrice($event, priceType.value)
                 "
-              >
+              />
               <div
                 v-if="priceType.value !== editableRowType"
                 :style="{ cursor: 'pointer' }"

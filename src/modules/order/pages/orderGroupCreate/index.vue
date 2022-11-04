@@ -67,7 +67,7 @@
                   align="right"
                   type="text"
                   @change="setOrder($event, [t, day.date])"
-                >
+                />
               </td>
             </tr>
           </tbody>

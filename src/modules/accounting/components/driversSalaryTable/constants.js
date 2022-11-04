@@ -1,5 +1,5 @@
 export const PIVOT_HEADERS = [
-  { value: '_rowNumber', sortable: false, width: '40px', align: 'right' },
+  { value: '_rowNumber', sortable: false, width: '30px', align: 'right' },
   { text: 'Водитель', value: '_driverName', sortable: false, width: '350px' },
   {
     text: 'Кол-во',
@@ -47,21 +47,25 @@ export const PIVOT_HEADERS = [
 ]
 
 export const DRIVER_DETAILS_HEADERS = [
+  { value: '_rowNumber', sortable: false, width: '30px', align: 'right' },
   { text: 'Дата рейса', value: '_orderDate', sortable: false },
+  { text: 'Грузовик', value: '_truckRegNum', sortable: false },
+  { text: 'Прицеп', value: '_trailerRegNum', sortable: false },
   { text: 'Клиент', value: '_client.name', sortable: false },
   { text: 'Погрузка', value: '_loadingAddressesStr', sortable: false },
   { text: 'Выгрузка', value: '_unloadingAddressesStr', sortable: false },
-  { text: 'Грузовик', value: '_truckRegNum', sortable: false },
-  { text: 'Прицеп', value: '_trailerRegNum', sortable: false },
-
-  { text: 'База', value: 'baseTariff.tariff.sum', sortable: false },
+  { text: 'Тип грузополучателя', value: '_consigneeType', sortable: false },
   {
     text: 'Тип базового тарифа',
     value: '_baseTariffTypeStr',
     sortable: false,
   },
+  { text: 'База', value: 'baseTariff.tariff.sum', sortable: false },
   { text: 'Простой', value: 'waitingSum', sortable: false },
+  { text: 'Возврат', value: '_returnSum', sortable: false },
+  { text: 'Доп.точки', value: '_additionalPointsSum', sortable: false },
   { text: 'Доплата', value: '_paymentSum', sortable: false },
+  { text: 'Итого', value: '_totalSum', sortable: false },
   { text: 'Прод-ть рейса, ч', value: '_routeDuration', sortable: false },
   { text: 'Оценка', value: 'grade.grade', sortable: false },
   { text: 'Комментарий к оценке', value: 'grade.note', sortable: false },

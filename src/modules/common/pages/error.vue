@@ -12,7 +12,7 @@
               {{ $route.query.message }}
             </v-alert>
             <router-link to="/"> Перейти на главную </router-link>
-            <br>
+            <br />
             <small>До автоматического перехода осталось {{ secBefore }}сек</small>
           </v-col>
         </v-row>

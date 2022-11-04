@@ -4,7 +4,6 @@
     :headers="tableHeaders"
     dense
     fixed-header
-    :server-items-length="preparedItems.length"
     :options.sync="options"
     height="75vh"
     :loading="loading"
@@ -46,7 +45,7 @@ export default {
     const options = ref({})
 
     watch(options, () => {
-      props.setListSettings(options.value)
+      // props.setListSettings(options.value)
     })
 
     const headersForDriverMode = DRIVER_DETAILS_HEADERS

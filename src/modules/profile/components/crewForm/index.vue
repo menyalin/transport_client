@@ -94,7 +94,7 @@
     <div v-if="crew && crew.manager" class="pb-4 text-caption">
       Отв.пользователь: {{ crew.manager.name }},
       {{ crew.manager.email }}
-      <br>
+      <br />
       Создан: {{ new Date(crew.createdAt).toLocaleString() }}
       <span v-if="crew.updatedAt">
         Обновлен: {{ new Date(crew.updatedAt).toLocaleString() }}
