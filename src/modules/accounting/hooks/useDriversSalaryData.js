@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 export const useDriversSalaryData = (period, driver) => {
   const items = ref([])
   const isLoading = ref(false)
+  const listSettings = ref({})
 
   function getPeriod() {
     return [
@@ -12,18 +13,24 @@ export const useDriversSalaryData = (period, driver) => {
       dayjs(period.value).endOf('month').toISOString(),
     ]
   }
+  function setListSettings(newSettings) {
+    console.log('setListSettings', newSettings)
+    listSettings.value = newSettings
+  }
 
   async function getData() {
     isLoading.value = true
+    items.value = []
     items.value = await SalaryTariffService.getDriversSalaryByPeriod({
       period: getPeriod(),
       driver: driver.value,
+      options: listSettings.value,
     })
     isLoading.value = false
   }
 
   watch(
-    [period, driver],
+    [period, driver, listSettings],
     async () => {
       if (period.value) await getData()
     },
@@ -33,5 +40,6 @@ export const useDriversSalaryData = (period, driver) => {
   return {
     items,
     isLoading,
+    setListSettings,
   }
 }

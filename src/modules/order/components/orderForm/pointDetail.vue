@@ -23,6 +23,16 @@
           class="ml-4"
           @change="setField($event, 'isReturn')"
         />
+        <v-checkbox
+          v-if="tmpPoint.isReturn"
+          v-model="tmpPoint.isPltReturn"
+          label="Возврат паллет"
+          hide-details
+          dense
+          color="primary"
+          class="ml-4"
+          @change="setField($event, 'isPltReturn')"
+        />
       </div>
 
       <app-address-autocomplete
@@ -192,6 +202,7 @@ export default {
         type: null,
         address: null,
         isReturn: false,
+        isPltReturn: false,
         plannedDate: null,
         arrivalDate: null,
         departureDate: null,

@@ -1,5 +1,5 @@
 <template>
-  <div class="page-wrapper">
+  <div class="page-wrapper" :class="!!driver ? 'driver-mode' : 'pivot-mode'">
     <div class="filters-wrapper">
       <app-drivers-salary-period v-model="period" />
       <v-autocomplete
@@ -20,6 +20,7 @@
       :items="items"
       :loading="isLoading"
       :driver="driver"
+      :setListSettings="setListSettings"
       @chooseDriver="setDriver"
     />
   </div>
@@ -51,7 +52,10 @@ export default {
       return store.getters.drivers.filter((i) => i.isCalcSalary)
     })
 
-    const { items, isLoading } = useDriversSalaryData(period, driver)
+    const { items, isLoading, setListSettings } = useDriversSalaryData(
+      period,
+      driver
+    )
 
     watch([period, driver], () => {
       window.history.pushState(
@@ -79,6 +83,7 @@ export default {
       driver,
       drivers,
       setDriver,
+      setListSettings,
     }
   },
 }
@@ -88,8 +93,15 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 85%;
+  min-width: 50%;
   padding: 20px;
+}
+.driver-mode {
+  width: 100%;
+}
+
+.pivot-mode {
+  min-width: 50%;
 }
 .filters-wrapper {
   padding-top: 20px;

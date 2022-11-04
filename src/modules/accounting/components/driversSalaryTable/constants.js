@@ -1,0 +1,68 @@
+export const PIVOT_HEADERS = [
+  { value: '_rowNumber', sortable: false, width: '40px', align: 'right' },
+  { text: 'Водитель', value: '_driverName', sortable: false, width: '350px' },
+  {
+    text: 'Кол-во',
+    value: '_count',
+    sortable: true,
+    width: '100px',
+    align: 'right',
+    _total: 'sum',
+    field: 'totalCount',
+  },
+  {
+    text: 'База',
+    value: '_base',
+    sortable: true,
+    width: '100px',
+    align: 'right',
+    _total: 'sum',
+    field: 'base',
+  },
+  {
+    text: 'Простой',
+    value: '_waiting',
+    sortable: true,
+    width: '100px',
+    align: 'right',
+    _total: 'sum',
+    field: 'waiting',
+  },
+  {
+    text: 'Доплата',
+    value: '_payment',
+    sortable: true,
+    width: '100px',
+    align: 'right',
+    _total: 'sum',
+    field: 'payment',
+  },
+  {
+    text: 'Оценка',
+    value: 'avgGrade',
+    sortable: true,
+    width: '100px',
+    align: 'right',
+  },
+]
+
+export const DRIVER_DETAILS_HEADERS = [
+  { text: 'Дата рейса', value: '_orderDate', sortable: false },
+  { text: 'Клиент', value: '_client.name', sortable: false },
+  { text: 'Погрузка', value: '_loadingAddressesStr', sortable: false },
+  { text: 'Выгрузка', value: '_unloadingAddressesStr', sortable: false },
+  { text: 'Грузовик', value: '_truckRegNum', sortable: false },
+  { text: 'Прицеп', value: '_trailerRegNum', sortable: false },
+
+  { text: 'База', value: 'baseTariff.tariff.sum', sortable: false },
+  {
+    text: 'Тип базового тарифа',
+    value: '_baseTariffTypeStr',
+    sortable: false,
+  },
+  { text: 'Простой', value: 'waitingSum', sortable: false },
+  { text: 'Доплата', value: '_paymentSum', sortable: false },
+  { text: 'Прод-ть рейса, ч', value: '_routeDuration', sortable: false },
+  { text: 'Оценка', value: 'grade.grade', sortable: false },
+  { text: 'Комментарий к оценке', value: 'grade.note', sortable: false },
+]
