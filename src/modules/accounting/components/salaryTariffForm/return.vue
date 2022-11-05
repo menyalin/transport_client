@@ -12,15 +12,7 @@
       hide-details
       v-model="tmpItem.clients"
     />
-    <v-select
-      label="Типы грузополучателей"
-      :items="$store.getters.partnerGroups"
-      dense
-      multiple
-      outlined
-      hide-details
-      v-model="tmpItem.consigneeTypes"
-    />
+    
     <v-select
       v-model="tmpItem.orderType"
       label="Тип рейса"

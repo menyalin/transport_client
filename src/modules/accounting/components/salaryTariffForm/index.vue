@@ -44,6 +44,15 @@
             dense
             hide-details
           />
+          <v-select
+            label="Типы грузополучателей"
+            :items="$store.getters.partnerGroups"
+            dense
+            multiple
+            outlined
+            hide-details
+            v-model="tmpItem.consigneeTypes"
+          />
           <app-points
             v-if="tmpItem.type === 'points'"
             ref="points"
@@ -136,9 +145,7 @@
 import AppPoints from './points.vue'
 import AppZones from './zones.vue'
 import AppRegions from './regions.vue'
-
 import AppAdditionalPoints from './additionalPoints.vue'
-import AppDirectDistanceZones from './directDistanceZones.vue'
 import AppWaiting from './waiting.vue'
 import AppReturn from './return.vue'
 import SalaryTariffService from '../../services/salaryTariff.service.js'
@@ -149,7 +156,6 @@ export default {
   components: {
     AppPoints,
     AppAdditionalPoints,
-    AppDirectDistanceZones,
     AppWaiting,
     AppReturn,
     AppZones,
@@ -173,6 +179,7 @@ export default {
       additionalPoints: {},
       tmpItem: {
         liftCapacity: [],
+        consigneeTypes: [],
       },
       directDistanceZones: {},
       waiting: {},

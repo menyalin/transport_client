@@ -1,8 +1,13 @@
 import dayjs from 'dayjs'
 
-const _REQUIRED_FIELDS = ['date', 'type', 'liftCapacity', 'sum', 'tks']
-
-const TYPES_WITHOUT_PRICE = ['directDistanceZones']
+const _REQUIRED_FIELDS = [
+  'date',
+  'type',
+  'liftCapacity',
+  'sum',
+  'tks',
+  'consigneeTypes',
+]
 
 const _REQUIRED_FIELDS_FOR_POINTS_TYPE = ['loading', 'unloading']
 const _REQUIRED_FIELDS_FOR_ZONES_TYPE = ['loadingZone', 'unloadingZone']
@@ -11,13 +16,10 @@ const _REQUIRED_FIELDS_FOR_REGIONS_TYPE = ['loadingRegion', 'unloadingRegion']
 const _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE = [
   'orderType',
   'includedPoints',
+  'clients',
 ]
 
-const _REQUIRED_FIELDS_FOR_RETURN_TYPE = [
-  'clients',
-  'consigneeTypes',
-  'orderType',
-]
+const _REQUIRED_FIELDS_FOR_RETURN_TYPE = ['clients', 'orderType']
 
 const _REQUIRED_FIELDS_FOR_WAITING_TYPE = [
   'orderType',
@@ -26,8 +28,6 @@ const _REQUIRED_FIELDS_FOR_WAITING_TYPE = [
   'tariffBy',
   'clients',
 ]
-
-const _REQUIRED_FIELDS_FOR_DIRECT_DISTANCE_ZONES_TYPE = ['loading', 'zones']
 
 const _getRequiredFieldsByType = (type) => {
   let typedFields
@@ -44,9 +44,6 @@ const _getRequiredFieldsByType = (type) => {
     case 'additionalPoints':
       typedFields = _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE
       break
-    case 'directDistanceZones':
-      typedFields = _REQUIRED_FIELDS_FOR_DIRECT_DISTANCE_ZONES_TYPE
-      break
     case 'waiting':
       typedFields = _REQUIRED_FIELDS_FOR_WAITING_TYPE
       break
@@ -56,9 +53,7 @@ const _getRequiredFieldsByType = (type) => {
     default:
       throw new Error(`"${type}" - incorrect tariff type`)
   }
-  return _REQUIRED_FIELDS
-    .concat(typedFields)
-    .filter((i) => (TYPES_WITHOUT_PRICE.includes(type) ? i !== 'price' : true))
+  return _REQUIRED_FIELDS.concat(typedFields)
 }
 
 export class SalaryTariffDTO {
@@ -81,21 +76,21 @@ export class SalaryTariffDTO {
 
   static invalidItem(item) {
     if (!item.type) return true
-    if (
-      item.type === 'waiting' &&
-      (!Array.isArray(item.clients) || item.clients.length === 0)
-    )
+    if (!Array.isArray(item.consigneeTypes) || item.consigneeTypes.length === 0)
       return true
     if (!Array.isArray(item.tks) || item.tks.length === 0) return true
     if (!Array.isArray(item.liftCapacity) || item.liftCapacity.length === 0)
       return true
 
     if (
-      item.type === 'return' &&
-      (!Array.isArray(item.clients) ||
-        item.clients.length === 0 ||
-        !Array.isArray(item.consigneeTypes) ||
-        item.consigneeTypes.length === 0)
+      item.type === 'waiting' &&
+      (!Array.isArray(item.clients) || item.clients.length === 0)
+    )
+      return true
+
+    if (
+      ['return', 'additionalPoints'].includes(item.type) &&
+      (!Array.isArray(item.clients) || item.clients.length === 0)
     )
       return true
 
@@ -110,10 +105,12 @@ export class SalaryTariffDTO {
         ...item,
         date: dayjs(item.date).format('YYYY-MM-DD'),
       },
+
       zones: {
         loadingZone: item.loadingZone,
         unloadingZone: item.unloadingZone,
       },
+
       regions: {
         loadingRegion: item.loadingRegion,
         unloadingRegion: item.unloadingRegion,
@@ -123,17 +120,13 @@ export class SalaryTariffDTO {
         loading: item.loading,
         unloading: item.unloading,
       },
+
       additionalPoints: {
         includedPoints: item.includedPoints,
         orderType: item.orderType,
+        clients: item.clients,
       },
-      directDistanceZones: {
-        loading: item.loading,
-        zones: item.zones?.map((i) => ({
-          ...i,
-          price: item.groupVat ? i.price : i.priceWOVat,
-        })),
-      },
+
       waiting: {
         includeHours: item.includeHours,
         roundByHours: item.roundByHours,
@@ -141,10 +134,10 @@ export class SalaryTariffDTO {
         tariffBy: item.tariffBy,
         clients: item.clients,
       },
+
       return: {
         clients: item.clients,
         isPltReturn: item.isPltReturn,
-        consigneeTypes: item.consigneeTypes,
         orderType: item.orderType,
       },
     }

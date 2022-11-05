@@ -11,6 +11,13 @@ export const ALL_LIST_HEADERS = [
   { value: '_type', text: 'Тип', sortable: false, default: true },
   { value: '_tks', text: 'ТК', sortable: false, default: true },
   { value: '_result', text: 'Параметры', sortable: false, default: true },
+  {
+    value: '_consigneeTypes',
+    text: 'Типы грузополучателя',
+    sortable: false,
+    default: true,
+  },
+  { value: '_clients', text: 'Клиенты', sortable: false, default: true },
 
   {
     value: '_liftCapacity',

@@ -1,7 +1,18 @@
 <template>
   <div id="points-wrapper">
-    <v-select
+    <v-autocomplete
       ref="routeTypeEl"
+      label="Клиенты"
+      dense
+      :items="clients"
+      item-value="_id"
+      item-text="name"
+      multiple
+      outlined
+      hide-details
+      v-model="tmpAdditionalPoints.clients"
+    />
+    <v-select
       v-model="tmpAdditionalPoints.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
@@ -32,12 +43,17 @@ export default {
   data() {
     return {
       tmpAdditionalPoints: {
+        clients: [],
         orderType: null,
         includedPoints: null,
       },
     }
   },
-
+  computed: {
+    clients() {
+      return this.$store.getters.partners.filter((i) => i.isClient)
+    },
+  },
   watch: {
     additionalPoints: {
       immediate: true,

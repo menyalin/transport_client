@@ -177,6 +177,12 @@ export default {
           .map((tkId) => this.$store.getters.tkNamesMap.get(tkId).name)
           .join(', '),
         _sum: Intl.NumberFormat().format(i.sum),
+        _clients: i.clients
+          ?.map((client) => this.$store.getters.partnersMap.get(client)?.name)
+          .join(', '),
+        _consigneeTypes: i.consigneeTypes
+          ?.map((type) => this.$store.getters.partnerGroupsMap.get(type))
+          .join(', '),
         _liftCapacity: i.liftCapacity.join(', '),
       }))
     },

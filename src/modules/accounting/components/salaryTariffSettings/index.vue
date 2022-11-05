@@ -31,7 +31,17 @@
       hide-details
       :style="{ 'max-width': '220px' }"
     />
-
+    <v-select
+      v-model="tmpSettings.consigneeTypes"
+      label="Типы грузополучателей"
+      :items="$store.getters.partnerGroups"
+      dense
+      multiple
+      outlined
+      clearable
+      hide-details
+      :style="{ 'max-width': '300px' }"
+    />
     <v-select
       v-model="tmpSettings.liftCapacity"
       label="Грузоподъемность"
@@ -69,6 +79,7 @@ export default {
         tks: [],
         type: null,
         liftCapacity: [],
+        consigneeTypes: [],
       },
     }
   },

@@ -13,7 +13,6 @@
       v-model="tmpItem.clients"
     />
     <v-select
-      
       v-model="tmpItem.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"

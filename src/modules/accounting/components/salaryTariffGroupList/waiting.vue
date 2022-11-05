@@ -1,11 +1,6 @@
 <template>
   <span>
-    <span>
-      Клиенты: <b>{{ clients }}</b> ,
-    </span>
-    <span>
-      Рейс: <b>{{ orderTypeStr }}</b> , тариф за: <b>{{ waitingTariffBy }}</b>
-    </span>
+    Рейс: <b>{{ orderTypeStr }}</b> , тариф за: <b>{{ waitingTariffBy }}</b>
   </span>
 </template>
 <script>
@@ -20,11 +15,6 @@ export default {
     },
     waitingTariffBy() {
       return this.$store.getters.waitingTariffByItemsMap.get(this.item.tariffBy)
-    },
-    clients() {
-      return this.item.clients
-        .map((clientId) => this.$store.getters.partnersMap.get(clientId)?.name)
-        .join(', ')
     },
   },
 }
