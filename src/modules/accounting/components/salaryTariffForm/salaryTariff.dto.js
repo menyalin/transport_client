@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 const _REQUIRED_FIELDS = ['date', 'type', 'liftCapacity', 'sum', 'tks']
 
-const TYPES_WITHOUT_PRICE = ['directDistanceZones', 'return']
+const TYPES_WITHOUT_PRICE = ['directDistanceZones']
 
 const _REQUIRED_FIELDS_FOR_POINTS_TYPE = ['loading', 'unloading']
 const _REQUIRED_FIELDS_FOR_ZONES_TYPE = ['loadingZone', 'unloadingZone']
@@ -13,7 +13,11 @@ const _REQUIRED_FIELDS_FOR_ADDIONAL_POINTS_TYPE = [
   'includedPoints',
 ]
 
-const _REQUIRED_FIELDS_FOR_RETURN_TYPE = ['percentOfTariff']
+const _REQUIRED_FIELDS_FOR_RETURN_TYPE = [
+  'clients',
+  'consigneeTypes',
+  'orderType',
+]
 
 const _REQUIRED_FIELDS_FOR_WAITING_TYPE = [
   'orderType',
@@ -85,12 +89,13 @@ export class SalaryTariffDTO {
     if (!Array.isArray(item.tks) || item.tks.length === 0) return true
     if (!Array.isArray(item.liftCapacity) || item.liftCapacity.length === 0)
       return true
-    if (item.type === 'directDistanceZones' && !item.zones?.length) return true
+
     if (
-      item.type === 'directDistanceZones' &&
-      item.zones.some(
-        (i) => !i.distance || i.distance <= 0 || !i.sum || i.sum <= 0
-      )
+      item.type === 'return' &&
+      (!Array.isArray(item.clients) ||
+        item.clients.length === 0 ||
+        !Array.isArray(item.consigneeTypes) ||
+        item.consigneeTypes.length === 0)
     )
       return true
 
@@ -137,29 +142,11 @@ export class SalaryTariffDTO {
         clients: item.clients,
       },
       return: {
-        percentOfTariff: item.percentOfTariff,
+        clients: item.clients,
+        isPltReturn: item.isPltReturn,
+        consigneeTypes: item.consigneeTypes,
+        orderType: item.orderType,
       },
     }
   }
-
-  // _getPrices({ price, vatRate, groupVat }) {
-  //   const vatKoef = parseFloat(1 + vatRate / 100)
-  //   const res = {}
-  //   if (vatRate !== 0 && groupVat) {
-  //     // если цену вносят с НДС
-  //     res.price = price
-  //     res.priceWOVat = price / vatKoef
-  //     res.sumVat = price - price / vatKoef
-  //   } else if (vatRate !== 0) {
-  //     // если цену вносят без НДС
-  //     res.priceWOVat = price
-  //     res.sumVat = price * ((vatKoef * 10 - 10) / 10)
-  //     res.price = price + price * ((vatKoef * 10 - 10) / 10)
-  //   } else {
-  //     res.priceWOVat = price
-  //     res.sumVat = 0
-  //     res.price = price
-  //   }
-  //   return res
-  // }
 }

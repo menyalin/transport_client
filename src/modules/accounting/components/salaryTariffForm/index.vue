@@ -89,7 +89,7 @@
             :style="{ 'min-width': '550px' }"
           />
           <v-text-field
-            v-if="!['return', 'directDistanceZones'].includes(tmpItem.type)"
+            v-if="!['directDistanceZones'].includes(tmpItem.type)"
             v-model.number="tmpItem.sum"
             dense
             type="number"

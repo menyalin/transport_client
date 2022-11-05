@@ -39,10 +39,12 @@ export const PIVOT_HEADERS = [
   },
   {
     text: 'Возврат',
-    value: '_returnSum',
+    value: '_return',
     sortable: false,
     align: 'right',
     width: '100px',
+    _total: 'sum',
+    field: 'returnSum',
   },
   {
     text: 'Доп.точки',
@@ -57,6 +59,8 @@ export const PIVOT_HEADERS = [
     sortable: false,
     align: 'right',
     width: '120px',
+    _total: 'sum',
+    field: 'totalSum',
   },
   {
     text: 'Оценка',
@@ -92,7 +96,7 @@ export const DRIVER_DETAILS_HEADERS = [
     align: 'right',
   },
   { text: 'Простой', value: 'waitingSum', sortable: false, align: 'right' },
-  { text: 'Возврат', value: '_returnSum', sortable: false, align: 'right' },
+  { text: 'Возврат', value: 'returnSum', sortable: false, align: 'right' },
   {
     text: 'Доп.точки',
     value: '_additionalPointsSum',

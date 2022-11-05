@@ -1,6 +1,7 @@
 <template>
   <div id="wrapper">
     <v-autocomplete
+      ref="first_field"
       label="Клиенты"
       dense
       :items="clients"
@@ -12,7 +13,7 @@
       v-model="tmpItem.clients"
     />
     <v-select
-      ref="first_field"
+      
       v-model="tmpItem.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"

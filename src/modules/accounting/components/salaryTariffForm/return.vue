@@ -1,13 +1,38 @@
 <template>
   <div id="wrapper">
-    <v-text-field
+    <v-autocomplete
       ref="first_field"
-      v-model.number="tmpItem.percentOfTariff"
-      label="Процент от базового тарифа"
-      type="number"
+      label="Клиенты"
+      dense
+      :items="clients"
+      item-value="_id"
+      item-text="name"
+      multiple
+      outlined
+      hide-details
+      v-model="tmpItem.clients"
+    />
+    <v-select
+      label="Типы грузополучателей"
+      :items="$store.getters.partnerGroups"
+      dense
+      multiple
+      outlined
+      hide-details
+      v-model="tmpItem.consigneeTypes"
+    />
+    <v-select
+      v-model="tmpItem.orderType"
+      label="Тип рейса"
+      :items="$store.getters.orderAnalyticTypes"
       dense
       outlined
       hide-details
+    />
+    <v-checkbox
+      label="Возврат паллет"
+      v-model="tmpItem.isPltReturn"
+      color="primary"
     />
   </div>
 </template>
@@ -24,11 +49,18 @@ export default {
   data() {
     return {
       tmpItem: {
-        percentOfTariff: null,
+        clients: [],
+        consigneeTypes: [],
+        orderType: null,
+        isPltReturn: false,
       },
     }
   },
-
+  computed: {
+    clients() {
+      return this.$store.getters.partners.filter((i) => i.isClient)
+    },
+  },
   watch: {
     item: {
       immediate: true,

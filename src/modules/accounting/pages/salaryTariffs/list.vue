@@ -80,6 +80,7 @@
               v-else-if="item.type === 'waiting'"
               :item="item"
             />
+            <app-return-cell v-else-if="item.type === 'return'" :item="item" />
             <div v-else>
               {{ item._result }}
             </div>
@@ -98,17 +99,13 @@
 </template>
 <script>
 /*
-  <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
             <app-additional-points-cell
               v-else-if="item.type === 'additionalPoints'"
               :item="item"
             /> -->
-            <!-- <app-return-cell v-else-if="item.type === 'return'" :item="item" />
             <app-direct-distance-zones
               v-else-if="item.type === 'directDistanceZones'"
               :item="item"
-            
-
 */
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
@@ -120,6 +117,8 @@ import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
 import AppWaitingCell from '../../components/salaryTariffGroupList/waiting.vue'
+import AppReturnCell from '../../components/salaryTariffGroupList/return.vue'
+
 export default {
   name: 'SalaryTariffList',
   components: {
@@ -129,6 +128,7 @@ export default {
     AppZonesCell,
     AppRegionsCell,
     AppWaitingCell,
+    AppReturnCell,
   },
 
   setup() {

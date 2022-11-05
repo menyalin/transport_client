@@ -22,7 +22,10 @@ export default {
   },
   setup(props) {
     function getSum(field) {
-      return props.items.reduce((res, item) => parseFloat(item[field]) + res, 0)
+      return props.items.reduce(
+        (res, item) => parseFloat(item[field] || 0) + res,
+        0
+      )
     }
     return { getSum }
   },

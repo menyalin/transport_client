@@ -60,6 +60,7 @@ export default {
 
     const preparedItems = computed(() => {
       if (props.driver)
+        // Детализация по Водителю
         return props.items.map((i, idx) => ({
           ...i,
           _paymentSum: i._paymentSum
@@ -73,6 +74,7 @@ export default {
             ? new Date(i.orderDate).toLocaleString()
             : null,
         }))
+      // Сводная информация
       else
         return props.items.map((i, idx) => ({
           ...i,
@@ -80,7 +82,10 @@ export default {
           _driverName: store.getters.driversMap.get(i._id)?.fullName,
           _count: i?.totalCount,
           _base: i?.base ? new Intl.NumberFormat().format(i.base) : 0,
-          _waiting: i?.base ? new Intl.NumberFormat().format(i.waiting) : 0,
+          _return: i?.returnSum
+            ? new Intl.NumberFormat().format(i.returnSum)
+            : 0,
+          _waiting: i?.waiting ? new Intl.NumberFormat().format(i.waiting) : 0,
           _totalSum: i?.totalSum
             ? new Intl.NumberFormat().format(i.totalSum)
             : 0,
