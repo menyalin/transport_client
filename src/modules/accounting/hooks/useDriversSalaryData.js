@@ -7,6 +7,7 @@ export const useDriversSalaryData = ({
   driver,
   client,
   consigneeType,
+  orderType,
 }) => {
   const items = ref([])
   const isLoading = ref(false)
@@ -19,7 +20,6 @@ export const useDriversSalaryData = ({
     ]
   }
   function setListSettings(newSettings) {
-    console.log('setListSettings', newSettings)
     listSettings.value = newSettings
   }
 
@@ -31,13 +31,14 @@ export const useDriversSalaryData = ({
       driver: driver.value,
       client: client.value,
       consigneeType: consigneeType.value,
+      orderType: orderType.value,
       options: listSettings.value,
     })
     isLoading.value = false
   }
 
   watch(
-    [period, driver, client, consigneeType],
+    [period, driver, client, consigneeType, orderType],
     async () => {
       if (period.value) await getData()
     },
