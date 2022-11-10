@@ -21,7 +21,7 @@ export const useFineList = () => {
     { value: 'expiryDateOfDiscount', text: 'Скидка до', sortable: true },
     { value: 'isPayment', text: 'Оплачен', sortable: false },
     { value: 'paymentDate', text: 'Дата оплаты', sortable: false },
-    // { value: 'payingByWorker', text: 'Оплатил', sortable: false},
+    { value: '_worker.name', text: 'Оплатил', sortable: false },
     { value: 'category', text: 'Категория', sortable: false },
     { value: 'note', text: 'Примечание', sortable: false },
   ]
@@ -38,6 +38,7 @@ export const useFineList = () => {
     driver: null,
     truck: null,
     category: null,
+    searchStr: null,
     listOptions: {
       page: 1,
       itemsPerPage: 50,
@@ -54,6 +55,7 @@ export const useFineList = () => {
     category: settings.value.category,
     sortBy: settings.value.listOptions?.sortBy,
     sortDesc: settings.value.listOptions.sortDesc,
+    searchStr: settings.value.searchStr,
     skip:
       settings.value.listOptions.itemsPerPage *
       (settings.value.listOptions.page - 1),

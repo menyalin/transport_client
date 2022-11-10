@@ -58,6 +58,15 @@
             hide-details
             dense
           />
+          <v-text-field
+            v-model.lazy.trim="settings.searchStr"
+            label="Поиск"
+            outlined
+            clearable
+            hide-details
+            dense
+            :style="{ minWidth: '450px' }"
+          />
         </div>
         <v-data-table
           v-model="selected"
@@ -67,7 +76,7 @@
           :items="preparedList"
           :loading="loading"
           :singleSelect="false"
-          height="73vh"
+          height="70vh"
           dense
           fixed-header
           :serverItemsLength="count"
@@ -171,6 +180,7 @@ export default {
 <style scoped>
 .filter-wrapper {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   margin-bottom: 20px;
