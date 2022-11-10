@@ -12,11 +12,12 @@
     :style="{ boxSizing: 'border-box' }"
   >
     <template
-      v-if="preparedItems.length && !driver"
+      v-if="preparedItems.length"
       v-slot:body.append="{ headers, items: tableItems }"
     >
       <app-append-pivor-row :headers="headers" :items="tableItems" />
     </template>
+
     <template v-slot:[`item.totalSum`]="{ item }">
       {{ new Intl.NumberFormat().format(item.totalSum) || 0 }}
     </template>
@@ -32,9 +33,7 @@
     <template v-slot:[`item.returnSum`]="{ item }">
       {{ new Intl.NumberFormat().format(item.returnSum) || 0 }}
     </template>
-    <template v-slot:[`item.totalSum`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.totalSum) || 0 }}
-    </template>
+
     <template v-slot:[`item.additionalPointsSum`]="{ item }">
       {{ new Intl.NumberFormat().format(item.additionalPointsSum) || 0 }}
     </template>
@@ -104,7 +103,7 @@ export default {
           _rowNumber: idx + 1,
           _driverName: store.getters.driversMap.get(i._id)?.fullName,
           _count: i?.totalCount,
-          
+
           avgGrade: i?.avgGrade
             ? new Intl.NumberFormat('ru', {
                 minimumFractionDigits: 2,

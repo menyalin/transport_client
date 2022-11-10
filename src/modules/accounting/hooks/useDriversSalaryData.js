@@ -8,6 +8,7 @@ export const useDriversSalaryData = ({
   client,
   consigneeType,
   orderType,
+  tk,
 }) => {
   const items = ref([])
   const isLoading = ref(false)
@@ -33,12 +34,13 @@ export const useDriversSalaryData = ({
       consigneeType: consigneeType.value,
       orderType: orderType.value,
       options: listSettings.value,
+      tk: tk.value,
     })
     isLoading.value = false
   }
 
   watch(
-    [period, driver, client, consigneeType, orderType],
+    [period, driver, client, consigneeType, orderType, tk],
     async () => {
       if (period.value) await getData()
     },

@@ -249,7 +249,7 @@ export default {
         isBrigadier: false,
         isMechanic: false,
         hideInFines: false,
-        isCalcSalary: false,
+        isCalcSalary: true,
       },
     }
   },

@@ -2,6 +2,18 @@
   <div class="page-wrapper">
     <div class="filters-wrapper">
       <app-drivers-salary-period v-model="period" />
+      <v-select
+        v-model="tk"
+        :items="$store.getters.tkNames"
+        label="ТК"
+        dense
+        item-text="name"
+        item-value="_id"
+        clearable
+        hide-details
+        :style="{ 'max-width': '250px' }"
+      />
+
       <v-autocomplete
         label="Водитель"
         v-model="driver"
@@ -43,7 +55,6 @@
     </div>
 
     <app-drivers-salary-table
-      :class="!!driver ? 'driver-mode' : 'pivot-mode'"
       :items="items"
       :loading="isLoading"
       :driver="driver"
@@ -75,6 +86,7 @@ export default {
   },
   setup(_props, _ctx) {
     const historyState = window.history.state
+    const tk = ref(historyState.tk)
     const driver = ref(historyState.driver)
     const client = ref(historyState.client)
     const consigneeType = ref(historyState.consigneeType)
@@ -87,6 +99,7 @@ export default {
       client,
       orderType,
       consigneeType,
+      tk,
     })
     const driversInItems = computed(() => {
       return new Set(items.value.map((i) => i?._id))
@@ -100,7 +113,7 @@ export default {
         )
     })
 
-    watch([period, driver, client, consigneeType, orderType], () => {
+    watch([period, driver, client, consigneeType, orderType, tk], () => {
       window.history.pushState(
         {
           period: period.value,
@@ -108,6 +121,7 @@ export default {
           client: client.value,
           consigneeType: consigneeType.value,
           orderType: orderType.value,
+          tk: tk.value,
         },
         ''
       )
@@ -119,6 +133,7 @@ export default {
       client.value = e.state.client
       orderType.value = e.state.orderType
       consigneeType.value = e.state.consigneeType
+      tk.value = e.state.tk
     })
 
     function setDriver(driverId) {
@@ -136,6 +151,7 @@ export default {
       setDriver,
       setListSettings,
       consigneeType,
+      tk,
     }
   },
 }
@@ -145,8 +161,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 60%;
   padding: 20px;
+  width: 100%;
 }
 .driver-mode {
   width: 100%;
