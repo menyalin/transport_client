@@ -5,10 +5,11 @@ import store from '@/store'
 const BASE_PATH = '/agreements'
 
 class AgreementService {
-  MODEL_NAME = 'agreement'
-  allAgreements = []
-  allAgreementsExpiresMs = 1000 * 60 * 5 // 5 минут
   constructor() {
+    this.MODEL_NAME = 'agreement'
+    this.allAgreements = []
+    this.allAgreementsExpiresMs = 1000 * 60 * 5 // 5 минут
+
     this.eo = new EventObserver()
     socket.on(this.MODEL_NAME + ':created', (data) => {
       store.commit('addAgreement', data)

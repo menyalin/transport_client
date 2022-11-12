@@ -1,6 +1,6 @@
 <template>
   <v-menu offset-y :close-on-content-click="false">
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
         <v-icon small> mdi-cog </v-icon>
       </v-btn>

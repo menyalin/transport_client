@@ -1,6 +1,6 @@
 <template>
   <v-simple-table id="table">
-    <template v-slot:default>
+    <template #default>
       <caption class="text-left font-weight-medium">
         Контроль дополнительных событий
       </caption>

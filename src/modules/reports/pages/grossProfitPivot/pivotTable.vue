@@ -11,7 +11,7 @@
     hide-default-footer
     :itemsPerPage="-1"
   >
-    <template v-slot:[`body.append`]="{}">
+    <template #[`body.append`]="{}">
       <tr>
         <th />
         <th>Итого:</th>

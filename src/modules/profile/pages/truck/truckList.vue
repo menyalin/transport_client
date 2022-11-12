@@ -23,10 +23,10 @@
           :loading="loading"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.type`]="{ item }">
+          <template #[`item.type`]="{ item }">
             <span>{{ truckTypesHash[item.type] }}</span>
           </template>
-          <template v-slot:top>
+          <template #top>
             <div class="filter-wrapper">
               <app-table-column-settings
                 v-model="activeHeaders"

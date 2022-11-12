@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-simple-table dense class="mb-3">
-      <template v-slot:default>
+      <template #default>
         <thead>
           <tr>
             <th class="date-col">Дата начала</th>

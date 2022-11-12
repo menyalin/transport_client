@@ -63,25 +63,25 @@
           dense
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.tkName`]="{ item }">
+          <template #[`item.tkName`]="{ item }">
             {{ $store.getters.tkNamesMap.get(item.tkName).name }}
           </template>
-          <template v-slot:[`item.startDate`]="{ item }">
+          <template #[`item.startDate`]="{ item }">
             {{ new Date(item.startDate).toLocaleString() }}
           </template>
-          <template v-slot:[`item.endDate`]="{ item }">
+          <template #[`item.endDate`]="{ item }">
             {{ item.endDate ? new Date(item.endDate).toLocaleString() : null }}
           </template>
-          <template v-slot:[`item.driver`]="{ item }">
+          <template #[`item.driver`]="{ item }">
             {{ getDriverName(item) }}
           </template>
-          <template v-slot:[`item.truck`]="{ item }">
+          <template #[`item.truck`]="{ item }">
             {{ getTruckName(item, 'truck') }}
           </template>
-          <template v-slot:[`item.trailer`]="{ item }">
+          <template #[`item.trailer`]="{ item }">
             {{ getTruckName(item, 'trailer') }}
           </template>
-          <template v-slot:[`item.isActual`]="{ item }">
+          <template #[`item.isActual`]="{ item }">
             <v-icon>
               {{ isActualCrew(item) ? 'mdi-check' : 'mdi-minus' }}
             </v-icon>

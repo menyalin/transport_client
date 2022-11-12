@@ -25,7 +25,7 @@
       }"
       @dblclick:row="dblClickRow"
     >
-      <template v-slot:top>
+      <template #top>
         <div class="settings-wrapper">
           <app-table-column-settings
             v-model="activeHeaders"

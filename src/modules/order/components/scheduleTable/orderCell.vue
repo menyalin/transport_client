@@ -6,7 +6,7 @@
     close-delay="50"
     transition="fade-transition"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <div
         v-bind="attrs"
         :class="orderClasses"

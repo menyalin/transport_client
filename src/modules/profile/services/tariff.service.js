@@ -4,8 +4,9 @@ import store from '@/store'
 const BASE_PATH = '/tariffs'
 
 class TariffService {
-  MODEL_NAME = 'tariff'
   constructor() {
+    this.MODEL_NAME = 'tariff'
+
     socket.on(this.MODEL_NAME + ':created', (data) => {
       store.commit('addToCache', data)
     })

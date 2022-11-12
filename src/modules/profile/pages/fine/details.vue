@@ -34,16 +34,16 @@ export default {
   props: {
     id: String,
   },
-  setup({ id }) {
-    const _id = ref(id)
+  setup(props) {
+    const _id = ref(props.id)
     let loading = ref(false)
     let item = ref()
 
     async function getItem() {
-      if (!id) return null
+      if (!props.id) return null
       try {
         loading.value = true
-        item.value = await service.getById(id)
+        item.value = await service.getById(props.id)
         loading.value = false
       } catch (e) {
         loading.value = false
@@ -53,7 +53,7 @@ export default {
 
     const submit = async (formState) => {
       try {
-        if (id) await service.updateOne(id, formState)
+        if (props.id) await service.updateOne(props.id, formState)
         else await service.create(formState)
         router.push('/profile/fines')
       } catch (e) {

@@ -33,14 +33,14 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.isClient`]="{ item }">
+          <template #[`item.isClient`]="{ item }">
             <div>{{ item.isClient ? 'Да' : 'Нет' }}</div>
           </template>
-          <template v-slot:[`item.created`]="{ item }">
+          <template #[`item.created`]="{ item }">
             {{ new Date(item.createdAt).toLocaleString() }}
           </template>
 
-          <template v-slot:[`item.updated`]="{ item }">
+          <template #[`item.updated`]="{ item }">
             {{ new Date(item.updatedAt).toLocaleString() }}
           </template>
         </v-data-table>

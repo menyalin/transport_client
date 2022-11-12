@@ -10,7 +10,7 @@
         max-width="290px"
         min-width="auto"
       >
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <span class="date-text" v-bind="attrs" v-on="on">
             c:
             {{ startDate ? new Date(startDate).toLocaleDateString() : '-' }}
@@ -35,7 +35,7 @@
         max-width="290px"
         min-width="auto"
       >
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <span class="date-text" v-bind="attrs" v-on="on">
             по:
             {{ endDate ? new Date(endDate).toLocaleDateString() : '-' }}

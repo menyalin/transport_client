@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-simple-table dense>
-      <template v-slot:default>
+      <template #default>
         <thead>
           <tr>
             <th>Тип</th>

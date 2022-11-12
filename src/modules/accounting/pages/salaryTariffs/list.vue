@@ -70,7 +70,7 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item._result`]="{ item }">
+          <template #[`item._result`]="{ item }">
             <app-zones-cell v-if="item.type === 'zones'" :item="item" />
             <app-regions-cell
               v-else-if="item.type === 'regions'"

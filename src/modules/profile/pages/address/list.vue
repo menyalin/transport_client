@@ -23,26 +23,26 @@
           }"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.isShipmentPlace`]="{ item }">
+          <template #[`item.isShipmentPlace`]="{ item }">
             <v-icon v-if="item.isShipmentPlace" color="green">
               mdi-check
             </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </template>
-          <template v-slot:[`item.isDeliveryPlace`]="{ item }">
+          <template #[`item.isDeliveryPlace`]="{ item }">
             <v-icon v-if="item.isDeliveryPlace" color="green">
               mdi-check
             </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </template>
-          <template v-slot:[`item.region`]="{ item }">
+          <template #[`item.region`]="{ item }">
             {{
               $store.getters.regionsMap.has(item.region)
                 ? $store.getters.regionsMap.get(item.region).name
                 : null
             }}
           </template>
-          <template v-slot:[`item.city`]="{ item }">
+          <template #[`item.city`]="{ item }">
             {{
               $store.getters.citiesMap.has(item.city)
                 ? $store.getters.citiesMap.get(item.city).name
@@ -50,7 +50,7 @@
             }}
           </template>
 
-          <template v-slot:[`item.zones`]="{ item }">
+          <template #[`item.zones`]="{ item }">
             <span v-if="Array.isArray(item.zones)">{{
               item.zones
                 .map((i) =>
@@ -63,20 +63,20 @@
             }}</span>
           </template>
 
-          <template v-slot:[`item.isService`]="{ item }">
+          <template #[`item.isService`]="{ item }">
             <v-icon v-if="item.isService" color="green"> mdi-check </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </template>
 
-          <template v-slot:[`item.created`]="{ item }">
+          <template #[`item.created`]="{ item }">
             {{ new Date(item.createdAt).toLocaleString() }}
           </template>
 
-          <template v-slot:[`item.updated`]="{ item }">
+          <template #[`item.updated`]="{ item }">
             {{ new Date(item.updatedAt).toLocaleString() }}
           </template>
 
-          <template v-slot:top>
+          <template #top>
             <div class="settings-wrapper">
               <app-table-column-settings
                 v-model="activeHeaders"

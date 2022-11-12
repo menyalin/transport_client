@@ -8,7 +8,7 @@ class AddressService {
     return arr.reverse().join(', ')
   }
 
-  _prepareData = (data) => {
+  _prepareData(data) {
     if (data?.geo?.coordinates && Array.isArray(data.geo.coordinates))
       data.geo = this._convertGeoToStr(data.geo.coordinates)
     return data

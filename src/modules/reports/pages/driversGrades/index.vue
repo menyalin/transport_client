@@ -59,7 +59,7 @@ export default {
         })
         state.loading = false
         nextTick(() => {
-          if (linkEl && state.link) linkEl.value.click()
+          if (linkEl.value && state.link) linkEl.value.click()
         })
       } catch (e) {
         store.commit('setError', e.message)

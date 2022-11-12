@@ -8,7 +8,7 @@
           :items="activeConnection"
           :items-per-page="-1"
         >
-          <template v-slot:top>
+          <template #top>
             <v-subheader>Active connections</v-subheader>
           </template>
         </v-data-table>

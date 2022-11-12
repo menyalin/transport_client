@@ -84,7 +84,7 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item._result`]="{ item }">
+          <template #[`item._result`]="{ item }">
             <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
             <app-additional-points-cell
               v-else-if="item.type === 'additionalPoints'"

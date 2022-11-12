@@ -13,31 +13,31 @@
   >
     <template
       v-if="preparedItems.length"
-      v-slot:body.append="{ headers, items: tableItems }"
+      #body.append="{ headers, items: tableItems }"
     >
       <app-append-pivor-row :headers="headers" :items="tableItems" />
     </template>
 
-    <template v-slot:[`item.totalSum`]="{ item }">
+    <template #[`item.totalSum`]="{ item }">
       {{ new Intl.NumberFormat().format(item.totalSum) || 0 }}
     </template>
-    <template v-slot:[`item.base`]="{ item }">
+    <template #[`item.base`]="{ item }">
       {{ new Intl.NumberFormat().format(item.base) || 0 }}
     </template>
-    <template v-slot:[`item.waiting`]="{ item }">
+    <template #[`item.waiting`]="{ item }">
       {{ new Intl.NumberFormat().format(item.waiting) || 0 }}
     </template>
-    <template v-slot:[`item.payment`]="{ item }">
+    <template #[`item.payment`]="{ item }">
       {{ new Intl.NumberFormat().format(item.payment) || 0 }}
     </template>
-    <template v-slot:[`item.returnSum`]="{ item }">
+    <template #[`item.returnSum`]="{ item }">
       {{ new Intl.NumberFormat().format(item.returnSum) || 0 }}
     </template>
 
-    <template v-slot:[`item.additionalPointsSum`]="{ item }">
+    <template #[`item.additionalPointsSum`]="{ item }">
       {{ new Intl.NumberFormat().format(item.additionalPointsSum) || 0 }}
     </template>
-    <template v-slot:[`item._driverName`]="{ item }">
+    <template #[`item._driverName`]="{ item }">
       <a @click="chooseDriver(item._id)"> {{ item._driverName }} </a>
     </template>
   </v-data-table>

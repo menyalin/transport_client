@@ -51,25 +51,25 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.type`]="{ item }">
+          <template #[`item.type`]="{ item }">
             <span>{{ downtimeTypesHash[item.type] }}</span>
           </template>
-          <template v-slot:[`item.partner`]="{ item }">
+          <template #[`item.partner`]="{ item }">
             <span>{{
               $store.getters.partnersMap.has(item.partner)
                 ? $store.getters.partnersMap.get(item.partner).name
                 : null
             }}</span>
           </template>
-          <template v-slot:[`item.truck`]="{ item }">
+          <template #[`item.truck`]="{ item }">
             <span>{{
               trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
             }}</span>
           </template>
-          <template v-slot:[`item.startPositionDate`]="{ item }">
+          <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
           </template>
-          <template v-slot:[`item.endPositionDate`]="{ item }">
+          <template #[`item.endPositionDate`]="{ item }">
             <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
           </template>
         </v-data-table>

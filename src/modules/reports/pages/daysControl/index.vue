@@ -34,13 +34,13 @@
           }"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.tkName`]="{ item }">
+          <template #[`item.tkName`]="{ item }">
             {{ $store.getters.tkNamesMap.get(item.tkName).name }}
           </template>
-          <template v-slot:[`item.note`]="{ item }">
+          <template #[`item.note`]="{ item }">
             {{ item.controlDates.note || item.note }}
           </template>
-          <template v-slot:[`item.controlDates.endDate`]="{ item }">
+          <template #[`item.controlDates.endDate`]="{ item }">
             {{ new Date(item.controlDates.endDate).toLocaleDateString() }}
           </template>
         </v-data-table>

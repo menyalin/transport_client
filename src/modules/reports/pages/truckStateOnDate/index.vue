@@ -33,31 +33,31 @@
           }"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.tkName`]="{ item }">
+          <template #[`item.tkName`]="{ item }">
             {{
               tkNamesMap.has(item.tkName)
                 ? tkNamesMap.get(item.tkName).name
                 : ''
             }}
           </template>
-          <template v-slot:[`item.truckNum`]="{ item }">
+          <template #[`item.truckNum`]="{ item }">
             {{ trucksMap.has(item._id) ? trucksMap.get(item._id).regNum : '' }}
           </template>
-          <template v-slot:[`item.trailerNum`]="{ item }">
+          <template #[`item.trailerNum`]="{ item }">
             {{
               !!item.crew && trucksMap.has(item.crew.transport.trailer)
                 ? trucksMap.get(item.crew.transport.trailer).regNum
                 : ''
             }}
           </template>
-          <template v-slot:[`item.driverName`]="{ item }">
+          <template #[`item.driverName`]="{ item }">
             {{
               !!item.crew && driversMap.has(item.crew.driver)
                 ? driversMap.get(item.crew.driver).fullName
                 : ''
             }}
           </template>
-          <template v-slot:[`item.downtime`]="{ item }">
+          <template #[`item.downtime`]="{ item }">
             {{ !!item.downtime ? item.downtime.title : '' }}
           </template>
         </v-data-table>

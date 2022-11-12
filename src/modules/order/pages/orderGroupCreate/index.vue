@@ -34,7 +34,7 @@
     </div>
     <div v-if="isValidPeriod" class="table-wrapper">
       <v-simple-table dense>
-        <template v-slot:default>
+        <template #default>
           <thead>
             <tr>
               <th class="text-center">Шаблон</th>

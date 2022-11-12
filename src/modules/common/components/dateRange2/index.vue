@@ -10,7 +10,7 @@
         max-width="290px"
         min-width="auto"
       >
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <span class="date-text" v-bind="attrs" v-on="on">
             c:
             {{
@@ -37,7 +37,7 @@
         max-width="290px"
         min-width="auto"
       >
-        <template v-slot:activator="{ on, attrs }">
+        <template #activator="{ on, attrs }">
           <span class="date-text" v-bind="attrs" v-on="on">
             по:
             {{

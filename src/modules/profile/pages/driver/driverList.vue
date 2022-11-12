@@ -23,7 +23,7 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.medBookState.validDays`]="{ item }">
+          <template #[`item.medBookState.validDays`]="{ item }">
             <v-chip
               v-if="item.medBookState.validDays !== null"
               small
@@ -34,7 +34,7 @@
             </v-chip>
           </template>
 
-          <template v-slot:top>
+          <template #top>
             <div class="filter-wrapper">
               <v-select
                 v-model="settings.tkNameFilter"

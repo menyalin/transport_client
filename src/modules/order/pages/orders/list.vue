@@ -179,11 +179,11 @@
         :options.sync="settings.listOptions"
         @dblclick:row="dblClickRow"
       >
-        <template v-slot:[`item.state.status`]="{ item }">
+        <template #[`item.state.status`]="{ item }">
           {{ getStatusText(item.state.status) }}
         </template>
 
-        <template v-slot:[`item.truck`]="{ item }">
+        <template #[`item.truck`]="{ item }">
           {{
             !!item.confirmedCrew &&
             !!item.confirmedCrew.truck &&
@@ -192,7 +192,7 @@
               : '-'
           }}
         </template>
-        <template v-slot:[`item.trailer`]="{ item }">
+        <template #[`item.trailer`]="{ item }">
           {{
             !!item.confirmedCrew &&
             !!item.confirmedCrew.trailer &&
@@ -201,14 +201,14 @@
               : ''
           }}
         </template>
-        <template v-slot:[`item.client.client`]="{ item }">
+        <template #[`item.client.client`]="{ item }">
           {{
             !!item.client && partnersMap.has(item.client.client)
               ? partnersMap.get(item.client.client).name
               : '-'
           }}
         </template>
-        <template v-slot:[`item.analytics.type`]="{ item }">
+        <template #[`item.analytics.type`]="{ item }">
           {{
             !!item.analytics &&
             !!item.analytics.type &&
@@ -217,12 +217,12 @@
               : ''
           }}
         </template>
-        <template v-slot:[`item.docStatus`]="{ item }">
+        <template #[`item.docStatus`]="{ item }">
           <b :style="{ color: item.docStatus.fontColor }">
             {{ item.docStatus.text }}
           </b>
         </template>
-        <template v-slot:[`item.docsGetted`]="{ item }">
+        <template #[`item.docsGetted`]="{ item }">
           <v-simple-checkbox
             :value="item.docsState ? item.docsState.getted : false"
             :disabled="!!item.docs && !!item.docs.length"
@@ -230,7 +230,7 @@
             @input="setDocStateStatus($event, item._id)"
           />
         </template>
-        <template v-slot:footer.prepend>
+        <template #footer.prepend>
           <app-footer-details
             :total="count"
             :accepted="acceptedOrders"
@@ -239,7 +239,7 @@
             :missing="missingOrders"
           />
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-btn
             color="primary"
             icon
@@ -450,6 +450,7 @@ export default {
     socket.on('order:updated', (data) => {
       // eslint-disable-next-line no-unused-vars
       let order = this.orders.find((item) => item._id === data._id)
+      // eslint-disable-next-line no-unused-vars
       order = Object.assign(order, data)
     })
   },

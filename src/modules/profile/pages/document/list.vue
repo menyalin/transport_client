@@ -43,7 +43,7 @@
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
-          <template v-slot:[`item.useInTariff`]="{ item }">
+          <template #[`item.useInTariff`]="{ item }">
             <div>{{ item.useInTariff ? 'Да' : 'Нет' }}</div>
           </template>
         </v-data-table>
