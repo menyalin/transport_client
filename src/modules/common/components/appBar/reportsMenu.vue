@@ -39,6 +39,11 @@ export default {
           permission: 'report:gross_profit',
         },
         {
+          link: '/reports/order_docs',
+          title: 'Отчет по документам',
+          permission: 'report:orderDocs',
+        },
+        {
           link: '/reports/gross_profit_pivot',
           title: 'Валовая прибыль свод',
           permission: 'report:gross_profit',

@@ -52,6 +52,14 @@ export default [
           permission: 'report:gross_profit',
         },
       },
+      {
+        path: 'order_docs',
+        name: 'OrderDocsReport',
+        component: () => import('../pages/orderDocs/orderDocs.page.vue'),
+        meta: {
+          permission: 'report:order_docs',
+        },
+      },
     ],
   },
 ]

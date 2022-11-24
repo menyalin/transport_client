@@ -5,7 +5,7 @@
         <v-icon small> mdi-cog </v-icon>
       </v-btn>
     </template>
-    <v-list v-if="activeHeaders" class="px-2">
+    <v-list class="px-2">
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
@@ -34,6 +34,7 @@ export default {
       type: Array,
       required: true,
     },
+    defaultHeaders: Array,
     listSettingsName: {
       type: String,
       required: true,
@@ -49,14 +50,29 @@ export default {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpHeaders = val
+        if (val) this.tmpHeaders = val
       },
     },
   },
+  mounted() {
+    if (!this.activeHeaders) {
+      const savedHeaders = JSON.parse(
+        localStorage.getItem(this.listSettingsName)
+      )
+      if (savedHeaders) this.tmpHeaders = savedHeaders
+      else this.tmpHeaders = this.tmpHeaders = this.defaultHeaders
+      this.emitActiveHeaders()
+    }
+  },
   methods: {
+    emitActiveHeaders() {
+      this.$emit('change', this.tmpHeaders)
+    },
+
     inputHandler(field) {
       if (this.tmpHeaders.includes(field)) this.tmpHeaders.push(field)
       else this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
+      console.log(this.tmpHeaders)
       localStorage.setItem(
         this.listSettingsName,
         JSON.stringify(this.tmpHeaders)

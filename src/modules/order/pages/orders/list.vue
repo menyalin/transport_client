@@ -275,7 +275,7 @@ import AppFooterDetails from '../../components/orderListFooterDetails/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 import { ALL_ORDER_LIST_HEADERS, DEFAULT_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
-import { useListColumnSettings } from '@/modules/common/hooks/useListColumnSettings.js'
+import { useListColumnSetting } from '@/shared/hooks'
 import { debounce } from '@/modules/common/helpers/utils.js'
 import { mapGetters } from 'vuex'
 import socket from '@/socket'
@@ -335,7 +335,7 @@ export default {
       useOrderListUtils()
 
     const { listSettingsName, activeHeaders, allHeaders, headers } =
-      useListColumnSettings({
+      useListColumnSetting({
         listSettingsName: 'orderList',
         allHeaders: ALL_ORDER_LIST_HEADERS,
         defaultHeaders: DEFAULT_HEADERS,

@@ -112,7 +112,7 @@ import AppTableColumnSettings from '@/modules/common/components/tableColumnSetti
 import AppSalaryTariffForm from '../../components/salaryTariffForm/index.vue'
 import salaryTariffService from '../../services/salaryTariff.service'
 import { mapGetters } from 'vuex'
-import { useListColumnSettings } from '@/modules/common/hooks/useListColumnSettings'
+import { useListColumnSetting } from '@/shared/hooks'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
@@ -133,7 +133,7 @@ export default {
 
   setup() {
     const { listSettingsName, activeHeaders, allHeaders, headers } =
-      useListColumnSettings({
+      useListColumnSetting({
         listSettingsName: 'salaryTariffList',
         defaultHeaders: DEFAULT_HEADERS,
         allHeaders: ALL_LIST_HEADERS,

@@ -78,6 +78,19 @@ class ReportService {
       return null
     }
   }
+
+  async orderDocs(body) {
+    try {
+      const { data } = await api.post(BASE_PATH + '/order_docs', {
+        ...body,
+        company: store.getters.directoriesProfile,
+      })
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      return []
+    }
+  }
 }
 
 export default new ReportService()

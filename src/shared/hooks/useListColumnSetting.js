@@ -1,10 +1,6 @@
 import { ref, onMounted, computed } from 'vue'
 
-export const useListColumnSettings = ({
-  listSettingsName,
-  defaultHeaders,
-  allHeaders,
-}) => {
+export default ({ listSettingsName, defaultHeaders, allHeaders }) => {
   let activeHeaders = ref([])
 
   onMounted(() => {
@@ -22,5 +18,6 @@ export const useListColumnSettings = ({
     activeHeaders,
     allHeaders,
     headers,
+    defaultHeaders,
   }
 }
