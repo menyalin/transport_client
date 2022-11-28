@@ -50,7 +50,7 @@ export default {
     hideDetails: { type: Boolean, default: false },
     outlined: { type: Boolean, default: false },
     dense: { type: Boolean, default: false },
-    value: String,
+    value: [String, Array],
     onlyClients: { type: Boolean, default: false },
     onlyServices: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },

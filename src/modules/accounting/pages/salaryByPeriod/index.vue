@@ -66,6 +66,7 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 import store from '@/store'
 import AppDriversSalaryPeriod from '../../components/driversSalaryPeriod/index.vue'
@@ -103,15 +104,16 @@ export default {
       consigneeType,
       tks,
     })
-    const driversInItems = computed(() => {
-      return new Set(items.value.map((i) => i?._id))
-    })
 
     const drivers = computed(() => {
+      const startPeriod = dayjs(period).startOf('month')
+      const endPeriod = dayjs(period).endOf('month')
       return store.getters.drivers
         .filter((i) => i.isCalcSalary)
         .filter(
-          (i) => driversInItems.value.has(i._id) || driver.value === i._id
+          (i) =>
+            (!i.employmentDate || endPeriod.isAfter(i.employmentDate)) &&
+            (!i.dismissalDate || startPeriod.isSameOrBefore(i.dismissalDate))
         )
     })
 
