@@ -12,7 +12,7 @@
     :itemsPerPage="-1"
   >
     <template #[`body.append`]="{}">
-      <tr>
+      <tr v-if="pivotData.items">
         <th />
         <th>Итого:</th>
         <th class="text-right">
@@ -25,6 +25,21 @@
           {{ totalAvg }}
         </th>
       </tr>
+      <tr v-if="pivotData.items && daysCount">
+        <th />
+        <th>Среднее по дням:</th>
+        <th class="text-right">
+          {{
+            Intl.NumberFormat().format(
+              Math.round(pivotData.totalCount / daysCount)
+            )
+          }}
+        </th>
+        <th class="text-right">
+          {{ totalAvgByDay }}
+        </th>
+        <th />
+      </tr>
     </template>
   </v-data-table>
 </template>
@@ -34,6 +49,7 @@ export default {
   props: {
     groupItems: { type: Array, required: true },
     groupBy: { type: String, required: true },
+    daysCount: Number,
     priceWithVat: Boolean,
     pivotData: { type: Object },
   },
@@ -43,6 +59,13 @@ export default {
     }
   },
   computed: {
+    totalAvgByDay() {
+      const sum =
+        this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+      if (isNaN(sum)) return null
+      if (!this.daysCount) return null
+      return Intl.NumberFormat().format(Math.round(sum / this.daysCount))
+    },
     totalSum() {
       const sum =
         this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000

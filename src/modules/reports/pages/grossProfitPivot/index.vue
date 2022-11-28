@@ -47,6 +47,7 @@
         :pivotData="pivotData"
         :priceWithVat="usePriceWithVat"
         @updateSelected="updateSelected"
+        :daysCount="daysInRange"
       />
       <v-divider />
       <app-orders-table
@@ -97,6 +98,14 @@ export default {
       mainFilters: MAIN_FILTER_LIST,
       additionalFilters: ADDITIONAL_FILTER_LIST,
     }
+  },
+  computed: {
+    daysInRange() {
+      console.log(this.settings.dateRange)
+      const start = new Date(this.settings.dateRange[0])
+      const end = new Date(this.settings.dateRange[1])
+      return Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+    },
   },
   watch: {
     settings: {
