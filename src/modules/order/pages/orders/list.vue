@@ -231,7 +231,7 @@
           />
         </template>
         <template #footer.prepend>
-          <app-footer-details
+          <order-list-footer-details
             :total="count"
             :accepted="acceptedOrders"
             :needFix="needFixOrders"
@@ -271,10 +271,10 @@ import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
-import AppFooterDetails from '../../components/orderListFooterDetails/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 import { ALL_ORDER_LIST_HEADERS, DEFAULT_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
+import { OrderListFooterDetails } from '@/shared/ui'
 import { useListColumnSetting } from '@/shared/hooks'
 import { debounce } from '@/modules/common/helpers/utils.js'
 import { mapGetters } from 'vuex'
@@ -297,7 +297,7 @@ export default {
     AppPartnerAutocomplete,
     AppAddressAutocomplete,
     AppDocListForm,
-    AppFooterDetails,
+    OrderListFooterDetails,
   },
   data: () => ({
     formName: 'orderList',

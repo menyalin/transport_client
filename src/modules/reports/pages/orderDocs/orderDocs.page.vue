@@ -6,7 +6,12 @@
       v-model="settings"
       @changeHeaders="changeHeaders"
     />
-    <report-data-table :items="items" :headers="headers" :loading="loading" />
+    <report-data-table
+      :items="items"
+      :headers="headers"
+      :loading="loading"
+      :statisticData="statisticData"
+    />
   </div>
 </template>
 
@@ -28,7 +33,7 @@ export default {
     ReportTitle,
     ReportDataTable,
   },
-  setup(_props) {
+  setup() {
     const historyState = window.history.state
     const initialState = { groupBy: 'month', clients: [], tks: [], state: null }
     const headers = ref([])
@@ -38,7 +43,9 @@ export default {
       pageTitle: 'Отчет по не сданным документам',
     })
 
-    const { items, refresh, loading } = useReportData({ settings })
+    const { items, refresh, loading, statisticData } = useReportData({
+      settings,
+    })
 
     function changeHeaders(value) {
       headers.value = value
@@ -64,6 +71,7 @@ export default {
       headers,
       changeHeaders,
       loading,
+      statisticData,
     }
   },
 }

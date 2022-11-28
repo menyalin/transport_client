@@ -3,6 +3,7 @@ import ReportService from '../../../services/index.js'
 
 export default function ({ settings }) {
   const items = ref([])
+  const statisticData = ref({})
   const loading = ref(false)
 
   async function refresh() {
@@ -12,7 +13,20 @@ export default function ({ settings }) {
   async function getData() {
     try {
       loading.value = true
-      items.value = await ReportService.orderDocs(settings.value)
+      const {
+        items: itemsData,
+        totalCount,
+        correctionCount,
+        notGettedCount,
+        reviewCount,
+      } = await ReportService.orderDocs(settings.value)
+      items.value = itemsData || []
+      statisticData.value = {
+        totalCount,
+        correctionCount,
+        notGettedCount,
+        reviewCount,
+      }
       loading.value = false
     } catch (e) {
       loading.value = false
@@ -30,6 +44,7 @@ export default function ({ settings }) {
 
   return {
     items,
+    statisticData,
     refresh,
     loading,
   }

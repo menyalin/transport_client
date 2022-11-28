@@ -16,24 +16,49 @@
     <template #[`item.orderDate`]="{ item }">
       {{ new Date(item.orderDate).toLocaleString() }}
     </template>
+    <template #[`item.docsState.date`]="{ item }">
+      {{
+        item.docsState.date
+          ? new Date(item.docsState.date).toLocaleString()
+          : null
+      }}
+    </template>
+    <template #[`item.reviewDate`]="{ item }">
+      {{
+        item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null
+      }}
+    </template>
     <template #[`item._docsStatusObj.text`]="{ item }">
       <b :style="{ color: item._docsStatusObj.color }">{{
         item._docsStatusObj.text
       }}</b>
     </template>
+    <template #footer.prepend>
+      <order-list-footer-details
+        :total="statisticData.totalCount"
+        :needFix="statisticData.correctionCount"
+        :onCheck="statisticData.reviewCount"
+        :missing="statisticData.notGettedCount"
+      />
+    </template>
   </v-data-table>
 </template>
 
 <script>
-import router from '@/router'
 import { computed } from 'vue'
+import router from '@/router'
+import { OrderListFooterDetails } from '@/shared/ui'
 
 export default {
   name: 'ReportDataTable',
+  components: {
+    OrderListFooterDetails,
+  },
   props: {
     items: Array,
     headers: Array,
     loading: Boolean,
+    statisticData: Object,
   },
   setup(props) {
     const preparedItems = computed(() => props.items.map((i) => ({ ...i })))
@@ -48,4 +73,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.v-data-table {
+  white-space: nowrap;
+}
+</style>

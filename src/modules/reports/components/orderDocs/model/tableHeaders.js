@@ -57,7 +57,20 @@ export const ALL_HEADERS = [
     default: true,
     groupable: true,
   },
-
+  {
+    value: 'client.num',
+    text: '№ Заказа',
+    sortable: false,
+    default: true,
+    groupable: false,
+  },
+  {
+    value: 'client.auctionNum',
+    text: '№ Аукциона',
+    sortable: false,
+    default: true,
+    groupable: false,
+  },
   {
     value: 'loadingPoints',
     text: 'Погрузка',
@@ -73,9 +86,70 @@ export const ALL_HEADERS = [
     groupable: false,
   },
   {
+    value: 'docsState.date',
+    text: 'Дата получения',
+    sortable: true,
+    default: false,
+    groupable: false,
+    align: 'right',
+  },
+  {
+    value: 'reviewDate',
+    text: 'Дата проверки',
+    sortable: true,
+    default: false,
+    groupable: false,
+    align: 'right',
+  },
+  {
+    value: 'getDocsDays',
+    text: 'Сдача документов, дней',
+    sortable: true,
+    default: false,
+    groupable: false,
+    align: 'right',
+  },
+  {
+    value: 'reviewDocsDays',
+    text: 'Проверка документов, дней',
+    sortable: true,
+    default: false,
+    groupable: false,
+    align: 'right',
+  },
+  {
     value: '_docsStatusObj.text',
     text: 'Документы',
     sortable: true,
     default: true,
   },
 ]
+
+/* --------------------------------
+
+  {
+    value: 'loadingZones',
+    text: 'Зоны погрузки',
+    sortable: false,
+    default: false,
+  },
+  
+  {
+    value: 'agreement.name',
+    text: 'Соглашение',
+    sortable: false,
+    forAccountingMode: true,
+    default: true,
+  },
+
+  {
+    value: 'actions',
+    // text: 'Действия',
+    sortable: false,
+    forAccountingMode: true,
+    width: '3rem',
+    default: true,
+  },
+
+
+*/

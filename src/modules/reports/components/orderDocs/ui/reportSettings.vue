@@ -73,6 +73,28 @@
       :style="{ maxWidth: '320px' }"
       @change="updateSettings($event, 'driver')"
     />
+    <v-select
+      :value="settings.getDocsDays"
+      label="Сдача документов, дней"
+      dense
+      clearable
+      outlined
+      :items="daysIntervalItems"
+      hide-details
+      :style="{ maxWidth: '200px' }"
+      @change="updateSettings($event, 'getDocsDays')"
+    />
+    <v-select
+      :value="settings.reviewDocsDays"
+      label="Проверка документов, дней"
+      dense
+      clearable
+      outlined
+      :items="daysIntervalItems"
+      hide-details
+      :style="{ maxWidth: '200px' }"
+      @change="updateSettings($event, 'reviewDocsDays')"
+    />
   </div>
 </template>
 
@@ -121,6 +143,15 @@ export default {
       { text: 'Водителям', value: 'driver' },
     ]
 
+    // < 10 / 11-20 / 21-30 / >31
+
+    const daysIntervalItems = [
+      { text: '< 10', value: 1 },
+      { text: '10 - 20', value: 2 },
+      { text: '20 - 30', value: 3 },
+      { text: ' > 30 ', value: 4 },
+    ]
+
     const tkNameItems = computed(() => {
       return store.getters.tkNames
     })
@@ -147,6 +178,7 @@ export default {
       clientItems,
       stateItems,
       driverItems,
+      daysIntervalItems,
     }
   },
 }

@@ -35,7 +35,7 @@ export const useOrderListUtils = () => {
     if (!isGetted && (!docs || !docs.length))
       return { text: 'Не получены', fontColor: 'red' }
     else if (isGetted && (!docs || !docs.length))
-      return { text: 'На проверке', fontColor: 'red' }
+      return { text: 'На проверке', fontColor: 'blue' }
     else if (isGetted && docs.some(isNotAccepted))
       return { text: 'На исправлении', fontColor: 'orange' }
     else return { text: 'Приняты', fontColor: 'green' }
