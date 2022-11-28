@@ -9,6 +9,7 @@
       :disabled="disabled"
       auto-select-first
       clearable
+      :multiple="multiple"
       persistent-hint
       :messages="messages"
       :hint="showHint && hint ? hint : null"
@@ -58,6 +59,7 @@ export default {
     loading: { type: Boolean, default: false },
     messages: Array,
     error: Boolean,
+    multiple: { type: Boolean, default: false },
   },
   data() {
     return {

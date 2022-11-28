@@ -3,10 +3,11 @@
     <div class="filters-wrapper">
       <app-drivers-salary-period v-model="period" />
       <v-select
-        v-model="tk"
+        v-model="tks"
         :items="$store.getters.tkNames"
         label="ТК"
         dense
+        multiple
         item-text="name"
         item-value="_id"
         clearable
@@ -27,10 +28,11 @@
         :style="{ maxWidth: '300px' }"
       />
       <app-partners-autocomplete
-        v-model="client"
+        v-model="clients"
         label="Клиент"
         dense
         hide-details
+        multiple
         onlyClients
         hideAppendIcon
       />
@@ -86,9 +88,9 @@ export default {
   },
   setup(_props, _ctx) {
     const historyState = window.history.state
-    const tk = ref(historyState.tk)
+    const tks = ref(historyState.tks || [])
     const driver = ref(historyState.driver)
-    const client = ref(historyState.client)
+    const clients = ref(historyState.clients || [])
     const consigneeType = ref(historyState.consigneeType)
     const orderType = ref(historyState.orderType)
     const period = useDebouncedRef(getInitialPeriod(historyState), 500)
@@ -96,10 +98,10 @@ export default {
     const { items, isLoading, setListSettings } = useDriversSalaryData({
       period,
       driver,
-      client,
+      clients,
       orderType,
       consigneeType,
-      tk,
+      tks,
     })
     const driversInItems = computed(() => {
       return new Set(items.value.map((i) => i?._id))
@@ -113,15 +115,15 @@ export default {
         )
     })
 
-    watch([period, driver, client, consigneeType, orderType, tk], () => {
+    watch([period, driver, clients, consigneeType, orderType, tks], () => {
       window.history.pushState(
         {
           period: period.value,
           driver: driver.value,
-          client: client.value,
+          clients: clients.value,
           consigneeType: consigneeType.value,
           orderType: orderType.value,
-          tk: tk.value,
+          tks: tks.value,
         },
         ''
       )
@@ -130,10 +132,10 @@ export default {
     addEventListener('popstate', (e) => {
       period.value = e.state.period
       driver.value = e.state.driver
-      client.value = e.state.client
+      clients.value = e.state.clients
       orderType.value = e.state.orderType
       consigneeType.value = e.state.consigneeType
-      tk.value = e.state.tk
+      tks.value = e.state.tks
     })
 
     function setDriver(driverId) {
@@ -145,13 +147,13 @@ export default {
       items,
       isLoading,
       driver,
-      client,
+      clients,
       orderType,
       drivers,
       setDriver,
       setListSettings,
       consigneeType,
-      tk,
+      tks,
     }
   },
 }

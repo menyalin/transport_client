@@ -5,10 +5,10 @@ import dayjs from 'dayjs'
 export const useDriversSalaryData = ({
   period,
   driver,
-  client,
+  clients,
   consigneeType,
   orderType,
-  tk,
+  tks,
 }) => {
   const items = ref([])
   const isLoading = ref(false)
@@ -30,17 +30,17 @@ export const useDriversSalaryData = ({
     items.value = await SalaryTariffService.getDriversSalaryByPeriod({
       period: getPeriod(),
       driver: driver.value,
-      client: client.value,
+      clients: clients.value,
       consigneeType: consigneeType.value,
       orderType: orderType.value,
       options: listSettings.value,
-      tk: tk.value,
+      tks: tks.value,
     })
     isLoading.value = false
   }
 
   watch(
-    [period, driver, client, consigneeType, orderType, tk],
+    [period, driver, clients, consigneeType, orderType, tks],
     async () => {
       if (period.value) await getData()
     },
