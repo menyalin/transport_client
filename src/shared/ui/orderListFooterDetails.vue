@@ -13,7 +13,7 @@
         На исправлении: {{ needFix }}<br />
       </b>
 
-      <b v-if="onCheck" class="blue--text">
+      <b v-if="onCheck" :style="{ color: 'blue' }">
         На проверке: {{ onCheck }}
         <br />
       </b>

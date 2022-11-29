@@ -106,14 +106,14 @@ export default {
     })
 
     const drivers = computed(() => {
-      const startPeriod = dayjs(period).startOf('month')
-      const endPeriod = dayjs(period).endOf('month')
+      const startPeriod = dayjs(period.value).startOf('month')
+      const endPeriod = dayjs(period.value).endOf('month')
       return store.getters.drivers
-        .filter((i) => i.isCalcSalary)
+        .filter((i) => !!i?.isCalcSalary)
         .filter(
           (i) =>
-            (!i.employmentDate || endPeriod.isAfter(i.employmentDate)) &&
-            (!i.dismissalDate || startPeriod.isSameOrBefore(i.dismissalDate))
+            (!i.dismissalDate || startPeriod.isBefore(i.dismissalDate)) &&
+            (!i.employmentDate || endPeriod.isAfter(i.employmentDate))
         )
     })
 
