@@ -57,7 +57,7 @@ export default [
         name: 'OrderDocsReport',
         component: () => import('../pages/orderDocs/orderDocs.page.vue'),
         meta: {
-          permission: 'report:order_docs',
+          permission: 'report:orderDocs',
         },
       },
     ],
