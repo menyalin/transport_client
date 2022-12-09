@@ -112,7 +112,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   min-width: 600px;
 }
 .analytic-block-wrapper > * {

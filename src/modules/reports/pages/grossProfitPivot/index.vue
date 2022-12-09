@@ -195,7 +195,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: start;
+  align-items: flex-start;
   width: 100%;
   gap: 10px;
 }

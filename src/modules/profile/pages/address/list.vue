@@ -205,7 +205,7 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 15px;
 }

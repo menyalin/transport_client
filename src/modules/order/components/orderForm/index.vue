@@ -712,7 +712,7 @@ export default {
 .wrapper {
   display: grid;
   align-content: start;
-  justify-content: start;
+  justify-content: flex-start;
   grid-template-columns: 1fr 4fr;
   gap: 1px;
 }

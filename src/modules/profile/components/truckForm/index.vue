@@ -485,7 +485,7 @@ export default {
 .delete-btn-row {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
 }
 .second-row {
   display: grid;
