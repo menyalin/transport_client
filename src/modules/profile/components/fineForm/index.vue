@@ -27,6 +27,7 @@
         outlined
         dense
         :style="{ maxWidth: '350px' }"
+        @blur="$emit('fineNumberUpdated', $event)"
       />
       <v-select
         v-model.trim="$v.form.category.$model"
@@ -234,7 +235,7 @@ export default {
         paymentDate: null,
         paymentSum: null,
         isPaydByDriver: false,
-        payingByWorker: false,
+        payingByWorker: null,
         isCulpritDriver: false,
         kX: 2,
         withheldSum: 0,
@@ -365,7 +366,7 @@ export default {
     },
     submit() {
       this.$emit('submit', this.formState)
-      this.resetForm()
+      // this.resetForm()
     },
     cancel() {
       this.resetForm()

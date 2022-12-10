@@ -2,6 +2,14 @@
   <v-container fluid>
     <v-row>
       <v-col>
+        <v-alert
+          type="error"
+          dismissible
+          v-model="showError"
+          transition="scale-transition"
+        >
+          {{ errorMessage }}
+        </v-alert>
         <app-load-spinner v-if="loading" />
         <app-form
           v-else
@@ -12,6 +20,7 @@
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
+          @fineNumberUpdated="checkFine"
         />
       </v-col>
     </v-row>
@@ -37,7 +46,9 @@ export default {
   setup(props) {
     const _id = ref(props.id)
     let loading = ref(false)
-    let item = ref()
+    const showError = ref(false)
+    const errorMessage = ref('')
+    let item = ref({})
 
     async function getItem() {
       if (!props.id) return null
@@ -57,14 +68,30 @@ export default {
         else await service.create(formState)
         router.push('/profile/fines')
       } catch (e) {
+        showError.value = true
+        errorMessage.value = e.response.data
+
         store.commit('setError', e.message)
+      }
+    }
+
+    async function checkFine(event) {
+      const fineNumber = event.target.value
+      if (!fineNumber || fineNumber === item?.value?.number) return null
+      const existedFine = await service.getByNumber(fineNumber)
+      if (existedFine) {
+        showError.value = true
+        errorMessage.value = `Штраф с номером ${existedFine.number} уже есть. id штрафа: ${existedFine._id}`
+      } else {
+        showError.value = false
+        errorMessage.value = ''
       }
     }
 
     getItem()
     watch(_id, getItem)
 
-    return { item, loading, submit }
+    return { item, loading, showError, errorMessage, submit, checkFine }
   },
 
   methods: {

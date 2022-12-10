@@ -43,6 +43,11 @@ class FineService {
     return data
   }
 
+  async getByNumber(number) {
+    let { data } = await api.get(BASE_PATH + '/number/' + number)
+    return data
+  }
+
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data

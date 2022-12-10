@@ -31,8 +31,8 @@ export const useFineList = () => {
 
   let settings = ref({
     period: [
-      dayjs().add(-45, 'd').format('YYYY-MM-DD'),
-      dayjs().add(5, 'd').format('YYYY-MM-DD'),
+      dayjs().add(-90, 'd').format('YYYY-MM-DD'),
+      dayjs().add(25, 'd').format('YYYY-MM-DD'),
     ],
     status: 'notPaid',
     driver: null,
