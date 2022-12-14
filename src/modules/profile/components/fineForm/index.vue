@@ -175,7 +175,7 @@
         outlined
         readonly
         dense
-        label="Удержано"
+        label="Удержать"
         :style="{ maxWidth: '250px' }"
       />
     </div>

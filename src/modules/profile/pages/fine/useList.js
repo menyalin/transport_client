@@ -30,7 +30,7 @@ export const useFineList = () => {
     },
     { value: 'expiryDateOfDiscount', text: 'Скидка до', sortable: true },
     { value: 'isPayment', text: 'Оплачен', sortable: false },
-    { value: 'withheldSum', text: 'Удержано', sortable: false, align: 'right' },
+    { value: 'withheldSum', text: 'Удержать', sortable: false, align: 'right' },
     { value: 'paymentDate', text: 'Дата оплаты', sortable: false },
     { value: '_worker.name', text: 'Оплатил', sortable: false },
     { value: 'category', text: 'Категория', sortable: false },
