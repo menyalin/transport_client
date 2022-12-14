@@ -1,3 +1,4 @@
+import router from '@/router'
 import { ref, watch } from 'vue'
 
 const useListData = () => {
@@ -15,7 +16,7 @@ const useListData = () => {
   }
 
   function create() {
-    console.log('create')
+    router.push('/accounting/docsRegistry/create')
   }
 
   watch(

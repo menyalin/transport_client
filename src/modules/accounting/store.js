@@ -3,6 +3,7 @@ export default {
     documentTypes: [],
     documentStatuses: [],
     salaryTariffTypes: [],
+    docsRegistryStatuses: [],
   },
   mutations: {
     setDocumentTypes(state, payload) {
@@ -13,6 +14,9 @@ export default {
     },
     setSalaryTariffTypes(state, payload) {
       state.salaryTariffTypes = payload
+    },
+    setDocsRegistryStatuses(state, payload) {
+      state.docsRegistryStatuses = payload
     },
   },
   actions: {},
@@ -26,5 +30,8 @@ export default {
     salaryTariffTypes: ({ salaryTariffTypes }) => salaryTariffTypes,
     salaryTariffTypesMap: ({ salaryTariffTypes }) =>
       new Map(salaryTariffTypes.map((i) => [i.value, i.text])),
+    docsRegistryStatuses: ({ docsRegistryStatuses }) => docsRegistryStatuses,
+    docsRegistryStatusesMap: ({ docsRegistryStatuses }) =>
+      new Map(docsRegistryStatuses.map((i) => [i.value, i.text])),
   },
 }

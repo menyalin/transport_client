@@ -136,6 +136,7 @@ export default {
         companyInvites,
         fineCategories,
         salaryTariffTypes,
+        docsRegistryStatuses,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -168,6 +169,8 @@ export default {
       if (salaryTariffTypes.length)
         commit('setSalaryTariffTypes', salaryTariffTypes)
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
+      if (docsRegistryStatuses?.length)
+        commit('setDocsRegistryStatuses', docsRegistryStatuses)
     },
 
     async createCompany({ commit }, payload) {
@@ -216,8 +219,6 @@ export default {
     staffRoles: ({ staffRoles }) => staffRoles,
     staffRolesMap: ({ staffRoles }) =>
       new Map(staffRoles.map((s) => [s.value, s.text])),
-
-    // tasks: ({ tasks }) => tasks,
 
     formSettingsMap: ({ formSettings }) => formSettings,
     permissionsMap: ({ permissionsMap }) => permissionsMap,
