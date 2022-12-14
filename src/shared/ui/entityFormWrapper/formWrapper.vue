@@ -11,27 +11,23 @@
           {{ errorMessage }}
         </v-alert>
         <app-load-spinner v-if="loading" />
-        <docs-registry-form
-          v-else
-          :item="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('docsRegistry:delete')
-          "
-          @cancel="cancel"
-          @submit="submit"
-          @delete="deleteHandler"
-        />
+        <slot v-else />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { AppLoadSpinner } from '@/shared/ui'
 export default {
-
+  components: {
+    AppLoadSpinner,
+  },
+  props: {
+    showError: Boolean,
+    errorMessage: Boolean,
+  },
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

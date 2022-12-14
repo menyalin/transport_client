@@ -1,34 +1,21 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-alert
-          type="error"
-          dismissible
-          v-model="showError"
-          transition="scale-transition"
-        >
-          {{ errorMessage }}
-        </v-alert>
-        <app-load-spinner v-if="loading" />
-        <docs-registry-form
-          v-else
-          :item="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('docsRegistry:delete')
-          "
-          @cancel="cancel"
-          @submit="submit"
-          @delete="deleteHandler"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <form-wrapper>
+    <docs-registry-form
+      :item="item"
+      :displayDeleteBtn="
+        !!id && $store.getters.hasPermission('docsRegistry:delete')
+      "
+      @cancel="cancel"
+      @submit="submit"
+      @delete="deleteHandler"
+    />
+  </form-wrapper>
 </template>
 
 <script>
 import { DocsRegistryForm } from '@/modules/accounting/components/docsRegistry'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { DocsRegistryService as service } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
 import router from '@/router'
 import store from '@/store'
 import { watch, ref } from 'vue'
@@ -36,7 +23,7 @@ export default {
   name: 'DocsRegistryDetail',
   components: {
     DocsRegistryForm,
-    AppLoadSpinner,
+    FormWrapper,
   },
   props: {
     id: String,
