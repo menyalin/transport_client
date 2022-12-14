@@ -27,6 +27,12 @@ export default {
   data: () => ({
     navButtons: [
       {
+        text: 'Реестры документов',
+        icon: 'mdi-list-box ',
+        link: '/accounting/docsRegistry',
+        onlyWithDirectoriesProfile: true,
+      },
+      {
         text: 'ЗП Водителей',
         icon: 'mdi-cash ',
         link: '/accounting/driversSalary',

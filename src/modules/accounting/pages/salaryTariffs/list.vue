@@ -98,15 +98,6 @@
   </v-container>
 </template>
 <script>
-/*
-            <app-additional-points-cell
-              v-else-if="item.type === 'additionalPoints'"
-              :item="item"
-            /> -->
-            <app-direct-distance-zones
-              v-else-if="item.type === 'directDistanceZones'"
-              :item="item"
-*/
 import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import AppSalaryTariffForm from '../../components/salaryTariffForm/index.vue'

@@ -1,5 +1,6 @@
 import Layout from '../pages/layout'
 import sararyTariffsRoutes from './salaryTariff.js'
+import docsRegistryRouters from './docsRegistry.js'
 
 export default [
   {
@@ -7,6 +8,7 @@ export default [
     component: Layout,
     children: [
       ...sararyTariffsRoutes,
+      ...docsRegistryRouters,
       {
         path: 'driversSalary',
         name: 'DriversSalary',
