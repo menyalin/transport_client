@@ -16,7 +16,7 @@
         </div>
         <app-load-spinner v-if="loading" />
         <div v-else class="pt-2">
-          <app-buttons-panel
+          <buttons-panel
             panel-type="form"
             :disabled-submit="!hasWritePermission || disabledSubmit"
             @cancel="cancel"
@@ -52,17 +52,17 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings'
 import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
 import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
+import { ButtonsPanel } from '@/shared/ui'
 import service from '../../services/salaryTariff.service'
 
 export default {
   name: 'CreateTariff',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppLoadSpinner,
     AppSalaryTariffSettings,
     AppSalaryTariffGroupList,

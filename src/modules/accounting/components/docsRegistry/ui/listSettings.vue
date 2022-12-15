@@ -1,11 +1,11 @@
 <template>
-    <div class="settings-wrapper">
+  <div class="settings-wrapper">
     <app-table-column-setting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    
+
     <v-autocomplete
       :value="settings.clients"
       item-text="name"
@@ -17,16 +17,58 @@
       outlined
       :items="clientItems"
       hide-details
-      :style="{ maxWidth: '280px' }"
+      :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'clients')"
     />
-
-    
   </div>
 </template>
+
 <script>
+import store from '@/store'
+import { computed } from 'vue'
+import { ALL_HEADERS } from '../model/tableHeaders'
+import { AppTableColumnSetting } from '@/shared/ui'
 export default {
   name: 'ListSettingsWidget',
+  components: { AppTableColumnSetting },
+  model: {
+    prop: 'settings',
+    event: 'change',
+  },
+  props: {
+    settings: Object,
+  },
+
+  setup(props, ctx) {
+    const allHeaders = ALL_HEADERS
+    const listSettingsName = 'docsRegistrySettings'
+    const clientItems = computed(() => {
+      return store.getters.partners.filter((i) => i.isClient)
+    })
+
+    function updateActiveHeaders(value) {
+      ctx.emit('changeHeaders', value)
+    }
+
+    function updateSettings(value, field) {
+      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
+    }
+
+    return {
+      allHeaders,
+      clientItems,
+      listSettingsName,
+      updateActiveHeaders,
+      updateSettings,
+    }
+  },
 }
 </script>
-<style></style>
+<style scoped>
+.settings-wrapper {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  gap: 15px;
+}
+</style>

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('crew:write') ||
-          editTransportTable ||
-          !form.transport.length ||
-          $v.$invalid
+        editTransportTable ||
+        !form.transport.length ||
+        $v.$invalid
       "
       @cancel="cancel"
       @submit="submit"
@@ -114,7 +114,7 @@ import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 import CrewService from '@/modules/profile/services/crew.service.js'
 
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 
 import AppTransportTable from './transportTable.vue'
 import AppCrewMessage from './crewMessage'
@@ -123,7 +123,7 @@ import dayjs from 'dayjs'
 export default {
   name: 'CrewForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateTimeInput,
     AppTransportTable,
     AppCrewMessage,

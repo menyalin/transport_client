@@ -1,25 +1,32 @@
 export const ALL_HEADERS = [
   {
-    value: 'createdAt',
-    text: '',
-    sortable: true,
+    value: 'number',
+    text: 'Номер',
+    sortable: false,
     default: true,
-    groupable: true,
-  }, 
+  },
+  {
+    value: 'createdAt',
+    text: 'Дата',
+    sortable: false,
+    default: true,
+  },
   {
     value: 'clientName',
     text: 'Клиент',
-    sortable: true,
+    sortable: false,
     default: true,
-    groupable: true,
   },
-    {
+  {
     value: 'status',
     text: 'Cтатус',
-    sortable: true,
+    sortable: false,
     default: true,
-    groupable: true,
+  },
+  {
+    value: 'note',
+    text: 'Примечание',
+    sortable: false,
+    default: true,
   },
 ]
-
-

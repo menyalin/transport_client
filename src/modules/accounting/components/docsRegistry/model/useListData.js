@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 const useListData = () => {
   const historyState = window.history.state
-  const initialState = { clients: [], tks: [], state: null }
+  const initialState = { clients: [] }
   const headers = ref([])
   const settings = ref(historyState.settings || initialState)
 

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <form>
-      <app-buttons-panel
+      <buttons-panel
         panel-type="form"
         :disabled-submit="$v.form.$invalid"
         @cancel="cancel"
@@ -49,14 +49,14 @@
 </template>
 <script>
 import { required } from 'vuelidate/lib/validators'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import { mapActions } from 'vuex'
 const touchMap = new WeakMap()
 
 export default {
   name: 'CompanyForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data() {
     return {

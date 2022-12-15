@@ -1,11 +1,11 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('partner:write') ||
-          isInvalidForm ||
-          !formChanged
+        isInvalidForm ||
+        !formChanged
       "
       class="mb-4"
       @cancel="cancel"
@@ -58,14 +58,14 @@ import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
 export default {
   name: 'PartnerForm',
 
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppPartnerAutocomplete,
   },
 

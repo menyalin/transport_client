@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabled-submit="
         !$store.getters.hasPermission('agreement:write') || isInvalidForm
@@ -140,7 +140,7 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppClients from './clients.vue'
 import AppTknames from './tkNames.vue'
@@ -148,7 +148,7 @@ import AppTknames from './tkNames.vue'
 export default {
   name: 'AgreementForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateTimeInput,
     AppClients,
     AppTknames,

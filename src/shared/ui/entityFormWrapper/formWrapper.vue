@@ -10,7 +10,7 @@
         >
           {{ errorMessage }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <slot v-else />
       </v-col>
     </v-row>
@@ -18,14 +18,20 @@
 </template>
 
 <script>
-import { AppLoadSpinner } from '@/shared/ui'
+import { LoadSpinner } from '@/shared/ui'
+
 export default {
+  name: 'EntityFormWrapper',
   components: {
-    AppLoadSpinner,
+    LoadSpinner,
   },
   props: {
     showError: Boolean,
     errorMessage: Boolean,
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
 }
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('region:write') ||
-          isInvalidForm ||
-          !formChanged
+        isInvalidForm ||
+        !formChanged
       "
       @cancel="cancel"
       @submit="submit"
@@ -28,12 +28,12 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 
 export default {
   name: 'CityForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   props: {
     city: {

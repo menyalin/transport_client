@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('salaryTariff:write')"
@@ -98,7 +98,6 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import AppSalaryTariffForm from '../../components/salaryTariffForm/index.vue'
 import salaryTariffService from '../../services/salaryTariff.service'
@@ -109,11 +108,12 @@ import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
 import AppWaitingCell from '../../components/salaryTariffGroupList/waiting.vue'
 import AppReturnCell from '../../components/salaryTariffGroupList/return.vue'
+import { ButtonsPanel } from '@/shared/ui'
 
 export default {
   name: 'SalaryTariffList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppTableColumnSettings,
     AppSalaryTariffForm,
     AppZonesCell,

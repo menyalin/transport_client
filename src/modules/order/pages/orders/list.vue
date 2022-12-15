@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/html-indent -->
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!$store.getters.hasPermission('order:daysForWrite')"
@@ -267,14 +267,13 @@ import dayjs from 'dayjs'
 import service from '@/modules/order/services/order.service'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import AppDateRange from '@/modules/common/components/dateRange'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDocListForm from '../../components/docListForm/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 import { ALL_ORDER_LIST_HEADERS, DEFAULT_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
-import { OrderListFooterDetails } from '@/shared/ui'
+import { OrderListFooterDetails, ButtonsPanel } from '@/shared/ui'
 import { useListColumnSetting } from '@/shared/hooks'
 import { debounce } from '@/modules/common/helpers/utils.js'
 import { mapGetters } from 'vuex'
@@ -293,7 +292,7 @@ export default {
   components: {
     AppTableColumnSettings,
     AppDateRange,
-    AppButtonsPanel,
+    ButtonsPanel,
     AppPartnerAutocomplete,
     AppAddressAutocomplete,
     AppDocListForm,

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('address:write') ||
-          isInvalidForm ||
-          loading
+        isInvalidForm ||
+        loading
       "
       @cancel="cancel"
       @submit="submit"
@@ -114,7 +114,7 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
 import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
 import AppSimilarAddresses from './similarAddresses.vue'
@@ -136,7 +136,7 @@ export default {
   name: 'AddressForm',
   components: {
     AppAddressSuggestion,
-    AppButtonsPanel,
+    ButtonsPanel,
     AppPartnerAutocomplete,
     AppSimilarAddresses,
     AppZoneAutocomplete,

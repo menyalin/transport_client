@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <div class="top-panel">
-          <app-buttons-panel
+          <buttons-panel
             :disabled-submit="disabledSubmitForm"
             panel-type="form"
             @cancel="cancel"
@@ -201,7 +201,7 @@ import AgreementService from '@/modules/profile/services/agreement.service'
 import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
 import OrderService from '@/modules/order/services/order.service.js'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppCargoParams from './cargoParams.vue'
 import AppRoutePoints from './routePoints.vue'
 import AppReqTransport from './reqTransport.vue'
@@ -222,7 +222,7 @@ import AppPaymentToDriver from './paymentToDriver.vue'
 export default {
   name: 'OrderForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppReqTransport,
     AppCargoParams,
     AppRoutePoints,
