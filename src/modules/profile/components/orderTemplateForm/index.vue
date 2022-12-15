@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabled-submit="
         !$store.getters.hasPermission('orderTemplate:write') || isInvalidForm
@@ -71,14 +71,14 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppReqTransport from '@/modules/order/components/orderForm/reqTransport'
 import AppRoutePoints from '@/modules/order/components/orderForm/routePoints'
 import AppCargoParams from '@/modules/order/components/orderForm/cargoParams'
 export default {
   name: 'OrderTemplateForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppPartnerAutocomplete,
     AppRoutePoints,
     AppReqTransport,

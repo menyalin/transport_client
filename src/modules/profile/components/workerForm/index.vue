@@ -1,11 +1,11 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('worker:write') ||
-          isInvalidForm ||
-          !formChanged
+        isInvalidForm ||
+        !formChanged
       "
       class="mb-4"
       @cancel="cancel"
@@ -76,13 +76,13 @@
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppUser from './user'
 
 export default {
   name: 'WorkerForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppUser,
   },
   props: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       :disabledSubmit="
         !$store.getters.hasPermission('truck:write') || isInvalidForm || loading
       "
@@ -258,7 +258,7 @@
 import { mapGetters } from 'vuex'
 import { required, numeric } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/modules/common/components/buttonsPanel'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'
@@ -269,7 +269,7 @@ import AppAdditionalNotifications from '@/modules/common/components/additionalNo
 export default {
   name: 'TruckForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateTimeInput,
     AppAllowedDrivers,
     AppInsurance,

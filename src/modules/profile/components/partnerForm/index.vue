@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('partner:write') ||
@@ -54,12 +54,12 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 
 export default {
   name: 'PartnerForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   props: {
     partner: {

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/html-indent -->
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabled-submit="
         !$store.getters.hasPermission('driver:write') ||
@@ -200,13 +200,13 @@ import { required } from 'vuelidate/lib/validators'
 
 import AppMedBook from './medBook.vue'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppAdditionalNotifications from '@/modules/common/components/additionalNotifications'
 
 export default {
   name: 'DriverForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateTimeInput,
     AppMedBook,
     AppAdditionalNotifications,

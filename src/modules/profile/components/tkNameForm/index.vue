@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('tkName:write') ||
@@ -35,12 +35,12 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 
 export default {
   name: 'DriverForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   props: {
     tkName: {

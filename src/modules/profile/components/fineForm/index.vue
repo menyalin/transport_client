@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabled-submit="
         !$store.getters.hasPermission('fine:write') || isInvalidForm
@@ -196,7 +196,7 @@
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import ButtonsPanel from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
 import crewService from '../../services/crew.service'
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
@@ -204,7 +204,7 @@ import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 export default {
   name: 'FineForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppWorkerAutocomplete,
   },
   props: {

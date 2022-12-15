@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-buttons-panel
+    <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('scheduleNote:write') || isInvalidForm
@@ -52,13 +52,13 @@
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 
 export default {
   name: 'ScheduleNoteForm',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateTimeInput,
   },
   props: {
