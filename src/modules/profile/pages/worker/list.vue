@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!$store.getters.directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('worker:write')"
@@ -40,14 +40,14 @@
 </template>
 <script>
 import store from '@/store'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import workerService from '../../services/worker.service'
 import { computed, ref } from 'vue'
 
 export default {
   name: 'WorkerList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data: () => ({
     formName: 'WorkerList',

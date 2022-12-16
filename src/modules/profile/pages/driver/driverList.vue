@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row class="data-table-wrapper">
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('driver:write')"
@@ -77,13 +77,13 @@
 </template>
 <script>
 import CrewService from '../../services/crew.service'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'DriverList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data: () => ({
     formName: 'DriverList',

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('address:write')"
@@ -100,14 +100,14 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 
 import { mapGetters } from 'vuex'
 export default {
   name: 'AddressList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppTableColumnSettings,
   },
   data: () => ({

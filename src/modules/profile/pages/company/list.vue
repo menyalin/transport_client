@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabledRefresh="!user || !user.emailConfirmed"
           :disabledSubmit="!user || !user.emailConfirmed"
@@ -34,13 +34,13 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'CompanyList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data() {
     return {

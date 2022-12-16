@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('downtime:write')"
@@ -82,7 +82,7 @@ import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/downtime.service'
 
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppDateRange from '@/modules/common/components/dateRange'
 
 const _initPeriod = () => {
@@ -96,7 +96,7 @@ const _initPeriod = () => {
 export default {
   name: 'DowntimeList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateRange,
   },
   data: () => ({

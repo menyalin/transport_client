@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('scheduleNote:write')"
@@ -51,7 +51,7 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/scheduleNote.service'
 import dayjs from 'dayjs'
@@ -68,7 +68,7 @@ const _initPeriod = () => {
 export default {
   name: 'ScheduleNoteList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateRange,
   },
   data: () => ({

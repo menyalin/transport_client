@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('crew:write')"
@@ -92,14 +92,14 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import service from '@/modules/profile/services/crew.service'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'CrewList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data: () => ({
     formName: 'crewList',

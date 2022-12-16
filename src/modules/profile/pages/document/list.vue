@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('document:write')"
@@ -52,14 +52,14 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
 import { mapGetters } from 'vuex'
 export default {
   name: 'DocumentList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppPartnerAutocomplete,
   },
   data: () => ({

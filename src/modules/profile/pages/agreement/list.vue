@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('agreement:write')"
@@ -45,14 +45,14 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/agreement.service'
 
 export default {
   name: 'AgreementList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data: () => ({
     formName: 'agreementList',

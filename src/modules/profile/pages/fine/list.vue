@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('fine:write')"
@@ -92,14 +92,14 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppDateRange from '@/modules/common/components/dateRange2'
 import { useFineList } from './useList'
 
 export default {
   name: 'FineList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppDateRange,
   },
 

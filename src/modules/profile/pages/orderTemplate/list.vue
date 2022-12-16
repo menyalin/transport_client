@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('orderTemplate:write')"
@@ -37,13 +37,13 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrderTemplateList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
   },
   data: () => ({
     formName: 'OrderTemplateList',

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('tariff:write')"
@@ -113,7 +113,7 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppTariffForm from '@/modules/profile/components/tariffForm'
 import AppWaitingCell from '@/modules/profile/components/tariffGroupList/waiting.vue'
 import AppReturnCell from '@/modules/profile/components/tariffGroupList/return.vue'
@@ -127,7 +127,7 @@ import AgreementService from '@/modules/profile/services/agreement.service'
 export default {
   name: 'TariffList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppTariffForm,
     AppWaitingCell,
     AppAdditionalPointsCell,

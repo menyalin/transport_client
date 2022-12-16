@@ -196,7 +196,7 @@
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import ButtonsPanel from '@/shared/ui'
+import { ButtonsPanel } from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
 import crewService from '../../services/crew.service'
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-buttons-panel
+        <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('truck:write')"
@@ -78,13 +78,13 @@
 </template>
 <script>
 import CrewService from '../../services/crew.service'
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import { mapGetters } from 'vuex'
 export default {
   name: 'TruckList',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppTableColumnSettings,
   },
   data: () => ({

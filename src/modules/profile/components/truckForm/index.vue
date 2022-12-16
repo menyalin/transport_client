@@ -258,7 +258,7 @@
 import { mapGetters } from 'vuex'
 import { required, numeric } from 'vuelidate/lib/validators'
 
-import { ButtonsPanel } from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'

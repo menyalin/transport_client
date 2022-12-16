@@ -16,7 +16,7 @@
         </div>
         <app-load-spinner v-if="loading" />
         <div v-else class="pt-2">
-          <app-buttons-panel
+          <buttons-panel
             panel-type="form"
             :disabled-submit="
               !$store.getters.hasPermission('tariff:write') || disabledSubmit
@@ -51,7 +51,7 @@
   </v-container>
 </template>
 <script>
-import AppButtonsPanel from '@/modules/common/components/buttonsPanel'
+import { ButtonsPanel } from '@/shared/ui'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import AppTariffSettings from '@/modules/profile/components/tariffSettings'
 import AppTariffGroupList from '@/modules/profile/components/tariffGroupList'
@@ -61,7 +61,7 @@ import service from '../../services/tariff.service'
 export default {
   name: 'CreateTariff',
   components: {
-    AppButtonsPanel,
+    ButtonsPanel,
     AppLoadSpinner,
     AppTariffSettings,
     AppTariffGroupList,
