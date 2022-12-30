@@ -12,13 +12,13 @@ export const ALL_HEADERS = [
     default: true,
   },
   {
-    value: 'clientName',
+    value: '_client.name',
     text: 'Клиент',
     sortable: false,
     default: true,
   },
   {
-    value: 'status',
+    value: 'statusStr',
     text: 'Cтатус',
     sortable: false,
     default: true,

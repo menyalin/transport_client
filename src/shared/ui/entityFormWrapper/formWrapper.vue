@@ -12,6 +12,10 @@
         </v-alert>
         <load-spinner v-if="loading" />
         <slot v-else />
+        <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
+          <v-icon left dark> mdi-delete </v-icon>
+          Удалить
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -31,6 +35,20 @@ export default {
     loading: {
       type: Boolean,
       default: false,
+    },
+    displayDeleteBtn: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    async deleteHandler() {
+      const res = await this.$confirm(
+        'Вы действительно хотите удалить запись? '
+      )
+      if (res) {
+        this.$emit('delete')
+      }
     },
   },
 }

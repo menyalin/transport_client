@@ -1,4 +1,4 @@
-import service from '@/modules/profile/services/partner.service'
+import service from '@/shared/services/partner/partner.service'
 
 export default {
   state: {

@@ -8,11 +8,20 @@
       @refresh="refresh"
     />
     <list-settings-widget v-model="settings" @changeHeaders="changeHeaders" />
+    <docs-registry-data-table
+      v-model="settings"
+      :items="items"
+      :headers="headers"
+    />
   </entity-list-wrapper>
 </template>
 <script>
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-import { ListSettingsWidget, useListData } from '../../components/docsRegistry'
+import {
+  ListSettingsWidget,
+  useListData,
+  DocsRegistryDataTable,
+} from '../../components/docsRegistry'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 
 export default {
@@ -22,14 +31,18 @@ export default {
     AppTableColumnSettings,
     ListSettingsWidget,
     EntityListWrapper,
+    DocsRegistryDataTable,
   },
   setup() {
-    const { create, refresh, settings, changeHeaders } = useListData()
+    const { create, refresh, settings, changeHeaders, items, headers } =
+      useListData()
     return {
       create,
       refresh,
       settings,
       changeHeaders,
+      items,
+      headers,
     }
   },
 }

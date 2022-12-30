@@ -1,18 +1,16 @@
 <template>
-  <div>
+  <div class="pb-4">
     <buttons-panel
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('partner:write') ||
-          isInvalidForm ||
-          !formChanged
+        isInvalidForm ||
+        !formChanged
       "
       @cancel="cancel"
       @submit="submit"
+      class="mb-3"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
@@ -44,10 +42,11 @@
     <v-checkbox v-model="form.isClient" label="Клиент" hide-details dense />
     <v-checkbox v-model="form.isService" label="Сервис" dense />
 
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
-      Удалить
-    </v-btn>
+    <places-for-transfer-docs
+      v-if="form.isClient"
+      v-model="form.placesForTransferDocs"
+      :partnerId="partner._id"
+    />
   </div>
 </template>
 <script>
@@ -55,19 +54,17 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
 import { ButtonsPanel } from '@/shared/ui'
+import PlacesForTransferDocs from './placesForTransferDocs.vue'
 
 export default {
   name: 'PartnerForm',
   components: {
     ButtonsPanel,
+    PlacesForTransferDocs,
   },
   props: {
     partner: {
       type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
     },
     openInModal: {
       type: Boolean,
@@ -84,6 +81,7 @@ export default {
         contacts: null,
         isClient: false,
         isService: false,
+        placesForTransferDocs: [],
       },
     }
   },
@@ -94,12 +92,7 @@ export default {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
     },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
-    },
+
     nameErrors() {
       const errors = []
       if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)

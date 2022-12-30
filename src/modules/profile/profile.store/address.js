@@ -66,6 +66,7 @@ export default {
           loading: item.isShipmentPlace,
           unloading: item.isDeliveryPlace,
           service: item.isService,
+          partner: item.partner,
         })),
 
     addresses: ({ addresses }, { directoriesProfile, partnersMap }) =>

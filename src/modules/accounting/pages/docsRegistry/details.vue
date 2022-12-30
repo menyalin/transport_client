@@ -1,45 +1,45 @@
 <template>
-  <form-wrapper>
-    <docs-registry-form
-      :item="item"
-      :displayDeleteBtn="
-        !!id && $store.getters.hasPermission('docsRegistry:delete')
-      "
-      @cancel="cancel"
-      @submit="submit"
-      @delete="deleteHandler"
-    />
+  <form-wrapper
+    :loading="loading"
+    @delete="deleteHandler"
+    :displayDeleteBtn="
+      !!id && $store.getters.hasPermission('docsRegistry:delete')
+    "
+  >
+    <docs-registry-form :item="item" @cancel="cancel" @submit="submit" />
   </form-wrapper>
 </template>
 
 <script>
-import { DocsRegistryForm } from '@/modules/accounting/components/docsRegistry'
-import { DocsRegistryService as service } from '@/shared/services'
-import { FormWrapper } from '@/shared/ui'
+import { watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
-import { watch, ref } from 'vue'
+import { DocsRegistryService as service } from '@/shared/services'
+import { FormWrapper, LoadSpinner } from '@/shared/ui'
+import { DocsRegistryForm } from '@/modules/accounting/components/docsRegistry'
+
 export default {
   name: 'DocsRegistryDetail',
   components: {
     DocsRegistryForm,
     FormWrapper,
+    LoadSpinner,
   },
   props: {
     id: String,
   },
   setup(props) {
-    const _id = ref(props.id)
     let loading = ref(false)
     const showError = ref(false)
     const errorMessage = ref('')
-    let item = ref({})
+    const item = ref({})
 
     async function getItem() {
       if (!props.id) return null
       try {
         loading.value = true
-        item.value = await service.getById(props.id)
+        const res = await service.getById(props.id)
+        item.value = res
         loading.value = false
       } catch (e) {
         loading.value = false
@@ -55,34 +55,31 @@ export default {
       } catch (e) {
         showError.value = true
         errorMessage.value = e.response.data
-
         store.commit('setError', e.message)
       }
     }
-
-    getItem()
-    watch(_id, getItem)
-
-    return { item, loading, showError, errorMessage, submit }
+    async function deleteHandler() {
+      try {
+        if (props.id) {
+          loading.value = true
+          await service.deleteById(props.id)
+          router.push('/accounting/docsRegistry')
+          loading.value = false
+        } else return null
+      } catch (e) {
+        loading.value = false
+        showError.value = true
+        errorMessage.value = e.response.data
+        store.commit('setError', e.message)
+      }
+    }
+    watch(() => props.id, getItem, { immediate: true, deep: true })
+    return { item, loading, showError, errorMessage, submit, deleteHandler }
   },
 
   methods: {
     cancel() {
       this.$router.go(-1)
-    },
-
-    async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
-      if (res) {
-        try {
-          await service.deleteById(this.id)
-          this.$router.go(-1)
-        } catch (e) {
-          this.$store.commit('setError', e.message)
-        }
-      }
     },
   },
 }

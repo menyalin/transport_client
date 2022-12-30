@@ -17,8 +17,19 @@
       outlined
       :items="clientItems"
       hide-details
-      :style="{ maxWidth: '300px' }"
+      :style="{ maxWidth: '400px' }"
       @change="updateSettings($event, 'clients')"
+    />
+    <v-select
+      :value="settings.status"
+      label="Статус"
+      dense
+      clearable
+      outlined
+      hide-details
+      :items="statusItems"
+      :style="{ maxWidth: '300px' }"
+      @change="updateSettings($event, 'status')"
     />
   </div>
 </template>
@@ -42,8 +53,13 @@ export default {
   setup(props, ctx) {
     const allHeaders = ALL_HEADERS
     const listSettingsName = 'docsRegistrySettings'
+
     const clientItems = computed(() => {
       return store.getters.partners.filter((i) => i.isClient)
+    })
+
+    const statusItems = computed(() => {
+      return store.getters.docsRegistryStatuses
     })
 
     function updateActiveHeaders(value) {
@@ -57,6 +73,7 @@ export default {
     return {
       allHeaders,
       clientItems,
+      statusItems,
       listSettingsName,
       updateActiveHeaders,
       updateSettings,
