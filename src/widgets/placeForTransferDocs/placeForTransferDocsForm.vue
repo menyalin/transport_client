@@ -54,25 +54,8 @@
 <script>
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { AddressAutocomplete } from '@/entities'
-
-/*
-   {
-        _id: 1,
-        title: 'БИКОМ',
-        address: '61b759ad30a28a9af8a7b0c4',
-        allowedLoadingPoints: [
-          '61b759ad30a28a9af8a7b0c4',
-          '61e7f19c87579a0c2af03fe5',
-          '61b7508c30a28a9af8a7b034',
-        ],
-        contacts:
-          'Строка с контактной информацией. можно выводить в печатную форму',
-        note: 'Комментарий к площадке',
-      },
-
- */
 
 export default {
   name: 'PlaceForTransferDocsForm',
@@ -80,21 +63,33 @@ export default {
     AddressAutocomplete,
   },
   props: {
+    item: Object,
     partnerId: { type: String, required: true },
   },
-  setup(_props, ctx) {
-    function setState(state) {
-      if (!state)
-        return {
-          title: null,
-          address: null,
-          allowedLoadingPoints: [],
-          contacts: null,
-          note: null,
-        }
+  setup(props, ctx) {
+    const state = ref({})
+    const initialState = {
+      title: null,
+      address: null,
+      allowedLoadingPoints: [],
+      contacts: null,
+      note: null,
     }
 
-    let state = ref(setState())
+    function setState(state) {
+      return state ? state : initialState
+    }
+
+    const itemComputed = computed(() => {
+      return props.item
+    })
+    watch(
+      itemComputed,
+      () => {
+        state.value = setState(itemComputed.value)
+      },
+      { immediate: true }
+    )
 
     const rules = {
       title: { required },
@@ -130,6 +125,10 @@ export default {
 
     const invalidForm = computed(() => v$.value.$invalid)
 
+    function clear() {
+      resetForm()
+    }
+
     function resetForm() {
       v$.value.$reset()
       nextTick(() => {
@@ -138,7 +137,7 @@ export default {
     }
 
     function submit() {
-      console.log('submit form')
+      ctx.emit('submit', state.value)
     }
 
     function cancel() {
@@ -154,6 +153,7 @@ export default {
       submit,
       cancel,
       state,
+      clear,
     }
   },
 }
@@ -163,7 +163,6 @@ export default {
 #form-wrapper {
   display: flex;
   flex-direction: column;
-
   padding: 20px;
 }
 </style>

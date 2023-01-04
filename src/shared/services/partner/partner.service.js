@@ -26,6 +26,29 @@ class PartnerService {
     return data
   }
 
+  async addPlaceForTransferDocs(partnerId, body) {
+    const { data } = await api.post(
+      BASE_PATH + '/' + partnerId + '/places',
+      body
+    )
+    return data
+  }
+
+  async deletePlaceForTransferDocs(partnerId, placeId) {
+    const { data } = await api.delete(
+      BASE_PATH + '/' + partnerId + '/places/' + placeId
+    )
+    return data
+  }
+
+  async updatePlaceForTransferDocs(partnerId, placeId, body) {
+    const { data } = await api.put(
+      BASE_PATH + '/' + partnerId + '/places/' + placeId,
+      body
+    )
+    return data
+  }
+
   async updateOne(id, body) {
     let { data } = await api.put(BASE_PATH + '/' + id, body)
     store.commit('addToCache', data)

@@ -18,8 +18,10 @@
         <div>{{ value.note }}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn small color="secondary">Редактировать</v-btn>
-        <v-btn small color="error">Удалить</v-btn>
+        <v-btn small color="secondary" @click="editHandler"
+          >Редактировать</v-btn
+        >
+        <v-btn small color="error" @click="deleteHandler">Удалить</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -33,15 +35,29 @@ export default {
   props: {
     value: Object,
   },
-  setup({ value }) {
-    const address = computed(() => store.getters.addressMap.get(value.address))
-    const allowedLoadingPoints = computed(() =>
-      value.allowedLoadingPoints.map((i) => store.getters.addressMap.get(i))
+  setup(props, ctx) {
+    const address = computed(() =>
+      store.getters.addressMap.get(props.value.address)
     )
+    const allowedLoadingPoints = computed(() =>
+      props.value.allowedLoadingPoints.map((i) =>
+        store.getters.addressMap.get(i)
+      )
+    )
+
+    function deleteHandler() {
+      ctx.emit('delete', props.value._id)
+    }
+
+    function editHandler() {
+      ctx.emit('edit', props.value._id)
+    }
 
     return {
       address,
       allowedLoadingPoints,
+      deleteHandler,
+      editHandler,
     }
   },
 }

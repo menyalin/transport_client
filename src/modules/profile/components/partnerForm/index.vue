@@ -46,6 +46,8 @@
       v-if="form.isClient"
       v-model="form.placesForTransferDocs"
       :partnerId="partner._id"
+      :places="partner.placesForTransferDocs"
+      @updatePartner="updatePartnerHandler"
     />
   </div>
 </template>
@@ -109,6 +111,7 @@ export default {
   watch: {
     partner: {
       immediate: true,
+      deep: true,
       handler: function (val) {
         if (val) this.setFormFields(val)
       },
@@ -128,6 +131,9 @@ export default {
     submit() {
       this.$emit('submit', this.formState)
       this.resetForm()
+    },
+    updatePartnerHandler(value) {
+      this.$emit('updatePartner', value)
     },
     cancel() {
       this.resetForm()

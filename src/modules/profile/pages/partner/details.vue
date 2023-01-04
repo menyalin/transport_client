@@ -6,7 +6,12 @@
       !!id && $store.getters.hasPermission('docsRegistry:delete')
     "
   >
-    <app-partner-form :partner="item" @cancel="cancel" @submit="submit" />
+    <app-partner-form
+      :partner="item"
+      @cancel="cancel"
+      @submit="submit"
+      @updatePartner="updatePartnerHandler"
+    />
   </form-wrapper>
 </template>
 <script>
@@ -28,6 +33,9 @@ export default {
     }
   },
   methods: {
+    async updatePartnerHandler(updatedItem) {
+      this.item = Object.assign({}, updatedItem)
+    },
     async deleteHandler() {
       try {
         this.loading = true
