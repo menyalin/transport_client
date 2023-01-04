@@ -356,7 +356,7 @@ export default {
       if (!this.form.truck || !this.form.violationDate) return null
       const crew = await crewService.getCrewByTruckAndDate({
         truck: this.form.truck,
-        date: this.form.violationDate,
+        date: new Date(this.form.violationDate).toISOString(),
       })
       if (crew) this.form.driver = crew.driver
       else {
