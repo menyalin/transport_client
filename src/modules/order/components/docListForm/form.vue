@@ -16,6 +16,7 @@
       <template #default>
         <thead>
           <tr>
+            <th class="text-center" width="10px">Включать в опись</th>
             <th class="text-left">Тип*</th>
             <th class="text-left">Номер</th>
             <th class="text-left">Комментарий</th>
@@ -30,6 +31,16 @@
             :key="idx"
             :class="{ 'not-accepted': item.status !== 'accepted' }"
           >
+            <td class="text-center">
+              <v-checkbox
+                :value="
+                  item.addToRegistry === undefined ? true : item.addToRegistry
+                "
+                dense
+                hide-details
+                color="primary"
+              />
+            </td>
             <td>
               <v-select
                 v-model="item.type"
