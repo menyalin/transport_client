@@ -1,5 +1,6 @@
 <template>
   <div class="docs-wrapper" :class="{ invalid: !isValid }">
+    <h5>Документы:</h5>
     <div class="btn-wrapper">
       <v-btn
         text
@@ -8,8 +9,9 @@
         outlined
         :disabled="readonly || !isValid"
         @click="openGroupDocDialog"
+        class="mb-4 mt-2"
       >
-        Добавить
+        Добавить документы
       </v-btn>
     </div>
     <v-simple-table dense>
@@ -27,15 +29,13 @@
         </thead>
         <tbody>
           <tr
-            v-for="(item, idx) in docs"
+            v-for="(item, idx) of docs"
             :key="idx"
             :class="{ 'not-accepted': item.status !== 'accepted' }"
           >
             <td class="text-center">
-              <v-checkbox
-                :value="
-                  item.addToRegistry === undefined ? true : item.addToRegistry
-                "
+              <v-simple-checkbox
+                v-model="item.addToRegistry"
                 dense
                 hide-details
                 color="primary"
@@ -154,6 +154,7 @@ export default {
         if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
         this.docs = val.map((i) => ({
           ...i,
+          addToRegistry: i.addToRegistry === undefined ? true : i.addToRegistry,
           date: dayjs(i.date).format(DATE_FORMAT),
         }))
       },

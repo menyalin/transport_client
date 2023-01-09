@@ -33,7 +33,11 @@
               color="primary"
             />
           </v-radio-group>
-
+          <v-checkbox
+            label="Включать документы в опись"
+            v-model="addToRegistry"
+            color="primary"
+          />
           <span>Будет создано документов: </span>{{ docCount }}
         </v-card-text>
 
@@ -61,9 +65,10 @@ export default {
       default: false,
     },
   },
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     const numberStr = ref('')
     const docTypes = ref([])
+    const addToRegistry = ref(true)
     const docStatus = ref('accepted')
     const docTypeItems = computed(() => store.getters.documentTypes)
     const docStatusItems = computed(() => store.getters.documentStatuses)
@@ -99,12 +104,24 @@ export default {
       if (numbers.length) {
         numbers.forEach((number) => {
           docTypes.value.forEach((type) => {
-            res.push({ type, number, status: docStatus.value, date })
+            res.push({
+              type,
+              number,
+              status: docStatus.value,
+              date,
+              addToRegistry: addToRegistry.value,
+            })
           })
         })
       } else {
         docTypes.value.forEach((type) => {
-          res.push({ type, number: '', status: docStatus.value, date })
+          res.push({
+            type,
+            number: '',
+            status: docStatus.value,
+            date,
+            addToRegistry: addToRegistry.value,
+          })
         })
       }
 
@@ -117,6 +134,7 @@ export default {
       numberStr,
       docTypes,
       docStatus,
+      addToRegistry,
       docTypeItems,
       docCount,
       docStatusItems,

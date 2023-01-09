@@ -72,7 +72,6 @@ export default {
     inputHandler(field) {
       if (this.tmpHeaders.includes(field)) this.tmpHeaders.push(field)
       else this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
-      console.log(this.tmpHeaders)
       localStorage.setItem(
         this.listSettingsName,
         JSON.stringify(this.tmpHeaders)

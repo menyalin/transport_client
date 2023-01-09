@@ -447,9 +447,8 @@ export default {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     socket.on('order:updated', (data) => {
-      // eslint-disable-next-line no-unused-vars
       let order = this.orders.find((item) => item._id === data._id)
-      // eslint-disable-next-line no-unused-vars
+      if (!order) return null
       order = Object.assign(order, data)
     })
   },
