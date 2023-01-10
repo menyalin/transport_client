@@ -6,6 +6,7 @@ const getInitialState = (editedItem) => ({
   number: editedItem?.number || null,
   client: editedItem?.client || null,
   status: editedItem?.status || 'inProcess',
+  placeForTransferDocs: editedItem?.placeForTransferDocs || null,
   note: editedItem?.note || null,
 })
 
@@ -15,6 +16,7 @@ function useDocsRegistryForm() {
   const rules = {
     client: { required },
     status: { required },
+    placeForTransferDocs: { required },
     note: {},
   }
 
@@ -31,6 +33,17 @@ function useDocsRegistryForm() {
     return err
   })
 
+  const placeErrorMessages = computed(() => {
+    const err = []
+    const field = v$.value.placeForTransferDocs
+    if (!field.$invalid) return err
+
+    field.$dirty &&
+      field.required.$invalid &&
+      err.push('Площадка не может быть пустой')
+    return err
+  })
+
   const invalidForm = computed(() => v$.value.$invalid)
 
   function setFormState(item) {
@@ -43,6 +56,7 @@ function useDocsRegistryForm() {
     invalidForm,
     clientErrorMessages,
     setFormState,
+    placeErrorMessages,
   }
 }
 

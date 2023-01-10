@@ -35,6 +35,11 @@ class DocsRegistryService {
     return data
   }
 
+  async pickOrders(params) {
+    let { data } = await api.get(BASE_PATH + '/pick_orders', { params })
+    return data
+  }
+
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
     return data

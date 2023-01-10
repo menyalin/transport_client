@@ -6,7 +6,12 @@
       !!id && $store.getters.hasPermission('docsRegistry:delete')
     "
   >
-    <docs-registry-form :item="item" @cancel="cancel" @submit="submit" />
+    <docs-registry-form
+      :item="item"
+      @cancel="cancel"
+      @submit="submit"
+      @save="submit($event, true)"
+    />
   </form-wrapper>
 </template>
 
@@ -47,11 +52,19 @@ export default {
       }
     }
 
-    const submit = async (formState) => {
+    const submit = async (formState, saveOnly) => {
+      let updatedItem
+      const itemId = props.id ? props.id : item.value?._id
       try {
-        if (props.id) await service.updateOne(props.id, formState)
-        else await service.create(formState)
-        router.push('/accounting/docsRegistry')
+        if (itemId) {
+          updatedItem = await service.updateOne(itemId, formState)
+        } else {
+          updatedItem = await service.create(formState)
+        }
+        if (!saveOnly) router.push('/accounting/docsRegistry')
+        else {
+          item.value = updatedItem
+        }
       } catch (e) {
         showError.value = true
         errorMessage.value = e.response.data

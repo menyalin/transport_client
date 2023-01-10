@@ -18,6 +18,12 @@ export const ALL_HEADERS = [
     default: true,
   },
   {
+    value: '_placeName',
+    text: 'Площадка',
+    sortable: false,
+    default: true,
+  },
+  {
     value: 'statusStr',
     text: 'Cтатус',
     sortable: false,

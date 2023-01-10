@@ -2,9 +2,11 @@
   <div>
     <buttons-panel
       panelType="form"
+      showSaveBtn
       @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
       @submit="submitHandler"
+      @save="saveHandler"
     />
     <div id="form">
       <v-text-field
@@ -38,6 +40,31 @@
         @blur="v$.client.$touch"
         :error-messages="clientErrorMessages"
       />
+      <v-select
+        label="Площадка"
+        v-model="state.placeForTransferDocs"
+        dense
+        required
+        clearable
+        item-text="title"
+        item-value="address"
+        :disabled="!placeItems.length"
+        outlined
+        :items="placeItems"
+        :style="{ maxWidth: '300px' }"
+        @blur="v$.placeForTransferDocs.$touch"
+        :error-messages="placeErrorMessages"
+      />
+
+      <v-btn
+        color="primary"
+        @click="pickOrdersHandler"
+        class="ma-3"
+        :disabled="!state.placeForTransferDocs"
+      >
+        Подобрать рейсы
+      </v-btn>
+
       <v-text-field
         v-model="state.note"
         label="Примечание"
@@ -66,15 +93,25 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const { v$, state, invalidForm, clientErrorMessages, setFormState } =
-      useDocsRegistryForm(props.item, ctx)
+    const {
+      v$,
+      state,
+      invalidForm,
+      clientErrorMessages,
+      placeErrorMessages,
+      setFormState,
+    } = useDocsRegistryForm(props.item, ctx)
 
     function cancelHandler() {
       router.go(-1)
     }
-
+    function pickOrdersHandler() {}
     function submitHandler() {
       ctx.emit('submit', state.value)
+    }
+
+    function saveHandler() {
+      ctx.emit('save', state.value)
     }
 
     const clientItems = computed(() =>
@@ -82,6 +119,15 @@ export default {
     )
 
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
+
+    const placeItems = computed(() => {
+      if (!state.value.client) return []
+      const client = store.getters.partners.find(
+        (i) => i._id === state.value.client
+      )
+      if (!client) return []
+      return client.placesForTransferDocs
+    })
     watch(
       () => props.item,
       () => {
@@ -98,6 +144,10 @@ export default {
       invalidForm,
       clientErrorMessages,
       submitHandler,
+      saveHandler,
+      placeItems,
+      placeErrorMessages,
+      pickOrdersHandler,
     }
   },
 }
