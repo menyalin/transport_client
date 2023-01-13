@@ -4,7 +4,7 @@ export default [
   {
     path: BASE_PATH,
     name: 'DocsRegistryList',
-    component: () => import('../pages/docsRegistry/list.vue'),
+    component: () => import('@/pages/accounting/docsRegistry/list.vue'),
     meta: {
       permission: 'docsRegistry:readList',
     },

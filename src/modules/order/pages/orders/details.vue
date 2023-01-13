@@ -17,8 +17,8 @@
           :order="item"
           :displayDeleteBtn="
             !!id &&
-              $store.getters.hasPermission('order:delete') &&
-              item.state.status === 'needGet'
+            $store.getters.hasPermission('order:delete') &&
+            item.state.status === 'needGet'
           "
           @cancel="cancel"
           @submit="submit"
@@ -30,7 +30,7 @@
 </template>
 <script>
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
-import service from '../../services/order.service'
+import { OrderService } from '@/shared/services'
 import AppOrderForm from '../../components/orderForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import socket from '@/socket'
@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      service: service,
+      service: OrderService,
     }
   },
   created() {

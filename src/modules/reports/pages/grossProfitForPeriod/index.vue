@@ -7,7 +7,7 @@
       <v-btn icon @click.stop="getData">
         <v-icon> mdi-cached </v-icon>
       </v-btn>
-      <app-date-range v-model="settings.dateRange" />
+      <date-range-input v-model="settings.dateRange" />
     </div>
     <v-progress-linear
       v-if="loading"
@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-import AppDateRange from '@/modules/common/components/dateRange2'
+import { DateRangeInput } from '@/shared/ui'
 import AppReportSummary from './reportSummary'
 import AppClientBlock from './clientBlock'
 import initDateRange from './initDateRange.js'
@@ -51,7 +51,7 @@ import ReportService from '../../services/index.js'
 export default {
   name: 'GrossProfitReport',
   components: {
-    AppDateRange,
+    DateRangeInput,
     AppReportSummary,
     AppClientBlock,
   },

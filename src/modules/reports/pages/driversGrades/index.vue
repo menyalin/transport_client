@@ -4,7 +4,7 @@
       <h4>Оценки водителей</h4>
     </div>
     <div id="settings">
-      <app-date-range v-model="state.dateRange" />
+      <date-range-input v-model="state.dateRange" />
       <v-btn small color="primary" @click="getLink">
         <v-icon left> mdi-download </v-icon> Скачать отчет
       </v-btn>
@@ -27,7 +27,7 @@
 </template>
 <script>
 import { reactive, ref, computed, nextTick } from 'vue'
-import AppDateRange from '@/modules/common/components/dateRange2'
+import { DateRangeInput } from '@/shared/ui'
 import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
 import store from '@/store'
@@ -35,7 +35,7 @@ import store from '@/store'
 export default {
   name: 'DriversGradesReport',
   components: {
-    AppDateRange,
+    DateRangeInput,
   },
   props: {},
   setup() {

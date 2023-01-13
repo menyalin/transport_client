@@ -56,7 +56,7 @@ import { mapGetters } from 'vuex'
 import AppBlockTitle from '../blockTitle.vue'
 import CrewService from '@/modules/profile/services/crew.service'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
-import agreementService from '@/modules/profile/services/agreement.service'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'ConfirmedCrew',
@@ -178,7 +178,7 @@ export default {
   async created() {
     await this.getCrew()
     if (this.params.outsourceAgreement)
-      this.outsourceAgreement = await agreementService.getById(
+      this.outsourceAgreement = await AgreementService.getById(
         this.params.outsourceAgreement
       )
   },
@@ -193,7 +193,7 @@ export default {
     },
     async getAgreement() {
       const truck = this.$store.getters.trucksMap.get(this.params.truck)
-      this.outsourceAgreement = await agreementService.getForOrder({
+      this.outsourceAgreement = await AgreementService.getForOrder({
         company: this.$store.getters.directoriesProfile,
         date: this.date,
         tkNameId: truck?.tkName?._id || truck.tkName,

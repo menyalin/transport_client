@@ -12,7 +12,7 @@ import accountingRoutes from '@/modules/accounting/routes/index.js'
 
 import serverNotAvailablePage from '@/modules/common/pages/error'
 import HomeLayout from '@/modules/common/pages/layout'
-import PermissionService from '@/modules/common/services/permission.service'
+import PermissionService from '@/shared/services/permission.service'
 
 const _checkPermissions = async (permissions, next, to, from) => {
   if (!permissions.length) next()

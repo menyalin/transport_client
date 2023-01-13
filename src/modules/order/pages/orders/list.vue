@@ -163,108 +163,24 @@
         Поместить в буфер обмена
       </v-btn>
     </div>
-    <div class="table-wrapper">
-      <v-data-table
-        :headers="filteredHeaders"
-        dense
-        :loading="loading"
-        :items="preparedOrders"
-        fixed-header
-        height="65vh"
-        multi-sort
-        :serverItemsLength="count"
-        :footer-props="{
-          'items-per-page-options': [50, 100, 200],
-        }"
-        :options.sync="settings.listOptions"
-        @dblclick:row="dblClickRow"
-      >
-        <template #[`item.state.status`]="{ item }">
-          {{ getStatusText(item.state.status) }}
-        </template>
-
-        <template #[`item.truck`]="{ item }">
-          {{
-            !!item.confirmedCrew &&
-            !!item.confirmedCrew.truck &&
-            trucksMap.has(item.confirmedCrew.truck)
-              ? trucksMap.get(item.confirmedCrew.truck).regNum
-              : '-'
-          }}
-        </template>
-        <template #[`item.trailer`]="{ item }">
-          {{
-            !!item.confirmedCrew &&
-            !!item.confirmedCrew.trailer &&
-            trucksMap.has(item.confirmedCrew.trailer)
-              ? trucksMap.get(item.confirmedCrew.trailer).regNum
-              : ''
-          }}
-        </template>
-        <template #[`item.client.client`]="{ item }">
-          {{
-            !!item.client && partnersMap.has(item.client.client)
-              ? partnersMap.get(item.client.client).name
-              : '-'
-          }}
-        </template>
-        <template #[`item.analytics.type`]="{ item }">
-          {{
-            !!item.analytics &&
-            !!item.analytics.type &&
-            orderAnalyticTypeMap.has(item.analytics.type)
-              ? orderAnalyticTypeMap.get(item.analytics.type)
-              : ''
-          }}
-        </template>
-        <template #[`item.docStatus`]="{ item }">
-          <b :style="{ color: item.docStatus.fontColor }">
-            {{ item.docStatus.text }}
-          </b>
-        </template>
-        <template #[`item.docsGetted`]="{ item }">
-          <v-simple-checkbox
-            :value="item.docsState ? item.docsState.getted : false"
-            :disabled="!!item.docs && !!item.docs.length"
-            color="primary"
-            @input="setDocStateStatus($event, item._id)"
-          />
-        </template>
-        <template #footer.prepend>
-          <order-list-footer-details
-            :total="count"
-            :accepted="acceptedOrders"
-            :needFix="needFixOrders"
-            :onCheck="onCheckOrders"
-            :missing="missingOrders"
-          />
-        </template>
-        <template #[`item.actions`]="{ item }">
-          <v-btn
-            color="primary"
-            icon
-            small
-            dark
-            @click="openDocsDialog(item._id)"
-          >
-            <v-icon small> mdi-file-document-multiple </v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
-      <v-dialog v-model="docDialog" max-width="1300" persistent>
-        <app-doc-list-form
-          :docs="editableDocs"
-          :orderId="editableOrderId"
-          @cancel="cancelDocDialog"
-          @save="saveDocDialog"
-        />
-      </v-dialog>
-    </div>
+    <orders-table
+      :headers="filteredHeaders"
+      :loading="loading"
+      :items="preparedOrders"
+      :count="count"
+      :settings="settings"
+      :missingOrders="missingOrders"
+      :onCheckOrders="onCheckOrders"
+      :needFixOrders="needFixOrders"
+      :acceptedOrders="acceptedOrders"
+    />
   </div>
 </template>
 <script>
 import dayjs from 'dayjs'
-import service from '@/modules/order/services/order.service'
+
+import socket from '@/socket'
+import { OrderService } from '@/shared/services'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import AppDateRange from '@/modules/common/components/dateRange'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
@@ -273,11 +189,11 @@ import AppDocListForm from '../../components/docListForm/index.vue'
 import _putTableToClipboard from './_putTableToClipboard.js'
 import { ALL_ORDER_LIST_HEADERS, DEFAULT_HEADERS } from './constants.js'
 import { useOrderListUtils } from '../../hooks/useOrderListUtils.js'
-import { OrderListFooterDetails, ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel } from '@/shared/ui'
 import { useListColumnSetting } from '@/shared/hooks'
+import { OrdersTable } from '@/widgets'
 import { debounce } from '@/modules/common/helpers/utils.js'
 import { mapGetters } from 'vuex'
-import socket from '@/socket'
 
 const _initPeriod = () => {
   const todayM = dayjs()
@@ -290,17 +206,16 @@ const _initPeriod = () => {
 export default {
   name: 'ListOrder',
   components: {
+    OrdersTable,
     AppTableColumnSettings,
     AppDateRange,
     ButtonsPanel,
     AppPartnerAutocomplete,
     AppAddressAutocomplete,
     AppDocListForm,
-    OrderListFooterDetails,
   },
   data: () => ({
     formName: 'orderList',
-    docDialog: false,
     editableDocs: [],
     editableOrderId: null,
     loading: false,
@@ -330,6 +245,7 @@ export default {
     orders: [],
   }),
   setup() {
+    
     const { getOrderDocStatus, docStatuses, setDocStateStatus, minDate } =
       useOrderListUtils()
 
@@ -339,6 +255,7 @@ export default {
         allHeaders: ALL_ORDER_LIST_HEADERS,
         defaultHeaders: DEFAULT_HEADERS,
       })
+
     return {
       getOrderDocStatus,
       docStatuses,
@@ -355,11 +272,9 @@ export default {
     accountingMode() {
       return this.settings.accountingMode
     },
-
     availableAccountantMode() {
       return this.$store.getters.hasPermission('orderListForAccountant')
     },
-
     filteredHeaders() {
       return this.headers.filter((item) =>
         this.accountingMode ? true : !item.forAccountingMode
@@ -389,44 +304,6 @@ export default {
           .map((p) => this.$store.getters.addressMap.get(p.address)?.shortName),
       }))
     },
-    partnersMap() {
-      return this.$store.getters.partnersMap
-    },
-    orderAnalyticTypeMap() {
-      return this.$store.getters.orderAnalyticTypesMap
-    },
-    trucksMap() {
-      return this.$store.getters.trucksMap
-    },
-    trailers() {
-      return this.$store.getters
-        .trucksForSelect({
-          type: 'trailer',
-          tkName: this.settings.tkName,
-        })
-        .map((t) => ({
-          ...t,
-          value: t._id,
-          text: t.regNum,
-        }))
-    },
-    trucks() {
-      return this.$store.getters
-        .trucksForSelect({
-          type: 'truck',
-          tkName: this.settings.tkName,
-        })
-        .map((t) => ({
-          ...t,
-          value: t._id,
-          text: t.regNum,
-        }))
-    },
-    drivers() {
-      return this.$store.getters.drivers.filter((i) =>
-        this.settings.tkName ? i.tkName._id === this.settings.tkName : true
-      )
-    },
   },
   watch: {
     settings: {
@@ -441,6 +318,7 @@ export default {
       },
     },
   },
+
 
   created() {
     this.debounceGetData = debounce(async () => await this.getData(), 300)
@@ -460,29 +338,6 @@ export default {
     next()
   },
   methods: {
-    async openDocsDialog(orderId) {
-      if (!orderId) return null
-      this.editableOrderId = orderId
-      const order = await service.getById(orderId)
-      this.editableDocs = order.docs
-      this.$nextTick(() => {
-        this.docDialog = true
-      })
-    },
-
-    cancelDocDialog() {
-      this.editableDocs = []
-      this.editableOrderId = null
-      this.$nextTick(() => {
-        this.docDialog = false
-      })
-    },
-
-    async saveDocDialog(val) {
-      await service.setDocs(this.editableOrderId, val)
-      this.cancelDocDialog()
-    },
-
     create() {
       this.$router.push({ name: 'CreateOrder' })
     },
@@ -499,7 +354,7 @@ export default {
           return null
         }
         this.loading = true
-        const data = await service.getList({
+        const data = await OrderService.getList({
           client: this.settings.client,
           truck: this.settings.truck,
           trailer: this.settings.trailer,
@@ -532,9 +387,6 @@ export default {
         this.loading = false
         this.$store.commit('setError', e.message)
       }
-    },
-    dblClickRow(_, { item }) {
-      if (item) this.$router.push(`/orders/${item._id}`)
     },
     putTableToClipboard() {
       _putTableToClipboard({

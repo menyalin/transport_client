@@ -8,7 +8,7 @@
 </template>
 <script>
 import AppScheduleTable from '../../components/scheduleTable'
-import service from '../../services/order.service'
+import { OrderService as service } from '@/shared/services'
 import periodDifferernce from '../../utils/periodDifference'
 
 export default {

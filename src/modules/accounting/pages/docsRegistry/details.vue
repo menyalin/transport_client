@@ -21,7 +21,7 @@ import router from '@/router'
 import store from '@/store'
 import { DocsRegistryService as service } from '@/shared/services'
 import { FormWrapper, LoadSpinner } from '@/shared/ui'
-import { DocsRegistryForm } from '@/modules/accounting/components/docsRegistry'
+import { DocsRegistryForm } from '@/entities/docsRegistry'
 
 export default {
   name: 'DocsRegistryDetail',

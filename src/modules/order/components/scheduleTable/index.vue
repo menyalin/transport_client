@@ -186,7 +186,7 @@ import appBgGrid from './bgGrid'
 import appNote from './note.vue'
 import appResultCell from './resultCell.vue'
 import AppSettingsCell from './settingsCell.vue'
-import permissionService from '@/modules/common/services/permission.service'
+import { PermissionService } from '@/shared/services'
 
 export default {
   name: 'ScheduleTable',
@@ -253,7 +253,7 @@ export default {
 
     draggableMode() {
       return (
-        permissionService.check({ permissions: ['order:move'] }) &&
+        PermissionService.check({ permissions: ['order:move'] }) &&
         this.settings.showDowntimes &&
         !this.settings.controlOnly
       )

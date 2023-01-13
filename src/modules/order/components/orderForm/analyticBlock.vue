@@ -38,7 +38,7 @@
 </template>
 <script>
 import AppBlockTitle from './blockTitle.vue'
-import orderService from '../../services/order.service'
+import { OrderService } from '@/shared/services'
 
 export default {
   name: 'AnalyticBlock',
@@ -90,7 +90,7 @@ export default {
       if (this.isValidRoute) {
         try {
           this.distanceLoading = true
-          const res = await orderService.getDistance(this.coords)
+          const res = await OrderService.getDistance(this.coords)
           this.params.distanceRoad = res.distanceRoad
           this.distanceLoading = false
         } catch (e) {
@@ -101,7 +101,7 @@ export default {
     },
     async getDirectDistance() {
       if (this.isValidRoute) {
-        this.params.distanceDirect = orderService.getDirectDistance(this.coords)
+        this.params.distanceDirect = OrderService.getDirectDistance(this.coords)
       }
     },
   },

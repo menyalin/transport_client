@@ -1,4 +1,4 @@
-import service from '../services/order.service'
+import { OrderService } from '@/shared/services'
 import dayjs from 'dayjs'
 
 const _getStartPositionDate = (order) => {
@@ -109,7 +109,7 @@ export default {
         commit('setError', 'Профиль настроек не установлен')
         return null
       }
-      service.getListForSchedule()
+      OrderService.getListForSchedule()
     },
   },
   getters: {

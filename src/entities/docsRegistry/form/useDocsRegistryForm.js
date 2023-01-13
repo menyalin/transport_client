@@ -1,6 +1,6 @@
-import { useVuelidate } from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
 import { computed, ref } from 'vue'
+import { required } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
 
 const getInitialState = (editedItem) => ({
   number: editedItem?.number || null,

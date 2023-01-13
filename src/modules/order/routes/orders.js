@@ -5,7 +5,7 @@ export default [
   {
     path: '/',
     name: 'ListOrder',
-    component: () => import('../pages/orders/list'),
+    component: () => import('@/pages/orders/list'),
   },
   {
     path: 'create',

@@ -142,7 +142,7 @@ import AppZones from './zones.vue'
 import AppReturn from './return.vue'
 import TariffService from '../../services/tariff.service.js'
 import { TariffDTO } from './tariff.dto'
-import agreementService from '../../services/agreement.service'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'TariffForm',
@@ -232,7 +232,7 @@ export default {
       handler: async function (val) {
         if (!val) this.agreement = null
         else
-          this.agreement = await agreementService.getById(
+          this.agreement = await AgreementService.getById(
             this.tmpItem.agreement
           )
       },

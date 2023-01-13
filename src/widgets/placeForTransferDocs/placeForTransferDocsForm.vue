@@ -55,7 +55,7 @@
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { computed, nextTick, ref, watch } from 'vue'
-import { AddressAutocomplete } from '@/entities'
+import { AddressAutocomplete } from '@/entities/address'
 
 export default {
   name: 'PlaceForTransferDocsForm',

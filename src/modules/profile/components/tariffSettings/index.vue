@@ -74,9 +74,9 @@
   </div>
 </template>
 <script>
-import uuid from 'uuid'
-import AgreementService from '@/modules/profile/services/agreement.service'
 import dayjs from 'dayjs'
+import uuid from 'uuid'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'TariffCommonSettings',

@@ -173,7 +173,7 @@
             />
           </div>
 
-          <app-doc-list-form
+          <order-docs-list-form
             v-if="isShowDocs"
             id="docs"
             v-model="docs"
@@ -197,9 +197,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AgreementService from '@/modules/profile/services/agreement.service'
+
+import { OrderService, AgreementService } from '@/shared/services'
 import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
-import OrderService from '@/modules/order/services/order.service.js'
 
 import { ButtonsPanel } from '@/shared/ui'
 import AppCargoParams from './cargoParams.vue'
@@ -212,12 +212,10 @@ import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
-import AppDocListForm from '../docListForm/form.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
-import { useOrderDocs } from '../../hooks/useOrderDocs.js'
+import { useOrderDocs, OrderDocsListForm } from '@/entities/orderDocs'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
 import AppPaymentToDriver from './paymentToDriver.vue'
-// import agreement from '@/modules/profile/profile.store/agreement'
 
 export default {
   name: 'OrderForm',
@@ -233,7 +231,7 @@ export default {
     AppAnalyticBlock,
     AppPriceBlock,
     AppPriceDialog,
-    AppDocListForm,
+    OrderDocsListForm,
     AppPaymentToDriver,
   },
   props: {

@@ -20,7 +20,7 @@
 </template>
 <script>
 import AppPriceWrapper from './priceWrapper.vue'
-import AgreementService from '@/modules/profile/services/agreement.service'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'PriceBlock',

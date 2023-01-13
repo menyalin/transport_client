@@ -122,7 +122,7 @@ import AppZonesCell from '@/modules/profile/components/tariffGroupList/zones.vue
 import AppDirectDistanceZones from '@/modules/profile/components/tariffGroupList/directDistanceZones.vue'
 import { mapGetters } from 'vuex'
 import service from '@/modules/profile/services/tariff.service'
-import AgreementService from '@/modules/profile/services/agreement.service'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'TariffList',

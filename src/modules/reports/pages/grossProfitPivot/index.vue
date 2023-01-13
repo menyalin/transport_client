@@ -8,7 +8,7 @@
         <v-btn icon @click.stop="getData">
           <v-icon> mdi-cached </v-icon>
         </v-btn>
-        <app-date-range v-model="settings.dateRange" />
+        <date-range-input v-model="settings.dateRange" />
         <v-checkbox
           v-model="usePriceWithVat"
           label="Цены с НДС"
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import AppDateRange from '@/modules/common/components/dateRange2'
+import { DateRangeInput } from '@/shared/ui'
 import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
 import AppGroupBySettings from './groupBySettings.vue'
@@ -78,7 +78,7 @@ import {
 export default {
   name: 'GrossProfitReport',
   components: {
-    AppDateRange,
+    DateRangeInput,
     AppGroupBySettings,
     AppPivotTable,
     AppFilters,

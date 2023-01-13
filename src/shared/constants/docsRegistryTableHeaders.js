@@ -1,4 +1,4 @@
-export const ALL_HEADERS = [
+export default [
   {
     value: 'number',
     text: 'Номер',

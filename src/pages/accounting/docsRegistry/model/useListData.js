@@ -1,18 +1,15 @@
 import { ref, watch, computed } from 'vue'
 import store from '@/store'
 import router from '@/router'
-import { DocsRegistryService as service } from '@/shared/services'
+import { DocsRegistryService } from '@/shared/services'
 
-const useListData = () => {
+export const useListData = () => {
   const historyState = window.history.state
   const initialState = { clients: [], status: null }
-  const headers = ref([])
   const settings = ref(historyState.settings || initialState)
   const items = ref([])
-
-  function changeHeaders(value) {
-    headers.value = value
-  }
+  const statisticData = ref({})
+  const loading = ref(false)
 
   async function refresh() {
     await getData()
@@ -22,10 +19,14 @@ const useListData = () => {
     router.push('/accounting/docsRegistry/create')
   }
 
-  watch(settings, async () => {
-    await getData()
-    window.history.pushState({ settings: settings.value }, '')
-  })
+  watch(
+    settings,
+    async () => {
+      await getData()
+      window.history.pushState({ settings: settings.value }, '')
+    },
+    { deep: true }
+  )
 
   const queryParams = computed(() => ({
     status: settings.value?.status,
@@ -36,8 +37,15 @@ const useListData = () => {
   }))
 
   async function getData() {
-    const data = await service.getList(queryParams.value)
-    items.value = data.items
+    try {
+      loading.value = true
+      const data = await DocsRegistryService.getList(queryParams.value)
+      items.value = data.items
+      loading.value = false
+    } catch (e) {
+      loading.value = false
+      store.commit('setError', e.message)
+    }
   }
 
   addEventListener('popstate', (e) => {
@@ -48,10 +56,8 @@ const useListData = () => {
     refresh,
     create,
     settings,
-    changeHeaders,
-    headers,
     items,
+    loading,
+    statisticData,
   }
 }
-
-export default useListData

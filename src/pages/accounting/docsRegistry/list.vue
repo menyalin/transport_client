@@ -7,42 +7,53 @@
       @submit="create"
       @refresh="refresh"
     />
-    <list-settings-widget v-model="settings" @changeHeaders="changeHeaders" />
+    <docs-registry-list-settings
+      v-model="settings"
+      @updateHeaders="changeHeaders"
+    />
     <docs-registry-data-table
       v-model="settings"
       :items="items"
       :headers="headers"
+      :statisticData="statisticData"
+      :listOptions.sync="settings.listOptions"
+      :loading="loading"
     />
   </entity-list-wrapper>
 </template>
 <script>
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import { ref } from 'vue'
 import {
-  ListSettingsWidget,
-  useListData,
+  DocsRegistryListSettings,
   DocsRegistryDataTable,
-} from '../../components/docsRegistry'
+} from '@/widgets/docsRegistry'
+import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 
 export default {
   name: 'DocsRegistryList',
   components: {
     ButtonsPanel,
-    AppTableColumnSettings,
-    ListSettingsWidget,
+    DocsRegistryListSettings,
     EntityListWrapper,
     DocsRegistryDataTable,
   },
   setup() {
-    const { create, refresh, settings, changeHeaders, items, headers } =
+    const headers = ref([])
+    function changeHeaders(val) {
+      headers.value = val
+    }
+    const { create, refresh, settings, items, loading, statisticData } =
       useListData()
     return {
       create,
       refresh,
       settings,
-      changeHeaders,
       items,
       headers,
+      changeHeaders,
+      statisticData,
+      loading,
     }
   },
 }

@@ -54,7 +54,7 @@
 </template>
 <script>
 import tariffService from '@/modules/profile/services/tariff.service'
-import orderService from '@/modules/order/services/order.service'
+import { OrderService } from '@/shared/services'
 import appFinalPriceTable from './finalPriceTable.vue'
 
 import DTO from '../priceBlock/Price.class'
@@ -163,7 +163,7 @@ export default {
     async save() {
       try {
         this.loading = true
-        await orderService.updateFinalPrices({
+        await OrderService.updateFinalPrices({
           orderId: this.order._id,
           company: this.$store.getters.directoriesProfile,
           finalPrices: this.finalPrices,

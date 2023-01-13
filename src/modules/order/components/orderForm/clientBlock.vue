@@ -34,7 +34,7 @@
 <script>
 import AppBlockTitle from './blockTitle.vue'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
-import service from '@/modules/profile/services/agreement.service'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'ClientBlock',
@@ -95,7 +95,7 @@ export default {
           this.params.agreement = val.agreement
         }
         if (val?.agreement) {
-          this.agreement = await service.getById(val.agreement)
+          this.agreement = await AgreementService.getById(val.agreement)
         }
       },
     },
@@ -122,9 +122,9 @@ export default {
       try {
         this.loading = true
         if (this.params.agreement) {
-          this.agreement = await service.getById(this.params.agreement)
+          this.agreement = await AgreementService.getById(this.params.agreement)
         } else {
-          this.agreement = await service.getForOrder({
+          this.agreement = await AgreementService.getForOrder({
             company: this.$store.getters.directoriesProfile,
             date: this.routeDate,
             client: this.params.client,

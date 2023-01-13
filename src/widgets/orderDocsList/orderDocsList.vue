@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="text-h6"> Список документов </v-card-title>
     <v-card-text>
-      <app-form
+      <order-docs-list-form
         v-model="tmpDocs"
         :isValid="isValidDocs(tmpDocs)"
         :readonly="isReadonlyDocs"
@@ -21,13 +21,13 @@
   </v-card>
 </template>
 <script>
-import AppForm from './form.vue'
-import { useOrderDocs } from '../../hooks/useOrderDocs.js'
+import { OrderDocsListForm, useOrderDocs } from '@/entities/orderDocs'
+
 
 export default {
   name: 'DocListForm',
   components: {
-    AppForm,
+    OrderDocsListForm,
   },
   setup() {
     const { isValidDocs, isReadonlyDocs } = useOrderDocs()

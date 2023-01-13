@@ -1,9 +1,9 @@
 <template>
   <div class="settings-wrapper">
     <app-table-column-setting
-      :allHeaders="allHeaders"
-      :listSettingsName="listSettingsName"
-      @change="updateActiveHeaders"
+      :allHeaders="DOCS_REGISTRY_TABLE_HEADERS"
+      listSettingsName="docsRegistrySettings"
+      @change="updateHeadersHandler"
     />
 
     <v-autocomplete
@@ -37,10 +37,11 @@
 <script>
 import store from '@/store'
 import { computed } from 'vue'
-import { ALL_HEADERS } from '../model/tableHeaders'
 import { AppTableColumnSetting } from '@/shared/ui'
+import { DOCS_REGISTRY_TABLE_HEADERS } from '@/shared/constants'
+
 export default {
-  name: 'ListSettingsWidget',
+  name: 'DocsRegistryListSettingsWidget',
   components: { AppTableColumnSetting },
   model: {
     prop: 'settings',
@@ -51,9 +52,6 @@ export default {
   },
 
   setup(props, ctx) {
-    const allHeaders = ALL_HEADERS
-    const listSettingsName = 'docsRegistrySettings'
-
     const clientItems = computed(() => {
       return store.getters.partners.filter((i) => i.isClient)
     })
@@ -62,21 +60,19 @@ export default {
       return store.getters.docsRegistryStatuses
     })
 
-    function updateActiveHeaders(value) {
-      ctx.emit('changeHeaders', value)
-    }
-
     function updateSettings(value, field) {
       ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
     }
 
+    function updateHeadersHandler(val) {
+      ctx.emit('updateHeaders', val)
+    }
     return {
-      allHeaders,
       clientItems,
       statusItems,
-      listSettingsName,
-      updateActiveHeaders,
+      updateHeadersHandler,
       updateSettings,
+      DOCS_REGISTRY_TABLE_HEADERS,
     }
   },
 }

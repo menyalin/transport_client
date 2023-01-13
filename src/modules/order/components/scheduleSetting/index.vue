@@ -20,7 +20,7 @@
 <script>
 import dayjs from 'dayjs'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import PermissionService from '@/modules/common/services/permission.service'
+import { PermissionService } from '@/shared/services'
 
 export default {
   name: 'ScheduleSettings',

@@ -39,6 +39,7 @@
         :style="{ maxWidth: '300px' }"
         @blur="v$.client.$touch"
         :error-messages="clientErrorMessages"
+        @change="changeClientHandler"
       />
       <v-select
         label="Площадка"
@@ -48,8 +49,8 @@
         clearable
         item-text="title"
         item-value="address"
-        :disabled="!placeItems.length"
         outlined
+        :disabled="!placeItems || placeItems.length === 0"
         :items="placeItems"
         :style="{ maxWidth: '300px' }"
         @blur="v$.placeForTransferDocs.$touch"
@@ -82,7 +83,7 @@ import store from '@/store'
 
 import { computed, watch } from 'vue'
 import { ButtonsPanel } from '@/shared/ui'
-import useDocsRegistryForm from './useDocsRegistryForm'
+import useDocsRegistryForm from './useDocsRegistryForm.js'
 
 export default {
   name: 'DocsRegistryForm',
@@ -105,23 +106,31 @@ export default {
     function cancelHandler() {
       router.go(-1)
     }
-    function pickOrdersHandler() {}
+
+    function pickOrdersHandler() {
+      // todo: pick orders
+    }
+
     function submitHandler() {
       ctx.emit('submit', state.value)
+    }
+
+    function changeClientHandler() {
+      state.value.placeForTransferDocs = null
     }
 
     function saveHandler() {
       ctx.emit('save', state.value)
     }
 
-    const clientItems = computed(() =>
-      store.getters.partners.filter((i) => i.isClient)
+    const clientItems = computed(
+      () => store.getters?.partners.filter((i) => i.isClient) || []
     )
 
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
 
     const placeItems = computed(() => {
-      if (!state.value.client) return []
+      if (!state.value?.client) return []
       const client = store.getters.partners.find(
         (i) => i._id === state.value.client
       )
@@ -148,6 +157,8 @@ export default {
       placeItems,
       placeErrorMessages,
       pickOrdersHandler,
+
+      changeClientHandler,
     }
   },
 }

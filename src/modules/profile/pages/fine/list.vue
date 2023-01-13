@@ -10,7 +10,7 @@
           @refresh="refetch"
         />
         <div class="filter-wrapper">
-          <app-date-range v-model="settings.period" />
+          <date-range-input v-model="settings.period" />
           <v-select
             v-model="settings.status"
             :items="fineStatuses"
@@ -92,15 +92,14 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { ButtonsPanel } from '@/shared/ui'
-import AppDateRange from '@/modules/common/components/dateRange2'
+import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 import { useFineList } from './useList'
 
 export default {
   name: 'FineList',
   components: {
     ButtonsPanel,
-    AppDateRange,
+    DateRangeInput,
   },
 
   setup() {

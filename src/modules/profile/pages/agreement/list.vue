@@ -47,7 +47,7 @@
 <script>
 import { ButtonsPanel } from '@/shared/ui'
 import { mapGetters } from 'vuex'
-import service from '@/modules/profile/services/agreement.service'
+import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'AgreementList',
@@ -124,7 +124,7 @@ export default {
       }
       try {
         this.loading = true
-        const data = await service.getList({
+        const data = await AgreementService.getList({
           company: this.directoriesProfile,
 
           skip:

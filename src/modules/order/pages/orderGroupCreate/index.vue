@@ -93,7 +93,7 @@
 import dayjs from 'dayjs'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import AppDateRange from '@/modules/common/components/dateRange'
-import service from '@/modules/order/services/order.service'
+import { OrderService } from '@/shared/services'
 
 export default {
   name: 'CreateOrderGroup',
@@ -163,7 +163,7 @@ export default {
       if (!res) return null
       try {
         this.loading = true
-        await service.createFromTemplate(this.preparedOrders)
+        await OrderService.createFromTemplate(this.preparedOrders)
         this.showAlert = true
         this.crearTable()
         this.loading = false

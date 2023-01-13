@@ -9,7 +9,8 @@
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
     }"
-    :options.sync="listOptions"
+    :options="settings.listOptions"
+    @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.createdAt`]="{ item }">
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import { watch, ref } from 'vue'
+import { ref } from 'vue'
 import router from '@/router'
 
 export default {
@@ -40,23 +41,27 @@ export default {
     function dblClickRow(_event, { item }) {
       router.push(`docsRegistry/${item._id}`)
     }
+    function updateListOptionsHandler(options) {
+      ctx.emit('update:listOptions', { ...options })
+    }
 
-    watch(
-      listOptions,
-      () => {
-        ctx.emit(
-          'change',
-          Object.assign({}, props?.settings, {
-            listOptions: listOptions?.value,
-          })
-        )
-      }
-      // { immediate: true }
-    )
+    // watch(
+    //   listOptions,
+    //   () => {
+    //     ctx.emit(
+    //       'change',
+    //       Object.assign({}, props?.settings, {
+    //         listOptions: listOptions?.value,
+    //       })
+    //     )
+    //   }
+    //   // { immediate: true }
+    // )
 
     return {
       dblClickRow,
       listOptions,
+      updateListOptionsHandler,
     }
   },
 }

@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import store from '@/store'
-import PermissionService from '@/modules/common/services/permission.service'
-import orderService from '../services/order.service.js'
+import PermissionService from '@/shared/services/permission.service'
+import { OrderService } from '@/shared/services'
 
 export const useOrderListUtils = () => {
   const minDate = computed(() =>
@@ -27,11 +27,13 @@ export const useOrderListUtils = () => {
     return docStatusesWithCustomNames
   })
 
-  function isNotAccepted(doc) {
+  
+  /*
+  function _isNotAccepted(doc) {
     return doc.status !== 'accepted'
   }
 
-  function getOrderDocStatus(docs, isGetted) {
+  function _getOrderDocStatus(docs, isGetted) {
     if (!isGetted && (!docs || !docs.length))
       return { text: 'Не получены', fontColor: 'red' }
     else if (isGetted && (!docs || !docs.length))
@@ -40,13 +42,13 @@ export const useOrderListUtils = () => {
       return { text: 'На исправлении', fontColor: 'orange' }
     else return { text: 'Приняты', fontColor: 'green' }
   }
-
+*/
   async function setDocStateStatus(val, id) {
-    await orderService.setDocState(id, val)
+    await OrderService.setDocState(id, val)
   }
 
   return {
-    getOrderDocStatus,
+    // getOrderDocStatus,
     docStatuses,
     setDocStateStatus,
     minDate,

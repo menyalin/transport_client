@@ -96,8 +96,8 @@
     </v-simple-table>
     <app-group-dialog
       :dialog="groupDialog"
-      @close="closeGroupDocDialog"
       @pushDocs="addGroup"
+      @close="closeGroupDocDialog"
     />
   </div>
 </template>

@@ -29,7 +29,7 @@
 <script>
 import AppAgreementForm from '@/modules/profile/components/agreementForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import service from '../../services/agreement.service'
+import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {
@@ -41,7 +41,7 @@ export default {
   mixins: [pageDetailsMixin],
   data() {
     return {
-      service: service,
+      service: AgreementService,
     }
   },
 }
