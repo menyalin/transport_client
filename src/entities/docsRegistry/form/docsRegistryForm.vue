@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
 
@@ -94,6 +95,7 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
+    const showPickOrderDialog = ref(true)
     const {
       v$,
       state,
@@ -108,7 +110,7 @@ export default {
     }
 
     function pickOrdersHandler() {
-      // todo: pick orders
+      ctx.emit('pickOrders')
     }
 
     function submitHandler() {
@@ -159,6 +161,7 @@ export default {
       pickOrdersHandler,
 
       changeClientHandler,
+      showPickOrderDialog,
     }
   },
 }

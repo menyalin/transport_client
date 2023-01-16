@@ -11,7 +11,21 @@
       @cancel="cancel"
       @submit="submit"
       @save="submit($event, true)"
+      @pickOrders="pickOrdersHandler"
     />
+    <v-dialog
+      v-if="item._id"
+      v-model="showPickOrderDialog"
+      fullscreen
+      persistent
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <pick-orders
+        :docsRegistryId="item._id"
+        @cancel="showPickOrderDialog = false"
+      />
+    </v-dialog>
   </form-wrapper>
 </template>
 
@@ -19,16 +33,17 @@
 import { watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
-import { DocsRegistryService as service } from '@/shared/services'
-import { FormWrapper, LoadSpinner } from '@/shared/ui'
+import { DocsRegistryService } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
 import { DocsRegistryForm } from '@/entities/docsRegistry'
+import { PickOrders } from '@/features/docsRegistry'
 
 export default {
   name: 'DocsRegistryDetail',
   components: {
     DocsRegistryForm,
     FormWrapper,
-    LoadSpinner,
+    PickOrders,
   },
   props: {
     id: String,
@@ -38,12 +53,16 @@ export default {
     const showError = ref(false)
     const errorMessage = ref('')
     const item = ref({})
+    const showPickOrderDialog = ref(false)
+    function pickOrdersHandler() {
+      showPickOrderDialog.value = true
+    }
 
     async function getItem() {
       if (!props.id) return null
       try {
         loading.value = true
-        const res = await service.getById(props.id)
+        const res = await DocsRegistryService.getById(props.id)
         item.value = res
         loading.value = false
       } catch (e) {
@@ -57,9 +76,9 @@ export default {
       const itemId = props.id ? props.id : item.value?._id
       try {
         if (itemId) {
-          updatedItem = await service.updateOne(itemId, formState)
+          updatedItem = await DocsRegistryService.updateOne(itemId, formState)
         } else {
-          updatedItem = await service.create(formState)
+          updatedItem = await DocsRegistryService.create(formState)
         }
         if (!saveOnly) router.push('/accounting/docsRegistry')
         else {
@@ -75,7 +94,7 @@ export default {
       try {
         if (props.id) {
           loading.value = true
-          await service.deleteById(props.id)
+          await DocsRegistryService.deleteById(props.id)
           router.push('/accounting/docsRegistry')
           loading.value = false
         } else return null
@@ -86,8 +105,19 @@ export default {
         store.commit('setError', e.message)
       }
     }
+
     watch(() => props.id, getItem, { immediate: true, deep: true })
-    return { item, loading, showError, errorMessage, submit, deleteHandler }
+
+    return {
+      item,
+      loading,
+      showError,
+      errorMessage,
+      submit,
+      deleteHandler,
+      pickOrdersHandler,
+      showPickOrderDialog,
+    }
   },
 
   methods: {
