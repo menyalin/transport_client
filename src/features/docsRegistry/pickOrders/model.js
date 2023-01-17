@@ -1,22 +1,21 @@
-import { ref, watch, computed } from 'vue'
 import store from '@/store'
-import router from '@/router'
+import { ref, watch, computed } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
 
-export const useListData = () => {
+export const useListData = ({ client, docsRegistryId }) => {
+  if (!client) console.error('client id is missing')
   const historyState = window.history.state
-  const initialState = { clients: [], status: null }
+  const initialState = { docsRegistryId: null }
   const settings = ref(historyState.settings || initialState)
   const items = ref([])
-  const statisticData = ref({})
   const loading = ref(false)
 
   async function refresh() {
     await getData()
   }
 
-  function create() {
-    router.push('/accounting/docsRegistry/create')
+  function resetSettings() {
+    //reset settings
   }
 
   watch(
@@ -29,19 +28,14 @@ export const useListData = () => {
   )
 
   const queryParams = computed(() => ({
-    status: settings.value?.status,
-    clients: settings.value?.clients,
-    company: store.getters.directoriesProfile,
-    limit: settings.value?.listOptions?.itemsPerPage || 50,
-    skip:
-      settings.value.listOptions.itemsPerPage *
-      (settings.value.listOptions.page - 1),
+    client,
+    docsRegistryId,
   }))
 
   async function getData() {
     try {
       loading.value = true
-      const data = await DocsRegistryService.getList(queryParams.value)
+      const data = await DocsRegistryService.pickOrders(queryParams.value)
       items.value = data.items
       loading.value = false
     } catch (e) {
@@ -55,11 +49,10 @@ export const useListData = () => {
   })
 
   return {
+    loading,
+    resetSettings,
     refresh,
-    create,
     settings,
     items,
-    loading,
-    statisticData,
   }
 }

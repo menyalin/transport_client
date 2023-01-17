@@ -1,13 +1,12 @@
 import store from '@/store/index.js'
 
 const getOrderNotes = (item) => {
+  const pointNotes = item.route.map((i) => i.note).filter((i) => !!i)
+
   return {
     'cargoParams.note': item.cargoParams.note || ' ',
     orderNote: item.note || ' ',
-    pointNotes: `"${item.route
-      .map((i) => i.note)
-      .filter((i) => !!i)
-      .join('; ')}"`,
+    pointNotes: pointNotes.length ? `"${pointNotes.join('; ')}"` : ' ',
   }
 }
 

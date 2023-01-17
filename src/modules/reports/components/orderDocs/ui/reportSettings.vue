@@ -52,6 +52,7 @@
       label="Клиенты"
       dense
       clearable
+      auto-select-first
       multiple
       outlined
       :items="clientItems"
@@ -67,11 +68,26 @@
       label="Водитель"
       dense
       clearable
+      auto-select-first
       outlined
       :items="driverItems"
       hide-details
       :style="{ maxWidth: '320px' }"
       @change="updateSettings($event, 'driver')"
+    />
+    <v-autocomplete
+      :value="settings.truck"
+      item-text="regNum"
+      item-value="_id"
+      label="Грузовик"
+      dense
+      auto-select-first
+      clearable
+      outlined
+      :items="truckItems"
+      hide-details
+      :style="{ maxWidth: '320px' }"
+      @change="updateSettings($event, 'truck')"
     />
     <v-select
       :value="settings.getDocsDays"
@@ -160,6 +176,10 @@ export default {
       return store.getters.drivers
     })
 
+    const truckItems = computed(() =>
+      store.getters.trucks.filter((i) => i.type === 'truck')
+    )
+
     const clientItems = computed(() => {
       return store.getters.partners.filter((i) => i.isClient)
     })
@@ -178,6 +198,7 @@ export default {
       clientItems,
       stateItems,
       driverItems,
+      truckItems,
       daysIntervalItems,
     }
   },

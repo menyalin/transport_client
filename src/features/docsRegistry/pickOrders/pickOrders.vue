@@ -2,7 +2,9 @@
   <v-card elevation="2" outlined class="ma-5">
     <v-card-actions>
       <v-btn @click="cancelHandler" class="ma-2">Закрыть</v-btn>
-      <v-btn @click="addToRegistryHandler" class="ma-2" color="primary">Добавить в опись</v-btn>
+      <v-btn @click="addToRegistryHandler" class="ma-2" color="primary"
+        >Добавить в опись</v-btn
+      >
     </v-card-actions>
 
     <v-card-title>
@@ -15,16 +17,19 @@
 </template>
 <script>
 import { PickOrdersSettings } from '@/entities/docsRegistry'
+import { useListData } from './model.js'
 export default {
   name: 'PickOrdersFeature',
   components: { PickOrdersSettings },
   props: {
+    client: String,
     docsRegistryId: {
       type: String,
       required: true,
     },
   },
-  setup(_props, ctx) {
+  setup({ client, docsRegistryId }, ctx) {
+    const { loading } = useListData({ client, docsRegistryId })
     function cancelHandler() {
       ctx.emit('cancel')
     }
@@ -35,6 +40,7 @@ export default {
     return {
       cancelHandler,
       addToRegistryHandler,
+      loading,
     }
   },
 }
