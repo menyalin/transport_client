@@ -129,7 +129,7 @@ export default {
       )
     },
     showReturnBtn(idx) {
-      if (this.points.length < 3) return false
+      if (this.isTemplate || this.points.length < 3) return false
       return (
         idx + 1 === this.points.length &&
         this.$store.getters.hasPermission('order:showReturnCheckbox')
