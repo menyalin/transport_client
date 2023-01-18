@@ -14,6 +14,7 @@
           :confirmed="confirmed"
           :fixedTimeSlots="fixedTimeSlots"
           :isActive="point.isCurrent"
+          :showReturnBtn="showReturnBtn(ind)"
           :showDeleteBtn="tmpPoints.length > 2"
           :isTemplate="isTemplate"
           @changePoint="change($event, ind)"
@@ -125,6 +126,13 @@ export default {
         this.driverId,
         this.points,
         this.cargoParams
+      )
+    },
+    showReturnBtn(idx) {
+      if (this.points.length < 3) return false
+      return (
+        idx + 1 === this.points.length &&
+        this.$store.getters.hasPermission('order:showReturnCheckbox')
       )
     },
     change(val, ind) {

@@ -13,10 +13,10 @@
           @change="setField($event, 'type')"
         />
         <v-checkbox
-          v-if="tmpPoint.isReturn"
+          v-if="tmpPoint.isReturn || showReturnBtn"
           v-model="tmpPoint.isReturn"
           label="Возврат"
-          readonly
+          :readonly="!showReturnBtn || tmpPoint.isPltReturn"
           hide-details
           dense
           color="red"
@@ -24,7 +24,7 @@
           @change="setField($event, 'isReturn')"
         />
         <v-checkbox
-          v-if="tmpPoint.isReturn"
+          v-if="tmpPoint.isReturn || tmpPoint.isPltReturn"
           v-model="tmpPoint.isPltReturn"
           label="Возврат паллет"
           hide-details
@@ -190,6 +190,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false,
+    },
+    showReturnBtn: {
+      type: Boolean,
+      default: true,
     },
     isTemplate: {
       type: Boolean,

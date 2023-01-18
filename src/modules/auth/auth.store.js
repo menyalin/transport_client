@@ -93,14 +93,14 @@ export default {
     },
 
     hasPermission:
-      (state, { userRoles, permissionsMap }) =>
+      (_state, { userRoles, permissionsMap }) =>
       (permission) => {
         if (userRoles.includes('admin')) return true
         return !!permissionsMap.get(permission)
       },
 
     allowedPeriodForPermission:
-      (state, { permissionsMap }) =>
+      (_state, { permissionsMap }) =>
       ({ date, permission }) => {
         if (permissionsMap.has('fullAccess')) return true
         if (!permissionsMap.has(permission)) return false
