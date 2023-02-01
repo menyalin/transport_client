@@ -79,7 +79,7 @@ export default {
     focus() {
       this.$refs.input.focus()
     },
-    
+
     itemsFilter(item) {
       if (!this.pointType) return true
       return item[this.pointType]
