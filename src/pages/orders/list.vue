@@ -36,7 +36,8 @@
 import { ref } from 'vue'
 import { OrderService } from '@/shared/services'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import { OrdersTable, OrdersTableSettings, OrderDocsList } from '@/widgets'
+import { OrdersTableSettings, OrderDocsList } from '@/widgets'
+import { OrdersTable } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 
@@ -53,8 +54,8 @@ export default {
     const editableOrderId = ref(null)
     const editableDocs = ref([])
     const docDialog = ref(false)
-    const headers = ref([])
     const allHeaders = ORDERS_TABLE_HEADERS
+    const headers = ref([])
 
     function updateActiveHeaders(val) {
       headers.value = val

@@ -168,7 +168,7 @@
 import { computed } from 'vue'
 import store from '@/store'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-
+import { useOrderListSettingsData } from '@/shared/hooks'
 export default {
   name: 'OrdersTableSettings',
   components: { AppTableColumnSetting, DateRangeInput },
@@ -186,59 +186,16 @@ export default {
     const availableAccountantMode = computed(() =>
       store.getters.hasPermission('orderListForAccountant')
     )
-    const orderStatuses = computed(() => store.getters.orderStatuses)
-    const docStatuses = computed(() => {
-      const docStatusesWithCustomNames = [
-        { value: 'accepted', text: 'Приняты' },
-        { value: 'needFix', text: 'На исправлении' },
-        { value: 'onCheck', text: 'На проверке' },
-        { value: 'missing', text: 'Не получены' },
-      ]
 
-      store.getters.documentStatuses
-        .map((i) => i.value)
-        .forEach((i) => {
-          if (!docStatusesWithCustomNames.map((j) => j.value).includes(i))
-            console.error('useOrderListUtils: unexpected document status value')
-        })
-      return docStatusesWithCustomNames
-    })
-    const trailers = computed(() =>
-      store.getters
-        .trucksForSelect({
-          type: 'trailer',
-          tkName: props.settings.tkName,
-        })
-        .map((t) => ({
-          ...t,
-          value: t._id,
-          text: t.regNum,
-        }))
-    )
-
-    const trucks = computed(() =>
-      store.getters
-        .trucksForSelect({
-          type: 'truck',
-          tkName: props.settings.tkName,
-        })
-        .map((t) => ({
-          ...t,
-          value: t._id,
-          text: t.regNum,
-        }))
-    )
-
-    const drivers = computed(() =>
-      store.getters.drivers.filter((i) =>
-        props.settings.tkName ? i.tkName._id === props.settings.tkName : true
-      )
-    )
-    const clientItems = computed(() =>
-      store.getters.partners.filter((i) => i.isClient)
-    )
-
-    const addressItems = computed(() => store.getters.addressesForAutocomplete)
+    const {
+      orderStatuses,
+      docStatuses,
+      trailers,
+      trucks,
+      drivers,
+      addressItems,
+      clientItems,
+    } = useOrderListSettingsData()
 
     function putTableToClipboard() {
       ctx.emit('putTableToClipboard')

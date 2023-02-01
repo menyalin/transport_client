@@ -27,28 +27,11 @@ export const useOrderListUtils = () => {
     return docStatusesWithCustomNames
   })
 
-  
-  /*
-  function _isNotAccepted(doc) {
-    return doc.status !== 'accepted'
-  }
-
-  function _getOrderDocStatus(docs, isGetted) {
-    if (!isGetted && (!docs || !docs.length))
-      return { text: 'Не получены', fontColor: 'red' }
-    else if (isGetted && (!docs || !docs.length))
-      return { text: 'На проверке', fontColor: 'blue' }
-    else if (isGetted && docs.some(isNotAccepted))
-      return { text: 'На исправлении', fontColor: 'orange' }
-    else return { text: 'Приняты', fontColor: 'green' }
-  }
-*/
   async function setDocStateStatus(val, id) {
     await OrderService.setDocState(id, val)
   }
 
   return {
-    // getOrderDocStatus,
     docStatuses,
     setDocStateStatus,
     minDate,

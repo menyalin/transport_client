@@ -5,9 +5,11 @@
         <div class="top-panel">
           <buttons-panel
             :disabled-submit="disabledSubmitForm"
+            show-save-btn
             panel-type="form"
             @cancel="cancel"
-            @submit="submit"
+            @submit="submit($event)"
+            @save="submit($event, true)"
           />
           <div class="template-panel">
             <v-autocomplete
@@ -171,6 +173,12 @@
               label="Примечание"
               dense
             />
+            <v-text-field
+              v-model="form.noteAccountant"
+              outlined
+              label="Примечание для бухгалтера"
+              dense
+            />
           </div>
 
           <order-docs-list-form
@@ -314,6 +322,7 @@ export default {
       form: {
         startPositionDate: null,
         note: null,
+        noteAccountant: null,
       },
     }
   },
@@ -625,7 +634,7 @@ export default {
         return true
       return false
     },
-    async submit() {
+    async submit(_val, saveOnly) {
       if (!this.directoriesProfile || this.isInvalidForm) return null
       if (!this.analytics.distanceDirect)
         this.analytics.distanceDirect = OrderService.getDirectDistance(
@@ -635,8 +644,7 @@ export default {
         const { distanceRoad } = await OrderService.getDistance(this.coords)
         this.analytics.distanceRoad = distanceRoad
       }
-
-      this.$emit('submit', this.formState)
+      this.$emit(saveOnly ? 'save' : 'submit', this.formState)
     },
     cancel() {
       this.$emit('cancel')

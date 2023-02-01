@@ -1,19 +1,27 @@
 <template>
   <v-data-table
+    :value="selected"
     :headers="headers"
     dense
+    color="primary"
     :loading="loading"
-    :items="items"
+    :items="preparedItems"
+    :showSelect="showSelect"
+    item-key="_id"
     fixed-header
+    checkbox-color="primary"
     height="65vh"
     multi-sort
-    :serverItemsLength="statisticData.count"
+    :serverItemsLength="
+      statisticData && !!statisticData.count ? statisticData.count : undefined
+    "
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
     }"
     :options="listOptions"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
+    @input="selectHandler"
   >
     <template #[`item.state.status`]="{ item }">
       {{ getStatusText(item.state.status) }}
@@ -54,7 +62,11 @@
       }}
     </template>
     <template #[`item.docStatus`]="{ item }">
-      <b :style="{ color: item.docStatus.fontColor }">
+      <b
+        :style="{
+          color: item.docStatus.fontColor ? item.docStatus.fontColor : null,
+        }"
+      >
         {{ item.docStatus.text }}
       </b>
     </template>
@@ -66,7 +78,7 @@
         @input="setDocStateStatus($event, item._id)"
       />
     </template>
-    <template #footer.prepend>
+    <template #footer.prepend v-if="statisticData && statisticData.count">
       <order-list-footer-details
         :total="statisticData.count"
         :accepted="statisticData.acceptedDocs"
@@ -100,7 +112,16 @@ export default {
   components: {
     OrderListFooterDetails,
   },
+  model: {
+    prop: 'selected',
+    event: 'change',
+  },
   props: {
+    selected: Array,
+    showSelect: {
+      type: Boolean,
+      default: false,
+    },
     headers: { type: Array, required: true },
     loading: { type: Boolean, required: true },
     items: Array,
@@ -108,7 +129,7 @@ export default {
     statisticData: Object,
     listOptions: Object,
   },
-  setup(_props, ctx) {
+  setup(props, ctx) {
     const orderAnalyticTypeMap = computed(
       () => store.getters.orderAnalyticTypesMap
     )
@@ -133,6 +154,46 @@ export default {
       await OrderService.setDocState(id, val)
     }
 
+    function isNotAccepted(doc) {
+      return doc.status !== 'accepted'
+    }
+    function selectHandler(selectedItems) {
+      ctx.emit('change', selectedItems)
+    }
+    function getOrderDocStatus(docs, isGetted) {
+      if (!isGetted && (!docs || !docs.length))
+        return { text: 'Не получены', fontColor: 'red' }
+      else if (isGetted && (!docs || !docs.length))
+        return { text: 'На проверке', fontColor: 'blue' }
+      else if (isGetted && docs.some(isNotAccepted))
+        return { text: 'На исправлении', fontColor: 'orange' }
+      else return { text: 'Приняты', fontColor: 'green' }
+    }
+
+    const preparedItems = computed(() => {
+      if (!props.items || props.items.length === 0) return []
+      return props.items.map((order) => ({
+        ...order,
+        driver:
+          store.getters.driversMap.get(order.confirmedCrew.driver)?.fullName ||
+          null,
+        tk:
+          order.confirmedCrew.tkName &&
+          store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
+            ? store.getters.tkNamesMap.get(order.confirmedCrew.tkName).name
+            : '-',
+        docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
+        plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
+        loadingZones: order._loadingZones.map((i) => i.name).join(', '),
+        loadingPoints: order.route
+          .filter((p) => p.type === 'loading')
+          .map((p) => store.getters.addressMap.get(p.address)?.shortName),
+        unloadingPoints: order.route
+          .filter((p) => p.type === 'unloading')
+          .map((p) => store.getters.addressMap.get(p.address)?.shortName),
+      }))
+    })
+
     return {
       orderAnalyticTypeMap,
       dblClickRow,
@@ -141,6 +202,8 @@ export default {
       updateListOptionsHandler,
       getStatusText,
       setDocStateStatus,
+      preparedItems,
+      selectHandler,
     }
   },
 }

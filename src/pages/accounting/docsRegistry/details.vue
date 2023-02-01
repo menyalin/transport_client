@@ -2,16 +2,19 @@
   <form-wrapper
     :loading="loading"
     @delete="deleteHandler"
-    :displayDeleteBtn="
-      !!id && $store.getters.hasPermission('docsRegistry:delete')
-    "
+    :displayDeleteBtn="showDeleteBtn"
   >
     <docs-registry-form
       :item="item"
       @cancel="cancel"
       @submit="submit"
       @save="submit($event, true)"
-      @pickOrders="pickOrdersHandler"
+      @pickOrders="openDialog"
+    />
+    <docs-registry-orders-list
+      :orders="item.orders"
+      @delete="deleteOrderFromRegistry"
+      @dblRowClick="dblRowClickHandler"
     />
     <v-dialog
       v-if="item._id"
@@ -19,44 +22,77 @@
       fullscreen
       persistent
       hide-overlay
-      transition="dialog-bottom-transition"
     >
       <pick-orders
-        :docsRegistryId="item._id"
-        @cancel="showPickOrderDialog = false"
+        :docsRegistry="item"
+        :client="item.client"
+        @cancel="closeDialog"
       />
     </v-dialog>
   </form-wrapper>
 </template>
 
 <script>
-import { watch, ref } from 'vue'
+import { watch, ref, onBeforeUnmount, computed } from 'vue'
+import socket from '@/socket'
 import router from '@/router'
 import store from '@/store'
 import { DocsRegistryService } from '@/shared/services'
 import { FormWrapper } from '@/shared/ui'
-import { DocsRegistryForm } from '@/entities/docsRegistry'
 import { PickOrders } from '@/features/docsRegistry'
+import {
+  DocsRegistryForm,
+  DocsRegistryOrdersList,
+} from '@/entities/docsRegistry'
 
 export default {
   name: 'DocsRegistryDetail',
   components: {
-    DocsRegistryForm,
     FormWrapper,
     PickOrders,
+    DocsRegistryForm,
+    DocsRegistryOrdersList,
   },
   props: {
     id: String,
   },
   setup(props) {
+    const item = ref({})
+    const storedSettingsName = 'docsRegistry:showPickOrderDialog'
+    const showPickOrderDialog = ref(
+      store.getters.storedValue(storedSettingsName) || false
+    )
+
+    const showDeleteBtn = computed(() => {
+      return (
+        !!props?.id &&
+        store.getters.hasPermission('docsRegistry:delete') &&
+        item.value?.orders &&
+        item.value?.orders.length === 0
+      )
+    })
+
+    async function deleteOrderFromRegistry(orders) {
+      if (!orders || orders.length === 0) return null
+      await DocsRegistryService.removeOrdersFromRegistry({
+        orders,
+        docsRegistryId: item.value._id,
+      })
+    }
+
+    function openDialog() {
+      showPickOrderDialog.value = true
+      store.commit('setStoredValue', { name: storedSettingsName, value: true })
+    }
+
+    function closeDialog() {
+      showPickOrderDialog.value = false
+      store.commit('setStoredValue', { name: storedSettingsName, value: false })
+    }
+
     let loading = ref(false)
     const showError = ref(false)
     const errorMessage = ref('')
-    const item = ref({})
-    const showPickOrderDialog = ref(false)
-    function pickOrdersHandler() {
-      showPickOrderDialog.value = true
-    }
 
     async function getItem() {
       if (!props.id) return null
@@ -90,6 +126,7 @@ export default {
         store.commit('setError', e.message)
       }
     }
+
     async function deleteHandler() {
       try {
         if (props.id) {
@@ -108,6 +145,30 @@ export default {
 
     watch(() => props.id, getItem, { immediate: true, deep: true })
 
+    function dblRowClickHandler(orderId) {
+      router.push('/orders/' + orderId)
+    }
+
+    function addOrders({ docsRegistry, orders }) {
+      if (docsRegistry !== item.value._id) return null
+      item.value.orders.push(...orders)
+    }
+
+    function removeOrders({ docsRegistry, orders }) {
+      if (docsRegistry !== item.value._id) return null
+      item.value.orders = item.value.orders.filter(
+        (i) => !orders.includes(i.order._id)
+      )
+    }
+
+    socket.on('orders:addedToRegistry', addOrders)
+    socket.on('orders:removedFromRegistry', removeOrders)
+
+    onBeforeUnmount(() => {
+      socket.off('orders:removedFromRegistry', removeOrders)
+      socket.off('orders:addedToRegistry', addOrders)
+    })
+
     return {
       item,
       loading,
@@ -115,8 +176,12 @@ export default {
       errorMessage,
       submit,
       deleteHandler,
-      pickOrdersHandler,
       showPickOrderDialog,
+      openDialog,
+      closeDialog,
+      deleteOrderFromRegistry,
+      showDeleteBtn,
+      dblRowClickHandler,
     }
   },
 

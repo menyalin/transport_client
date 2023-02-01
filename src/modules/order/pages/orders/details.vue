@@ -15,13 +15,10 @@
         <app-order-form
           v-else
           :order="item"
-          :displayDeleteBtn="
-            !!id &&
-            $store.getters.hasPermission('order:delete') &&
-            item.state.status === 'needGet'
-          "
+          :displayDeleteBtn="showDeleteBtn"
           @cancel="cancel"
-          @submit="submit"
+          @submit="submit($event)"
+          @save="submit($event, true)"
           @delete="deleteHandler"
         />
       </v-col>
@@ -51,6 +48,16 @@ export default {
       service: OrderService,
     }
   },
+  computed: {
+    showDeleteBtn() {
+      return (
+        !!this.id &&
+        this.$store.getters.hasPermission('order:delete') &&
+        this.item?.state?.status === 'needGet'
+      )
+    },
+  },
+
   created() {
     if (this.id) {
       socket.on(`order:${this.id}:finalPriceUpdated`, ({ finalPrices }) => {
@@ -72,6 +79,28 @@ export default {
         ],
       }
     }
+  },
+  methods: {
+    async submit(val, saveOnly) {
+      this.tmpVal = val
+      try {
+        this.loading = true
+        if (this.id) {
+          this.item = await this.service.updateOne(this.id, val)
+        } else this.item = await this.service.create(val)
+        this.loading = false
+        this.tmpVal = null
+        if (this.openInModal) this.$emit('submit', this.item._id)
+        else if (!saveOnly) this.$router.go(-1)
+      } catch (e) {
+        this.loading = false
+        this.item = this.tmpVal
+        if (e.response.status === 400 || e.response.status === 403) {
+          this.error.message = e.response.data
+          this.error.show = true
+        }
+      }
+    },
   },
 }
 </script>

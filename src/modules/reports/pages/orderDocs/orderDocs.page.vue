@@ -17,7 +17,6 @@
 
 <script>
 import { ref, watch } from 'vue'
-import { useDataListPage } from '@/shared/hooks'
 import { ReportTitle } from '../../shared/ui'
 
 import {
@@ -38,10 +37,7 @@ export default {
     const initialState = { groupBy: 'month', clients: [], tks: [], state: null }
     const headers = ref([])
     const settings = ref(historyState.settings || initialState)
-
-    const { pageTitle } = useDataListPage({
-      pageTitle: 'Отчет по не сданным документам',
-    })
+    const pageTitle = ref('Отчет по не сданным документам')
 
     const { items, refresh, loading, statisticData } = useReportData({
       settings,

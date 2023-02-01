@@ -54,6 +54,10 @@ export const useListData = () => {
     settings.value = e.state.settings
   })
 
+  function onDeleteHandler(itemId) {
+    items.value = items.value.filter((i) => i._id !== itemId)
+  }
+
   return {
     refresh,
     create,
@@ -61,5 +65,6 @@ export const useListData = () => {
     items,
     loading,
     statisticData,
+    onDeleteHandler,
   }
 }

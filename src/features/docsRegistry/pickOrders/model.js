@@ -2,7 +2,7 @@ import store from '@/store'
 import { ref, watch, computed } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
 
-export const useListData = ({ client, docsRegistryId }) => {
+export const useListData = ({ client, _id }) => {
   if (!client) console.error('client id is missing')
   const historyState = window.history.state
   const initialState = { docsRegistryId: null }
@@ -29,14 +29,17 @@ export const useListData = ({ client, docsRegistryId }) => {
 
   const queryParams = computed(() => ({
     client,
-    docsRegistryId,
+    docsRegistryId: _id,
+    docStatus: settings.value.docStatus,
+    truck: settings.value.truck,
+    driver: settings.value.driver,
   }))
 
   async function getData() {
     try {
       loading.value = true
       const data = await DocsRegistryService.pickOrders(queryParams.value)
-      items.value = data.items
+      items.value = data
       loading.value = false
     } catch (e) {
       loading.value = false

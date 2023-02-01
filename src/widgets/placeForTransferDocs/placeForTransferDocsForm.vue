@@ -15,7 +15,7 @@
           v-model="state.address"
           label="Адрес площадки"
           outlined
-          :partnerId="partnerId"
+          :partnerId="resctrictAddresses ? partnerId : undefined"
           @blur="v$.address.$touch"
           :errorMessages="addressErrorMessages"
         />
@@ -24,7 +24,7 @@
           label="Разрешенные пункты погрузки"
           outlined
           multiple
-          :partnerId="partnerId"
+          :partnerId="resctrictAddresses ? partnerId : undefined"
           @blur="v$.allowedLoadingPoints.$touch"
         />
         <v-text-field
@@ -38,6 +38,11 @@
           label="Примечание"
           outlined
           @blur="v$.note.$touch"
+        />
+        <v-checkbox
+          v-model="resctrictAddresses"
+          label="Скрывать адреса других клиентов"
+          color="primary"
         />
       </form>
     </v-card-text>
@@ -67,6 +72,7 @@ export default {
     partnerId: { type: String, required: true },
   },
   setup(props, ctx) {
+    const resctrictAddresses = ref(true)
     const state = ref({})
     const initialState = {
       title: null,
@@ -154,6 +160,7 @@ export default {
       cancel,
       state,
       clear,
+      resctrictAddresses,
     }
   },
 }

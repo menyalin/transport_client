@@ -10,6 +10,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: () => ({
+    tmpCacheMap: new Map(),
     loading: false,
     appLoading: false,
     error: null,
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     clearError(state) {
       state.error = null
     },
+    setStoredValue(state, payload) {
+      state.tmpCacheMap.set(payload.name, payload.value)
+    },
   },
   actions: {
     setError({ commit }, error) {
@@ -41,6 +45,10 @@ export default new Vuex.Store({
     error: ({ error }) => error,
     appLoading: ({ appLoading }) => appLoading,
     loading: ({ loading }) => loading,
+    storedValue:
+      ({ tmpCacheMap }) =>
+      (name) =>
+        tmpCacheMap.get(name),
   },
   modules: {
     AuthModule,

@@ -22,7 +22,8 @@
   </entity-list-wrapper>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
+import socket from '@/socket'
 import {
   DocsRegistryListSettings,
   DocsRegistryDataTable,
@@ -43,8 +44,21 @@ export default {
     function changeHeaders(val) {
       headers.value = val
     }
-    const { create, refresh, settings, items, loading, statisticData } =
-      useListData()
+    const {
+      create,
+      refresh,
+      settings,
+      items,
+      loading,
+      statisticData,
+      onDeleteHandler,
+    } = useListData()
+
+    socket.on('docsRegistry:deleted', onDeleteHandler)
+    onBeforeUnmount(() => {
+      socket.off('docsRegistry:deleted', onDeleteHandler)
+    })
+    
     return {
       create,
       refresh,
