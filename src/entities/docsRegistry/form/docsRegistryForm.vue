@@ -35,6 +35,7 @@
         item-text="name"
         clearable
         outlined
+        :disabled="disabledMainFields"
         :items="clientItems"
         :style="{ maxWidth: '300px' }"
         @blur="v$.client.$touch"
@@ -50,18 +51,23 @@
         item-text="title"
         item-value="address"
         outlined
-        :disabled="!placeItems || placeItems.length === 0"
+        :disabled="!placeItems || placeItems.length === 0 || disabledMainFields"
         :items="placeItems"
         :style="{ maxWidth: '300px' }"
         @blur="v$.placeForTransferDocs.$touch"
         :error-messages="placeErrorMessages"
       />
 
+      <v-alert v-if="disabledPickOrders || needSave" type="info" text>
+        Для подбора рейсов требуется сохранение документа
+      </v-alert>
       <v-btn
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="!state.placeForTransferDocs"
+        :disabled="
+          !state.placeForTransferDocs || disabledPickOrders || needSave
+        "
       >
         Подобрать рейсы
       </v-btn>
@@ -93,6 +99,12 @@ export default {
   },
   props: {
     item: Object,
+    disabledPickOrders: {
+      type: Boolean,
+    },
+    disabledMainFields: {
+      type: Boolean,
+    },
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
@@ -139,6 +151,13 @@ export default {
       if (!client) return []
       return client.placesForTransferDocs
     })
+    const needSave = computed(() => {
+      return (
+        state.value?.client !== props.item.client ||
+        state.value.placeForTransferDocs !== props.item.placeForTransferDocs
+      )
+    })
+
     watch(
       () => props.item,
       () => {
@@ -159,7 +178,7 @@ export default {
       placeItems,
       placeErrorMessages,
       pickOrdersHandler,
-
+      needSave,
       changeClientHandler,
       showPickOrderDialog,
     }

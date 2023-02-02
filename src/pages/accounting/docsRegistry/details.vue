@@ -6,6 +6,8 @@
   >
     <docs-registry-form
       :item="item"
+      :disabledPickOrders="disabledPickOrders"
+      :disabledMainFields="disabledMainFields"
       @cancel="cancel"
       @submit="submit"
       @save="submit($event, true)"
@@ -62,6 +64,13 @@ export default {
     const showPickOrderDialog = ref(
       store.getters.storedValue(storedSettingsName) || false
     )
+    const disabledPickOrders = computed(() => {
+      return !item.value?._id
+    })
+
+    const disabledMainFields = computed(() => {
+      return item.value.orders?.length > 0
+    })
 
     const showDeleteBtn = computed(() => {
       return (
@@ -182,6 +191,8 @@ export default {
       deleteOrderFromRegistry,
       showDeleteBtn,
       dblRowClickHandler,
+      disabledPickOrders,
+      disabledMainFields,
     }
   },
 
