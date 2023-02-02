@@ -7,7 +7,9 @@
       :disabledSubmit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
-    />
+    >
+      <v-btn @click="buttonClick">Кнопка</v-btn>
+    </buttons-panel>
     <div id="form">
       <v-text-field
         v-if="state.number"
@@ -157,7 +159,9 @@ export default {
         state.value.placeForTransferDocs !== props.item.placeForTransferDocs
       )
     })
-
+    function buttonClick() {
+      console.log('click')
+    }
     watch(
       () => props.item,
       () => {
@@ -179,6 +183,7 @@ export default {
       placeErrorMessages,
       pickOrdersHandler,
       needSave,
+      buttonClick,
       changeClientHandler,
       showPickOrderDialog,
     }

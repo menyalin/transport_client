@@ -18,6 +18,10 @@
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
+
+      <v-col>
+        <slot #default />
+      </v-col>
     </v-row>
     <v-row v-else-if="panelType === 'list'">
       <v-col cols="auto">
