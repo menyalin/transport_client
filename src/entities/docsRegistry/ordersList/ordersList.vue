@@ -7,6 +7,10 @@
     item-key="order._id"
     checkbox-color="primary"
     show-select
+    :itemsPerPage="-1"
+    :footerProps="{
+      itemsPerPageOptions: [-1, 100],
+    }"
     dense
     @dblclick:row="dblclickRowHandler"
   >
