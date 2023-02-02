@@ -7,6 +7,7 @@
     :hide-details="hideDetails"
     :readonly="readonly"
     hide-no-data
+    cache-items
     :items="items"
     :disabled="disabled"
     :clearable="!readonly"
@@ -58,6 +59,7 @@ export default {
       this.$refs.input.focus()
     },
     itemsFilter(item) {
+      if (item.value === this.value) return true
       if (this.partnerId && this.partnerId !== item.partner) return false
       if (!this.pointType) return true
       return item[this.pointType]
