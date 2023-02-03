@@ -6,6 +6,10 @@
       listSettingsName="pickOrdersTable"
       @change="updateHeadersHandler"
     />
+    <date-range-input 
+      v-model="settings.period"
+      class="mx-4"
+    />
     <v-select
       v-model="settings.docStatus"
       label="Документы"
@@ -67,7 +71,7 @@
   </div>
 </template>
 <script>
-import { AppTableColumnSetting } from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 export default {
   name: 'PickOrdersSettings',
@@ -75,7 +79,7 @@ export default {
     prop: 'settings',
     event: 'change',
   },
-  components: { AppTableColumnSetting },
+  components: { AppTableColumnSetting, DateRangeInput },
   props: {
     settings: Object,
     allHeaders: Array,

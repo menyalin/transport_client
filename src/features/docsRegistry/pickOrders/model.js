@@ -1,11 +1,23 @@
 import store from '@/store'
+import dayjs from 'dayjs'
 import { ref, watch, computed } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
+
+const initPeriod = () => {
+  return [
+    dayjs().add(-1, 'month').startOf('month').toISOString(),
+    new Date().toISOString(),
+  ]
+}
 
 export const useListData = ({ client, _id }) => {
   if (!client) console.error('client id is missing')
   const historyState = window.history.state
-  const initialState = { docsRegistryId: null, onlySelectable: true }
+  const initialState = {
+    docsRegistryId: null,
+    onlySelectable: true,
+    period: initPeriod(),
+  }
   const settings = ref(historyState.settings || initialState)
   const items = ref([])
   const loading = ref(false)
@@ -35,6 +47,7 @@ export const useListData = ({ client, _id }) => {
     driver: settings.value.driver,
     onlySelectable: settings.value.onlySelectable,
     loadingZone: settings.value.loadingZone,
+    period: settings.value.period,
   }))
 
   async function getData() {
