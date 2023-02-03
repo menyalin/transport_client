@@ -1,37 +1,48 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <div class="text-h4">
-          {{ company.name }}
-        </div>
-        <div class="text-caption">ИНН: {{ company.inn }}</div>
-        <v-divider />
-        <app-company-settings :companyId="id" />
-      </v-col>
-    </v-row>
-  </v-container>
+  <form-wrapper>
+    <div class="text-h4">
+      {{ company.name }}
+    </div>
+    <div class="text-caption">ИНН: {{ company.inn }}</div>
+    <v-divider />
+    <company-base-fields-form :item="company" @submit="submitHandler" />
+    <company-settings :companyId="id" />
+  </form-wrapper>
 </template>
 <script>
-import AppCompanySettings from '@/modules/profile/components/companySettings'
+import store from '@/store'
+import router from '@/router'
+import { computed } from 'vue'
+import { FormWrapper } from '@/shared/ui'
+import { CompanyService } from '@/shared/services'
+import { CompanySettings, CompanyBaseFieldsForm } from '@/entities/company'
 
 export default {
   name: 'CompanyDetails',
   components: {
-    AppCompanySettings,
+    CompanySettings,
+    CompanyBaseFieldsForm,
+    FormWrapper,
   },
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
+    id: { type: String, required: true },
   },
-  computed: {
-    company() {
-      return this.$store.state.ProfileModule.myCompanies.find(
-        (item) => item._id === this.id
+  setup(props) {
+    const company = computed(() =>
+      store.state.ProfileModule.myCompanies.find(
+        (item) => item._id === props.id
       )
-    },
+    )
+
+    async function submitHandler(formState) {
+      const res = await CompanyService.updateOne(props.id, formState)
+      if (res) router.push('/profile/settings')
+    }
+
+    return {
+      company,
+      submitHandler,
+    }
   },
 }
 </script>

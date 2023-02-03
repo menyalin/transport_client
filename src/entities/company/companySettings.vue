@@ -2,6 +2,7 @@
   <div class="mt-2">
     <v-card v-if="!disabledSettings">
       <v-card-title>Настройки компании:</v-card-title>
+
       <v-card-text>
         <div id="truck-kinds">
           <v-select
@@ -77,7 +78,7 @@
   </div>
 </template>
 <script>
-import CompanyService from '../../services/company.service'
+import { CompanyService } from '@/shared/services'
 
 export default {
   name: 'CompanySettings',

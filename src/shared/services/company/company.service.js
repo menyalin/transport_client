@@ -5,7 +5,8 @@ const BASE_PATH = '/companies'
 
 class CompanyService {
   constructor() {
-    socket.on('company:updateCompany', (payload) => {
+    socket.on('company:updated', (payload) => {
+      console.log('updated: ', payload)
       store.commit('updateCompany', payload)
     })
     socket.on('company:deleteEmployeeById', (payload) => {
@@ -40,6 +41,20 @@ class CompanyService {
       params: { inn },
     })
     return data
+  }
+
+  async updateOne(id, body) {
+    if (!store.getters.hasPermission('fullAccess')) {
+      store.commit('setError', 'Нет прав на выполнение операции')
+      return null
+    }
+    try {
+      const { data } = await api.put(BASE_PATH + '/' + id, body)
+      return data
+    } catch (e) {
+      store.commit('setError', e.response?.data || e.message)
+      return false
+    }
   }
 
   async updateSettings({ settings }) {

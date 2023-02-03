@@ -3,6 +3,7 @@ import PartnerService from './partner/partner.service.js'
 import OrderService from './order/order.service.js'
 import AgreementService from './agreement/agreement.service.js'
 import PermissionService from './permission.service.js'
+import CompanyService from './company/company.service.js'
 
 export {
   DocsRegistryService,
@@ -10,4 +11,5 @@ export {
   OrderService,
   AgreementService,
   PermissionService,
+  CompanyService,
 }

@@ -13,7 +13,7 @@ import DocumentModule from './document'
 import ZoneModule from './zone'
 import RegionModule from './region'
 import CityModule from './city'
-import CompanyService from '../services/company.service'
+import CompanyService from '../../../shared/services/company/company.service'
 import UserService from '@/modules/auth/services/user.service'
 
 export default {
@@ -84,10 +84,12 @@ export default {
     },
 
     updateCompany(state, company) {
-      state.myCompanies = state.myCompanies.filter(
-        (item) => item._id !== company._id
+      const idx = state.myCompanies.findIndex(
+        (item) => item._id === company._id
       )
-      state.myCompanies.push(company)
+      if (idx === -1) return null
+
+      state.myCompanies.splice(idx, 1, company)
     },
     updateCompanySettings(state, { settings, companyId }) {
       const company = state.myCompanies.find((i) => i._id === companyId)

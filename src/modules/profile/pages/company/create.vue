@@ -5,19 +5,19 @@
     </v-row>
     <v-row>
       <v-col>
-        <app-company-form @cancel="cancel" @submit="submitForm" />
+        <company-form @cancel="cancel" @submit="submitForm" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
-import AppCompanyForm from '@/modules/profile/components/companyForm'
+import { CompanyForm } from '@/entities/company'
 import { mapActions } from 'vuex'
 
 export default {
   name: 'CreateCompany',
   components: {
-    AppCompanyForm,
+    CompanyForm,
   },
   methods: {
     ...mapActions(['createCompany']),
@@ -32,4 +32,3 @@ export default {
   },
 }
 </script>
-<style></style>
