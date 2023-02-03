@@ -5,7 +5,7 @@ import { DocsRegistryService } from '@/shared/services'
 export const useListData = ({ client, _id }) => {
   if (!client) console.error('client id is missing')
   const historyState = window.history.state
-  const initialState = { docsRegistryId: null }
+  const initialState = { docsRegistryId: null, onlySelectable: true }
   const settings = ref(historyState.settings || initialState)
   const items = ref([])
   const loading = ref(false)
@@ -33,6 +33,7 @@ export const useListData = ({ client, _id }) => {
     docStatus: settings.value.docStatus,
     truck: settings.value.truck,
     driver: settings.value.driver,
+    onlySelectable: settings.value.onlySelectable,
   }))
 
   async function getData() {

@@ -43,6 +43,13 @@
       :style="{ 'max-width': '300px' }"
       @change="settings.listOptions.page = 1"
     />
+    <v-checkbox
+      v-model="settings.onlySelectable"
+      label="Только доступные рейсы"
+      hide-details
+      class="ml-2"
+      dense
+    />
   </div>
 </template>
 <script>

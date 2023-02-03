@@ -19,6 +19,12 @@
       dense
     />
     <v-text-field
+      v-model.trim="$v.form.fullName.$model"
+      outlined
+      label="Полное наименование"
+      dense
+    />
+    <v-text-field
       v-model.trim="$v.form.inn.$model"
       outlined
       label="ИНН"
@@ -78,6 +84,7 @@ export default {
       initialFormState: null,
       form: {
         name: null,
+        fullName: null,
         inn: null,
         group: null,
         contacts: null,
@@ -121,6 +128,7 @@ export default {
   validations: {
     form: {
       name: { required },
+      fullName: {},
       inn: {},
     },
   },
