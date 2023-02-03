@@ -43,6 +43,20 @@
       :style="{ 'max-width': '300px' }"
       @change="settings.listOptions.page = 1"
     />
+    <v-autocomplete
+      v-model="settings.loadingZone"
+      dense
+      auto-select-first
+      item-value="_id"
+      item-text="name"
+      clearable
+      :items="loadingZoneItems"
+      outlined
+      hide-details
+      label="Зона погрузки"
+      :style="{ 'max-width': '300px' }"
+      @change="settings.listOptions.page = 1"
+    />
     <v-checkbox
       v-model="settings.onlySelectable"
       label="Только доступные рейсы"
@@ -67,8 +81,14 @@ export default {
     allHeaders: Array,
   },
   setup(props, { emit }) {
-    const { orderStatuses, docStatuses, trailers, trucks, drivers } =
-      useOrderListSettingsData()
+    const {
+      orderStatuses,
+      docStatuses,
+      trailers,
+      trucks,
+      drivers,
+      loadingZoneItems,
+    } = useOrderListSettingsData()
     const refreshHandler = () => {
       emit('refresh')
     }
@@ -90,6 +110,7 @@ export default {
       trailers,
       trucks,
       drivers,
+      loadingZoneItems,
     }
   },
 }

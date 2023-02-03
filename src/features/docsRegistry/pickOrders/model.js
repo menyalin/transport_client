@@ -34,6 +34,7 @@ export const useListData = ({ client, _id }) => {
     truck: settings.value.truck,
     driver: settings.value.driver,
     onlySelectable: settings.value.onlySelectable,
+    loadingZone: settings.value.loadingZone,
   }))
 
   async function getData() {

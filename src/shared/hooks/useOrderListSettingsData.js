@@ -58,6 +58,8 @@ export default (settings) => {
 
   const addressItems = computed(() => store.getters.addressesForAutocomplete)
 
+  const loadingZoneItems = computed(() => store.getters.zones)
+
   return {
     orderStatuses,
     docStatuses,
@@ -66,5 +68,6 @@ export default (settings) => {
     drivers,
     clientItems,
     addressItems,
+    loadingZoneItems,
   }
 }
