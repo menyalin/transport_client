@@ -8,7 +8,7 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn @click="buttonClick">Кнопка</v-btn>
+      <v-btn @click="downloadPdf">Скачать PDF</v-btn>
     </buttons-panel>
     <div id="form">
       <v-text-field
@@ -139,6 +139,10 @@ export default {
       ctx.emit('save', state.value)
     }
 
+    function downloadPdf() {
+      ctx.emit('downloadPdf')
+    }
+
     const clientItems = computed(
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
@@ -186,6 +190,7 @@ export default {
       buttonClick,
       changeClientHandler,
       showPickOrderDialog,
+      downloadPdf,
     }
   },
 }

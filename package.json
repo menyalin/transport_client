@@ -16,6 +16,7 @@
     "dayjs": "^1.11.3",
     "effector": "^22.4.1",
     "effector-vue": "^22.2.0",
+    "pdfmake": "^0.2.7",
     "register-service-worker": "^1.7.1",
     "socket.io-client": "^4.1.2",
     "uuid": "^3.4.0",

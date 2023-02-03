@@ -12,6 +12,7 @@
       @submit="submit"
       @save="submit($event, true)"
       @pickOrders="openDialog"
+      @downloadPdf="downloadPdfHandler"
     />
     <docs-registry-orders-list
       :orders="item.orders"
@@ -41,7 +42,11 @@ import router from '@/router'
 import store from '@/store'
 import { DocsRegistryService } from '@/shared/services'
 import { FormWrapper } from '@/shared/ui'
-import { PickOrders } from '@/features/docsRegistry'
+import { PdfMaker } from '@/shared/utils'
+import {
+  PickOrders,
+  getDocsRegistryPdfDefinition,
+} from '@/features/docsRegistry'
 import {
   DocsRegistryForm,
   DocsRegistryOrdersList,
@@ -114,6 +119,10 @@ export default {
         loading.value = false
         store.commit('setError', e.message)
       }
+    }
+    function downloadPdfHandler() {
+      const fileNameStr = `Опись №${item.value.number}`
+      PdfMaker.download(getDocsRegistryPdfDefinition(item.value), fileNameStr)
     }
 
     const submit = async (formState, saveOnly) => {
@@ -193,6 +202,7 @@ export default {
       dblRowClickHandler,
       disabledPickOrders,
       disabledMainFields,
+      downloadPdfHandler,
     }
   },
 
