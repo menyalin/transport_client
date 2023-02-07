@@ -68,7 +68,7 @@ export default {
   setup(_props, { emit }) {
     const numberStr = ref('')
     const docTypes = ref([])
-    const addToRegistry = ref(true)
+    const addToRegistry = ref(false)
     const docStatus = ref('accepted')
     const docTypeItems = computed(() => store.getters.documentTypes)
     const docStatusItems = computed(() => store.getters.documentStatuses)

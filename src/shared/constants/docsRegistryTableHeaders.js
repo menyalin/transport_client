@@ -34,5 +34,6 @@ export default [
     text: 'Примечание',
     sortable: false,
     default: true,
+    width: '200px',
   },
 ]

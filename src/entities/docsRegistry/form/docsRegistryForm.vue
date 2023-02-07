@@ -11,54 +11,58 @@
       <v-btn @click="downloadPdf">Скачать PDF</v-btn>
     </buttons-panel>
     <div id="form">
-      <v-text-field
-        v-if="state.number"
-        label="Номер"
-        :value="state.number"
-        readonly
-        dense
-        outlined
-        :style="{ maxWidth: '100px' }"
-      />
-      <v-select
-        label="Статус"
-        v-model="state.status"
-        :items="statusItems"
-        dense
-        outlined
-        :style="{ maxWidth: '200px' }"
-      />
-      <v-autocomplete
-        v-model="state.client"
-        label="Клиент"
-        dense
-        required
-        item-value="_id"
-        item-text="name"
-        clearable
-        outlined
-        :disabled="disabledMainFields"
-        :items="clientItems"
-        :style="{ maxWidth: '300px' }"
-        @blur="v$.client.$touch"
-        :error-messages="clientErrorMessages"
-        @change="changeClientHandler"
-      />
-      <v-select
-        label="Площадка"
-        v-model="state.placeForTransferDocs"
-        dense
-        required
-        clearable
-        item-text="title"
-        item-value="address"
-        outlined
-        :disabled="!placeItems || placeItems.length === 0 || disabledMainFields"
-        :items="placeItems"
-        :style="{ maxWidth: '300px' }"
-        @blur="v$.placeForTransferDocs.$touch"
-        :error-messages="placeErrorMessages"
-      />
+      <div id="fields-row">
+        <v-text-field
+          v-if="state.number"
+          label="Номер"
+          :value="state.number"
+          readonly
+          dense
+          outlined
+          :style="{ maxWidth: '100px' }"
+        />
+        <v-select
+          label="Статус"
+          v-model="state.status"
+          :items="statusItems"
+          dense
+          outlined
+          :style="{ maxWidth: '200px' }"
+        />
+        <v-autocomplete
+          v-model="state.client"
+          label="Клиент"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="disabledMainFields"
+          :items="clientItems"
+          :style="{ maxWidth: '300px' }"
+          @blur="v$.client.$touch"
+          :error-messages="clientErrorMessages"
+          @change="changeClientHandler"
+        />
+        <v-select
+          label="Площадка"
+          v-model="state.placeForTransferDocs"
+          dense
+          required
+          clearable
+          item-text="title"
+          item-value="address"
+          outlined
+          :disabled="
+            !placeItems || placeItems.length === 0 || disabledMainFields
+          "
+          :items="placeItems"
+          :style="{ maxWidth: '300px' }"
+          @blur="v$.placeForTransferDocs.$touch"
+          :error-messages="placeErrorMessages"
+        />
+      </div>
 
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
@@ -202,5 +206,12 @@ export default {
   flex-direction: column;
   gap: 5px;
   padding: 20px;
+}
+#fields-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+  
 }
 </style>
