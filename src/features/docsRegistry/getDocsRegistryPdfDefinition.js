@@ -16,8 +16,16 @@ class TableDataTDO {
   tableRows(headers) {
     return this.items.map((row) => {
       return headers.map((col) => {
-        if (!row[col.value]) return { text: '' }
-        return { text: row[col.value], alignment: 'center' }
+        // if (!row[col.value])
+        //   return {
+        //     text: ' ',
+        //     headlineLevel: idx + 1 === headers.length ? 1 : 0,
+        //   }
+        return {
+          text: row[col.value] || ' ',
+          alignment: 'center',
+          headlineLevel: 1,
+        }
       })
     })
   }
@@ -79,6 +87,20 @@ export function getDocsRegistryPdfDefinition(docsRegistry) {
     // pageOrientation: 'landscape',
     pageOrientation: 'portrait',
     pageMargins: [20, 20, 20, 20],
+    footer: (currentPage, pageCount) => ({
+      text: 'Страница ' + currentPage.toString() + ' из ' + pageCount,
+      style: 'pageFooter',
+    }),
+    pageBreakBefore: (
+      currentNode,
+      followingNodesOnPage,
+      nodesOnNextPage,
+      _previousNodesOnPage
+    ) =>
+      currentNode.headlineLevel === 1 &&
+      followingNodesOnPage.length < tableHeaders.length + 1 &&
+      nodesOnNextPage.length === 5,
+
     content: [
       {
         stack: [
@@ -121,16 +143,13 @@ export function getDocsRegistryPdfDefinition(docsRegistry) {
           ],
         },
       },
-      {
-        text: $note,
-        style: 'note',
-      },
+      { text: $note, style: 'note' },
       {
         columns: [
           { width: '*', text: 'Сдал:   _________________' },
           { width: '*', text: 'Принял:   _________________' },
         ],
-        style: 'footer',
+        style: 'signatures',
       },
     ],
     styles: {
@@ -156,10 +175,16 @@ export function getDocsRegistryPdfDefinition(docsRegistry) {
         italics: true,
         margin: [30, 10],
       },
-      footer: {
+      signatures: {
         alignment: 'center',
         fontSize: 12,
         margin: [5, 50],
+      },
+
+      pageFooter: {
+        alignment: 'center',
+        fontSize: 8,
+        margin: [20, 5],
       },
     },
   }
