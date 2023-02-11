@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import { watch, ref, onBeforeUnmount, computed } from 'vue'
 import socket from '@/socket'
 import router from '@/router'
@@ -121,9 +122,23 @@ export default {
       }
     }
     function downloadPdfHandler() {
-      const fileNameStr = `Опись №${item.value.number}`
-      PdfMaker.download(getDocsRegistryPdfDefinition(item.value), fileNameStr)
+      // Опись 001 от 2023 02 08 БИКОМ
+      const fileNameStr = `Опись №${item.value.number} от ${dayjs(
+        item.value.date
+      ).format('YYYY-MM-DD')} : ${placeName.value}`
+      PdfMaker.download(
+        getDocsRegistryPdfDefinition(item.value, placeName.value),
+        fileNameStr
+      )
     }
+    const placeName = computed(() => {
+      const client = store.getters.partnersMap.get(item.value.client)
+      if (!client || !client.placesForTransferDocs) return ''
+      const place = client.placesForTransferDocs.find(
+        (place) => place.address === item.value.placeForTransferDocs
+      )
+      return place?.title || '???'
+    })
 
     const submit = async (formState, saveOnly) => {
       let updatedItem
