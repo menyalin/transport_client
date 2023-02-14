@@ -1,15 +1,12 @@
 <template>
   <div class="settings-wrapper">
-    <v-btn @click="refreshHandler"> Обновить</v-btn>
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="pickOrdersTable"
       @change="updateHeadersHandler"
     />
-    <date-range-input 
-      v-model="settings.period"
-      class="mx-4"
-    />
+    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
+    <date-range-input v-model="settings.period" class="mx-2" />
     <v-select
       v-model="settings.docStatus"
       label="Документы"
@@ -58,8 +55,18 @@
       outlined
       hide-details
       label="Зона погрузки"
-      :style="{ 'max-width': '300px' }"
+      :style="{ 'max-width': '250px' }"
       @change="settings.listOptions.page = 1"
+    />
+    <v-text-field
+      :value="settings.search"
+      dense
+      clearable
+      outlined
+      hide-details
+      label="Поиск по номеру рейса"
+      :style="{ 'max-width': '300px' }"
+      @change="searchInputHandler"
     />
     <v-checkbox
       v-model="settings.onlySelectable"
@@ -105,9 +112,14 @@ export default {
       emit('change', Object.assign({}, props.settings, { [field]: value }))
     }
 
+    function searchInputHandler(val) {
+      emit('change', Object.assign({}, props.settings, { search: val }))
+    }
+
     return {
       refreshHandler,
       updateHeadersHandler,
+      searchInputHandler,
       updateSettings,
       orderStatuses,
       docStatuses,

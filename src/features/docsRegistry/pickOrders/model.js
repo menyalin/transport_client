@@ -14,6 +14,7 @@ export const useListData = ({ client, _id }) => {
   if (!client) console.error('client id is missing')
   const historyState = window.history.state
   const initialState = {
+    search: null,
     docsRegistryId: null,
     onlySelectable: true,
     period: initPeriod(),
@@ -48,6 +49,7 @@ export const useListData = ({ client, _id }) => {
     onlySelectable: settings.value.onlySelectable,
     loadingZone: settings.value.loadingZone,
     period: settings.value.period,
+    search: settings.value.search,
   }))
 
   async function getData() {

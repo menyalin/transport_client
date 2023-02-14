@@ -13,6 +13,7 @@
       @save="submit($event, true)"
       @pickOrders="openDialog"
       @downloadPdf="downloadPdfHandler"
+      @downloadXlsx="downloadWordHandler"
     />
     <docs-registry-orders-list
       :orders="item.orders"
@@ -36,7 +37,6 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
 import { watch, ref, onBeforeUnmount, computed } from 'vue'
 import socket from '@/socket'
 import router from '@/router'
@@ -46,7 +46,9 @@ import { FormWrapper } from '@/shared/ui'
 import { PdfMaker } from '@/shared/utils'
 import {
   PickOrders,
-  getDocsRegistryPdfDefinition,
+  docsRegistryPdfReport,
+  docsRegistryWordReport,
+  DocsRegistryReportData,
 } from '@/features/docsRegistry'
 import {
   DocsRegistryForm,
@@ -121,24 +123,19 @@ export default {
         store.commit('setError', e.message)
       }
     }
+    const docsRegistryReportData = computed(
+      () => new DocsRegistryReportData(item.value)
+    )
+
     function downloadPdfHandler() {
-      // Опись 001 от 2023 02 08 БИКОМ
-      const fileNameStr = `Опись №${item.value.number} от ${dayjs(
-        item.value.date
-      ).format('YYYY-MM-DD')} : ${placeName.value}`
       PdfMaker.download(
-        getDocsRegistryPdfDefinition(item.value, placeName.value),
-        fileNameStr
+        docsRegistryPdfReport(docsRegistryReportData.value),
+        docsRegistryReportData.value.fileNameStr
       )
     }
-    const placeName = computed(() => {
-      const client = store.getters.partnersMap.get(item.value.client)
-      if (!client || !client.placesForTransferDocs) return ''
-      const place = client.placesForTransferDocs.find(
-        (place) => place.address === item.value.placeForTransferDocs
-      )
-      return place?.title || '???'
-    })
+    function downloadWordHandler() {
+      docsRegistryWordReport(docsRegistryReportData.value)
+    }
 
     const submit = async (formState, saveOnly) => {
       let updatedItem
@@ -218,6 +215,7 @@ export default {
       disabledPickOrders,
       disabledMainFields,
       downloadPdfHandler,
+      downloadWordHandler,
     }
   },
 

@@ -1,5 +1,11 @@
 export default [
   {
+    value: 'client.num',
+    text: '№ Заказа',
+    sortable: false,
+    default: true,
+  },
+  {
     value: 'plannedDate',
     text: 'Дата погрузки',
     sortable: true,
@@ -64,12 +70,6 @@ export default [
   },
   { value: 'state.status', text: 'Статус', sortable: false, default: true },
   { value: 'client.client', text: 'Клиент', sortable: false, default: true },
-  {
-    value: 'client.num',
-    text: '№ Заказа',
-    sortable: false,
-    default: true,
-  },
   {
     value: 'client.auctionNum',
     text: '№ Аукциона',

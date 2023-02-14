@@ -8,7 +8,8 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn @click="downloadPdf">Скачать PDF</v-btn>
+      <v-btn small @click="downloadPdf" class="mx-2">Скачать PDF</v-btn>
+      <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
@@ -146,6 +147,9 @@ export default {
     function downloadPdf() {
       ctx.emit('downloadPdf')
     }
+    function downloadXlsx() {
+      ctx.emit('downloadXlsx')
+    }
 
     const clientItems = computed(
       () => store.getters?.partners.filter((i) => i.isClient) || []
@@ -195,6 +199,7 @@ export default {
       changeClientHandler,
       showPickOrderDialog,
       downloadPdf,
+      downloadXlsx,
     }
   },
 }
@@ -212,6 +217,5 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 5px;
-  
 }
 </style>

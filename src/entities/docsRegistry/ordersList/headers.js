@@ -3,8 +3,16 @@ export default [
     text: '№',
     value: 'idx',
     align: 'right',
-    width: '4rem',
+    width: '2rem',
     sortable: false,
+  },
+  {
+    text: '№ Рейса',
+    value: 'routeNumber',
+    sortable: false,
+    align: 'center',
+    default: true,
+    width: '5rem',
   },
   {
     text: 'Площадка',
@@ -36,14 +44,7 @@ export default [
     default: true,
     width: '20rem',
   },
-  {
-    text: '№ Рейса',
-    value: 'routeNumber',
-    sortable: false,
-    align: 'center',
-    default: true,
-    width: '10rem',
-  },
+
   {
     text: 'Сопроводительные док-ты',
     value: 'docTypesStr',

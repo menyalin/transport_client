@@ -1,4 +1,11 @@
 import PickOrders from './pickOrders/pickOrders.vue'
-import { getDocsRegistryPdfDefinition } from './getDocsRegistryPdfDefinition.js'
+import { docsRegistryPdfReport } from './docsRegistryPdfReport.js'
+import { docsRegistryWordReport } from './docsRegistryWordReport.js'
+import DocsRegistryReportData from './ReportData.js'
 
-export { PickOrders, getDocsRegistryPdfDefinition }
+export {
+  PickOrders,
+  DocsRegistryReportData,
+  docsRegistryPdfReport,
+  docsRegistryWordReport,
+}
