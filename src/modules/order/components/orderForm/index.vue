@@ -188,7 +188,9 @@
             title="Документы"
             :isValid="isValidDocs(docs)"
             :readonly="isReadonlyDocs"
-          />
+          >
+            <docs-registry-link :docsRegistry="form.docsRegistry" />
+          </order-docs-list-form>
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -208,6 +210,7 @@ import { mapGetters } from 'vuex'
 
 import { OrderService, AgreementService } from '@/shared/services'
 import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
+import { DocsRegistryLink } from '@/entities/order'
 
 import { ButtonsPanel } from '@/shared/ui'
 import AppCargoParams from './cargoParams.vue'
@@ -240,6 +243,7 @@ export default {
     AppPriceBlock,
     AppPriceDialog,
     OrderDocsListForm,
+    DocsRegistryLink,
     AppPaymentToDriver,
   },
   props: {
@@ -323,6 +327,7 @@ export default {
         startPositionDate: null,
         note: null,
         noteAccountant: null,
+        docsRegistry: null,
       },
     }
   },

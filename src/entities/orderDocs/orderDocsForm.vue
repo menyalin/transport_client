@@ -9,10 +9,10 @@
         outlined
         :disabled="readonly || !isValid"
         @click="openGroupDocDialog"
-        class="mb-4 mt-2"
       >
         Добавить документы
       </v-btn>
+      <slot #default />
     </div>
     <v-simple-table dense>
       <template #default>
@@ -202,6 +202,8 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 15px;
+  align-items: center;
+  margin: 10px;
 }
 .not-accepted {
   background-color: rgba(255, 0, 0, 0.4);
