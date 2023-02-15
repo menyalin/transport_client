@@ -85,6 +85,14 @@ export default [
     default: true,
   },
   {
+    value: 'docNumbers',
+    text: 'Номера док-ов',
+    sortable: false,
+    forAccountingMode: true,
+    default: false,
+    width: '10rem',
+  },
+  {
     value: 'docsGetted',
     text: 'Сданы',
     sortable: false,
