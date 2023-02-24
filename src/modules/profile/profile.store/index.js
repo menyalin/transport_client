@@ -139,6 +139,7 @@ export default {
         fineCategories,
         salaryTariffTypes,
         docsRegistryStatuses,
+        paymentInvoiceStatuses,
       }
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
@@ -173,6 +174,7 @@ export default {
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
       if (docsRegistryStatuses?.length)
         commit('setDocsRegistryStatuses', docsRegistryStatuses)
+      if (paymentInvoiceStatuses?.length) commit('setPaymentInvoiceStatuses', paymentInvoiceStatuses)
     },
 
     async createCompany({ commit }, payload) {
