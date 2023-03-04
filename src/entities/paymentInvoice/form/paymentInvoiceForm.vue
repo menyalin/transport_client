@@ -14,12 +14,11 @@
     <div id="form">
       <div id="fields-row">
         <v-text-field
-          v-if="state.number"
           label="Номер"
-          :value="state.number"
+          v-model.trim="state.number"
           dense
           outlined
-          :style="{ maxWidth: '100px' }"
+          :style="{ maxWidth: '150px' }"
         />
         <v-select
           label="Статус"
@@ -45,6 +44,22 @@
           :error-messages="clientErrorMessages"
           @change="changeClientHandler"
         />
+        <v-autocomplete
+          v-model="state.agreement"
+          label="Соглашение"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="!state.client || disabledMainFields"
+          :items="agreementItems"
+          :style="{ maxWidth: '300px' }"
+          @blur="v$.client.$touch"
+          :error-messages="agreementErrorMessages"
+          @change="changeAgreementHandler"
+        />
       </div>
 
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
@@ -54,9 +69,7 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          !state.placeForTransferDocs || disabledPickOrders || needSave
-        "
+        :disabled="disabledPickOrders || needSave"
       >
         Подобрать рейсы
       </v-btn>
@@ -73,12 +86,11 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
-
-import { computed, watch } from 'vue'
 import { ButtonsPanel } from '@/shared/ui'
+
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 
 export default {
@@ -97,12 +109,15 @@ export default {
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
+
     const {
       v$,
       state,
       invalidForm,
       clientErrorMessages,
-      placeErrorMessages,
+      agreementErrorMessages,
+      agreementItems,
+      changeClientHandler,
       setFormState,
     } = usePaymentInvoiceForm(props.item, ctx)
 
@@ -118,10 +133,6 @@ export default {
       ctx.emit('submit', state.value)
     }
 
-    function changeClientHandler() {
-      state.value.placeForTransferDocs = null
-    }
-
     function saveHandler() {
       ctx.emit('save', state.value)
     }
@@ -133,32 +144,26 @@ export default {
       ctx.emit('downloadXlsx')
     }
 
+    function changeAgreementHandler() {
+      //TODO:
+    }
+
     const clientItems = computed(
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
 
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
 
-    const placeItems = computed(() => {
-      if (!state.value?.client) return []
-      const client = store.getters.partners.find(
-        (i) => i._id === state.value.client
-      )
-      if (!client) return []
-      return client.placesForTransferDocs
-    })
     const needSave = computed(() => {
-      return (
-        state.value?.client !== props.item.client ||
-        state.value.placeForTransferDocs !== props.item.placeForTransferDocs
-      )
+      return state?.value.client !== props.item.client
     })
     function buttonClick() {
       console.log('click')
     }
     watch(
       () => props.item,
-      () => {
+      (val) => {
+        console.log('update form state: ', val)
         setFormState(props.item)
       },
       { immediate: true }
@@ -173,8 +178,7 @@ export default {
       clientErrorMessages,
       submitHandler,
       saveHandler,
-      placeItems,
-      placeErrorMessages,
+      agreementErrorMessages,
       pickOrdersHandler,
       needSave,
       buttonClick,
@@ -182,6 +186,8 @@ export default {
       showPickOrderDialog,
       downloadPdf,
       downloadXlsx,
+      agreementItems,
+      changeAgreementHandler,
     }
   },
 }

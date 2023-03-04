@@ -1,43 +1,70 @@
 import { computed, ref } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
+import { AgreementService } from '@/shared/services/index'
 
 const getInitialState = (editedItem) => ({
   status: editedItem?.status || 'inProcess',
   number: editedItem?.number || null,
-  client: editedItem?.client || null,
+  client: editedItem?.client || undefined,
   agremeent: editedItem?.agremeent || null,
   note: editedItem?.note || null,
 })
 
 function usePaimentInvoiceForm() {
-  let state = ref({})
+  let state = ref(getInitialState())
+  const agreements = ref([])
+  const agreementItems = computed(() => agreements.value || [])
+
+  async function setAgreements(client) {
+    if (!client) return null
+    agreements.value = await AgreementService.getByClient(client)
+    if (agreements.value.length === 1)
+      state.value = { ...state.value, agreement: agreements.value[0]._id }
+  }
 
   const rules = {
     number: {},
     client: { required },
     status: { required },
-    agremeent: {},
+    agreement: { required },
     note: {},
   }
 
   const v$ = useVuelidate(rules, state)
 
   const clientErrorMessages = computed(() => {
-    const err = []
+    const errors = []
     const clientField = v$.value.client
-    if (!clientField.$invalid) return err
+    if (!clientField.$invalid) return errors
 
     clientField.$dirty &&
       clientField.required.$invalid &&
-      err.push('Реквизит не может быть пустым')
-    return err
+      errors.push('Реквизит не может быть пустым')
+    return errors
+  })
+
+  const agreementErrorMessages = computed(() => {
+    const errors = []
+    const field = v$.value.agreement
+    if (!field?.$invalid) return errors
+
+    field.$dirty &&
+      field.required.$invalid &&
+      errors.push('Соглашение не может быть пустым')
+    return errors
   })
 
   const invalidForm = computed(() => v$.value.$invalid)
 
-  function setFormState(item) {
+  async function setFormState(item) {
     state.value = { ...getInitialState(item) }
+    if (item.client) await setAgreements(item.client)
+  }
+
+  const changeClientHandler = async (val) => {
+    state.value = { ...state.value, agreement: null }
+    if (val) await setAgreements(val)
   }
 
   return {
@@ -45,7 +72,10 @@ function usePaimentInvoiceForm() {
     state,
     invalidForm,
     clientErrorMessages,
+    agreementErrorMessages,
     setFormState,
+    agreementItems,
+    changeClientHandler,
   }
 }
 

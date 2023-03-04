@@ -1,5 +1,9 @@
 import PaymentInvoiceForm from './form/paymentInvoiceForm.vue'
-import PickOrdersSettings from './pickOrdersSettings.vue'
-import DocsRegistryOrdersList from './ordersList/ordersList.vue'
+import PaymentInvoicesListSettings from './listSettings.vue'
+import PaymentInvoiceDataTable from './dataTable.vue'
 
-export { PaymentInvoiceForm, PickOrdersSettings, DocsRegistryOrdersList }
+export {
+  PaymentInvoiceForm,
+  PaymentInvoicesListSettings,
+  PaymentInvoiceDataTable,
+}

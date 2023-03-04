@@ -27,6 +27,12 @@ export default {
   data: () => ({
     navButtons: [
       {
+        text: 'Акты',
+        icon: 'mdi-list-box ',
+        link: '/accounting/paymentInvoice',
+        onlyWithDirectoriesProfile: true,
+      },
+      {
         text: 'Реестры документов',
         icon: 'mdi-list-box ',
         link: '/accounting/docsRegistry',

@@ -1,7 +1,7 @@
 import { ref, watch, computed } from 'vue'
 import store from '@/store'
 import router from '@/router'
-import { DocsRegistryService } from '@/shared/services'
+import { PaymentInvoiceService } from '@/shared/services'
 
 export const useListData = () => {
   const historyState = window.history.state
@@ -16,7 +16,7 @@ export const useListData = () => {
   }
 
   function create() {
-    router.push('/accounting/docsRegistry/create')
+    router.push('/accounting/paymentInvoice/create')
   }
 
   watch(
@@ -41,7 +41,7 @@ export const useListData = () => {
   async function getData() {
     try {
       loading.value = true
-      const data = await DocsRegistryService.getList(queryParams.value)
+      const data = await PaymentInvoiceService.getList(queryParams.value)
       items.value = data.items
       loading.value = false
     } catch (e) {

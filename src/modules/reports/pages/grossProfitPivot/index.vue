@@ -101,7 +101,6 @@ export default {
   },
   computed: {
     daysInRange() {
-      console.log(this.settings.dateRange)
       const start = new Date(this.settings.dateRange[0])
       const end = new Date(this.settings.dateRange[1])
       return Math.ceil((end - start) / (1000 * 60 * 60 * 24))

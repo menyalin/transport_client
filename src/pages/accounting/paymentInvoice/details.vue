@@ -4,28 +4,35 @@
     @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
   >
-    тут будет форма счета на оплату
+    <payment-invoice-form
+      :item="item"
+      @submit="submit($event, false)"
+      @save="submit($event, true)"
+    />
   </form-wrapper>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 // import socket from '@/socket'
-// import router from '@/router'
+import router from '@/router'
 import store from '@/store'
 import { FormWrapper } from '@/shared/ui'
+import { PaymentInvoiceForm } from '@/entities/paymentInvoice'
+import { PaymentInvoiceService } from '@/shared/services'
 
 export default {
   name: 'PaymentInvoiceDetails',
   components: {
     FormWrapper,
+    PaymentInvoiceForm,
   },
   props: {
     id: String,
   },
   setup(props) {
     const item = ref({})
-    const storedSettingsName = 'docsRegistry:showPickOrderDialog'
+    const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
     const showPickOrderDialog = ref(
       store.getters.storedValue(storedSettingsName) || false
     )
@@ -40,7 +47,7 @@ export default {
     const showDeleteBtn = computed(() => {
       return (
         !!props?.id &&
-        store.getters.hasPermission('docsRegistry:delete') &&
+        store.getters.hasPermission('paymentInvoice:delete') &&
         item.value?.orders &&
         item.value?.orders.length === 0
       )
@@ -68,18 +75,18 @@ export default {
     const showError = ref(false)
     const errorMessage = ref('')
 
-    // async function getItem() {
-    //   if (!props.id) return null
-    //   try {
-    //     loading.value = true
-    //     const res = await DocsRegistryService.getById(props.id)
-    //     item.value = res
-    //     loading.value = false
-    //   } catch (e) {
-    //     loading.value = false
-    //     store.commit('setError', e.message)
-    //   }
-    // }
+    async function getItem() {
+      if (!props.id) return null
+      try {
+        loading.value = true
+        const res = await PaymentInvoiceService.getById(props.id)
+        item.value = { ...res }
+        loading.value = false
+      } catch (e) {
+        loading.value = false
+        store.commit('setError', e.message)
+      }
+    }
     // const docsRegistryReportData = computed(
     //   () => new DocsRegistryReportData(item.value)
     // )
@@ -94,43 +101,43 @@ export default {
     //   docsRegistryWordReport(docsRegistryReportData.value)
     // }
 
-    // const submit = async (formState, saveOnly) => {
-    //   let updatedItem
-    //   const itemId = props.id ? props.id : item.value?._id
-    //   try {
-    //     if (itemId) {
-    //       updatedItem = await DocsRegistryService.updateOne(itemId, formState)
-    //     } else {
-    //       updatedItem = await DocsRegistryService.create(formState)
-    //     }
-    //     if (!saveOnly) router.push('/accounting/docsRegistry')
-    //     else {
-    //       item.value = updatedItem
-    //     }
-    //   } catch (e) {
-    //     showError.value = true
-    //     errorMessage.value = e.response.data
-    //     store.commit('setError', e.message)
-    //   }
-    // }
+    async function submit(formState, saveOnly) {
+      let updatedItem
+      const itemId = props.id ? props.id : item.value?._id
+      try {
+        if (itemId) {
+          updatedItem = await PaymentInvoiceService.updateOne(itemId, formState)
+        } else {
+          updatedItem = await PaymentInvoiceService.create(formState)
+        }
+        if (!saveOnly) router.push('/accounting/paymentInvoice')
+        else {
+          item.value = updatedItem
+        }
+      } catch (e) {
+        showError.value = true
+        errorMessage.value = e.response.data
+        store.commit('setError', e.message)
+      }
+    }
 
-    // async function deleteHandler() {
-    //   try {
-    //     if (props.id) {
-    //       loading.value = true
-    //       await DocsRegistryService.deleteById(props.id)
-    //       router.push('/accounting/docsRegistry')
-    //       loading.value = false
-    //     } else return null
-    //   } catch (e) {
-    //     loading.value = false
-    //     showError.value = true
-    //     errorMessage.value = e.response.data
-    //     store.commit('setError', e.message)
-    //   }
-    // }
+    async function deleteHandler() {
+      try {
+        if (props.id) {
+          loading.value = true
+          await PaymentInvoiceService.deleteById(props.id)
+          router.push('/accounting/paimentInvoice')
+          loading.value = false
+        } else return null
+      } catch (e) {
+        loading.value = false
+        showError.value = true
+        errorMessage.value = e.response.data
+        store.commit('setError', e.message)
+      }
+    }
 
-    // watch(() => props.id, getItem, { immediate: true, deep: true })
+    watch(() => props.id, getItem, { immediate: true, deep: true })
 
     // function dblRowClickHandler(orderId) {
     //   router.push('/orders/' + orderId)
@@ -161,8 +168,8 @@ export default {
       loading,
       showError,
       errorMessage,
-      // submit,
-      // deleteHandler,
+      submit,
+      deleteHandler,
       showPickOrderDialog,
       openDialog,
       closeDialog,
@@ -175,7 +182,6 @@ export default {
       // downloadWordHandler,
     }
   },
-
   methods: {
     cancel() {
       this.$router.go(-1)

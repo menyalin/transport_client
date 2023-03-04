@@ -67,6 +67,18 @@ class AgreementService {
     }
   }
 
+  async getByClient(client) {
+    const { data } = await api.get(BASE_PATH, {
+      params: {
+        client,
+        company: store.getters.directoriesProfile,
+        limit: 100,
+        skip: 0,
+      },
+    })
+    return data?.items || []
+  }
+
   async getById(id) {
     if (store.getters.cacheDirectories.has(id))
       return store.getters.cacheDirectories.get(id)

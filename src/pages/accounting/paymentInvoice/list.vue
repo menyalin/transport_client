@@ -7,11 +7,12 @@
       @submit="create"
       @refresh="refresh"
     />
-    <docs-registry-list-settings
+
+    <payment-invoices-list-settings
       v-model="settings"
       @updateHeaders="changeHeaders"
     />
-    <docs-registry-data-table
+    <payment-invoice-data-table
       v-model="settings"
       :items="items"
       :headers="headers"
@@ -27,12 +28,18 @@ import { ref } from 'vue'
 
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
+import {
+  PaymentInvoicesListSettings,
+  PaymentInvoiceDataTable,
+} from '@/entities/paymentInvoice'
 
 export default {
   name: 'PaymentInvoiceList',
   components: {
     ButtonsPanel,
     EntityListWrapper,
+    PaymentInvoicesListSettings,
+    PaymentInvoiceDataTable,
   },
   setup() {
     const headers = ref([])
@@ -53,7 +60,7 @@ export default {
     // onBeforeUnmount(() => {
     //   socket.off('docsRegistry:deleted', onDeleteHandler)
     // })
-    
+
     return {
       create,
       refresh,
