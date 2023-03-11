@@ -191,6 +191,13 @@
           >
             <docs-registry-link :docsRegistry="form.docsRegistry" />
           </order-docs-list-form>
+    
+          <order-payment-parts
+            v-if="routeDate"
+            id="payment-parts"
+            v-model="form.paymentParts"
+            :routeDate="routeDate"
+          />
         </div>
         <v-btn
           v-if="displayDeleteBtn"
@@ -224,7 +231,11 @@ import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
-import { useOrderDocs, OrderDocsListForm } from '@/entities/orderDocs'
+import {
+  useOrderDocs,
+  OrderDocsListForm,
+  OrderPaymentParts,
+} from '@/entities/order'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
 import AppPaymentToDriver from './paymentToDriver.vue'
 
@@ -245,6 +256,7 @@ export default {
     OrderDocsListForm,
     DocsRegistryLink,
     AppPaymentToDriver,
+    OrderPaymentParts,
   },
   props: {
     order: {
@@ -328,6 +340,7 @@ export default {
         note: null,
         noteAccountant: null,
         docsRegistry: null,
+        paymentParts: [],
       },
     }
   },
@@ -775,5 +788,10 @@ export default {
 #docs {
   grid-column: 2/4;
   grid-row: 9/9;
+}
+
+#payment-parts {
+  grid-column: 2/4;
+  grid-row: 10/10;
 }
 </style>

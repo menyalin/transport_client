@@ -21,8 +21,7 @@
   </v-card>
 </template>
 <script>
-import { OrderDocsListForm, useOrderDocs } from '@/entities/orderDocs'
-
+import { OrderDocsListForm, useOrderDocs } from '@/entities/order'
 
 export default {
   name: 'DocListForm',
