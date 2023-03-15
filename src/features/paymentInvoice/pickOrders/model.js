@@ -44,12 +44,12 @@ export const useListData = ({ client, _id }) => {
     period: settings.value.period,
     client,
     paymentInvoiceId: _id,
+    truck: settings.value.truck,
+    search: settings.value.search,
+    driver: settings.value.driver,
     // docStatus: settings.value.docStatus,
-    // truck: settings.value.truck,
-    // driver: settings.value.driver,
     // onlySelectable: settings.value.onlySelectable,
     // loadingZone: settings.value.loadingZone,
-    search: settings.value.search,
   }))
 
   async function getData() {

@@ -27,7 +27,7 @@
       clearable
       outlined
       hide-details
-      label="Поиск по номеру рейса"
+      label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
       @change="searchInputHandler"
     />
