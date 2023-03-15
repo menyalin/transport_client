@@ -26,6 +26,18 @@
     <template #[`item.state.status`]="{ item }">
       {{ getStatusText(item.state.status) }}
     </template>
+    <template #[`item.addItemColumn`]="{ item }">
+      <v-icon
+        v-if="item.isSelectable"
+        small
+        color="primary"
+        :disabled="!item.isSelectable"
+        @click="addItem(item._id)"
+        :style="{ cursor: 'pointer' }"
+      >
+        mdi-arrow-up-left
+      </v-icon>
+    </template>
 
     <template #[`item.truck`]="{ item }">
       {{
@@ -170,27 +182,39 @@ export default {
       else return { text: 'Приняты', fontColor: 'green' }
     }
 
+    function addItem(itemId) {
+      ctx.emit('addItem', itemId)
+    }
+
     const preparedItems = computed(() => {
       if (!props.items || props.items.length === 0) return []
+
       return props.items.map((order) => ({
         ...order,
         driver:
-          store.getters.driversMap.get(order.confirmedCrew.driver)?.fullName ||
+          store.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName ||
           null,
         tk:
-          order.confirmedCrew.tkName &&
+          order.confirmedCrew?.tkName &&
           store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
             ? store.getters.tkNamesMap.get(order.confirmedCrew.tkName).name
             : '-',
         docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
-        plannedDate: new Date(order.route[0].plannedDate).toLocaleString(),
-        loadingZones: order._loadingZones.map((i) => i.name).join(', '),
-        loadingPoints: order.route
-          .filter((p) => p.type === 'loading')
-          .map((p) => store.getters.addressMap.get(p.address)?.shortName),
-        unloadingPoints: order.route
-          .filter((p) => p.type === 'unloading')
-          .map((p) => store.getters.addressMap.get(p.address)?.shortName),
+        plannedDate: order?.route[0]
+          ? new Date(order.route[0]?.plannedDate).toLocaleString()
+          : null,
+        loadingZones:
+          order._loadingZones?.map((i) => i.name).join(', ') || null,
+        loadingPoints:
+          order.route
+            .filter((p) => p.type === 'loading')
+            .map((p) => store.getters.addressMap.get(p.address)?.shortName) ||
+          null,
+        unloadingPoints:
+          order.route
+            .filter((p) => p.type === 'unloading')
+            .map((p) => store.getters.addressMap.get(p.address)?.shortName) ||
+          null,
       }))
     })
 
@@ -204,6 +228,7 @@ export default {
       setDocStateStatus,
       preparedItems,
       selectHandler,
+      addItem,
     }
   },
 }

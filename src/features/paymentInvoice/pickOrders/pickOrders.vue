@@ -1,21 +1,21 @@
 <template>
   <v-card elevation="2" outlined class="ma-5">
     <v-card-title>
-      Подобрать рейсы для описи № {{ docsRegistry.number }}
+      Подобрать рейсы для акта выполненных работ №
+      {{ paymentInvoice.number || 'б/н' }}
     </v-card-title>
     <v-card-subtitle>
       <b>{{ clientName }} </b>
-      <span>{{ placeForTransferDocs.title }}</span>
     </v-card-subtitle>
     <v-card-actions>
       <v-btn @click="cancelHandler" class="ma-2">Закрыть</v-btn>
       <v-btn
-        @click="addToRegistryHandler"
+        @click="addToInvoiceHandler"
         class="ma-2"
         color="primary"
         :disabled="!selectedOrders.length"
       >
-        Добавить в опись
+        Добавить в акт
       </v-btn>
     </v-card-actions>
     <v-card-text>
@@ -25,6 +25,7 @@
         @updateHeaders="updateActiveHeaders"
         @refresh="refreshHandler"
       />
+
       <orders-table
         v-model="selectedOrders"
         show-select
@@ -32,7 +33,6 @@
         :headers="headers"
         :loading="loading"
         :listOptions.sync="settings.listOptions"
-        @addItem="addItem"
       />
     </v-card-text>
   </v-card>
@@ -40,34 +40,28 @@
 <script>
 import store from '@/store'
 import { ref, computed } from 'vue'
-import { PickOrdersSettings } from '@/entities/docsRegistry'
+import { PickOrdersSettings } from '@/entities/paymentInvoice'
 import { OrdersTable } from '@/entities/order'
 import { useListData } from './model.js'
-import { PickOrdersForDocsRegistryHeaders } from '@/shared/constants'
-import { DocsRegistryService } from '@/shared/services'
+import { PickOrdersForPaymentInvoiceHeaders } from '@/shared/constants'
+import { PaymentInvoiceService } from '@/shared/services'
 
 export default {
-  name: 'PickOrdersFeature',
+  name: 'PickOrdersForPaymentInvoiceFeature',
   components: { PickOrdersSettings, OrdersTable },
   props: {
-    docsRegistry: {
+    paymentInvoice: {
       type: Object,
       required: true,
     },
   },
-  setup({ docsRegistry }, ctx) {
+  setup({ paymentInvoice }, ctx) {
     const headers = ref([])
     const selectedOrders = ref([])
-    const { loading, settings, items, refresh } = useListData(docsRegistry)
+    const { loading, settings, items, refresh } = useListData(paymentInvoice)
 
     const client = computed(() =>
-      store.getters.partnersMap.get(docsRegistry.client)
-    )
-
-    const placeForTransferDocs = computed(() =>
-      client.value.placesForTransferDocs.find(
-        (i) => i.address === docsRegistry.placeForTransferDocs
-      )
+      store.getters.partnersMap.get(paymentInvoice.client)
     )
 
     const clientName = computed(() => {
@@ -92,21 +86,10 @@ export default {
       selectedOrders.value = []
     }
 
-    async function addItem(orderId) {
-      await DocsRegistryService.addOrdersToRegistry({
-        orders: [orderId],
-        docsRegistryId: docsRegistry._id,
-      })
-      selectedOrders.value = selectedOrders.value.filter(
-        (item) => item._id !== orderId
-      )
-      refresh()
-    }
-
-    async function addToRegistryHandler() {
-      await DocsRegistryService.addOrdersToRegistry({
+    async function addToInvoiceHandler() {
+      await PaymentInvoiceService.addOrdersToPaymentInvoice({
         orders: selectedOrdersIds.value,
-        docsRegistryId: docsRegistry._id,
+        paymentInvoiceId: paymentInvoice._id,
       })
 
       selectedOrders.value = []
@@ -114,10 +97,10 @@ export default {
     }
     return {
       cancelHandler,
-      addToRegistryHandler,
+      addToInvoiceHandler,
       loading,
       updateActiveHeaders,
-      allHeaders: PickOrdersForDocsRegistryHeaders(),
+      allHeaders: PickOrdersForPaymentInvoiceHeaders(),
       settings,
       items,
       headers,
@@ -125,9 +108,7 @@ export default {
       selectedOrders,
       selectedOrdersIds,
       clientName,
-      placeForTransferDocs,
       client,
-      addItem,
     }
   },
 }

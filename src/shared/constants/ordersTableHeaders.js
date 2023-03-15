@@ -1,4 +1,4 @@
-export default [
+const allHeaders = [
   {
     value: 'client.num',
     text: '№ Заказа',
@@ -114,3 +114,45 @@ export default [
     default: true,
   },
 ]
+
+const totalPriceHeaders = [
+  {
+    value: 'total.price',
+    text: 'Сумма с НДС',
+    sortable: false,
+    align: 'right',
+    default: true,
+  },
+  {
+    value: 'total.priceWOVat',
+    text: 'Сумма без НДС',
+    sortable: false,
+    align: 'right',
+    default: false,
+  },
+  {
+    value: 'total.sumVat',
+    text: 'НДС',
+    sortable: false,
+    align: 'right',
+    default: false,
+  },
+]
+
+export default allHeaders
+
+const addItemColumn = {
+  value: 'addItemColumn',
+  sortable: false,
+  align: 'center',
+  width: '2rem',
+  default: true,
+}
+
+export function PickOrdersForPaymentInvoiceHeaders() {
+  return allHeaders.concat(totalPriceHeaders)
+}
+
+export function PickOrdersForDocsRegistryHeaders() {
+  return [addItemColumn, ...allHeaders]
+}

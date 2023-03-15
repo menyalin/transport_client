@@ -162,8 +162,7 @@ export default {
     }
     watch(
       () => props.item,
-      (val) => {
-        console.log('update form state: ', val)
+      () => {
         setFormState(props.item)
       },
       { immediate: true }

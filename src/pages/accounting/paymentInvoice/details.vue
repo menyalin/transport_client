@@ -8,7 +8,21 @@
       :item="item"
       @submit="submit($event, false)"
       @save="submit($event, true)"
+      @pickOrders="openDialog"
     />
+    <v-dialog
+      v-if="item._id"
+      v-model="showPickOrderDialog"
+      fullscreen
+      persistent
+      hide-overlay
+    >
+      <pick-orders
+        :paymentInvoice="item"
+        :client="item.client"
+        @cancel="closeDialog"
+      />
+    </v-dialog>
   </form-wrapper>
 </template>
 
@@ -19,6 +33,7 @@ import router from '@/router'
 import store from '@/store'
 import { FormWrapper } from '@/shared/ui'
 import { PaymentInvoiceForm } from '@/entities/paymentInvoice'
+import { PickOrders } from '@/features/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
 
 export default {
@@ -26,6 +41,7 @@ export default {
   components: {
     FormWrapper,
     PaymentInvoiceForm,
+    PickOrders,
   },
   props: {
     id: String,

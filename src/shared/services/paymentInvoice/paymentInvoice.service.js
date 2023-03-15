@@ -2,7 +2,6 @@ import api from '@/api'
 const BASE_PATH = '/payment_invoice'
 
 class PaymentInvoiceService {
-  
   async create(body) {
     let { data } = await api.post(BASE_PATH, body)
     return data
@@ -16,7 +15,12 @@ class PaymentInvoiceService {
   async getList(params) {
     let { data } = await api.get(BASE_PATH, { params })
     return data
-  }  
+  }
+
+  async pickOrders(params) {
+    let { data } = await api.get(BASE_PATH + '/pick_orders', { params })
+    return data
+  }
 
   async getById(id) {
     let { data } = await api.get(BASE_PATH + '/' + id)
