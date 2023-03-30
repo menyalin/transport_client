@@ -15,6 +15,7 @@
     <payment-invoice-data-table
       v-model="settings"
       :items="items"
+      :totalCount="totalCount"
       :headers="headers"
       :statisticData="statisticData"
       :listOptions.sync="settings.listOptions"
@@ -51,6 +52,7 @@ export default {
       refresh,
       settings,
       items,
+      totalCount,
       loading,
       statisticData,
       // onDeleteHandler,
@@ -66,6 +68,7 @@ export default {
       refresh,
       settings,
       items,
+      totalCount,
       headers,
       changeHeaders,
       statisticData,

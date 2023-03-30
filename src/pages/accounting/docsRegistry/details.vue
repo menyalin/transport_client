@@ -181,7 +181,9 @@ export default {
 
     function addOrders({ docsRegistry, orders }) {
       if (docsRegistry !== item.value._id) return null
-      item.value.orders.push(...orders)
+
+      if (Array.isArray(item.value.orders)) item.value.orders.push(...orders)
+      else item.value.orders = orders
     }
 
     function removeOrders({ docsRegistry, orders }) {

@@ -4,7 +4,7 @@
     :headers="headers"
     v-model="selected"
     multiple
-    item-key="order._id"
+    item-key="_id"
     checkbox-color="primary"
     show-select
     :itemsPerPage="-1"
@@ -25,13 +25,19 @@
         Удалить выделенные рейсы
       </v-btn>
     </template>
+    <template #[`item.total.price`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.price) }}
+    </template>
+    <template #[`item.total.priceWOVat`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.priceWOVat) }}
+    </template>
   </v-data-table>
 </template>
 <script>
 import { computed, ref } from 'vue'
 import ALL_HEADERS from './headers.js'
 export default {
-  name: 'DocsRegistryOrdersList',
+  name: 'PaymentInvoiceOrdersList',
   props: {
     orders: {
       type: Array,
@@ -39,16 +45,14 @@ export default {
   },
   setup(props, { emit }) {
     const selected = ref([])
-    const selectedOrderIds = computed(() =>
-      selected.value.map((i) => i.order._id)
-    )
+    const selectedOrderIds = computed(() => selected.value.map((i) => i._id))
 
     const preparedOrders = computed(() => {
       if (!props.orders) return []
       return props.orders.map((item, idx) => ({
         idx: idx + 1,
         ...item,
-        orderDate: new Date(item.orderDate).toLocaleDateString(),
+        plannedDate: new Date(item.plannedDate).toLocaleDateString(),
       }))
     })
 
@@ -58,7 +62,7 @@ export default {
     }
 
     function dblclickRowHandler(_event, { item }) {
-      emit('dblRowClick', item.order._id)
+      emit('dblRowClick', item.orderId)
     }
 
     return {

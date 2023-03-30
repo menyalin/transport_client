@@ -5,6 +5,7 @@
     :loading="loading"
     height="70vh"
     dense
+    :server-items-length="totalCount"
     fixed-header
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
@@ -36,6 +37,7 @@ export default {
   },
   props: {
     items: Array,
+    totalCount: Number,
     settings: Object,
     headers: Array,
     loading: Boolean,

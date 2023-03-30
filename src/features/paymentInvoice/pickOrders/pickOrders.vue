@@ -29,10 +29,12 @@
       <orders-table
         v-model="selectedOrders"
         show-select
+        itemIdField="orderId"
         :items="items"
         :headers="headers"
         :loading="loading"
         :listOptions.sync="settings.listOptions"
+        @addItem="addOrderToInvoice"
       />
     </v-card-text>
   </v-card>
@@ -86,6 +88,18 @@ export default {
       selectedOrders.value = []
     }
 
+    async function addOrderToInvoice(orderId) {
+      await PaymentInvoiceService.addOrdersToPaymentInvoice({
+        orders: [orderId],
+        paymentInvoiceId: paymentInvoice._id,
+      })
+
+      selectedOrders.value = selectedOrders.value.filter(
+        (i) => i._id !== orderId
+      )
+      refresh()
+    }
+
     async function addToInvoiceHandler() {
       await PaymentInvoiceService.addOrdersToPaymentInvoice({
         orders: selectedOrdersIds.value,
@@ -109,6 +123,7 @@ export default {
       selectedOrdersIds,
       clientName,
       client,
+      addOrderToInvoice,
     }
   },
 }

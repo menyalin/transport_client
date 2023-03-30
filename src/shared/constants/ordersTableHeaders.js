@@ -107,7 +107,7 @@ const allHeaders = [
   },
   {
     value: 'actions',
-    // text: 'Действия',
+    hiddenTitle: 'Доп.действия',
     sortable: false,
     forAccountingMode: true,
     width: '3rem',
@@ -130,19 +130,20 @@ const totalPriceHeaders = [
     align: 'right',
     default: false,
   },
-  {
-    value: 'total.sumVat',
-    text: 'НДС',
-    sortable: false,
-    align: 'right',
-    default: false,
-  },
+  // {
+  //   value: 'total.sumVat',
+  //   text: 'НДС',
+  //   sortable: false,
+  //   align: 'right',
+  //   default: false,
+  // },
 ]
 
 export default allHeaders
 
 const addItemColumn = {
   value: 'addItemColumn',
+  hiddenTitle: 'Кнопка быстрого добавления',
   sortable: false,
   align: 'center',
   width: '2rem',
@@ -150,7 +151,7 @@ const addItemColumn = {
 }
 
 export function PickOrdersForPaymentInvoiceHeaders() {
-  return allHeaders.concat(totalPriceHeaders)
+  return [addItemColumn, ...allHeaders, ...totalPriceHeaders]
 }
 
 export function PickOrdersForDocsRegistryHeaders() {

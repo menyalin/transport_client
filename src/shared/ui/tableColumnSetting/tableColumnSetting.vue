@@ -9,7 +9,7 @@
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
-        :label="field.text"
+        :label="field.hiddenTitle || field.text"
         v-model="activeFields"
         :value="field.value"
         dense

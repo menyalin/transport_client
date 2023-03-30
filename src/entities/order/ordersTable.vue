@@ -110,6 +110,15 @@
         <v-icon small> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>
+    <template #[`item.total.price`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.price) }}
+    </template>
+    <template #[`item.total.priceWOVat`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.priceWOVat) }}
+    </template>
+    <template #[`item.total.sumVat`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.sumVat) }}
+    </template>
   </v-data-table>
 </template>
 <script>
@@ -140,6 +149,10 @@ export default {
     count: Number,
     statisticData: Object,
     listOptions: Object,
+    itemIdField: {
+      type: String,
+      default: '_id',
+    },
   },
   setup(props, ctx) {
     const orderAnalyticTypeMap = computed(
@@ -155,7 +168,7 @@ export default {
     }
 
     function dblClickRow(_, { item }) {
-      if (item) router.push(`/orders/${item._id}`)
+      if (item) router.push(`/orders/${item[props.itemIdField]}`)
     }
 
     function updateListOptionsHandler(options) {

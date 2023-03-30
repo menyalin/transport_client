@@ -7,8 +7,15 @@
     <payment-invoice-form
       :item="item"
       @submit="submit($event, false)"
+      :disabledPickOrders="disabledPickOrders"
+      :disabledMainFields="disabledMainFields"
       @save="submit($event, true)"
       @pickOrders="openDialog"
+    />
+    <payment-invoice-orders-list
+      :orders="item.orders"
+      @delete="deleteOrderFromPaymentInvoice"
+      @dblRowClick="dblRowClickHandler"
     />
     <v-dialog
       v-if="item._id"
@@ -17,22 +24,21 @@
       persistent
       hide-overlay
     >
-      <pick-orders
-        :paymentInvoice="item"
-        :client="item.client"
-        @cancel="closeDialog"
-      />
+      <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>
   </form-wrapper>
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
-// import socket from '@/socket'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import socket from '@/socket'
 import router from '@/router'
 import store from '@/store'
 import { FormWrapper } from '@/shared/ui'
-import { PaymentInvoiceForm } from '@/entities/paymentInvoice'
+import {
+  PaymentInvoiceForm,
+  PaymentInvoiceOrdersList,
+} from '@/entities/paymentInvoice'
 import { PickOrders } from '@/features/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
 
@@ -42,6 +48,7 @@ export default {
     FormWrapper,
     PaymentInvoiceForm,
     PickOrders,
+    PaymentInvoiceOrdersList,
   },
   props: {
     id: String,
@@ -69,13 +76,13 @@ export default {
       )
     })
 
-    // async function deleteOrderFromRegistry(orders) {
-    //   if (!orders || orders.length === 0) return null
-    //   await DocsRegistryService.removeOrdersFromRegistry({
-    //     orders,
-    //     docsRegistryId: item.value._id,
-    //   })
-    // }
+    async function deleteOrderFromPaymentInvoice(orders) {
+      if (!orders || orders.length === 0) return null
+      await PaymentInvoiceService.deleteOrdersFromPaymentInvoice({
+        orders,
+        paymentInvoiceId: item.value._id,
+      })
+    }
 
     function openDialog() {
       showPickOrderDialog.value = true
@@ -142,7 +149,7 @@ export default {
         if (props.id) {
           loading.value = true
           await PaymentInvoiceService.deleteById(props.id)
-          router.push('/accounting/paimentInvoice')
+          router.push('/accounting/paymentInvoice')
           loading.value = false
         } else return null
       } catch (e) {
@@ -155,29 +162,32 @@ export default {
 
     watch(() => props.id, getItem, { immediate: true, deep: true })
 
-    // function dblRowClickHandler(orderId) {
-    //   router.push('/orders/' + orderId)
-    // }
+    function dblRowClickHandler(orderId) {
+      router.push('/orders/' + orderId)
+    }
 
-    // function addOrders({ docsRegistry, orders }) {
-    //   if (docsRegistry !== item.value._id) return null
-    //   item.value.orders.push(...orders)
-    // }
+    function addOrders({ paymentInvoiceId, orders }) {
+      if (paymentInvoiceId !== item.value._id) return null
 
-    // function removeOrders({ docsRegistry, orders }) {
-    //   if (docsRegistry !== item.value._id) return null
-    //   item.value.orders = item.value.orders.filter(
-    //     (i) => !orders.includes(i.order._id)
-    //   )
-    // }
+      if (Array.isArray(item.value.orders)) item.value.orders.push(...orders)
+      else item.value.orders = orders
+    }
 
-    // socket.on('orders:addedToRegistry', addOrders)
-    // socket.on('orders:removedFromRegistry', removeOrders)
+    function removeOrders({ paymentInvoiceId, orders }) {
+      if (paymentInvoiceId !== item.value._id) return null
 
-    // onBeforeUnmount(() => {
-    //   socket.off('orders:removedFromRegistry', removeOrders)
-    //   socket.off('orders:addedToRegistry', addOrders)
-    // })
+      item.value.orders = item.value.orders.filter(
+        (i) => !orders.includes(i._id)
+      )
+    }
+
+    socket.on('orders:addedToPaymentInvoice', addOrders)
+    socket.on('orders:removedFromPaimentInvoice', removeOrders)
+
+    onBeforeUnmount(() => {
+      socket.off('orders:removedFromPaimentInvoice', removeOrders)
+      socket.off('orders:addedToPaymentInvoice', addOrders)
+    })
 
     return {
       item,
@@ -189,9 +199,9 @@ export default {
       showPickOrderDialog,
       openDialog,
       closeDialog,
-      // deleteOrderFromRegistry,
+      deleteOrderFromPaymentInvoice,
       showDeleteBtn,
-      // dblRowClickHandler,
+      dblRowClickHandler,
       disabledPickOrders,
       disabledMainFields,
       // downloadPdfHandler,
