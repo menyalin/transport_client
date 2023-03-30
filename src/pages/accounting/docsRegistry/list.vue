@@ -15,6 +15,7 @@
       v-model="settings"
       :items="items"
       :headers="headers"
+      :totalCount="totalCount"
       :statisticData="statisticData"
       :listOptions.sync="settings.listOptions"
       :loading="loading"
@@ -49,6 +50,7 @@ export default {
       refresh,
       settings,
       items,
+      totalCount,
       loading,
       statisticData,
       onDeleteHandler,
@@ -58,7 +60,7 @@ export default {
     onBeforeUnmount(() => {
       socket.off('docsRegistry:deleted', onDeleteHandler)
     })
-    
+
     return {
       create,
       refresh,
@@ -68,6 +70,7 @@ export default {
       changeHeaders,
       statisticData,
       loading,
+      totalCount,
     }
   },
 }

@@ -8,6 +8,7 @@ export const useListData = () => {
   const initialState = { clients: [], status: null }
   const settings = ref(historyState.settings || initialState)
   const items = ref([])
+  const totalCount = ref(0)
   const statisticData = ref({})
   const loading = ref(false)
 
@@ -43,6 +44,7 @@ export const useListData = () => {
       loading.value = true
       const data = await DocsRegistryService.getList(queryParams.value)
       items.value = data.items
+      totalCount.value = data.count
       loading.value = false
     } catch (e) {
       loading.value = false
@@ -66,5 +68,6 @@ export const useListData = () => {
     loading,
     statisticData,
     onDeleteHandler,
+    totalCount,
   }
 }

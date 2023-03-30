@@ -10,6 +10,7 @@
       'items-per-page-options': [50, 100, 200],
     }"
     :options="settings.listOptions"
+    :server-items-length="totalCount"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
   >
@@ -36,6 +37,7 @@ export default {
   },
   props: {
     items: Array,
+    totalCount: Number,
     settings: Object,
     headers: Array,
     loading: Boolean,
