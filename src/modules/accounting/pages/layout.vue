@@ -33,7 +33,7 @@ export default {
         onlyWithDirectoriesProfile: true,
       },
       {
-        text: 'Реестры документов',
+        text: 'Описи документов',
         icon: 'mdi-list-box ',
         link: '/accounting/docsRegistry',
         onlyWithDirectoriesProfile: true,

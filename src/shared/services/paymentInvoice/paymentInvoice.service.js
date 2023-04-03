@@ -67,6 +67,11 @@ class PaymentInvoiceService {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data
   }
+
+  async updatePrices(orderId) {
+    const { data } = await api.put(BASE_PATH + '/update_prices/' + orderId)
+    return data
+  }
 }
 
 export default new PaymentInvoiceService()

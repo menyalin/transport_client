@@ -37,7 +37,7 @@ export default [
     width: '20rem',
   },
   {
-    value: 'total.priceWOVat',
+    value: 'savedTotal.priceWOVat',
     text: 'Сумма без НДС',
     sortable: false,
     align: 'right',
@@ -45,12 +45,19 @@ export default [
     width: '7rem',
   },
   {
-    value: 'total.price',
+    value: 'savedTotal.price',
     text: 'Сумма',
     sortable: false,
     align: 'right',
     default: true,
     width: '7rem',
+  },
+  {
+    value: 'needUpdate',
+    sortable: false,
+    align: 'center',
+    default: true,
+    width: '2rem',
   },
 
   {

@@ -17,6 +17,15 @@
     <template #[`item.createdAt`]="{ item }">
       {{ new Date(item.createdAt).toLocaleString() }}
     </template>
+
+    <template #[`item.total.priceWOVat`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.priceWOVat) }}
+    </template>
+
+    <template #[`item.total.price`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.total.price) }}
+    </template>
+
     <template #[`item.note`]="{ item }">
       <span class="d-inline-block text-truncate" style="max-width: 200px">
         {{ item.note }}

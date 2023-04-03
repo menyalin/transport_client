@@ -16,6 +16,7 @@
       :orders="item.orders"
       @delete="deleteOrderFromPaymentInvoice"
       @dblRowClick="dblRowClickHandler"
+      @updateItemPrice="updateItemPrice"
     />
     <v-dialog
       v-if="item._id"
@@ -181,6 +182,13 @@ export default {
       )
     }
 
+    async function updateItemPrice(itemId) {
+      // Обновить цены по рейсы в акте
+      const res = await PaymentInvoiceService.updatePrices(itemId)
+      const orderIdx = item.value.orders.findIndex((i) => itemId === i._id)
+      item.value.orders.splice(orderIdx, 1, res)
+    } 
+
     socket.on('orders:addedToPaymentInvoice', addOrders)
     socket.on('orders:removedFromPaimentInvoice', removeOrders)
 
@@ -204,6 +212,7 @@ export default {
       dblRowClickHandler,
       disabledPickOrders,
       disabledMainFields,
+      updateItemPrice,
       // downloadPdfHandler,
       // downloadWordHandler,
     }

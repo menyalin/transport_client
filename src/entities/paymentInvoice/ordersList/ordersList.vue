@@ -25,11 +25,21 @@
         Удалить выделенные рейсы
       </v-btn>
     </template>
-    <template #[`item.total.price`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.total.price) }}
+    <template #[`item.savedTotal.price`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.savedTotal.price) }}
     </template>
-    <template #[`item.total.priceWOVat`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.total.priceWOVat) }}
+    <template #[`item.savedTotal.priceWOVat`]="{ item }">
+      {{ new Intl.NumberFormat().format(item.savedTotal.priceWOVat) }}
+    </template>
+    <template #[`item.needUpdate`]="{ item }">
+      <v-icon
+        v-if="item.needUpdate"
+        color="orange"
+        :style="{ cursor: 'pointer' }"
+        @click="updateItemPrice(item._id)"
+      >
+        mdi-alert
+      </v-icon>
     </template>
   </v-data-table>
 </template>
@@ -65,6 +75,10 @@ export default {
       emit('dblRowClick', item.orderId)
     }
 
+    function updateItemPrice(itemId) {
+      emit('updateItemPrice', itemId)
+    }
+
     return {
       selected,
       selectedOrderIds,
@@ -72,6 +86,7 @@ export default {
       headers: ALL_HEADERS,
       deleteHandler,
       dblclickRowHandler,
+      updateItemPrice,
     }
   },
 }
