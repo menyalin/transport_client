@@ -31,6 +31,7 @@ export const useListData = () => {
 
   const queryParams = computed(() => ({
     status: settings.value?.status,
+    search: settings.value?.search,
     clients: settings.value?.clients,
     company: store.getters.directoriesProfile,
     limit: settings.value?.listOptions?.itemsPerPage || 50,

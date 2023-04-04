@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
@@ -9,6 +10,9 @@ const getInitialState = (editedItem) => ({
   client: editedItem?.client || undefined,
   agremeent: editedItem?.agremeent || null,
   note: editedItem?.note || null,
+  sendDate: editedItem?.sendDate
+    ? dayjs(editedItem?.sendDate).format('YYYY-MM-DD')
+    : null,
 })
 
 function usePaimentInvoiceForm() {
@@ -25,6 +29,7 @@ function usePaimentInvoiceForm() {
 
   const rules = {
     number: {},
+    sendDate: {},
     client: { required },
     status: { required },
     agreement: { required },

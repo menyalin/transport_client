@@ -31,6 +31,16 @@
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'status')"
     />
+    <v-text-field
+      :value="settings.search"
+      label="Поиск по номеру"
+      dense
+      clearable
+      outlined
+      hide-details
+      :style="{ maxWidth: '200px' }"
+      @change="updateSettings($event, 'search')"
+    />
   </div>
 </template>
 

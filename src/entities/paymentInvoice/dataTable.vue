@@ -18,12 +18,20 @@
       {{ new Date(item.createdAt).toLocaleString() }}
     </template>
 
+    <template #[`item.sendDate`]="{ item }">
+      {{ item.sendDate ? new Date(item.sendDate).toLocaleDateString() : null }}
+    </template>
+
     <template #[`item.total.priceWOVat`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.total.priceWOVat) }}
+      {{ moneyFormatter(item.total.priceWOVat) }}
+    </template>
+
+    <template #[`item.vatSum`]="{ item }">
+      {{ moneyFormatter(item.total.price - item.total.priceWOVat) }}
     </template>
 
     <template #[`item.total.price`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.total.price) }}
+      {{ moneyFormatter(item.total.price) }}
     </template>
 
     <template #[`item.note`]="{ item }">
@@ -37,6 +45,7 @@
 <script>
 import { ref } from 'vue'
 import router from '@/router'
+import { moneyFormatter } from '@/shared/utils'
 
 export default {
   name: 'PaymentInvoicesDataTable',
@@ -65,6 +74,7 @@ export default {
       dblClickRow,
       listOptions,
       updateListOptionsHandler,
+      moneyFormatter,
     }
   },
 }

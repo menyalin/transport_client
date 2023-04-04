@@ -14,12 +14,6 @@ export default [
     default: true,
     width: '5rem',
   },
-  // {
-  //   text: 'Площадка',
-  //   value: 'placeName',
-  //   align: 'center',
-  //   sortable: false,
-  // },
   {
     value: 'plannedDate',
     text: 'Дата',
@@ -39,6 +33,14 @@ export default [
   {
     value: 'savedTotal.priceWOVat',
     text: 'Сумма без НДС',
+    sortable: false,
+    align: 'right',
+    default: true,
+    width: '7rem',
+  },
+  {
+    value: 'vatSum',
+    text: 'Сумма НДС',
     sortable: false,
     align: 'right',
     default: true,

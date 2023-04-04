@@ -26,10 +26,13 @@
       </v-btn>
     </template>
     <template #[`item.savedTotal.price`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.savedTotal.price) }}
+      {{ moneyFormatter(item.savedTotal.price) }}
+    </template>
+    <template #[`item.vatSum`]="{ item }">
+      {{ moneyFormatter(item.savedTotal.price - item.savedTotal.priceWOVat) }}
     </template>
     <template #[`item.savedTotal.priceWOVat`]="{ item }">
-      {{ new Intl.NumberFormat().format(item.savedTotal.priceWOVat) }}
+      {{ moneyFormatter(item.savedTotal.priceWOVat) }}
     </template>
     <template #[`item.needUpdate`]="{ item }">
       <v-icon
@@ -45,6 +48,7 @@
 </template>
 <script>
 import { computed, ref } from 'vue'
+import { moneyFormatter } from '@/shared/utils'
 import ALL_HEADERS from './headers.js'
 export default {
   name: 'PaymentInvoiceOrdersList',
@@ -87,6 +91,7 @@ export default {
       deleteHandler,
       dblclickRowHandler,
       updateItemPrice,
+      moneyFormatter,
     }
   },
 }

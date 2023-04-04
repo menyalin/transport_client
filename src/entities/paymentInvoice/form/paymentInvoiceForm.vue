@@ -20,6 +20,14 @@
           outlined
           :style="{ maxWidth: '150px' }"
         />
+        <v-text-field
+          label="Дата выставления"
+          v-model="state.sendDate"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+        />
         <v-select
           label="Статус"
           v-model="state.status"
@@ -86,6 +94,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
@@ -129,11 +138,11 @@ export default {
     }
 
     function submitHandler() {
-      ctx.emit('submit', state.value)
+      ctx.emit('submit', formState.value)
     }
 
     function saveHandler() {
-      ctx.emit('save', state.value)
+      ctx.emit('save', formState.value)
     }
 
     function downloadPdf() {
@@ -159,6 +168,15 @@ export default {
     function buttonClick() {
       console.log('click')
     }
+
+    const formState = computed(() => {
+      return {
+        ...state.value,
+        sendDate: state.value.sendDate
+          ? dayjs(state.value.sendDate).format()
+          : null,
+      }
+    })
     watch(
       () => props.item,
       () => {

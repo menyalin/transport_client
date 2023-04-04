@@ -6,11 +6,19 @@ export default [
     default: true,
   },
   {
-    value: 'createdAt',
-    text: 'Дата',
+    value: 'sendDate',
+    text: 'Дата выставления',
     sortable: false,
     default: true,
   },
+
+  {
+    value: 'statusStr',
+    text: 'Статус',
+    sortable: false,
+    default: true,
+  },
+
   {
     value: 'clientName',
     text: 'Клиент',
@@ -19,7 +27,7 @@ export default [
   },
   {
     value: 'count',
-    text: 'Кол-во строк',
+    text: 'Рейсы',
     sortable: false,
     default: true,
     align: 'right',
@@ -28,6 +36,14 @@ export default [
   {
     value: 'total.priceWOVat',
     text: 'Сумма без НДС',
+    sortable: false,
+    default: true,
+    align: 'right',
+    width: '10rem',
+  },
+  {
+    value: 'vatSum',
+    text: 'Сумма НДС',
     sortable: false,
     default: true,
     align: 'right',
@@ -42,7 +58,12 @@ export default [
     align: 'right',
     width: '10rem',
   },
-
+  {
+    value: 'createdAt',
+    text: 'Дата создания',
+    sortable: false,
+    default: true,
+  },
   {
     value: 'note',
     text: 'Примечание',
