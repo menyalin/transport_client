@@ -12,6 +12,7 @@
       @save="submit($event, true)"
       @pickOrders="openDialog"
     />
+    <payment-invoice-result :orders="item.orders" />
     <payment-invoice-orders-list
       :orders="item.orders"
       @delete="deleteOrderFromPaymentInvoice"
@@ -39,6 +40,7 @@ import { FormWrapper } from '@/shared/ui'
 import {
   PaymentInvoiceForm,
   PaymentInvoiceOrdersList,
+  PaymentInvoiceResult
 } from '@/entities/paymentInvoice'
 import { PickOrders } from '@/features/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
@@ -50,6 +52,7 @@ export default {
     PaymentInvoiceForm,
     PickOrders,
     PaymentInvoiceOrdersList,
+    PaymentInvoiceResult,
   },
   props: {
     id: String,

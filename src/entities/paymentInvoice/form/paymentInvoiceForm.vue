@@ -88,6 +88,7 @@
         dense
         outlined
         @blur="v$.note.$touch"
+        hide-details
       />
     </div>
   </div>
