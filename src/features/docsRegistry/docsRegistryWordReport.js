@@ -38,6 +38,5 @@ export async function docsRegistryWordReport(reportData) {
     mimeType:
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   })
-
   saveAs(out, `${reportData.fileNameStr}.docx`)
 }

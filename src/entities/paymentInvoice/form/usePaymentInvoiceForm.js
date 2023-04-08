@@ -8,7 +8,7 @@ const getInitialState = (editedItem) => ({
   status: editedItem?.status || 'inProcess',
   number: editedItem?.number || null,
   client: editedItem?.client || undefined,
-  agremeent: editedItem?.agremeent || null,
+  agreement: editedItem?.agreement || null,
   note: editedItem?.note || null,
   sendDate: editedItem?.sendDate
     ? dayjs(editedItem?.sendDate).format('YYYY-MM-DD')
@@ -16,7 +16,7 @@ const getInitialState = (editedItem) => ({
 })
 
 function usePaimentInvoiceForm() {
-  let state = ref(getInitialState())
+  let state = ref({})
   const agreements = ref([])
   const agreementItems = computed(() => agreements.value || [])
 
@@ -63,12 +63,12 @@ function usePaimentInvoiceForm() {
   const invalidForm = computed(() => v$.value.$invalid)
 
   async function setFormState(item) {
-    state.value = { ...getInitialState(item) }
+    state.value = getInitialState(item)
     if (item.client) await setAgreements(item.client)
   }
 
   const changeClientHandler = async (val) => {
-    state.value = { ...state.value, agreement: null }
+    // state.value = { ...state.value, agreement: null }
     if (val) await setAgreements(val)
   }
 

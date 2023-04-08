@@ -5,6 +5,7 @@ import OrderListFooterDetails from './orderListFooterDetails.vue'
 import FormWrapper from './entityFormWrapper/formWrapper.vue'
 import ButtonsPanel from './buttonsPanel.vue'
 import DateRangeInput from './dateRangeInput.vue'
+import DownloadDocTemplateMenu from './downloadDocTemplateMenu.vue'
 
 export {
   AppTableColumnSetting,
@@ -14,4 +15,5 @@ export {
   FormWrapper,
   EntityListWrapper,
   DateRangeInput,
+  DownloadDocTemplateMenu,
 }

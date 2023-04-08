@@ -8,8 +8,10 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small @click="downloadPdf" class="mx-2">Скачать PDF</v-btn>
-      <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
+      <download-doc-template-menu
+        :templates="docTemplates"
+        @downloadTemplate="downloadHandler"
+      />
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
@@ -66,7 +68,6 @@
           :style="{ maxWidth: '300px' }"
           @blur="v$.client.$touch"
           :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
         />
       </div>
 
@@ -81,7 +82,6 @@
       >
         Подобрать рейсы
       </v-btn>
-
       <v-text-field
         v-model="state.note"
         label="Примечание"
@@ -99,13 +99,15 @@ import dayjs from 'dayjs'
 import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
+import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
 
 export default {
   name: 'PaymentInvoiceForm',
   components: {
     ButtonsPanel,
+    DownloadDocTemplateMenu,
   },
   props: {
     item: Object,
@@ -118,7 +120,6 @@ export default {
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
-
     const {
       v$,
       state,
@@ -129,6 +130,8 @@ export default {
       changeClientHandler,
       setFormState,
     } = usePaymentInvoiceForm(props.item, ctx)
+
+    const { docTemplates } = usePaymentInvoiceDocTemplates(state)
 
     function cancelHandler() {
       router.go(-1)
@@ -146,15 +149,8 @@ export default {
       ctx.emit('save', formState.value)
     }
 
-    function downloadPdf() {
-      ctx.emit('downloadPdf')
-    }
-    function downloadXlsx() {
-      ctx.emit('downloadXlsx')
-    }
-
-    function changeAgreementHandler() {
-      //TODO:
+    function downloadHandler(filename) {
+      ctx.emit('download', filename)
     }
 
     const clientItems = computed(
@@ -201,10 +197,9 @@ export default {
       buttonClick,
       changeClientHandler,
       showPickOrderDialog,
-      downloadPdf,
-      downloadXlsx,
+      downloadHandler,
       agreementItems,
-      changeAgreementHandler,
+      docTemplates,
     }
   },
 }

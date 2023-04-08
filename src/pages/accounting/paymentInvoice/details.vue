@@ -11,6 +11,7 @@
       :disabledMainFields="disabledMainFields"
       @save="submit($event, true)"
       @pickOrders="openDialog"
+      @download="downloadHandler"
     />
     <payment-invoice-result :orders="item.orders" />
     <payment-invoice-orders-list
@@ -40,10 +41,11 @@ import { FormWrapper } from '@/shared/ui'
 import {
   PaymentInvoiceForm,
   PaymentInvoiceOrdersList,
-  PaymentInvoiceResult
+  PaymentInvoiceResult,
 } from '@/entities/paymentInvoice'
 import { PickOrders } from '@/features/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
+import { useDownloadTemplate } from './model/useDownloadTemplate'
 
 export default {
   name: 'PaymentInvoiceDetails',
@@ -59,6 +61,8 @@ export default {
   },
   setup(props) {
     const item = ref({})
+    const { downloadHandler } = useDownloadTemplate(item)
+
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
     const showPickOrderDialog = ref(
       store.getters.storedValue(storedSettingsName) || false
@@ -216,8 +220,7 @@ export default {
       disabledPickOrders,
       disabledMainFields,
       updateItemPrice,
-      // downloadPdfHandler,
-      // downloadWordHandler,
+      downloadHandler,
     }
   },
   methods: {
