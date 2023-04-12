@@ -18,7 +18,7 @@
 </template>
 <script>
 import { computed } from 'vue'
-import workerService from '@/modules/profile/services/worker.service'
+import { WorkerService } from '@/shared/services'
 import { useServerData } from '@/modules/common/hooks/useServerData'
 
 export default {
@@ -41,7 +41,7 @@ export default {
       handleSearchInputUpdate,
       searchString,
       loading,
-    } = useServerData({ ctx, service: workerService, propValue: value })
+    } = useServerData({ ctx, service: WorkerService, propValue: value })
 
     const title = computed(() => {
       if (!value) return ''

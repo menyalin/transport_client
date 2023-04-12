@@ -103,7 +103,7 @@
 <script>
 import store from '@/store'
 import AppUserInfo from './_userInfo.vue'
-import workerService from '../../services/worker.service'
+import {WorkerService } from '@/shared/services'
 import userService from '../../../auth/services/user.service'
 import { computed, ref } from 'vue'
 
@@ -145,7 +145,7 @@ export default {
       if (!workerId) return null
       try {
         isWorkerLoading.value = true
-        worker.value = await workerService.getById(workerId)
+        worker.value = await WorkerService.getById(workerId)
         isWorkerLoading.value = false
       } catch (e) {
         isWorkerLoading.value = false
@@ -154,14 +154,14 @@ export default {
     const toggleDisableStatus = async () => {
       if (!workerId || !store.getters.hasPermission('worker:userAdmin'))
         return null
-      worker.value = await workerService.updateOne(workerId, {
+      worker.value = await WorkerService.updateOne(workerId, {
         disabled: !worker.value?.disabled,
       })
     }
 
     const resendInvite = async () => {
       if (!workerId) return null
-      worker.value = await workerService.sendInvite({
+      worker.value = await WorkerService.sendInvite({
         workerId: workerId,
         userId: userId,
         roles: worker.value.roles,
@@ -178,7 +178,7 @@ export default {
     const sendInvite = async ({ userId, roles, workerId }) => {
       if (roles.length === 0 || !workerId) return
       try {
-        worker.value = await workerService.sendInvite({
+        worker.value = await WorkerService.sendInvite({
           userId,
           roles,
           workerId,
@@ -214,7 +214,7 @@ export default {
         this.setTmpUser({})
         return
       }
-      const data = await workerService.getUserByEmail(this.emailSearch)
+      const data = await WorkerService.getUserByEmail(this.emailSearch)
       if (!data) {
         this.setTmpUser({})
         this.$store.commit('setError', 'Пользователь не найден')
@@ -227,7 +227,7 @@ export default {
 
     async updateRoles() {
       if (this.tmpRoles.length === 0 || !this.workerId) return
-      const res = await workerService.updateOne(this.workerId, {
+      const res = await WorkerService.updateOne(this.workerId, {
         roles: this.tmpRoles,
       })
       if (res) {

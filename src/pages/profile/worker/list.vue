@@ -41,7 +41,7 @@
 <script>
 import store from '@/store'
 import { ButtonsPanel } from '@/shared/ui'
-import workerService from '../../services/worker.service'
+import { WorkerService } from '@/shared/services'
 import { computed, ref } from 'vue'
 
 export default {
@@ -69,7 +69,7 @@ export default {
     const getWorkers = async () => {
       try {
         loading.value = true
-        workers.value = await workerService.getByDirectoriesProfile()
+        workers.value = await WorkerService.getByDirectoriesProfile()
         loading.value = false
       } catch (e) {
         loading.value = false

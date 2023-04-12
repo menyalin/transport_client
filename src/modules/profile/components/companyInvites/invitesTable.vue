@@ -38,7 +38,7 @@
   </v-simple-table>
 </template>
 <script>
-import WorkerService from '../../services/worker.service'
+import { WorkerService } from '@/shared/services'
 
 export default {
   name: 'InvitesTable',

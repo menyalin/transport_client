@@ -6,7 +6,6 @@ const BASE_PATH = '/workers'
 
 class WorkerService {
   constructor() {
-    this.cache = new Map()
     socket.on('worker:created', (_data) => {
       //queryClient.setQueryData([WORKERS, data._id], data)
       // const workers = queryClient.getQueryData([WORKERS])

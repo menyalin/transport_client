@@ -4,7 +4,7 @@ export default [
   {
     path: BASE_PATH,
     name: 'WorkerList',
-    component: () => import('../pages/worker/list'),
+    component: () => import('@/pages/profile/worker/list'),
     meta: {
       permission: 'worker:readList',
     },
@@ -12,7 +12,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'WorkerCreate',
-    component: () => import('../pages/worker/details'),
+    component: () => import('@/pages/profile/worker/details'),
     props: true,
     meta: {
       permission: 'worker:readItem',
@@ -21,7 +21,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'WorkerDetails',
-    component: () => import('../pages/worker/details'),
+    component: () => import('@/pages/profile/worker/details'),
     props: true,
     meta: {
       permission: 'worker:readItem',
