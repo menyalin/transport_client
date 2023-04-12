@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import UserService from '../services/user.service'
+import { UserService } from '@/shared/services'
 
 export default {
   name: 'ConfirmEmail',

@@ -3,8 +3,8 @@
     <v-alert
       v-if="
         confirmationEmailSended ||
-          ($route.query.status === 'need_email_confirmation' &&
-            !user.emailConfirmed)
+        ($route.query.status === 'need_email_confirmation' &&
+          !user.emailConfirmed)
       "
       type="info"
     >
@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-import userService from '@/modules/auth/services/user.service'
+import { UserService } from '@/shared/services'
 import { mapGetters } from 'vuex'
 import AppChangePasswordDialog from './changePasswordDialog.vue'
 
@@ -82,7 +82,7 @@ export default {
   methods: {
     async retryConfirmationEmail() {
       try {
-        await userService.retryConfirmationEmail(this.user?.email)
+        await UserService.retryConfirmationEmail(this.user?.email)
         this.confirmationEmailSended = true
       } catch (e) {
         this.$store.commit('setError', e?.response?.data || e.message)

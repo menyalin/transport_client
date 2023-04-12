@@ -14,7 +14,7 @@ import ZoneModule from './zone'
 import RegionModule from './region'
 import CityModule from './city'
 import CompanyService from '../../../shared/services/company/company.service'
-import UserService from '@/modules/auth/services/user.service'
+import { UserService } from '@/shared/services'
 
 export default {
   state: {
@@ -174,7 +174,8 @@ export default {
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
       if (docsRegistryStatuses?.length)
         commit('setDocsRegistryStatuses', docsRegistryStatuses)
-      if (paymentInvoiceStatuses?.length) commit('setPaymentInvoiceStatuses', paymentInvoiceStatuses)
+      if (paymentInvoiceStatuses?.length)
+        commit('setPaymentInvoiceStatuses', paymentInvoiceStatuses)
     },
 
     async createCompany({ commit }, payload) {

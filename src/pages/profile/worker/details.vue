@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
-        <app-form
+        <load-spinner v-if="loading" />
+        <worker-form
           v-else
           :item="formItem"
           :displayDeleteBtn="
@@ -18,18 +18,18 @@
   </v-container>
 </template>
 <script>
-import AppForm from '@/modules/profile/components/workerForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { WorkerForm } from '@/entities/worker'
+import { LoadSpinner } from '@/shared/ui'
 import { WorkerService } from '@/shared/services'
-import { ref, computed, reactive } from 'vue'
+import { ref, computed } from 'vue'
 import store from '@/store'
 import router from '@/router'
 
 export default {
   name: 'WorkerDetails',
   components: {
-    AppForm,
-    AppLoadSpinner,
+    WorkerForm,
+    LoadSpinner,
   },
   props: {
     id: String,
@@ -38,12 +38,13 @@ export default {
     const { id } = router.currentRoute.params
     let tmpVal = ref()
     let loading = ref(false)
-    let worker = reactive({})
+    let worker = ref({})
+
     async function getWorker() {
       if (!id) return null
       try {
         loading.value = true
-        worker = await WorkerService.getById(id)
+        worker.value = await WorkerService.getById(id)
         loading.value = false
       } catch (e) {
         loading.value = false
@@ -51,7 +52,9 @@ export default {
       }
     }
 
-    const formItem = computed(() => (tmpVal.value ? tmpVal.value : worker))
+    const formItem = computed(() =>
+      tmpVal.value ? tmpVal.value : worker.value
+    )
 
     const submit = async (val) => {
       try {

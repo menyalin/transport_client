@@ -7,6 +7,7 @@ import CompanyService from './company/company.service.js'
 import PaymentInvoiceService from './paymentInvoice/paymentInvoice.service.js'
 import DocTemplateService from './docTemplate/docTemplate.service.js'
 import WorkerService from './worker/worker.service.js'
+import UserService from './user/user.service.js'
 
 export {
   DocsRegistryService,
@@ -18,4 +19,5 @@ export {
   PaymentInvoiceService,
   DocTemplateService,
   WorkerService,
+  UserService,
 }

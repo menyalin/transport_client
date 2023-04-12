@@ -47,7 +47,7 @@
   </v-dialog>
 </template>
 <script>
-import userService from '@/modules/auth/services/user.service'
+import { UserService} from '@/shared/services'
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
   name: 'ChangePasswordDialog',
@@ -99,7 +99,7 @@ export default {
         newPassword: this.newPassword,
       }
       try {
-        await userService.changePassword(body)
+        await UserService.changePassword(body)
         this.$v.$reset()
         this.$store.commit('setError', 'Пароль успешно обновлен')
         this.cancel()

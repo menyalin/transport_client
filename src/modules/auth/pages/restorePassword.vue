@@ -58,7 +58,7 @@
 </template>
 <script>
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
-import userService from '../services/user.service'
+import { UserService } from '@/shared/services'
 
 export default {
   name: 'RestorePassword',
@@ -131,7 +131,7 @@ export default {
       if (this.$v.$invalid) return null
       try {
         this.loading = true
-        await userService.setPassword({
+        await UserService.setPassword({
           token: this.token,
           password: this.form.password,
         })

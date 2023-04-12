@@ -1,7 +1,7 @@
 import api from '@/api'
 import router from '@/router'
 import socket from '@/socket'
-import userService from './services/user.service'
+import  { UserService } from '@/shared/services'
 
 export default {
   state: () => ({
@@ -50,7 +50,7 @@ export default {
       })
     },
     async logOut({ commit }) {
-      await userService.logout()
+      await UserService.logout()
       localStorage.clear()
       commit('clearDirectories')
       commit('logOut')

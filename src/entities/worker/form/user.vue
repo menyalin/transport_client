@@ -53,7 +53,7 @@
           <v-btn
             v-if="
               worker.accepted &&
-                $store.getters.hasPermission('worker:userAdmin')
+              $store.getters.hasPermission('worker:userAdmin')
             "
             @click="toggleDisableStatus"
           >
@@ -103,8 +103,8 @@
 <script>
 import store from '@/store'
 import AppUserInfo from './_userInfo.vue'
-import {WorkerService } from '@/shared/services'
-import userService from '../../../auth/services/user.service'
+import { WorkerService, UserService } from '@/shared/services'
+
 import { computed, ref } from 'vue'
 
 export default {
@@ -138,7 +138,7 @@ export default {
 
     const getUserById = async () => {
       if (!userId) return null
-      user.value = await userService.getById(userId)
+      user.value = await UserService.getById(userId)
     }
 
     const getWorkerById = async () => {

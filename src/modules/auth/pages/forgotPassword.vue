@@ -42,7 +42,7 @@
   </v-container>
 </template>
 <script>
-import userService from '../services/user.service'
+import { UserService } from '@/shared/services'
 
 export default {
   data: () => ({
@@ -78,7 +78,7 @@ export default {
     async submit() {
       try {
         this.loading = true
-        await userService.forgotPassword(this.email)
+        await UserService.forgotPassword(this.email)
         this.showMessage(
           'На указанный адрес отправлено письмо с ссылкой',
           'info'
