@@ -65,8 +65,8 @@ export class TemplateDataBuilder {
     this.pO = invoice.orders.map((order, idx) => ({
       ...order,
       idx: idx + 1,
-      auctionNum: order.client.auctionNum,
-      num: order.client.num,
+      auctionNum: order.client.auctionNum || '',
+      num: order.client.num || '',
       truckNum:
         store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
       ttnNums: getTtnNums(order),
@@ -93,12 +93,14 @@ export class TemplateDataBuilder {
         price: moneyFormatter(order.savedTotalByTypes.base.price),
         priceWOVat: moneyFormatter(order.savedTotalByTypes.base.priceWOVat),
       },
+      // Простой на погрузке
       loadingD: {
         price: moneyFormatter(order.savedTotalByTypes.loadingDowntime.price),
         priceWOVat: moneyFormatter(
           order.savedTotalByTypes.loadingDowntime.priceWOVat
         ),
       },
+      // Простой на разгрузке
       unloadingD: {
         price: moneyFormatter(order.savedTotalByTypes.unloadingDowntime.price),
         priceWOVat: moneyFormatter(

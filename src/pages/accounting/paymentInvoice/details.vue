@@ -12,6 +12,7 @@
       @save="submit($event, true)"
       @pickOrders="openDialog"
       @download="downloadHandler"
+      :disabledDownloadFiles="disabledDownloadFiles"
     />
     <payment-invoice-result :orders="item.orders" />
     <payment-invoice-orders-list
@@ -70,7 +71,9 @@ export default {
     const disabledPickOrders = computed(() => {
       return !item.value?._id
     })
-
+    const disabledDownloadFiles = computed(
+      () => !item.value.orders || item.value.orders.length === 0
+    )
     const disabledMainFields = computed(() => {
       return item.value.orders?.length > 0
     })
@@ -219,6 +222,7 @@ export default {
       dblRowClickHandler,
       disabledPickOrders,
       disabledMainFields,
+      disabledDownloadFiles,
       updateItemPrice,
       downloadHandler,
     }

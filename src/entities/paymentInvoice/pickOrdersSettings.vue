@@ -31,13 +31,6 @@
       :style="{ 'max-width': '300px' }"
       @change="searchInputHandler"
     />
-    <v-checkbox
-      v-model="settings.onlySelectable"
-      label="Только доступные рейсы"
-      hide-details
-      class="ml-2"
-      dense
-    />
   </div>
 </template>
 <script>

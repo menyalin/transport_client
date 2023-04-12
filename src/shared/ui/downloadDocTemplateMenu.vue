@@ -24,9 +24,15 @@ export default {
       type: Array,
       default: [],
     },
+    disabledDownloadFiles: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props, ctx) {
-    const disabled = computed(() => props.templates.length === 0)
+    const disabled = computed(
+      () => props.templates.length === 0 || props.disabledDownloadFiles
+    )
 
     function itemClickHandler(templateId) {
       const template = props.templates.find((i) => i._id === templateId)

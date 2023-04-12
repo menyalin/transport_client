@@ -10,6 +10,7 @@
     >
       <download-doc-template-menu
         :templates="docTemplates"
+        :disabledDownloadFiles="disabledDownloadFiles"
         @downloadTemplate="downloadHandler"
       />
     </buttons-panel>
@@ -116,6 +117,10 @@ export default {
     },
     disabledMainFields: {
       type: Boolean,
+    },
+    disabledDownloadFiles: {
+      type: Boolean,
+      default: true,
     },
   },
   setup(props, ctx) {

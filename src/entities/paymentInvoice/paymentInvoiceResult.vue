@@ -13,10 +13,10 @@ import { computed } from 'vue'
 export default {
   name: 'PaymentInvoiceResult',
   props: {
-    orders: { type: Array, required: true },
+    orders: { type: Array, required: true, default: () => [] },
   },
   setup(props) {
-    //orders[0].itemType
+    
     const total = computed(() => {
       const sum = props.orders.reduce(
         (res, item) => res + item?.savedTotal?.price,
