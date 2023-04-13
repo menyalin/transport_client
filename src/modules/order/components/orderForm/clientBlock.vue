@@ -15,14 +15,14 @@
         only-clients
       />
       <v-text-field
-        v-model="params.num"
+        v-model.trim="params.num"
         outlined
         dense
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
       />
       <v-text-field
-        v-model="params.auctionNum"
+        v-model.trim="params.auctionNum"
         outlined
         dense
         label="Номер аукциона"

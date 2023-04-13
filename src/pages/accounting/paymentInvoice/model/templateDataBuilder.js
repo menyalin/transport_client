@@ -65,8 +65,8 @@ export class TemplateDataBuilder {
     this.pO = invoice.orders.map((order, idx) => ({
       ...order,
       idx: idx + 1,
-      auctionNum: order.client.auctionNum || '',
-      num: order.client.num || '',
+      auctionNum: order.client.auctionNum.trim() || '',
+      num: order.client.num.trim() || '',
       truckNum:
         store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
       ttnNums: getTtnNums(order),
