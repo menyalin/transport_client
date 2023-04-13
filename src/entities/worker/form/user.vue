@@ -101,11 +101,11 @@
   </v-card>
 </template>
 <script>
-import store from '@/store'
-import AppUserInfo from './_userInfo.vue'
-import { WorkerService, UserService } from '@/shared/services'
-
 import { computed, ref } from 'vue'
+import store from '@/store'
+import { WorkerService, UserService } from '@/shared/services'
+import AppUserInfo from './_userInfo.vue'
+
 
 export default {
   name: 'User',
@@ -129,41 +129,43 @@ export default {
     },
   },
 
-  setup({ userId, workerId }) {
-    let tmpUser = ref()
-    let user = ref()
-    let worker = ref()
+  setup(props) {
+    
+
+    let tmpUser = ref({})
+    let user = ref({})
+    let worker = ref({})
     let isUserLoading = ref(false)
     let isWorkerLoading = ref(false)
 
     const getUserById = async () => {
-      if (!userId) return null
-      user.value = await UserService.getById(userId)
+      if (!props.userId) return null
+      user.value = await UserService.getById(props.userId)
     }
 
     const getWorkerById = async () => {
-      if (!workerId) return null
+      if (!props.workerId) return null
       try {
         isWorkerLoading.value = true
-        worker.value = await WorkerService.getById(workerId)
+        worker.value = await WorkerService.getById(props.workerId)
         isWorkerLoading.value = false
       } catch (e) {
         isWorkerLoading.value = false
       }
     }
     const toggleDisableStatus = async () => {
-      if (!workerId || !store.getters.hasPermission('worker:userAdmin'))
+      if (!props.workerId || !store.getters.hasPermission('worker:userAdmin'))
         return null
-      worker.value = await WorkerService.updateOne(workerId, {
+      worker.value = await WorkerService.updateOne(props.workerId, {
         disabled: !worker.value?.disabled,
       })
     }
 
     const resendInvite = async () => {
-      if (!workerId) return null
+      if (!props.workerId) return null
       worker.value = await WorkerService.sendInvite({
-        workerId: workerId,
-        userId: userId,
+        workerId: props.workerId,
+        userId: props.userId,
         roles: worker.value.roles,
       })
     }
