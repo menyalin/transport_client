@@ -49,9 +49,9 @@ const getTruckType = (order) => {
 const getTtnNums = (order) =>
   order.docs
     .filter((d) => ['trn', 'ttn', 'torg'].includes(d.type) && !!d.number)
-    .map((d) => d.number)
+    .map((d) => d.number?.trim())
     .reduce((res, i) => (res.includes(i) ? res : res.concat([i])), [])
-    .join(', ')
+    .join('\n')
 
 export class TemplateDataBuilder {
   constructor(invoice) {
@@ -62,14 +62,16 @@ export class TemplateDataBuilder {
     this.startPeriodDate = getPeriodDate(invoice.orders, Math.min)
     this.endPeriodDate = getPeriodDate(invoice.orders, Math.max)
     this.total = getInvoiceTotal(invoice.orders)
+
     this.pO = invoice.orders.map((order, idx) => ({
       ...order,
       idx: idx + 1,
-      auctionNum: order.client.auctionNum.trim() || '',
-      num: order.client.num.trim() || '',
+      auctionNum: order.client.auctionNum?.trim() || '',
+      num: order.client.num?.trim() || '',
       truckNum:
         store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
       ttnNums: getTtnNums(order),
+      driverName: order.driverName.split(' ').join('\n'),
       orderDate: dayjs(order.plannedDate).format(DATE_FORMAT),
       orderTime: dayjs(order.plannedDate).format('HH:mm'),
       shippers: getAddressesByType(order.route, 'loading')

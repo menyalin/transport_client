@@ -4,20 +4,19 @@
     @delete="deleteHandler"
     :displayDeleteBtn="!!id && $store.getters.hasPermission('worker:delete')"
   >
-    <worker-form
-      :item="item"
-      @cancel="cancel"
-      @submit="submit"
-      @delete="deleteHandler"
+    <worker-form :item="worker" @cancel="cancel" @submit="submit" />
+    <linked-user
+      v-if="id"
+      :worker="worker"
+      @updateWorker="updateWorkerHandler"
     />
-    <linked-user v-if="id" :worker="item" />
   </form-wrapper>
 </template>
 <script>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import store from '@/store'
 import router from '@/router'
-import { LoadSpinner, FormWrapper } from '@/shared/ui'
+import { FormWrapper } from '@/shared/ui'
 import { WorkerService } from '@/shared/services'
 import { WorkerForm } from '@/entities/worker'
 import { LinkedUser } from '@/widgets/worker'
@@ -27,16 +26,14 @@ export default {
   components: {
     FormWrapper,
     WorkerForm,
-    LoadSpinner,
     LinkedUser,
   },
   props: {
     id: String,
   },
   setup(props) {
-    let tmpVal = ref()
-    let loading = ref(false)
     let worker = ref({})
+    let loading = ref(false)
 
     async function getWorker() {
       if (!props.id) return null
@@ -50,11 +47,12 @@ export default {
       }
     }
 
-    const item = computed(() => (tmpVal.value ? tmpVal.value : worker.value))
+    function updateWorkerHandler(updatedWorker) {
+      worker.value = updatedWorker
+    }
 
     const submit = async (val) => {
       try {
-        tmpVal.value = val
         if (props.id) await WorkerService.updateOne(props.id, val)
         else await WorkerService.create(val)
         router.go(-1)
@@ -63,7 +61,7 @@ export default {
       }
     }
     getWorker()
-    return { submit, loading, tmpVal, item }
+    return { submit, loading, worker, updateWorkerHandler }
   },
 
   methods: {

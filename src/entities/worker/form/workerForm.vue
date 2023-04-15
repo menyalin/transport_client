@@ -57,13 +57,8 @@
     />
 
     <v-text-field v-model.trim="form.note" outlined label="Примечание" dense />
-    <app-user
-      v-if="item && item._id"
-      :workerId="item._id"
-      :userId="item.user"
-      :roles="item.roles"
-    />
-    <div v-else class="text-caption mx-3">
+
+    <div v-if="!item._id" class="text-caption mx-3">
       *Для сопоставления сотрудника с пользователем, запись необходимо сохранить
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
@@ -77,13 +72,11 @@ import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import { ButtonsPanel } from '@/shared/ui'
-import AppUser from './user'
 
 export default {
   name: 'WorkerForm',
   components: {
     ButtonsPanel,
-    AppUser,
   },
   props: {
     item: {
