@@ -67,6 +67,9 @@ export default {
         idx: idx + 1,
         ...item,
         plannedDate: new Date(item.plannedDate).toLocaleDateString(),
+        savedTotal: item.savedTotal
+          ? item.savedTotal
+          : { price: 0, priceWOVat: 0 },
       }))
     })
 
