@@ -59,6 +59,10 @@ export const useListData = () => {
     settings,
     async () => {
       window.history.pushState({ settings: settings.value }, '')
+      localStorage.setItem(
+        'orders:accontingMode',
+        settings.value.accountingMode ? 1 : 0
+      )
       await getData()
     },
     { deep: true }
