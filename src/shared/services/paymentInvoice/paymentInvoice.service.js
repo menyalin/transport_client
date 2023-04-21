@@ -41,9 +41,9 @@ class PaymentInvoiceService {
   }
 
   async deleteOrdersFromPaymentInvoice(params) {
-    if (!params.orders || params.orders.length === 0)
+    if (!params.rowIds || params.rowIds.length === 0)
       throw new Error(
-        'PaymentInvoiceService:deleteOrdersFromPaymentInvoice: orders is missing!'
+        'PaymentInvoiceService:deleteOrdersFromPaymentInvoice: _id is missing!'
       )
 
     if (!params.paymentInvoiceId)

@@ -4,7 +4,7 @@
     :headers="headers"
     v-model="selected"
     multiple
-    item-key="_id"
+    item-key="rowId"
     checkbox-color="primary"
     show-select
     :itemsPerPage="-1"
@@ -47,6 +47,7 @@
   </v-data-table>
 </template>
 <script>
+import store from '@/store'
 import { computed, ref } from 'vue'
 import { moneyFormatter } from '@/shared/utils'
 import ALL_HEADERS from './headers.js'
@@ -59,7 +60,7 @@ export default {
   },
   setup(props, { emit }) {
     const selected = ref([])
-    const selectedOrderIds = computed(() => selected.value.map((i) => i._id))
+    const selectedOrderIds = computed(() => selected.value.map((i) => i.rowId))
 
     const preparedOrders = computed(() => {
       if (!props.orders) return []
@@ -79,10 +80,24 @@ export default {
     }
 
     function dblclickRowHandler(_event, { item }) {
+      if (!item.orderId) {
+        store.commit(
+          'setError',
+          'Ссылка отсутствует! Необходимо удалить рейс из акта!'
+        )
+        return
+      }
       emit('dblRowClick', item.orderId)
     }
 
     function updateItemPrice(itemId) {
+      if (!itemId) {
+        store.commit(
+          'setError',
+          'Ссылка отсутствует! Необходимо удалить рейс из акта!'
+        )
+        return
+      }
       emit('updateItemPrice', itemId)
     }
 

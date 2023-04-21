@@ -5,6 +5,7 @@ import OrderDocsListForm from './orderDocs/orderDocsForm.vue'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 
 import OrderPaymentParts from './paymentParts/orderPaymentParts.vue'
+import PaymentInvoiceLinks from './paymentInvoiceLinks.vue'
 
 export {
   OrdersTable,
@@ -12,4 +13,5 @@ export {
   OrderDocsListForm,
   useOrderDocs,
   OrderPaymentParts,
+  PaymentInvoiceLinks,
 }

@@ -68,11 +68,17 @@ export default {
     const showPickOrderDialog = ref(
       store.getters.storedValue(storedSettingsName) || false
     )
-    const disabledPickOrders = computed(() => {
-      return !item.value?._id
-    })
+    const disabledPickOrders = computed(() => !item.value?._id)
+    
+    const needUpdateRows = computed(() =>
+      item.value.orders.some((i) => i.needUpdate)
+    )
+
     const disabledDownloadFiles = computed(
-      () => !item.value.orders || item.value.orders.length === 0
+      () =>
+        !item.value.orders ||
+        item.value.orders.length === 0 ||
+        needUpdateRows.value
     )
     const disabledMainFields = computed(() => {
       return item.value.orders?.length > 0
@@ -87,10 +93,10 @@ export default {
       )
     })
 
-    async function deleteOrderFromPaymentInvoice(orders) {
-      if (!orders || orders.length === 0) return null
+    async function deleteOrderFromPaymentInvoice(rowIds) {
+      if (!rowIds || rowIds.length === 0) return null
       await PaymentInvoiceService.deleteOrdersFromPaymentInvoice({
-        orders,
+        rowIds,
         paymentInvoiceId: item.value._id,
       })
     }
@@ -121,19 +127,6 @@ export default {
         store.commit('setError', e.message)
       }
     }
-    // const docsRegistryReportData = computed(
-    //   () => new DocsRegistryReportData(item.value)
-    // )
-
-    // function downloadPdfHandler() {
-    //   PdfMaker.download(
-    //     docsRegistryPdfReport(docsRegistryReportData.value),
-    //     docsRegistryReportData.value.fileNameStr
-    //   )
-    // }
-    // function downloadWordHandler() {
-    //   docsRegistryWordReport(docsRegistryReportData.value)
-    // }
 
     async function submit(formState, saveOnly) {
       let updatedItem
@@ -184,11 +177,11 @@ export default {
       else item.value.orders = orders
     }
 
-    function removeOrders({ paymentInvoiceId, orders }) {
+    function removeOrders({ paymentInvoiceId, rowIds }) {
       if (paymentInvoiceId !== item.value._id) return null
 
       item.value.orders = item.value.orders.filter(
-        (i) => !orders.includes(i._id)
+        (i) => !rowIds.includes(i.rowId)
       )
     }
 

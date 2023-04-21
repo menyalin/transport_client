@@ -67,14 +67,6 @@
           </div>
         </div>
 
-        <v-alert
-          v-if="!directoriesProfile"
-          outlined
-          class="ma-3 mb-5"
-          type="error"
-        >
-          Профиль справочников не выбран, сохранение не возможно
-        </v-alert>
         <div class="wrapper">
           <app-route-state
             v-model="state"
@@ -133,6 +125,7 @@
           />
 
           <div id="price">
+            <payment-invoice-links :items="form.paymentInvoices" />
             <app-analytic-block
               v-model="analytics"
               :isValidRoute="isValidRoute"
@@ -191,7 +184,7 @@
           >
             <docs-registry-link :docsRegistry="form.docsRegistry" />
           </order-docs-list-form>
-    
+
           <order-payment-parts
             v-if="routeDate"
             id="payment-parts"
@@ -213,8 +206,6 @@
   </v-container>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-
 import { OrderService, AgreementService } from '@/shared/services'
 import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
 import { DocsRegistryLink } from '@/entities/order'
@@ -235,6 +226,7 @@ import {
   useOrderDocs,
   OrderDocsListForm,
   OrderPaymentParts,
+  PaymentInvoiceLinks,
 } from '@/entities/order'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
 import AppPaymentToDriver from './paymentToDriver.vue'
@@ -242,6 +234,7 @@ import AppPaymentToDriver from './paymentToDriver.vue'
 export default {
   name: 'OrderForm',
   components: {
+    PaymentInvoiceLinks,
     ButtonsPanel,
     AppReqTransport,
     AppCargoParams,
@@ -341,12 +334,12 @@ export default {
         noteAccountant: null,
         docsRegistry: null,
         paymentParts: [],
+        paymentInvoices: [],
       },
     }
   },
 
   computed: {
-    ...mapGetters(['directoriesProfile', 'myCompanies']),
     showFinalPriceDialog() {
       return (
         !!this.$store.getters.hasPermission('order:readFinalPrices') &&
@@ -443,12 +436,7 @@ export default {
     isValidClientInfo() {
       return !!this.client?.client
     },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      )?.name
-    },
+
     enableConfirmOrder() {
       return !!this.confirmedCrew.driver
     },
@@ -493,7 +481,7 @@ export default {
         client: this.client,
         state: this.state,
         route: this.route,
-        company: this.directoriesProfile,
+        company: this.$store.getters.directoriesProfile,
         cargoParams: this.cargoParams,
         reqTransport: this.reqTransport,
         confirmedCrew: this.confirmedCrew,
@@ -653,7 +641,7 @@ export default {
       return false
     },
     async submit(_val, saveOnly) {
-      if (!this.directoriesProfile || this.isInvalidForm) return null
+      if (this.isInvalidForm) return null
       if (!this.analytics.distanceDirect)
         this.analytics.distanceDirect = OrderService.getDirectDistance(
           this.coords
