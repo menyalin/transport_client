@@ -72,6 +72,14 @@ function usePaimentInvoiceForm() {
     if (val) await setAgreements(val)
   }
 
+  const commission = computed(() => {
+    if (!state.value.agreement || agreements.value.length === 0) return 0
+    const { commission } = agreements.value.find(
+      (i) => i._id === state.value.agreement
+    )
+    return commission || 0
+  })
+
   return {
     v$,
     state,
@@ -81,6 +89,7 @@ function usePaimentInvoiceForm() {
     setFormState,
     agreementItems,
     changeClientHandler,
+    commission,
   }
 }
 

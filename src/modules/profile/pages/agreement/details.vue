@@ -12,7 +12,7 @@
           {{ error.message }}
         </v-alert>
         <app-load-spinner v-if="loading" />
-        <app-agreement-form
+        <agreement-form
           v-else
           :agreement="item"
           :displayDeleteBtn="
@@ -27,7 +27,7 @@
   </v-container>
 </template>
 <script>
-import AppAgreementForm from '@/modules/profile/components/agreementForm'
+import { AgreementForm } from '@/entities/agreement'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
@@ -35,7 +35,7 @@ import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 export default {
   name: 'AgreementDetails',
   components: {
-    AppAgreementForm,
+    AgreementForm,
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],

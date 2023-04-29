@@ -8,9 +8,6 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
     <div>
       <div id="title-row">
         <v-text-field
@@ -114,7 +111,16 @@
           label="Обязательно заполнение номера аукциона"
         />
       </div>
-
+      <v-text-field
+        v-model.number="form.commission"
+        type="number"
+        label="Комиссия экспедитора (скидка в акте)"
+        outlined
+        dense
+        class="mt-5"
+        suffix="%"
+        :style="{ maxWidth: '400px' }"
+      />
       <v-text-field v-model="form.note" label="Примечание" outlined dense />
       <div class="row mb-2">
         <v-checkbox
@@ -137,9 +143,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-
 import { ButtonsPanel } from '@/shared/ui'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import AppClients from './clients.vue'
@@ -184,28 +188,22 @@ export default {
         clients: [],
         outsourceCarriers: [],
         closed: null,
+        agreement: 0,
         priceRequired: false,
         clientNumRequired: false,
         auctionNumRequired: false,
+        commission: 0,
       },
     }
   },
 
   computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
-      if (!this.directoriesProfile) return true
       return this.$v.$invalid
-    },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
     },
 
     formState() {
-      return { ...this.form, company: this.directoriesProfile }
+      return { ...this.form, company: this.$store.getters.directoriesProfile }
     },
     vatRates() {
       return this.$store.getters.vatRates

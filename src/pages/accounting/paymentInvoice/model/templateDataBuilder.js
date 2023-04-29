@@ -11,18 +11,33 @@ const getPeriodDate = (orders, condFxName) => {
 
 const getInvoiceTotal = (orders) => {
   const result = orders.reduce(
-    (res, item) => ({
-      price: res.price + item.savedTotal.price,
-      priceWOVat: res.priceWOVat + item.savedTotal.priceWOVat,
-      vat: res.vat + (item.savedTotal.price - item.savedTotal.priceWOVat),
-    }),
-    { price: 0, priceWOVat: 0, vat: 0 }
+    (res, item) => {
+      const discountKoef = (item.agreement.commission || 0) / 100
+      const discountSum = (item.savedTotal.price || 0) * discountKoef
+      const discountSumWOVat = (item.savedTotal.priceWOVat || 0) * discountKoef
+
+      const itemPrice = (item.savedTotal.price || 0) - discountSum
+      const itemPriceWOVat =
+        (item.savedTotal.priceWOVat || 0) - discountSumWOVat
+      const vat = itemPrice - itemPriceWOVat
+      return {
+        price: res.price + itemPrice,
+        priceWOVat: res.priceWOVat + itemPriceWOVat,
+        vat: res.vat + vat,
+        discountSum: res.discountSum + discountSum,
+        discountSumWOVat: res.discountSumWOVat + discountSumWOVat,
+      }
+    },
+    { price: 0, priceWOVat: 0, vat: 0, discountSum: 0, discountSumWOVat: 0 }
   )
 
   return {
+    priceWOdiscount: moneyFormatter(result.price + result.discountSum),
     price: moneyFormatter(result.price),
     priceWOVat: moneyFormatter(result.priceWOVat),
     vat: moneyFormatter(result.vat),
+    discountSum: moneyFormatter(result.discountSum),
+    discountSumWOVat: moneyFormatter(result.discountSumWOVat),
   }
 }
 
