@@ -21,6 +21,7 @@
   </v-card>
 </template>
 <script>
+import { ref, watch } from 'vue'
 import { OrderDocsListForm, useOrderDocs } from '@/entities/order'
 
 export default {
@@ -28,36 +29,31 @@ export default {
   components: {
     OrderDocsListForm,
   },
-  setup() {
-    const { isValidDocs, isReadonlyDocs } = useOrderDocs()
-    return {
-      isValidDocs,
-      isReadonlyDocs,
-    }
-  },
   props: {
     docs: Array,
   },
-  data() {
-    return {
-      tmpDocs: [],
-    }
-  },
-  watch: {
-    docs: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        if (!val) this.tmpDocs = []
-        else this.tmpDocs = [...val]
-      },
-    },
-  },
+  setup(props, ctx) {
+    const tmpDocs = ref([])
+    const { isValidDocs, isReadonlyDocs } = useOrderDocs()
 
-  methods: {
-    saveHandler() {
-      this.$emit('save', this.tmpDocs)
-    },
+    async function saveHandler() {
+      ctx.emit('save', tmpDocs.value)
+    }
+
+    watch(
+      props.docs,
+      (docs = []) => {
+        if (!docs) tmpDocs.value = []
+        else tmpDocs.value = [...docs]
+      },
+      { immediate: true, deep: true }
+    )
+    return {
+      isValidDocs,
+      isReadonlyDocs,
+      saveHandler,
+      tmpDocs,
+    }
   },
 }
 </script>

@@ -105,7 +105,7 @@
         icon
         small
         dark
-        @click="$emit('openDocsDialog', item._id)"
+        @click="$emit('openDocsDialog', item[itemIdField])"
       >
         <v-icon small> mdi-file-document-multiple </v-icon>
       </v-btn>

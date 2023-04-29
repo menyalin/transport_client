@@ -2,6 +2,7 @@ import OrdersTable from './ordersTable.vue'
 import DocsRegistryLink from './docsRegistryLink.vue'
 
 import OrderDocsListForm from './orderDocs/orderDocsForm.vue'
+import OrderDocsList from './orderDocs/orderDocsList.vue'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 
 import OrderPaymentParts from './paymentParts/orderPaymentParts.vue'
@@ -14,4 +15,5 @@ export {
   useOrderDocs,
   OrderPaymentParts,
   PaymentInvoiceLinks,
+  OrderDocsList,
 }

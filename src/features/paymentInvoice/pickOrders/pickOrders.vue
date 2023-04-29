@@ -35,7 +35,16 @@
         :loading="loading"
         :listOptions.sync="settings.listOptions"
         @addItem="addOrderToInvoice"
+        @openDocsDialog="openDocsDialog"
       />
+      <v-dialog v-model="docDialog" max-width="1300" persistent>
+        <order-docs-list
+          :orderId="editableOrderId"
+          :docs="editableDocs"
+          @save="saveDocDialog"
+          @cancel="cancelDocDialog"
+        />
+      </v-dialog>
     </v-card-text>
   </v-card>
 </template>
@@ -43,14 +52,14 @@
 import store from '@/store'
 import { ref, computed } from 'vue'
 import { PickOrdersSettings } from '@/entities/paymentInvoice'
-import { OrdersTable } from '@/entities/order'
+import { OrdersTable, useOrderDocs, OrderDocsList } from '@/entities/order'
 import { useListData } from './model.js'
 import { PickOrdersForPaymentInvoiceHeaders } from '@/shared/constants'
 import { PaymentInvoiceService } from '@/shared/services'
 
 export default {
   name: 'PickOrdersForPaymentInvoiceFeature',
-  components: { PickOrdersSettings, OrdersTable },
+  components: { PickOrdersSettings, OrdersTable, OrderDocsList },
   props: {
     paymentInvoice: {
       type: Object,
@@ -61,6 +70,15 @@ export default {
     const headers = ref([])
     const selectedOrders = ref([])
     const { loading, settings, items, refresh } = useListData(paymentInvoice)
+
+    const {
+      editableOrderId,
+      openDocsDialog,
+      docDialog,
+      editableDocs,
+      saveDocDialog,
+      cancelDocDialog,
+    } = useOrderDocs()
 
     const client = computed(() =>
       store.getters.partnersMap.get(paymentInvoice.client)
@@ -124,6 +142,13 @@ export default {
       clientName,
       client,
       addOrderToInvoice,
+
+      editableOrderId,
+      openDocsDialog,
+      docDialog,
+      editableDocs,
+      saveDocDialog,
+      cancelDocDialog,
     }
   },
 }

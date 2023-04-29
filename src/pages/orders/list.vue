@@ -24,20 +24,19 @@
     />
     <v-dialog v-model="docDialog" max-width="1300" persistent>
       <order-docs-list
-        :docs="editableDocs"
         :orderId="editableOrderId"
-        @cancel="cancelDocDialog"
+        :docs="editableDocs"
         @save="saveDocDialog"
+        @cancel="cancelDocDialog"
       />
     </v-dialog>
   </entity-list-wrapper>
 </template>
 <script>
 import { ref } from 'vue'
-import { OrderService } from '@/shared/services'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import { OrdersTableSettings, OrderDocsList } from '@/widgets'
-import { OrdersTable } from '@/entities/order'
+import { OrdersTableSettings } from '@/widgets'
+import { OrdersTable, OrderDocsList, useOrderDocs } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 
@@ -51,33 +50,20 @@ export default {
     OrderDocsList,
   },
   setup(_props, _ctx) {
-    const editableOrderId = ref(null)
-    const editableDocs = ref([])
-    const docDialog = ref(false)
     const allHeaders = ORDERS_TABLE_HEADERS
     const headers = ref([])
 
+    const {
+      editableOrderId,
+      openDocsDialog,
+      docDialog,
+      editableDocs,
+      saveDocDialog,
+      cancelDocDialog,
+    } = useOrderDocs()
+
     function updateActiveHeaders(val) {
       headers.value = val
-    }
-
-    async function openDocsDialog(orderId) {
-      if (!orderId) return null
-      editableOrderId.value = orderId
-      const order = await OrderService.getById(orderId)
-      editableDocs.value = order.docs
-      docDialog.value = true
-    }
-
-    function cancelDocDialog() {
-      editableDocs.value = []
-      editableOrderId.value = null
-      docDialog.value = false
-    }
-
-    async function saveDocDialog(val) {
-      await OrderService.setDocs(editableOrderId.value, val)
-      cancelDocDialog()
     }
 
     const {
@@ -103,11 +89,11 @@ export default {
       headers,
       statisticData,
       openDocsDialog,
-      cancelDocDialog,
-      saveDocDialog,
       docDialog,
-      editableDocs,
       editableOrderId,
+      editableDocs,
+      saveDocDialog,
+      cancelDocDialog,
     }
   },
 }

@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import dayjs from 'dayjs'
 import router from '@/router'
 import store from '@/store'
@@ -103,12 +103,16 @@ export const useListData = () => {
       store.commit('setError', e.message)
     }
   }
-
-  socket.on('order:updated', (data) => {
+  function updateItems(data) {
     if (!items.value) return null
     let order = items.value.find((item) => item._id === data._id)
     if (!order) return null
     order = Object.assign(order, data)
+  }
+
+  socket.on('order:updated', updateItems)
+  onBeforeUnmount(() => {
+    socket.off('order:updated', updateItems)
   })
 
   addEventListener('popstate', (e) => {

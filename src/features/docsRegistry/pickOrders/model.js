@@ -1,6 +1,7 @@
 import store from '@/store'
+import socket from '@/socket'
 import dayjs from 'dayjs'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
 
 const initPeriod = () => {
@@ -66,6 +67,18 @@ export const useListData = ({ client, _id }) => {
 
   addEventListener('popstate', (e) => {
     settings.value = e.state.settings
+  })
+
+  function updateItems(data) {
+    if (!items.value) return null
+    let order = items.value.find((item) => item._id === data._id)
+    if (!order) return null
+    order = Object.assign(order, data)
+  }
+
+  socket.on('order:updated', updateItems)
+  onBeforeUnmount(() => {
+    socket.off('order:updated', updateItems)
   })
 
   return {
