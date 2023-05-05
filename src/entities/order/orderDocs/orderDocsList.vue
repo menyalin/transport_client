@@ -41,7 +41,7 @@ export default {
     }
 
     watch(
-      props.docs,
+      () => props.docs,
       (docs = []) => {
         if (!docs) tmpDocs.value = []
         else tmpDocs.value = [...docs]
