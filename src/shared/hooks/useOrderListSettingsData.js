@@ -3,7 +3,10 @@ import store from '@/store'
 
 export default (settings) => {
   const orderStatuses = computed(() => store.getters.orderStatuses)
-
+  const invoiceStatusItems = [
+    { text: 'Включен', value: 'included' },
+    { text: 'Не включен', value: 'notIncluded' },
+  ]
   const docStatuses = computed(() => {
     const docStatusesWithCustomNames = [
       { value: 'accepted', text: 'Приняты' },
@@ -69,5 +72,6 @@ export default (settings) => {
     clientItems,
     addressItems,
     loadingZoneItems,
+    invoiceStatusItems,
   }
 }

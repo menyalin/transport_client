@@ -13,7 +13,6 @@ const _initPeriod = () => {
   ]
 }
 
-/** use list data function */
 export const useListData = () => {
   const minDate = computed(() =>
     PermissionService.minAllowedDate({
@@ -32,6 +31,7 @@ export const useListData = () => {
     searchNum: null,
     status: null,
     docStatus: null,
+    invoiceStatus: null,
     accountingMode: !!parseInt(localStorage.getItem('orders:accontingMode')),
     period: _initPeriod(),
     listOptions: {
@@ -75,6 +75,7 @@ export const useListData = () => {
     address: settings.value.address,
     driver: settings.value.driver,
     docStatus: settings.value.docStatus,
+    invoiceStatus: settings.value.invoiceStatus,
     tkName: settings.value.tkName,
     status: settings.value.status,
     searchNum: settings.value.searchNum,

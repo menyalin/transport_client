@@ -24,6 +24,18 @@
       :style="{ 'max-width': '220px' }"
       @change="settings.listOptions.page = 1"
     />
+    <v-select
+      v-if="accountingMode"
+      v-model="settings.invoiceStatus"
+      label="Включен в акт"
+      :items="invoiceStatusItems"
+      dense
+      hide-details
+      outlined
+      clearable
+      :style="{ 'max-width': '220px' }"
+      @change="settings.listOptions.page = 1"
+    />
 
     <v-select
       v-model="settings.docStatus"
@@ -169,6 +181,7 @@ import { computed } from 'vue'
 import store from '@/store'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
+
 export default {
   name: 'OrdersTableSettings',
   components: { AppTableColumnSetting, DateRangeInput },
@@ -195,6 +208,7 @@ export default {
       drivers,
       addressItems,
       clientItems,
+      invoiceStatusItems,
     } = useOrderListSettingsData()
 
     function putTableToClipboard() {
@@ -222,6 +236,7 @@ export default {
       clientItems,
       addressItems,
       updateHeadersHandler,
+      invoiceStatusItems,
     }
   },
 }

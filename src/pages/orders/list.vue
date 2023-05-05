@@ -35,8 +35,7 @@
 <script>
 import { ref } from 'vue'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import { OrdersTableSettings } from '@/widgets'
-import { OrdersTable, OrderDocsList, useOrderDocs } from '@/entities/order'
+import { OrdersTable, OrderDocsList, useOrderDocs, OrdersTableSettings } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 
