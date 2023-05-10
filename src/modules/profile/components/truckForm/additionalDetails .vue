@@ -111,6 +111,8 @@ export default {
   data() {
     return {
       params: {
+        diagnosticCardExpDate:null,
+        diagnosticCardNote: null,
         platonNumber: null,
         platonDate: null,
         tachographNumber: null,
