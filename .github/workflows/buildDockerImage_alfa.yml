@@ -8,9 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env: 
-        VUE_APP_API_URL: https://alfa.s4log.ru/api
-        VUE_APP_API_WS_URL: https://alfa.s4log.ru
-        VUE_APP_STATIC_URL: https://alfa.s4log.ru
+      VUE_APP_API_URL: https://alfa.s4log.ru/api
+      VUE_APP_API_WS_URL: https://alfa.s4log.ru
+      VUE_APP_STATIC_URL: https://alfa.s4log.ru
   
     steps:
     - uses: actions/checkout@v3
