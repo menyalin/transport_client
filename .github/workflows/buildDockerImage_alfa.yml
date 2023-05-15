@@ -7,8 +7,8 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+  
     steps:
-
     - uses: actions/checkout@v3
       with:
         ref: alfa
@@ -29,7 +29,6 @@ jobs:
         VUE_APP_API_WS_URL: https://alfa.s4log.ru
         VUE_APP_STATIC_URL: https://alfa.s4log.ru
       with:
-        context: .
         file: ./Dockerfile.alfa
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/alfa_front2:latest
