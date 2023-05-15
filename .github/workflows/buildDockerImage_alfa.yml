@@ -6,7 +6,11 @@ on:
     branches: [ "alfa" ]
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    env: 
+        VUE_APP_API_URL: https://alfa.s4log.ru/api
+        VUE_APP_API_WS_URL: https://alfa.s4log.ru
+        VUE_APP_STATIC_URL: https://alfa.s4log.ru
   
     steps:
     - uses: actions/checkout@v3
@@ -24,10 +28,7 @@ jobs:
     
     - name: Build and push
       uses: docker/build-push-action@v4
-      env: 
-        VUE_APP_API_URL: https://alfa.s4log.ru/api
-        VUE_APP_API_WS_URL: https://alfa.s4log.ru
-        VUE_APP_STATIC_URL: https://alfa.s4log.ru
+      
       with:
         file: ./Dockerfile.alfa
         push: true
