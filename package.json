@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build && docker build -t menyalin/front:latest . && docker image push menyalin/front:latest",
     "lint": "vue-cli-service lint",
-    "buildalfa": "vue-cli-service build --mode alfa && docker build -f ./Dockerfile.alfa -t menyalin/alfa_front:latest . && docker image push menyalin/alfa_front:latest"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0",
