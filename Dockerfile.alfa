@@ -1,5 +1,8 @@
 FROM node:lts-alpine as build
 WORKDIR /app
+ENV VUE_APP_API_URL=https://alfa.s4log.ru/api
+ENV VUE_APP_API_WS_URL=https://alfa.s4log.ru
+ENV VUE_APP_STATIC_URL=https://alfa.s4log.ru  
 COPY package*.json ./
 RUN npm install
 COPY . .

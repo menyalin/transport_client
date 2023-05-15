@@ -30,6 +30,7 @@ jobs:
       uses: docker/build-push-action@v4
       
       with:
+        context: .
         file: ./Dockerfile.alfa
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/alfa_front2:latest
