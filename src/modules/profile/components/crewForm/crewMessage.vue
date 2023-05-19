@@ -39,7 +39,7 @@
   </div>
 </template>
 <script>
-import CrewService from '@/modules/profile/services/crew.service'
+import { CrewService } from '@/shared/services'
 
 export default {
   name: 'CrewMessage',

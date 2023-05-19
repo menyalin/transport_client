@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-import AppDetailsAddress from '@/modules/profile/pages/address/details'
+import AppDetailsAddress from '@/pages/profile/address/details'
 export default {
   name: 'AddressAutocomplete',
   components: {
