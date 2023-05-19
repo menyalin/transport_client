@@ -111,7 +111,7 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 
-import CrewService from '@/modules/profile/services/crew.service.js'
+import { CrewService } from '@/shared/services'
 
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import { ButtonsPanel } from '@/shared/ui'

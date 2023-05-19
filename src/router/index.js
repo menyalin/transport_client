@@ -5,7 +5,7 @@ import store from '@/store'
 
 import authRoutes from '@/modules/auth/auth.routes'
 import adminRoutes from '@/modules/admin/admin.routes'
-import profileRoutes from '@/modules/profile/profile.routes/index.js'
+import profileRoutes from './profile/index.js'
 import orderRoutes from '@/modules/order/routes/index.js'
 import reportsRoutes from '@/modules/reports/routes/index.js'
 import accountingRoutes from '@/modules/accounting/routes/index.js'
@@ -73,19 +73,6 @@ router.beforeEach(async (to, from, next) => {
       path: '/auth/login',
       query: { redirect: to.fullPath },
     })
-  // else if (store.getters.isLoggedIn && !store.getters.user) {
-  //   store
-  //     .dispatch('getUserData')
-  //     .then(() => {
-  //       _checkPermissions(permissions, next, to, from)
-  //     })
-  //     .catch((e) => {
-  //       next({
-  //         name: 'serverNotAvailable',
-  //         query: { message: e.message },
-  //       })
-  //     })
-  //  }
   else if (store.getters.user && permissions.length)
     _checkPermissions(permissions, next, to, from)
   else next()
