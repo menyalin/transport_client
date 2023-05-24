@@ -37,6 +37,7 @@ const getInvoiceTotal = (orders) => {
     priceWOVat: moneyFormatter(result.priceWOVat),
     vat: moneyFormatter(result.vat),
     discountSum: moneyFormatter(result.discountSum),
+    rawDiscountSum: result.discountSum,
     discountSumWOVat: moneyFormatter(result.discountSumWOVat),
   }
 }
@@ -77,7 +78,7 @@ export class TemplateDataBuilder {
     this.startPeriodDate = getPeriodDate(invoice.orders, Math.min)
     this.endPeriodDate = getPeriodDate(invoice.orders, Math.max)
     this.total = getInvoiceTotal(invoice.orders)
-
+    this.hasDiscount = !!(this.total.rawDiscountSum > 0)
     this.pO = invoice.orders.map((order, idx) => ({
       ...order,
       idx: idx + 1,
