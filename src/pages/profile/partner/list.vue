@@ -66,7 +66,7 @@ export default {
       { value: 'name', text: 'Наименование' },
       { value: 'group', text: 'Группа' },
       { value: 'inn', text: 'ИНН' },
-      { value: 'isClient', text: 'Клиент' },
+      { value: 'isClient', text: 'Заказчик' },
       { value: 'created', text: 'Дата создания', sortable: true },
       { value: 'updated', text: 'Дата изменения', sortable: true },
     ],

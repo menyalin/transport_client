@@ -45,7 +45,7 @@
       label="Контакты"
       dense
     />
-    <v-checkbox v-model="form.isClient" label="Клиент" hide-details dense />
+    <v-checkbox v-model="form.isClient" label="Заказчик" hide-details dense />
     <v-checkbox v-model="form.isService" label="Сервис" dense />
 
     <places-for-transfer-docs
