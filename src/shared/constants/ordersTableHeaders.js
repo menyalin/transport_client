@@ -69,7 +69,7 @@ const allHeaders = [
     default: true,
   },
   { value: 'state.status', text: 'Статус', sortable: false, default: true },
-  { value: 'client.client', text: 'Клиент', sortable: false, default: true },
+  { value: 'client.client', text: 'Заказчик', sortable: false, default: true },
   {
     value: 'client.auctionNum',
     text: '№ Аукциона',
