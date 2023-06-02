@@ -4,7 +4,6 @@ import socket from '@/socket'
 import store from '@/store'
 import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
 
-
 const BASE_PATH = '/orders'
 
 class OrderService {
@@ -111,6 +110,11 @@ class OrderService {
     let { data } = await api.put(`${BASE_PATH}/${orderId}/setDocsState`, {
       state,
     })
+    return data
+  }
+
+  async autoFillOrderDates(params) {
+    const { data } = await api.post(`${BASE_PATH}/auto_set_route_dates`, params)
     return data
   }
 }

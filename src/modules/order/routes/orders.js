@@ -25,5 +25,14 @@ export default [
       permission: 'order:groupCreate',
     },
   },
+  {
+    path: 'fill_dates',
+    name: 'AutoFillOrderDates',
+    component: () => import('@/pages/orders/autofillDates.vue'),
+    props: true,
+    meta: {
+      permission: 'order:autoFillRouteDates',
+    },
+  },
   { path: ':id', name: 'DetailsOrder', component: DetailsOrder, props: true },
 ]

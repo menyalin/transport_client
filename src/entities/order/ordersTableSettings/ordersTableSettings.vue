@@ -166,6 +166,16 @@
       Создать группу рейсов
     </v-btn>
     <v-btn
+      v-if="$store.getters.hasPermission('order:autoFillRouteDates')"
+      color="error"
+      text
+      outlined
+      small
+      to="/orders/fill_dates"
+    >
+      Автозаполнение рейсов
+    </v-btn>
+    <v-btn
       v-if="availableAccountantMode && accountingMode"
       color="primary"
       text
