@@ -32,7 +32,8 @@
   </div>
 </template>
 <script>
-import AppDetailsZone from '@/modules/profile/pages/zone/details'
+import AppDetailsZone from '@/pages/profile/zone/details'
+
 export default {
   name: 'ZoneAutocomplete',
   components: {

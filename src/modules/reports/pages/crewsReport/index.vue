@@ -86,7 +86,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import CrewService from '@/modules/profile/services/crew.service'
+import { CrewService } from '@/shared/services'
 
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import AppDateRange from '@/modules/common/components/dateRange'

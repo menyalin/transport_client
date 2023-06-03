@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import AppDetailsPartner from '@/modules/profile/pages/partner/details'
+import AppDetailsPartner from '@/pages/profile/partner/details'
 export default {
   name: 'PartnerAutocomplete',
   components: {

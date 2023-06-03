@@ -33,6 +33,16 @@
           class="ml-4"
           @change="setField($event, 'isPltReturn')"
         />
+        <v-checkbox
+          v-if="tmpPoint.isAutofilled"
+          v-model="tmpPoint.isAutofilled"
+          label="Автозаполнение"
+          hide-details
+          dense
+          disabled
+          color="grey"
+          class="ml-4"
+        />
       </div>
 
       <app-address-autocomplete
@@ -207,6 +217,7 @@ export default {
         address: null,
         isReturn: false,
         isPltReturn: false,
+        isAutofilled: false,
         plannedDate: null,
         arrivalDate: null,
         departureDate: null,
@@ -274,9 +285,10 @@ export default {
     setField(val, field) {
       const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate']
       this.tmpPoint[field] = val
-      if (DATE_FIELDS.includes(field)) {
-        this.tmpPoint[field + 'Doc'] = val
-      }
+      if (DATE_FIELDS.includes(field)) this.tmpPoint[field + 'Doc'] = val
+      if (['arrivalDate', 'departureDate'].includes(field))
+        this.tmpPoint.isAutofilled = false
+
       this.$emit('changePoint', { ...this.tmpPoint })
     },
   },

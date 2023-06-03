@@ -179,7 +179,7 @@
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import CrewService from '@/modules/profile/services/crew.service'
+import { CrewService } from '@/shared/services'
 import AppCrewMessage from './crewMessage.vue'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
