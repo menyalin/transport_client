@@ -42,7 +42,11 @@
       :items="truckItems"
       v-model="settings.truckIds"
       :style="{ maxWidth: '600px' }"
+      hide-details
     />
+    <v-btn small class="ma-2" color="primary" @click="selectAllTrucks">
+      Выбрать все
+    </v-btn>
     <v-alert
       v-for="(message, idx) in messages"
       :key="idx"
@@ -74,6 +78,7 @@ export default {
       disabledSubmit,
       autoFillDatesHandler,
       messages,
+      selectAllTrucks,
     } = useFeatureModel()
 
     return {
@@ -84,6 +89,7 @@ export default {
       disabledSubmit,
       autoFillDatesHandler,
       messages,
+      selectAllTrucks,
     }
   },
 }

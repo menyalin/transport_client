@@ -21,6 +21,10 @@ export function useFeatureModel() {
       .sort((a, b) => a.text - b.text)
   })
 
+  function selectAllTrucks() {
+    settings.value.truckIds = truckItems.value.map((i) => i.value)
+  }
+
   const operationToken = uuidv4()
   const loading = ref(false)
   const messages = ref([])
@@ -42,11 +46,10 @@ export function useFeatureModel() {
       type: 'info',
       content: 'Запрос на автозаполнение отправлен',
     })
-    const data = await OrderService.autoFillOrderDates({
+    await OrderService.autoFillOrderDates({
       ...settings.value,
       operationToken,
     })
-    console.log('data: ', data)
   }
 
   const disabledSubmit = computed(() => {
@@ -112,5 +115,6 @@ export function useFeatureModel() {
     autoFillDatesHandler,
     disabledSubmit,
     messages,
+    selectAllTrucks,
   }
 }
