@@ -53,8 +53,8 @@
   </v-dialog>
 </template>
 <script>
-import tariffService from '@/modules/profile/services/tariff.service'
-import { OrderService } from '@/shared/services'
+
+import { OrderService, TariffService } from '@/shared/services'
 import appFinalPriceTable from './finalPriceTable.vue'
 
 import DTO from '../priceBlock/Price.class'
@@ -131,7 +131,7 @@ export default {
         )
         return null
       }
-      const data = await tariffService.getOrderPrePrices(
+      const data = await TariffService.getOrderPrePrices(
         DTO.prepareOrderForPrePriceQuery({
           ...this.order,
           orderId: this.order._id,

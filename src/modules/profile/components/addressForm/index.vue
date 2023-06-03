@@ -10,12 +10,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение адреса не возможно
-    </v-alert>
-    <div v-else class="ma-3 text-caption">
-      Профиль настроек: {{ directoriesProfileName }}
-    </div>
+    
     <app-address-suggestion class="mt-3" @change="getParsedAddress" />
 
     <v-text-field
@@ -118,7 +113,7 @@ import { ButtonsPanel } from '@/shared/ui'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
 import AppSimilarAddresses from './similarAddresses.vue'
-import addressService from '../../services/address.service'
+import { AddressService } from '@/shared/services'
 
 const validCoordinates = (val) => {
   if (!val) return true
@@ -243,7 +238,7 @@ export default {
 
   methods: {
     async searchSimilarAddresses() {
-      this.similarAddresses = await addressService.search({
+      this.similarAddresses = await AddressService.search({
         search: this.form.name,
         profile: this.directoriesProfile,
       })

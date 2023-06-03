@@ -206,8 +206,7 @@
   </v-container>
 </template>
 <script>
-import { OrderService, AgreementService } from '@/shared/services'
-import OrderTemplateService from '@/modules/profile/services/orderTemplate.service'
+import { OrderService, AgreementService, OrderTemplateService } from '@/shared/services'
 import { DocsRegistryLink } from '@/entities/order'
 
 import { ButtonsPanel } from '@/shared/ui'

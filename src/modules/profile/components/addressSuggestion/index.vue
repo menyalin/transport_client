@@ -17,7 +17,7 @@
   />
 </template>
 <script>
-import AddressService from '../../services/address.service'
+import { AddressService } from '@/shared/services'
 
 export default {
   name: 'AddressAutocomplete',

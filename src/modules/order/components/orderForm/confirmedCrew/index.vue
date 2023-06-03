@@ -54,9 +54,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import AppBlockTitle from '../blockTitle.vue'
-import CrewService from '@/modules/profile/services/crew.service'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
-import { AgreementService } from '@/shared/services'
+import { AgreementService, CrewService } from '@/shared/services'
 
 export default {
   name: 'ConfirmedCrew',

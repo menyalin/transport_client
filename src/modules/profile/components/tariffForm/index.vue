@@ -140,9 +140,9 @@ import AppDirectDistanceZones from './directDistanceZones.vue'
 import AppWaiting from './waiting.vue'
 import AppZones from './zones.vue'
 import AppReturn from './return.vue'
-import TariffService from '../../services/tariff.service.js'
+
 import { TariffDTO } from './tariff.dto'
-import { AgreementService } from '@/shared/services'
+import { AgreementService, TariffService } from '@/shared/services'
 
 export default {
   name: 'TariffForm',

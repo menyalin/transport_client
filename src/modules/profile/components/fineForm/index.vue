@@ -198,7 +198,7 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
-import crewService from '../../services/crew.service'
+import {CrewService} from '@/shared/services'
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
@@ -354,7 +354,7 @@ export default {
   methods: {
     async getDriver() {
       if (!this.form.truck || !this.form.violationDate) return null
-      const crew = await crewService.getCrewByTruckAndDate({
+      const crew = await CrewService.getCrewByTruckAndDate({
         truck: this.form.truck,
         date: new Date(this.form.violationDate).toISOString(),
       })

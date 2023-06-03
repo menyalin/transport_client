@@ -6,7 +6,7 @@
     <div class="client-block">
       <app-partner-autocomplete
         v-model="params.client"
-        label="Клиент"
+        label="Заказчик"
         outlined
         :loading="loading"
         :messages="agreement ? [agreement.name] : ['Соглашение отсутствует']"
@@ -32,9 +32,9 @@
   </div>
 </template>
 <script>
+import { AgreementService } from '@/shared/services'
 import AppBlockTitle from './blockTitle.vue'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
-import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'ClientBlock',
