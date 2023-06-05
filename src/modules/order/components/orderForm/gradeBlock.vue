@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="grade-block">
       <v-rating
@@ -29,12 +29,12 @@
   </div>
 </template>
 <script>
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 
 export default {
   name: 'GradeBlock',
   components: {
-    AppBlockTitle,
+    BlockTitle,
   },
   model: {
     prop: 'item',

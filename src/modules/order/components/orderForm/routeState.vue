@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="state-block">
       <div>
@@ -53,11 +53,11 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 export default {
   name: 'RouteState',
   components: {
-    AppBlockTitle,
+    BlockTitle,
   },
   model: {
     prop: 'routeState',

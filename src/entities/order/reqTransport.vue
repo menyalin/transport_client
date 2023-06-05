@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <!-- <BlockTitle>{{ title }}</BlockTitle> -->
     </div>
     <div class="req-transport-block">
       <v-select
@@ -39,12 +39,12 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppBlockTitle from '@/modules/order/components/orderForm/blockTitle.vue'
+import BlockTitle from './blockTitle/blockTitle.vue'
 
 export default {
   name: 'ReqTransport',
   components: {
-    AppBlockTitle,
+    BlockTitle,
   },
   model: {
     prop: 'reqTransport',

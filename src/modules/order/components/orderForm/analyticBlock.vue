@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="analytic-block-wrapper">
       <v-select
@@ -37,13 +37,13 @@
   </div>
 </template>
 <script>
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 import { OrderService } from '@/shared/services'
 
 export default {
   name: 'AnalyticBlock',
   components: {
-    AppBlockTitle,
+    BlockTitle,
   },
   model: {
     prop: 'item',

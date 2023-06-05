@@ -1,7 +1,7 @@
 <template>
   <div class="ma-2">
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="cargo-params-block py-2">
       <v-text-field
@@ -45,11 +45,11 @@
   </div>
 </template>
 <script>
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 export default {
   name: 'CargoParams',
   components: {
-    AppBlockTitle,
+    BlockTitle,
   },
   model: {
     prop: 'cargoParams',
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     change(val, field) {
-      this.params[field] = val
+      this.params = { ...this.cargoParams, [field]: val }
       this.$emit('change', this.params)
     },
   },
