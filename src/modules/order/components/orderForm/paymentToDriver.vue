@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title-row">
-      <app-block-title>Доплата водителю</app-block-title>
+      <BlockTitle>Доплата водителю</BlockTitle>
       <v-btn
         v-if="!showDataRow && hasWritePermission"
         small
@@ -61,7 +61,7 @@
   </div>
 </template>
 <script>
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
 import { reactive, ref, computed } from 'vue'
 import store from '@/store'
@@ -69,7 +69,7 @@ import store from '@/store'
 export default {
   name: 'PaymentToDriver',
   components: {
-    AppBlockTitle,
+    BlockTitle,
     AppWorkerAutocomplete,
   },
   model: {

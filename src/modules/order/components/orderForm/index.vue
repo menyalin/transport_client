@@ -87,13 +87,13 @@
             :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
             :routeDate="routeDate"
           />
-          <app-cargo-params
+          <CargoParams
             v-model="cargoParams"
             title="Параметры груза"
             class="cargo-params"
           />
 
-          <app-req-transport
+          <ReqTransport
             v-model="reqTransport"
             title="Требования к транспорту"
             class="req-transport"
@@ -206,13 +206,16 @@
   </v-container>
 </template>
 <script>
-import { OrderService, AgreementService, OrderTemplateService } from '@/shared/services'
+import {
+  OrderService,
+  AgreementService,
+  OrderTemplateService,
+} from '@/shared/services'
 import { DocsRegistryLink } from '@/entities/order'
 
 import { ButtonsPanel } from '@/shared/ui'
-import AppCargoParams from './cargoParams.vue'
 import AppRoutePoints from './routePoints.vue'
-import AppReqTransport from './reqTransport.vue'
+
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppClientBlock from './clientBlock.vue'
@@ -226,6 +229,8 @@ import {
   OrderDocsListForm,
   OrderPaymentParts,
   PaymentInvoiceLinks,
+  ReqTransport,
+  CargoParams,
 } from '@/entities/order'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
 import AppPaymentToDriver from './paymentToDriver.vue'
@@ -235,8 +240,8 @@ export default {
   components: {
     PaymentInvoiceLinks,
     ButtonsPanel,
-    AppReqTransport,
-    AppCargoParams,
+    ReqTransport,
+    CargoParams,
     AppRoutePoints,
     AppRouteState,
     AppConfirmedCrew,

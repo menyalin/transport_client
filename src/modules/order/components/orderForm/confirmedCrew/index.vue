@@ -2,7 +2,7 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
@@ -53,14 +53,14 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppBlockTitle from '../blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
 import { AgreementService, CrewService } from '@/shared/services'
 
 export default {
   name: 'ConfirmedCrew',
   components: {
-    AppBlockTitle,
+    BlockTitle,
   },
   model: {
     prop: 'crew',

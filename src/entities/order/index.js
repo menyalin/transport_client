@@ -8,6 +8,9 @@ import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 import OrderPaymentParts from './paymentParts/orderPaymentParts.vue'
 import PaymentInvoiceLinks from './paymentInvoiceLinks.vue'
 import OrdersTableSettings from './ordersTableSettings/ordersTableSettings.vue'
+import ReqTransport from './reqTransport.vue'
+import BlockTitle from './blockTitle/blockTitle.vue'
+import CargoParams from './cargoParams.vue'
 
 export {
   OrdersTable,
@@ -18,4 +21,7 @@ export {
   PaymentInvoiceLinks,
   OrderDocsList,
   OrdersTableSettings,
+  ReqTransport,
+  BlockTitle,
+  CargoParams,
 }

@@ -8,9 +8,6 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
     <div class="body-wrapper">
       <v-text-field
         v-model.trim="$v.form.name.$model"
@@ -41,11 +38,8 @@
         />
       </div>
 
-      <app-req-transport
-        v-model="reqTransport"
-        title="Требования к транспорту"
-      />
-      <app-cargo-params v-model="cargoParams" title="Параметры груза" />
+      <ReqTransport v-model="reqTransport" title="Требования к транспорту" />
+      <CargoParams v-model="cargoParams" title="Параметры груза" />
       <v-checkbox
         v-model="form.fixedTimeSlots"
         hide-details
@@ -72,17 +66,16 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import { ButtonsPanel } from '@/shared/ui'
-import AppReqTransport from '@/modules/order/components/orderForm/reqTransport'
 import AppRoutePoints from '@/modules/order/components/orderForm/routePoints'
-import AppCargoParams from '@/modules/order/components/orderForm/cargoParams'
+import { ReqTransport, CargoParams } from '@/entities/order'
 export default {
   name: 'OrderTemplateForm',
   components: {
     ButtonsPanel,
     AppPartnerAutocomplete,
     AppRoutePoints,
-    AppReqTransport,
-    AppCargoParams,
+    ReqTransport,
+    CargoParams,
   },
   props: {
     orderTemplate: {

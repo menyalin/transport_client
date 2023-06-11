@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper" :class="{ invalid: !isValid }">
     <div id="button-panel">
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
       <v-btn
         small
         text
@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import AppBlockTitle from '../blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 import AppCostsTable from './costsTable.vue'
 import AppDialogForm from './dialogForm.vue'
 import Price from './Price.class'
@@ -38,7 +38,7 @@ import Price from './Price.class'
 export default {
   name: 'PriceWrapper',
   components: {
-    AppBlockTitle,
+    BlockTitle,
     AppCostsTable,
     AppDialogForm,
   },

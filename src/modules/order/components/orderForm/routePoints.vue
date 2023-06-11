@@ -1,6 +1,6 @@
 <template>
   <div class="route-wrapper" :class="{ invalid: !isValid }">
-    <app-block-title>{{ title }}</app-block-title>
+    <BlockTitle>{{ title }}</BlockTitle>
     <draggable v-model="xPoints" :disabled="!dragEnabled">
       <div
         v-for="(point, ind) of tmpPoints"
@@ -54,14 +54,14 @@
 <script>
 import draggable from 'vuedraggable'
 import AppPointDetail from './pointDetail'
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 import putRouteForDriverToClipboard from './_putRouteForDriverToClipboard'
 
 export default {
   name: 'RoutePoints',
   components: {
     AppPointDetail,
-    AppBlockTitle,
+    BlockTitle,
     draggable,
   },
   model: {

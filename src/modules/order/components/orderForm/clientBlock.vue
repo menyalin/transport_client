@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="client-block">
       <app-partner-autocomplete
@@ -33,13 +33,13 @@
 </template>
 <script>
 import { AgreementService } from '@/shared/services'
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle } from '@/entities/order'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
 export default {
   name: 'ClientBlock',
   components: {
-    AppBlockTitle,
+    BlockTitle,
     AppPartnerAutocomplete,
   },
   model: {
