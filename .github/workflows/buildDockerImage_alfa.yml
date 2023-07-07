@@ -1,7 +1,7 @@
 name: Docker Image CI (ALFA)
 on:
-  push:
-    branches: ['alfa']
+  # push:
+  #   branches: ['alfa']
   pull_request:
     branches: ['alfa']
 env:
@@ -35,6 +35,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
+    needs: build
     steps:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v0.1.10
