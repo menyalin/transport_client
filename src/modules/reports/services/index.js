@@ -1,5 +1,8 @@
 import store from '@/store'
 import api from '@/api'
+import FileSaver from 'file-saver'
+import dayjs from 'dayjs'
+
 const BASE_PATH = '/reports'
 
 class ReportService {
@@ -32,12 +35,24 @@ class ReportService {
     }
   }
 
-  async driversGradesGetLink(body) {
+  async getDriversGradesReportFile(dateRange) {
     try {
-      const { data } = await api.post(BASE_PATH + '/drivers_grades', {
-        ...body,
+      const { data } = await api({
+        url: BASE_PATH + '/drivers_grades',
+        method: 'POST',
+        responseType: 'blob',
+        data: {
+          dateRange: dateRange,
+          company: store.getters.directoriesProfile,
+        },
       })
-      return data
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      })
+      const filename =
+        dayjs().format('YYYY_MM_DD hh.mm.ss') + '_driversGrades.xlsx'
+      FileSaver.saveAs(blob, filename)
+      return data || null
     } catch (e) {
       store.commit('setError', e.message)
       return null
