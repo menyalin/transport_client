@@ -41,7 +41,7 @@ export const useListData = () => {
   }
 
   const loading = ref(false)
-  const settings = ref(historyState.settings || initialState)
+  const settings = ref(historyState?.settings || initialState)
   const items = ref([])
   const statisticData = ref({
     count: 0,

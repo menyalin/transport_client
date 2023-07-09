@@ -26,6 +26,14 @@ const getPriceFields = () => {
   )
 }
 
+const getDeliveryPlannedDate = (order) => {
+  const points = order.route.filter(
+    (i) => i.type === 'unloading' && i.plannedDate
+  )
+  if (points.length === 0) return ''
+  else return new Date(points[0].plannedDate).toLocaleString()
+}
+
 const getPrices = (item) => {
   const { agreement } = item
   const fields = getPriceFields()
@@ -90,7 +98,7 @@ const headers = [
   { val: 'plannedDate', text: 'Дата' },
   { val: 'plannedTime', text: 'Время' },
   { val: 'clientName', text: 'Клиент' },
-  { val: null, text: 'Счет' },
+  { val: 'deliveryPlannedDate', text: 'Дата доставки (План)' },
   { val: null, text: 'Дата счета' },
   { val: 'regNum', text: 'Номер ТС' },
   { val: 'truckKind', text: 'Тип ТС' },
@@ -137,6 +145,7 @@ export default (items) => {
       ? new Date(unloadPoints[unloadPoints.length - 1].departureDate)
       : null
     return {
+      deliveryPlannedDate: getDeliveryPlannedDate(row),
       plannedDate: new Date(row.route[0].plannedDate).toLocaleDateString(),
       plannedTime: new Date(row.route[0].plannedDate).toLocaleTimeString(),
       orderType: store.getters.orderAnalyticTypesMap.get(row.analytics.type),
