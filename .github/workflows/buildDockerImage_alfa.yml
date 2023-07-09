@@ -3,6 +3,8 @@ on:
   # push:
   #   branches: ['alfa']
   pull_request:
+    types:
+      - closed
     branches: ['alfa']
 env:
   VUE_APP_API_URL: https://alfa.s4log.ru/api
@@ -10,6 +12,7 @@ env:
   VUE_APP_STATIC_URL: https://alfa.s4log.ru
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
