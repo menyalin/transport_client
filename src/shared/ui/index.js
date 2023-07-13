@@ -6,6 +6,7 @@ import FormWrapper from './entityFormWrapper/formWrapper.vue'
 import ButtonsPanel from './buttonsPanel.vue'
 import DateRangeInput from './dateRangeInput.vue'
 import DownloadDocTemplateMenu from './downloadDocTemplateMenu.vue'
+import BorderedBlock from './borderedBlock.vue'
 
 export {
   AppTableColumnSetting,
@@ -16,4 +17,5 @@ export {
   EntityListWrapper,
   DateRangeInput,
   DownloadDocTemplateMenu,
+  BorderedBlock,
 }
