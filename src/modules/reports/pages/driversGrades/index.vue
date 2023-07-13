@@ -4,29 +4,24 @@
       <h4>Оценки водителей</h4>
     </div>
     <div id="settings">
-      <date-range-input v-model="state.dateRange" />
-      <v-btn small color="primary" @click="getLink">
+      <date-range-input v-model="dateRange" />
+      <v-btn small color="primary" @click="getReportHandler">
         <v-icon left> mdi-download </v-icon> Скачать отчет
       </v-btn>
     </div>
     <div id="report-body">
-      <div id="link-wrapper">
-        <v-progress-linear
-          v-if="state.loading"
-          indeterminate
-          color="primary"
-          striped
-          rounded
-        />
-        <a v-show="false" ref="linkEl" :href="staticUrl + state.link" download>
-          Скачать отчет
-        </a>
-      </div>
+      <v-progress-linear
+        v-if="loading"
+        indeterminate
+        color="primary"
+        striped
+        rounded
+      />
     </div>
   </div>
 </template>
 <script>
-import { reactive, ref, computed, nextTick } from 'vue'
+import { ref } from 'vue'
 import { DateRangeInput } from '@/shared/ui'
 import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
@@ -39,37 +34,23 @@ export default {
   },
   props: {},
   setup() {
-    const linkEl = ref(null)
-    const state = reactive({
-      dateRange: initDateRange(),
-      link: null,
-      loading: false,
-    })
+    const loading = ref(false)
+    const dateRange = ref(initDateRange())
 
-    const staticUrl = computed(() => {
-      return process.env.VUE_APP_STATIC_URL + '/'
-    })
-
-    async function getLink() {
+    async function getReportHandler() {
       try {
-        state.loading = true
-        state.link = await ReportService.driversGradesGetLink({
-          dateRange: state.dateRange,
-          company: store.getters.directoriesProfile,
-        })
-        state.loading = false
-        nextTick(() => {
-          if (linkEl.value && state.link) linkEl.value.click()
-        })
+        loading.value = true
+        await ReportService.getDriversGradesReportFile(dateRange.value)
+        loading.value = false
       } catch (e) {
+        loading.value = false
         store.commit('setError', e.message)
       }
     }
     return {
-      linkEl,
-      state,
-      staticUrl,
-      getLink,
+      dateRange,
+      loading,
+      getReportHandler,
     }
   },
 }
@@ -96,12 +77,5 @@ export default {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-}
-#link-wrapper {
-  display: flex;
-  margin-top: 50px;
-  flex-direction: column;
-  min-height: 50px;
-  width: 800px;
 }
 </style>
