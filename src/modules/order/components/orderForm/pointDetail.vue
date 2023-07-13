@@ -13,6 +13,15 @@
           @change="setField($event, 'type')"
         />
         <v-checkbox
+          v-model="tmpPoint.useInterval"
+          label="Указать временнное окно"
+          hide-details
+          dense
+          color="primary"
+          class="ml-4"
+          @change="setField($event, 'useInterval')"
+        />
+        <v-checkbox
           v-if="tmpPoint.isReturn || showReturnBtn"
           v-model="tmpPoint.isReturn"
           label="Возврат"
@@ -69,12 +78,38 @@
       />
     </div>
     <div v-if="!isTemplate" class="dates-column">
+      <BorderedBlock title="Временное окно" v-if="tmpPoint.useInterval">
+        <app-date-time-input
+          :value="tmpPoint.plannedDate"
+          type="datetime-local"
+          label="Начало периода"
+          dense
+          outlined
+          class="mt-1"
+          hide-details
+          :readonly="readonly"
+          @change="setField($event, 'plannedDate')"
+        />
+        <app-date-time-input
+          :value="tmpPoint.intervalEndDate"
+          type="datetime-local"
+          label="Конец периода"
+          dense
+          outlined
+          hide-details
+          :readonly="readonly"
+          class="mt-2"
+          @change="setField($event, 'intervalEndDate')"
+        />
+      </BorderedBlock>
       <app-date-time-input
+        v-else
         :value="tmpPoint.plannedDate"
         type="datetime-local"
         label="Плановая дата"
         dense
         outlined
+        class="mt-1"
         hide-details
         :readonly="readonly"
         @change="setField($event, 'plannedDate')"
@@ -107,14 +142,40 @@
       />
     </div>
     <div v-if="!isTemplate && isShowDocDates" class="dates-column">
+      <BorderedBlock title="Временное окно (Док)" v-if="tmpPoint.useInterval">
+        <app-date-time-input
+          :value="tmpPoint.plannedDateDoc"
+          type="datetime-local"
+          label="Начало периода"
+          dense
+          outlined
+          class="mt-1"
+          hide-details
+          :readonly="readonly"
+          @change="setField($event, 'plannedDateDoc')"
+        />
+        <app-date-time-input
+          :value="tmpPoint.intervalEndDateDoc"
+          type="datetime-local"
+          label="Конец периода"
+          dense
+          outlined
+          hide-details
+          :readonly="readonly"
+          class="mt-2"
+          @change="setField($event, 'intervalEndDateDoc')"
+        />
+      </BorderedBlock>
       <app-date-time-input
+        v-else
         :value="tmpPoint.plannedDateDoc"
         type="datetime-local"
         label="Плановая дата (док)"
         dense
         outlined
+        class="mt-1"
         hide-details
-        :readonly="readonlyDocDates"
+        :readonly="readonly"
         @change="setField($event, 'plannedDateDoc')"
       />
       <app-date-time-input
@@ -178,12 +239,14 @@ import { mapGetters } from 'vuex'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput2'
+import { BorderedBlock } from '@/shared/ui'
 
 export default {
   name: 'PointDetail',
   components: {
     AppAddressAutocomplete,
     AppDateTimeInput,
+    BorderedBlock,
   },
   props: {
     point: {
@@ -218,7 +281,10 @@ export default {
         isReturn: false,
         isPltReturn: false,
         isAutofilled: false,
+        useInterval: false,
         plannedDate: null,
+        intervalEndDate: null,
+        intervalEndDateDoc: null,
         arrivalDate: null,
         departureDate: null,
         plannedDateDoc: null,
@@ -283,7 +349,12 @@ export default {
     },
 
     setField(val, field) {
-      const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate']
+      const DATE_FIELDS = [
+        'plannedDate',
+        'arrivalDate',
+        'departureDate',
+        'intervalEndDate',
+      ]
       this.tmpPoint[field] = val
       if (DATE_FIELDS.includes(field)) this.tmpPoint[field + 'Doc'] = val
       if (['arrivalDate', 'departureDate'].includes(field))

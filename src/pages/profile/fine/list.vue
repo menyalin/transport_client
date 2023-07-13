@@ -76,9 +76,7 @@
           :items="preparedList"
           :loading="loading"
           :singleSelect="false"
-          height="70vh"
           dense
-          fixed-header
           :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
