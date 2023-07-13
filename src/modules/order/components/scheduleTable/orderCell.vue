@@ -130,7 +130,10 @@ export default {
       )
         return -1
       const idx = this.order.route.findIndex(
-        (p) => new Date(p.plannedDate) < new Date() && !p.arrivalDate
+        (p) =>
+          !!p.plannedDate &&
+          new Date(p.plannedDate) < new Date() &&
+          !p.arrivalDate
       )
       return idx
     },
