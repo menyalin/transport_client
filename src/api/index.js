@@ -24,7 +24,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
     if (
-      error.response.status == 401 &&
+      error?.response?.status == 401 &&
       error.config &&
       !error.config._isRetry
     ) {
@@ -39,11 +39,11 @@ api.interceptors.response.use(
         return api.request(originalRequest)
       } catch (e) {
         console.log('error in refresh request')
-        console.dir(e.response)
+        console.dir(e?.response)
         localStorage.removeItem('token')
         router.push('/')
       }
-    } else if (error.response.status == 401 && error.config._isRetry) {
+    } else if (error?.response?.status == 401 && error.config._isRetry) {
       console.log('api auth error')
       store.dispatch('logOut')
       localStorage.removeItem('token')
