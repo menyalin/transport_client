@@ -211,7 +211,6 @@ import {
   AgreementService,
   OrderTemplateService,
 } from '@/shared/services'
-import { DocsRegistryLink } from '@/entities/order'
 
 import { ButtonsPanel } from '@/shared/ui'
 import AppRoutePoints from './routePoints.vue'
@@ -223,14 +222,17 @@ import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
+// TODO: Перенсти в OrderModel
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 import {
-  useOrderDocs,
+  DocsRegistryLink,
   OrderDocsListForm,
   OrderPaymentParts,
   PaymentInvoiceLinks,
   ReqTransport,
   CargoParams,
+  OrderModel,
+  useOrderDocs,
 } from '@/entities/order'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
 import AppPaymentToDriver from './paymentToDriver.vue'
@@ -524,15 +526,7 @@ export default {
       )
       const plannedDate = this.route[0]?.plannedDate
       this.analytics = { ...template.analytics }
-      this.route = template.route.map((item) => {
-        return {
-          type: item.type,
-          isReturn: item.isReturn,
-          address: item.address,
-          note: item.note,
-        }
-      })
-      this.route[0].plannedDate = plannedDate
+      this.route = OrderModel.fillRouteFromTemplate(template, plannedDate)
       this.cargoParams = Object.assign(
         {},
         this.cargoParams,
