@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3 point-wrapper">
+  <div class="pa-2 point-wrapper">
     <div class="main-column-wrapper">
       <div class="row">
         <v-select
@@ -199,23 +199,37 @@
         @change="setField($event, 'departureDateDoc')"
       />
     </div>
-    <div v-if="isTemplate && fixedTimeSlots" id="fixedTime">
-      <v-text-field
-        :value="tmpPoint.fixedTime"
-        label="Время"
-        tag="div"
-        type="time"
-        dense
-        hide-details
-        outlined
-        :style="{ 'max-width': '100px' }"
-        @change="setField($event, 'fixedTime')"
-      />
+    <div v-if="isTemplate && fixedTimeSlots" id="fixedTimeBlock">
+      <div class="time-row">
+        <v-text-field
+          :value="tmpPoint.fixedTime"
+          label="Время"
+          tag="div"
+          type="time"
+          dense
+          hide-details
+          outlined
+          :style="{ 'max-width': '100px' }"
+          @change="setField($event, 'fixedTime')"
+        />
+        <v-text-field
+          v-if="tmpPoint.useInterval"
+          :value="tmpPoint.hoursInterval"
+          label="Окно, часов"
+          type="number"
+          dense
+          min="0"
+          hide-details
+          outlined
+          :style="{ 'max-width': '130px' }"
+          @change="setField($event, 'hoursInterval')"
+        />
+      </div>
 
       <v-text-field
         v-if="ind !== 0"
         v-model.number="tmpPoint.offsetDays"
-        :style="{ 'max-width': '180px' }"
+        :style="{ 'max-width': '240px' }"
         label="Смещение в днях"
         persistent-hint
         hint="Смещение в днях относительно даты начала рейса"
@@ -368,9 +382,9 @@ export default {
 <style scoped>
 .point-wrapper {
   display: flex;
-  gap: 20px;
   flex-direction: row;
   flex-wrap: nowrap;
+  gap: 10px;
 }
 .point-wrapper > div > * {
   margin: 5px;
@@ -379,13 +393,23 @@ export default {
   flex-grow: 1;
 }
 .dates-column {
-  flex-basis: 270px;
+  flex-basis: 220px;
 }
 .remove-btn-wrapper {
-  min-width: 30px;
+  min-width: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+#fixedTimeBlock {
+  border: 1px solid;
+  min-width: 250px;
+}
+.time-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
 }
 </style>
