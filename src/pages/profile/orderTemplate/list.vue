@@ -1,47 +1,47 @@
 <template>
-    <entity-list-wrapper>
-      <buttons-panel
-          panel-type="list"
-          :disabledSubmit="!$store.getters.hasPermission('orderTemplate:write')"
-          @submit="create"
-          @refresh="refresh"
-        />
-        <div class="filter-wrapper">
-          <v-text-field
-            v-model="settings.search"
-            label="Поиск"
-            outlined
-            dense
-            hide-details
-          />
-        </div>
-        <v-data-table
-          :headers="headers"
-          :items="items"
-          :loading="loading"
-          height="73vh"
-          dense
-          :search="settings.search"
-          fixed-header
-          :footer-props="{
-            'items-per-page-options': [50, 100, -1],
-          }"
-          :options.sync="settings.listOptions"
-          @dblclick:row="dblClickRow"
-        />
-      </entity-list-wrapper>
+  <entity-list-wrapper>
+    <buttons-panel
+      panel-type="list"
+      :disabledSubmit="!$store.getters.hasPermission('orderTemplate:write')"
+      @submit="create"
+      @refresh="refresh"
+    />
+    <div class="filter-wrapper">
+      <v-text-field
+        v-model="settings.search"
+        label="Поиск"
+        outlined
+        dense
+        hide-details
+      />
+    </div>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :loading="loading"
+      height="73vh"
+      dense
+      :search="settings.search"
+      fixed-header
+      :footer-props="{
+        'items-per-page-options': [50, 100, -1],
+      }"
+      :options.sync="settings.listOptions"
+      @dblclick:row="dblClickRow"
+    />
+  </entity-list-wrapper>
 </template>
 <script>
 import { ButtonsPanel } from '@/shared/ui'
 import { EntityListWrapper } from '@/shared/ui/index'
 import { useListData } from './model'
-// TODO: Вынести логику в useListData
+
 export default {
   name: 'OrderTemplateList',
   components: {
     ButtonsPanel,
-    EntityListWrapper
-},
+    EntityListWrapper,
+  },
   data: () => ({
     formName: 'OrderTemplateList',
     loading: false,
@@ -52,13 +52,12 @@ export default {
         itemsPerPage: 50,
       },
     },
-
-    headers: [{ value: 'name', text: 'Название' }],
   }),
   setup() {
-    const { items } = useListData()
+    const { items, headers } = useListData()
     return {
-      items
+      items,
+      headers,
     }
   },
 
