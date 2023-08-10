@@ -99,15 +99,15 @@
 </template>
 <script>
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-import AppSalaryTariffForm from '../../components/salaryTariffForm/index.vue'
-import salaryTariffService from '../../services/salaryTariff.service'
+import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
+import { SalaryTariffService } from '@/shared/services'
 import { mapGetters } from 'vuex'
 import { useListColumnSetting } from '@/shared/hooks'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
-import AppWaitingCell from '../../components/salaryTariffGroupList/waiting.vue'
-import AppReturnCell from '../../components/salaryTariffGroupList/return.vue'
+import AppWaitingCell from '@/modules/accounting/components/salaryTariffGroupList/waiting.vue'
+import AppReturnCell from '@/modules/accounting/components/salaryTariffGroupList/return.vue'
 import { ButtonsPanel } from '@/shared/ui'
 
 export default {
@@ -242,7 +242,7 @@ export default {
       }
       try {
         this.loading = true
-        const data = await salaryTariffService.getList({
+        const data = await SalaryTariffService.getList({
           company: this.directoriesProfile,
           date: this.settings.date,
           type: this.settings.type,
@@ -286,7 +286,7 @@ export default {
     async updateItem(item) {
       try {
         this.loading = true
-        const updatedItem = await salaryTariffService.updateOne({
+        const updatedItem = await SalaryTariffService.updateOne({
           _id: item._id,
           body: item,
         })

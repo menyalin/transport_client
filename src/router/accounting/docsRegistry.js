@@ -12,7 +12,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'DocsRegistryCreate',
-    component: () => import('../../../pages/accounting/docsRegistry/details.vue'),
+    component: () => import('@/pages/accounting/docsRegistry/details.vue'),
     props: true,
     meta: {
       permission: 'docsRegistry:write',
@@ -21,7 +21,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'DocsRegistryDetail',
-    component: () => import('../../../pages/accounting/docsRegistry/details.vue'),
+    component: () => import('@/pages/accounting/docsRegistry/details.vue'),
     props: true,
     meta: {
       permission: 'docsRegistry:readItem',

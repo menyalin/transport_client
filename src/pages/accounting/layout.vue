@@ -45,6 +45,13 @@ export default {
         onlyWithDirectoriesProfile: true,
       },
       {
+        text: 'Тарифы клиентов',
+        icon: 'mdi-cash-multiple',
+        link: '/accounting/tariffs',
+        onlyWithDirectoriesProfile: true,
+        permission: 'tariff:readList',
+      },
+      {
         text: 'Зарплатные тарифы',
         icon: 'mdi-cash ',
         link: '/accounting/salaryTariffs',

@@ -1,20 +1,21 @@
-import Layout from '../pages/layout'
+import Layout from '@/pages/accounting/layout'
 import sararyTariffsRoutes from './salaryTariff.js'
-import docsRegistryRouters from './docsRegistry.js'
+import docsRegistryRoutes from './docsRegistry.js'
 import paymentInvoicesRoutes from '@/pages/accounting/paymentInvoice/routes'
+import tariffRoutes from './tariff'
 export default [
   {
     path: '/accounting',
     component: Layout,
     children: [
       ...sararyTariffsRoutes,
-      ...docsRegistryRouters,
+      ...docsRegistryRoutes,
       ...paymentInvoicesRoutes,
+      ...tariffRoutes,
       {
         path: 'driversSalary',
         name: 'DriversSalary',
-        component: () =>
-          import('@/modules/accounting/pages/salaryByPeriod/index.vue'),
+        component: () => import('@/pages/accounting/salaryByPeriod/index.vue'),
       },
     ],
     meta: {

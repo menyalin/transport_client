@@ -3,12 +3,13 @@ import VueRouter from 'vue-router'
 
 import store from '@/store'
 
+import profileRoutes from './profile/index.js'
+import accountingRoutes from './accounting/index.js'
+
 import authRoutes from '@/modules/auth/auth.routes'
 import adminRoutes from '@/modules/admin/admin.routes'
-import profileRoutes from './profile/index.js'
 import orderRoutes from '@/modules/order/routes/index.js'
 import reportsRoutes from '@/modules/reports/routes/index.js'
-import accountingRoutes from '@/modules/accounting/routes/index.js'
 
 import serverNotAvailablePage from '@/modules/common/pages/error'
 import HomeLayout from '@/modules/common/pages/layout'

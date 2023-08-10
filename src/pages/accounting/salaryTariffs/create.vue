@@ -57,7 +57,7 @@ import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTarif
 import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
 import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
 import { ButtonsPanel } from '@/shared/ui'
-import service from '../../services/salaryTariff.service'
+import { SalaryTariffService } from '@/shared/services'
 
 export default {
   name: 'CreateTariff',
@@ -111,7 +111,7 @@ export default {
       handler: async function (newVal, oldVal) {
         if (newVal && newVal !== oldVal) {
           this.loading = true
-          this.item = await this.service.getById(newVal)
+          this.item = await SalaryTariffService.getById(newVal)
           this.loading = false
         }
       },
@@ -161,7 +161,7 @@ export default {
     async submit() {
       try {
         this.loading = true
-        await service.create(
+        await SalaryTariffService.create(
           this.items.map((i) => ({
             ...i,
             company: this.$store.getters.directoriesProfile,
@@ -182,7 +182,7 @@ export default {
       if (res) {
         try {
           this.loading = true
-          await this.service.deleteById(this.id)
+          await SalaryTariffService.deleteById(this.id)
           this.loading = false
           this.$router.go(-1)
         } catch (e) {
