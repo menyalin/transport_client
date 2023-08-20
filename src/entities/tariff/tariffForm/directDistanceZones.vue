@@ -21,7 +21,7 @@
       />
       <v-text-field
         v-model.number="tmpItem.zones[idx].price"
-        :label="groupVat ? 'Цена с НДС' : 'Цена без НДС'"
+        :label="withVat ? 'Цена с НДС' : 'Цена без НДС'"
         type="number"
         dense
         outlined
@@ -62,7 +62,7 @@ export default {
   },
   props: {
     item: Object,
-    groupVat: { type: Boolean, required: true },
+    withVat: { type: Boolean, required: true },
   },
   data() {
     return {

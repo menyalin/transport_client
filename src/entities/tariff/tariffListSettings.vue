@@ -65,7 +65,7 @@
       hide-details
     />
     <v-checkbox
-      v-model="tmpSettings.groupVat"
+      v-model="tmpSettings.withVat"
       label="Тариф c НДС"
       :disabled="disabled"
       dense
@@ -75,7 +75,6 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import uuid from 'uuid'
 import { AgreementService } from '@/shared/services'
 
 export default {
@@ -97,11 +96,9 @@ export default {
     return {
       agreements: [],
       tmpSettings: {
-        group: uuid.v4(),
-        groupVat: false,
+        withVat: false,
         document: null,
         agreement: null,
-        agreementVatRate: null,
         date: null,
         truckKind: null,
         liftCapacity: null,
@@ -122,15 +119,6 @@ export default {
     },
   },
   watch: {
-    ['tmpSettings.agreement']: function (val) {
-      if (val)
-        this.tmpSettings.groupVat =
-          !!this.agreements.find((i) => i._id === val)?.vatRate || false
-      this.tmpSettings.agreementVatRate = this.agreements.find(
-        (i) => i._id === val
-      )?.vatRate
-    },
-
     ['tmpSettings.document']: function (val) {
       if (!val || !this.$store.getters.documentsMap.has(val)) return null
       const dateValue = this.$store.getters.documentsMap.get(val)?.date
@@ -151,15 +139,12 @@ export default {
     },
   },
   created() {
-    if (this.settings?.group) this.tmpSettings = { ...this.settings }
-    else {
-      // default values
-      this.tmpSettings.truckKind =
-        this.$store.getters.companySettings?.defaultTruckKind || null
-      this.tmpSettings.liftCapacity =
-        this.$store.getters.companySettings?.defaultLiftCapacity || null
-      this.tmpSettings.date = dayjs().format('YYYY-MM-DD')
-    }
+    this.tmpSettings.truckKind =
+      this.$store.getters.companySettings?.defaultTruckKind || null
+    this.tmpSettings.liftCapacity =
+      this.$store.getters.companySettings?.defaultLiftCapacity || null
+    this.tmpSettings.date = dayjs().format('YYYY-MM-DD')
+
     this.getAgreements()
   },
   methods: {

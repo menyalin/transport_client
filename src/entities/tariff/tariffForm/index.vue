@@ -74,7 +74,7 @@
             v-if="tmpItem.type === 'directDistanceZones'"
             ref="directDistanceZones"
             v-model="directDistanceZones"
-            :groupVat="tmpItem.groupVat"
+            :withVat="tmpItem.withVat"
             :style="{ 'min-width': '550px' }"
           />
           <app-waiting
@@ -94,7 +94,7 @@
             v-model.number="tmpItem.price"
             dense
             type="number"
-            :label="tmpItem.groupVat ? 'Тариф c НДС' : 'Тариф без НДС'"
+            :label="tmpItem.withVat ? 'Тариф c НДС' : 'Тариф без НДС'"
             outlined
             hide-details
           />
@@ -141,7 +141,7 @@ import AppWaiting from './waiting.vue'
 import AppZones from './zones.vue'
 import AppReturn from './return.vue'
 
-import { TariffDTO } from './tariff.dto'
+import { Tariff } from '@/entities/tariff/model'
 import { AgreementService, TariffService } from '@/shared/services'
 
 export default {
@@ -185,12 +185,10 @@ export default {
       )
     },
     invalidItem() {
-      return TariffDTO.invalidItem({
+      return Tariff.invalidItem({
         ...this.tmpItem,
         ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
-        ...(this.tmpItem.type && this.tmpItem.type === 'return'
-          ? this.returnTariff
-          : {}),
+        ...(this.tmpItem.type === 'return' ? this.returnTariff : {}),
       })
     },
     showDeleteBtn() {
@@ -198,12 +196,10 @@ export default {
     },
     formState() {
       return {
-        ...new TariffDTO({
+        ...new Tariff({
           ...this.tmpItem,
           ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
-          ...(this.tmpItem.type && this.tmpItem.type === 'return'
-            ? this.returnTariff
-            : {}),
+          ...(this.tmpItem.type === 'return' ? this.returnTariff : {}),
         }),
       }
     },
@@ -220,7 +216,7 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) {
-          const item = TariffDTO.tariffFromDBItem(val)
+          const item = Tariff.tariffFromDBItem(val)
           const itemKeys = Object.keys(item)
           itemKeys.forEach((key) => (this[key] = { ...item[key] }))
           if (val.type === 'return') this.returnTariff = item.return
@@ -260,10 +256,12 @@ export default {
         })
       }
     },
+
     update() {
       this.$emit('update', this.formState)
       this.tmpDialog = false
     },
+
     async deleteItem() {
       const res = await this.$confirm('Вы уверены? Запись будет удалена')
       if (!res) return null

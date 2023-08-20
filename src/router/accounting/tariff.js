@@ -7,6 +7,7 @@ export default [
     component: () => import('@/pages/accounting/tariff/list'),
     meta: {
       permission: 'tariff:readList',
+      title: 'Тарифы клиентов : список',
     },
   },
   {
@@ -16,6 +17,7 @@ export default [
     props: true,
     meta: {
       permission: 'tariff:write',
+      title: 'Тарифы клиентов : новый',
     },
   },
 ]

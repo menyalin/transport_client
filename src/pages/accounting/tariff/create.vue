@@ -1,71 +1,57 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
-          {{ error.message }}
-        </v-alert>
-        <div class="text-h5 ma-3">
-          {{ id ? 'Редактировать группу тарифов' : 'Создать группу тарифов' }}
-        </div>
-        <app-load-spinner v-if="loading" />
-        <div v-else class="pt-2">
-          <buttons-panel
-            panel-type="form"
-            :disabled-submit="
-              !$store.getters.hasPermission('tariff:write') || disabledSubmit
-            "
-            @cancel="cancel"
-            @submit="submit"
-          />
-          <app-tariff-settings
-            v-model="settings"
-            :disabled="disabledSettings"
-          />
-          <v-btn
-            color="primary"
-            small
-            class="ma-2"
-            hint="alt + N"
-            :disabled="!allowCreateTariffItem"
-            @click="addBtnHandler"
-          >
-            Добавить тариф alt+N
-          </v-btn>
-          <app-tariff-form
-            v-model="editableTariff"
-            :dialog="dialog"
-            @cancel="closeDialog"
-            @push="pushItem"
-          />
-          <app-tariff-group-list v-model="items" @removeItem="deleteItem" />
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
+  <form-wrapper :loading="loading" @delete="deleteHandler">
+    <div class="text-h5 ma-3">Создать группу тарифов</div>
+
+    <div class="pt-1">
+      <buttons-panel
+        panel-type="form"
+        :disabled-submit="
+          !$store.getters.hasPermission('tariff:write') || disabledSubmit
+        "
+        @cancel="cancel"
+        @submit="submit"
+      />
+      <tariff-list-settings v-model="settings" :disabled="disabledSettings" />
+      <v-btn
+        color="primary"
+        small
+        class="ma-2"
+        hint="alt + N"
+        :disabled="!allowCreateTariffItem"
+        @click="addBtnHandler"
+      >
+        Добавить тариф alt+N
+      </v-btn>
+      <tariff-form
+        v-model="editableTariff"
+        :dialog="dialog"
+        @cancel="closeDialog"
+        @push="pushItem"
+      />
+      <tariff-group-list v-model="items" @removeItem="deleteItem" />
+    </div>
+  </form-wrapper>
 </template>
 <script>
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, FormWrapper } from '@/shared/ui'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import AppTariffSettings from '@/modules/profile/components/tariffSettings'
-import AppTariffGroupList from '@/modules/profile/components/tariffGroupList'
-import AppTariffForm from '@/modules/profile/components/tariffForm'
-import {TariffService} from '@/shared/services'
+
+import {
+  TariffForm,
+  TariffGroupList,
+  TariffListSettings,
+} from '@/entities/tariff'
+import { TariffService } from '@/shared/services'
 
 export default {
   name: 'CreateTariff',
   components: {
+    FormWrapper,
     ButtonsPanel,
     AppLoadSpinner,
-    AppTariffSettings,
-    AppTariffGroupList,
-    AppTariffForm,
+    TariffListSettings,
+    TariffGroupList,
+    TariffForm,
   },
   props: {
     id: String,
@@ -88,7 +74,7 @@ export default {
   },
   computed: {
     allowCreateTariffItem() {
-      return this.settings.date && this.settings.agreement
+      return !!this.settings.date && !!this.settings.agreement
     },
     disabledSettings() {
       return this.items.length > 0

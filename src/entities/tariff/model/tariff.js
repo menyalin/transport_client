@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { Price } from './index'
 
 const TYPES_WITHOUT_PRICE = ['directDistanceZones', 'return']
 
@@ -25,12 +26,8 @@ const _REQUIRED_FIELDS = [
   'date',
   'type',
   'agreement',
-  'agreementVatRate',
   'truckKind',
   'liftCapacity',
-  'price',
-  'group',
-  'groupVat',
 ]
 
 const _getRequiredFieldsByType = (type) => {
@@ -62,48 +59,28 @@ const _getRequiredFieldsByType = (type) => {
     .filter((i) => (TYPES_WITHOUT_PRICE.includes(type) ? i !== 'price' : true))
 }
 
-export class TariffDTO {
+export class Tariff {
   constructor(item) {
     if (!item.type) throw new Error('Tariff type is undefinded')
+
     const requiredField = _getRequiredFieldsByType(item.type)
     requiredField.forEach((field) => {
       if (item[field] === undefined)
         throw new Error(`Not exist required field: ${field}`)
     })
     const keys = Object.keys(item)
+
     keys.forEach((key) => {
-      this[key] = item[key]
+      if (key === 'price') this.price = new Price(item.price, item.withVat)
+      else this[key] = item[key]
     })
 
     if (item.type === 'directDistanceZones') {
-      this.zones = item.zones
-        .sort((a, b) => a.distance - b.distance)
-        .map((i) => ({
-          distance: i.distance,
-          ...this._getPrices({
-            price: i.price,
-            vatRate: item.agreementVatRate,
-            groupVat: item.groupVat,
-          }),
-        }))
+      this.zones = item.zones.sort((a, b) => a.distance - b.distance)
     }
 
-    if (TYPES_WITHOUT_PRICE.includes(item.type)) {
-      // для "Возврата" и "Цен по линейке" цена не имеет смысла
-      this.price = 0
-      this.priceWOVat = 0
-      this.sumVat = 0
-      return null
-    }
-    Object.assign(
-      this,
-      { date: new Date(this.date + ' 00:00:00').toISOString() },
-      this._getPrices({
-        price: item.price,
-        vatRate: item.agreementVatRate,
-        groupVat: item.groupVat,
-      })
-    )
+    this.price = new Price(item.price || 0, item.withVat)
+    this.date = dayjs(this.date).startOf('day').toISOString()
   }
 
   static invalidItem(item) {
@@ -127,8 +104,8 @@ export class TariffDTO {
       tmpItem: {
         ...item,
         date: dayjs(item.date).format('YYYY-MM-DD'),
-        price: item.groupVat ? item.price : item.priceWOVat,
-        agreement: item.agreement?._id || item.agreement,
+        price: item.price?.price,
+        withVat: item.price?.withVat,
       },
       zones: {
         loadingZone: item.loadingZone,
@@ -144,10 +121,7 @@ export class TariffDTO {
       },
       directDistanceZones: {
         loading: item.loading,
-        zones: item.zones?.map((i) => ({
-          ...i,
-          price: item.groupVat ? i.price : i.priceWOVat,
-        })),
+        zones: item.zones,
       },
       waiting: {
         includeHours: item.includeHours,
@@ -159,26 +133,5 @@ export class TariffDTO {
         percentOfTariff: item.percentOfTariff,
       },
     }
-  }
-
-  _getPrices({ price, vatRate, groupVat }) {
-    const vatKoef = parseFloat(1 + vatRate / 100)
-    const res = {}
-    if (vatRate !== 0 && groupVat) {
-      // если цену вносят с НДС
-      res.price = price
-      res.priceWOVat = price / vatKoef
-      res.sumVat = price - price / vatKoef
-    } else if (vatRate !== 0) {
-      // если цену вносят без НДС
-      res.priceWOVat = price
-      res.sumVat = price * ((vatKoef * 10 - 10) / 10)
-      res.price = price + price * ((vatKoef * 10 - 10) / 10)
-    } else {
-      res.priceWOVat = price
-      res.sumVat = 0
-      res.price = price
-    }
-    return res
   }
 }

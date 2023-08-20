@@ -61,6 +61,14 @@ router.beforeEach(async (to, from, next) => {
   if (!!localStorage.getItem('token') && !store.getters.isLoggedIn)
     await store.dispatch('getUserData')
 
+  const nearestWithTitle = to.matched
+    .slice()
+    .reverse()
+    .find((r) => r.meta && r.meta.title)
+
+  if (nearestWithTitle) document.title = nearestWithTitle.meta.title
+  else document.title = process.env.VUE_APP_NAME || 's4log'
+
   const permissions = to.matched
     .map((r) => r.meta.permission)
     .filter((p) => !!p)

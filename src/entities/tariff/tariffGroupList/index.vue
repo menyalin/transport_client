@@ -8,8 +8,8 @@
             <th class="text-center" />
             <th class="text-center">Вид ТС</th>
             <th class="text-center">Грузоподъемность</th>
-            <th class="text-right">Цена с НДС</th>
-            <th class="text-right">Цена без НДС</th>
+            <th class="text-right">Тариф</th>
+
             <th class="text-left">Примечание</th>
             <th />
           </tr>
@@ -20,21 +20,7 @@
               {{ tariffTypesMap.get(item.type) }}
             </td>
             <td>
-              <div v-if="item.type === 'points'">
-                {{ addressMap.get(item.loading).shortName }} >>>
-                {{ addressMap.get(item.unloading).shortName }}
-              </div>
-              <app-direct-distance-zones
-                v-if="item.type === 'directDistanceZones'"
-                :item="item"
-              />
-              <app-additional-points-cell
-                v-if="item.type === 'additionalPoints'"
-                :item="item"
-              />
-              <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
-              <app-zones-cell v-if="item.type === 'zones'" :item="item" />
-              <app-return-cell v-if="item.type === 'return'" :item="item" />
+              <tariff-description-cell :item="item" />
             </td>
 
             <td class="text-center">
@@ -44,11 +30,13 @@
               {{ item.liftCapacity }}
             </td>
             <td class="text-right">
-              {{ Intl.NumberFormat().format(item.price) }}
+              {{
+                item.type === 'return' || item.type === 'directDistanceZones'
+                  ? null
+                  : Intl.NumberFormat().format(item.price.price)
+              }}
             </td>
-            <td class="text-right">
-              {{ Intl.NumberFormat().format(item.priceWOVat) }}
-            </td>
+
             <td>{{ item.note }}</td>
             <td class="text-right">
               <v-btn small icon @click="removeHandler(ind)">
@@ -62,20 +50,12 @@
   </div>
 </template>
 <script>
-import AppWaitingCell from './waiting.vue'
-import AppAdditionalPointsCell from './additionalPoints.vue'
-import AppReturnCell from './return.vue'
-import AppZonesCell from './zones.vue'
-import AppDirectDistanceZones from './directDistanceZones.vue'
+import TariffDescriptionCell from '../tariffDescriptionCell'
 
 export default {
   name: 'TariffGroupList',
   components: {
-    AppAdditionalPointsCell,
-    AppWaitingCell,
-    AppReturnCell,
-    AppDirectDistanceZones,
-    AppZonesCell,
+    TariffDescriptionCell,
   },
   model: {
     prop: 'items',
