@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import SalaryTariffService from '../services/salaryTariff.service.js'
+import SalaryTariffService from '@/shared/services/salaryTariff/salaryTariff.service.js'
 import dayjs from 'dayjs'
 
 export const useDriversSalaryData = ({
