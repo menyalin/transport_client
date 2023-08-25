@@ -10,9 +10,7 @@ import downtimeRoutes from './downtime.js'
 import ProfileSettings from '@/pages/profile/profileSettings'
 import orderTemplateRoutes from './orderTemplates.js'
 import scheduleNoteRoutes from './scheduleNotes.js'
-import agreementRoutes from './agreement'
 import companyRouter from './company'
-import documentRouter from './document'
 import zoneRouter from './zone'
 import regionRouter from './region.js'
 import cityRouter from './city.js'
@@ -25,9 +23,9 @@ export default [
     component: Layout,
     meta: {
       authRequired: true,
+      title: 'Профиль',
     },
     children: [
-      ...agreementRoutes,
       ...crewRoutes,
       ...truckRoutes,
       ...driverRoutes,
@@ -38,7 +36,6 @@ export default [
       ...orderTemplateRoutes,
       ...scheduleNoteRoutes,
       ...companyRouter,
-      ...documentRouter,
       ...zoneRouter,
       ...regionRouter,
       ...cityRouter,

@@ -27,6 +27,20 @@ export default {
   data: () => ({
     navButtons: [
       {
+        text: 'Соглашения',
+        icon: 'mdi-file-sign',
+        link: '/accounting/agreements',
+        onlyWithDirectoriesProfile: true,
+        permission: 'agreement:readList',
+      },
+      {
+        text: 'Документы',
+        icon: 'mdi-file-document-multiple',
+        link: '/accounting/documents',
+        onlyWithDirectoriesProfile: true,
+        permission: 'document:readList',
+      },
+      {
         text: 'Акты',
         icon: 'mdi-list-box ',
         link: '/accounting/paymentInvoice',

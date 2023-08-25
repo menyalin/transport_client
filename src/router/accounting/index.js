@@ -1,5 +1,7 @@
 import Layout from '@/pages/accounting/layout'
 import sararyTariffsRoutes from './salaryTariff.js'
+import agreementRoutes from './agreement.js'
+import documentRoutes from './document.js'
 import docsRegistryRoutes from './docsRegistry.js'
 import paymentInvoicesRoutes from '@/pages/accounting/paymentInvoice/routes'
 import tariffRoutes from './tariff'
@@ -12,6 +14,8 @@ export default [
       ...docsRegistryRoutes,
       ...paymentInvoicesRoutes,
       ...tariffRoutes,
+      ...agreementRoutes,
+      ...documentRoutes,
       {
         path: 'driversSalary',
         name: 'DriversSalary',
