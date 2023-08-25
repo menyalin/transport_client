@@ -45,11 +45,6 @@
     />
 
     <v-text-field v-model.trim="form.note" outlined label="Примечание" dense />
-
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
-      Удалить
-    </v-btn>
   </div>
 </template>
 <script>
@@ -72,14 +67,6 @@ export default {
   props: {
     document: {
       type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    openInModal: {
-      type: Boolean,
-      default: false,
     },
   },
 
