@@ -1,6 +1,6 @@
 <template>
   <div class="block-wrapper">
-    <h5 class="ml-3">Площадки приема первичных документов</h5>
+    <h5 class="ml-3">Площадки для приема документов</h5>
     <v-alert v-if="!partnerId" type="info">
       Добавление площадок возможно только после сохранения партнера
     </v-alert>
@@ -36,7 +36,7 @@
 import store from '@/store'
 import { ref } from 'vue'
 import PlaceItem from './placeItem.vue'
-import { PlaceForTransferDocsForm } from '@/widgets'
+import PlaceForTransferDocsForm from './placeForTransferDocsForm.vue'
 import { PartnerService } from '@/shared/services'
 
 export default {

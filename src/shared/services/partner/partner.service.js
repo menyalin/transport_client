@@ -26,6 +26,18 @@ class PartnerService {
     return data
   }
 
+  async addIdleTruckNotify(partnerId, body) {
+    if (!partnerId || !body)
+      throw new Error(
+        'PartnerService : addIdleTruckNotify : required args is missing'
+      )
+    const { data } = await api.post(
+      BASE_PATH + '/' + partnerId + '/idle_truck_notification',
+      body
+    )
+    return data
+  }
+
   async addPlaceForTransferDocs(partnerId, body) {
     const { data } = await api.post(
       BASE_PATH + '/' + partnerId + '/places',
