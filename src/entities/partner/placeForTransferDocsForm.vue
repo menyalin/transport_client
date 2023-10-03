@@ -6,6 +6,7 @@
         <v-text-field
           v-model="state.title"
           label="Название площадки"
+          dense
           outlined
           @blur="v$.title.$touch"
           :errorMessages="titleErrorMessages"
@@ -13,6 +14,7 @@
         />
         <address-autocomplete
           v-model="state.address"
+          dense
           label="Адрес площадки"
           outlined
           :partnerId="resctrictAddresses ? partnerId : undefined"
@@ -24,18 +26,22 @@
           label="Разрешенные пункты погрузки"
           outlined
           multiple
+          dense
           :partnerId="resctrictAddresses ? partnerId : undefined"
           @blur="v$.allowedLoadingPoints.$touch"
         />
         <v-text-field
           v-model="state.contacts"
           label="Контакты"
+          dense
           outlined
           @blur="v$.contacts.$touch"
         />
+
         <v-text-field
           v-model="v$.note.$model"
           label="Примечание"
+          dense
           outlined
           @blur="v$.note.$touch"
         />
@@ -74,6 +80,7 @@ export default {
   setup(props, ctx) {
     const resctrictAddresses = ref(true)
     const state = ref({})
+
     const initialState = {
       title: null,
       address: null,
@@ -89,6 +96,7 @@ export default {
     const itemComputed = computed(() => {
       return props.item
     })
+
     watch(
       itemComputed,
       () => {

@@ -6,25 +6,31 @@
       !!id && $store.getters.hasPermission('docsRegistry:delete')
     "
   >
-    <app-partner-form
+    <PartnerForm
       :partner="item"
       @cancel="cancel"
       @submit="submit"
       @updatePartner="updatePartnerHandler"
     />
+    <IdleTruckNotificationsWidget
+      :partner="item"
+      @updatePartner="updatePartnerHandler"
+    />
   </form-wrapper>
 </template>
 <script>
-import AppPartnerForm from '@/modules/profile/components/partnerForm'
 import { PartnerService as service } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import { FormWrapper } from '@/shared/ui'
+import { PartnerForm } from '@/entities/partner'
+import { IdleTruckNotifications as IdleTruckNotificationsWidget } from '@/widgets/idleTruckNotifications'
 
 export default {
   name: 'PartnerDetails',
   components: {
-    AppPartnerForm,
+    PartnerForm,
     FormWrapper,
+    IdleTruckNotificationsWidget,
   },
   mixins: [pageDetailsMixin],
   data() {
