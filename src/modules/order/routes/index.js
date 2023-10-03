@@ -10,7 +10,6 @@ export default [
         path: '/',
         name: 'Schedule',
         component: () => import('../pages/schedule'),
-        meta: { title: 'Распределение' },
       },
     ],
     meta: {
@@ -23,7 +22,6 @@ export default [
     children: [...orderRoutes],
     meta: {
       authRequired: true,
-      title: 'Список рейсов',
     },
   },
 ]

@@ -43,7 +43,27 @@ export default {
         onlyWithDirectoriesProfile: true,
         permission: 'worker:readList',
       },
-
+      {
+        text: 'Соглашения',
+        icon: 'mdi-file-sign',
+        link: '/profile/agreements',
+        onlyWithDirectoriesProfile: true,
+        permission: 'agreement:readList',
+      },
+      {
+        text: 'Документы',
+        icon: 'mdi-file-document-multiple',
+        link: '/profile/documents',
+        onlyWithDirectoriesProfile: true,
+        permission: 'document:readList',
+      },
+      {
+        text: 'Тарифы',
+        icon: 'mdi-cash-multiple',
+        link: '/profile/tariffs',
+        onlyWithDirectoriesProfile: true,
+        permission: 'tariff:readList',
+      },
       {
         text: 'Перевозчики',
         icon: 'mdi-alien',

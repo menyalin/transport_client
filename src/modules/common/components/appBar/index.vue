@@ -1,13 +1,6 @@
 <template>
   <v-app-bar app color="primary" dark dense>
     <v-app-bar-nav-icon />
-    <v-img
-      src="/logo.svg"
-      height="40"
-      max-height="20"
-      max-width="20"
-      class="mx-3"
-    />
     <v-toolbar-title class="app-title" @click="toHomePage">
       {{ title || 's4log' }}
     </v-toolbar-title>
