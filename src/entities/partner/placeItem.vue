@@ -18,9 +18,9 @@
         <div>{{ value.note }}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn small color="secondary" @click="editHandler"
-          >Редактировать</v-btn
-        >
+        <v-btn small color="secondary" @click="editHandler">
+          Редактировать
+        </v-btn>
         <v-btn small color="error" @click="deleteHandler">Удалить</v-btn>
       </v-card-actions>
     </v-card>

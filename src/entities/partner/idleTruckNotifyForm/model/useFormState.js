@@ -1,5 +1,5 @@
 import store from '@/store'
-import { reactive, computed } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
@@ -16,18 +16,26 @@ export const useFormState = (props, { emit }) => {
     }
     return true
   }
-  const state = reactive({
-    title: '',
-    addresses: [],
-    idleHoursBeforeNotify: 0,
-    emails: '',
-    ccEmails: '',
-    templateName: '',
-  })
+
+  function getInitialState() {
+    if (props.initialState?._id) return props.initialState
+    return {
+      title: '',
+      addresses: [],
+      idleHoursBeforeNotify: 0,
+      emails: '',
+      ccEmails: '',
+      templateName: '',
+      note: '',
+      usePlannedDate: false,
+    }
+  }
+
+  let state = ref(getInitialState())
 
   const rules = {
-    title: { required, $autoDirty: true }, // Matches state.firstName
-    addresses: { required, $autoDirty: true }, // Matches state.lastName
+    title: { required, $autoDirty: true },
+    addresses: { required, $autoDirty: true },
     emails: {
       required,
       $autoDirty: true,
@@ -44,15 +52,20 @@ export const useFormState = (props, { emit }) => {
       ),
     },
     templateName: { $autoDirty: true },
+    note: { $autoDirty: true },
+    usePlannedDate: { $autoDirty: true },
   }
   const v$ = useVuelidate(rules, state)
 
   function cancel() {
+    state.value = Object.assign({})
+    v$.value.$reset()
     emit('cancel')
   }
 
   function submit() {
-    emit('submit', state)
+    emit('submit', { ...state.value })
+    cancel()
   }
 
   const titleFieldErrors = computed(() => {
@@ -80,6 +93,15 @@ export const useFormState = (props, { emit }) => {
       (i) => i.partner === props.partnerId
     )
   })
+
+  watch(
+    () => props.initialState,
+    () => {
+      state.value = Object.assign({}, getInitialState())
+      v$.value.$reset()
+    },
+    { deep: true }
+  )
 
   return {
     state,

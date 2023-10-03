@@ -13,11 +13,17 @@
     >
       Добавить оповещение
     </v-btn>
-    <NotificationListFeature :items="partner.idleTruckNotifications" />
+    <NotificationListFeature
+      :partnerId="partner._id"
+      :items="partner.idleTruckNotifications"
+      @updatePartner="updatePartnerHandler"
+      @editNotify="editNotifyHandler"
+    />
     <v-dialog :value="dialog" persistent max-width="1200" :loading="loading">
       <IdleTruckNotifyForm
         :partnerId="partner._id"
         :loading="loading"
+        :initialState="editableItem"
         @submit="submitHandler"
         @cancel="cancelHandler"
       />
@@ -37,19 +43,28 @@ export default {
     partner: Object,
   },
   setup(props, ctx) {
+    function updatePartnerHandler(payload) {
+      ctx.emit('updatePartner', payload)
+    }
+
     const {
+      editNotifyHandler,
       addNotificationHandler,
       cancelHandler,
       submitHandler,
       dialog,
       loading,
+      editableItem,
     } = useWidgetModel(props, ctx)
     return {
+      editNotifyHandler,
+      updatePartnerHandler,
       addNotificationHandler,
       cancelHandler,
       submitHandler,
       dialog,
       loading,
+      editableItem,
     }
   },
 }

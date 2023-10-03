@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title>Заголовок диалога</v-card-title>
+    <v-card-title>
+      {{ state._id ? 'Редактировать оповещение' : 'Новое оповещение' }}
+    </v-card-title>
     <v-card-text>
       <div class="form_wrapper">
         <v-text-field
@@ -17,6 +19,7 @@
           outlined
           :errorMessages="addressFieldErrors"
           :items="addressItems"
+          clearable
           dense
         />
         <v-text-field
@@ -42,10 +45,19 @@
               v-model="state.idleHoursBeforeNotify"
               label="Часов до отправки уведомления"
               outlined
-              dense
+            />
+          </div>
+          <div class="column">
+            <v-checkbox
+              v-model="state.usePlannedDate"
+              hint="По умолчанию используется фактическое время прибытия"
+              persistent-hint
+              color="primary"
+              label="Использовать плановую дату погрузки/разгрузки"
             />
           </div>
         </div>
+        <v-text-field v-model="state.note" label="Примечание" outlined dense />
       </div>
     </v-card-text>
     <v-card-actions class="buttons-wrapper">
@@ -63,6 +75,7 @@ export default {
   props: {
     partnerId: String,
     loading: Boolean,
+    initialState: Object,
   },
   setup(props, ctx) {
     const {
