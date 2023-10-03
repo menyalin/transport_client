@@ -22,6 +22,7 @@ import RegionService from './region/region.service.js'
 import ScheduleNoteService from './scheduleNote/scheduleNote.service.js'
 import TariffService from './tariff/tariff.service.js'
 import TkNameService from './tkName/tkName.service.js'
+import SalaryTariffService from './salaryTariff/salaryTariff.service.js'
 
 export {
   AddressService,
@@ -48,4 +49,5 @@ export {
   ScheduleNoteService,
   TariffService,
   TkNameService,
+  SalaryTariffService,
 }
