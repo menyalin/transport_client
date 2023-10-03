@@ -148,7 +148,7 @@ import AppRegions from './regions.vue'
 import AppAdditionalPoints from './additionalPoints.vue'
 import AppWaiting from './waiting.vue'
 import AppReturn from './return.vue'
-import SalaryTariffService from '../../services/salaryTariff.service.js'
+import { SalaryTariffService } from '@/shared/services'
 import { SalaryTariffDTO } from './salaryTariff.dto'
 
 export default {
