@@ -26,6 +26,41 @@ class PartnerService {
     return data
   }
 
+  async addIdleTruckNotify(partnerId, body) {
+    if (!partnerId || !body)
+      throw new Error(
+        'PartnerService : addIdleTruckNotify : required args is missing'
+      )
+    const { data } = await api.post(
+      BASE_PATH + '/' + partnerId + '/idle_truck_notification',
+      body
+    )
+    return data
+  }
+
+  async deleteIdleTruckNotify(partnerId, idleId) {
+    if (!partnerId || !idleId)
+      throw new Error(
+        'PartnerService : deleteIdleTruckNotify : required args is missing'
+      )
+    const { data } = await api.delete(
+      BASE_PATH + '/' + partnerId + '/idle_truck_notification/' + idleId
+    )
+    return data
+  }
+
+  async updateIdleTruckNotify(partnerId, idleId, body) {
+    if (!partnerId || !idleId)
+      throw new Error(
+        'PartnerService : updateIdleTruckNotify : required args is missing'
+      )
+    const { data } = await api.put(
+      BASE_PATH + '/' + partnerId + '/idle_truck_notification/' + idleId,
+      body
+    )
+    return data
+  }
+
   async addPlaceForTransferDocs(partnerId, body) {
     const { data } = await api.post(
       BASE_PATH + '/' + partnerId + '/places',
