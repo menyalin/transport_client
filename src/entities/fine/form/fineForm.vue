@@ -178,6 +178,13 @@
         label="Удержать"
         :style="{ maxWidth: '250px' }"
       />
+      <v-checkbox
+        v-if="isNeedWithheldFromDriver && showIsWithheldField"
+        v-model="$v.form.isWithheld.$model"
+        label="Удержано"
+        :disabled="isWithheldReadonly"
+        dense
+      />
     </div>
     <v-text-field
       v-model="$v.form.note.$model"
@@ -198,7 +205,7 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
-import {CrewService} from '@/shared/services'
+import { CrewService } from '@/shared/services'
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
@@ -239,6 +246,7 @@ export default {
         isCulpritDriver: false,
         kX: 2,
         withheldSum: 0,
+        isWithheld: false,
         note: null,
       },
     }
@@ -246,6 +254,16 @@ export default {
 
   computed: {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
+    showIsWithheldField() {
+      return (
+        this.isNeedWithheldFromDriver &&
+        this.form.withheldSum > 0 &&
+        this.$store.getters.hasPermission('fine:isWithheldRead')
+      )
+    },
+    isWithheldReadonly() {
+      return !this.$store.getters.hasPermission('fine:isWithheldWrite')
+    },
     isInvalidForm() {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
@@ -347,6 +365,7 @@ export default {
         isCulpritDriver: {},
         kX: {},
         withheldSum: {},
+        isWithheld: {},
         note: {},
       },
     }

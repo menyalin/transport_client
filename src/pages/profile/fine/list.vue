@@ -58,6 +58,12 @@
             hide-details
             dense
           />
+          <v-checkbox
+            v-model="settings.needToWithheld"
+            label="Удержать из ЗП водителя"
+            hide-details
+            dense
+          />
           <v-text-field
             v-model.lazy.trim="settings.searchStr"
             label="Поиск"
@@ -65,7 +71,23 @@
             clearable
             hide-details
             dense
-            :style="{ minWidth: '450px' }"
+            :style="{ minWidth: '450px', maxWidth: '600px' }"
+          />
+          <v-autocomplete
+            v-model="settings.payingByWorker"
+            label="Оплатил"
+            :items="workerItems"
+            auto-select-first
+            clearable
+            outlined
+            hide-details
+            dense
+            :loading="workerIsLoading"
+            :style="{ maxWidth: '350px' }"
+            :filter="() => true"
+            :search-input="searchString"
+            @update:search-input="handleSearchInputUpdate"
+            @change="handleChange"
           />
         </div>
         <v-data-table
@@ -83,14 +105,25 @@
           }"
           :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
-        />
+        >
+          <template #[`item.isWithheld`]="{ item }">
+            <v-icon v-if="item.isWithheld" color="primary">mdi-check</v-icon>
+            <v-icon v-else color="primary">mdi-minus</v-icon>
+          </template>
+          <template #footer.prepend>
+            <FineListAnalitics :data="analyticData" />
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import { computed } from 'vue'
 import { mapGetters } from 'vuex'
 import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
+import { useItemsForAutocomplete } from '@/entities/worker'
+import { FineListAnalitics } from '@/entities/fine'
 import { useFineList } from './useList'
 
 export default {
@@ -98,9 +131,10 @@ export default {
   components: {
     ButtonsPanel,
     DateRangeInput,
+    FineListAnalitics,
   },
 
-  setup() {
+  setup(_props, ctx) {
     const {
       fineStatuses,
       settings,
@@ -111,11 +145,31 @@ export default {
       loading,
       refetch,
       count,
+      analyticData,
       preparedList,
       setInitSettings,
     } = useFineList()
 
+    const {
+      items: workers,
+      loading: workerIsLoading,
+      handleChange,
+      handleSearchInputUpdate,
+      searchString,
+    } = useItemsForAutocomplete({
+      ctx,
+      propValue: settings.value.payingByWorker,
+    })
+    const workerItems = computed(() => {
+      return [{ value: '__driver__', text: 'ВОДИТЕЛЬ' }, ...workers.value]
+    })
     return {
+      workerItems,
+      workerIsLoading,
+      handleChange,
+      handleSearchInputUpdate,
+      searchString,
+      //
       fineStatuses,
       formName,
       settings,
@@ -123,6 +177,7 @@ export default {
       loading,
       refetch,
       count,
+      analyticData,
       preparedList,
       selected,
       showOnlySelected,
