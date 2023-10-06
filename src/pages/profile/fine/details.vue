@@ -11,7 +11,7 @@
           {{ errorMessage }}
         </v-alert>
         <app-load-spinner v-if="loading" />
-        <app-form
+        <FineForm
           v-else
           :item="item"
           :displayDeleteBtn="
@@ -27,9 +27,9 @@
   </v-container>
 </template>
 <script>
-import AppForm from '@/modules/profile/components/fineForm'
+import { FineForm } from '@/entities/fine'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {FineService } from '@/shared/services'
+import { FineService } from '@/shared/services'
 import router from '@/router'
 import store from '@/store'
 import { watch, ref } from 'vue'
@@ -37,7 +37,7 @@ import { watch, ref } from 'vue'
 export default {
   name: 'FineDetails',
   components: {
-    AppForm,
+    FineForm,
     AppLoadSpinner,
   },
   props: {
@@ -88,8 +88,7 @@ export default {
       }
     }
 
-    getItem()
-    watch(_id, getItem)
+    watch(_id, getItem, { immediate: true })
 
     return { item, loading, showError, errorMessage, submit, checkFine }
   },
