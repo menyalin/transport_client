@@ -14,6 +14,7 @@ export default [
     props: true,
     meta: {
       permission: 'order:daysForWrite',
+      title: 'Новый рейс',
     },
   },
   {
@@ -23,6 +24,7 @@ export default [
     props: true,
     meta: {
       permission: 'order:groupCreate',
+      title: 'Создание группы рейсов',
     },
   },
   {
@@ -32,6 +34,7 @@ export default [
     props: true,
     meta: {
       permission: 'order:autoFillRouteDates',
+      title: 'Заполнение рейсов',
     },
   },
   { path: ':id', name: 'DetailsOrder', component: DetailsOrder, props: true },
