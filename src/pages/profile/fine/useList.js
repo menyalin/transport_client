@@ -5,6 +5,11 @@ import { FineService } from '@/shared/services'
 
 export const useFineList = () => {
   const formName = 'fineList'
+
+  const list = ref([])
+  const count = ref(0)
+  const analyticData = ref({})
+
   const fineStatuses = [
     { text: 'Не оплачен', value: 'notPaid' },
     { text: 'Оплачен', value: 'paid' },
@@ -50,6 +55,8 @@ export const useFineList = () => {
     truck: null,
     category: null,
     searchStr: null,
+    payingByWorker: null,
+    needToWithheld: false,
     listOptions: {
       page: 1,
       itemsPerPage: 50,
@@ -67,14 +74,13 @@ export const useFineList = () => {
     sortBy: settings.value.listOptions?.sortBy,
     sortDesc: settings.value.listOptions.sortDesc,
     searchStr: settings.value.searchStr,
+    payingByWorker: settings.value.payingByWorker,
+    needToWithheld: settings.value.needToWithheld,
     skip:
       settings.value.listOptions.itemsPerPage *
       (settings.value.listOptions.page - 1),
     limit: settings.value.listOptions.itemsPerPage,
   }))
-
-  const list = ref([])
-  const count = ref(0)
 
   const getData = async (params) => {
     if (!params) return null
@@ -84,6 +90,7 @@ export const useFineList = () => {
       loading.value = false
       list.value = data.items || []
       count.value = data.count || 0
+      analyticData.value = data.analyticData || 0
     } catch (e) {
       loading.value = false
       store.commit('setError', e.message)
@@ -130,7 +137,19 @@ export const useFineList = () => {
   function setInitSettings(initSettings) {
     settings.value = Object.assign(settings.value, initSettings)
   }
-
+  const headersComputed = computed(() => {
+    if (store.getters.hasPermission('fine:isWithheldRead'))
+      return [
+        ...headers,
+        {
+          value: 'isWithheld',
+          text: 'Удержано',
+          sortable: false,
+          align: 'center',
+        },
+      ]
+    else return headers
+  })
   return {
     selected,
     showOnlySelected,
@@ -138,10 +157,11 @@ export const useFineList = () => {
     formName,
     settings,
     refetch,
-    headers,
+    headers: headersComputed,
     loading,
     list,
     count,
+    analyticData,
     preparedList,
     setInitSettings,
   }
