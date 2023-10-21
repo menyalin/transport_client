@@ -1,7 +1,7 @@
 <template>
   <div class="pa-2 point-wrapper">
     <div class="main-column-wrapper">
-      <div class="row">
+      <div class="settings_row">
         <v-select
           :value="tmpPoint.type"
           :items="pointTypes"
@@ -52,6 +52,17 @@
           color="grey"
           class="ml-4"
         />
+        <v-spacer />
+        <v-checkbox
+          v-if="!!tmpPoint.arrivalDate && !tmpPoint.departureDate"
+          v-model="tmpPoint.waitsForWaybills"
+          label="Ожидает документы"
+          hide-details
+          dense
+          color="primary"
+          class="mx-4"
+          @change="setField($event, 'waitsForWaybills')"
+        />
       </div>
 
       <app-address-autocomplete
@@ -65,6 +76,18 @@
         outlined
         hide-details
         @change="setField($event, 'address')"
+      />
+
+      <v-text-field
+        v-if="tmpPoint.type === 'unloading'"
+        :value="tmpPoint.waybills"
+        label="Накладные"
+        hide-details
+        :readonly="readonly"
+        outlined
+        :style="{ 'min-width': '550px' }"
+        dense
+        @change="setField($event, 'waybills')"
       />
       <v-text-field
         :value="tmpPoint.note"
@@ -291,6 +314,7 @@ export default {
     return {
       tmpPoint: {
         type: null,
+        waybills: null,
         address: null,
         isReturn: false,
         isPltReturn: false,
@@ -304,6 +328,7 @@ export default {
         plannedDateDoc: null,
         arrivalDateDoc: null,
         departureDateDoc: null,
+        waitsForWaybills: false,
         note: null,
         fixedTime: null,
       },
@@ -380,6 +405,11 @@ export default {
 }
 </script>
 <style scoped>
+.settings_row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
 .point-wrapper {
   display: flex;
   flex-direction: row;

@@ -75,7 +75,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import uuid from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { AgreementService } from '@/shared/services'
 
 export default {
@@ -97,7 +97,7 @@ export default {
     return {
       agreements: [],
       tmpSettings: {
-        group: uuid.v4(),
+        group: uuidv4(),
         groupVat: false,
         document: null,
         agreement: null,

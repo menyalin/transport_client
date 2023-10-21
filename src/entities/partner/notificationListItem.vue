@@ -1,6 +1,7 @@
 <template>
   <v-card outlined min-width="600px" max-width="800px" class="ma-3" fill-height>
     <v-card-title> {{ item.title }}</v-card-title>
+    <v-card-subtitle> {{ item.companyName }}</v-card-subtitle>
     <v-card-text>
       <div>
         Адреса клиента: <b>{{ addresses }}</b>
@@ -15,6 +16,18 @@
         Часов до отправки уведомления: <b>{{ item.idleHoursBeforeNotify }}</b>
         используется плановая дата доставки:
         <b> {{ item.usePlannedDate ? 'Да' : 'Нет' }}</b>
+      </div>
+      <div v-if="item.useTruckFilter !== 'notUsed'">
+        <v-divider />
+        <div>
+          {{
+            item.useTruckFilter === 'included'
+              ? 'Грузовики:'
+              : 'Кроме грузовиков:'
+          }}
+        </div>
+        <b>{{ trucks }}</b>
+        <v-divider />
       </div>
       <div v-if="item.note">
         <i>{{ item.note }}</i>
@@ -35,6 +48,11 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
+    const trucks = computed(() => {
+      return props.item.trucks
+        .map((t) => store.getters.trucksMap.get(t)?.regNum)
+        .join(', ')
+    })
     const addresses = computed(() => {
       return store.getters.addresses
         .filter((address) => props.item.addresses.includes(address._id))
@@ -54,6 +72,7 @@ export default {
       editHandler,
       deleteHandler,
       addresses,
+      trucks,
     }
   },
 }
