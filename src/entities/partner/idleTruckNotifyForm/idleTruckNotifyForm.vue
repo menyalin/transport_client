@@ -12,15 +12,25 @@
           outlined
           dense
         />
+        <v-text-field
+          v-model="v$.companyName.$model"
+          label="Название компании"
+          hint="Отвечает за название компании в теме письма и подписи"
+          :errorMessages="companyNameFieldErrors"
+          outlined
+          dense
+        />
         <v-autocomplete
           multiple
           v-model="v$.addresses.$model"
           label="Адреса"
           outlined
+          chips
           :errorMessages="addressFieldErrors"
+          deletable-chips
           :items="addressItems"
           clearable
-          dense
+          auto-select-first
         />
         <v-text-field
           v-model="v$.emails.$model"
@@ -57,6 +67,30 @@
             />
           </div>
         </div>
+
+        <v-select
+          :items="truckFilterStatusItems"
+          v-model="state.useTruckFilter"
+          label="Фильтр по грузовикам"
+          outlined
+          hide-details
+        />
+        <v-autocomplete
+          v-if="state.useTruckFilter !== 'notUsed'"
+          multiple
+          chips
+          item-value="_id"
+          item-text="regNum"
+          v-model="v$.trucks.$model"
+          label="Грузовики"
+          deletable-chips
+          auto-select-first
+          outlined
+          :items="truckItems"
+          clearable
+          hide-details
+          :style="{ width: '100%' }"
+        />
         <v-text-field v-model="state.note" label="Примечание" outlined dense />
       </div>
     </v-card-text>
@@ -89,6 +123,9 @@ export default {
       addressFieldErrors,
       emailFieldErrors,
       ccEmailFieldErrors,
+      companyNameFieldErrors,
+      truckFilterStatusItems,
+      truckItems,
     } = useFormState(props, ctx)
     return {
       v$,
@@ -101,6 +138,9 @@ export default {
       addressFieldErrors,
       emailFieldErrors,
       ccEmailFieldErrors,
+      companyNameFieldErrors,
+      truckFilterStatusItems,
+      truckItems,
     }
   },
 }

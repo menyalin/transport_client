@@ -16,18 +16,32 @@ export const useFormState = (props, { emit }) => {
     }
     return true
   }
+  /*
+    export enum USE_TRUCK_FILTER_ENUM {
+      included = 'included',
+      excluded = 'excluded',
+      notUsed = 'notUsed',
+}
+  */
+  const truckFilterStatusItems = [
+    { value: 'notUsed', text: 'Все грузовики' },
+    { value: 'included', text: 'Разрешенные грузовики' },
+    { value: 'excluded', text: 'Кроме грузовиков' },
+  ]
 
   function getInitialState() {
     if (props.initialState?._id) return props.initialState
     return {
       title: '',
       addresses: [],
+      companyName: '',
       idleHoursBeforeNotify: 0,
       emails: '',
       ccEmails: '',
       templateName: '',
       note: '',
       usePlannedDate: false,
+      useTruckFilter: 'notUsed',
     }
   }
 
@@ -36,6 +50,9 @@ export const useFormState = (props, { emit }) => {
   const rules = {
     title: { required, $autoDirty: true },
     addresses: { required, $autoDirty: true },
+    useTruckFilter: { $autoDirty: true },
+    trucks: { $autoDirty: true },
+    companyName: { required, $autoDirty: true },
     emails: {
       required,
       $autoDirty: true,
@@ -55,6 +72,7 @@ export const useFormState = (props, { emit }) => {
     note: { $autoDirty: true },
     usePlannedDate: { $autoDirty: true },
   }
+
   const v$ = useVuelidate(rules, state)
 
   function cancel() {
@@ -70,6 +88,10 @@ export const useFormState = (props, { emit }) => {
 
   const titleFieldErrors = computed(() => {
     return v$.value.title.$errors.map((error) => error.$message)
+  })
+
+  const companyNameFieldErrors = computed(() => {
+    return v$.value.companyName.$errors.map((error) => error.$message)
   })
 
   const addressFieldErrors = computed(() => {
@@ -94,6 +116,10 @@ export const useFormState = (props, { emit }) => {
     )
   })
 
+  const truckItems = computed(() => {
+    return store.getters.trucks.filter((i) => i.type === 'truck')
+  })
+
   watch(
     () => props.initialState,
     () => {
@@ -114,5 +140,8 @@ export const useFormState = (props, { emit }) => {
     addressFieldErrors,
     emailFieldErrors,
     ccEmailFieldErrors,
+    companyNameFieldErrors,
+    truckFilterStatusItems,
+    truckItems,
   }
 }
