@@ -7,6 +7,7 @@
       :item="item"
       @edit="editHandler"
       @delete="deleteHandler"
+      @switchStatus="switchStatusHandler"
     />
   </div>
 </template>
@@ -27,10 +28,14 @@ export default {
     },
   },
   setup(props, ctx) {
-    const { deleteHandler, editHandler } = useListData(props, ctx)
+    const { deleteHandler, editHandler, switchStatusHandler } = useListData(
+      props,
+      ctx
+    )
     return {
       deleteHandler,
       editHandler,
+      switchStatusHandler,
     }
   },
 }

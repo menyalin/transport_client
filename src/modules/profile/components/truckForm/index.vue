@@ -400,7 +400,7 @@ export default {
       type: { required },
       kind: {},
       liftCapacity: { numeric },
-      liftCapacityType: { required, numeric },
+      liftCapacityType: { required },
       regNum: { required },
       win: {},
       sts: {},
