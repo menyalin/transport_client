@@ -12,7 +12,7 @@ const initPeriod = () => {
 }
 
 export const useListData = ({ client, _id }) => {
-  if (!client) console.error('client id is missing')
+  // if (!client) throw new Error('client is missing')
   const historyState = window.history.state
   const initialState = {
     search: null,
