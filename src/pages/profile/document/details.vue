@@ -20,7 +20,7 @@
 <script>
 import AppDocumentForm from '@/modules/profile/components/documentForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { DowntimeService } from '@/shared/services'
+import { DocumentService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {
@@ -32,7 +32,7 @@ export default {
   mixins: [pageDetailsMixin],
   data() {
     return {
-      service: DowntimeService,
+      service: DocumentService,
     }
   },
 }
