@@ -56,7 +56,25 @@
       </div>
       <div v-else class="mb-4">
         <v-divider />
+        <v-text-field
+          label="Наименование исполнителя"
+          outlined
+          v-model="form.executorName"
+          class="mt-4"
+          :style="{ width: '400px' }"
+        />
+        <v-select
+          multiple
+          outlined
+          :items="carriers"
+          label="Разрешенные ТК"
+          :style="{ width: '500px' }"
+          v-model="form.allowedCarriers"
+          chips
+          deletable-chips
+        />
         <app-clients v-model="form.clients" :style="{ 'max-width': '400px' }" />
+
         <v-checkbox
           v-model="form.usePriceWithVAT"
           :disabled="form.vatRate === 0"
@@ -112,7 +130,8 @@
         />
       </div>
       <v-text-field
-        v-model.number="form.commission"
+        v-if="isOutsourceAgreement"
+        v-model.number="form.commsission"
         type="number"
         label="Комиссия экспедитора (скидка в акте)"
         outlined
@@ -193,6 +212,8 @@ export default {
         clientNumRequired: false,
         auctionNumRequired: false,
         commission: 0,
+        executorName: null,
+        allowedCarriers: [],
       },
     }
   },
@@ -207,6 +228,17 @@ export default {
     },
     vatRates() {
       return this.$store.getters.vatRates
+    },
+    carriers() {
+      return this.$store.getters.tkNames
+        .map((i) => ({
+          value: i._id,
+          text: i.name,
+        }))
+        .sort((a, b) => a - b)
+    },
+    isOutsourceAgreement() {
+      return this.form.isOutsourceAgreement
     },
   },
   watch: {
