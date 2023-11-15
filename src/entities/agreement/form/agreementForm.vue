@@ -162,6 +162,7 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import { required } from 'vuelidate/lib/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
@@ -224,7 +225,11 @@ export default {
     },
 
     formState() {
-      return { ...this.form, company: this.$store.getters.directoriesProfile }
+      return {
+        ...this.form,
+        company: this.$store.getters.directoriesProfile,
+        date: dayjs(this.form.date).toISOString(),
+      }
     },
     vatRates() {
       return this.$store.getters.vatRates
