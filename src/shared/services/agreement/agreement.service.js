@@ -48,6 +48,11 @@ class AgreementService {
     return data
   }
 
+  async getForClient(params) {
+    let { data } = await api.get(BASE_PATH + '/get_for_client', { params })
+    return data
+  }
+
   async getActiveAgreements() {
     if (this.allAgreements?.length) {
       return this.allAgreements
