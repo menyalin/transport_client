@@ -22,7 +22,7 @@ const getPointStr = (point) => {
   return res + '\n'
 }
 
-export default async (userId, route, params) => {
+export default async (userId, route, params, agreement) => {
   if (!userId) {
     store.commit('setError', 'Водитель не определен')
     return null
@@ -33,12 +33,13 @@ export default async (userId, route, params) => {
   }
   const user = store.getters.driversMap.get(userId)
   const title = '__' + user.name + ', Ваш рейс:__ \n'
+  const executor = '\n **ТК: ' + agreement.executorName + '**'
   const points = route.reduce(
     (res, item, idx) => res + `\n${idx + 1}. ` + getPointStr(item),
     ''
   )
 
   await navigator.clipboard.writeText(
-    title + getCargoParams(params) + points + '\n'
+    title + executor + getCargoParams(params) + points + '\n'
   )
 }

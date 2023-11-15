@@ -114,6 +114,7 @@
             title="Маршрут"
             :state="state"
             :cargoParams="cargoParams"
+            :agreement="agreement"
             :confirmed="orderInProgress"
             class="route-points"
             :isValid="isValidRoute"

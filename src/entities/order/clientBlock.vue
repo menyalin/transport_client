@@ -9,7 +9,7 @@
         label="Заказчик"
         outlined
         :loading="loading"
-        :messages="agreement ? [agreement.name] : ['Соглашение отсутствует']"
+        :messages="agreementNameSring"
         :error="!agreement"
         dense
         only-clients
@@ -91,6 +91,14 @@ export default {
     }
   },
   computed: {
+    agreementNameSring() {
+      const suffix = this.params.directiveAgreement
+        ? ' (Установлено вручную)'
+        : ''
+      return this.agreement
+        ? [this.agreement.name + suffix]
+        : ['Соглашение отсутствует']
+    },
     showChangeAgreementBtn() {
       return this.agreements.length > 1
     },
@@ -124,10 +132,11 @@ export default {
     params: {
       deep: true,
       handler: function (val) {
-        console.log('emit params')
         const keys = Object.keys(this.params)
-        if (keys.some((key) => val[key] !== this.item[key]))
+        if (keys.some((key) => val[key] !== this.item[key])) {
           this.$emit('change', this.params)
+          console.log('emit params')
+        }
       },
     },
     ['params.client']: {
@@ -139,7 +148,12 @@ export default {
       },
     },
     routeDate: async function () {
-      this.$emit('change', { ...this.params, agreement: null })
+      this.$emit('change', {
+        ...this.params,
+        agreement: this.params.directiveAgreement
+          ? this.params.agreement
+          : null,
+      })
     },
   },
   methods: {
@@ -199,6 +213,7 @@ export default {
       if (forceUpdate || !this.params.directiveAgreement) {
         this.params.agreement = null
         this.agreement = null
+        this.directiveAgreement = false
         this.$emit('updateAgreement', null)
       }
     },
