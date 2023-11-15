@@ -73,6 +73,7 @@ export default {
     points: Array,
     title: String,
     cargoParams: Object,
+    agreement: Object,
     confirmed: Boolean,
     isValid: Boolean,
     state: Object,
@@ -125,7 +126,8 @@ export default {
       await putRouteForDriverToClipboard(
         this.driverId,
         this.points,
-        this.cargoParams
+        this.cargoParams,
+        this.agreement
       )
     },
     showReturnBtn(idx) {
