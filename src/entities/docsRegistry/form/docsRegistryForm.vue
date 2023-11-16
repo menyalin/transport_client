@@ -47,6 +47,24 @@
           @change="changeClientHandler"
         />
         <v-select
+          v-model="state.agreement"
+          label="Соглашение"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="disabledAgreements || disabledMainFields"
+          :loading="loadingAgreements"
+          :items="agreementItems"
+          :style="{ maxWidth: '300px' }"
+          @blur="v$.agreement.$touch"
+          :error-messages="agreementErrorMessages"
+          @change="changeAgreementHandler"
+        />
+
+        <v-select
           label="Площадка"
           v-model="state.placeForTransferDocs"
           dense
@@ -122,6 +140,11 @@ export default {
       clientErrorMessages,
       placeErrorMessages,
       setFormState,
+      disabledAgreements,
+      loadingAgreements,
+      agreementItems,
+      agreementErrorMessages,
+      changeAgreementHandler,
     } = useDocsRegistryForm(props.item, ctx)
 
     function cancelHandler() {
@@ -171,9 +194,7 @@ export default {
         state.value.placeForTransferDocs !== props.item.placeForTransferDocs
       )
     })
-    function buttonClick() {
-      console.log('click')
-    }
+
     watch(
       () => props.item,
       () => {
@@ -195,11 +216,15 @@ export default {
       placeErrorMessages,
       pickOrdersHandler,
       needSave,
-      buttonClick,
       changeClientHandler,
       showPickOrderDialog,
       downloadPdf,
       downloadXlsx,
+      disabledAgreements,
+      loadingAgreements,
+      agreementItems,
+      agreementErrorMessages,
+      changeAgreementHandler,
     }
   },
 }

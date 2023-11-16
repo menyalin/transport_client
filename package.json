@@ -14,8 +14,6 @@
     "core-js": "^3.8.3",
     "dayjs": "^1.11.3",
     "docxtemplater": "^3.34.0",
-    "effector": "^22.4.1",
-    "effector-vue": "^22.2.0",
     "file-saver": "^2.0.5",
     "pdfmake": "^0.2.7",
     "pizzip": "^3.1.4",
