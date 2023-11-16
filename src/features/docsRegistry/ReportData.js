@@ -72,9 +72,11 @@ export default class TableData {
   }
 
   getCompanyName() {
-    return store.getters.myCompanies.find(
-      (i) => i._id === this.docsRegistry.company
-    ).fullName
+    return (
+      this.docsRegistry.executorName ||
+      store.getters.myCompanies.find((i) => i._id === this.docsRegistry.company)
+        .fullName
+    )
   }
   placeName() {
     const client = store.getters.partnersMap.get(this.docsRegistry.client)
