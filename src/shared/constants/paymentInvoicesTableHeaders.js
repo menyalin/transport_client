@@ -26,6 +26,12 @@ export default [
     default: true,
   },
   {
+    value: 'agreementName',
+    text: 'Соглашение',
+    sortable: false,
+    default: true,
+  },
+  {
     value: 'count',
     text: 'Рейсы',
     sortable: false,
