@@ -8,7 +8,7 @@ const getInitialState = (editedItem) => ({
   status: editedItem?.status || 'inProcess',
   number: editedItem?.number || null,
   client: editedItem?.client || undefined,
-  agreement: editedItem?.agreement || null,
+  agreement: editedItem?.agreementId || null,
   note: editedItem?.note || null,
   sendDate: editedItem?.sendDate
     ? dayjs(editedItem?.sendDate).format('YYYY-MM-DD')
