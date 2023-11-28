@@ -13,6 +13,12 @@
         :disabledDownloadFiles="disabledDownloadFiles"
         @downloadTemplate="downloadHandler"
       />
+      <download-doc-template-menu
+        :templates="newDocTemplates"
+        :disabledDownloadFiles="disabledDownloadFiles"
+        @downloadTemplate="newDownloadHandler"
+        class="mx-3"
+      />
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
@@ -136,7 +142,8 @@ export default {
       setFormState,
     } = usePaymentInvoiceForm(props.item, ctx)
 
-    const { docTemplates } = usePaymentInvoiceDocTemplates(state)
+    const { docTemplates, newDocTemplates, newDownloadHandler } =
+      usePaymentInvoiceDocTemplates(state, props)
 
     function cancelHandler() {
       router.go(-1)
@@ -205,6 +212,9 @@ export default {
       downloadHandler,
       agreementItems,
       docTemplates,
+
+      newDocTemplates,
+      newDownloadHandler,
     }
   },
 }
