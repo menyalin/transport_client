@@ -64,6 +64,21 @@
       :style="{ 'max-width': '220px' }"
       @change="settings.listOptions.page = 1"
     />
+    <v-autocomplete
+      v-model="settings.agreement"
+      label="Соглашение"
+      outlined
+      dense
+      clearable
+      auto-select-first
+      hide-details
+      hide-append-icon
+      :items="agreementItems"
+      item-value="_id"
+      item-text="name"
+      :style="{ 'max-width': '250px' }"
+      @change="settings.listOptions.page = 1"
+    />
     <v-select
       v-model="settings.tkName"
       label="ТК"
@@ -218,6 +233,7 @@ export default {
       drivers,
       addressItems,
       clientItems,
+      agreementItems,
       invoiceStatusItems,
     } = useOrderListSettingsData()
 
@@ -247,6 +263,7 @@ export default {
       addressItems,
       updateHeadersHandler,
       invoiceStatusItems,
+      agreementItems,
     }
   },
 }
