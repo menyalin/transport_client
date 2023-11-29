@@ -22,6 +22,7 @@ export const useListData = () => {
   const historyState = window.history.state
   const initialState = {
     client: null,
+    agreement: null,
     tkName: null,
     truck: null,
     trailer: null,
@@ -74,6 +75,7 @@ export const useListData = () => {
     trailer: settings.value.trailer,
     address: settings.value.address,
     driver: settings.value.driver,
+    agreement: settings.value.agreement,
     docStatus: settings.value.docStatus,
     invoiceStatus: settings.value.invoiceStatus,
     tkName: settings.value.tkName,
