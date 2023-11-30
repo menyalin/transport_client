@@ -26,9 +26,9 @@ class PaymentInvoiceService {
     return data
   }
 
-  async getAllowedPrintForms(agreement) {
+  async getAllowedPrintForms(agreement, client) {
     const { data } = await api.get(BASE_PATH + '/allowed_print_forms', {
-      params: { agreement },
+      params: { agreement, client },
     })
     return data
   }
