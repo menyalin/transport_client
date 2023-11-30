@@ -53,7 +53,6 @@
   </v-dialog>
 </template>
 <script>
-
 import { OrderService, TariffService } from '@/shared/services'
 import appFinalPriceTable from './finalPriceTable.vue'
 
@@ -62,7 +61,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'PriceDialog',
-  inject: ['getOrderAgreement', 'updateFinalPrices'],
+  inject: ['updateFinalPrices'],
   components: {
     appFinalPriceTable,
   },
@@ -71,14 +70,11 @@ export default {
     dialog: Boolean,
     finalPrices: Array,
     prePrices: Array,
-    agreementId: String,
+    agreement: Object,
   },
   data() {
     return {
       loading: false,
-      agreement: {
-        vatRate: 0,
-      },
       priceWithVat: false,
     }
   },
@@ -112,13 +108,11 @@ export default {
     },
   },
   watch: {
-    agreementId: {
+    agreement: {
       immediate: true,
-      handler: async function (val) {
-        if (val) {
-          this.agreement = await this.getOrderAgreement(val)
-          if (this.agreement) this.priceWithVat = this.agreement.usePriceWithVAT
-        } else this.agreement = null
+      deep: true,
+      handler: function (val) {
+        this.priceWithVat = val?.usePriceWithVAT || false
       },
     },
   },

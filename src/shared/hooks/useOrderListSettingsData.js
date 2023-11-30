@@ -1,7 +1,13 @@
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import store from '@/store'
+import { AgreementService } from '@/shared/services'
 
 export default (settings) => {
+  const agreements = ref([])
+  async function getAgreements() {
+    const res = await AgreementService.getActiveAgreements()
+    agreements.value = res
+  }
   const orderStatuses = computed(() => store.getters.orderStatuses)
   const invoiceStatusItems = [
     { text: 'Включен', value: 'included' },
@@ -22,6 +28,13 @@ export default (settings) => {
           console.error('useOrderListUtils: unexpected document status value')
       })
     return docStatusesWithCustomNames
+  })
+
+  const agreementItems = computed(() => {
+    return agreements.value
+      .filter((i) => !i.isOutsourceAgreement)
+      .map((i) => ({ _id: i._id, name: i.name }))
+      .sort((a, b) => a.name - b.name)
   })
 
   const trailers = computed(() =>
@@ -62,7 +75,9 @@ export default (settings) => {
   const addressItems = computed(() => store.getters.addressesForAutocomplete)
 
   const loadingZoneItems = computed(() => store.getters.zones)
-
+  onMounted(async () => {
+    await getAgreements()
+  })
   return {
     orderStatuses,
     docStatuses,
@@ -73,5 +88,6 @@ export default (settings) => {
     addressItems,
     loadingZoneItems,
     invoiceStatusItems,
+    agreementItems,
   }
 }

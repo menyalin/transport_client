@@ -56,7 +56,25 @@
       </div>
       <div v-else class="mb-4">
         <v-divider />
+        <v-text-field
+          label="Наименование исполнителя"
+          outlined
+          v-model="form.executorName"
+          class="mt-4"
+          :style="{ width: '400px' }"
+        />
+        <v-select
+          multiple
+          outlined
+          :items="carriers"
+          label="Разрешенные ТК"
+          :style="{ width: '500px' }"
+          v-model="form.allowedCarriers"
+          chips
+          deletable-chips
+        />
         <app-clients v-model="form.clients" :style="{ 'max-width': '400px' }" />
+
         <v-checkbox
           v-model="form.usePriceWithVAT"
           :disabled="form.vatRate === 0"
@@ -112,7 +130,8 @@
         />
       </div>
       <v-text-field
-        v-model.number="form.commission"
+        v-if="isOutsourceAgreement"
+        v-model.number="form.commsission"
         type="number"
         label="Комиссия экспедитора (скидка в акте)"
         outlined
@@ -143,6 +162,7 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import { required } from 'vuelidate/lib/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
@@ -193,6 +213,8 @@ export default {
         clientNumRequired: false,
         auctionNumRequired: false,
         commission: 0,
+        executorName: null,
+        allowedCarriers: [],
       },
     }
   },
@@ -203,10 +225,25 @@ export default {
     },
 
     formState() {
-      return { ...this.form, company: this.$store.getters.directoriesProfile }
+      return {
+        ...this.form,
+        company: this.$store.getters.directoriesProfile,
+        date: dayjs(this.form.date).toISOString(),
+      }
     },
     vatRates() {
       return this.$store.getters.vatRates
+    },
+    carriers() {
+      return this.$store.getters.tkNames
+        .map((i) => ({
+          value: i._id,
+          text: i.name,
+        }))
+        .sort((a, b) => a - b)
+    },
+    isOutsourceAgreement() {
+      return this.form.isOutsourceAgreement
     },
   },
   watch: {

@@ -79,13 +79,15 @@
             title="Статус рейса"
             class="route-state"
           />
-          <app-client-block
+          <ClientBlock
             v-model="client"
             title="Информация о клиенте"
             class="client"
+            :carrier="confirmedCrew.tkName"
             :isValidNum="isValidClientNum(agreement, client, state)"
             :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
             :routeDate="routeDate"
+            @updateAgreement="updateAgreementHandler"
           />
           <CargoParams
             v-model="cargoParams"
@@ -112,6 +114,7 @@
             title="Маршрут"
             :state="state"
             :cargoParams="cargoParams"
+            :agreement="agreement"
             :confirmed="orderInProgress"
             class="route-points"
             :isValid="isValidRoute"
@@ -143,7 +146,7 @@
               :isValidPrices="isValidPrices(agreement, prices, state)"
               :prices.sync="prices"
               :outsourceCosts.sync="outsourceCosts"
-              :agreementId="client.agreement"
+              :agreement="agreement"
               :outsourceAgreementId="confirmedCrew.outsourceAgreement"
               :analytics="analytics"
               :route="route"
@@ -152,7 +155,7 @@
             <app-price-dialog
               v-if="showFinalPriceDialog"
               :order="order"
-              :agreementId="client.agreement"
+              :agreement="agreement"
               :prePrices.sync="prePrices"
               :finalPrices="finalPrices"
               :dialog.sync="priceDialog"
@@ -206,18 +209,14 @@
   </v-container>
 </template>
 <script>
-import {
-  OrderService,
-  AgreementService,
-  OrderTemplateService,
-} from '@/shared/services'
+import { OrderService, OrderTemplateService } from '@/shared/services'
 
 import { ButtonsPanel } from '@/shared/ui'
 import AppRoutePoints from './routePoints.vue'
 
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
-import AppClientBlock from './clientBlock.vue'
+
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
@@ -233,6 +232,7 @@ import {
   CargoParams,
   OrderModel,
   useOrderDocs,
+  ClientBlock,
 } from '@/entities/order'
 import { useOrderValidations } from '../../hooks/useOrderValidations.js'
 import AppPaymentToDriver from './paymentToDriver.vue'
@@ -247,7 +247,7 @@ export default {
     AppRoutePoints,
     AppRouteState,
     AppConfirmedCrew,
-    AppClientBlock,
+    ClientBlock,
     AppGradeBlock,
     AppAnalyticBlock,
     AppPriceBlock,
@@ -271,13 +271,13 @@ export default {
       updateFinalPrices: (val) => {
         this.finalPrices = [...val]
       },
-      getOrderAgreement: async (val) => {
-        if (!val && !this.client.agreement) return null
-        const agreement = await AgreementService.getById(
-          val || this.client.agreement
-        )
-        return agreement
-      },
+      // getOrderAgreement: async (val) => {
+      //   if (!val && !this.client.agreement) return null
+      //   const agreement = await AgreementService.getById(
+      //     val || this.client.agreement
+      //   )
+      //   return agreement
+      // },
     }
   },
   setup() {
@@ -507,13 +507,13 @@ export default {
     },
   },
   watch: {
-    ['client.agreement']: {
-      immediate: true,
-      handler: async function (val) {
-        if (!val) this.agreement = null
-        else this.agreement = await AgreementService.getById(val)
-      },
-    },
+    // ['client.agreement']: {
+    //   immediate: true,
+    //   handler: async function (val) {
+    //     if (!val) this.agreement = null
+    //     else this.agreement = await AgreementService.getById(val)
+    //   },
+    // },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)
@@ -574,6 +574,10 @@ export default {
   },
 
   methods: {
+    updateAgreementHandler(agreement) {
+      this.agreement = Object.assign({}, agreement)
+    },
+
     updateOrderType() {
       const regions = this.route
         .map((i) =>
