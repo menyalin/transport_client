@@ -29,8 +29,10 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
 
   async function getAllowedPrintForms() {
     const agreement = formState.value.agreement
+    const client = formState.value.client
     newDocTemplates.value = await PaymentInvoiceService.getAllowedPrintForms(
-      agreement
+      agreement,
+      client
     )
   }
 
