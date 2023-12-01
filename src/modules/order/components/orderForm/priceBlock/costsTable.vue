@@ -3,10 +3,11 @@
     <template #default>
       <thead>
         <tr>
-          <th class="text-center">Тип</th>
-          <th class="text-center">Цена без НДС</th>
-          <th v-if="false" class="text-center">Сумма НДС</th>
-          <th class="text-center">Цена итоговая</th>
+          <th class="text-center" width="140">Тип</th>
+          <th v-if="usePriceWithVat" class="text-center" width="130">
+            Цена c НДС
+          </th>
+          <th v-else class="text-center" width="130">Цена без НДС</th>
           <th class="text-center">Примечание</th>
           <th />
         </tr>
@@ -14,16 +15,14 @@
       <tbody>
         <tr v-if="showPrePrice && basePrePrice">
           <td>Тариф из ДС</td>
-
-          <td class="text-right">
-            {{ new Intl.NumberFormat().format(basePrePrice.priceWOVat) }}
-          </td>
-          <td class="text-right" v-if="false">
-            {{ new Intl.NumberFormat().format(basePrePrice.sumVat) }}
-          </td>
-          <td class="text-right">
+          <td v-if="usePriceWithVat" class="text-right">
             {{ new Intl.NumberFormat().format(basePrePrice.price) }}
           </td>
+
+          <td v-else class="text-right">
+            {{ new Intl.NumberFormat().format(basePrePrice.priceWOVat) }}
+          </td>
+
           <td colspan="4" />
         </tr>
         <tr v-else-if="showPrePrice">
@@ -40,15 +39,13 @@
                 : '-'
             }}
           </td>
-          <td class="text-right">
-            {{ new Intl.NumberFormat().format(item.priceWOVat) }}
-          </td>
-          <td class="text-right" v-if="false">
-            {{ new Intl.NumberFormat().format(item.sumVat) }}
-          </td>
-          <td class="text-right">
+          <td v-if="usePriceWithVat" class="text-right">
             {{ new Intl.NumberFormat().format(item.price) }}
           </td>
+          <td v-else class="text-right">
+            {{ new Intl.NumberFormat().format(item.priceWOVat) }}
+          </td>
+
           <td>
             <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2">
               mdi-cash
@@ -81,6 +78,10 @@ export default {
     readonly: Boolean,
     basePrePrice: Object,
     hidePrePrice: Boolean,
+    usePriceWithVat: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     sortedItems() {
