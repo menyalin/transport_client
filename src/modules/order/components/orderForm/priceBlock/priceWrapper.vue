@@ -18,6 +18,8 @@
       :readonly="readonly"
       @editPrice="editPrice"
       @deletePrice="deletePrice"
+      :basePrePrice="basePrePrice"
+      :hidePrePrice="hidePrePrice"
     />
     <app-dialog-form
       v-model="editedItem"
@@ -52,6 +54,11 @@ export default {
     isValid: { type: Boolean, default: true },
     agreement: Object,
     readonly: { type: Boolean, default: false },
+    prePrices: Array,
+    hidePrePrice: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -69,6 +76,9 @@ export default {
       return this.$store.getters.orderPriceTypes
         .map((t) => t.value)
         .filter((t) => !usedTypes.includes(t))
+    },
+    basePrePrice() {
+      return this.prePrices?.find((i) => i.type === 'base') || null
     },
   },
   watch: {

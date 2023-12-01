@@ -135,7 +135,6 @@ export default {
         const keys = Object.keys(this.params)
         if (keys.some((key) => val[key] !== this.item[key])) {
           this.$emit('change', this.params)
-          console.log('emit params')
         }
       },
     },

@@ -7,6 +7,7 @@
       :readonly="readonlyPrice"
       :agreement="agreement"
       title="Стоимость рейса"
+      :prePrices="prePrices"
     />
     <app-price-wrapper
       v-if="showOutsourceBlock"
@@ -15,6 +16,7 @@
       :readonly="readonlyCosts"
       :agreement="outsourceAgreement"
       title="Затраты на привлеченного перевозчика"
+      :hidePrePrice="true"
     />
   </div>
 </template>
@@ -28,6 +30,7 @@ export default {
     AppPriceWrapper,
   },
   props: {
+    prePrices: Array,
     route: Array,
     isValidPrices: {
       type: Boolean,

@@ -145,6 +145,7 @@
             <app-price-block
               :isValidPrices="isValidPrices(agreement, prices, state)"
               :prices.sync="prices"
+              :prePrices="prePrices"
               :outsourceCosts.sync="outsourceCosts"
               :agreement="agreement"
               :outsourceAgreementId="confirmedCrew.outsourceAgreement"

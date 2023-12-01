@@ -5,13 +5,33 @@
         <tr>
           <th class="text-center">Тип</th>
           <th class="text-center">Цена без НДС</th>
-          <th class="text-center">Сумма НДС</th>
+          <th v-if="false" class="text-center">Сумма НДС</th>
           <th class="text-center">Цена итоговая</th>
           <th class="text-center">Примечание</th>
           <th />
         </tr>
       </thead>
       <tbody>
+        <tr v-if="showPrePrice && basePrePrice">
+          <td>Тариф из ДС</td>
+
+          <td class="text-right">
+            {{ new Intl.NumberFormat().format(basePrePrice.priceWOVat) }}
+          </td>
+          <td class="text-right" v-if="false">
+            {{ new Intl.NumberFormat().format(basePrePrice.sumVat) }}
+          </td>
+          <td class="text-right">
+            {{ new Intl.NumberFormat().format(basePrePrice.price) }}
+          </td>
+          <td colspan="4" />
+        </tr>
+        <tr v-else-if="showPrePrice">
+          <td colspan="99" align="center">
+            <b>Базовый тариф не определен</b>
+          </td>
+        </tr>
+
         <tr v-for="(item, idx) in sortedItems" :key="idx">
           <td class="text-start">
             {{
@@ -23,7 +43,7 @@
           <td class="text-right">
             {{ new Intl.NumberFormat().format(item.priceWOVat) }}
           </td>
-          <td class="text-right">
+          <td class="text-right" v-if="false">
             {{ new Intl.NumberFormat().format(item.sumVat) }}
           </td>
           <td class="text-right">
@@ -59,6 +79,8 @@ export default {
   props: {
     items: Array,
     readonly: Boolean,
+    basePrePrice: Object,
+    hidePrePrice: Boolean,
   },
   computed: {
     sortedItems() {
@@ -70,6 +92,9 @@ export default {
             typesOrder.findIndex((t) => t === a.type) -
             typesOrder.findIndex((t) => t === b.type)
         )
+    },
+    showPrePrice() {
+      return !this.hidePrePrice
     },
   },
 }
