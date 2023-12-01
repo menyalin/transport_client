@@ -111,9 +111,7 @@ export const useFormState = (props, { emit }) => {
   })
 
   const addressItems = computed(() => {
-    return store.getters.addressesForAutocomplete.filter(
-      (i) => i.partner === props.partnerId
-    )
+    return store.getters.addressesForAutocomplete.filter((i) => i.loading)
   })
 
   const truckItems = computed(() => {
