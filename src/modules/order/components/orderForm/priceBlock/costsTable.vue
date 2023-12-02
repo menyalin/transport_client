@@ -13,22 +13,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="showPrePrice && basePrePrice">
+        <tr v-if="showPrePrice">
           <td>Тариф из ДС</td>
           <td v-if="usePriceWithVat" class="text-right">
-            {{ new Intl.NumberFormat().format(basePrePrice.price) }}
+            {{ basePrePrice ? moneyFormatter.format(basePrePrice.price) : 0 }}
           </td>
 
           <td v-else class="text-right">
-            {{ new Intl.NumberFormat().format(basePrePrice.priceWOVat) }}
+            {{
+              basePrePrice ? moneyFormatter.format(basePrePrice.priceWOVat) : 0
+            }}
           </td>
 
           <td colspan="4" />
-        </tr>
-        <tr v-else-if="showPrePrice">
-          <td colspan="99" align="center">
-            <b>Базовый тариф не определен</b>
-          </td>
         </tr>
 
         <tr v-for="(item, idx) in sortedItems" :key="idx">
@@ -40,10 +37,10 @@
             }}
           </td>
           <td v-if="usePriceWithVat" class="text-right">
-            {{ new Intl.NumberFormat().format(item.price) }}
+            {{ moneyFormatter.format(item.price) }}
           </td>
           <td v-else class="text-right">
-            {{ new Intl.NumberFormat().format(item.priceWOVat) }}
+            {{ moneyFormatter.format(item.priceWOVat) }}
           </td>
 
           <td>
@@ -84,6 +81,12 @@ export default {
     },
   },
   computed: {
+    moneyFormatter() {
+      return new Intl.NumberFormat('ru-RU', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    },
     sortedItems() {
       const typesOrder = this.$store.getters.orderPriceTypes.map((i) => i.value)
       return this.items
