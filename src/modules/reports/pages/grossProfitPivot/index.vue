@@ -26,11 +26,13 @@
         id="main-filters"
         v-model="mainFilters"
         title="Основной отбор"
+        :agreements="agreements"
       />
       <app-filters
         id="additional-filters"
         v-model="additionalFilters"
         title="Дополнительный отбор"
+        :agreements="agreements"
       />
     </div>
     <v-progress-linear
@@ -48,6 +50,7 @@
         :priceWithVat="usePriceWithVat"
         @updateSelected="updateSelected"
         :daysCount="daysInRange"
+        :agreements="agreements"
       />
       <v-divider />
       <app-orders-table
@@ -61,6 +64,7 @@
 </template>
 
 <script>
+import { AgreementService } from '@/shared/services/index'
 import { DateRangeInput } from '@/shared/ui'
 import initDateRange from './initDateRange.js'
 import ReportService from '../../services/index.js'
@@ -86,6 +90,7 @@ export default {
   },
   data() {
     return {
+      agreements: [],
       loading: false,
       formName: 'grossProfitPivotReport',
       pivotData: {},
@@ -106,6 +111,7 @@ export default {
       return Math.ceil((end - start) / (1000 * 60 * 60 * 24))
     },
   },
+
   watch: {
     settings: {
       deep: true,
@@ -131,6 +137,9 @@ export default {
       this.settings.dateRange = initDateRange()
     }
   },
+  async mounted() {
+    await this.getAgreements()
+  },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
       formName: this.formName,
@@ -142,6 +151,23 @@ export default {
     next()
   },
   methods: {
+    async getAgreements() {
+      const { items } = await AgreementService.getList({
+        skip: 0,
+        limit: 100,
+        company: this.$store.getters.directoriesProfile,
+        clientsOnly: true,
+      })
+      this.agreements = Object.assign(
+        [],
+        items
+          .map((i) => ({
+            value: i._id,
+            text: i.name,
+          }))
+          .sort((a, b) => (a.name > b.name ? -1 : 1))
+      )
+    },
     updateSelected(val) {
       const groupItem = GROUP_BY_ITEMS.find(
         (i) => i.value === this.settings.groupBy
