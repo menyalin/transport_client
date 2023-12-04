@@ -52,6 +52,7 @@ export default {
     daysCount: Number,
     priceWithVat: Boolean,
     pivotData: { type: Object },
+    agreements: Array,
   },
   data() {
     return {
@@ -94,7 +95,7 @@ export default {
     items() {
       if (!this.pivotData?.items) return []
       return this.pivotData.items.map((i) => ({
-        _id: i._id.toString(),
+        _id: i._id?.toString(),
         titleColumn: this.setTitleColumn(i._id),
 
         count: i.totalCount,
@@ -146,6 +147,10 @@ export default {
             res.set(p._id, p.name)
           })
           break
+        case 'agreement':
+          this.agreements.forEach((p) => {
+            res.set(p.value, p.text)
+          })
       }
       return res
     },

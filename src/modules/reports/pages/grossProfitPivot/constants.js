@@ -1,5 +1,11 @@
 export const GROUP_BY_ITEMS = [
   { text: 'Клиент', value: 'client', disabled: false, filterName: 'clients' },
+  {
+    text: 'Соглашение',
+    value: 'agreement',
+    disabled: false,
+    filterName: 'agreements',
+  },
   { text: 'ТК', value: 'tkName', disabled: false, filterName: 'tkNames' },
   {
     text: 'Регион',
@@ -22,6 +28,7 @@ export const ALL_ORDER_TABLE_HEADERS = [
   { value: 'status', text: 'Статус', sortable: false },
   { value: 'orderDate', text: 'Дата', sortable: true },
   { value: 'client', text: 'Клиент', sortable: false },
+  { value: 'agreementName', text: 'Соглашение', sortable: false },
   { value: 'truck', text: 'ТС', sortable: false },
   { value: 'driver', text: 'Водитель', sortable: false },
   { value: 'tk', text: 'ТК', sortable: false },
@@ -69,6 +76,7 @@ export const DEFAULT_HEADERS = [
   'status',
   'orderDate',
   'client',
+  'agreementName',
   'truck',
   'driver',
   'tk',
@@ -81,6 +89,10 @@ export const DEFAULT_HEADERS = [
 
 export const MAIN_FILTER_LIST = {
   clients: {
+    values: [],
+    cond: 'in',
+  },
+  agreements: {
     values: [],
     cond: 'in',
   },
@@ -120,6 +132,10 @@ export const MAIN_FILTER_LIST = {
 
 export const ADDITIONAL_FILTER_LIST = {
   clients: {
+    values: [],
+    cond: 'in',
+  },
+  agreements: {
     values: [],
     cond: 'in',
   },
