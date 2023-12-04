@@ -177,7 +177,10 @@ export default {
           dateRange: this.dateRange,
           mainFilters: this.mainFilters,
           additionalFilters: this.additionalFilters,
-          listOptions: this.listOptions,
+          listOptions: {
+            ...this.listOptions,
+            priceWithVat: this.priceWithVat,
+          },
         })
         this.items = items
         this.totalCount = count
