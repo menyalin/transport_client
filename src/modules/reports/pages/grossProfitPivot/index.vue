@@ -64,20 +64,15 @@
 </template>
 
 <script>
-import { AgreementService } from '@/shared/services/index'
+import { useReportSettings } from './model/useReportSettings'
+
 import { DateRangeInput } from '@/shared/ui'
 import initDateRange from './initDateRange.js'
-import ReportService from '../../services/index.js'
+
 import AppGroupBySettings from './groupBySettings.vue'
 import AppPivotTable from './pivotTable.vue'
 import AppOrdersTable from './ordersTable.vue'
 import AppFilters from './filters.vue'
-
-import {
-  ADDITIONAL_FILTER_LIST,
-  MAIN_FILTER_LIST,
-  GROUP_BY_ITEMS,
-} from './constants.js'
 
 export default {
   name: 'GrossProfitReport',
@@ -88,43 +83,29 @@ export default {
     AppFilters,
     AppOrdersTable,
   },
-  data() {
-    return {
-      agreements: [],
-      loading: false,
-      formName: 'grossProfitPivotReport',
-      pivotData: {},
-      groupItems: GROUP_BY_ITEMS,
-      usePriceWithVat: true,
-      settings: {
-        dateRange: null,
-        groupBy: 'client',
-      },
-      mainFilters: MAIN_FILTER_LIST,
-      additionalFilters: ADDITIONAL_FILTER_LIST,
-    }
-  },
-  computed: {
-    daysInRange() {
-      const start = new Date(this.settings.dateRange[0])
-      const end = new Date(this.settings.dateRange[1])
-      return Math.ceil((end - start) / (1000 * 60 * 60 * 24))
-    },
-  },
+  data() {},
+  setup() {
+    const {
+      settings,
+      groupItems,
+      mainFilters,
+      additionalFilters,
+      pivotData,
+      daysInRange,
+      agreements,
+      usePriceWithVat,
+    } = useReportSettings()
 
-  watch: {
-    settings: {
-      deep: true,
-      handler: function () {
-        this.getData()
-      },
-    },
-    mainFilters: {
-      deep: true,
-      handler: function () {
-        this.getData()
-      },
-    },
+    return {
+      settings,
+      groupItems,
+      mainFilters,
+      additionalFilters,
+      pivotData,
+      daysInRange,
+      agreements,
+      usePriceWithVat,
+    }
   },
 
   async created() {
@@ -150,50 +131,7 @@ export default {
     })
     next()
   },
-  methods: {
-    async getAgreements() {
-      const { items } = await AgreementService.getList({
-        skip: 0,
-        limit: 100,
-        company: this.$store.getters.directoriesProfile,
-        clientsOnly: true,
-      })
-      this.agreements = Object.assign(
-        [],
-        items
-          .map((i) => ({
-            value: i._id,
-            text: i.name,
-          }))
-          .sort((a, b) => (a.name > b.name ? -1 : 1))
-      )
-    },
-    updateSelected(val) {
-      const groupItem = GROUP_BY_ITEMS.find(
-        (i) => i.value === this.settings.groupBy
-      )
-      this.additionalFilters[groupItem.filterName] = {
-        values: val,
-        cond: 'in',
-      }
-    },
-    async getData() {
-      try {
-        this.loading = true
-        const { pivot } = await ReportService.grossProfitPivot({
-          dateRange: this.settings.dateRange,
-          company: this.$store.getters.directoriesProfile,
-          groupBy: this.settings.groupBy,
-          mainFilters: this.mainFilters,
-        })
-        this.pivotData = pivot
-        this.loading = false
-      } catch (e) {
-        this.$store.commit('setError', e.message)
-        this.loading = false
-      }
-    },
-  },
+  methods: {},
 }
 </script>
 <style scoped>
