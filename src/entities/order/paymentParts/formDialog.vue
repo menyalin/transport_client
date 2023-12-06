@@ -20,10 +20,9 @@
             outlined
             dense
             v-model="state.agreement"
-            :items="agreementItems"
+            :items="agreements"
             item-value="_id"
             item-text="name"
-            readonly
           />
           <div class="row-sum">
             <v-text-field
@@ -83,7 +82,7 @@ export default {
     const {
       state,
       clientItems,
-      agreementItems,
+      agreements,
       vatCheckboxIsDisabled,
       sumFieldIsDisabled,
       vatRate,
@@ -98,7 +97,7 @@ export default {
       closeDialog,
       state,
       clientItems,
-      agreementItems,
+      agreements,
       vatCheckboxIsDisabled,
       sumFieldIsDisabled,
       invalidForm,

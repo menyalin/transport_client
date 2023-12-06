@@ -7,7 +7,7 @@ import { AgreementService } from '@/shared/services/index'
 export function usePaymentPartForm({ routeDate }) {
   if (!routeDate) console.warn('-->> route date is required!!!')
   const agreement = ref({})
-
+  const agreements = ref([])
   const state = ref({
     client: null,
     agreement: null,
@@ -30,20 +30,18 @@ export function usePaymentPartForm({ routeDate }) {
   )
 
   async function setAgreement({ client, routeDate }) {
-    agreement.value = await AgreementService.getForOrder({
+    agreements.value = await AgreementService.getForClient({
       client,
       date: routeDate,
       company: store.getters.directoriesProfile,
     })
-    if (agreement.value) {
-      state.value.agreement = agreement.value._id
-      state.value.sumWithVAT = !!agreement.value.vatRate
+
+    if (agreements.value.length === 1) {
+      agreement.value = agreements.value[0]
+      // state.value.agreement = agreement.value[0]._id
+      // state.value.sumWithVAT = !!agreement.value[0].vatRate
     }
   }
-  const agreementItems = computed(() => {
-    if (agreement.value) return [agreement.value]
-    else return []
-  })
 
   const vatCheckboxIsDisabled = computed(() => {
     return !agreement.value?.vatRate
@@ -52,6 +50,11 @@ export function usePaymentPartForm({ routeDate }) {
   const sumFieldIsDisabled = computed(() => !state.value?.agreement)
 
   const vatRate = computed(() => agreement.value.vatRate)
+
+  watch(state, (newVal, oldVal) => {
+    if (newVal.agreement !== oldVal.agreement)
+      console.log('agreement changed: ', newVal)
+  })
 
   watch(
     [() => routeDate, () => state.value.client],
@@ -64,7 +67,7 @@ export function usePaymentPartForm({ routeDate }) {
     state,
     invalidForm,
     clientItems,
-    agreementItems,
+    agreements,
     vatCheckboxIsDisabled,
     sumFieldIsDisabled,
     vatRate,
