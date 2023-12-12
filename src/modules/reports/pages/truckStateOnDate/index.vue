@@ -67,7 +67,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import ReportService from '../../services/index.js'
+import { ReportService } from '@/shared/services'
 import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 export default {
   name: 'TruckStateOnDate',

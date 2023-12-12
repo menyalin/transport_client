@@ -38,9 +38,9 @@
   </div>
 </template>
 <script>
-import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './constants.js'
+import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-import service from '../../services/index.js'
+import { ReportService } from '@/shared/services'
 
 export default {
   name: 'OrdersTable',
@@ -172,7 +172,7 @@ export default {
     async getData() {
       try {
         this.loading = true
-        const { items, count } = await service.grossProfitDetailsData({
+        const { items, count } = await ReportService.grossProfitDetailsData({
           company: this.$store.getters.directoriesProfile,
           dateRange: this.dateRange,
           mainFilters: this.mainFilters,
@@ -182,8 +182,8 @@ export default {
             priceWithVat: this.priceWithVat,
           },
         })
-        this.items = items
-        this.totalCount = count
+        this.items = items || []
+        this.totalCount = count || 0
         this.loading = false
       } catch (e) {
         this.loading = false

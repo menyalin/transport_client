@@ -5,7 +5,7 @@
     </div>
     <div id="settings">
       <div id="period-settings">
-        <v-btn icon @click.stop="getData">
+        <v-btn icon @click.stop="getPivotData">
           <v-icon> mdi-cached </v-icon>
         </v-btn>
         <date-range-input v-model="settings.dateRange" />
@@ -51,6 +51,7 @@
         @updateSelected="updateSelected"
         :daysCount="daysInRange"
         :agreements="agreements"
+        :selectedGroups="selectedGroups"
       />
       <v-divider />
       <app-orders-table
@@ -65,10 +66,7 @@
 
 <script>
 import { useReportSettings } from './model/useReportSettings'
-
 import { DateRangeInput } from '@/shared/ui'
-import initDateRange from './initDateRange.js'
-
 import AppGroupBySettings from './groupBySettings.vue'
 import AppPivotTable from './pivotTable.vue'
 import AppOrdersTable from './ordersTable.vue'
@@ -83,7 +81,6 @@ export default {
     AppFilters,
     AppOrdersTable,
   },
-  data() {},
   setup() {
     const {
       settings,
@@ -94,6 +91,11 @@ export default {
       daysInRange,
       agreements,
       usePriceWithVat,
+      getData,
+      loading,
+      updateSelected,
+      selectedGroups,
+      getPivotData,
     } = useReportSettings()
 
     return {
@@ -105,33 +107,13 @@ export default {
       daysInRange,
       agreements,
       usePriceWithVat,
+      getData,
+      loading,
+      updateSelected,
+      selectedGroups,
+      getPivotData,
     }
   },
-
-  async created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      const { settings, usePriceWithVat } =
-        this.$store.getters.formSettingsMap.get(this.formName)
-      this.settings = settings
-      this.usePriceWithVat = usePriceWithVat
-    } else {
-      this.settings.dateRange = initDateRange()
-    }
-  },
-  async mounted() {
-    await this.getAgreements()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: {
-        settings: this.settings,
-        usePriceWithVat: this.usePriceWithVat,
-      },
-    })
-    next()
-  },
-  methods: {},
 }
 </script>
 <style scoped>

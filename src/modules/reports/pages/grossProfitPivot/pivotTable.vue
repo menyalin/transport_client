@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    v-model="selected"
+    :value="selected"
     :headers="headers"
     :items="items"
     selectable-key="isSelectable"
@@ -10,6 +10,7 @@
     show-select
     hide-default-footer
     :itemsPerPage="-1"
+    @input="selectHandler"
   >
     <template #[`body.append`]="{}">
       <tr v-if="pivotData.items">
@@ -44,6 +45,8 @@
   </v-data-table>
 </template>
 <script>
+import { useHistorySettings } from '@/shared/hooks'
+
 export default {
   name: 'PivotTable',
   props: {
@@ -53,12 +56,13 @@ export default {
     priceWithVat: Boolean,
     pivotData: { type: Object },
     agreements: Array,
+    selectedGroups: Array,
   },
-  data() {
-    return {
-      selected: [],
-    }
+  setup() {
+    const selected = useHistorySettings([], 'selected_items')
+    return { selected }
   },
+
   computed: {
     totalAvgByDay() {
       const sum =
@@ -155,18 +159,15 @@ export default {
       return res
     },
   },
-  watch: {
-    selected: {
-      deep: true,
-      handler: function (val) {
-        this.$emit(
-          'updateSelected',
-          val.map((i) => i._id)
-        )
-      },
-    },
-  },
+
   methods: {
+    selectHandler(val) {
+      console.log('select handler')
+      this.$emit(
+        'updateSelected',
+        val.filter((i) => !!i._id).map((i) => i._id)
+      )
+    },
     setTitleColumn(id) {
       if (Array.isArray(id))
         return id.map((i) =>

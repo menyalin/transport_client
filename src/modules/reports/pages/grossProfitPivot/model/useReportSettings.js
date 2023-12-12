@@ -1,22 +1,34 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
+import store from '@/store'
 import { AgreementService, ReportService } from '@/shared/services'
+import { useHistorySettings } from '@/shared/hooks'
 import {
   ADDITIONAL_FILTER_LIST,
   MAIN_FILTER_LIST,
   GROUP_BY_ITEMS,
 } from './constants.js'
+import initDateRange from './initDateRange.js'
 
 export const useReportSettings = () => {
-  const mainFilters = ref(MAIN_FILTER_LIST)
-  const agreements = ref([])
+  const mainFilters = useHistorySettings(MAIN_FILTER_LIST, 'main_filters')
+  const selectedGroups = useHistorySettings([], 'selected_groups')
+  const additionalFilters = useHistorySettings(
+    ADDITIONAL_FILTER_LIST,
+    'additional_filters'
+  )
+  const usePriceWithVat = useHistorySettings(false, 'usePriceWithVat')
   const loading = ref(false)
-  const pivotData = ref({})
-  const usePriceWithVat = ref(false)
 
-  const settings = ref({
-    dateRange: null,
-    groupBy: 'client',
-  })
+  const agreements = ref([])
+  const pivotData = ref({})
+
+  const settings = useHistorySettings(
+    {
+      dateRange: initDateRange(),
+      groupBy: 'client',
+    },
+    'settings'
+  )
 
   const daysInRange = computed(() => {
     const start = new Date(settings.value.dateRange[0])
@@ -28,10 +40,10 @@ export const useReportSettings = () => {
     const { items } = await AgreementService.getList({
       skip: 0,
       limit: 100,
-      company: this.$store.getters.directoriesProfile,
+      company: store.getters.directoriesProfile,
       clientsOnly: true,
     })
-    this.agreements = Object.assign(
+    agreements.value = Object.assign(
       [],
       items
         .map((i) => ({
@@ -43,42 +55,53 @@ export const useReportSettings = () => {
   }
 
   function updateSelected(val) {
+    selectedGroups.value = val
+    console.log('update selected: ', val)
     const groupItem = GROUP_BY_ITEMS.find(
-      (i) => i.value === this.settings.groupBy
+      (i) => i.value === settings.value.groupBy
     )
-    this.additionalFilters[groupItem.filterName] = {
+    additionalFilters.value[groupItem.filterName] = {
       values: val,
       cond: 'in',
     }
   }
-  async function getData() {
+  async function getPivotData() {
     try {
       loading.value = true
       const { pivot } = await ReportService.grossProfitPivot({
-        dateRange: this.settings.dateRange,
-        company: this.$store.getters.directoriesProfile,
-        groupBy: this.settings.groupBy,
-        mainFilters: this.mainFilters,
+        dateRange: settings.value.dateRange,
+        company: store.getters.directoriesProfile,
+        groupBy: settings.value.groupBy,
+        mainFilters: mainFilters.value,
       })
-      this.pivotData = pivot
+      pivotData.value = pivot
       loading.value = false
     } catch (e) {
-      this.$store.commit('setError', e.message)
+      store.commit('setError', e.message)
       loading.value = false
     }
   }
 
-  watch([settings, mainFilters], getData, { deep: true })
+  onMounted(async () => {
+    await getAgreements()
+  })
+
+  watch([settings, mainFilters], getPivotData, { deep: true, immediate: true })
 
   return {
     settings,
     groupItems: GROUP_BY_ITEMS,
-
-    additionalFilters: ADDITIONAL_FILTER_LIST,
+    mainFilters,
+    additionalFilters,
     agreements,
     loading,
     pivotData,
     usePriceWithVat,
     daysInRange,
+    // убрать
+    getAgreements,
+    updateSelected,
+    selectedGroups,
+    getPivotData,
   }
 }
