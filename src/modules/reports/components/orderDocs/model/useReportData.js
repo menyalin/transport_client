@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import ReportService from '../../../services/index.js'
+import { ReportService } from '@/shared/services'
 
 export default function ({ settings }) {
   const items = ref([])
