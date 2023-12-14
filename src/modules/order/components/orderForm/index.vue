@@ -266,19 +266,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    loading: Boolean,
   },
   provide() {
     return {
       updateFinalPrices: (val) => {
         this.finalPrices = [...val]
       },
-      // getOrderAgreement: async (val) => {
-      //   if (!val && !this.client.agreement) return null
-      //   const agreement = await AgreementService.getById(
-      //     val || this.client.agreement
-      //   )
-      //   return agreement
-      // },
     }
   },
   setup() {
@@ -297,6 +291,7 @@ export default {
   },
   data() {
     return {
+      processingBeforeSubmit: false,
       agreement: null,
       docs: [],
       paymentToDriver: {},
@@ -305,7 +300,6 @@ export default {
       templateDialog: false,
       templateName: null,
       templateSelector: null,
-      loading: false,
       orderId: null,
       prePrices: [],
       prices: [],
@@ -365,7 +359,12 @@ export default {
       } else
         hasPermission = this.$store.getters.hasPermission('order:daysForWrite')
 
-      return this.isInvalidForm || this.loading || !hasPermission
+      return (
+        this.processingBeforeSubmit ||
+        this.isInvalidForm ||
+        this.loading ||
+        !hasPermission
+      )
     },
     currentPointInd() {
       return this.route.findIndex((p) => !p.departureDate)
@@ -508,13 +507,6 @@ export default {
     },
   },
   watch: {
-    // ['client.agreement']: {
-    //   immediate: true,
-    //   handler: async function (val) {
-    //     if (!val) this.agreement = null
-    //     else this.agreement = await AgreementService.getById(val)
-    //   },
-    // },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)
@@ -644,6 +636,7 @@ export default {
       return false
     },
     async submit(_val, saveOnly) {
+      this.processingBeforeSubmit = true
       if (this.isInvalidForm) return null
       if (!this.analytics.distanceDirect)
         this.analytics.distanceDirect = OrderService.getDirectDistance(
@@ -653,6 +646,7 @@ export default {
         const { distanceRoad } = await OrderService.getDistance(this.coords)
         this.analytics.distanceRoad = distanceRoad
       }
+      this.processingBeforeSubmit = false
       this.$emit(saveOnly ? 'save' : 'submit', this.formState)
     },
     cancel() {

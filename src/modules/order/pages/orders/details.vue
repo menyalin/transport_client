@@ -16,6 +16,7 @@
           v-else
           :order="item"
           :displayDeleteBtn="showDeleteBtn"
+          :loading="loading"
           @cancel="cancel"
           @submit="submit($event)"
           @save="submit($event, true)"
