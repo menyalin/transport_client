@@ -58,6 +58,18 @@ export const ALL_ORDER_TABLE_HEADERS = [
     align: 'right',
   },
   {
+    value: 'basePrePrice',
+    text: 'Тариф из ДС',
+    align: 'right',
+    sortable: false,
+  },
+  {
+    value: 'basePrice',
+    text: 'Тариф (аукцион)',
+    align: 'right',
+    sortable: false,
+  },
+  {
     value: 'price',
     text: 'Цена',
     align: 'right',
