@@ -40,6 +40,7 @@
 <script>
 import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import useHistorySettings from '@/shared/hooks/useHistorySettings'
 import { ReportService } from '@/shared/services'
 
 export default {
@@ -51,6 +52,12 @@ export default {
     dateRange: { type: Array, required: true },
     priceWithVat: Boolean,
   },
+  setup() {
+    const listOptions = useHistorySettings({}, 'orders_table_list_options')
+    return {
+      listOptions,
+    }
+  },
   data() {
     return {
       loading: false,
@@ -58,7 +65,7 @@ export default {
       totalCount: 0,
       formName: 'ordersDetailReport',
       listSettingsName: 'ordersDetailReportFields',
-      listOptions: {},
+
       settings: {},
       activeHeaders: [],
       allHeaders: ALL_ORDER_TABLE_HEADERS,
