@@ -117,6 +117,8 @@ export default {
           i.outsourceCostsWithVat
         ),
         outsourceCostsWOVat: Intl.NumberFormat().format(i.outsourceCostsWOVat),
+        basePrePrice: this.getBasePrice(i, 'prePrices', this.priceWithVat),
+        basePrice: this.getBasePrice(i, 'prices', this.priceWithVat),
         price: Intl.NumberFormat().format(
           Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
         ),
@@ -172,6 +174,18 @@ export default {
     next()
   },
   methods: {
+    getBasePrice(order, type, withVat) {
+      if (!['prices', 'prePrices'].includes(type))
+        throw new Error('ordersTable : getBasePrice : price type error!!!')
+
+      const price = order[type]
+      if (!price?.base) return 0
+
+      return Intl.NumberFormat().format(
+        Math.round(price.base[withVat ? 'price' : 'priceWOVat'])
+      )
+    },
+
     clearItems() {
       this.items = []
       this.totalCount = 0
