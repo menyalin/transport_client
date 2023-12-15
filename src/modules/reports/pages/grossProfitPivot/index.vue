@@ -47,7 +47,6 @@
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
-        :priceWithVat="usePriceWithVat"
         @updateSelected="updateSelected"
         :daysCount="daysInRange"
         :agreements="agreements"
