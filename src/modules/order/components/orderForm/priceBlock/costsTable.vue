@@ -3,7 +3,7 @@
     <template #default>
       <thead>
         <tr>
-          <th class="text-center" width="140">Тип</th>
+          <th class="text-center" width="180">Тип</th>
           <th v-if="usePriceWithVat" class="text-center" width="130">
             Цена c НДС
           </th>

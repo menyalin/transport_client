@@ -187,7 +187,6 @@ export default {
         this.agreement = this.findAgreement(this.agreements, this.carrier)
         this.params.agreement = this.agreement?._id || null
       }
-
       this.$emit('updateAgreement', this.agreement)
     },
 
