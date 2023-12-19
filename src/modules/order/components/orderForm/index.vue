@@ -439,6 +439,7 @@ export default {
       if (this.grade.grade === 2) return true
       else return !!this.grade.note
     },
+
     isValidClientInfo() {
       return !!this.client?.client
     },
@@ -635,9 +636,23 @@ export default {
         return true
       return false
     },
+    updatePricesUseAgreement(prices, agreement) {
+      if (!Array.isArray(prices) || prices.length === 0) return []
+      const vatKoef = agreement.vatRate / 100
+      const updatedPrices = []
+      prices.forEach((item) => {
+        updatedPrices.push({
+          ...item,
+          sumVat: item.priceWOVat * vatKoef,
+          price: item.priceWOVat * (1 + vatKoef),
+        })
+      })
+      return updatedPrices
+    },
+
     async submit(_val, saveOnly) {
-      this.processingBeforeSubmit = true
       if (this.isInvalidForm) return null
+      this.processingBeforeSubmit = true
       if (!this.analytics.distanceDirect)
         this.analytics.distanceDirect = OrderService.getDirectDistance(
           this.coords
@@ -646,6 +661,17 @@ export default {
         const { distanceRoad } = await OrderService.getDistance(this.coords)
         this.analytics.distanceRoad = distanceRoad
       }
+
+      this.prePrices = this.updatePricesUseAgreement(
+        this.prePrices,
+        this.agreement
+      )
+      this.prices = this.updatePricesUseAgreement(this.prices, this.agreement)
+      this.finalPrices = this.updatePricesUseAgreement(
+        this.finalPrices,
+        this.agreement
+      )
+
       this.processingBeforeSubmit = false
       this.$emit(saveOnly ? 'save' : 'submit', this.formState)
     },
