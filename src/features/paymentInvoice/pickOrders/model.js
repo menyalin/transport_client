@@ -11,7 +11,7 @@ const initPeriod = () => {
   ]
 }
 
-export const useListData = ({ client, _id }) => {
+export const useListData = ({ client, _id, agreementId }) => {
   if (!client) console.error('client id is missing')
   const historyState = window.history.state
   const initialState = {
@@ -44,13 +44,11 @@ export const useListData = ({ client, _id }) => {
   const queryParams = computed(() => ({
     period: settings.value.period,
     client,
+    agreement: agreementId,
     paymentInvoiceId: _id,
     truck: settings.value.truck,
     search: settings.value.search,
     driver: settings.value.driver,
-    // docStatus: settings.value.docStatus,
-    // onlySelectable: settings.value.onlySelectable,
-    // loadingZone: settings.value.loadingZone,
   }))
 
   async function getData() {

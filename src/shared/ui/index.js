@@ -7,6 +7,7 @@ import ButtonsPanel from './buttonsPanel.vue'
 import DateRangeInput from './dateRangeInput.vue'
 import DownloadDocTemplateMenu from './downloadDocTemplateMenu.vue'
 import BorderedBlock from './borderedBlock.vue'
+import XlsxFileInput from './xlsxFileInput'
 
 export {
   AppTableColumnSetting,
@@ -18,4 +19,5 @@ export {
   DateRangeInput,
   DownloadDocTemplateMenu,
   BorderedBlock,
+  XlsxFileInput,
 }

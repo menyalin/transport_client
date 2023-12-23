@@ -27,11 +27,10 @@
   </v-container>
 </template>
 <script>
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import socket from '@/socket'
 import { OrderService } from '@/shared/services'
 import AppOrderForm from '../../components/orderForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import socket from '@/socket'
 
 export default {
   name: 'DetailsOrder',
@@ -39,15 +38,35 @@ export default {
     AppOrderForm,
     AppLoadSpinner,
   },
-  mixins: [pageDetailsMixin],
+
   props: {
+    id: String,
     truckId: String,
     startDate: String,
   },
   data() {
     return {
       service: OrderService,
+      item: null,
+      loading: false,
+      tmpVal: null,
+      error: {
+        message: null,
+        show: false,
+      },
     }
+  },
+  watch: {
+    id: {
+      immediate: true,
+      handler: async function (newVal, oldVal) {
+        if (newVal && newVal !== oldVal) {
+          this.loading = true
+          this.item = await this.service.getById(newVal)
+          this.loading = false
+        }
+      },
+    },
   },
   computed: {
     showDeleteBtn() {
@@ -82,23 +101,48 @@ export default {
     }
   },
   methods: {
+    toggleAlert() {
+      this.error = {
+        show: false,
+        message: null,
+      }
+    },
     async submit(val, saveOnly) {
       this.tmpVal = val
       try {
         this.loading = true
-        if (this.id) {
-          this.item = await this.service.updateOne(this.id, val)
+        if (this.item._id) {
+          this.item = await this.service.updateOne(this.item._id, val)
         } else this.item = await this.service.create(val)
         this.loading = false
         this.tmpVal = null
-        if (this.openInModal) this.$emit('submit', this.item._id)
-        else if (!saveOnly) this.$router.go(-1)
+        if (!saveOnly) this.$router.go(-1)
       } catch (e) {
         this.loading = false
         this.item = this.tmpVal
         if (e.response.status === 400 || e.response.status === 403) {
           this.error.message = e.response.data
           this.error.show = true
+        }
+      }
+    },
+    cancel() {
+      this.$router.go(-1)
+    },
+
+    async deleteHandler() {
+      const res = await this.$confirm(
+        'Вы действительно хотите удалить запись? '
+      )
+      if (res) {
+        try {
+          this.loading = true
+          await this.service.deleteById(this.id)
+          this.loading = false
+          this.$router.go(-1)
+        } catch (e) {
+          this.loading = false
+          this.$store.commit('setError', e.message)
         }
       }
     },
