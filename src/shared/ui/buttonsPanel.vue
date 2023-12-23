@@ -10,7 +10,7 @@
           color="secondary"
           @click="$emit('submit')"
         >
-          Сохранить и закрыть
+          {{ submitTitle ? submitTitle : 'Сохранить и закрыть' }}
         </v-btn>
       </v-col>
       <v-col v-if="showSaveBtn" cols="auto">
@@ -44,6 +44,7 @@
 <script>
 export default {
   props: {
+    submitTitle: { type: String },
     disabledSubmit: { type: Boolean, default: false },
     disabledRefresh: { type: Boolean, default: false },
     showSaveBtn: { type: Boolean, default: false },

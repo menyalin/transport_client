@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import dayjs from 'dayjs'
 import api from '@/api'
 import socket from '@/socket'
@@ -37,7 +38,9 @@ class OrderService {
   }
 
   async create(body) {
-    let { data } = await api.post(BASE_PATH, body)
+    let { data } = await api.post(BASE_PATH, body, {
+      headers: { 'request-id': uuidv4() },
+    })
     return data
   }
 
