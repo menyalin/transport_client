@@ -177,9 +177,6 @@ export default {
     const needSave = computed(() => {
       return state?.value.client !== props.item.client
     })
-    function buttonClick() {
-      console.log('click')
-    }
 
     const formState = computed(() => {
       return {
@@ -209,7 +206,6 @@ export default {
       agreementErrorMessages,
       pickOrdersHandler,
       needSave,
-      buttonClick,
       changeClientHandler,
       showPickOrderDialog,
       downloadHandler,
@@ -223,7 +219,6 @@ export default {
   methods: {
     goToLoader() {
       if (!this.item._id || !this.loaderPath) return
-      console.log(this.state)
       this.$router.push({
         path: this.$route.path + '/' + this.loaderPath,
         query: {
