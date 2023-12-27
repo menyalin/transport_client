@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <v-alert v-if="errors.length > 0" type="error" outlined>
-      Ошибка загрузки реестра: <br />
-      <ul>
-        <li v-for="error in errors" :key="error.message">{{ error }}</li>
-      </ul>
-    </v-alert>
-    <v-alert v-else type="info" outlined>
-      Загружено рейсов:
-      <b>{{ items.length }}</b
-      >, Общая сумма реестра:
-      <b>{{ formattedSum }}</b>
-    </v-alert>
-  </div>
+  <v-alert v-if="errors.length > 0" type="error" outlined>
+    Ошибка загрузки реестра: <br />
+    <ul>
+      <li v-for="error in errors" :key="error.message">{{ error }}</li>
+    </ul>
+  </v-alert>
+  <v-alert v-else :type="hasTotalSumDiff ? 'error' : 'info'" outlined>
+    Кол-во рейсов в реестре:
+    <b>{{ items.length }}</b>
+    , Общая сумма реестра:
+    <b>{{ formattedSum }}</b>
+    <br />
+    <div v-if="totalPickedSum">
+      Итог по выбранным рейсам: <b>{{ formattedPickedSum }}</b>
+    </div>
+  </v-alert>
 </template>
 <script>
 import { moneyFormatter } from '@/shared/utils'
@@ -22,6 +24,7 @@ export default {
   props: {
     items: Array,
     errors: Array,
+    totalPickedSum: Number,
   },
   computed: {
     ordersTotalSum() {
@@ -30,6 +33,12 @@ export default {
     },
     formattedSum() {
       return moneyFormatter(this.ordersTotalSum)
+    },
+    formattedPickedSum() {
+      return moneyFormatter(this.totalPickedSum)
+    },
+    hasTotalSumDiff() {
+      return this.ordersTotalSum !== this.totalPickedSum
     },
   },
 }

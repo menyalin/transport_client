@@ -19,6 +19,9 @@
         @downloadTemplate="newDownloadHandler"
         class="mx-3"
       />
+      <v-btn v-if="loaderPath" class="mx-3" @click="goToLoader" color="primary">
+        Загрузить из реестра
+      </v-btn>
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
@@ -77,7 +80,6 @@
           :error-messages="agreementErrorMessages"
         />
       </div>
-
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
@@ -140,6 +142,7 @@ export default {
       agreementItems,
       changeClientHandler,
       setFormState,
+      loaderPath,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const { docTemplates, newDocTemplates, newDownloadHandler } =
@@ -212,10 +215,24 @@ export default {
       downloadHandler,
       agreementItems,
       docTemplates,
-
+      loaderPath,
       newDocTemplates,
       newDownloadHandler,
     }
+  },
+  methods: {
+    goToLoader() {
+      if (!this.item._id || !this.loaderPath) return
+      console.log(this.state)
+      this.$router.push({
+        path: this.$route.path + '/' + this.loaderPath,
+        query: {
+          invoiceDate: this.state.sendDate,
+          client: this.state.client,
+          agreement: this.state.agreement,
+        },
+      })
+    },
   },
 }
 </script>
