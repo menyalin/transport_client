@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
+import store from '@/store/index'
 
 const getInitialState = (editedItem) => ({
   status: editedItem?.status || 'inProcess',
@@ -80,6 +81,11 @@ function usePaimentInvoiceForm() {
     return commission || 0
   })
 
+  const loaderPath = computed(() => {
+    if (!state.value.client) return null
+    else return store.getters.partnersMap.get(state.value.client)?.invoiceLoader
+  })
+
   return {
     v$,
     state,
@@ -90,6 +96,7 @@ function usePaimentInvoiceForm() {
     agreementItems,
     changeClientHandler,
     commission,
+    loaderPath,
   }
 }
 

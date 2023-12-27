@@ -20,7 +20,7 @@
       </v-col>
 
       <v-col>
-        <slot #default />
+        <slot />
       </v-col>
     </v-row>
     <v-row v-else-if="panelType === 'list'">
