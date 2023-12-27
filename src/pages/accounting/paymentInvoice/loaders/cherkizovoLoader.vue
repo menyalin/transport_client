@@ -5,6 +5,7 @@
       submitTitle="Загрузить"
       @submit="submitHandler"
       @cancel="cancelHandler"
+      disabledSubmit
     >
       <v-btn @click="refetchHandler">refetch</v-btn>
       <v-btn @click="clearUploadedOrders">clear</v-btn>
@@ -108,11 +109,15 @@ export default {
       sessionStorage.removeItem(this.id)
     },
     submitHandler() {
-      console.log('submit handler')
+      console.log(window.history)
     },
     cancelHandler() {
-      console.log(this.id)
-      console.log(this.$route)
+      if (window.history.length > 2) this.$router.back()
+      else
+        this.$router.replace({
+          name: 'PaymentInvoiceDetail',
+          params: { id: this.id },
+        })
     },
     async pickOrders() {
       this.pickedOrders = await this.pickOrdersByClientNumbers(
