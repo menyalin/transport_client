@@ -6,7 +6,6 @@
     :label="label"
     prepend-icon="mdi-microsoft-excel"
     @change="fileInputChanged"
-    hint="Подсказка"
   />
 </template>
 <script>

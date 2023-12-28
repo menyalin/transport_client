@@ -57,6 +57,15 @@ class PaymentInvoiceService {
     }
   }
 
+  /**
+   * @async
+   * @function addOrdersToPaymentInvoice
+   * @param {Object} params - Объект, содержащий свойства
+   * @param {string} params.company - Имя компании
+   * @param {string[]} params.orders - Массив строк, представляющих заказы
+   * @param {string} params.paymentInvoiceId - ID платежного счета
+   * @returns {Promise<any>} Данные от API
+   */
   async addOrdersToPaymentInvoice(params) {
     if (!params.orders || params.orders.length === 0)
       throw new Error(

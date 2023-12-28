@@ -100,6 +100,7 @@ export default {
         isService: false,
         placesForTransferDocs: [],
         invoiceLoader: null,
+        idleTruckNotifications: [],
       },
     }
   },

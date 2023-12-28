@@ -5,12 +5,11 @@
       submitTitle="Загрузить"
       @submit="submitHandler"
       @cancel="cancelHandler"
-      disabledSubmit
     >
       <v-btn @click="refetchHandler">refetch</v-btn>
       <v-btn @click="clearUploadedOrders">clear</v-btn>
     </ButtonsPanel>
-    <XlsxFileInput label="Укажите файл с реестром" @change="uploadHandler" />
+    <XlsxFileInput label="Выберите файл с реестром" @change="uploadHandler" />
 
     <UploadedInfo
       :items="uploadedOrders"
@@ -22,6 +21,7 @@
 </template>
 
 <script>
+import { PaymentInvoiceService } from '@/shared/services'
 import { FormWrapper, ButtonsPanel } from '@/shared/ui'
 import { XlsxFileInput } from '@/shared/ui/index'
 import {
@@ -95,6 +95,10 @@ export default {
         numbers: this.orderNumbers,
       }
     },
+    pickedOrderIds() {
+      if (this.pickedOrders.length === 0) return []
+      return this.pickedOrders.map((i) => i._id)
+    },
   },
 
   methods: {
@@ -108,8 +112,23 @@ export default {
       this.errors = []
       sessionStorage.removeItem(this.id)
     },
-    submitHandler() {
-      console.log(window.history)
+    async submitHandler() {
+      if (this.pickedOrderIds.length === 0) return
+      try {
+        await PaymentInvoiceService.addOrdersToPaymentInvoice({
+          company: this.$store.getters.directoriesProfile,
+          paymentInvoiceId: this.id,
+          orders: this.pickedOrderIds,
+        })
+
+        this.$router.push({
+          name: 'PaymentInvoiceDetail',
+          params: { id: this.id },
+        })
+      } catch (e) {
+        console.log(e)
+        this.$store.commit('setError', e.message)
+      }
     },
     cancelHandler() {
       if (window.history.length > 2) this.$router.back()
@@ -119,6 +138,7 @@ export default {
           params: { id: this.id },
         })
     },
+
     async pickOrders() {
       this.pickedOrders = await this.pickOrdersByClientNumbers(
         this.pickOrdersQueryParams
@@ -128,9 +148,11 @@ export default {
         this.pickedOrders
       )
     },
+
     async refetchHandler() {
       if (this.uploadedOrders.length > 0) this.pickOrders()
     },
+
     async uploadHandler(uploadData) {
       if (!uploadData || !uploadData.length) {
         this.clearUploadedOrders()
