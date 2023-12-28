@@ -10,7 +10,7 @@
       <v-btn @click="refetchHandler">refetch</v-btn>
       <v-btn @click="clearUploadedOrders">clear</v-btn>
     </ButtonsPanel>
-    <XlsxFileInput label="Укажите файл с реестром" @change="uploadHandler" />
+    <XlsxFileInput label="Выберите файл с реестром" @change="uploadHandler" />
 
     <UploadedInfo
       :items="uploadedOrders"
