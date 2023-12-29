@@ -97,7 +97,7 @@ export default {
     },
     pickedOrderIds() {
       if (this.pickedOrders.length === 0) return []
-      return this.pickedOrders.map((i) => i._id)
+      return this.compareItems.filter((i) => i.isOrderPicked).map((i) => i._id)
     },
   },
 
