@@ -62,7 +62,6 @@ export default {
   },
   setup(props) {
     const item = ref({})
-    // TODO: // Удалить downloadHandler
     const { downloadHandler } = useDownloadTemplate(item)
 
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
@@ -137,6 +136,11 @@ export default {
           updatedItem = await PaymentInvoiceService.updateOne(itemId, formState)
         } else {
           updatedItem = await PaymentInvoiceService.create(formState)
+          if (saveOnly)
+            router.push({
+              name: 'PaymentInvoiceDetail',
+              params: { id: updatedItem._id },
+            })
         }
         if (!saveOnly) router.push('/accounting/paymentInvoice')
         else {

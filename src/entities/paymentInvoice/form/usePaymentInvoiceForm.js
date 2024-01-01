@@ -9,10 +9,14 @@ const getInitialState = (editedItem) => ({
   status: editedItem?.status || 'inProcess',
   number: editedItem?.number || null,
   client: editedItem?.client || undefined,
-  agreement: editedItem?.agreementId || null,
+  agreement: editedItem?.agreementId || undefined,
+  numberByClient: editedItem?.numberByClient || undefined,
   note: editedItem?.note || null,
   sendDate: editedItem?.sendDate
     ? dayjs(editedItem?.sendDate).format('YYYY-MM-DD')
+    : null,
+  dateByClient: editedItem?.dateByClient
+    ? dayjs(editedItem.dateByClient).format('YYYY-MM-DD')
     : null,
 })
 
@@ -22,7 +26,10 @@ function usePaimentInvoiceForm() {
   const agreementItems = computed(() => agreements.value || [])
 
   async function setAgreements(client) {
-    if (!client) return null
+    if (!client) {
+      state.value = { ...state.value, agreement: null }
+      return
+    }
     agreements.value = await AgreementService.getByClient(client)
     if (agreements.value.length === 1)
       state.value = { ...state.value, agreement: agreements.value[0]._id }
@@ -31,6 +38,8 @@ function usePaimentInvoiceForm() {
   const rules = {
     number: {},
     sendDate: {},
+    numberByClient: {},
+    dateByClient: {},
     client: { required },
     status: { required },
     agreement: { required },
@@ -69,8 +78,7 @@ function usePaimentInvoiceForm() {
   }
 
   const changeClientHandler = async (val) => {
-    // state.value = { ...state.value, agreement: null }
-    if (val) await setAgreements(val)
+    await setAgreements(val)
   }
 
   const commission = computed(() => {

@@ -6,6 +6,13 @@ export default [
     default: true,
   },
   {
+    value: 'numberByClient',
+    text: '№ реестра клиента',
+    sortable: false,
+    default: true,
+    width: '120',
+  },
+  {
     value: 'sendDate',
     text: 'Дата выставления',
     sortable: false,
