@@ -25,7 +25,6 @@
 </template>
 <script>
 import { ref } from 'vue'
-// import socket from '@/socket'
 
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
@@ -55,13 +54,7 @@ export default {
       totalCount,
       loading,
       statisticData,
-      // onDeleteHandler,
     } = useListData()
-
-    // socket.on('docsRegistry:deleted', onDeleteHandler)
-    // onBeforeUnmount(() => {
-    //   socket.off('docsRegistry:deleted', onDeleteHandler)
-    // })
 
     return {
       create,

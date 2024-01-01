@@ -19,18 +19,23 @@
         @downloadTemplate="newDownloadHandler"
         class="mx-3"
       />
-      <v-btn v-if="loaderPath" class="mx-3" @click="goToLoader" color="primary">
+      <v-btn
+        v-if="!!loaderPath && !disabledPickOrders && !invalidForm"
+        class="mx-3"
+        @click="goToLoader"
+        color="primary"
+      >
         Загрузить из реестра
       </v-btn>
     </buttons-panel>
     <div id="form">
-      <div id="fields-row">
+      <div class="fields-row">
         <v-text-field
           label="Номер"
           v-model.trim="state.number"
           dense
           outlined
-          :style="{ maxWidth: '150px' }"
+          :style="{ maxWidth: '200px' }"
         />
         <v-text-field
           label="Дата выставления"
@@ -80,6 +85,23 @@
           :error-messages="agreementErrorMessages"
         />
       </div>
+      <div class="fields-row">
+        <v-text-field
+          label="Номер реестра клиента"
+          v-model.trim="state.numberByClient"
+          dense
+          outlined
+          :style="{ maxWidth: '200px' }"
+        />
+        <v-text-field
+          label="Дата реестра клиента"
+          v-model="state.dateByClient"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+        />
+      </div>
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
@@ -87,7 +109,7 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="disabledPickOrders || needSave"
+        :disabled="disabledPickOrders || needSave || invalidForm"
       >
         Подобрать рейсы
       </v-btn>
@@ -175,7 +197,10 @@ export default {
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
 
     const needSave = computed(() => {
-      return state?.value.client !== props.item.client
+      return (
+        state?.value.client !== props.item.client ||
+        state?.value.agreement !== props.item.agreementId
+      )
     })
 
     const formState = computed(() => {
@@ -239,7 +264,7 @@ export default {
   gap: 5px;
   padding: 20px;
 }
-#fields-row {
+.fields-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
