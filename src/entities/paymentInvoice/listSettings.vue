@@ -7,18 +7,19 @@
     />
 
     <v-autocomplete
-      :value="settings.clients"
+      :value="settings.agreements"
       item-text="name"
       item-value="_id"
-      label="Клиенты"
+      label="Соглашения"
+      :disabled="agreementItems.length === 0"
       dense
       clearable
       multiple
       outlined
-      :items="clientItems"
+      :items="agreementItems"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'clients')"
+      @change="updateSettings($event, 'agreements')"
     />
     <v-select
       :value="settings.status"
@@ -46,9 +47,10 @@
 
 <script>
 import store from '@/store'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { AppTableColumnSetting } from '@/shared/ui'
 import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
+import { AgreementService } from '@/shared/services/index'
 
 export default {
   name: 'DocsRegistryListSettingsWidget',
@@ -62,9 +64,7 @@ export default {
   },
 
   setup(props, ctx) {
-    const clientItems = computed(() => {
-      return store.getters.partners.filter((i) => i.isClient)
-    })
+    const agreementItems = ref([])
 
     const statusItems = computed(() => {
       return store.getters.docsRegistryStatuses
@@ -77,8 +77,12 @@ export default {
     function updateHeadersHandler(val) {
       ctx.emit('updateHeaders', val)
     }
+    onMounted(async () => {
+      agreementItems.value = await AgreementService.getActiveAgreements()
+    })
+
     return {
-      clientItems,
+      agreementItems,
       statusItems,
       updateHeadersHandler,
       updateSettings,
