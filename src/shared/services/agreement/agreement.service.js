@@ -67,7 +67,7 @@ class AgreementService {
       this.allAgreements = data.items || []
       setTimeout(() => {
         this.allAgreements = []
-      }, this.allAgreementsExpiresMs)
+      }, this.allAgreementsExpiresMs * 10)
       return data.items
     }
   }

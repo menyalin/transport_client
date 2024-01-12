@@ -2,11 +2,19 @@ import { ref, watch, computed } from 'vue'
 import store from '@/store'
 import router from '@/router'
 import { PaymentInvoiceService } from '@/shared/services'
+import useHistorySettings from '@/shared/hooks/useHistorySettings'
 
 export const useListData = () => {
-  const historyState = window.history.state
-  const initialState = { clients: [], status: null }
-  const settings = ref(historyState.settings || initialState)
+  function initialPeriod() {
+    // TODO: сделать автовыбор периода
+    return ['2023-12-01', '2023-12-31']
+  }
+  const initialState = { agreements: [], status: null, period: initialPeriod() }
+  const settings = useHistorySettings(
+    initialState,
+    'paymentInvoice_list_settings'
+  )
+
   const items = ref([])
   const totalCount = ref(0)
   const statisticData = ref({})
@@ -24,7 +32,6 @@ export const useListData = () => {
     settings,
     async () => {
       await getData()
-      window.history.pushState({ settings: settings.value }, '')
     },
     { deep: true }
   )
@@ -32,7 +39,7 @@ export const useListData = () => {
   const queryParams = computed(() => ({
     status: settings.value?.status,
     search: settings.value?.search,
-    clients: settings.value?.clients,
+    agreements: settings.value?.agreements,
     company: store.getters.directoriesProfile,
     limit: settings.value?.listOptions?.itemsPerPage || 50,
     skip:
@@ -52,10 +59,6 @@ export const useListData = () => {
       store.commit('setError', e.message)
     }
   }
-
-  addEventListener('popstate', (e) => {
-    settings.value = e.state.settings
-  })
 
   function onDeleteHandler(itemId) {
     items.value = items.value.filter((i) => i._id !== itemId)
