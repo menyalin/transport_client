@@ -13,6 +13,21 @@ const PickOrdersByClientNumbersPropsSchema = z.object({
   }),
 })
 
+const truckTypeMapper = {
+  '10т': {
+    liftCapacity: 10,
+    kind: 'ref',
+  },
+  '20т': {
+    liftCapacity: 20,
+    kind: 'ref',
+  },
+  '20т DD': {
+    liftCapacity: 20,
+    kind: 'refD',
+  },
+}
+
 const ParsedOrderDTOSchema = z.object({
   num: z.union([z.string(), z.number()]),
   truck: z.string(),
@@ -21,6 +36,11 @@ const ParsedOrderDTOSchema = z.object({
   priceWOVat: z.number(),
   vat: z.number(),
   price: z.number(),
+  truckType: z
+    .string()
+    .refine((value) => Object.keys(truckTypeMapper).includes(value), {
+      message: (value) => `Invalid transport type: ${value}`,
+    }),
 })
 
 export class ParsedOrderDTO {
@@ -33,6 +53,7 @@ export class ParsedOrderDTO {
     this.priceWOVat = item.priceWOVat
     this.vat = item.vat
     this.price = item.price
+    this.truckType = item.truckType
   }
 }
 
@@ -42,6 +63,7 @@ const compareItemSchema = z.object({
   route: z.string(),
   uploadedTruckNumber: z.string(),
   uploadedDriverName: z.string(),
+  uploadedTruckType: z.string(),
   uploadedPrices: z.object({
     price: z.number(),
     vat: z.number(),
@@ -52,6 +74,14 @@ const compareItemSchema = z.object({
   orderId: z.string().optional(),
   driverNameInOrder: z.string().optional(),
   truckInOrder: z.string().optional(),
+
+  pickedTruckType: z
+    .object({
+      liftCapacity: z.number(),
+      kind: z.string(),
+    })
+    .optional(),
+
   pickedPrices: z
     .object({
       price: z.number(),
@@ -66,11 +96,22 @@ export class CompareItem {
     compareItemSchema.parse(props)
     Object.assign(this, props)
   }
+
+  get isTruckTypeEqual() {
+    if (!this.pickedTruckType) return false
+    const uploadedTruckType = truckTypeMapper[this.uploadedTruckType]
+    return (
+      this.pickedTruckType.liftCapacity === uploadedTruckType.liftCapacity &&
+      this.pickedTruckType.kind === uploadedTruckType.kind
+    )
+  }
+
   get isTruckEqual() {
     const uploadedTruck = CompareItem.prepareRegNum(this.uploadedTruckNumber)
     const truckInOrder = CompareItem.prepareRegNum(this.truckInOrder)
     return uploadedTruck === truckInOrder
   }
+
   get isDriverEqual() {
     const preparedUploadedDriverName = CompareItem.prepareDriverName(
       this.uploadedDriverName
@@ -80,6 +121,7 @@ export class CompareItem {
     )
     return preparedDriverNameInOrder === preparedUploadedDriverName
   }
+
   get isPriceEqual() {
     return this.uploadedPrices.priceWOVat === this.pickedPrices.priceWOVat
   }
@@ -96,7 +138,12 @@ export class CompareItem {
           driverNameInOrder: store.getters.driversMap.get(
             pickedItem.confirmedCrew.driver
           )?.fullName,
-
+          pickedTruckType: pickedItem.reqTransport,
+          pickedTruckTypeStr:
+            pickedItem.reqTransport.liftCapacity +
+            `т ${store.getters.truckKindsMap.get(
+              pickedItem.reqTransport.kind
+            )}`,
           truckInOrder: store.getters.trucksMap.get(
             pickedItem.confirmedCrew.truck
           )?.regNum,
@@ -113,6 +160,7 @@ export class CompareItem {
       clientNum: uploadItem.num,
       uploadedTruckNumber: uploadItem.truck,
       uploadedDriverName: uploadItem.driver,
+      uploadedTruckType: uploadItem.truckType,
       uploadedPrices: {
         price: uploadItem.price,
         vat: uploadItem.vat,
