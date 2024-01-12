@@ -28,7 +28,6 @@ export default {
       return props.items.map((invoice) => ({
         url: '/accounting/paymentInvoice/' + invoice._id,
         text:
-          'Акт № ' +
           (invoice.number ? invoice.number : 'б/н') +
           (invoice.sendDate
             ? ' от ' + new Date(invoice.sendDate).toLocaleDateString()
@@ -46,6 +45,8 @@ export default {
 .block-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+  font-weight: bold;
 }
 </style>
