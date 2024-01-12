@@ -30,7 +30,7 @@
           range
           :first-day-of-week="1"
           color="primary"
-          @change="changeStartDate"
+          @change="changeDate"
         />
       </v-menu>
     </div>
@@ -73,15 +73,12 @@ export default {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpPeriod = [
-          val[0] ? dayjs(val[0]).startOf('day').format() : null,
-          val[1] ? dayjs(val[1]).endOf('day').format() : null,
-        ]
+        this.tmpPeriod = val
       },
     },
   },
   methods: {
-    changeStartDate(val) {
+    changeDate(val) {
       if (!val || val.length !== 2) return
 
       this.$emit('change', [

@@ -10,7 +10,9 @@
             @cancel="cancel"
             @submit="submit($event)"
             @save="submit($event, true)"
-          />
+          >
+            <PaymentInvoiceLinks :items="form.paymentInvoices" />
+          </buttons-panel>
           <div class="template-panel">
             <v-autocomplete
               v-model="templateSelector"
@@ -128,7 +130,6 @@
           />
 
           <div id="price">
-            <payment-invoice-links :items="form.paymentInvoices" />
             <app-analytic-block
               v-model="analytics"
               :isValidRoute="isValidRoute"
