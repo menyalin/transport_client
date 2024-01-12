@@ -142,7 +142,7 @@ export default {
       handler: async function (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.clearAgreement(true)
-          await this.getAgreements()
+          // await this.getAgreements()
         }
       },
     },

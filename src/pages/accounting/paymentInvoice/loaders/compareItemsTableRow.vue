@@ -16,12 +16,19 @@
       Рейс: {{ item.driverNameInOrder }} <br />
       Реестр: {{ item.uploadedDriverName }}
     </td>
-
+    <!-- Гос.номер -->
     <td v-if="item.isTruckEqual">{{ item.truckInOrder }}</td>
     <td v-else class="has-diff">
       Рейс: {{ item.truckInOrder }} <br />
       Реестр: {{ item.uploadedTruckNumber }}
     </td>
+    <!-- Тип ТС -->
+    <td v-if="item.isTruckTypeEqual">{{ item.uploadedTruckType }}</td>
+    <td v-else class="has-diff">
+      Рейс: {{ item.pickedTruckTypeStr }}<br />
+      Реестр: {{ item.uploadedTruckType }}
+    </td>
+
     <!-- Цена без НДС -->
     <td v-if="item.isPriceEqual" class="text-right">
       {{ moneyFormatter(item.uploadedPrices.priceWOVat) }}

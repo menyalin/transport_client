@@ -14,13 +14,16 @@
       @download="downloadHandler"
       :disabledDownloadFiles="disabledDownloadFiles"
     />
+
     <payment-invoice-result :orders="item.orders" />
+
     <payment-invoice-orders-list
       :orders="item.orders"
       @delete="deleteOrderFromPaymentInvoice"
       @dblRowClick="dblRowClickHandler"
       @updateItemPrice="updateItemPrice"
     />
+
     <v-dialog
       v-if="item._id"
       v-model="showPickOrderDialog"

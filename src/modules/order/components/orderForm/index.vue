@@ -222,7 +222,6 @@ import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
-// TODO: Перенсти в OrderModel
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 import {
   DocsRegistryLink,

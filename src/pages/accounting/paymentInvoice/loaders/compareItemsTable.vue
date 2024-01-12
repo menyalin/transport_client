@@ -8,6 +8,7 @@
           <th class="text-left">Маршрут</th>
           <th>Водитель</th>
           <th>Грузовик</th>
+          <th>Тип ТС</th>
           <th class="text-right">Цена без НДС</th>
         </tr>
       </thead>

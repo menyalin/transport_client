@@ -44,6 +44,7 @@
           outlined
           type="date"
           :style="{ maxWidth: '250px' }"
+          @paste="pasteDate"
         />
         <v-select
           label="Статус"
@@ -100,6 +101,7 @@
           outlined
           type="date"
           :style="{ maxWidth: '250px' }"
+          @paste="pasteDate"
         />
       </div>
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
@@ -133,6 +135,7 @@ import store from '@/store'
 import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
+import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
   name: 'PaymentInvoiceForm',
@@ -155,6 +158,7 @@ export default {
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
+    const { pasteDate } = usePasteDateInput()
     const {
       v$,
       state,
@@ -219,6 +223,7 @@ export default {
       { immediate: true }
     )
     return {
+      pasteDate,
       v$,
       cancelHandler,
       clientItems,
