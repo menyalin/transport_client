@@ -3,7 +3,7 @@
     <div class="text-caption">Выбор периода</div>
     <div class="inputs-row">
       <v-menu
-        v-model="startDateMenu"
+        v-model="menu"
         :close-on-content-click="false"
         transition="scale-transition"
         offset-y
@@ -56,8 +56,7 @@ export default {
   data() {
     return {
       tmpPeriod: [null, null],
-      startDateMenu: false,
-      endDateMenu: false,
+      menu: false,
     }
   },
   computed: {
@@ -80,10 +79,13 @@ export default {
   methods: {
     changeDate(val) {
       if (!val || val.length !== 2) return
+      let tmpVal = val
+
+      if (dayjs(val[1]).isBefore(val[0], 'day')) tmpVal.reverse()
 
       this.$emit('change', [
-        dayjs(val[0]).startOf('day').toISOString(),
-        dayjs(val[1]).endOf('day').toISOString(),
+        dayjs(tmpVal[0]).startOf('day').toISOString(),
+        dayjs(tmpVal[1]).endOf('day').toISOString(),
       ])
     },
   },

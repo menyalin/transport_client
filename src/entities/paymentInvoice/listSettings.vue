@@ -5,7 +5,10 @@
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
-
+    <DateRangeInput
+      :period="settings.period"
+      @change="updateSettings($event, 'period')"
+    />
     <v-autocomplete
       :value="settings.agreements"
       item-text="name"
@@ -48,13 +51,13 @@
 <script>
 import store from '@/store'
 import { computed, ref, onMounted } from 'vue'
-import { AppTableColumnSetting } from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
 export default {
   name: 'DocsRegistryListSettingsWidget',
-  components: { AppTableColumnSetting },
+  components: { AppTableColumnSetting, DateRangeInput },
   model: {
     prop: 'settings',
     event: 'change',
