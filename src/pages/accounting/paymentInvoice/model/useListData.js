@@ -3,11 +3,13 @@ import store from '@/store'
 import router from '@/router'
 import { PaymentInvoiceService } from '@/shared/services'
 import useHistorySettings from '@/shared/hooks/useHistorySettings'
+import dayjs from 'dayjs'
 
 export const useListData = () => {
   function initialPeriod() {
-    // TODO: сделать автовыбор периода
-    return ['2023-12-01', '2023-12-31']
+    const startDate = dayjs().add(-1, 'month').startOf('month').toISOString()
+    const endDate = dayjs().toISOString()
+    return [startDate, endDate]
   }
   const initialState = { agreements: [], status: null, period: initialPeriod() }
   const settings = useHistorySettings(
@@ -37,6 +39,7 @@ export const useListData = () => {
   )
 
   const queryParams = computed(() => ({
+    period: settings.value?.period,
     status: settings.value?.status,
     search: settings.value?.search,
     agreements: settings.value?.agreements,
