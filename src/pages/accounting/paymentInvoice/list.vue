@@ -16,8 +16,9 @@
       v-model="settings"
       :items="items"
       :totalCount="totalCount"
+      :routesCount="routesCount"
+      :total="total"
       :headers="headers"
-      :statisticData="statisticData"
       :listOptions.sync="settings.listOptions"
       :loading="loading"
     />
@@ -25,7 +26,6 @@
 </template>
 <script>
 import { ref } from 'vue'
-
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import {
@@ -52,8 +52,9 @@ export default {
       settings,
       items,
       totalCount,
+      routesCount,
       loading,
-      statisticData,
+      total,
     } = useListData()
 
     return {
@@ -62,9 +63,10 @@ export default {
       settings,
       items,
       totalCount,
+      routesCount,
       headers,
       changeHeaders,
-      statisticData,
+      total,
       loading,
     }
   },
