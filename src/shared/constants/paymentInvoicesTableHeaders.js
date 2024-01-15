@@ -15,7 +15,7 @@ export default [
   {
     value: 'sendDate',
     text: 'Дата выставления',
-    sortable: false,
+    sortable: true,
     default: true,
   },
 
@@ -49,7 +49,7 @@ export default [
   {
     value: 'total.priceWOVat',
     text: 'Сумма без НДС',
-    sortable: false,
+    sortable: true,
     default: true,
     align: 'right',
     width: '10rem',
@@ -66,7 +66,7 @@ export default [
   {
     value: 'total.price',
     text: 'Сумма',
-    sortable: false,
+    sortable: true,
     default: true,
     align: 'right',
     width: '10rem',
