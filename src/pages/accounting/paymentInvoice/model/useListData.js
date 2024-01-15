@@ -16,6 +16,7 @@ export const useListData = () => {
     initialState,
     'paymentInvoice_list_settings'
   )
+  const listOptions = useHistorySettings({}, 'paymentInvoice_list_options')
 
   const items = ref([])
   const totalCount = ref(0)
@@ -35,24 +36,16 @@ export const useListData = () => {
     router.push('/accounting/paymentInvoice/create')
   }
 
-  watch(
-    settings,
-    async () => {
-      await getData()
-    },
-    { deep: true }
-  )
-
   const queryParams = computed(() => ({
     period: settings.value?.period,
     status: settings.value?.status,
     search: settings.value?.search,
     agreements: settings.value?.agreements,
     company: store.getters.directoriesProfile,
-    limit: settings.value?.listOptions?.itemsPerPage || 50,
-    skip:
-      settings.value.listOptions.itemsPerPage *
-      (settings.value.listOptions.page - 1),
+    limit: listOptions.value?.itemsPerPage || 50,
+    skip: listOptions.value?.itemsPerPage * (listOptions.value?.page - 1) || 0,
+    sortBy: listOptions.value?.sortBy || [],
+    sortDesc: listOptions.value?.sortDesc || [],
   }))
 
   async function getData() {
@@ -74,10 +67,27 @@ export const useListData = () => {
     items.value = items.value.filter((i) => i._id !== itemId)
   }
 
+  watch(
+    settings,
+    () => {
+      listOptions.value = { ...listOptions.value, page: 1 }
+    },
+    { deep: true }
+  )
+
+  watch(
+    listOptions,
+    async () => {
+      await getData()
+    },
+    { deep: true, immediate: true }
+  )
+
   return {
     refresh,
     create,
     settings,
+    listOptions,
     items,
     loading,
     total,

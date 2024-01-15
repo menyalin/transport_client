@@ -19,7 +19,7 @@
       :routesCount="routesCount"
       :total="total"
       :headers="headers"
-      :listOptions.sync="settings.listOptions"
+      :listOptions.sync="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>
@@ -54,6 +54,7 @@ export default {
       totalCount,
       routesCount,
       loading,
+      listOptions,
       total,
     } = useListData()
 
@@ -68,6 +69,7 @@ export default {
       changeHeaders,
       total,
       loading,
+      listOptions,
     }
   },
 }

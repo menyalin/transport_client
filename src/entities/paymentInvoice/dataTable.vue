@@ -14,7 +14,7 @@
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
     }"
-    :options="settings.listOptions"
+    :options="listOptions"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
   >
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { computed, watch } from 'vue'
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
 import PaymentInvoiceListAnalitics from './listAnalitics.vue'
@@ -65,6 +65,7 @@ export default {
   props: {
     items: Array,
     totalCount: Number,
+    listOptions: Object,
     routesCount: {
       type: Number,
       default: 0,
@@ -76,7 +77,6 @@ export default {
   },
   setup(props, ctx) {
     const selected = useHistorySettings([], 'selectedInvoicesInList')
-    const listOptions = ref(props.settings?.listOptions || {})
 
     function dblClickRow(_event, { item }) {
       router.push(`paymentInvoice/${item._id}`)
@@ -137,7 +137,6 @@ export default {
     return {
       selected,
       dblClickRow,
-      listOptions,
       updateListOptionsHandler,
       moneyFormatter,
       analiticsData,
