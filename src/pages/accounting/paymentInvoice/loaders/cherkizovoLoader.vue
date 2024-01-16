@@ -3,11 +3,12 @@
     <ButtonsPanel
       panelType="form"
       submitTitle="Загрузить"
+      :disabledSubmit="disabledSubmitBtn"
       @submit="submitHandler"
       @cancel="cancelHandler"
     >
-      <v-btn @click="refetchHandler">refetch</v-btn>
-      <v-btn @click="clearUploadedOrders">clear</v-btn>
+      <v-btn class="mx-2" @click="refetchHandler">Обновить</v-btn>
+      <v-btn class="mx-2" @click="clearUploadedOrders">Очистить</v-btn>
     </ButtonsPanel>
     <XlsxFileInput label="Выберите файл с реестром" @change="uploadHandler" />
 
@@ -67,6 +68,9 @@ export default {
   },
 
   computed: {
+    disabledSubmitBtn() {
+      return this.compareItems.filter((i) => i.isOrderPicked).length === 0
+    },
     totalPickedSum() {
       return this.pickedOrders.reduce(
         (sum, order) => (sum += order.total?.price),
@@ -126,7 +130,6 @@ export default {
           params: { id: this.id },
         })
       } catch (e) {
-        console.log(e)
         this.$store.commit('setError', e.message)
       }
     },
