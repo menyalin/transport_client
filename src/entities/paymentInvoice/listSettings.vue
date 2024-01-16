@@ -67,7 +67,13 @@ export default {
   },
 
   setup(props, ctx) {
-    const agreementItems = ref([])
+    const agreements = ref([])
+    const agreementItems = computed(() => {
+      console.log(agreements.value)
+      return agreements.value
+        .filter((i) => i.isOutsourceAgreement !== true)
+        .sort((a, b) => (a.name < b.name ? -1 : 1))
+    })
 
     const statusItems = computed(() => {
       return store.getters.docsRegistryStatuses
@@ -81,7 +87,7 @@ export default {
       ctx.emit('updateHeaders', val)
     }
     onMounted(async () => {
-      agreementItems.value = await AgreementService.getActiveAgreements()
+      agreements.value = await AgreementService.getActiveAgreements()
     })
 
     return {
