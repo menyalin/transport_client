@@ -145,8 +145,10 @@ export default {
               params: { id: updatedItem._id },
             })
         }
-        if (!saveOnly) router.push('/accounting/paymentInvoice')
-        else {
+        if (!saveOnly) {
+          router.go(-1)
+          //  router.push('/accounting/paymentInvoice')
+        } else {
           item.value = updatedItem
         }
       } catch (e) {
