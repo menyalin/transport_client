@@ -20,13 +20,16 @@
         class="mx-3"
       />
       <v-btn
-        v-if="!!loaderPath && !disabledPickOrders && !invalidForm"
+        v-if="showLoaderBtn"
         class="mx-3"
         @click="goToLoader"
         color="primary"
       >
         Загрузить из реестра
       </v-btn>
+      <span v-else-if="loaderPath" class="text-caption mx-3">
+        Для использования загрузчика необходимо очистить список рейсов.
+      </span>
     </buttons-panel>
     <div id="form">
       <div class="fields-row">
@@ -174,6 +177,14 @@ export default {
     const { docTemplates, newDocTemplates, newDownloadHandler } =
       usePaymentInvoiceDocTemplates(state, props)
 
+    const showLoaderBtn = computed(() => {
+      if (Array.isArray(props.item.orders) && props.item.orders.length > 0)
+        return false
+      return (
+        !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
+      )
+    })
+
     function cancelHandler() {
       router.go(-1)
     }
@@ -244,6 +255,7 @@ export default {
       loaderPath,
       newDocTemplates,
       newDownloadHandler,
+      showLoaderBtn,
     }
   },
   methods: {
