@@ -3,6 +3,7 @@ import socket from '@/socket'
 import dayjs from 'dayjs'
 import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { PaymentInvoiceService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
 
 const initPeriod = () => {
   return [
@@ -13,14 +14,16 @@ const initPeriod = () => {
 
 export const useListData = ({ client, _id, agreementId }) => {
   if (!client) console.error('client id is missing')
-  const historyState = window.history.state
   const initialState = {
     search: null,
     paymentInvoiceId: null,
     onlySelectable: true,
     period: initPeriod(),
   }
-  const settings = ref(historyState.settings || initialState)
+  const settings = usePersistedRef(
+    initialState,
+    'paymentInvoice:pickOrders:settings'
+  )
   const items = ref([])
   const loading = ref(false)
 
@@ -36,7 +39,6 @@ export const useListData = ({ client, _id, agreementId }) => {
     settings,
     async () => {
       await getData()
-      window.history.pushState({ settings: settings.value }, '')
     },
     { deep: true }
   )
@@ -62,10 +64,6 @@ export const useListData = ({ client, _id, agreementId }) => {
       store.commit('setError', e.message)
     }
   }
-
-  addEventListener('popstate', (e) => {
-    settings.value = e.state.settings
-  })
 
   function updateItems(data) {
     if (!items.value) return null

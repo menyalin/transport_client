@@ -140,7 +140,7 @@ export default {
         } else {
           updatedItem = await PaymentInvoiceService.create(formState)
           if (saveOnly)
-            router.push({
+            router.replace({
               name: 'PaymentInvoiceDetail',
               params: { id: updatedItem._id },
             })

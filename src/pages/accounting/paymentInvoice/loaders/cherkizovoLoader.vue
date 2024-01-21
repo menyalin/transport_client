@@ -124,8 +124,8 @@ export default {
           paymentInvoiceId: this.id,
           orders: this.pickedOrderIds,
         })
-
-        this.$router.push({
+        this.clearHandler()
+        this.$router.replace({
           name: 'PaymentInvoiceDetail',
           params: { id: this.id },
         })
