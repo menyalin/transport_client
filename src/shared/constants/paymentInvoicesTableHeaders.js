@@ -2,7 +2,7 @@ export default [
   {
     value: 'number',
     text: 'Номер',
-    sortable: false,
+    sortable: true,
     default: true,
   },
   {

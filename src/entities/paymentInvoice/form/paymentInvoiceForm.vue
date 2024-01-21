@@ -261,7 +261,7 @@ export default {
   methods: {
     goToLoader() {
       if (!this.item._id || !this.loaderPath) return
-      this.$router.push({
+      this.$router.replace({
         path: this.$route.path + '/' + this.loaderPath,
         query: {
           invoiceDate: this.state.sendDate,
