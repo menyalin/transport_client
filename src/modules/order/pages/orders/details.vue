@@ -111,9 +111,14 @@ export default {
       this.tmpVal = val
       try {
         this.loading = true
-        if (this.item._id) {
-          this.item = await this.service.updateOne(this.item._id, val)
-        } else this.item = await this.service.create(val)
+        if (this.id) this.item = await this.service.updateOne(this.id, val)
+        else {
+          this.item = await this.service.create(val)
+          this.$router.replace({
+            name: 'DetailsOrder',
+            params: { id: this.item._id },
+          })
+        }
         this.loading = false
         this.tmpVal = null
         if (!saveOnly) this.$router.go(-1)
@@ -123,7 +128,7 @@ export default {
         if (e.response.status === 400 || e.response.status === 403) {
           this.error.message = e.response.data
           this.error.show = true
-        }
+        } else this.$store.commit('setError', e)
       }
     },
     cancel() {

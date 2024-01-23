@@ -74,7 +74,7 @@ export default [
   {
     value: 'createdAt',
     text: 'Дата создания',
-    sortable: false,
+    sortable: true,
     default: true,
   },
   {
