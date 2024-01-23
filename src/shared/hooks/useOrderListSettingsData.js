@@ -34,7 +34,7 @@ export default (settings) => {
     return agreements.value
       .filter((i) => !i.isOutsourceAgreement)
       .map((i) => ({ _id: i._id, name: i.name }))
-      .sort((a, b) => a.name - b.name)
+      .sort((a, b) => (a.name > b.name ? 1 : -1))
   })
 
   const trailers = computed(() =>
