@@ -123,6 +123,9 @@ export default {
           company: this.$store.getters.directoriesProfile,
           paymentInvoiceId: this.id,
           orders: this.pickedOrderIds,
+          registryData: this.compareItems
+            .filter((i) => i.isOrderPicked)
+            .map((i) => i.exportData()),
         })
         this.clearHandler()
         this.$router.replace({

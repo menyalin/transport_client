@@ -58,6 +58,7 @@ export class ParsedOrderDTO {
 }
 
 const compareItemSchema = z.object({
+  _id: z.string().optional(),
   isOrderPicked: z.boolean(),
   clientNum: z.string(),
   route: z.string(),
@@ -70,7 +71,6 @@ const compareItemSchema = z.object({
     priceWOVat: z.number(),
   }),
 
-  _id: z.string().optional(),
   orderId: z.string().optional(),
   driverNameInOrder: z.string().optional(),
   truckInOrder: z.string().optional(),
@@ -95,8 +95,24 @@ export class CompareItem {
   constructor(props) {
     compareItemSchema.parse(props)
     Object.assign(this, props)
+    this.loaderName = 'cherkizovo_loader'
   }
 
+  exportData() {
+    return {
+      _id: this._id,
+      route: this.route,
+      truck: this.uploadedTruckNumber,
+      driver: this.uploadedDriverName,
+      truckType: this.uploadedTruckType,
+      price: this.uploadedPrices.price,
+      priceWOVat: this.uploadedPrices.priceWOVat,
+      isTruckTypeEqual: this.isTruckTypeEqual,
+      isTruckEqual: this.isTruckEqual,
+      isDriverEqual: this.isDriverEqual,
+      isPriceEqual: this.isPriceEqual,
+    }
+  }
   get isTruckTypeEqual() {
     if (!this.pickedTruckType) return false
     const uploadedTruckType = truckTypeMapper[this.uploadedTruckType]
