@@ -101,6 +101,7 @@ export class CompareItem {
   exportData() {
     return {
       _id: this._id,
+      loaderName: this.loaderName,
       route: this.route,
       truck: this.uploadedTruckNumber,
       driver: this.uploadedDriverName,

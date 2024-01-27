@@ -25,15 +25,27 @@
         Удалить выделенные рейсы
       </v-btn>
     </template>
+
     <template #[`item.savedTotal.price`]="{ item }">
-      {{ moneyFormatter(item.savedTotal.price) }}
+      <div v-if="item.hasDiffPrice" class="diff-cell">
+        <div>Рейс: {{ moneyFormatter(item.savedTotal.price) }}</div>
+        <div>Реестр: {{ moneyFormatter(item.loadedPrice) }}</div>
+      </div>
+      <span v-else>{{ moneyFormatter(item.savedTotal.price) }}</span>
     </template>
+
     <template #[`item.vatSum`]="{ item }">
       {{ moneyFormatter(item.savedTotal.price - item.savedTotal.priceWOVat) }}
     </template>
+
     <template #[`item.savedTotal.priceWOVat`]="{ item }">
-      {{ moneyFormatter(item.savedTotal.priceWOVat) }}
+      <div v-if="item.hasDiffPriceWOVat" class="diff-cell">
+        <div>Рейс: {{ moneyFormatter(item.savedTotal.priceWOVat) }}</div>
+        <div>Реестр: {{ moneyFormatter(item.loadedPriceWOVat) }}</div>
+      </div>
+      <span v-else>{{ moneyFormatter(item.savedTotal.priceWOVat) }}</span>
     </template>
+
     <template #[`item.needUpdate`]="{ item }">
       <v-icon
         v-if="item.needUpdate"
@@ -61,7 +73,7 @@ export default {
   setup(props, { emit }) {
     const selected = ref([])
     const selectedOrderIds = computed(() => selected.value.map((i) => i.rowId))
-
+    const expanded = ref([])
     const preparedOrders = computed(() => {
       if (!props.orders) return []
       return props.orders.map((item, idx) => ({
@@ -71,6 +83,14 @@ export default {
         savedTotal: item.savedTotal
           ? item.savedTotal
           : { price: 0, priceWOVat: 0 },
+        hasDiffPrice:
+          item.loaderData?.price &&
+          item.loaderData?.price !== item.savedTotal?.price,
+        hasDiffPriceWOVat:
+          item.loaderData?.priceWOVat &&
+          item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
+        loadedPrice: item.loaderData?.price || 0,
+        loadedPriceWOVat: item.loaderData?.priceWOVat || 0,
       }))
     })
 
@@ -100,18 +120,28 @@ export default {
       }
       emit('updateItemPrice', itemId)
     }
+    const headers = computed(() => ALL_HEADERS)
 
     return {
       selected,
       selectedOrderIds,
       preparedOrders,
-      headers: ALL_HEADERS,
+      headers,
       deleteHandler,
       dblclickRowHandler,
       updateItemPrice,
       moneyFormatter,
+      expanded,
     }
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.diff-cell {
+  border: 1px solid rgb(255, 97, 97);
+  background-color: rgba(255, 97, 97, 0.2);
+  border-radius: 5px;
+  margin: 1px 2px;
+  padding: 0px 2px;
+}
+</style>
