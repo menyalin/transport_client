@@ -6,7 +6,12 @@
       :disabledSubmit="!$store.getters.hasPermission('paymentInvoice:write')"
       @submit="create"
       @refresh="refresh"
-    />
+    >
+      <v-btn color="primary" @click="downloadHandler">
+        <v-icon>mdi-download</v-icon>
+        Скачать отчет
+      </v-btn>
+    </buttons-panel>
 
     <payment-invoices-list-settings
       v-model="settings"
@@ -56,6 +61,7 @@ export default {
       loading,
       listOptions,
       total,
+      downloadHandler,
     } = useListData()
 
     return {
@@ -70,6 +76,7 @@ export default {
       total,
       loading,
       listOptions,
+      downloadHandler,
     }
   },
 }
