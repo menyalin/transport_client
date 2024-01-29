@@ -67,6 +67,17 @@ export const useListData = () => {
     items.value = items.value.filter((i) => i._id !== itemId)
   }
 
+  async function downloadHandler() {
+    try {
+      loading.value = true
+      await PaymentInvoiceService.getPaymentInvocesListFile(queryParams.value)
+      loading.value = false
+    } catch (e) {
+      loading.value = false
+      store.commit('setError', e.message)
+    }
+  }
+
   watch(
     settings,
     () => {
@@ -94,5 +105,6 @@ export const useListData = () => {
     onDeleteHandler,
     totalCount,
     routesCount,
+    downloadHandler,
   }
 }
