@@ -7,8 +7,8 @@ import dayjs from 'dayjs'
 
 export const useListData = () => {
   function initialPeriod() {
-    const startDate = dayjs().add(-1, 'month').startOf('month').toISOString()
-    const endDate = dayjs().toISOString()
+    const startDate = dayjs().startOf('month').toISOString()
+    const endDate = dayjs().endOf('month').toISOString()
     return [startDate, endDate]
   }
   const initialState = { agreements: [], status: null, period: initialPeriod() }
