@@ -23,6 +23,7 @@
       label="Документы"
       dense
       clearable
+      multiple
       outlined
       :items="stateItems"
       hide-details
@@ -94,6 +95,7 @@
       label="Сдача документов, дней"
       dense
       clearable
+      multiple
       outlined
       :items="daysIntervalItems"
       hide-details
@@ -106,6 +108,7 @@
       dense
       clearable
       outlined
+      multiple
       :items="daysIntervalItems"
       hide-details
       :style="{ maxWidth: '200px' }"
@@ -118,9 +121,6 @@
 import store from '@/store'
 import { watch, ref, computed } from 'vue'
 import { RefreshBtn } from '../../../shared/ui'
-
-import { ALL_HEADERS } from '../index.js'
-
 import { AppTableColumnSetting } from '@/shared/ui'
 
 export default {
@@ -135,10 +135,14 @@ export default {
   },
   props: {
     settings: Object,
+    allHeaders: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props, ctx) {
     const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = ALL_HEADERS
+    const allHeaders = props.allHeaders
     const activeHeaders = ref([])
 
     function updateSettings(value, field) {
@@ -159,13 +163,12 @@ export default {
       { text: 'Водителям', value: 'driver' },
     ]
 
-    // < 10 / 11-20 / 21-30 / >31
-
     const daysIntervalItems = [
-      { text: '< 10', value: 1 },
-      { text: '10 - 20', value: 2 },
-      { text: '20 - 30', value: 3 },
-      { text: ' > 30 ', value: 4 },
+      { text: '< 5', value: 1 },
+      { text: '5 - 10', value: 2 },
+      { text: '10 - 20', value: 3 },
+      { text: '20 - 30', value: 4 },
+      { text: ' > 30 ', value: 5 },
     ]
 
     const tkNameItems = computed(() => {

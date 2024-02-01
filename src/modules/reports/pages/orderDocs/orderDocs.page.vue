@@ -1,9 +1,10 @@
 <template>
   <div class="page-wrapper">
-    <report-title :title="pageTitle" />
-    <report-settings-widget
+    <report-title title="Отчет по не сданным документам" />
+    <report-settings
       @refresh="refresh"
       v-model="settings"
+      :allHeaders="allHeaders"
       @changeHeaders="changeHeaders"
     />
     <report-data-table
@@ -16,51 +17,29 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { ReportTitle } from '../../shared/ui'
 
-import {
-  ReportSettingsWidget,
-  useReportData,
-  ReportDataTable,
-} from '../../components/orderDocs'
+import { ReportSettings, ReportDataTable } from './ui'
+import { useReportData, ALL_HEADERS } from './model'
 
 export default {
   name: 'OrderDocsReport',
   components: {
-    ReportSettingsWidget,
+    ReportSettings,
     ReportTitle,
     ReportDataTable,
   },
   setup() {
-    const historyState = window.history.state
-    const initialState = { groupBy: 'month', clients: [], tks: [], state: null }
     const headers = ref([])
-    const settings = ref(historyState.settings || initialState)
-    const pageTitle = ref('Отчет по не сданным документам')
 
-    const { items, refresh, loading, statisticData } = useReportData({
-      settings,
-    })
+    const { settings, items, refresh, loading, statisticData } = useReportData()
 
     function changeHeaders(value) {
       headers.value = value
     }
 
-    watch(
-      settings,
-      () => {
-        window.history.pushState({ settings: settings.value }, '')
-      },
-      { immediate: true }
-    )
-
-    addEventListener('popstate', (e) => {
-      settings.value = e.state.settings
-    })
-
     return {
-      pageTitle,
       items,
       refresh,
       settings,
@@ -68,6 +47,7 @@ export default {
       changeHeaders,
       loading,
       statisticData,
+      allHeaders: ALL_HEADERS,
     }
   },
 }
