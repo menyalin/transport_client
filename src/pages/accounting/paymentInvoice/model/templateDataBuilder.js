@@ -13,32 +13,52 @@ const getInvoiceTotal = (orders) => {
   const result = orders.reduce(
     (res, item) => {
       const discountKoef = (item.agreement.commission || 0) / 100
-      const discountSum = (item.savedTotal.price || 0) * discountKoef
-      const discountSumWOVat = (item.savedTotal.priceWOVat || 0) * discountKoef
-
-      const itemPrice = (item.savedTotal.price || 0) - discountSum
+      const vatRateKoef = (item.agreement.vatRate || 0) / 100
+      const discountSumWOVat = item.savedTotal.priceWOVat * discountKoef
       const itemPriceWOVat =
         (item.savedTotal.priceWOVat || 0) - discountSumWOVat
-      const vat = itemPrice - itemPriceWOVat
+
       return {
-        price: res.price + itemPrice,
+        priceWOdiscountWOVat:
+          res.priceWOdiscountWOVat + item.savedTotal.priceWOVat,
+
+        priceWOdiscount:
+          res.priceWOdiscount +
+          item.savedTotal.priceWOVat +
+          item.savedTotal.priceWOVat * vatRateKoef,
+
         priceWOVat: res.priceWOVat + itemPriceWOVat,
-        vat: res.vat + vat,
-        discountSum: res.discountSum + discountSum,
+
+        price: res.price + (itemPriceWOVat + itemPriceWOVat * vatRateKoef),
+
         discountSumWOVat: res.discountSumWOVat + discountSumWOVat,
+
+        discountSum:
+          res.discountSum + (discountSumWOVat + discountSumWOVat * vatRateKoef),
       }
     },
-    { price: 0, priceWOVat: 0, vat: 0, discountSum: 0, discountSumWOVat: 0 }
+    {
+      priceWOdiscountWOVat: 0,
+      priceWOdiscount: 0,
+      priceWOVat: 0,
+      price: 0,
+      discountSumWOVat: 0,
+      discountSum: 0,
+    }
   )
 
   return {
-    priceWOdiscount: moneyFormatter(result.price + result.discountSum),
-    price: moneyFormatter(result.price),
+    priceWOdiscountWOVat: moneyFormatter(result.priceWOdiscountWOVat),
+    priceWOdiscount: moneyFormatter(result.priceWOdiscount),
     priceWOVat: moneyFormatter(result.priceWOVat),
-    vat: moneyFormatter(result.vat),
+    price: moneyFormatter(result.price),
+    vat: moneyFormatter(result.price - result.priceWOVat),
+    vatWOdiscount: moneyFormatter(
+      result.priceWOdiscount - result.priceWOdiscountWOVat
+    ),
     discountSum: moneyFormatter(result.discountSum),
-    rawDiscountSum: result.discountSum,
     discountSumWOVat: moneyFormatter(result.discountSumWOVat),
+    rawDiscountSum: result.discountSum,
   }
 }
 
