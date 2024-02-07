@@ -19,7 +19,7 @@
             outlined
             dense
             v-model="state.agreement"
-            :items="agreementItems"
+            :items="agreements"
             item-value="_id"
             item-text="name"
           />
@@ -77,7 +77,7 @@ export default {
     const {
       state,
       clientItems,
-      agreementItems,
+      agreements,
       vatCheckboxIsDisabled,
       sumFieldIsDisabled,
       submitHandler,
@@ -94,7 +94,7 @@ export default {
       closeDialog,
       state,
       clientItems,
-      agreementItems,
+      agreements,
       vatCheckboxIsDisabled,
       sumFieldIsDisabled,
       invalidForm,

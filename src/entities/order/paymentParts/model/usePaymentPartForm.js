@@ -43,8 +43,10 @@ class PaymentPart {
 export function usePaymentPartForm({ routeDate }, ctx) {
   if (!routeDate) console.warn('-->> route date is required!!!')
 
+
   const agreements = ref([])
   const initialState = {
+
     client: null,
     agreement: null,
     sumWithVAT: false,
@@ -74,6 +76,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
       company: store.getters.directoriesProfile,
     })
 
+
     if (res) agreements.value = res
     const [firstAgreement] = res
 
@@ -88,6 +91,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
     if (!state.value.agreement) return {}
     else return agreements.value.find((i) => i._id === state.value.agreement)
   })
+
 
   const agreementItems = computed(
     () => agreements.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || []
@@ -110,6 +114,11 @@ export function usePaymentPartForm({ routeDate }, ctx) {
     ctx.emit('submit', submitedData)
   }
 
+  watch(state, (newVal, oldVal) => {
+    if (newVal.agreement !== oldVal.agreement)
+      console.log('agreement changed: ', newVal)
+  })
+
   watch(
     [() => routeDate, () => state.value.client],
     async ([routeDate, client]) => {
@@ -126,7 +135,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
     state,
     invalidForm,
     clientItems,
-    agreementItems,
+    agreements,
     vatCheckboxIsDisabled,
     sumFieldIsDisabled,
     vatRate,
