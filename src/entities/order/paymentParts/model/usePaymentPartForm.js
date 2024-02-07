@@ -43,10 +43,8 @@ class PaymentPart {
 export function usePaymentPartForm({ routeDate }, ctx) {
   if (!routeDate) console.warn('-->> route date is required!!!')
 
-
   const agreements = ref([])
   const initialState = {
-
     client: null,
     agreement: null,
     sumWithVAT: false,
@@ -65,17 +63,12 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   const invalidForm = computed(() => v$.value.$invalid)
   const v$ = useVuelidate(rules, state)
 
-  const clientItems = computed(() =>
-    store.getters.partners.filter((i) => i.isClient)
-  )
-
   async function setAgreement({ client, routeDate }) {
     const res = await AgreementService.getForClient({
       client,
       date: routeDate,
       company: store.getters.directoriesProfile,
     })
-
 
     if (res) agreements.value = res
     const [firstAgreement] = res
@@ -91,7 +84,6 @@ export function usePaymentPartForm({ routeDate }, ctx) {
     if (!state.value.agreement) return {}
     else return agreements.value.find((i) => i._id === state.value.agreement)
   })
-
 
   const agreementItems = computed(
     () => agreements.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || []
@@ -134,7 +126,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
     v$,
     state,
     invalidForm,
-    clientItems,
+    agreementItems,
     agreements,
     vatCheckboxIsDisabled,
     sumFieldIsDisabled,
