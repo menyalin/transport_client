@@ -4,6 +4,7 @@
       <thead>
         <tr>
           <th class="text-left">Клиент</th>
+          <th class="text-left">Соглашение</th>
           <th class="text-right">Сумма без НДС</th>
           <th class="text-right">Сумма НДС</th>
           <th class="text-right">Сумма с НДС</th>
@@ -23,6 +24,9 @@
                 ? $store.getters.partnersMap.get(item.client).name
                 : '????'
             }}
+          </td>
+          <td>
+            {{ item.agreementName }}
           </td>
           <td class="text-right" width="180px">
             {{ new Intl.NumberFormat().format(item.priceWOVat) }}
@@ -55,6 +59,7 @@ export default {
     function deleteRow(idx) {
       emit('deleteRow', idx)
     }
+
     return {
       deleteRow,
     }

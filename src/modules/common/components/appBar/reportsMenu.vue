@@ -44,6 +44,11 @@ export default {
           permission: 'report:orderDocs',
         },
         {
+          link: '/reports/orders_wo_invoice',
+          title: 'Рейсы, не включенные в акты',
+          permission: 'report:orders_wo_invoice',
+        },
+        {
           link: '/reports/gross_profit_pivot',
           title: 'Валовая прибыль свод',
           permission: 'report:gross_profit',

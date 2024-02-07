@@ -60,6 +60,15 @@ export default [
           permission: 'report:orderDocs',
         },
       },
+      {
+        path: 'orders_wo_invoice',
+        name: 'OrdersNotIncludedInInvoice',
+        component: () =>
+          import('../pages/ordersWOInvoice/ordersWOInvoice.page.vue'),
+        meta: {
+          permission: 'report:orderDocs',
+        },
+      },
     ],
   },
 ]

@@ -36,8 +36,8 @@ function usePaimentInvoiceForm() {
   }
 
   const rules = {
-    number: {},
-    sendDate: {},
+    number: { required },
+    sendDate: { required },
     numberByClient: {},
     dateByClient: {},
     client: { required },

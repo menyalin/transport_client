@@ -56,8 +56,8 @@ export const useListData = ({ client, _id, agreementId }) => {
   async function getData() {
     try {
       loading.value = true
-      const data = await PaymentInvoiceService.pickOrders(queryParams.value)
-      items.value = data
+      const [orders] = await PaymentInvoiceService.pickOrders(queryParams.value)
+      items.value = orders
       loading.value = false
     } catch (e) {
       loading.value = false
