@@ -2,7 +2,6 @@
   <v-dialog :value="dialog" max-width="800" @input="closeDialog" persistent>
     <v-card>
       <v-card-title class="text-h5">{{ dialogTitle }}</v-card-title>
-
       <form @submit.prevent="submitHandler">
         <v-card-text class="form-wrapper">
           <v-autocomplete
@@ -23,7 +22,6 @@
             :items="agreementItems"
             item-value="_id"
             item-text="name"
-            readonly
           />
           <div class="row-sum">
             <v-text-field
@@ -64,20 +62,16 @@
 import { computed } from 'vue'
 import { usePaymentPartForm } from './model/usePaymentPartForm'
 export default {
-  name: 'GroupDocDialog',
+  name: 'PaymentPartsDialog',
   props: {
     routeDate: { type: String, required: true },
     dialog: { type: Boolean, default: true },
   },
-  setup(props, { emit }) {
+  setup(props, ctx) {
     const dialogTitle = computed(() => 'Добавить сумму для частичной оплаты')
 
     function closeDialog() {
-      emit('close')
-    }
-
-    function submitHandler() {
-      emit('submit', { ...state.value, vatRate: vatRate.value })
+      ctx.emit('close')
     }
 
     const {
@@ -86,15 +80,17 @@ export default {
       agreementItems,
       vatCheckboxIsDisabled,
       sumFieldIsDisabled,
-      vatRate,
+      submitHandler,
       invalidForm,
-    } = usePaymentPartForm({
-      routeDate: props.routeDate,
-    })
+    } = usePaymentPartForm(
+      {
+        routeDate: props.routeDate,
+      },
+      ctx
+    )
 
     return {
       dialogTitle,
-      submitHandler,
       closeDialog,
       state,
       clientItems,
@@ -102,6 +98,7 @@ export default {
       vatCheckboxIsDisabled,
       sumFieldIsDisabled,
       invalidForm,
+      submitHandler,
     }
   },
 }

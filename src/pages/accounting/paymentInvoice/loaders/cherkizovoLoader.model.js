@@ -212,7 +212,7 @@ export class CompareItem {
 export const usePageData = () => {
   async function pickOrdersByClientNumbers(props) {
     PickOrdersByClientNumbersPropsSchema.parse(props)
-    const orders = await PaymentInvoiceService.pickOrders(props)
+    const [orders] = await PaymentInvoiceService.pickOrders(props)
     return orders
   }
 

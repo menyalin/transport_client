@@ -2,11 +2,23 @@
   <div class="docs-wrapper">
     <h5>Деление стоимости рейса:</h5>
     <div class="btn-wrapper">
-      <v-btn text small color="primary" outlined @click="openDialog">
+      <v-btn
+        text
+        small
+        color="primary"
+        outlined
+        @click="openDialog"
+        :disabled="loading"
+      >
         Добавить часть
       </v-btn>
     </div>
-    <payment-parts-table :items="parts" @deleteRow="deleteRowHandler" />
+    <div v-if="loading">Загружаю...</div>
+    <payment-parts-table
+      v-else
+      :items="preparedItems"
+      @deleteRow="deleteRowHandler"
+    />
     <payment-part-form-dialog
       :routeDate="routeDate"
       :dialog="dialog"
@@ -16,9 +28,9 @@
   </div>
 </template>
 <script>
+import { AgreementService } from '@/shared/services/index'
 import PaymentPartFormDialog from './formDialog.vue'
 import PaymentPartsTable from './paymentPartsTable.vue'
-import { PaymentPart } from './model/paymentPart.class'
 
 export default {
   name: 'OrderPaymentParts',
@@ -41,9 +53,27 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      agreements: [],
       parts: [],
       dialog: false,
     }
+  },
+  computed: {
+    clientsInParts() {
+      return this.parts.map((i) => i.client)
+    },
+    preparedItems() {
+      return this.parts.map((part) => {
+        const agreement = this.agreements.find(
+          (agreement) => agreement._id === part.agreement
+        )
+        return {
+          ...part,
+          agreementName: agreement?.name || '__no name__',
+        }
+      })
+    },
   },
 
   watch: {
@@ -61,11 +91,21 @@ export default {
         this.$emit('change', val)
       },
     },
+    clientsInParts: {
+      deep: true,
+      immediate: true,
+      handler: async function (newVal, oldVal) {
+        if (
+          Array.isArray(newVal) &&
+          newVal.some((i) => !Array.isArray(oldVal) || !oldVal.includes(i))
+        )
+          await this.getAgreements()
+      },
+    },
   },
   methods: {
     submitHandler(formState) {
-      const part = new PaymentPart(formState)
-      this.parts.push(part)
+      this.parts.push(formState)
       this.closeDialog()
     },
     openDialog() {
@@ -76,6 +116,21 @@ export default {
     },
     deleteRowHandler(idx) {
       this.parts.splice(idx, 1)
+    },
+    async getAgreements() {
+      try {
+        this.loading = true
+        const res = await AgreementService.getForClient({
+          company: this.$store.getters.directoriesProfile,
+          date: this.routeDate,
+          clients: this.clientsInParts,
+        })
+        this.agreements = Object.assign([], res)
+      } catch (e) {
+        this.$store.commit('setError', e)
+      } finally {
+        this.loading = false
+      }
     },
   },
 }
