@@ -4,7 +4,7 @@
     :headers="headers"
     v-model="selected"
     multiple
-    item-key="rowId"
+    item-key="_id"
     checkbox-color="primary"
     show-select
     :itemsPerPage="-1"

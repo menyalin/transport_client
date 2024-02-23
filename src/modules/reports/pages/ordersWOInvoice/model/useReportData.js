@@ -3,6 +3,7 @@ import { ReportService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
 import { AgreementService } from '@/shared/services/index'
 import dayjs from 'dayjs'
+import store from '@/store/index'
 
 export default function () {
   const setInitialPeriod = () => [
@@ -12,13 +13,25 @@ export default function () {
 
   const initialState = {
     period: setInitialPeriod(),
-    groupBy: 'month',
     tks: [],
     agreements: [],
   }
   const settings = usePersistedRef(
     initialState,
     'OrderWOInvoiceReport:settings'
+  )
+
+  function resetListOptions() {
+    listOptions.value = { ...listOptions.value, page: 1 }
+  }
+  const listOptions = usePersistedRef(
+    {
+      page: 1,
+      itemsPerPage: 50,
+      sortBy: [],
+      sortDesc: [],
+    },
+    'OrderWOInvoiceReport:listOptions'
   )
   const agreements = ref([])
   const agreementItems = computed(() =>
@@ -27,7 +40,9 @@ export default function () {
       .sort((a, b) => (a.name < b.name ? -1 : 1))
   )
   const items = ref([])
-  const statisticData = ref({})
+  const statisticData = ref({
+    count: 0,
+  })
   const loading = ref(false)
 
   async function refresh() {
@@ -37,28 +52,28 @@ export default function () {
   async function getData() {
     try {
       loading.value = true
-      const [itemsData] = await ReportService.ordersWOInvoice(settings.value)
+      const [itemsData, data] = await ReportService.ordersWOInvoice({
+        ...settings.value,
+        skip: (listOptions.value.page - 1) * listOptions.value.itemsPerPage,
+        limit: listOptions.value.itemsPerPage,
+        sortBy: listOptions.value.sortBy,
+        sortDesc: listOptions.value.sortDesc,
+      })
+      statisticData.value = data || { count: 0 }
       items.value = itemsData || []
-      // statisticData.value = {
-      //   totalCount,
-      //   correctionCount,
-      //   notGettedCount,
-      //   reviewCount,
-      // }
       loading.value = false
     } catch (e) {
+      store.commit('setError', e.message)
+    } finally {
       loading.value = false
-      console.log('Ошибка !', e)
     }
   }
 
-  watch(
-    settings,
-    async () => {
-      await getData()
-    },
-    { immediate: true }
-  )
+  watch(listOptions, async () => {
+    await getData()
+  })
+
+  watch(settings, resetListOptions)
 
   onMounted(async () => {
     agreements.value = await AgreementService.getActiveAgreements()
@@ -71,5 +86,6 @@ export default function () {
     refresh,
     loading,
     agreementItems,
+    listOptions,
   }
 }

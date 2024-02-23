@@ -4,43 +4,45 @@
     dense
     :headers="headers"
     :loading="loading"
-    :items-per-page="-1"
+    :serverItemsLength="statisticData.count"
     height="72vh"
     show-group-by
     fixed-header
+    :listOptions="listOptions"
+    @update:options="updateListOptions"
     :footer-props="{
-      'items-per-page-options': [-1, 10],
+      'items-per-page-options': [50, 100, 300],
     }"
     @dblclick:row="dblClickRow"
   >
-    <template #[`item.orderDate`]="{ item }">
-      {{ new Date(item.orderDate).toLocaleString() }}
-    </template>
-    <template #[`item.docsState.date`]="{ item }">
+    <!-- <template #[`item.plannedDate`]="{ item }">
+      {{ new Date(item.plannedDate).toLocaleString() }}
+    </template> -->
+    <!-- <template #[`item.docsState.date`]="{ item }">
       {{
         item.docsState.date
           ? new Date(item.docsState.date).toLocaleString()
           : null
       }}
-    </template>
-    <template #[`item.reviewDate`]="{ item }">
+    </template> -->
+    <!-- <template #[`item.reviewDate`]="{ item }">
       {{
         item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null
       }}
-    </template>
-    <template #[`item._docsStatusObj.text`]="{ item }">
+    </template> -->
+    <!-- <template #[`item._docsStatusObj.text`]="{ item }">
       <b :style="{ color: item._docsStatusObj.color }">{{
         item._docsStatusObj.text
       }}</b>
-    </template>
-    <template #footer.prepend>
+    </template> -->
+    <!-- <template #footer.prepend>
       <order-list-footer-details
         :total="statisticData.totalCount"
         :needFix="statisticData.correctionCount"
         :onCheck="statisticData.reviewCount"
         :missing="statisticData.notGettedCount"
       />
-    </template>
+    </template> -->
   </v-data-table>
 </template>
 
@@ -48,6 +50,7 @@
 import { computed } from 'vue'
 import router from '@/router'
 import { OrderListFooterDetails } from '@/shared/ui'
+import { DataTableRow } from './index'
 
 export default {
   name: 'ReportDataTable',
@@ -59,15 +62,22 @@ export default {
     headers: Array,
     loading: Boolean,
     statisticData: Object,
+    listOptions: Object,
   },
-  setup(props) {
-    const preparedItems = computed(() => props.items.map((i) => ({ ...i })))
+  setup(props, ctx) {
+    const preparedItems = computed(() =>
+      props.items.map((i) => new DataTableRow(i))
+    )
     function dblClickRow(_, { item }) {
-      if (item) router.push(`/orders/${item._id}`)
+      if (item) router.push(`/orders/${item.orderId}`)
+    }
+    function updateListOptions(val) {
+      ctx.emit('update:listOptions', val)
     }
     return {
       preparedItems,
       dblClickRow,
+      updateListOptions,
     }
   },
 }

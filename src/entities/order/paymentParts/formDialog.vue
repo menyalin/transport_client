@@ -82,12 +82,7 @@ export default {
       sumFieldIsDisabled,
       submitHandler,
       invalidForm,
-    } = usePaymentPartForm(
-      {
-        routeDate: props.routeDate,
-      },
-      ctx
-    )
+    } = usePaymentPartForm({ routeDate: props.routeDate }, ctx)
 
     return {
       dialogTitle,

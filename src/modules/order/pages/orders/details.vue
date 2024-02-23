@@ -109,16 +109,18 @@ export default {
     },
     async submit(val, saveOnly) {
       this.tmpVal = val
+      let res
       try {
         this.loading = true
-        if (this.id) this.item = await this.service.updateOne(this.id, val)
+        if (this.id) res = await this.service.updateOne(this.id, val)
         else {
-          this.item = await this.service.create(val)
+          res = await this.service.create(val)
           this.$router.replace({
             name: 'DetailsOrder',
-            params: { id: this.item._id },
+            params: { id: res._id },
           })
         }
+        this.item = Object.assign(this.item, res)
         this.loading = false
         this.tmpVal = null
         if (!saveOnly) this.$router.go(-1)

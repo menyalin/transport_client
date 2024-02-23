@@ -63,6 +63,10 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   const invalidForm = computed(() => v$.value.$invalid)
   const v$ = useVuelidate(rules, state)
 
+  const clientItems = computed(() =>
+    store.getters.partners.filter((i) => i.isClient)
+  )
+
   async function setAgreement({ client, routeDate }) {
     const res = await AgreementService.getForClient({
       client,
@@ -125,6 +129,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   return {
     v$,
     state,
+    clientItems,
     invalidForm,
     agreementItems,
     agreements,

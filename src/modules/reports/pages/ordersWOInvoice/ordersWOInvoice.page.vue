@@ -1,13 +1,19 @@
 <template>
   <div class="page-wrapper">
     <report-title title="Отчет по рейсам, не включенным в акты" />
-    settings: {{ settings }}
     <ReportSettings
       v-model="settings"
       :agreementItems="agreementItems"
       :allHeaders="allHeaders"
       @changeHeaders="changeHeaders"
       @refresh="refresh"
+    />
+    <ReportDataTable
+      :items="items"
+      :headers="headers"
+      :loading="loading"
+      :listOptions.sync="listOptions"
+      :statisticData="statisticData"
     />
   </div>
 </template>
@@ -27,8 +33,15 @@ export default {
   setup() {
     const headers = ref([])
 
-    const { settings, items, refresh, loading, statisticData, agreementItems } =
-      useReportData()
+    const {
+      settings,
+      items,
+      refresh,
+      loading,
+      statisticData,
+      agreementItems,
+      listOptions,
+    } = useReportData()
 
     function changeHeaders(value) {
       headers.value = value
@@ -38,6 +51,7 @@ export default {
       items,
       refresh,
       settings,
+      listOptions,
       headers,
       changeHeaders,
       loading,
