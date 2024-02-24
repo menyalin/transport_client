@@ -18,11 +18,13 @@
       label="ТК"
       dense
       clearable
+      chips
+      deletable-chips
       multiple
       outlined
       :items="tkNameItems"
       hide-details
-      :style="{ maxWidth: '230px' }"
+      :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'tks')"
     />
 
@@ -36,9 +38,11 @@
       auto-select-first
       multiple
       outlined
+      chips
+      deletable-chips
       :items="agreementItems"
       hide-details
-      :style="{ maxWidth: '280px' }"
+      :style="{ maxWidth: '500px' }"
       @change="updateSettings($event, 'agreements')"
     />
   </div>

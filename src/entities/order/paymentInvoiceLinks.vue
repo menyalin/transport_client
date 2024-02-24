@@ -25,7 +25,7 @@ export default {
       )
     })
     const links = computed(() => {
-      return props.items.map((invoice) => ({
+      return props.items?.map((invoice) => ({
         url: '/accounting/paymentInvoice/' + invoice._id,
         text:
           (invoice.number ? invoice.number : 'б/н') +

@@ -1,8 +1,8 @@
 export const ALL_HEADERS = [
   {
-    value: 'orderDate',
+    value: 'plannedDateStr',
     text: 'Дата рейса',
-    sortable: false,
+    sortable: true,
     width: '12rem',
     default: true,
     groupable: false,
@@ -10,10 +10,10 @@ export const ALL_HEADERS = [
   {
     value: 'orderTypeStr',
     text: 'Тип рейса',
-    sortable: true,
+    sortable: false,
     width: '7rem',
     default: true,
-    groupable: true,
+    groupable: false,
   },
   {
     value: 'tkNameStr',
@@ -45,30 +45,37 @@ export const ALL_HEADERS = [
   {
     value: 'driverFullName',
     text: 'Водитель',
-    sortable: true,
+    sortable: false,
     align: 'left',
     default: true,
-    groupable: true,
+    groupable: false,
   },
   {
     value: 'clientName',
     text: 'Клиент',
-    sortable: true,
-    default: true,
-    groupable: true,
+    sortable: false,
+    default: false,
+    groupable: false,
   },
   {
-    value: 'client.num',
+    value: 'clientNum',
     text: '№ Заказа',
     sortable: false,
     default: true,
     groupable: false,
   },
   {
-    value: 'client.auctionNum',
-    text: '№ Аукциона',
+    value: 'agreementName',
+    text: 'Соглашение',
     sortable: false,
     default: true,
+    groupable: false,
+  },
+  {
+    value: 'clientAuctionNum',
+    text: '№ Аукциона',
+    sortable: false,
+    default: false,
     groupable: false,
   },
   {
@@ -86,70 +93,59 @@ export const ALL_HEADERS = [
     groupable: false,
   },
   {
-    value: 'docsState.date',
-    text: 'Дата получения',
-    sortable: true,
-    default: false,
-    groupable: false,
-    align: 'right',
-  },
-  {
-    value: 'reviewDate',
-    text: 'Дата проверки',
-    sortable: true,
-    default: false,
-    groupable: false,
-    align: 'right',
-  },
-  {
-    value: 'getDocsDays',
-    text: 'Сдача документов, дней',
-    sortable: true,
-    default: false,
-    groupable: false,
-    align: 'right',
-  },
-  {
-    value: 'reviewDocsDays',
-    text: 'Проверка документов, дней',
-    sortable: true,
-    default: false,
-    groupable: false,
-    align: 'right',
-  },
-  {
-    value: '_docsStatusObj.text',
+    value: 'docsStatusStr',
     text: 'Документы',
-    sortable: true,
+    sortable: false,
+    default: false,
+    groupable: false,
+  },
+  {
+    value: 'itemType',
+    text: 'Тип записи',
+    sortable: false,
+    default: false,
+    groupable: false,
+  },
+  {
+    value: 'basePriceWOvat',
+    text: 'Тариф без НДС',
+    sortable: false,
+    default: false,
+    groupable: false,
+  },
+  {
+    value: 'basePrice',
+    text: 'Тариф c НДС',
+    sortable: false,
+    default: false,
+    groupable: false,
+  },
+  {
+    value: 'additionalPriceWOvat',
+    text: 'Доп.доход без НДС',
+    sortable: false,
+    default: false,
+    groupable: false,
+  },
+  {
+    value: 'additionalPrice',
+    text: 'Доп.доход с НДС',
+    sortable: false,
+    default: false,
+    groupable: false,
+  },
+  {
+    value: 'totalPriceWOvat',
+    text: 'Итог без НДС',
+    sortable: false,
     default: true,
+    groupable: false,
+  },
+  {
+    value: 'totalPrice',
+    text: 'Итог с НДС',
+    sortable: false,
+    default: true,
+    groupable: false,
   },
 ]
-
-/* --------------------------------
-
-  {
-    value: 'loadingZones',
-    text: 'Зоны погрузки',
-    sortable: false,
-    default: false,
-  },
-  
-  {
-    value: 'agreement.name',
-    text: 'Соглашение',
-    sortable: false,
-    forAccountingMode: true,
-    default: true,
-  },
-
-  {
-    value: 'actions',
-    // text: 'Действия',
-    sortable: false,
-    forAccountingMode: true,
-    width: '3rem',
-    default: true,
-  },
-
-
-*/
