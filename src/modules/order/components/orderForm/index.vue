@@ -235,8 +235,9 @@ import {
   OrderModel,
   useOrderDocs,
   ClientBlock,
+  useOrderValidations,
 } from '@/entities/order'
-import { useOrderValidations } from '../../hooks/useOrderValidations.js'
+
 import AppPaymentToDriver from './paymentToDriver.vue'
 
 export default {

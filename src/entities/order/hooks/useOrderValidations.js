@@ -1,3 +1,5 @@
+import { plannedDateInRetailPartnersControl } from './utils'
+
 export const useOrderValidations = () => {
   function isValidPrices(agreement, prices, { status }) {
     const STATUSES_WITH_PRICES = ['inProgress', 'completed']
@@ -23,9 +25,23 @@ export const useOrderValidations = () => {
     return !!auctionNum
   }
 
+  function beforeSubmitOrderValidation(order) {
+    let baseResult = [false, null]
+
+    const res = plannedDateInRetailPartnersControl(
+      order.state.status,
+      order.route
+    )
+
+    if (res[0]) return res
+
+    return baseResult
+  }
+
   return {
     isValidPrices,
     isValidClientNum,
     isValidAuctionNum,
+    beforeSubmitOrderValidation,
   }
 }

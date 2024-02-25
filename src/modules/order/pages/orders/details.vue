@@ -31,6 +31,7 @@ import socket from '@/socket'
 import { OrderService } from '@/shared/services'
 import AppOrderForm from '../../components/orderForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { useOrderValidations } from '@/entities/order'
 
 export default {
   name: 'DetailsOrder',
@@ -100,6 +101,10 @@ export default {
       }
     }
   },
+  setup() {
+    const { beforeSubmitOrderValidation } = useOrderValidations()
+    return { beforeSubmitOrderValidation }
+  },
   methods: {
     toggleAlert() {
       this.error = {
@@ -108,6 +113,13 @@ export default {
       }
     },
     async submit(val, saveOnly) {
+      const [isInvalid, errorMessage] = this.beforeSubmitOrderValidation(val)
+      if (isInvalid) {
+        this.error.message = errorMessage
+        this.error.show = true
+        return
+      }
+
       this.tmpVal = val
       let res
       try {

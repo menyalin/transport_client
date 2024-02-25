@@ -11,6 +11,8 @@ import CargoParams from './cargoParams.vue'
 import ClientBlock from './clientBlock/clientBlock.vue'
 import { OrderModel } from './model/orderModel.js'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
+import { useOrderListUtils } from './hooks/useOrderListUtils'
+import { useOrderValidations } from './hooks/useOrderValidations'
 import { OrderRoute } from './orderRoute'
 
 export {
@@ -19,6 +21,8 @@ export {
   OrderDocsListForm,
   OrderModel,
   useOrderDocs,
+  useOrderListUtils,
+  useOrderValidations,
   OrderPaymentParts,
   PaymentInvoiceLinks,
   OrderDocsList,

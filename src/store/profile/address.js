@@ -79,5 +79,16 @@ export default {
         })),
     addressMap: ({ addresses }) =>
       new Map(addresses.map((item) => [item._id, item])),
+
+    addressIdsWithDateControlSet: ({ addresses }, { partners }) => {
+      const controlledPartners = partners
+        .filter((partner) => partner?.group === 'fts')
+        .map((i) => i._id)
+
+      const controlledAddresses = addresses
+        .filter((address) => controlledPartners.includes(address.partner))
+        .map((i) => i._id)
+      return new Set(controlledAddresses)
+    },
   },
 }
