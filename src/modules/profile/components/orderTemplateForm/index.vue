@@ -46,7 +46,7 @@
         color="primary"
         label="Маршрут имеет фиксированные временные окна"
       />
-      <app-route-points
+      <OrderRoute
         v-model="route"
         title="Маршрут"
         :isValid="isValidRoute"
@@ -66,14 +66,14 @@ import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import { ButtonsPanel } from '@/shared/ui'
-import AppRoutePoints from '@/modules/order/components/orderForm/routePoints'
+import { OrderRoute } from '@/entities/order'
 import { ReqTransport, CargoParams } from '@/entities/order'
 export default {
   name: 'OrderTemplateForm',
   components: {
     ButtonsPanel,
     AppPartnerAutocomplete,
-    AppRoutePoints,
+    OrderRoute,
     ReqTransport,
     CargoParams,
   },

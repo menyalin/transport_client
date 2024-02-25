@@ -110,7 +110,7 @@
             title="Оценка водителя"
             class="grade"
           />
-          <app-route-points
+          <OrderRoute
             v-model="preparedRoute"
             :driverId="confirmedCrew.driver"
             title="Маршрут"
@@ -121,6 +121,7 @@
             class="route-points"
             :isValid="isValidRoute"
           />
+
           <app-confirmed-crew
             v-model="confirmedCrew"
             :date="dateForCrew"
@@ -214,7 +215,7 @@
 import { OrderService, OrderTemplateService } from '@/shared/services'
 
 import { ButtonsPanel } from '@/shared/ui'
-import AppRoutePoints from './routePoints.vue'
+import { OrderRoute } from '@/entities/order'
 
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
@@ -234,8 +235,9 @@ import {
   OrderModel,
   useOrderDocs,
   ClientBlock,
+  useOrderValidations,
 } from '@/entities/order'
-import { useOrderValidations } from '../../hooks/useOrderValidations.js'
+
 import AppPaymentToDriver from './paymentToDriver.vue'
 
 export default {
@@ -245,7 +247,6 @@ export default {
     ButtonsPanel,
     ReqTransport,
     CargoParams,
-    AppRoutePoints,
     AppRouteState,
     AppConfirmedCrew,
     ClientBlock,
@@ -257,6 +258,7 @@ export default {
     DocsRegistryLink,
     AppPaymentToDriver,
     OrderPaymentParts,
+    OrderRoute,
   },
   props: {
     order: {
