@@ -11,11 +11,13 @@ import CargoParams from './cargoParams.vue'
 import ClientBlock from './clientBlock/clientBlock.vue'
 import { OrderModel } from './model/orderModel.js'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
+import { OrderRoute } from './orderRoute'
 
 export {
   OrdersTable,
   DocsRegistryLink,
   OrderDocsListForm,
+  OrderModel,
   useOrderDocs,
   OrderPaymentParts,
   PaymentInvoiceLinks,
@@ -25,5 +27,5 @@ export {
   BlockTitle,
   ClientBlock,
   CargoParams,
-  OrderModel,
+  OrderRoute,
 }
