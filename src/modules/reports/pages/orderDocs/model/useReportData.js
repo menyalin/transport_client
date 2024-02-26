@@ -31,7 +31,10 @@ export default function () {
         correctionCount,
         notGettedCount,
         reviewCount,
-      } = await ReportService.orderDocs(settings.value)
+      } = await ReportService.orderDocs({
+        ...settings.value,
+        date: dayjs(settings.value.date).endOf('day').toISOString(),
+      })
       items.value = itemsData || []
       statisticData.value = {
         totalCount,
