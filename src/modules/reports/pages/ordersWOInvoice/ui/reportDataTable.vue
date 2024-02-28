@@ -35,27 +35,22 @@
         item._docsStatusObj.text
       }}</b>
     </template> -->
-    <!-- <template #footer.prepend>
-      <order-list-footer-details
-        :total="statisticData.totalCount"
-        :needFix="statisticData.correctionCount"
-        :onCheck="statisticData.reviewCount"
-        :missing="statisticData.notGettedCount"
-      />
-    </template> -->
+    <template #footer.prepend>
+      <ReportStatisticData :data="statisticData" />
+    </template>
   </v-data-table>
 </template>
 
 <script>
 import { computed } from 'vue'
 import router from '@/router'
-import { OrderListFooterDetails } from '@/shared/ui'
 import { DataTableRow } from './index'
+import ReportStatisticData from './reportStatisticData.vue'
 
 export default {
   name: 'ReportDataTable',
   components: {
-    OrderListFooterDetails,
+    ReportStatisticData,
   },
   props: {
     items: Array,

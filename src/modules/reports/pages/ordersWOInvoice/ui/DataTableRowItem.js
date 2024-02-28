@@ -37,16 +37,18 @@ export class DataTableRow {
     )
     this.docsStatusStr = utils.getDocsStatus(props.docs)
     this.itemType = utils.getItemTypeStr(props.itemType)
-    this.basePriceWOvat = moneyFormatter(props.totalByTypes.base.priceWOVat)
-    this.basePrice = moneyFormatter(props.totalByTypes.base.price)
+    this.basePriceWOvat = moneyFormatter(props.totalByTypes.base.priceWOVat, 0)
+    this.basePrice = moneyFormatter(props.totalByTypes.base.price, 0)
     this.additionalPriceWOvat = moneyFormatter(
-      props.total.priceWOVat - props.totalByTypes.base.priceWOVat
+      props.total.priceWOVat - props.totalByTypes.base.priceWOVat,
+      0
     )
     this.additionalPrice = moneyFormatter(
-      props.total.price - props.totalByTypes.base.price
+      props.total.price - props.totalByTypes.base.price,
+      0
     )
-    this.totalPriceWOvat = moneyFormatter(props.total.priceWOVat)
-    this.totalPrice = moneyFormatter(props.total.price)
+    this.totalPriceWOvat = moneyFormatter(props.total.priceWOVat, 0)
+    this.totalPrice = moneyFormatter(props.total.price, 0)
     this.agreementName = props.agreement.name
   }
 

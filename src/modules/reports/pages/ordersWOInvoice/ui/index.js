@@ -1,5 +1,6 @@
-import ReportSettings from './reportSettings.vue'
-import ReportDataTable from './reportDataTable.vue'
+import ReportSettings from './reportSettings'
+import ReportDataTable from './reportDataTable'
+import ReportStatisticData from './reportStatisticData'
 import { DataTableRow } from './DataTableRowItem'
 
-export { ReportSettings, ReportDataTable, DataTableRow }
+export { ReportSettings, ReportDataTable, DataTableRow, ReportStatisticData }

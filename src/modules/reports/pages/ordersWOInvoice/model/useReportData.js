@@ -7,7 +7,7 @@ import store from '@/store/index'
 
 export default function () {
   const setInitialPeriod = () => [
-    new dayjs().add(-1, 'month').startOf('month').toISOString(),
+    new dayjs().startOf('month').toISOString(),
     new dayjs().toISOString(),
   ]
 
@@ -42,6 +42,10 @@ export default function () {
   const items = ref([])
   const statisticData = ref({
     count: 0,
+    total: {
+      withVat: 0,
+      woVat: 0,
+    },
   })
   const loading = ref(false)
 
