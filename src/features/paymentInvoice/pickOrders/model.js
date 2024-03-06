@@ -3,6 +3,7 @@ import socket from '@/socket'
 import dayjs from 'dayjs'
 import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { PaymentInvoiceService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
 
 const initPeriod = () => {
   return [
@@ -11,16 +12,18 @@ const initPeriod = () => {
   ]
 }
 
-export const useListData = ({ client, _id }) => {
-  // if (!client) throw new Error('client is missing')
-  const historyState = window.history.state
+export const useListData = ({ client, _id, agreementId }) => {
+  if (!client) console.error('client id is missing')
   const initialState = {
     search: null,
     paymentInvoiceId: null,
     onlySelectable: true,
     period: initPeriod(),
   }
-  const settings = ref(historyState.settings || initialState)
+  const settings = usePersistedRef(
+    initialState,
+    'paymentInvoice:pickOrders:settings'
+  )
   const items = ref([])
   const loading = ref(false)
 
@@ -36,7 +39,6 @@ export const useListData = ({ client, _id }) => {
     settings,
     async () => {
       await getData()
-      window.history.pushState({ settings: settings.value }, '')
     },
     { deep: true }
   )
@@ -44,30 +46,24 @@ export const useListData = ({ client, _id }) => {
   const queryParams = computed(() => ({
     period: settings.value.period,
     client,
+    agreement: agreementId,
     paymentInvoiceId: _id,
     truck: settings.value.truck,
     search: settings.value.search,
     driver: settings.value.driver,
-    // docStatus: settings.value.docStatus,
-    // onlySelectable: settings.value.onlySelectable,
-    // loadingZone: settings.value.loadingZone,
   }))
 
   async function getData() {
     try {
       loading.value = true
-      const data = await PaymentInvoiceService.pickOrders(queryParams.value)
-      items.value = data
+      const [orders] = await PaymentInvoiceService.pickOrders(queryParams.value)
+      items.value = orders
       loading.value = false
     } catch (e) {
       loading.value = false
       store.commit('setError', e.message)
     }
   }
-
-  addEventListener('popstate', (e) => {
-    settings.value = e.state.settings
-  })
 
   function updateItems(data) {
     if (!items.value) return null

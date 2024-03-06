@@ -55,7 +55,7 @@
 import draggable from 'vuedraggable'
 import AppPointDetail from './pointDetail'
 import { BlockTitle } from '@/entities/order'
-import putRouteForDriverToClipboard from './_putRouteForDriverToClipboard'
+import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
 
 export default {
   name: 'RoutePoints',

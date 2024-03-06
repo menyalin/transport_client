@@ -6,7 +6,12 @@
       :disabledSubmit="!$store.getters.hasPermission('paymentInvoice:write')"
       @submit="create"
       @refresh="refresh"
-    />
+    >
+      <v-btn color="primary" @click="downloadHandler">
+        <v-icon>mdi-download</v-icon>
+        Скачать отчет
+      </v-btn>
+    </buttons-panel>
 
     <payment-invoices-list-settings
       v-model="settings"
@@ -16,17 +21,16 @@
       v-model="settings"
       :items="items"
       :totalCount="totalCount"
+      :routesCount="routesCount"
+      :total="total"
       :headers="headers"
-      :statisticData="statisticData"
-      :listOptions.sync="settings.listOptions"
+      :listOptions.sync="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>
 </template>
 <script>
 import { ref } from 'vue'
-// import socket from '@/socket'
-
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import {
@@ -53,15 +57,12 @@ export default {
       settings,
       items,
       totalCount,
+      routesCount,
       loading,
-      statisticData,
-      // onDeleteHandler,
+      listOptions,
+      total,
+      downloadHandler,
     } = useListData()
-
-    // socket.on('docsRegistry:deleted', onDeleteHandler)
-    // onBeforeUnmount(() => {
-    //   socket.off('docsRegistry:deleted', onDeleteHandler)
-    // })
 
     return {
       create,
@@ -69,10 +70,13 @@ export default {
       settings,
       items,
       totalCount,
+      routesCount,
       headers,
       changeHeaders,
-      statisticData,
+      total,
       loading,
+      listOptions,
+      downloadHandler,
     }
   },
 }

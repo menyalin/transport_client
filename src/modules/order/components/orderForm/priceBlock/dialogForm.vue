@@ -1,33 +1,36 @@
 <template>
-  <v-dialog v-model="tmpDialog" max-width="800" persistent>
+  <v-dialog v-model="dialog" max-width="800" persistent>
     <v-card>
       <v-card-title>Редактировать сумму</v-card-title>
       <v-card-text>
         <div class="form-wrapper">
-          <div class="row">
+          <div class="fields-row">
             <v-select
-              v-model="tmpItem.type"
+              v-model="$v.tmpItem.type.$model"
               label="Тип затрат"
               :items="availablePriceTypes"
-              hide-details
               dense
               outlined
-              :style="{ 'max-width': '250px' }"
+              clearable
+              :style="{ 'max-width': '300px' }"
+              :errorMessages="typeErrorMessages"
+              @blur="$v.tmpItem.type.$touch()"
             />
             <v-text-field
-              v-model.number="tmpItem.price"
+              v-model="$v.tmpItem.price.$model"
               label="Сумма"
-              hide-details
               outlined
               dense
-              :style="{ 'max-width': '150px' }"
+              type="number"
+              :errorMessages="priceErrorMessages"
+              :style="{ 'max-width': '200px' }"
+              @blur="$v.tmpItem.price.$touch()"
             />
             <v-checkbox
               v-if="allowedVat"
               v-model="tmpItem.withVat"
               :disabled="disabledVatRateCheckbox"
               label="c НДС"
-              hide-details
               dense
             />
             <v-checkbox
@@ -38,7 +41,7 @@
               dense
             />
           </div>
-          <div class="row">
+          <div class="fields-row">
             <v-text-field
               v-model.lazy="tmpItem.note"
               label="Комментарий"
@@ -50,8 +53,8 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="tmpDialog = false"> Отмена </v-btn>
-        <v-btn color="primary" :disabled="!isValidNewPrice" @click="submit">
+        <v-btn @click="cancel"> Отмена </v-btn>
+        <v-btn color="primary" :disabled="isInvalidForm" @click="submit">
           Сохранить
         </v-btn>
       </v-card-actions>
@@ -59,6 +62,7 @@
   </v-dialog>
 </template>
 <script>
+import { required, decimal } from 'vuelidate/lib/validators'
 export default {
   name: 'DialogForm',
   model: {
@@ -82,16 +86,20 @@ export default {
   },
   data() {
     return {
-      tmpDialog: false,
       tmpItem: {
         price: 0,
-        type: null,
+        type: '',
       },
     }
   },
+  validations: {
+    tmpItem: {
+      price: { required, decimal },
+      type: { required },
+    },
+  },
   computed: {
     availablePriceTypes() {
-      // return this.$store.getters.orderPriceTypes
       return this.$store.getters.orderPriceTypes
         .slice()
         .filter((t) => this.availibleTypes.includes(t.value))
@@ -99,50 +107,49 @@ export default {
     disabledVatRateCheckbox() {
       return false
     },
-    isValidNewPrice() {
-      return +this.tmpItem.price > 0 && !!this.tmpItem.type
+    isInvalidForm() {
+      return this.$v.$invalid
+    },
+    priceErrorMessages() {
+      let errors = []
+      if (this.$v.tmpItem.price.$dirty && this.$v.tmpItem.price.$invalid)
+        errors.push('Сумма обязательна к заполнению')
+      return errors
+    },
+    typeErrorMessages() {
+      const errors = []
+      if (this.$v.tmpItem.type.$dirty && this.$v.tmpItem.type.$invalid)
+        errors.push('Укажите тип тарифа')
+      return errors
     },
   },
   watch: {
-    dialog: {
-      immediate: true,
-      handler: function (val) {
-        this.tmpDialog = val
-      },
-    },
-    tmpDialog: function (val) {
-      this.$emit('update:dialog', val)
-    },
     item: {
       immediate: true,
       handler: function (val) {
         this.tmpItem = val
       },
     },
-    tmpItem: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
-      },
-    },
   },
   methods: {
     submit() {
-      this.$emit('save', { ...this.tmpItem })
-      this.tmpDialog = false
+      this.$emit('save', this.tmpItem)
+      this.cancel()
+    },
+    cancel() {
+      this.$emit('update:dialog', false)
+      this.$v.$reset()
     },
   },
 }
 </script>
 
 <style scoped>
-.row {
+.fields-row {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-
-  gap: 15px;
-  padding: 10px 30px;
+  gap: 20px;
 }
 </style>

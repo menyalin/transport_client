@@ -11,6 +11,14 @@
       @submit="submit"
       class="mb-3"
     />
+    <div v-if="isAdmin">
+      <v-text-field
+        v-model.trim="$v.form.invoiceLoader.$model"
+        label="invoiceLoader(admin only)"
+        outlined
+        dense
+      />
+    </div>
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
@@ -91,6 +99,8 @@ export default {
         isClient: false,
         isService: false,
         placesForTransferDocs: [],
+        invoiceLoader: null,
+        idleTruckNotifications: [],
       },
     }
   },
@@ -114,6 +124,9 @@ export default {
     formChanged() {
       return JSON.stringify(this.formState) !== this.initialFormState
     },
+    isAdmin() {
+      return this.$store.getters.user?.isAdmin
+    },
   },
   watch: {
     partner: {
@@ -130,6 +143,7 @@ export default {
       name: { required },
       fullName: {},
       inn: {},
+      invoiceLoader: {},
     },
   },
   mounted() {

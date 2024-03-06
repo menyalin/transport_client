@@ -19,6 +19,15 @@ export default [
     },
   },
   {
+    path: BASE_PATH + '/:id/cherkizovo_loader',
+    name: 'CherkizovoInvoiceLoader',
+    component: () => import('./loaders/cherkizovoLoader.vue'),
+    props: true,
+    meta: {
+      permission: 'paymentInvoice:write',
+    },
+  },
+  {
     path: BASE_PATH + '/:id',
     name: 'PaymentInvoiceDetail',
     component: () => import('./details.vue'),

@@ -2,18 +2,22 @@ import store from '@/store/index'
 
 class Price {
   constructor({ price, withVat, type, note, cashPayment }, vatRate) {
-    const parsedVal = parseFloat(price)
+    let parsedVal = parseFloat(price)
+    if (isNaN(parsedVal)) throw new Error('invalid price value')
     const vatKoef = parseFloat(1 + vatRate / 100)
+    const tmpPrice = withVat
+      ? parsedVal
+      : parsedVal + parsedVal * vatRate * 0.01
+    const tmpPriceWOVat = withVat ? parsedVal / vatKoef : parsedVal
+
     this.type = type
     this.note = note
     this.cashPayment = cashPayment
-    this.priceWOVat = withVat ? parsedVal / vatKoef : parsedVal
-    this.sumVat = withVat
-      ? parsedVal - parsedVal / vatKoef
-      : parsedVal * ((vatKoef * 10 - 10) / 10)
-    this.price = withVat
-      ? parsedVal
-      : parsedVal + parsedVal * ((vatKoef * 10 - 10) / 10)
+
+    this.priceWOVat = Math.round(tmpPriceWOVat * 100) / 100
+    this.price = Math.round(tmpPrice * 100) / 100
+
+    this.sumVat = Math.round((this.price - this.priceWOVat) * 100) / 100
   }
 
   static prepareOrderForPrePriceQuery(order) {

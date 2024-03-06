@@ -21,6 +21,26 @@ class PaymentInvoiceService {
     return data
   }
 
+  async getPaymentInvocesListFile(params) {
+    try {
+      const { data } = await api({
+        url: BASE_PATH + '/download_list',
+        method: 'GET',
+        responseType: 'blob',
+        params: params,
+      })
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      })
+      const filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_invoices.xlsx'
+      FileSaver.saveAs(blob, filename)
+      return data || null
+    } catch (e) {
+      store.commit('setError', e.message)
+      return null
+    }
+  }
+
   async pickOrders(params) {
     let { data } = await api.get(BASE_PATH + '/pick_orders', { params })
     return data

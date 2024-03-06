@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    v-model="selected"
+    :value="selected"
     :headers="headers"
     :items="items"
     selectable-key="isSelectable"
@@ -10,6 +10,7 @@
     show-select
     hide-default-footer
     :itemsPerPage="-1"
+    @input="selectHandler"
   >
     <template #[`body.append`]="{}">
       <tr v-if="pivotData.items">
@@ -19,10 +20,16 @@
           {{ pivotData.totalCount }}
         </th>
         <th class="text-right">
-          {{ totalSum }}
+          {{ totalSumWOVat }}
         </th>
         <th class="text-right">
-          {{ totalAvg }}
+          {{ totalAvgWOVat }}
+        </th>
+        <th class="text-right">
+          {{ totalSumWithVat }}
+        </th>
+        <th class="text-right">
+          {{ totalAvgWithVat }}
         </th>
       </tr>
       <tr v-if="pivotData.items && daysCount">
@@ -36,76 +43,94 @@
           }}
         </th>
         <th class="text-right">
-          {{ totalAvgByDay }}
+          {{ totalAvgByDayWOVat }}
         </th>
         <th />
+        <th class="text-right">
+          {{ totalAvgByDayWithVat }}
+        </th>
       </tr>
     </template>
   </v-data-table>
 </template>
 <script>
+import { useHistorySettings } from '@/shared/hooks'
+
 export default {
   name: 'PivotTable',
   props: {
     groupItems: { type: Array, required: true },
     groupBy: { type: String, required: true },
     daysCount: Number,
-    priceWithVat: Boolean,
     pivotData: { type: Object },
+    agreements: Array,
+    selectedGroups: Array,
   },
-  data() {
-    return {
-      selected: [],
-    }
+  setup() {
+    const selected = useHistorySettings([], 'selected_items')
+    return { selected }
   },
+
   computed: {
-    totalAvgByDay() {
-      const sum =
-        this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+    totalAvgByDayWithVat() {
+      const sum = this.pivotData.totalWithVat / 1000
       if (isNaN(sum)) return null
       if (!this.daysCount) return null
       return Intl.NumberFormat().format(Math.round(sum / this.daysCount))
     },
-    totalSum() {
-      const sum =
-        this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+
+    totalAvgByDayWOVat() {
+      const sum = this.pivotData.totalWOVat / 1000
+      if (isNaN(sum)) return null
+      if (!this.daysCount) return null
+      return Intl.NumberFormat().format(Math.round(sum / this.daysCount))
+    },
+
+    totalSumWithVat() {
+      const sum = this.pivotData.totalWithVat / 1000
+      if (isNaN(sum)) return null
+      return Intl.NumberFormat().format(Math.round(sum))
+    },
+    totalSumWOVat() {
+      const sum = this.pivotData.totalWOVat / 1000
       if (isNaN(sum)) return null
       return Intl.NumberFormat().format(Math.round(sum))
     },
 
-    totalAvg() {
-      const avg =
-        this.pivotData[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
-        this.pivotData.totalCount /
-        1000
+    totalAvgWithVat() {
+      const avg = this.pivotData.totalWithVat / this.pivotData.totalCount / 1000
+      if (isNaN(avg)) return null
+      return Intl.NumberFormat().format(Math.round(avg))
+    },
+    totalAvgWOVat() {
+      const avg = this.pivotData.totalWOVat / this.pivotData.totalCount / 1000
       if (isNaN(avg)) return null
       return Intl.NumberFormat().format(Math.round(avg))
     },
 
     headers() {
       return [
-        //{ value: '_id' },
         { text: this.groupName, value: 'titleColumn' },
         { text: 'Кол-во', value: 'count', align: 'right' },
-        { text: 'Сумма', value: 'sum', align: 'right' },
-        { text: 'Сред.сумма', value: 'avg', align: 'right' },
+        { text: 'Сумма без НДС', value: 'sumWOVat', align: 'right' },
+        { text: 'Сред.сумма без НДС', value: 'avgWOVat', align: 'right' },
+        { text: 'Сумма c НДС', value: 'sumWithVat', align: 'right' },
+        { text: 'Сред.сумма c НДС', value: 'avgWithVat', align: 'right' },
       ]
     },
     items() {
       if (!this.pivotData?.items) return []
       return this.pivotData.items.map((i) => ({
-        _id: i._id.toString(),
+        _id: i._id?.toString(),
         titleColumn: this.setTitleColumn(i._id),
 
         count: i.totalCount,
-        sum: Intl.NumberFormat().format(
-          Math.round(
-            i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
-          )
+        sumWOVat: Intl.NumberFormat().format(Math.round(i.totalWOVat / 1000)),
+        sumWithVat: Intl.NumberFormat().format(
+          Math.round(i.totalWithVat / 1000)
         ),
-        avg: Intl.NumberFormat().format(
-          Math.round(i[this.priceWithVat ? 'avgWithVat' : 'avgWOVat'] / 1000)
-        ),
+        avgWOVat: Intl.NumberFormat().format(Math.round(i.avgWOVat / 1000)),
+        avgWithVat: Intl.NumberFormat().format(Math.round(i.avgWithVat / 1000)),
         isSelectable: !!i._id,
       }))
     },
@@ -146,22 +171,23 @@ export default {
             res.set(p._id, p.name)
           })
           break
+        case 'agreement':
+          this.agreements.forEach((p) => {
+            res.set(p.value, p.text)
+          })
       }
       return res
     },
   },
-  watch: {
-    selected: {
-      deep: true,
-      handler: function (val) {
-        this.$emit(
-          'updateSelected',
-          val.map((i) => i._id)
-        )
-      },
-    },
-  },
+
   methods: {
+    selectHandler(val) {
+      console.log('select handler')
+      this.$emit(
+        'updateSelected',
+        val.filter((i) => !!i._id).map((i) => i._id)
+      )
+    },
     setTitleColumn(id) {
       if (Array.isArray(id))
         return id.map((i) =>

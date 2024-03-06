@@ -55,7 +55,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import ReportService from '../../services/index.js'
+import { ReportService } from '@/shared/services'
 
 export default {
   name: 'OrdersInProgress',

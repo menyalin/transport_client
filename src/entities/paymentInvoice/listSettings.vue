@@ -5,20 +5,24 @@
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
-
+    <DateRangeInput
+      :period="settings.period"
+      @change="updateSettings($event, 'period')"
+    />
     <v-autocomplete
-      :value="settings.clients"
+      :value="settings.agreements"
       item-text="name"
       item-value="_id"
-      label="Клиенты"
+      label="Соглашения"
+      :disabled="agreementItems.length === 0"
       dense
       clearable
       multiple
       outlined
-      :items="clientItems"
+      :items="agreementItems"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'clients')"
+      @change="updateSettings($event, 'agreements')"
     />
     <v-select
       :value="settings.status"
@@ -46,13 +50,14 @@
 
 <script>
 import store from '@/store'
-import { computed } from 'vue'
-import { AppTableColumnSetting } from '@/shared/ui'
+import { computed, ref, onMounted } from 'vue'
+import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
+import { AgreementService } from '@/shared/services/index'
 
 export default {
   name: 'DocsRegistryListSettingsWidget',
-  components: { AppTableColumnSetting },
+  components: { AppTableColumnSetting, DateRangeInput },
   model: {
     prop: 'settings',
     event: 'change',
@@ -62,9 +67,12 @@ export default {
   },
 
   setup(props, ctx) {
-    const clientItems = computed(() => {
-      return store.getters.partners.filter((i) => i.isClient)
-    })
+    const agreements = ref([])
+    const agreementItems = computed(() =>
+      agreements.value
+        .filter((i) => i.isOutsourceAgreement !== true)
+        .sort((a, b) => (a.name < b.name ? -1 : 1))
+    )
 
     const statusItems = computed(() => {
       return store.getters.docsRegistryStatuses
@@ -77,8 +85,13 @@ export default {
     function updateHeadersHandler(val) {
       ctx.emit('updateHeaders', val)
     }
+
+    onMounted(async () => {
+      agreements.value = await AgreementService.getActiveAgreements()
+    })
+
     return {
-      clientItems,
+      agreementItems,
       statusItems,
       updateHeadersHandler,
       updateSettings,

@@ -10,7 +10,7 @@
           color="secondary"
           @click="$emit('submit')"
         >
-          Сохранить и закрыть
+          {{ submitTitle ? submitTitle : 'Сохранить и закрыть' }}
         </v-btn>
       </v-col>
       <v-col v-if="showSaveBtn" cols="auto">
@@ -18,9 +18,8 @@
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
-
       <v-col>
-        <slot #default />
+        <slot />
       </v-col>
     </v-row>
     <v-row v-else-if="panelType === 'list'">
@@ -38,12 +37,16 @@
           Создать
         </v-btn>
       </v-col>
+      <v-col>
+        <slot />
+      </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
 export default {
   props: {
+    submitTitle: { type: String },
     disabledSubmit: { type: Boolean, default: false },
     disabledRefresh: { type: Boolean, default: false },
     showSaveBtn: { type: Boolean, default: false },

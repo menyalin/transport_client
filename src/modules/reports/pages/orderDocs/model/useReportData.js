@@ -1,7 +1,19 @@
 import { ref, watch } from 'vue'
-import ReportService from '../../../services/index.js'
+import { ReportService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
+import dayjs from 'dayjs'
 
-export default function ({ settings }) {
+export default function () {
+  const initialState = {
+    groupBy: 'month',
+    clients: [],
+    tks: [],
+    state: [],
+    getDocsDays: [],
+    reviewDocsDays: [],
+    date: new dayjs().format('YYYY-MM-DD'),
+  }
+  const settings = usePersistedRef(initialState, 'OrderDocsReport:settings')
   const items = ref([])
   const statisticData = ref({})
   const loading = ref(false)
@@ -19,7 +31,10 @@ export default function ({ settings }) {
         correctionCount,
         notGettedCount,
         reviewCount,
-      } = await ReportService.orderDocs(settings.value)
+      } = await ReportService.orderDocs({
+        ...settings.value,
+        date: dayjs(settings.value.date).endOf('day').toISOString(),
+      })
       items.value = itemsData || []
       statisticData.value = {
         totalCount,
@@ -43,6 +58,7 @@ export default function ({ settings }) {
   )
 
   return {
+    settings,
     items,
     statisticData,
     refresh,

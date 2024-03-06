@@ -1,21 +1,31 @@
 import { ref, watch } from 'vue'
 
-export default function useHistorySettings(initialState) {
+export default function useHistorySettings(
+  initialState,
+  stateName = 'default'
+) {
   const state = ref(
-    history.state ? Object.assign(initialState, history.state) : initialState
+    history.state[stateName]
+      ? typeof initialState === 'object'
+        ? Object.assign(initialState, history.state[stateName])
+        : history.state[stateName]
+      : initialState
   )
 
   watch(
     state,
     (newState) => {
-      history.pushState(Object.assign({}, state.value, newState), '')
+      history.pushState(
+        Object.assign({}, history.state, { [stateName]: newState }),
+        ''
+      )
     },
     { deep: true }
   )
 
   window.addEventListener('popstate', (event) => {
-    if (event.state) {
-      Object.assign(state.value, event.state)
+    if (event.state && event.state[stateName]) {
+      state.value = event.state[stateName]
     }
   })
 
