@@ -18,6 +18,12 @@ export default [
     default: true,
   },
   {
+    value: 'agreementName',
+    text: 'Соглашение',
+    sortable: false,
+    default: true,
+  },
+  {
     value: '_placeName',
     text: 'Площадка',
     sortable: false,

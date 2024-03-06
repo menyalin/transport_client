@@ -62,6 +62,7 @@ export default {
   },
   setup(props) {
     const item = ref({})
+    // TODO: // Удалить downloadHandler
     const { downloadHandler } = useDownloadTemplate(item)
 
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
@@ -69,7 +70,7 @@ export default {
       store.getters.storedValue(storedSettingsName) || false
     )
     const disabledPickOrders = computed(() => !item.value?._id)
-    
+
     const needUpdateRows = computed(() =>
       item.value.orders.some((i) => i.needUpdate)
     )

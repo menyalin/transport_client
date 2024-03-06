@@ -35,12 +35,11 @@ export default {
     },
     prices: Array,
     outsourceCosts: Array,
-    agreementId: String,
+    agreement: Object,
     outsourceAgreementId: String,
   },
   data() {
     return {
-      agreement: {},
       outsourceAgreement: {},
       tmpPrices: [],
       tmpCosts: [],
@@ -54,14 +53,14 @@ export default {
       const lastDepartureDate = this.route[this.route.length - 1].departureDate
       if (!lastDepartureDate)
         return (
-          this.agreement.useCustomPrices &&
+          this.agreement?.useCustomPrices &&
           this.$store.getters.hasPermission('order:daysForReadPrice')
         )
       const hasReadPermission = this.$store.getters.allowedPeriodForPermission({
         date: lastDepartureDate,
         permission: 'order:daysForReadPrice',
       })
-      return this.agreement.useCustomPrices && hasReadPermission
+      return this.agreement?.useCustomPrices && hasReadPermission
     },
     showOutsourceBlock() {
       return (
@@ -114,13 +113,7 @@ export default {
         this.$emit('outsource-costs:update', val)
       },
     },
-    agreementId: {
-      immediate: true,
-      handler: async function (val) {
-        if (val) this.agreement = await AgreementService.getById(val)
-        else this.agreement = { ...{} }
-      },
-    },
+
     outsourceAgreementId: {
       immediate: true,
       handler: async function (val) {

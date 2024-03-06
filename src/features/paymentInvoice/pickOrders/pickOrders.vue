@@ -81,7 +81,7 @@ export default {
     } = useOrderDocs()
 
     const client = computed(() =>
-      store.getters.partnersMap.get(paymentInvoice.client)
+      store.getters.partnersMap.get(paymentInvoice.clientId)
     )
 
     const clientName = computed(() => {
