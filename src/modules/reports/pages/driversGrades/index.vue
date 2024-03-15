@@ -24,7 +24,7 @@
 import { ref } from 'vue'
 import { DateRangeInput } from '@/shared/ui'
 import initDateRange from './initDateRange.js'
-import ReportService from '../../services/index.js'
+import { ReportService } from '@/shared/services'
 import store from '@/store'
 
 export default {

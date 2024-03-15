@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :class="{ invalid: !isValid }">
-    <div id="button-panel">
+    <div class="button-panel">
       <BlockTitle>{{ title }}</BlockTitle>
       <v-btn
         small
@@ -18,9 +18,12 @@
       :readonly="readonly"
       @editPrice="editPrice"
       @deletePrice="deletePrice"
+      :basePrePrice="basePrePrice"
+      :hidePrePrice="hidePrePrice"
+      :usePriceWithVat="agreement.usePriceWithVAT"
     />
     <app-dialog-form
-      v-model="editedItem"
+      :item="editedItem"
       :dialog.sync="dialog"
       :allowedCashPayment="!!agreement.cashPayment"
       :allowedVat="agreement.vatRate !== 0"
@@ -52,6 +55,11 @@ export default {
     isValid: { type: Boolean, default: true },
     agreement: Object,
     readonly: { type: Boolean, default: false },
+    prePrices: Array,
+    hidePrePrice: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -59,88 +67,85 @@ export default {
       editedItem: {
         type: null,
       },
-      tmpItems: [],
     }
   },
   computed: {
     availibleTypes() {
       if (this.editedItem.type) return [this.editedItem.type]
-      const usedTypes = this.tmpItems.map((i) => i.type)
+      const usedTypes = this.items.map((i) => i.type)
       return this.$store.getters.orderPriceTypes
         .map((t) => t.value)
         .filter((t) => !usedTypes.includes(t))
     },
-  },
-  watch: {
-    items: {
-      immediate: true,
-      handler: function (val) {
-        this.tmpItems = val
-      },
-    },
-    tmpItems: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
-      },
+    basePrePrice() {
+      return this.prePrices?.find((i) => i.type === 'base') || null
     },
   },
+
   methods: {
     clearEditedItem() {
       this.editedItem = Object.assign({}, {})
     },
+
     saveItem(val) {
       const priceItem = new Price(val, this.agreement.vatRate)
-      const idx = this.tmpItems.findIndex((i) => i.type === priceItem.type)
-      idx !== -1
-        ? this.tmpItems.splice(idx, 1, { ...priceItem })
-        : this.tmpItems.push({ ...priceItem })
-      this.clearEditedItem()
+      const idx = this.items.findIndex((i) => i.type === priceItem.type)
+      const tmpArr = this.items.slice()
+
+      if (idx === -1) tmpArr.push(priceItem)
+      else tmpArr.splice(idx, 1, priceItem)
+
+      this.$emit('change', tmpArr)
+      this.$nextTick(() => {
+        this.clearEditedItem()
+      })
     },
+
     addNewItem() {
-      this.editedItem = Object.assign(
-        {},
-        {
-          withVat: this.agreement.vatRate !== 0,
-          price: 0,
-          cashPayment: this.agreement.cashPayment,
-        }
-      )
+      this.editedItem = {
+        type: '',
+        withVat: Boolean(this.agreement.usePriceWithVAT) || false,
+        price: 0,
+        cashPayment: this.agreement.cashPayment,
+      }
+
       this.$nextTick(() => {
         this.dialog = true
       })
     },
+
     async editPrice(type) {
-      const idx = this.tmpItems.findIndex((i) => i.type === type)
-      if (idx === -1) return null
-      this.editedItem = Object.assign(
-        {},
-        {
-          type: this.tmpItems[idx].type,
-          withVat: this.agreement.vatRate !== 0,
-          price:
-            this.agreement.vatRate !== 0
-              ? this.tmpItems[idx].price
-              : this.tmpItems[idx].priceWOVat,
-          note: this.tmpItems[idx].note,
-          cashPayment: this.tmpItems[idx].cashPayment,
-        }
-      )
+      const item = this.items.find((i) => i.type === type)
+      if (!item) return null
+
+      this.editedItem = {
+        ...item,
+        withVat: Boolean(this.agreement.usePriceWithVAT),
+        price: +(
+          this.agreement.usePriceWithVAT ? item.price : item.priceWOVat
+        ).toFixed(2),
+      }
+
       this.$nextTick(() => {
         this.dialog = true
       })
     },
+
     async deletePrice(type) {
-      const idx = this.tmpItems.findIndex((i) => i.type === type)
+      const idx = this.items.findIndex((i) => i.type === type)
       if (idx === -1) return null
       const res = await this.$confirm('Вы уверены?')
-      if (res) this.tmpItems = this.tmpItems.splice(idx, 1)
+      if (res) {
+        const tmpArr = this.items.slice()
+        tmpArr.splice(idx, 1)
+        this.$emit('change', tmpArr)
+      }
     },
   },
 }
 </script>
 <style scoped>
-#button-panel {
+.button-panel {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

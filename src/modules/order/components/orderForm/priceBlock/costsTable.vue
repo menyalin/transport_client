@@ -3,15 +3,31 @@
     <template #default>
       <thead>
         <tr>
-          <th class="text-center">Тип</th>
-          <th class="text-center">Цена без НДС</th>
-          <th class="text-center">Сумма НДС</th>
-          <th class="text-center">Цена итоговая</th>
+          <th class="text-center" width="180">Тип</th>
+          <th v-if="usePriceWithVat" class="text-center" width="130">
+            Цена c НДС
+          </th>
+          <th v-else class="text-center" width="130">Цена без НДС</th>
           <th class="text-center">Примечание</th>
           <th />
         </tr>
       </thead>
       <tbody>
+        <tr v-if="showPrePrice">
+          <td>Тариф из ДС</td>
+          <td v-if="usePriceWithVat" class="text-right">
+            {{ basePrePrice ? moneyFormatter.format(basePrePrice.price) : 0 }}
+          </td>
+
+          <td v-else class="text-right">
+            {{
+              basePrePrice ? moneyFormatter.format(basePrePrice.priceWOVat) : 0
+            }}
+          </td>
+
+          <td colspan="4" />
+        </tr>
+
         <tr v-for="(item, idx) in sortedItems" :key="idx">
           <td class="text-start">
             {{
@@ -20,15 +36,13 @@
                 : '-'
             }}
           </td>
-          <td class="text-right">
-            {{ new Intl.NumberFormat().format(item.priceWOVat) }}
+          <td v-if="usePriceWithVat" class="text-right">
+            {{ moneyFormatter.format(item.price) }}
           </td>
-          <td class="text-right">
-            {{ new Intl.NumberFormat().format(item.sumVat) }}
+          <td v-else class="text-right">
+            {{ moneyFormatter.format(item.priceWOVat) }}
           </td>
-          <td class="text-right">
-            {{ new Intl.NumberFormat().format(item.price) }}
-          </td>
+
           <td>
             <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2">
               mdi-cash
@@ -59,8 +73,20 @@ export default {
   props: {
     items: Array,
     readonly: Boolean,
+    basePrePrice: Object,
+    hidePrePrice: Boolean,
+    usePriceWithVat: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
+    moneyFormatter() {
+      return new Intl.NumberFormat('ru-RU', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    },
     sortedItems() {
       const typesOrder = this.$store.getters.orderPriceTypes.map((i) => i.value)
       return this.items
@@ -70,6 +96,9 @@ export default {
             typesOrder.findIndex((t) => t === a.type) -
             typesOrder.findIndex((t) => t === b.type)
         )
+    },
+    showPrePrice() {
+      return !this.hidePrePrice
     },
   },
 }

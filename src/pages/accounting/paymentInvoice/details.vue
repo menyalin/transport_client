@@ -14,13 +14,16 @@
       @download="downloadHandler"
       :disabledDownloadFiles="disabledDownloadFiles"
     />
+
     <payment-invoice-result :orders="item.orders" />
+
     <payment-invoice-orders-list
       :orders="item.orders"
       @delete="deleteOrderFromPaymentInvoice"
       @dblRowClick="dblRowClickHandler"
       @updateItemPrice="updateItemPrice"
     />
+
     <v-dialog
       v-if="item._id"
       v-model="showPickOrderDialog"
@@ -62,7 +65,6 @@ export default {
   },
   setup(props) {
     const item = ref({})
-    // TODO: // Удалить downloadHandler
     const { downloadHandler } = useDownloadTemplate(item)
 
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
@@ -137,9 +139,16 @@ export default {
           updatedItem = await PaymentInvoiceService.updateOne(itemId, formState)
         } else {
           updatedItem = await PaymentInvoiceService.create(formState)
+          if (saveOnly)
+            router.replace({
+              name: 'PaymentInvoiceDetail',
+              params: { id: updatedItem._id },
+            })
         }
-        if (!saveOnly) router.push('/accounting/paymentInvoice')
-        else {
+        if (!saveOnly) {
+          router.go(-1)
+          //  router.push('/accounting/paymentInvoice')
+        } else {
           item.value = updatedItem
         }
       } catch (e) {

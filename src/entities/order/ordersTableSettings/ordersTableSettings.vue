@@ -38,8 +38,9 @@
     />
 
     <v-select
-      v-model="settings.docStatus"
+      v-model="settings.docStatuses"
       label="Документы"
+      multiple
       :items="docStatuses"
       dense
       hide-details
@@ -50,8 +51,9 @@
     />
 
     <v-autocomplete
-      v-model="settings.client"
-      label="Клиент"
+      v-model="settings.clients"
+      label="Клиенты"
+      multiple
       outlined
       dense
       clearable
@@ -65,8 +67,9 @@
       @change="settings.listOptions.page = 1"
     />
     <v-autocomplete
-      v-model="settings.agreement"
-      label="Соглашение"
+      v-model="settings.agreements"
+      multiple
+      label="Соглашения"
       outlined
       dense
       clearable
@@ -80,7 +83,8 @@
       @change="settings.listOptions.page = 1"
     />
     <v-select
-      v-model="settings.tkName"
+      v-model="settings.tkNames"
+      multiple
       label="ТК"
       :items="$store.getters.tkNames"
       item-value="_id"
@@ -93,7 +97,8 @@
       @change="settings.listOptions.page = 1"
     />
     <v-autocomplete
-      v-model="settings.truck"
+      v-model="settings.trucks"
+      multiple
       dense
       clearable
       auto-select-first
@@ -130,7 +135,8 @@
       @change="settings.listOptions.page = 1"
     />
     <v-autocomplete
-      v-model="settings.loadingZone"
+      v-model="settings.loadingZones"
+      multiple
       label="Зона погрузки"
       dense
       auto-select-first

@@ -10,7 +10,9 @@
             @cancel="cancel"
             @submit="submit($event)"
             @save="submit($event, true)"
-          />
+          >
+            <PaymentInvoiceLinks :items="form.paymentInvoices" />
+          </buttons-panel>
           <div class="template-panel">
             <v-autocomplete
               v-model="templateSelector"
@@ -108,7 +110,7 @@
             title="Оценка водителя"
             class="grade"
           />
-          <app-route-points
+          <OrderRoute
             v-model="preparedRoute"
             :driverId="confirmedCrew.driver"
             title="Маршрут"
@@ -119,6 +121,7 @@
             class="route-points"
             :isValid="isValidRoute"
           />
+
           <app-confirmed-crew
             v-model="confirmedCrew"
             :date="dateForCrew"
@@ -128,7 +131,6 @@
           />
 
           <div id="price">
-            <payment-invoice-links :items="form.paymentInvoices" />
             <app-analytic-block
               v-model="analytics"
               :isValidRoute="isValidRoute"
@@ -145,6 +147,7 @@
             <app-price-block
               :isValidPrices="isValidPrices(agreement, prices, state)"
               :prices.sync="prices"
+              :prePrices="prePrices"
               :outsourceCosts.sync="outsourceCosts"
               :agreement="agreement"
               :outsourceAgreementId="confirmedCrew.outsourceAgreement"
@@ -212,7 +215,7 @@
 import { OrderService, OrderTemplateService } from '@/shared/services'
 
 import { ButtonsPanel } from '@/shared/ui'
-import AppRoutePoints from './routePoints.vue'
+import { OrderRoute } from '@/entities/order'
 
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
@@ -221,7 +224,6 @@ import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
 import AppPriceBlock from './priceBlock/index.vue'
 import AppPriceDialog from './priceDialog'
-// TODO: Перенсти в OrderModel
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 import {
   DocsRegistryLink,
@@ -233,8 +235,9 @@ import {
   OrderModel,
   useOrderDocs,
   ClientBlock,
+  useOrderValidations,
 } from '@/entities/order'
-import { useOrderValidations } from '../../hooks/useOrderValidations.js'
+
 import AppPaymentToDriver from './paymentToDriver.vue'
 
 export default {
@@ -244,7 +247,6 @@ export default {
     ButtonsPanel,
     ReqTransport,
     CargoParams,
-    AppRoutePoints,
     AppRouteState,
     AppConfirmedCrew,
     ClientBlock,
@@ -256,6 +258,7 @@ export default {
     DocsRegistryLink,
     AppPaymentToDriver,
     OrderPaymentParts,
+    OrderRoute,
   },
   props: {
     order: {
@@ -265,19 +268,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    loading: Boolean,
   },
   provide() {
     return {
       updateFinalPrices: (val) => {
         this.finalPrices = [...val]
       },
-      // getOrderAgreement: async (val) => {
-      //   if (!val && !this.client.agreement) return null
-      //   const agreement = await AgreementService.getById(
-      //     val || this.client.agreement
-      //   )
-      //   return agreement
-      // },
     }
   },
   setup() {
@@ -296,6 +293,7 @@ export default {
   },
   data() {
     return {
+      processingBeforeSubmit: false,
       agreement: null,
       docs: [],
       paymentToDriver: {},
@@ -304,7 +302,6 @@ export default {
       templateDialog: false,
       templateName: null,
       templateSelector: null,
-      loading: false,
       orderId: null,
       prePrices: [],
       prices: [],
@@ -364,7 +361,12 @@ export default {
       } else
         hasPermission = this.$store.getters.hasPermission('order:daysForWrite')
 
-      return this.isInvalidForm || this.loading || !hasPermission
+      return (
+        this.processingBeforeSubmit ||
+        this.isInvalidForm ||
+        this.loading ||
+        !hasPermission
+      )
     },
     currentPointInd() {
       return this.route.findIndex((p) => !p.departureDate)
@@ -439,6 +441,7 @@ export default {
       if (this.grade.grade === 2) return true
       else return !!this.grade.note
     },
+
     isValidClientInfo() {
       return !!this.client?.client
     },
@@ -507,13 +510,6 @@ export default {
     },
   },
   watch: {
-    // ['client.agreement']: {
-    //   immediate: true,
-    //   handler: async function (val) {
-    //     if (!val) this.agreement = null
-    //     else this.agreement = await AgreementService.getById(val)
-    //   },
-    // },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)
@@ -642,8 +638,23 @@ export default {
         return true
       return false
     },
+    updatePricesUseAgreement(prices, agreement) {
+      if (!Array.isArray(prices) || prices.length === 0) return []
+      const vatKoef = agreement.vatRate / 100
+      const updatedPrices = []
+      prices.forEach((item) => {
+        updatedPrices.push({
+          ...item,
+          sumVat: item.priceWOVat * vatKoef,
+          price: item.priceWOVat * (1 + vatKoef),
+        })
+      })
+      return updatedPrices
+    },
+
     async submit(_val, saveOnly) {
       if (this.isInvalidForm) return null
+      this.processingBeforeSubmit = true
       if (!this.analytics.distanceDirect)
         this.analytics.distanceDirect = OrderService.getDirectDistance(
           this.coords
@@ -652,6 +663,18 @@ export default {
         const { distanceRoad } = await OrderService.getDistance(this.coords)
         this.analytics.distanceRoad = distanceRoad
       }
+
+      this.prePrices = this.updatePricesUseAgreement(
+        this.prePrices,
+        this.agreement
+      )
+      this.prices = this.updatePricesUseAgreement(this.prices, this.agreement)
+      this.finalPrices = this.updatePricesUseAgreement(
+        this.finalPrices,
+        this.agreement
+      )
+
+      this.processingBeforeSubmit = false
       this.$emit(saveOnly ? 'save' : 'submit', this.formState)
     },
     cancel() {

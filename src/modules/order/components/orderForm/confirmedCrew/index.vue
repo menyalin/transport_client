@@ -132,7 +132,6 @@ export default {
       },
     },
     date: {
-      immediate: true,
       handler: async function (val) {
         if (val) {
           await this.getCrew()

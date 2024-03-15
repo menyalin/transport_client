@@ -2,11 +2,13 @@
   <div>
     <app-price-wrapper
       v-if="showPriceBlock"
-      v-model="tmpPrices"
+      :items="prices"
+      @change="changePricesHandler"
       :isValid="isValidPrices"
       :readonly="readonlyPrice"
       :agreement="agreement"
       title="Стоимость рейса"
+      :prePrices="prePrices"
     />
     <app-price-wrapper
       v-if="showOutsourceBlock"
@@ -15,6 +17,7 @@
       :readonly="readonlyCosts"
       :agreement="outsourceAgreement"
       title="Затраты на привлеченного перевозчика"
+      :hidePrePrice="true"
     />
   </div>
 </template>
@@ -28,6 +31,7 @@ export default {
     AppPriceWrapper,
   },
   props: {
+    prePrices: Array,
     route: Array,
     isValidPrices: {
       type: Boolean,
@@ -41,7 +45,6 @@ export default {
   data() {
     return {
       outsourceAgreement: {},
-      tmpPrices: [],
       tmpCosts: [],
     }
   },
@@ -89,18 +92,6 @@ export default {
     },
   },
   watch: {
-    prices: {
-      immediate: true,
-      handler: function (val) {
-        if (val) this.tmpPrices = val
-      },
-    },
-    tmpPrices: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('prices:update', val)
-      },
-    },
     outsourceCosts: {
       immediate: true,
       handler: function (val) {
@@ -122,6 +113,10 @@ export default {
       },
     },
   },
+  methods: {
+    changePricesHandler(prices) {
+      this.$emit('update:prices', prices)
+    },
+  },
 }
 </script>
-<style></style>

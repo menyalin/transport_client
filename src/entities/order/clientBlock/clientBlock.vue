@@ -135,7 +135,6 @@ export default {
         const keys = Object.keys(this.params)
         if (keys.some((key) => val[key] !== this.item[key])) {
           this.$emit('change', this.params)
-          console.log('emit params')
         }
       },
     },
@@ -143,7 +142,7 @@ export default {
       handler: async function (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.clearAgreement(true)
-          await this.getAgreements()
+          // await this.getAgreements()
         }
       },
     },
@@ -188,7 +187,6 @@ export default {
         this.agreement = this.findAgreement(this.agreements, this.carrier)
         this.params.agreement = this.agreement?._id || null
       }
-
       this.$emit('updateAgreement', this.agreement)
     },
 

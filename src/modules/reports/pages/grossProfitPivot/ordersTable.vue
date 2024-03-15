@@ -38,9 +38,10 @@
   </div>
 </template>
 <script>
-import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './constants.js'
+import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-import service from '../../services/index.js'
+import useHistorySettings from '@/shared/hooks/useHistorySettings'
+import { ReportService } from '@/shared/services'
 
 export default {
   name: 'OrdersTable',
@@ -51,6 +52,12 @@ export default {
     dateRange: { type: Array, required: true },
     priceWithVat: Boolean,
   },
+  setup() {
+    const listOptions = useHistorySettings({}, 'orders_table_list_options')
+    return {
+      listOptions,
+    }
+  },
   data() {
     return {
       loading: false,
@@ -58,7 +65,7 @@ export default {
       totalCount: 0,
       formName: 'ordersDetailReport',
       listSettingsName: 'ordersDetailReportFields',
-      listOptions: {},
+
       settings: {},
       activeHeaders: [],
       allHeaders: ALL_ORDER_TABLE_HEADERS,
@@ -110,6 +117,8 @@ export default {
           i.outsourceCostsWithVat
         ),
         outsourceCostsWOVat: Intl.NumberFormat().format(i.outsourceCostsWOVat),
+        basePrePrice: this.getBasePrice(i, 'prePrices', this.priceWithVat),
+        basePrice: this.getBasePrice(i, 'prices', this.priceWithVat),
         price: Intl.NumberFormat().format(
           Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
         ),
@@ -165,6 +174,18 @@ export default {
     next()
   },
   methods: {
+    getBasePrice(order, type, withVat) {
+      if (!['prices', 'prePrices'].includes(type))
+        throw new Error('ordersTable : getBasePrice : price type error!!!')
+
+      const price = order[type]
+      if (!price?.base) return 0
+
+      return Intl.NumberFormat().format(
+        Math.round(price.base[withVat ? 'price' : 'priceWOVat'])
+      )
+    },
+
     clearItems() {
       this.items = []
       this.totalCount = 0
@@ -172,15 +193,18 @@ export default {
     async getData() {
       try {
         this.loading = true
-        const { items, count } = await service.grossProfitDetailsData({
+        const { items, count } = await ReportService.grossProfitDetailsData({
           company: this.$store.getters.directoriesProfile,
           dateRange: this.dateRange,
           mainFilters: this.mainFilters,
           additionalFilters: this.additionalFilters,
-          listOptions: this.listOptions,
+          listOptions: {
+            ...this.listOptions,
+            priceWithVat: this.priceWithVat,
+          },
         })
-        this.items = items
-        this.totalCount = count
+        this.items = items || []
+        this.totalCount = count || 0
         this.loading = false
       } catch (e) {
         this.loading = false

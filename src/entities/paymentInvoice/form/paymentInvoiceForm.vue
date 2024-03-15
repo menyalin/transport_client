@@ -19,15 +19,26 @@
         @downloadTemplate="newDownloadHandler"
         class="mx-3"
       />
+      <v-btn
+        v-if="showLoaderBtn"
+        class="mx-3"
+        @click="goToLoader"
+        color="primary"
+      >
+        Загрузить из реестра
+      </v-btn>
+      <span v-else-if="loaderPath" class="text-caption mx-3">
+        Для использования загрузчика необходимо очистить список рейсов.
+      </span>
     </buttons-panel>
     <div id="form">
-      <div id="fields-row">
+      <div class="fields-row">
         <v-text-field
           label="Номер"
           v-model.trim="state.number"
           dense
           outlined
-          :style="{ maxWidth: '150px' }"
+          :style="{ maxWidth: '200px' }"
         />
         <v-text-field
           label="Дата выставления"
@@ -36,6 +47,7 @@
           outlined
           type="date"
           :style="{ maxWidth: '250px' }"
+          @paste="pasteDate"
         />
         <v-select
           label="Статус"
@@ -77,7 +89,24 @@
           :error-messages="agreementErrorMessages"
         />
       </div>
-
+      <div class="fields-row">
+        <v-text-field
+          label="Номер реестра клиента"
+          v-model.trim="state.numberByClient"
+          dense
+          outlined
+          :style="{ maxWidth: '200px' }"
+        />
+        <v-text-field
+          label="Дата реестра клиента"
+          v-model="state.dateByClient"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+          @paste="pasteDate"
+        />
+      </div>
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
@@ -85,7 +114,7 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="disabledPickOrders || needSave"
+        :disabled="disabledPickOrders || needSave || invalidForm"
       >
         Подобрать рейсы
       </v-btn>
@@ -109,6 +138,7 @@ import store from '@/store'
 import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
+import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
   name: 'PaymentInvoiceForm',
@@ -131,6 +161,7 @@ export default {
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
+    const { pasteDate } = usePasteDateInput()
     const {
       v$,
       state,
@@ -140,10 +171,19 @@ export default {
       agreementItems,
       changeClientHandler,
       setFormState,
+      loaderPath,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const { docTemplates, newDocTemplates, newDownloadHandler } =
       usePaymentInvoiceDocTemplates(state, props)
+
+    const showLoaderBtn = computed(() => {
+      if (Array.isArray(props.item.orders) && props.item.orders.length > 0)
+        return false
+      return (
+        !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
+      )
+    })
 
     function cancelHandler() {
       router.go(-1)
@@ -172,11 +212,11 @@ export default {
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
 
     const needSave = computed(() => {
-      return state?.value.client !== props.item.client
+      return (
+        state?.value.client !== props.item.client ||
+        state?.value.agreement !== props.item.agreementId
+      )
     })
-    function buttonClick() {
-      console.log('click')
-    }
 
     const formState = computed(() => {
       return {
@@ -194,6 +234,7 @@ export default {
       { immediate: true }
     )
     return {
+      pasteDate,
       v$,
       cancelHandler,
       clientItems,
@@ -206,16 +247,29 @@ export default {
       agreementErrorMessages,
       pickOrdersHandler,
       needSave,
-      buttonClick,
       changeClientHandler,
       showPickOrderDialog,
       downloadHandler,
       agreementItems,
       docTemplates,
-
+      loaderPath,
       newDocTemplates,
       newDownloadHandler,
+      showLoaderBtn,
     }
+  },
+  methods: {
+    goToLoader() {
+      if (!this.item._id || !this.loaderPath) return
+      this.$router.replace({
+        path: this.$route.path + '/' + this.loaderPath,
+        query: {
+          invoiceDate: this.state.sendDate,
+          client: this.state.client,
+          agreement: this.state.agreement,
+        },
+      })
+    },
   },
 }
 </script>
@@ -227,7 +281,7 @@ export default {
   gap: 5px;
   padding: 20px;
 }
-#fields-row {
+.fields-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

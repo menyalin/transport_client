@@ -38,14 +38,14 @@ export default [
     default: true,
     width: '7rem',
   },
-  {
-    value: 'vatSum',
-    text: 'Сумма НДС',
-    sortable: false,
-    align: 'right',
-    default: true,
-    width: '7rem',
-  },
+  // {
+  //   value: 'vatSum',
+  //   text: 'Сумма НДС',
+  //   sortable: false,
+  //   align: 'right',
+  //   default: true,
+  //   width: '7rem',
+  // },
   {
     value: 'savedTotal.price',
     text: 'Сумма',

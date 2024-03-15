@@ -46,7 +46,7 @@ import { DateRangeInput } from '@/shared/ui'
 import AppReportSummary from './reportSummary'
 import AppClientBlock from './clientBlock'
 import initDateRange from './initDateRange.js'
-import ReportService from '../../services/index.js'
+import { ReportService } from '@/shared/services'
 
 export default {
   name: 'GrossProfitReport',

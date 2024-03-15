@@ -48,6 +48,7 @@ export default {
   props: {
     filters: { type: Object },
     title: String,
+    agreements: Array,
   },
   data() {
     return {
@@ -58,6 +59,11 @@ export default {
       tmpFilters: [],
       filterItems: [
         { value: 'clients', title: 'Клиенты', items: () => this.clients },
+        {
+          value: 'agreements',
+          title: 'Соглашения',
+          items: () => this.agreements,
+        },
         { value: 'orderTypes', title: 'Регионы', items: () => this.orderTypes },
         { value: 'tkNames', title: 'ТК', items: () => this.tkNames },
         { value: 'trucks', title: 'ТС', items: () => this.trucks },
@@ -85,6 +91,7 @@ export default {
       ],
     }
   },
+
   computed: {
     clients() {
       return this.$store.getters.partners
@@ -128,6 +135,7 @@ export default {
       }))
     },
   },
+
   watch: {
     filters: {
       immediate: true,
