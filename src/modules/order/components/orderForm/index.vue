@@ -144,7 +144,7 @@
               v-model="paymentToDriver"
             />
 
-            <app-price-block
+            <PriceBlock
               :isValidPrices="isValidPrices(agreement, prices, state)"
               :prices.sync="prices"
               :prePrices="prePrices"
@@ -155,7 +155,7 @@
               :route="route"
             />
 
-            <app-price-dialog
+            <PriceDialog
               v-if="showFinalPriceDialog"
               :order="order"
               :agreement="agreement"
@@ -213,18 +213,14 @@
 </template>
 <script>
 import { OrderService, OrderTemplateService } from '@/shared/services'
-
 import { ButtonsPanel } from '@/shared/ui'
 import { OrderRoute } from '@/entities/order'
-
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
-
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from './analyticBlock.vue'
-import AppPriceBlock from './priceBlock/index.vue'
-import AppPriceDialog from './priceDialog'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
+
 import {
   DocsRegistryLink,
   OrderDocsListForm,
@@ -236,6 +232,8 @@ import {
   useOrderDocs,
   ClientBlock,
   useOrderValidations,
+  PriceBlock,
+  PriceDialog,
 } from '@/entities/order'
 
 import AppPaymentToDriver from './paymentToDriver.vue'
@@ -252,8 +250,8 @@ export default {
     ClientBlock,
     AppGradeBlock,
     AppAnalyticBlock,
-    AppPriceBlock,
-    AppPriceDialog,
+    PriceBlock,
+    PriceDialog,
     OrderDocsListForm,
     DocsRegistryLink,
     AppPaymentToDriver,

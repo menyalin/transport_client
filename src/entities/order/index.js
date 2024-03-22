@@ -14,6 +14,8 @@ import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 import { useOrderListUtils } from './hooks/useOrderListUtils'
 import { useOrderValidations } from './hooks/useOrderValidations'
 import { OrderRoute } from './orderRoute'
+import PriceBlock from './priceBlock'
+import PriceDialog from './priceDialog'
 
 export {
   OrdersTable,
@@ -32,4 +34,6 @@ export {
   ClientBlock,
   CargoParams,
   OrderRoute,
+  PriceBlock,
+  PriceDialog,
 }
