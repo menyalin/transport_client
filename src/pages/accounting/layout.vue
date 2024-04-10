@@ -41,6 +41,13 @@ export default {
         permission: 'document:readList',
       },
       {
+        text: 'Тарифные контракты',
+        icon: 'mdi-file-document-multiple',
+        link: '/accounting/tariff_contracts',
+        onlyWithDirectoriesProfile: true,
+        permission: 'tariffContract:readList',
+      },
+      {
         text: 'Акты',
         icon: 'mdi-list-box ',
         link: '/accounting/paymentInvoice',

@@ -33,6 +33,7 @@ export default function () {
     },
     'OrderWOInvoiceReport:listOptions'
   )
+
   const agreements = ref([])
   const agreementItems = computed(() =>
     agreements.value

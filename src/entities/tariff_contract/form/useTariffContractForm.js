@@ -1,4 +1,5 @@
-import { ref, computed } from 'vue'
+import dayjs from 'dayjs'
+import { reactive, computed, watch } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
@@ -10,14 +11,25 @@ const initialState = {
   orderType: 'city', // Город / Регион
   withVat: false,
   note: null,
+  zonesTariffs: [],
+  _version: 0,
 }
 
-export const useTariffContractForm = (_props) => {
+export const useTariffContractForm = (props, ctx) => {
   const orderTypeItems = [
     { text: 'Город', value: 'city' },
     { text: 'Регион', value: 'region' },
   ]
-  let state = ref(initialState)
+  let state = reactive(initialState)
+
+  function setState(newState) {
+    Object.assign(state, newState, {
+      startDate: dayjs(newState.startDate).format('YYYY-MM-DD'),
+      endDate: newState.endDate
+        ? dayjs(newState.startDate).format('YYYY-MM-DD')
+        : null,
+    })
+  }
 
   const rules = {
     name: { required },
@@ -27,30 +39,53 @@ export const useTariffContractForm = (_props) => {
     orderType: { required }, // Город / Регион
     withVat: { required },
     note: {},
+    zonesTariffs: {},
   }
   const disableSubmitBtn = computed(() => {
     return invalidForm.value
   })
-  const v$ = useVuelidate(rules, state)
-  const invalidForm = computed(() => v$.value.$invalid)
+  const mainFormV$ = useVuelidate(rules, state)
+  const invalidForm = computed(() => mainFormV$.value.$invalid)
+
   const formState = computed(() => {
     return {
-      ...state.value,
-      startDate: new Date(state.value.startDate).toISOString(),
-      endDate: state.value.endDate
-        ? new Date(state.value.endDate).toISOString()
+      ...state,
+      startDate: new Date(state.startDate + 'T00:00').toISOString(),
+      endDate: state.endDate
+        ? new Date(state.endDate + 'T00:00').toISOString()
         : null,
     }
   })
+
+  const agreementReadonly = computed(() => {
+    return props.item?.id
+  })
+
   function submitHandler() {
-    console.log('submit: ', formState.value)
+    ctx.emit('submit', formState.value)
   }
+
+  function cancelHandler() {
+    ctx.emit('cancel')
+  }
+
+  watch(
+    () => props.item,
+    (val) => {
+      if (val?._id) setState(val)
+    },
+    { immediate: true, deep: true }
+  )
+
   return {
     state,
-    v$,
+    mainFormV$,
     invalidForm,
     orderTypeItems,
     disableSubmitBtn,
     submitHandler,
+    cancelHandler,
+    agreementReadonly,
+    formState,
   }
 }
