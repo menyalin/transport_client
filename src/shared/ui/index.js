@@ -4,10 +4,11 @@ import EntityListWrapper from './entityListWrapper.vue'
 import OrderListFooterDetails from './orderListFooterDetails.vue'
 import FormWrapper from './entityFormWrapper/formWrapper.vue'
 import ButtonsPanel from './buttonsPanel.vue'
-import DateRangeInput from './dateRangeInput2.vue'
+import DateRangeInput from './dateRangeInput.vue'
 import DownloadDocTemplateMenu from './downloadDocTemplateMenu.vue'
 import BorderedBlock from './borderedBlock.vue'
 import XlsxFileInput from './xlsxFileInput'
+import CardActionButtons from './cardActionButtons.vue'
 
 export {
   AppTableColumnSetting,
@@ -20,4 +21,5 @@ export {
   DownloadDocTemplateMenu,
   BorderedBlock,
   XlsxFileInput,
+  CardActionButtons,
 }
