@@ -41,22 +41,37 @@
         label="Тарифы указаны с НДС"
       />
     </div>
+    <v-divider />
     <TariffListWrapper
       title="Базовые тарифы по зонам"
       formTitle="Базовый тариф по зонам"
       v-model="state.zonesTariffs"
       :tariffListComponent="zoneBaseTariffList"
       :tariffFormComponent="zoneBaseTariffForm"
+      class="mb-6"
+      @change="tmpHandler"
     />
+    <v-divider />
+    <TariffListWrapper
+      title="Базовые тарифы по линейке от зоны погрузки"
+      formTitle="Базовый тариф по линейке"
+      v-model="state.directDistanceZonesTariffs"
+      :tariffListComponent="directDistanceZonesTariffList"
+      :tariffFormComponent="directDistanceZonesTariffForm"
+      @change="tmpHandler"
+    />
+    <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
   </div>
 </template>
 <script>
 import { ButtonsPanel } from '@/shared/ui'
+import { useTariffContractForm } from './useTariffContractForm'
+import TariffListWrapper from './tariffListWrapper'
 import ZoneBaseTariffList from './zonesBaseTariffList.vue'
 import ZoneBaseTariffForm from './zonesBaseTariffForm.vue'
-import TariffListWrapper from './tariffListWrapper'
-import { useTariffContractForm } from './useTariffContractForm'
+import DirectDistanceZonesTariffList from './directDistanceZonesTariffList.vue'
+import DirectDistanceZonesTariffForm from './directDistanceZonesTariffForm.vue'
 
 export default {
   name: 'TariffContractForm',
@@ -72,12 +87,13 @@ export default {
     return {
       zoneBaseTariffList: ZoneBaseTariffList,
       zoneBaseTariffForm: ZoneBaseTariffForm,
+      directDistanceZonesTariffList: DirectDistanceZonesTariffList,
+      directDistanceZonesTariffForm: DirectDistanceZonesTariffForm,
     }
   },
   setup(props, ctx) {
     const {
       state,
-
       orderTypeItems,
       disableSubmitBtn,
       submitHandler,
@@ -85,6 +101,9 @@ export default {
       mainFormV$,
       agreementReadonly,
     } = useTariffContractForm(props, ctx)
+    function tmpHandler(val) {
+      console.log(val)
+    }
 
     return {
       state,
@@ -94,6 +113,7 @@ export default {
       submitHandler,
       cancelHandler,
       agreementReadonly,
+      tmpHandler,
     }
   },
 }

@@ -31,7 +31,7 @@ export default {
     event: 'change',
   },
   props: {
-    items: Array,
+    items: { type: Array, default: [] },
     formTitle: String,
     title: String,
     tariffFormComponent: {
@@ -45,6 +45,7 @@ export default {
   },
   setup(props, ctx) {
     const item = ref(null)
+    const items = ref(props.items)
     const dialog = ref(false)
     function addHandler() {
       dialog.value = true
@@ -55,32 +56,31 @@ export default {
     }
     function saveHandler(val) {
       if (item.value) {
-        ctx.emit('change', [
-          ...props.items.slice(0, item.value.idx),
-          val,
-          ...props.items.slice(item.value.idx + 1),
-        ])
+        items.value.splice(item.value.idx, 1, { ...val })
         item.value = null
       } else {
-        ctx.emit('change', [...props.items, val])
+        items.value.push({ ...val })
       }
+      ctx.emit('change', items.value)
       dialog.value = false
     }
+
     const itemsWithIdx = computed(() => {
-      return [...props.items.map((i, idx) => ({ ...i, idx }))]
+      return props.items.map((i, idx) => ({ ...i, idx }))
     })
+
     function addTariffHandler(val) {
-      ctx.emit('change', [...props.items, val])
+      items.value.push(...val)
+      ctx.emit('change', items.value)
     }
+
     function updateHandler(idx) {
-      item.value = { ...props.items[idx], idx }
+      item.value = { ...items.value[idx], idx }
       dialog.value = true
     }
     function removeByIdx(idx) {
-      ctx.emit('change', [
-        ...props.items.slice(0, idx),
-        ...props.items.slice(idx + 1),
-      ])
+      items.value.splice(idx, 1)
+      ctx.emit('change', items.value)
     }
     return {
       addHandler,
