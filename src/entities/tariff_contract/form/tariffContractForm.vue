@@ -29,12 +29,7 @@
         v-model="state.endDate"
         :style="{ maxWidth: '150px' }"
       />
-      <v-select
-        label="Тип рейса"
-        v-model="state.orderType"
-        :items="orderTypeItems"
-        :style="{ maxWidth: '150px' }"
-      />
+
       <v-checkbox
         color="primary"
         v-model="state.withVat"
@@ -49,7 +44,6 @@
       :tariffListComponent="zoneBaseTariffList"
       :tariffFormComponent="zoneBaseTariffForm"
       class="mb-6"
-      @change="tmpHandler"
     />
     <v-divider />
     <TariffListWrapper
@@ -58,7 +52,6 @@
       v-model="state.directDistanceZonesTariffs"
       :tariffListComponent="directDistanceZonesTariffList"
       :tariffFormComponent="directDistanceZonesTariffForm"
-      @change="tmpHandler"
     />
     <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
@@ -101,9 +94,6 @@ export default {
       mainFormV$,
       agreementReadonly,
     } = useTariffContractForm(props, ctx)
-    function tmpHandler(val) {
-      console.log(val)
-    }
 
     return {
       state,
@@ -113,7 +103,6 @@ export default {
       submitHandler,
       cancelHandler,
       agreementReadonly,
-      tmpHandler,
     }
   },
 }
