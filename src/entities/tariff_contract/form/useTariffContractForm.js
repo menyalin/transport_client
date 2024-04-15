@@ -8,7 +8,7 @@ const initialState = {
   agreement: null,
   startDate: null,
   endDate: null,
-  orderType: 'city', // Город / Регион
+  
   withVat: false,
   note: null,
   zonesTariffs: [],
@@ -36,7 +36,7 @@ export const useTariffContractForm = (props, ctx) => {
     agreement: { required },
     startDate: { required },
     endDate: {},
-    orderType: { required }, // Город / Регион
+    
     withVat: { required },
     note: {},
     zonesTariffs: {},

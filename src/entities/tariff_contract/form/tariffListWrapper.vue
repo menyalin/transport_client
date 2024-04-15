@@ -70,7 +70,7 @@ export default {
     })
 
     function addTariffHandler(val) {
-      items.value.push(...val)
+      items.value.push({ ...val })
       ctx.emit('change', items.value)
     }
 
