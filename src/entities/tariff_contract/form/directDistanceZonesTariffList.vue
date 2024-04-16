@@ -33,7 +33,7 @@
   </v-data-table>
 </template>
 <script>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import store from '@/store'
 import { moneyFormatter } from '@/shared/utils'
 
@@ -69,19 +69,11 @@ export default {
     function updateHandler(item) {
       ctx.emit('updateByIdx', item.idx)
     }
-    watch(
-      () => props.items,
-      (arr) => {
-        console.log('list updated: ', arr)
-      },
-      { deep: true, immediate: true }
-    )
 
     const preparedItems = computed(() => {
       return props.items.map((i) => ({
         ...i,
         loadingZone: formatZone(i.loadingZone),
-        // zones: i.zones.splice(),
       }))
     })
 
