@@ -18,45 +18,32 @@
           />
         </div>
         <div class="input-fields-row">
-          <v-autocomplete
-            label="Зона погрузки"
-            :items="zoneItems"
-            item-value="_id"
-            item-text="name"
-            auto-select-first
-            v-model="form.loadingZone"
+          <v-select
+            ref="focusableNodeRef"
+            label="Тип рейса"
+            :items="orderTypeItems"
+            v-model="form.orderType"
+            :style="{ width: '130px' }"
+          />
+          <v-text-field
+            label="Часы простоя, включенные в тариф"
+            v-model.number="form.includeHours"
+          />
+          <v-select
+            label="Округлять до"
+            :items="roundByHoursItems"
+            v-model="form.roundByHours"
+            :style="{ width: '150px' }"
+          />
+          <v-select
+            label="Тариф за"
+            :items="tariffByItems"
+            v-model="form.tariffBy"
+            :style="{ width: '150px' }"
           />
         </div>
-        <div v-for="(_zone, idx) of form.zones" :key="idx" class="zone-row">
-          <v-text-field
-            v-model.number="form.zones[idx].distance"
-            label="До, км"
-            :style="{ 'max-width': '100px' }"
-            dense
-          />
-          <v-text-field
-            v-model.number="form.zones[idx].price"
-            label="Тариф"
-            dense
-            :style="{ 'max-width': '160px' }"
-          />
-          <v-btn
-            v-if="showDeleteBtn(idx)"
-            icon
-            small
-            color="red"
-            @click="deleteRow"
-          >
-            <v-icon small> mdi-delete </v-icon>
-          </v-btn>
-          <v-btn
-            v-if="showAddBtn(idx) && !invalidZones"
-            icon
-            color="primary"
-            @click="addRow"
-          >
-            <v-icon> mdi-plus-circle </v-icon>
-          </v-btn>
+        <div class="input-fields-row">
+          <v-text-field label="Тариф" v-model.number="form.price" />
         </div>
       </v-card-text>
       <CardActionButtons
@@ -80,19 +67,23 @@
 <script>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, minLength } from '@vuelidate/validators'
+import { required, numeric } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
 
-const defaultFormState = () => ({
-  truckKinds: [],
-  liftCapacities: [],
-  loadingZone: null,
-  zones: [{ distance: null, price: null }],
-})
+/*
+  truckKinds: TRUCK_KINDS_ENUM[]
+  liftCapacities: number[]
+  orderType: OrderType
+  includeHours: number
+  roundByHours: RoundByHours
+  tariffBy: TariffBy
+  price: number
+
+*/
 
 export default {
-  name: 'DirectDistanceZonesTariffForm',
+  name: 'AdditionalPointsTariffForm',
   components: {
     CardActionButtons,
   },
@@ -106,17 +97,33 @@ export default {
       focusableNodeRef,
       truckKindItems,
       liftCapacityItems,
-      zoneItems,
+      orderTypeItems,
       commonRules,
+      tariffByItems,
+      roundByHoursItems,
     } = useFormHelpers()
+
+    const defaultFormState = () => ({
+      truckKinds: [],
+      liftCapacities: [],
+      orderType: null,
+      includeHours: null,
+      roundByHours: null,
+      tariffBy: null,
+      price: null,
+    })
+
     const form = ref(
       props.initialFormState ? props.initialFormState : defaultFormState()
     )
 
     const rules = {
       ...commonRules,
-      loadingZone: { required },
-      zones: { required, minLength: minLength(1) },
+      orderType: { required },
+      includeHours: { required, numeric },
+      roundByHours: { required },
+      tariffBy: { required },
+      price: { required, numeric },
     }
     const v$ = useVuelidate(rules, form, { $stopPropagation: true })
 
@@ -124,10 +131,7 @@ export default {
       () => props.initialFormState,
       (newState) => {
         if (newState) {
-          form.value = {
-            ...newState,
-            zones: [...newState.zones.map((zone) => Object.assign({}, zone))],
-          }
+          form.value = { ...newState }
           v$.value.$reset()
         }
       },
@@ -138,6 +142,7 @@ export default {
       ctx.emit('submit', form.value)
       clearForm()
     }
+
     function clearForm() {
       form.value = defaultFormState()
       v$.value.$reset()
@@ -145,7 +150,12 @@ export default {
 
     function submitFormHandler() {
       ctx.emit('add', form.value)
-      clearForm()
+      form.value.orderType = null
+      form.value.includeHours = null
+      form.value.roundByHours = null
+      form.value.tariffBy = null
+      form.value.price = null
+      v$.value.$reset()
     }
 
     function cancelHandler() {
@@ -155,49 +165,22 @@ export default {
     }
 
     const isInvalidForm = computed(() => {
-      return v$.value.$invalid || invalidZones.value
+      return v$.value.$invalid
     })
-
-    const invalidZones = computed(() => {
-      if (!form.value.zones || form.value.zones.length === 0) return true
-      return form.value.zones.some((i) => !i.distance || !i.price)
-    })
-
-    function showDeleteBtn(idx) {
-      return form.value.zones.length > 1 && form.value.zones.length === idx + 1
-    }
-
-    function showAddBtn(idx) {
-      return form.value.zones.length === idx + 1
-    }
-
-    function addRow() {
-      form.value.zones.push({
-        distance: null,
-        price: null,
-      })
-    }
-
-    function deleteRow() {
-      form.value.zones.pop()
-    }
 
     return {
       truckKindItems,
       liftCapacityItems,
-      zoneItems,
+      orderTypeItems,
       submitHandler,
       submitFormHandler,
       cancelHandler,
       form,
       isInvalidForm,
-      focusableNodeRef,
       v$,
-      showDeleteBtn,
-      showAddBtn,
-      invalidZones,
-      deleteRow,
-      addRow,
+      focusableNodeRef,
+      tariffByItems,
+      roundByHoursItems,
     }
   },
 }

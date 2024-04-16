@@ -27,7 +27,7 @@
             v-model="form.loadingZone"
           />
           <v-autocomplete
-            ref="unloadingZoneRef"
+            ref="focusableNodeRef"
             label="Зона разгрузки"
             :items="zoneItems"
             item-value="_id"
@@ -60,9 +60,9 @@
 <script>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, minLength, numeric } from '@vuelidate/validators'
-import store from '@/store'
+import { required, numeric } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
+import { useFormHelpers } from './useFormHelpers'
 
 const defaultFormState = () => ({
   truckKinds: [],
@@ -83,19 +83,19 @@ export default {
     initialFormState: Object,
   },
   setup(props, ctx) {
-    const unloadingZoneRef = ref(null)
+    const {
+      focusableNodeRef,
+      truckKindItems,
+      liftCapacityItems,
+      zoneItems,
+      commonRules,
+    } = useFormHelpers()
+
     const form = ref(
       props.initialFormState ? props.initialFormState : defaultFormState()
     )
     const rules = {
-      truckKinds: {
-        required,
-        minLength: minLength(1),
-      },
-      liftCapacities: {
-        required,
-        minLength: minLength(1),
-      },
+      ...commonRules,
       loadingZone: { required },
       unloadingZone: { required },
       price: { required, numeric },
@@ -113,10 +113,6 @@ export default {
       { deep: true }
     )
 
-    const zoneItems = computed(() => store.getters.zones)
-    const truckKindItems = computed(() => store.getters.truckKinds)
-    const liftCapacityItems = computed(() => store.getters.liftCapacityTypes)
-
     function submitHandler() {
       ctx.emit('submit', { ...form.value })
       clearForm()
@@ -130,7 +126,7 @@ export default {
       ctx.emit('add', { ...form.value })
       form.value.price = null
       form.value.unloadingZone = null
-      unloadingZoneRef.value.focus()
+      focusableNodeRef.value.focus()
     }
 
     function cancelHandler() {
@@ -152,8 +148,8 @@ export default {
       cancelHandler,
       form,
       isInvalidForm,
-      unloadingZoneRef,
       v$,
+      focusableNodeRef,
     }
   },
 }

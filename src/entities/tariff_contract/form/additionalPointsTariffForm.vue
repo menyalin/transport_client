@@ -57,9 +57,9 @@
 <script>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, minLength, numeric } from '@vuelidate/validators'
-import store from '@/store'
+import { required, numeric } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
+import { useFormHelpers } from './useFormHelpers'
 
 /*
   truckKinds: TRUCK_KINDS_ENUM[]
@@ -89,14 +89,20 @@ export default {
       price: null,
     })
 
-    const focusableNodeRef = ref(null)
+    const {
+      truckKindItems,
+      liftCapacityItems,
+      orderTypeItems,
+      commonRules,
+      focusableNodeRef,
+    } = useFormHelpers()
+
     const form = ref(
       props.initialFormState ? props.initialFormState : defaultFormState()
     )
 
     const rules = {
-      truckKinds: { required, minLength: minLength(1) },
-      liftCapacities: { required, minLength: minLength(1) },
+      ...commonRules,
       orderType: { required },
       includedPoints: { required, numeric },
       price: { required, numeric },
@@ -113,10 +119,6 @@ export default {
       },
       { deep: true }
     )
-
-    const truckKindItems = computed(() => store.getters.truckKinds)
-    const liftCapacityItems = computed(() => store.getters.liftCapacityTypes)
-    const orderTypeItems = computed(() => store.getters.orderAnalyticTypes)
 
     function submitHandler() {
       ctx.emit('submit', form.value)
