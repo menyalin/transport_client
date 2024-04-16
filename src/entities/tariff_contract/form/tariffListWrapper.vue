@@ -31,7 +31,7 @@ export default {
     event: 'change',
   },
   props: {
-    items: { type: Array, default: [] },
+    items: { type: Array, default: () => [] },
     formTitle: String,
     title: String,
     tariffFormComponent: {

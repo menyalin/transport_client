@@ -1,34 +1,33 @@
 import dayjs from 'dayjs'
-import { reactive, computed, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
-const initialState = {
-  name: null,
-  agreement: null,
-  startDate: null,
-  endDate: null,
-  
-  withVat: false,
-  note: null,
-  zonesTariffs: [],
-  _version: 0,
-}
-
 export const useTariffContractForm = (props, ctx) => {
+  const initialState = () => ({
+    name: null,
+    agreement: null,
+    startDate: null,
+    endDate: null,
+    withVat: false,
+    note: null,
+    zonesTariffs: [],
+    _version: 0,
+  })
   const orderTypeItems = [
     { text: 'Город', value: 'city' },
     { text: 'Регион', value: 'region' },
   ]
-  let state = reactive(initialState)
+  let state = ref(initialState())
 
   function setState(newState) {
-    Object.assign(state, newState, {
+    state.value = {
+      ...newState,
       startDate: dayjs(newState.startDate).format('YYYY-MM-DD'),
       endDate: newState.endDate
-        ? dayjs(newState.startDate).format('YYYY-MM-DD')
+        ? dayjs(newState.endDate).format('YYYY-MM-DD')
         : null,
-    })
+    }
   }
 
   const rules = {
@@ -36,7 +35,6 @@ export const useTariffContractForm = (props, ctx) => {
     agreement: { required },
     startDate: { required },
     endDate: {},
-    
     withVat: { required },
     note: {},
     zonesTariffs: {},
@@ -49,10 +47,10 @@ export const useTariffContractForm = (props, ctx) => {
 
   const formState = computed(() => {
     return {
-      ...state,
-      startDate: new Date(state.startDate + 'T00:00').toISOString(),
-      endDate: state.endDate
-        ? new Date(state.endDate + 'T00:00').toISOString()
+      ...state.value,
+      startDate: new Date(state.value.startDate + 'T00:00').toISOString(),
+      endDate: state.value.endDate
+        ? new Date(state.value.endDate + 'T00:00').toISOString()
         : null,
     }
   })

@@ -14,7 +14,7 @@ a
   </form-wrapper>
 </template>
 <script>
-import { onMounted, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import store from '@/store'
 import router from '@/router'
 import { FormWrapper } from '@/shared/ui'
@@ -36,7 +36,9 @@ export default {
   setup(props) {
     const item = ref({})
     const loading = ref(false)
-    const showDeleteBtn = ref(true)
+    const showDeleteBtn = computed(() => {
+      return !!props?.id && store.getters.hasPermission('tariffContract:delete')
+    })
     const { allClientAgreements: agreementItems } = useAgreements()
     const { getById, create, updateOne, deleteById } = useTariffContract()
 
@@ -44,9 +46,11 @@ export default {
       try {
         let res
         loading.value = true
-        if (props.id) {
-          res = await updateOne(props.id, formState)
+        const itemId = props.id ? props.id : item.value?._id
+        if (itemId) {
+          res = await updateOne(itemId, formState)
           item.value = { ...item.value, ...res }
+          router.push({ name: 'TariffContractList' })
         } else {
           res = await create(formState)
           router.replace({
@@ -61,19 +65,22 @@ export default {
         loading.value = false
       }
     }
-
-    onMounted(async () => {
-      if (props.id) {
-        try {
-          loading.value = true
-          item.value = await getById(props.id)
-        } catch (e) {
-          store.commit('setError', e.message)
-        } finally {
-          loading.value = false
+    watch(
+      () => props.id,
+      async (id) => {
+        if (id) {
+          try {
+            loading.value = true
+            item.value = await getById(id)
+          } catch (e) {
+            store.commit('setError', e.message)
+          } finally {
+            loading.value = false
+          }
         }
-      }
-    })
+      },
+      { immediate: true, deep: true }
+    )
 
     return {
       item,
