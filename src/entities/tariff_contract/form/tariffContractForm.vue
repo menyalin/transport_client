@@ -54,6 +54,14 @@
       :tariffFormComponent="directDistanceZonesTariffForm"
     />
     <v-divider />
+    <TariffListWrapper
+      title="Дополнительные точки"
+      formTitle="Тариф за дополнительную точку"
+      v-model="state.additionalPointsTariffs"
+      :tariffListComponent="additionalPointsTariffList"
+      :tariffFormComponent="additionalPointsTariffForm"
+    />
+    <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
   </div>
 </template>
@@ -65,6 +73,8 @@ import ZoneBaseTariffList from './zonesBaseTariffList.vue'
 import ZoneBaseTariffForm from './zonesBaseTariffForm.vue'
 import DirectDistanceZonesTariffList from './directDistanceZonesTariffList.vue'
 import DirectDistanceZonesTariffForm from './directDistanceZonesTariffForm.vue'
+import AdditionalPointsTariffList from './additionalPointsTariffList.vue'
+import AdditionalPointsTariffForm from './additionalPointsTariffForm.vue'
 
 export default {
   name: 'TariffContractForm',
@@ -82,6 +92,8 @@ export default {
       zoneBaseTariffForm: ZoneBaseTariffForm,
       directDistanceZonesTariffList: DirectDistanceZonesTariffList,
       directDistanceZonesTariffForm: DirectDistanceZonesTariffForm,
+      additionalPointsTariffList: AdditionalPointsTariffList,
+      additionalPointsTariffForm: AdditionalPointsTariffForm,
     }
   },
   setup(props, ctx) {
