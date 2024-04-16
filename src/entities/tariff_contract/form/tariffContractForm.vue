@@ -62,6 +62,14 @@
       :tariffFormComponent="additionalPointsTariffForm"
     />
     <v-divider />
+    <TariffListWrapper
+      title="Простой по типу рейса"
+      formTitle="Тариф для расчета простоя ТС"
+      v-model="state.idleTimeTariffs"
+      :tariffListComponent="idleTimeTariffList"
+      :tariffFormComponent="idleTimeTariffForm"
+    />
+    <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
   </div>
 </template>
@@ -75,6 +83,8 @@ import DirectDistanceZonesTariffList from './directDistanceZonesTariffList.vue'
 import DirectDistanceZonesTariffForm from './directDistanceZonesTariffForm.vue'
 import AdditionalPointsTariffList from './additionalPointsTariffList.vue'
 import AdditionalPointsTariffForm from './additionalPointsTariffForm.vue'
+import IdleTimeTariffForm from './idleTimeTariffForm.vue'
+import IdleTimeTariffList from './idleTimeTariffList.vue'
 
 export default {
   name: 'TariffContractForm',
@@ -94,6 +104,8 @@ export default {
       directDistanceZonesTariffForm: DirectDistanceZonesTariffForm,
       additionalPointsTariffList: AdditionalPointsTariffList,
       additionalPointsTariffForm: AdditionalPointsTariffForm,
+      idleTimeTariffForm: IdleTimeTariffForm,
+      idleTimeTariffList: IdleTimeTariffList,
     }
   },
   setup(props, ctx) {
