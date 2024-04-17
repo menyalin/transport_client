@@ -5,6 +5,7 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
+            ref="focusableNodeRef"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
@@ -18,21 +19,9 @@
           />
         </div>
         <div class="input-fields-row">
-          <v-select
-            ref="focusableNodeRef"
-            label="Тип рейса"
-            :items="orderTypeItems"
-            v-model="form.orderType"
-          />
           <v-text-field
-            label="Кол-во точек включенных базовый тариф"
-            v-model.number="form.includedPoints"
-          />
-        </div>
-        <div class="input-fields-row">
-          <v-text-field
-            label="Тариф за каждую дополнительную точку"
-            v-model.number="form.price"
+            label="Процент от базовой стоимости рейса"
+            v-model.number="form.percent"
           />
         </div>
       </v-card-text>
@@ -64,14 +53,12 @@ import { useFormHelpers } from './useFormHelpers'
 /*
   truckKinds: TRUCK_KINDS_ENUM[]
   liftCapacities: number[]
-  includedPoints: number
-  price: number
-  orderType: OrderType
+  percent: number
 
 */
 
 export default {
-  name: 'AdditionalPointsTariffForm',
+  name: 'ReturnPercentTariffForm',
   components: {
     CardActionButtons,
   },
@@ -84,9 +71,7 @@ export default {
     const defaultFormState = () => ({
       truckKinds: [],
       liftCapacities: [],
-      orderType: null,
-      includedPoints: null,
-      price: null,
+      percent: null,
     })
 
     const {
@@ -103,9 +88,7 @@ export default {
 
     const rules = {
       ...commonRules,
-      orderType: { required },
-      includedPoints: { required, numeric },
-      price: { required, numeric },
+      percent: { required, numeric },
     }
     const v$ = useVuelidate(rules, form, { $stopPropagation: true })
 
@@ -131,10 +114,7 @@ export default {
 
     function submitFormHandler() {
       ctx.emit('add', form.value)
-      form.value.orderType = null
-      form.value.includedPoints = null
-      form.value.price = null
-      v$.value.$reset()
+      clearForm()
       focusableNodeRef.value.focus()
     }
 

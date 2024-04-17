@@ -70,6 +70,14 @@
       :tariffFormComponent="idleTimeTariffForm"
     />
     <v-divider />
+    <TariffListWrapper
+      title="Возврат: % от базового тарифа"
+      formTitle="Тариф на возврат"
+      v-model="state.returnPercentTariffs"
+      :tariffListComponent="returnPercentTariffList"
+      :tariffFormComponent="returnPercentTariffForm"
+    />
+    <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
   </div>
 </template>
@@ -85,6 +93,8 @@ import AdditionalPointsTariffList from './additionalPointsTariffList.vue'
 import AdditionalPointsTariffForm from './additionalPointsTariffForm.vue'
 import IdleTimeTariffForm from './idleTimeTariffForm.vue'
 import IdleTimeTariffList from './idleTimeTariffList.vue'
+import ReturnPercentTariffForm from './returnPercentTariffForm.vue'
+import ReturnPercentTariffList from './returnPercentTariffList.vue'
 
 export default {
   name: 'TariffContractForm',
@@ -106,6 +116,8 @@ export default {
       additionalPointsTariffForm: AdditionalPointsTariffForm,
       idleTimeTariffForm: IdleTimeTariffForm,
       idleTimeTariffList: IdleTimeTariffList,
+      returnPercentTariffForm: ReturnPercentTariffForm,
+      returnPercentTariffList: ReturnPercentTariffList,
     }
   },
   setup(props, ctx) {
