@@ -13,6 +13,16 @@
           @change="setField($event, 'type')"
         />
         <v-checkbox
+          v-if="showMainLoadingPointSelector && tmpPoint.type === 'loading'"
+          v-model="tmpPoint.isMainLoadingPoint"
+          label="Основной пункт погрузки"
+          hide-details
+          dense
+          color="primary"
+          class="ml-4"
+          @change="setField($event, 'isMainLoadingPoint')"
+        />
+        <v-checkbox
           v-model="tmpPoint.useInterval"
           label="Указать временнное окно"
           hide-details
@@ -305,6 +315,7 @@ export default {
       type: Boolean,
       default: true,
     },
+    showMainLoadingPointSelector: Boolean,
     isTemplate: {
       type: Boolean,
       default: false,
@@ -331,6 +342,7 @@ export default {
         waitsForWaybills: false,
         note: null,
         fixedTime: null,
+        isMainLoadingPoint: null,
       },
     }
   },
@@ -384,7 +396,7 @@ export default {
   },
   methods: {
     setFields(point) {
-      this.tmpPoint = point
+      this.tmpPoint = { ...point }
     },
 
     setField(val, field) {

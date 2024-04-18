@@ -15,6 +15,7 @@
           :fixedTimeSlots="fixedTimeSlots"
           :isActive="point.isCurrent"
           :showReturnBtn="showReturnBtn(ind)"
+          :showMainLoadingPointSelector="showMainLoadingPointSelector"
           :showDeleteBtn="tmpPoints.length > 2"
           :isTemplate="isTemplate"
           @changePoint="change($event, ind)"
@@ -109,6 +110,16 @@ export default {
       if (this.isTemplate) return false
       return this.state.status === 'completed'
     },
+    showMainLoadingPointSelector() {
+      return this.tmpPoints.filter((p) => p.type === 'loading').length > 1
+    },
+    hasMainLoadingPoint() {
+      return (
+        this.tmpPoints.filter(
+          (i) => i.isMainLoadingPoint && i.type === 'loading'
+        ).length > 0
+      )
+    },
   },
   watch: {
     points: {
@@ -122,6 +133,16 @@ export default {
     },
   },
   methods: {
+    setDefaultMainLoadingPoint() {
+      this.tmpPoints[0].isMainLoadingPoint = true
+    },
+
+    clearMainLoadingPointInRoute() {
+      this.tmpPoints.forEach((point) => {
+        point.isMainLoadingPoint = false
+      })
+    },
+
     async getDriverRouteHandler() {
       await putRouteForDriverToClipboard(
         this.driverId,
@@ -138,7 +159,12 @@ export default {
       )
     },
     change(val, ind) {
+      if (this.hasMainLoadingPoint && val.isMainLoadingPoint)
+        this.clearMainLoadingPointInRoute()
+
       this.tmpPoints.splice(ind, 1, val)
+      if (!this.hasMainLoadingPoint) this.setDefaultMainLoadingPoint()
+
       this.$emit('changePoints', this.tmpPoints)
     },
     addPoint() {
