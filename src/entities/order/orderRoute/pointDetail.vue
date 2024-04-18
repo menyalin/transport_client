@@ -32,7 +32,7 @@
           @change="setField($event, 'useInterval')"
         />
         <v-checkbox
-          v-if="tmpPoint.isReturn || showReturnBtn"
+          v-if="tmpPoint.isReturn || (showReturnBtn && tmpPoint.type==='unloading')"
           v-model="tmpPoint.isReturn"
           label="Возврат"
           :readonly="!showReturnBtn || tmpPoint.isPltReturn"
