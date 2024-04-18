@@ -151,12 +151,9 @@ export default {
         this.agreement
       )
     },
-    showReturnBtn(idx) {
-      if (this.isTemplate || this.points.length < 3) return false
-      return (
-        idx + 1 === this.points.length &&
-        this.$store.getters.hasPermission('order:showReturnCheckbox')
-      )
+    showReturnBtn() {
+      if (this.isTemplate || this.points.length <= 2) return false
+      return this.$store.getters.hasPermission('order:showReturnCheckbox')
     },
     change(val, ind) {
       if (this.hasMainLoadingPoint && val.isMainLoadingPoint)
