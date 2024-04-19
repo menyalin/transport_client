@@ -40,7 +40,7 @@ export default {
       { text: 'Тип ТС', value: 'truckKinds', sortable: false },
       { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
       { text: 'Зона погрузки', value: 'loadingZone', sortable: true },
-      { text: 'Зона разгрузки', value: 'unloadingZone', sortable: true },
+      { text: 'Зоны разгрузки', value: 'unloadingZones', sortable: true },
       { text: 'Тариф', value: 'price', align: 'right', sortable: true },
       { value: 'actions', align: 'right', sortable: false },
     ]
@@ -66,7 +66,9 @@ export default {
       return props.items.map((i) => ({
         ...i,
         loadingZone: formatZone(i.loadingZone),
-        unloadingZone: formatZone(i.unloadingZone),
+        unloadingZones: i.unloadingZones
+          .map((zone) => formatZone(zone))
+          .join('; '),
       }))
     })
     return {

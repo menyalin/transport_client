@@ -28,12 +28,14 @@
           />
           <v-autocomplete
             ref="focusableNodeRef"
-            label="Зона разгрузки"
+            label="Зоны разгрузки"
+            multiple
             :items="zoneItems"
             item-value="_id"
             item-text="name"
             auto-select-first
-            v-model="form.unloadingZone"
+            v-model="form.unloadingZones"
+            hint="Важна последовательность зон"
           />
         </div>
 
@@ -68,7 +70,7 @@ const defaultFormState = () => ({
   truckKinds: [],
   liftCapacities: [],
   loadingZone: null,
-  unloadingZone: null,
+  unloadingZones: [],
   price: null,
 })
 
@@ -97,7 +99,7 @@ export default {
     const rules = {
       ...commonRules,
       loadingZone: { required },
-      unloadingZone: { required },
+      unloadingZones: { required },
       price: { required, numeric },
     }
     const v$ = useVuelidate(rules, form, { $stopPropagation: true })
