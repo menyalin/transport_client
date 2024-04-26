@@ -34,6 +34,11 @@
         @click:append="getDirectDistance"
       />
     </div>
+    <div class="zones-wrapper">
+      <div>Зоны погрузки: {{ loadingZones }}</div>
+      <div>Зоны разгрузки: {{ unloadingZones }}</div>
+      {{ item.routeStats }}
+    </div>
   </div>
 </template>
 <script>
@@ -85,6 +90,22 @@ export default {
       },
     },
   },
+  computed: {
+    loadingZones() {
+      return (
+        this.item.loadingZones?.map(
+          (i) => this.$store.getters.zonesMap.get(i)?.name
+        ) || null
+      )
+    },
+    unloadingZones() {
+      return (
+        this.item.unloadingZones?.map(
+          (i) => this.$store.getters.zonesMap.get(i)?.name
+        ) || null
+      )
+    },
+  },
   methods: {
     async getRoadDistance() {
       if (this.isValidRoute) {
@@ -117,5 +138,10 @@ export default {
 }
 .analytic-block-wrapper > * {
   margin: 10px;
+}
+.zones-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: small;
 }
 </style>
