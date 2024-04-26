@@ -33,6 +33,7 @@ export default {
       { text: 'Users', icon: 'mdi-account-multiple', link: '/admin/users' },
       { text: 'Companies', icon: 'mdi-star', link: '/admin/companies' },
       { text: 'Contracts', icon: 'mdi-history', link: '/admin/contracts' },
+      { text: 'Обнволение рейсов', icon: 'mdi-history', link: '/admin/orders' },
     ],
   }),
 }

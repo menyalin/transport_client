@@ -6,7 +6,6 @@ const BASE_PATH = '/companies'
 class CompanyService {
   constructor() {
     socket.on('company:updated', (payload) => {
-      console.log('updated: ', payload)
       store.commit('updateCompany', payload)
     })
     socket.on('company:deleteEmployeeById', (payload) => {
@@ -20,15 +19,9 @@ class CompanyService {
     })
   }
 
-  getMyCompanies() {
-    return new Promise((resolve, reject) => {
-      api
-        .get(BASE_PATH)
-        .then(({ data }) => {
-          resolve(data?.data)
-        })
-        .catch((e) => reject(e))
-    })
+  async getMyCompanies() {
+    const { data } = await api.get(BASE_PATH)
+    return data
   }
 
   async create(body) {

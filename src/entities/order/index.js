@@ -16,6 +16,7 @@ import { useOrderValidations } from './hooks/useOrderValidations'
 import { OrderRoute } from './orderRoute'
 import PriceBlock from './priceBlock'
 import PriceDialog from './priceDialog'
+import AnalyticBlock from './analyticBlock.vue'
 
 export {
   OrdersTable,
@@ -36,4 +37,5 @@ export {
   OrderRoute,
   PriceBlock,
   PriceDialog,
+  AnalyticBlock,
 }

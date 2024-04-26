@@ -7,7 +7,7 @@ import profileRoutes from './profile/index.js'
 import accountingRoutes from './accounting/index.js'
 
 import authRoutes from '@/modules/auth/auth.routes'
-import adminRoutes from '@/modules/admin/admin.routes'
+import adminRoutes from '@/router/admin.routes.js'
 import orderRoutes from '@/modules/order/routes/index.js'
 import reportsRoutes from '@/modules/reports/routes/index.js'
 
