@@ -1,6 +1,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import socket from '@/socket'
 import { v4 as uuidv4 } from 'uuid'
+import store from '@/store'
 
 export const useMassOrderUpdate = () => {
   const initialProcessingState = {
@@ -53,6 +54,11 @@ export const useMassOrderUpdate = () => {
     socket.emit('mass_update_orders:cancel_orders_processing')
   }
 
+  function errorHandler(e) {
+    store.commit('setError', e)
+    console.log(e)
+  }
+
   watch(ordersSettings, () => {
     ordersCount.value = 0
     processingState.value = initialProcessingState
@@ -61,11 +67,13 @@ export const useMassOrderUpdate = () => {
   onMounted(() => {
     socket.on('mass_update_orders:orders_count', setOrdersCount)
     socket.on('mass_update_orders:order_processing_state', setProcessingState)
+    socket.on('mass_update_orders:processing_error', errorHandler)
   })
 
   onUnmounted(() => {
     socket.off('mass_update_orders:orders_count', setOrdersCount)
     socket.off('mass_update_orders:order_processing_state', setProcessingState)
+    socket.off('mass_update_orders:processing_error', errorHandler)
     clearInterval(updatingInterval)
   })
 
