@@ -526,7 +526,8 @@ export default {
         width: this.getOrderWidth(order) + 'px',
         left: this.getLeftShiftForOrder(order) + 'px',
         top: this.getTopShiftForOrder(order) + 'px',
-        opacity: order.isDisabled ? 0.5 : 1,
+        opacity: order.isDisabled ? 0.5 : 0.8,
+        'z-index': order.itemType === 'order' ? 15 : 3,
       }
     },
 
