@@ -43,7 +43,7 @@
         {{ item.note }}
       </span>
     </template>
-    <template #footer.prepend>
+    <template #[`footer.prepend`]>
       <PaymentInvoiceListAnalitics :data="analiticsData" />
     </template>
   </v-data-table>
