@@ -13,7 +13,17 @@
       'items-per-page-options': [50, 100, 300],
     }"
     @dblclick:row="dblClickRow"
-  />
+  >
+    <template #[`item.createdAt`]="{ item }">
+      {{ new Date(item.createdAt).toLocaleString() }}
+    </template>
+    <template #[`item.startDate`]="{ item }">
+      {{ new Date(item.startDate).toLocaleDateString() }}
+    </template>
+    <template #[`item.endDate`]="{ item }">
+      {{ item.endDate ? new Date(item.endDate).toLocaleDateString() : null }}
+    </template>
+  </v-data-table>
 </template>
 <script>
 import tableHeaders from './listDataTableHeaders'
