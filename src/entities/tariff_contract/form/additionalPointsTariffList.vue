@@ -47,7 +47,7 @@ export default {
     const headers = [
       { text: 'Тип ТС', value: 'truckKinds', sortable: false },
       { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
-      { text: 'Тип рейса', value: 'orderType', sortable: true },
+      { text: 'Тип рейса', value: 'orderTypes', sortable: true },
       { text: 'Кол-во точек', value: 'includedPoints', sortable: true },
       { text: 'Тариф', value: 'price', sortable: true, align: 'right' },
       { value: 'actions', align: 'right', sortable: false },
@@ -74,7 +74,9 @@ export default {
     const preparedItems = computed(() => {
       return props.items.map((i) => ({
         ...i,
-        orderType: i.orderType === 'region' ? 'Регион' : 'Город',
+        orderTypes: i.orderTypes
+          .map((j) => (j === 'region' ? 'Регион' : 'Город'))
+          .join(', '),
       }))
     })
 

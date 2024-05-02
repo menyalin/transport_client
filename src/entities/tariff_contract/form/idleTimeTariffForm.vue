@@ -19,10 +19,11 @@
         </div>
         <div class="input-fields-row">
           <v-select
+            multiple
             ref="focusableNodeRef"
             label="Тип рейса"
             :items="orderTypeItems"
-            v-model="form.orderType"
+            v-model="form.orderTypes"
             :style="{ width: '130px' }"
           />
           <v-text-field
@@ -67,14 +68,14 @@
 <script>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, numeric } from '@vuelidate/validators'
+import { required, numeric, minLength } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
 
 /*
   truckKinds: TRUCK_KINDS_ENUM[]
   liftCapacities: number[]
-  orderType: OrderType
+  orderTypes: OrderType[]
   includeHours: number
   roundByHours: RoundByHours
   tariffBy: TariffBy
@@ -106,7 +107,7 @@ export default {
     const defaultFormState = () => ({
       truckKinds: [],
       liftCapacities: [],
-      orderType: null,
+      orderTypes: [],
       includeHours: null,
       roundByHours: null,
       tariffBy: null,
@@ -119,7 +120,7 @@ export default {
 
     const rules = {
       ...commonRules,
-      orderType: { required },
+      orderTypes: { required, minLength: minLength(1) },
       includeHours: { required, numeric },
       roundByHours: { required },
       tariffBy: { required },
@@ -150,7 +151,7 @@ export default {
 
     function submitFormHandler() {
       ctx.emit('add', form.value)
-      form.value.orderType = null
+      form.value.orderTypes = []
       form.value.includeHours = null
       form.value.roundByHours = null
       form.value.tariffBy = null
