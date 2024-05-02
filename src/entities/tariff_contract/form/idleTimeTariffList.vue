@@ -34,7 +34,7 @@ import { moneyFormatter } from '@/shared/utils'
 /*
   truckKinds: TRUCK_KINDS_ENUM[]
   liftCapacities: number[]
-  orderType: OrderType
+  orderTypes: OrderType[]
   includeHours: number
   roundByHours: RoundByHours
   tariffBy: TariffBy
@@ -49,7 +49,7 @@ export default {
     const headers = [
       { text: 'Тип ТС', value: 'truckKinds', sortable: false },
       { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
-      { text: 'Тип рейса', value: 'orderType', sortable: true },
+      { text: 'Тип рейса', value: 'orderTypes', sortable: true },
       { text: 'Включено часов', value: 'includeHours', sortable: true },
       { text: 'Округлять до', value: 'roundByHours', sortable: true },
       { text: 'Тариф за', value: 'tariffBy', sortable: true },
@@ -78,7 +78,9 @@ export default {
     const preparedItems = computed(() => {
       return props.items.map((i) => ({
         ...i,
-        orderType: i.orderType === 'region' ? 'Регион' : 'Город',
+        orderTypes: i.orderTypes
+          .map((j) => (j === 'region' ? 'Регион' : 'Город'))
+          .join(', '),
         roundByHours:
           store.getters.roundingWaitingByHoursMap.get(i.roundByHours) ?? '-',
         tariffBy: store.getters.waitingTariffByItemsMap.get(i.tariffBy) ?? '-',

@@ -19,10 +19,11 @@
         </div>
         <div class="input-fields-row">
           <v-select
+            multiple
             ref="focusableNodeRef"
             label="Тип рейса"
             :items="orderTypeItems"
-            v-model="form.orderType"
+            v-model="form.orderTypes"
           />
           <v-text-field
             label="Кол-во точек включенных базовый тариф"
@@ -57,7 +58,7 @@
 <script>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, numeric } from '@vuelidate/validators'
+import { required, numeric, minLength } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
 
@@ -84,7 +85,7 @@ export default {
     const defaultFormState = () => ({
       truckKinds: [],
       liftCapacities: [],
-      orderType: null,
+      orderTypes: [],
       includedPoints: null,
       price: null,
     })
@@ -103,7 +104,7 @@ export default {
 
     const rules = {
       ...commonRules,
-      orderType: { required },
+      orderTypes: { required, minLength: minLength(1) },
       includedPoints: { required, numeric },
       price: { required, numeric },
     }
@@ -131,7 +132,7 @@ export default {
 
     function submitFormHandler() {
       ctx.emit('add', form.value)
-      form.value.orderType = null
+      form.value.orderTypes = []
       form.value.includedPoints = null
       form.value.price = null
       v$.value.$reset()
