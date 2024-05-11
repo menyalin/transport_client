@@ -18,6 +18,16 @@
           />
         </div>
         <div class="input-fields-row">
+          <v-text-field
+            label="Кол-во точек, включенных в тариф"
+            v-model.number="v$.includedPoints.$model"
+          />
+          <v-text-field
+            label="Тариф за доп.точку"
+            v-model.number="v$.pointPrice.$model"
+          />
+        </div>
+        <div class="input-fields-row">
           <v-autocomplete
             label="Зона погрузки"
             :items="zoneItems"
@@ -72,6 +82,8 @@ const defaultFormState = () => ({
   loadingZone: null,
   unloadingZones: [],
   price: null,
+  includedPoints: 2,
+  pointPrice: 0,
 })
 
 export default {
@@ -101,6 +113,8 @@ export default {
       loadingZone: { required },
       unloadingZones: { required },
       price: { required, numeric },
+      includedPoints: { required, numeric },
+      pointPrice: { required, numeric },
     }
     const v$ = useVuelidate(rules, form, { $stopPropagation: true })
 

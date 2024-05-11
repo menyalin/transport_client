@@ -38,6 +38,12 @@
       <div>Зоны погрузки: {{ loadingZones }}</div>
       <div>Зоны разгрузки: {{ unloadingZones }}</div>
       {{ item.routeStats }}
+
+      <br />
+      prices:
+      <div v-for="(price, idx) of item.prePrices" :key="idx" class="ma-1">
+        {{ price }}
+      </div>
     </div>
   </div>
 </template>
