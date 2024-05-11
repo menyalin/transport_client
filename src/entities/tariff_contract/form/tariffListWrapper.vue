@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper ma-2">
     <h5>{{ title }}</h5>
-    <v-btn color="primary" @click="addHandler" small>Добавить</v-btn>
+    <v-btn color="primary" @click="addHandler" small :disabled="disabled">
+      Добавить
+    </v-btn>
     <component
       :is="tariffListComponent"
       :items="itemsWithIdx"
@@ -34,6 +36,10 @@ export default {
     items: { type: Array, default: () => [] },
     formTitle: String,
     title: String,
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     tariffFormComponent: {
       type: [Object, Function],
       required: true,

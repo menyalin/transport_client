@@ -9,6 +9,9 @@
     <template #[`item.price`]="{ item }">
       {{ formatPrice(item.price) }}
     </template>
+    <template #[`item.pointPrice`]="{ item }">
+      {{ formatPrice(item.pointPrice) }}
+    </template>
     <template #[`item.truckKinds`]="{ item }">
       {{ formatTruckKinds(item.truckKinds) }}
     </template>
@@ -39,9 +42,22 @@ export default {
     const headers = [
       { text: 'Тип ТС', value: 'truckKinds', sortable: false },
       { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
+      {
+        text: 'Включено точек',
+        value: 'includedPoints',
+        align: 'right',
+        sortable: true,
+      },
+      {
+        text: 'Стоимость доп.точки',
+        value: 'pointPrice',
+        align: 'right',
+        sortable: true,
+      },
       { text: 'Зона погрузки', value: 'loadingZone', sortable: true },
       { text: 'Зоны разгрузки', value: 'unloadingZones', sortable: true },
       { text: 'Тариф', value: 'price', align: 'right', sortable: true },
+
       { value: 'actions', align: 'right', sortable: false },
     ]
     function formatPrice(price) {

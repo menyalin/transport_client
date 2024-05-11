@@ -58,6 +58,7 @@
       title="Дополнительные точки"
       formTitle="Тариф за дополнительную точку"
       v-model="state.additionalPointsTariffs"
+      disabled
       :tariffListComponent="additionalPointsTariffList"
       :tariffFormComponent="additionalPointsTariffForm"
     />
