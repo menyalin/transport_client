@@ -18,6 +18,16 @@
           />
         </div>
         <div class="input-fields-row">
+          <v-text-field
+            label="Кол-во точек, включенных в тариф"
+            v-model.number="v$.includedPoints.$model"
+          />
+          <v-text-field
+            label="Тариф за доп.точку"
+            v-model.number="v$.pointPrice.$model"
+          />
+        </div>
+        <div class="input-fields-row">
           <v-autocomplete
             label="Зона погрузки"
             :items="zoneItems"
@@ -80,7 +90,7 @@
 <script>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, minLength } from '@vuelidate/validators'
+import { required, minLength, numeric } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
 
@@ -89,6 +99,8 @@ const defaultFormState = () => ({
   liftCapacities: [],
   loadingZone: null,
   zones: [{ distance: null, price: null }],
+  includedPoints: 2,
+  pointPrice: 0,
 })
 
 export default {
@@ -117,6 +129,8 @@ export default {
       ...commonRules,
       loadingZone: { required },
       zones: { required, minLength: minLength(1) },
+      includedPoints: { required, numeric },
+      pointPrice: { required, numeric },
     }
     const v$ = useVuelidate(rules, form, { $stopPropagation: true })
 
@@ -215,3 +229,4 @@ export default {
   align-items: center;
 }
 </style>
+import { numeric } from 'vuelidate/lib/validators'

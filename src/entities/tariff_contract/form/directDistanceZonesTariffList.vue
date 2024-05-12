@@ -46,6 +46,18 @@ export default {
       { text: 'Тип ТС', value: 'truckKinds', sortable: false },
       { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
       { text: 'Зона погрузки', value: 'loadingZone', sortable: true },
+      {
+        text: 'Включено точек',
+        value: 'includedPoints',
+        align: 'right',
+        sortable: true,
+      },
+      {
+        text: 'Стоимость доп.точки',
+        value: 'pointPrice',
+        align: 'right',
+        sortable: true,
+      },
       { text: 'Зоны', value: 'zones', sortable: false },
       { value: 'actions', align: 'right', sortable: false },
     ]
