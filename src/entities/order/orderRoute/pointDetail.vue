@@ -24,7 +24,7 @@
         />
         <v-checkbox
           v-model="tmpPoint.useInterval"
-          label="Указать временнное окно"
+          label="Временнное окно"
           hide-details
           dense
           color="primary"
@@ -32,7 +32,10 @@
           @change="setField($event, 'useInterval')"
         />
         <v-checkbox
-          v-if="tmpPoint.isReturn || (showReturnBtn && tmpPoint.type==='unloading')"
+          v-if="
+            tmpPoint.isReturn ||
+            (showReturnBtn && tmpPoint.type === 'unloading')
+          "
           v-model="tmpPoint.isReturn"
           label="Возврат"
           :readonly="!showReturnBtn || tmpPoint.isPltReturn"
