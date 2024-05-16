@@ -32,8 +32,8 @@
           />
           <v-select
             label="Округлять до"
-            :items="roundByHoursItems"
-            v-model="form.roundByHours"
+            :items="roundingIntervalItems"
+            v-model="form.roundingInterval"
             :style="{ width: '150px' }"
           />
           <v-select
@@ -72,16 +72,7 @@ import { required, numeric, minLength } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
 
-/*
-  truckKinds: TRUCK_KINDS_ENUM[]
-  liftCapacities: number[]
-  orderTypes: OrderType[]
-  includeHours: number
-  roundByHours: RoundByHours
-  tariffBy: TariffBy
-  price: number
 
-*/
 
 export default {
   name: 'AdditionalPointsTariffForm',
@@ -101,7 +92,7 @@ export default {
       orderTypeItems,
       commonRules,
       tariffByItems,
-      roundByHoursItems,
+      roundingIntervalItems,
     } = useFormHelpers()
 
     const defaultFormState = () => ({
@@ -109,7 +100,7 @@ export default {
       liftCapacities: [],
       orderTypes: [],
       includeHours: null,
-      roundByHours: null,
+      roundingInterval: null,
       tariffBy: null,
       price: null,
     })
@@ -122,7 +113,7 @@ export default {
       ...commonRules,
       orderTypes: { required, minLength: minLength(1) },
       includeHours: { required, numeric },
-      roundByHours: { required },
+      roundingInterval: { required },
       tariffBy: { required },
       price: { required, numeric },
     }
@@ -153,7 +144,7 @@ export default {
       ctx.emit('add', form.value)
       form.value.orderTypes = []
       form.value.includeHours = null
-      form.value.roundByHours = null
+      form.value.roundingInterval = null
       form.value.tariffBy = null
       form.value.price = null
       v$.value.$reset()
@@ -181,7 +172,7 @@ export default {
       v$,
       focusableNodeRef,
       tariffByItems,
-      roundByHoursItems,
+      roundingIntervalItems,
     }
   },
 }

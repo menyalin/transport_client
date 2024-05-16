@@ -31,16 +31,6 @@ import { computed } from 'vue'
 import store from '@/store'
 import { moneyFormatter } from '@/shared/utils'
 
-/*
-  truckKinds: TRUCK_KINDS_ENUM[]
-  liftCapacities: number[]
-  orderTypes: OrderType[]
-  includeHours: number
-  roundByHours: RoundByHours
-  tariffBy: TariffBy
-  price: number
-*/
-
 export default {
   props: {
     items: Array,
@@ -51,7 +41,7 @@ export default {
       { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
       { text: 'Тип рейса', value: 'orderTypes', sortable: true },
       { text: 'Включено часов', value: 'includeHours', sortable: true },
-      { text: 'Округлять до', value: 'roundByHours', sortable: true },
+      { text: 'Округлять до', value: 'roundingInterval', sortable: true },
       { text: 'Тариф за', value: 'tariffBy', sortable: true },
       { text: 'Тариф', value: 'price', sortable: true, align: 'right' },
       { value: 'actions', align: 'right', sortable: false },
@@ -81,8 +71,9 @@ export default {
         orderTypes: i.orderTypes
           .map((j) => (j === 'region' ? 'Регион' : 'Город'))
           .join(', '),
-        roundByHours:
-          store.getters.roundingWaitingByHoursMap.get(i.roundByHours) ?? '-',
+        roundingInterval:
+          store.getters.idleTimeRoundingIntervalsMap.get(i.roundingInterval) ??
+          '-',
         tariffBy: store.getters.waitingTariffByItemsMap.get(i.tariffBy) ?? '-',
       }))
     })
