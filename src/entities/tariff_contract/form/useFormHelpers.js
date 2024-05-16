@@ -13,7 +13,9 @@ export const useFormHelpers = () => {
   const liftCapacityItems = computed(() => store.getters.liftCapacityTypes)
   const orderTypeItems = computed(() => store.getters.orderAnalyticTypes)
   const tariffByItems = computed(() => store.getters.waitingTariffByItems)
-  const roundByHoursItems = computed(() => store.getters.roundingWaitingByHours)
+  const roundingIntervalItems = computed(
+    () => store.getters.idleTimeRoundingIntervals
+  )
 
   return {
     focusableNodeRef,
@@ -22,7 +24,7 @@ export const useFormHelpers = () => {
     orderTypeItems,
     commonRules,
     tariffByItems,
-    roundByHoursItems,
+    roundingIntervalItems,
     zoneItems,
   }
 }
