@@ -8,7 +8,7 @@ export const useFineList = () => {
 
   const list = ref([])
   const count = ref(0)
-  const analyticData = ref({})
+  const serverAnalyticData = ref({})
 
   const fineStatuses = [
     { text: 'Не оплачен', value: 'notPaid' },
@@ -90,12 +90,34 @@ export const useFineList = () => {
       loading.value = false
       list.value = data.items || []
       count.value = data.count || 0
-      analyticData.value = data.analyticData || 0
+      serverAnalyticData.value = data.analyticData || {}
     } catch (e) {
       loading.value = false
       store.commit('setError', e.message)
     }
   }
+
+  const analyticData = computed(() => {
+    if (selected.value.length === 0) return serverAnalyticData.value
+    return selected.value.reduce(
+      (res, item) => {
+        return {
+          totalSum: res.totalSum + item.totalSum,
+          totalSumWithDiscount: res.totalSumWithDiscount + item.discountedSum,
+          totalPayed: res.totalPayed + (item.paymentSum || 0),
+          needWithheld: res.needWithheld + (item.withheldSum || 0),
+          isWithheld: res.isWithheld + (item.isWithheld ? item.withheldSum : 0),
+        }
+      },
+      {
+        totalSum: 0,
+        totalSumWithDiscount: 0,
+        totalPayed: 0,
+        needWithheld: 0,
+        isWithheld: 0,
+      }
+    )
+  })
 
   const refetch = () => {
     getData(queryParams.value)
