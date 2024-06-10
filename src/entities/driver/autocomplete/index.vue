@@ -22,8 +22,7 @@
   />
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import DriverService from '../../services/driver.service'
+import { DriverService } from '@/shared/services'
 
 const _getDriverNameString = (driver) => {
   return driver?.surname + ' ' + driver?.name
@@ -59,9 +58,7 @@ export default {
       timeout: null,
     }
   },
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-  },
+
   watch: {
     async search(val, oldVal) {
       if (!val || !val?.trim() || oldVal === val) {
@@ -88,7 +85,10 @@ export default {
   },
   methods: {
     async getItems(str) {
-      const res = await DriverService.search(str, this.directoriesProfile)
+      const res = await DriverService.search(
+        str,
+        this.$store.getters.directoriesProfile
+      )
       return res.map((item) => ({
         ...item,
         text: _getDriverNameString(item),

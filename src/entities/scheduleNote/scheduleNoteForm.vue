@@ -2,8 +2,8 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('downtime:write') || isInvalidForm
+      :disabledSubmit="
+        !$store.getters.hasPermission('scheduleNote:write') || isInvalidForm
       "
       @cancel="cancel"
       @submit="submit"
@@ -16,62 +16,37 @@
       v-model="$v.form.truck.$model"
       label="Грузовик"
       :items="trucks"
-      auto-select-first
       outlined
+      dense
+    />
+    <v-text-field
+      v-model.trim="$v.form.text.$model"
+      outlined
+      label="Текст"
       dense
     />
     <v-select
-      v-model="$v.form.type.$model"
-      label="Тип простоя"
-      :items="downtimeTypes"
+      v-model="form.priority"
+      label="Приоритет"
+      :items="priorityItems"
       outlined
       dense
     />
-    <v-text-field
-      v-model.trim="$v.form.title.$model"
-      outlined
-      label="Заголовок"
+
+    <DateTimeInput
+      v-model="$v.form.startPositionDate.$model"
+      label="Дата начала"
       dense
-    />
-    <app-partner-autocomplete
-      v-if="form.type === 'repair'"
-      v-model="form.partner"
-      label="Партнер"
-      showHint
-      onlyServices
       outlined
+      type="datetime-local"
+      :style="{ maxWidth: '300px' }"
     />
-    <app-address-autocomplete
-      v-if="form.type === 'repair'"
-      v-model="form.address"
-      pointType="service"
-      label="Адрес"
-      outlined
-      dense
-    />
-    <div class="row-input my-4">
-      <app-date-time-input
-        v-model="$v.form.startPositionDate.$model"
-        label="Дата начала"
-      />
-      <app-date-time-input
-        v-model="$v.form.endPositionDate.$model"
-        label="Дата завешения"
-        :minDate="form.startPositionDate"
-      />
-    </div>
-    <v-text-field
-      v-model="$v.form.note.$model"
-      label="Примечание"
-      outlined
-      hide-details
-      dense
-    />
-    <v-checkbox
-      v-model="form.inOrderTime"
-      label="Разрешить пересечение с рейсом"
-    />
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+    <v-btn
+      v-if="displayDeleteBtn"
+      class="mt-5"
+      color="error"
+      @click="$emit('delete')"
+    >
       <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
@@ -80,37 +55,40 @@
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
-import { ButtonsPanel } from '@/shared/ui'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+
+import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 
 export default {
-  name: 'DowntimeForm',
+  name: 'ScheduleNoteForm',
   components: {
     ButtonsPanel,
-    AppDateTimeInput,
-    AppPartnerAutocomplete,
-    AppAddressAutocomplete,
+    DateTimeInput,
   },
   props: {
-    downtime: { type: Object },
-    displayDeleteBtn: { type: Boolean, default: false },
-    openInModal: { type: Boolean, default: false },
+    scheduleNote: {
+      type: Object,
+    },
+    displayDeleteBtn: {
+      type: Boolean,
+      default: false,
+    },
+    openInModal: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      priorityItems: [
+        { value: 'low', text: 'Обычный' },
+        { value: 'middle', text: 'Средний' },
+        { value: 'high', text: 'Высокий' },
+      ],
       form: {
-        title: null,
+        text: null,
         truck: null,
-        type: null,
-        note: null,
-        partner: null,
-        address: null,
         startPositionDate: null,
-        endPositionDate: null,
-        inOrderTime: false,
+        priority: 'low',
       },
     }
   },
@@ -136,12 +114,9 @@ export default {
         .filter((item) => item.type === 'truck')
         .map((item) => ({ value: item._id, text: item.regNum }))
     },
-    downtimeTypes() {
-      return this.$store.getters.downtimeTypes
-    },
   },
   watch: {
-    downtime: {
+    scheduleNote: {
       immediate: true,
       handler: function (val) {
         if (val) this.setFormFields(val)
@@ -152,15 +127,9 @@ export default {
   validations() {
     return {
       form: {
-        title: { required },
+        text: { required },
         truck: { required },
-        type: { required },
-        note: {},
         startPositionDate: { required },
-        endPositionDate: {
-          required,
-          isLaterThan: isLaterThan(this.form.startPositionDate),
-        },
       },
     }
   },

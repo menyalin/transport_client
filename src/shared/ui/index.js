@@ -9,6 +9,8 @@ import DownloadDocTemplateMenu from './downloadDocTemplateMenu.vue'
 import BorderedBlock from './borderedBlock.vue'
 import XlsxFileInput from './xlsxFileInput'
 import CardActionButtons from './cardActionButtons.vue'
+import DateTimeInput from './dateTimeInput.vue'
+import AdditionalNotifications from './additionalNotifications'
 
 export {
   AppTableColumnSetting,
@@ -22,4 +24,6 @@ export {
   BorderedBlock,
   XlsxFileInput,
   CardActionButtons,
+  DateTimeInput,
+  AdditionalNotifications,
 }

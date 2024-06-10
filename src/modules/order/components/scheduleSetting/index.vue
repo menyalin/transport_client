@@ -3,7 +3,7 @@
     <v-btn icon small :disabled="isMinDate" @click="incDate(-1)">
       <v-icon>mdi-arrow-left-bold</v-icon>
     </v-btn>
-    <app-date-time-input
+    <DateTimeInput
       :value="date"
       hideDetails
       dense
@@ -19,13 +19,13 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import { PermissionService } from '@/shared/services'
+import { DateTimeInput } from '@/shared/ui'
 
 export default {
   name: 'ScheduleSettings',
   components: {
-    AppDateTimeInput,
+    DateTimeInput,
   },
   computed: {
     date() {
@@ -58,5 +58,6 @@ export default {
   flex-direction: row;
   align-items: center;
   margin-left: 20px;
+  gap: 12px;
 }
 </style>

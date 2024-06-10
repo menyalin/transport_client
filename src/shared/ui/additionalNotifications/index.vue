@@ -56,7 +56,7 @@
               @blur="$v.editableItem.title.$touch()"
             />
             <div class="dates-row">
-              <app-date-time-input
+              <DateTimeInput
                 v-model="$v.editableItem.expDate.$model"
                 label="Действительно до"
                 hidePrependIcon
@@ -98,12 +98,11 @@
 </template>
 <script>
 import { required, numeric } from 'vuelidate/lib/validators'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-
+import { DateTimeInput } from '@/shared/ui'
 export default {
   name: 'AdditionalNotifications',
   components: {
-    AppDateTimeInput,
+    DateTimeInput,
   },
   model: {
     prop: 'items',
