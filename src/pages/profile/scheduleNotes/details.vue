@@ -12,7 +12,7 @@
           {{ error.message }}
         </v-alert>
         <app-load-spinner v-if="loading" />
-        <app-schedule-note-form
+        <ScheduleNoteForm
           v-else
           :scheduleNote="item"
           :displayDeleteBtn="
@@ -27,15 +27,15 @@
   </v-container>
 </template>
 <script>
-import AppScheduleNoteForm from '@/modules/profile/components/scheduleNoteForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { ScheduleNoteService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { ScheduleNoteForm } from '@/entities/scheduleNote'
 
 export default {
   name: 'ScheduleNoteDetails',
   components: {
-    AppScheduleNoteForm,
+    ScheduleNoteForm,
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],

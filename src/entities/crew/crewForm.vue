@@ -11,12 +11,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
-    <div v-else class="ma-3 text-caption">
-      Профиль настроек: {{ directoriesProfileName }}
-    </div>
+
     <v-select
       v-model.trim="$v.form.tkName.$model"
       :items="tkNames"
@@ -40,23 +35,32 @@
       :disabled="!form.tkName || !!crewId"
     />
     <div class="row-input">
-      <app-date-time-input
+      <DateTimeInput
         v-model="$v.form.startDate.$model"
         label="Дата начала"
         :errorMessages="startDateError"
         :disabled="!form.driver || !!crewId"
         :minDate="minValueForStartDate"
         @blur="$v.form.startDate.$touch()"
+        dense
+        hideDetails
+        outlined
+        type="datetime-local"
+        :style="{ maxWidth: '300px' }"
       />
-      <app-date-time-input
+      <DateTimeInput
         v-model="$v.form.endDate.$model"
         :disabled="!form.startDate || (!!form.endDate && !crewEditable)"
         label="Дата завершения"
         :errorMessages="endDateError"
         :minDate="form.startDate"
         @blur="$v.form.endDate.$touch()"
+        dense
+        hideDetails
+        outlined
+        type="datetime-local"
+        :style="{ maxWidth: '300px' }"
       />
-      <div v-if="crew">crewEditable: {{ crewEditable }}</div>
     </div>
 
     <app-crew-message
@@ -107,24 +111,23 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 
 import { CrewService } from '@/shared/services'
 
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 
 import AppTransportTable from './transportTable.vue'
 import AppCrewMessage from './crewMessage'
-import dayjs from 'dayjs'
 
 export default {
   name: 'CrewForm',
   components: {
     ButtonsPanel,
-    AppDateTimeInput,
+    DateTimeInput,
     AppTransportTable,
     AppCrewMessage,
   },

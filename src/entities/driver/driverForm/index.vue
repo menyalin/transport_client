@@ -1,23 +1,12 @@
-<!-- eslint-disable vue/html-indent -->
 <template>
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('driver:write') ||
-        isInvalidForm ||
-        loading ||
-        !formChanged
-      "
+      :disabled-submit="disabledSubmitForm"
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
-    <div v-else class="ma-3 text-caption">
-      Профиль настроек: {{ directoriesProfileName }}
-    </div>
+
     <div>
       <div class="row-wrapper tk-name">
         <v-select
@@ -30,6 +19,7 @@
           outlined
         />
       </div>
+
       <div class="row-wrapper driver-name">
         <v-text-field
           v-model.trim="$v.form.surname.$model"
@@ -52,7 +42,7 @@
           dense
           :error-messages="nameErrors"
         />
-        <app-date-time-input
+        <DateTimeInput
           v-model="$v.form.birthday.$model"
           label="Дата рождения"
           hide-time-input
@@ -71,7 +61,7 @@
               dense
               class="pb-3"
             />
-            <app-date-time-input
+            <DateTimeInput
               v-model="$v.form.passportDate.$model"
               label="Дата выдачи паспорта"
               hide-time-input
@@ -101,7 +91,7 @@
             hide-details
             dense
           />
-          <app-date-time-input
+          <DateTimeInput
             v-model="$v.form.licenseDate.$model"
             label="Дата выдачи ВУ"
             hide-time-input
@@ -110,13 +100,20 @@
         </div>
         <div class="driver-cards">
           <v-text-field
+            v-model.trim="$v.form.inn.$model"
+            outlined
+            hide-details
+            label="ИНН"
+            dense
+          />
+          <v-text-field
             v-model.trim="$v.form.driverCardId.$model"
             outlined
             hide-details
             label="Карта водителя"
             dense
           />
-          <app-date-time-input
+          <DateTimeInput
             v-model="$v.form.driverCardPeriod.$model"
             label="КВ действительна до"
             hide-time-input
@@ -157,13 +154,13 @@
             dense
           />
         </div>
-        <app-date-time-input
+        <DateTimeInput
           v-model="$v.form.employmentDate.$model"
           label="Дата приема на работу"
           hide-time-input
         />
 
-        <app-date-time-input
+        <DateTimeInput
           v-model="$v.form.dismissalDate.$model"
           label="Дата увольнения"
           hide-time-input
@@ -176,7 +173,7 @@
           hide-details
         />
       </div>
-      <app-additional-notifications v-model="additionalNotifications" />
+      <AdditionalNotifications v-model="additionalNotifications" />
       <v-checkbox v-model="form.hasScans" label="Есть сканы документов" dense />
       <v-checkbox
         v-model="form.hideInFines"
@@ -197,19 +194,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-
 import AppMedBook from './medBook.vue'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
-import { ButtonsPanel } from '@/shared/ui'
-import AppAdditionalNotifications from '@/modules/common/components/additionalNotifications'
+import {
+  ButtonsPanel,
+  DateTimeInput,
+  AdditionalNotifications,
+} from '@/shared/ui'
 
 export default {
   name: 'DriverForm',
   components: {
     ButtonsPanel,
-    AppDateTimeInput,
+    DateTimeInput,
     AppMedBook,
-    AppAdditionalNotifications,
+    AdditionalNotifications,
   },
   props: {
     driver: {
@@ -250,21 +248,21 @@ export default {
         isMechanic: false,
         hideInFines: false,
         isCalcSalary: true,
+        inn: null,
       },
     }
   },
   computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile', 'tkNames']),
-    isInvalidForm() {
-      if (!this.directoriesProfile) return true
-      return this.$v.$invalid
+    ...mapGetters(['tkNames']),
+    disabledSubmitForm() {
+      return (
+        !this.$store.getters.hasPermission('driver:write') ||
+        this.$v.$invalid ||
+        !this.formChanged ||
+        this.loading
+      )
     },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
-    },
+
     nameErrors() {
       const errors = []
       if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
@@ -284,7 +282,7 @@ export default {
       return {
         ...this.form,
         medBook: this.medBook,
-        company: this.directoriesProfile,
+        company: this.$store.getters.directoriesProfile,
         additionalNotifications: this.additionalNotifications,
       }
     },
@@ -318,6 +316,7 @@ export default {
       dismissalDate: {},
       recommender: {},
       birthday: {},
+      inn: {},
     },
   },
   mounted() {

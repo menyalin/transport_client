@@ -13,7 +13,7 @@
           label="Номер"
           @change="change($event, 'number')"
         />
-        <app-date-time-input
+        <DateTimeInput
           label="Дата выдачи"
           :value="params.issueDate"
           hide-prepend-icon
@@ -21,7 +21,7 @@
           @change="change($event, 'issueDate')"
         />
         <div class="date-input-row">
-          <app-date-time-input
+          <DateTimeInput
             label="Аттестация до"
             :value="params.certifiedBeforeDate"
             hide-prepend-icon
@@ -37,7 +37,7 @@
           </v-chip>
         </div>
         <div class="date-input-row">
-          <app-date-time-input
+          <DateTimeInput
             label="Ежегодная комиссия от"
             :value="params.annualCommisionDate"
             hide-prepend-icon
@@ -67,13 +67,13 @@
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import AppBlockTitle from './blockTitle.vue'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import { DateTimeInput } from '@/shared/ui'
 
 export default {
   name: 'MedBook',
   components: {
     AppBlockTitle,
-    AppDateTimeInput,
+    DateTimeInput,
   },
   model: {
     prop: 'item',

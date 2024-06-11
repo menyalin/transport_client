@@ -69,17 +69,21 @@
               <div v-if="fixedStartDateInRow">
                 {{ new Date(newItem.startDate).toLocaleString() }}
               </div>
-              <app-date-time-input
+              <DateTimeInput
                 v-else
                 v-model="$v.newItem.startDate.$model"
                 class="my-2"
                 label="Дата начала"
                 hideDetails
                 :minDate="minDateValue"
+                type="datetime-local"
+                :dense="true"
+                :outlined="true"
+                hide-details
               />
             </td>
             <td>
-              <app-date-time-input
+              <DateTimeInput
                 v-if="newItem.startDate"
                 v-model="newItem.endDate"
                 class="my-2"
@@ -87,6 +91,10 @@
                 hideDetails
                 :errorMessages="endDateErrors"
                 :minDate="newItem.startDate"
+                type="datetime-local"
+                :dense="true"
+                :outlined="true"
+                hide-details
               />
             </td>
             <td class="truck-col">
@@ -178,16 +186,16 @@
 <script>
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
 import { CrewService } from '@/shared/services'
 import AppCrewMessage from './crewMessage.vue'
 import { required } from 'vuelidate/lib/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
+import { DateTimeInput } from '@/shared/ui'
 
 export default {
   name: 'TransportTable',
   components: {
-    AppDateTimeInput,
+    DateTimeInput,
     AppCrewMessage,
   },
   props: {

@@ -11,12 +11,15 @@
           hide-details
           @change="change($event, 'osagoNum')"
         />
-        <app-date-time-input
+        <DateTimeInput
           label="Дата окончания"
           :value="params.osagoExpDate"
           hide-prepend-icon
           hide-time-input
           @change="change($event, 'osagoExpDate')"
+          outlined
+          dense
+          hide-details
         />
         <v-text-field
           label="Страховая компания"
@@ -35,12 +38,15 @@
         hide-details
         @change="change($event, 'kaskoNum')"
       />
-      <app-date-time-input
+      <DateTimeInput
         label="Дата окончания"
         :value="params.kaskoExpDate"
         hide-prepend-icon
         hide-time-input
         @change="change($event, 'kaskoExpDate')"
+        outlined
+        dense
+        hide-details
       />
       <v-text-field
         label="Страховая компания"
@@ -63,12 +69,13 @@
 </template>
 <script>
 import AppBlockTitle from './blockTitle.vue'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import { DateTimeInput } from '@/shared/ui'
+
 export default {
   name: 'Insurance',
   components: {
     AppBlockTitle,
-    AppDateTimeInput,
+    DateTimeInput,
   },
   model: {
     prop: 'item',

@@ -12,12 +12,15 @@
         hide-details
         @change="change($event, 'dayPermitNumber')"
       />
-      <app-date-time-input
+      <DateTimeInput
         label="Действует до"
         :value="params.dayPermitExpDate"
         hide-prepend-icon
         hide-time-input
         @change="change($event, 'dayPermitExpDate')"
+        outlined
+        dense
+        hide-details
       />
       <v-text-field
         label="Зона действия"
@@ -36,12 +39,15 @@
         hide-details
         @change="change($event, 'nightPermitNumber')"
       />
-      <app-date-time-input
+      <DateTimeInput
         label="Действует до"
         :value="params.nightPermitExpDate"
         hide-prepend-icon
         hide-time-input
         @change="change($event, 'nightPermitExpDate')"
+        outlined
+        dense
+        hide-details
       />
       <v-text-field
         label="Зона действия"
@@ -56,12 +62,12 @@
 </template>
 <script>
 import AppBlockTitle from './blockTitle.vue'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import { DateTimeInput } from '@/shared/ui'
 export default {
   name: 'Permits',
   components: {
     AppBlockTitle,
-    AppDateTimeInput,
+    DateTimeInput,
   },
   model: {
     prop: 'item',

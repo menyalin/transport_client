@@ -11,12 +11,15 @@
           hide-details
           @change="change($event, 'platonNumber')"
         />
-        <app-date-time-input
+        <DateTimeInput
           label="Дата замены"
           :value="params.platonDate"
           hide-prepend-icon
           hide-time-input
           @change="change($event, 'platonDate')"
+          outlined
+          dense
+          hide-details
         />
       </div>
       <div id="tachograph">
@@ -28,12 +31,15 @@
           hide-details
           @change="change($event, 'tachographNumber')"
         />
-        <app-date-time-input
+        <DateTimeInput
           label="Дата сделующей калибровки"
           :value="params.tachographExpDate"
           hide-prepend-icon
           hide-time-input
           @change="change($event, 'tachographExpDate')"
+          outlined
+          dense
+          hide-details
         />
         <v-text-field
           label="Примечание (тахограф)"
@@ -54,12 +60,15 @@
           hide-details
           @change="change($event, 'transponderNumber')"
         />
-        <app-date-time-input
+        <DateTimeInput
           label="Дата выдачи"
           :value="params.transponderDate"
           hide-prepend-icon
           hide-time-input
           @change="change($event, 'transponderDate')"
+          outlined
+          dense
+          hide-details
         />
       </div>
       <div id="fuel-card">
@@ -71,12 +80,15 @@
           hide-details
           @change="change($event, 'fuelCardNumber')"
         />
-        <app-date-time-input
+        <DateTimeInput
           label="Дата выдачи карты"
           :value="params.fuelCardDate"
           hide-prepend-icon
           hide-time-input
           @change="change($event, 'fuelCardDate')"
+          outlined
+          dense
+          hide-details
         />
         <v-text-field
           label="Примечание (Топливная карта)"
@@ -92,12 +104,13 @@
 </template>
 <script>
 import AppBlockTitle from './blockTitle.vue'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import { DateTimeInput } from '@/shared/ui'
+
 export default {
   name: 'AdditionalDetails',
   components: {
     AppBlockTitle,
-    AppDateTimeInput,
+    DateTimeInput,
   },
   model: {
     prop: 'item',
@@ -111,7 +124,7 @@ export default {
   data() {
     return {
       params: {
-        diagnosticCardExpDate:null,
+        diagnosticCardExpDate: null,
         diagnosticCardNote: null,
         platonNumber: null,
         platonDate: null,
@@ -166,13 +179,13 @@ export default {
 #platon {
   display: grid;
   grid-template-columns: 220px 190px;
-  gap: 5px;
+  gap: 10px;
 }
 
 #tachograph {
   display: grid;
   grid-template-columns: 190px 190px 350px;
-  gap: 5px;
+  gap: 10px;
 }
 
 #transponder {
@@ -186,6 +199,6 @@ export default {
 #fuel-card {
   display: grid;
   grid-template-columns: 190px 190px 350px;
-  gap: 5px;
+  gap: 10px;
 }
 </style>

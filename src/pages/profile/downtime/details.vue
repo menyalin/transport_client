@@ -12,7 +12,7 @@
           {{ error.message }}
         </v-alert>
         <app-load-spinner v-if="loading" />
-        <app-downtime-form
+        <DowntimeForm
           v-else
           :downtime="item"
           :displayDeleteBtn="
@@ -27,15 +27,15 @@
   </v-container>
 </template>
 <script>
-import AppDowntimeForm from '@/modules/profile/components/downtimeForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { DowntimeService}  from '@/shared/services'
+import { DowntimeService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { DowntimeForm } from '@/entities/downtime'
 
 export default {
   name: 'DowntimeDetails',
   components: {
-    AppDowntimeForm,
+    DowntimeForm,
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],

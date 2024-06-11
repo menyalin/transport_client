@@ -2,19 +2,17 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-driver-form @submit="submit" @cancel="cancel" />
+        <DriverForm @submit="submit" @cancel="cancel" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
-import AppDriverForm from '@/modules/profile/components/driverForm'
+import { DriverForm } from '@/entities/driver/index.js'
 
 export default {
   name: 'DriverCreate',
-  components: {
-    AppDriverForm,
-  },
+  components: { DriverForm },
   data() {
     return {
       loading: false,

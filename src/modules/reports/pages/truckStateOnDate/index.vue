@@ -6,7 +6,14 @@
           <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
           </v-btn>
-          <app-date-time-input v-model="settings.date" label="Отчет на дату" />
+          <DateTimeInput
+            v-model="settings.date"
+            label="Отчет на дату"
+            outlined
+            hideDetails
+            dense
+            :style="{ 'max-width': '200px' }"
+          />
           <v-select
             v-model="settings.tkName"
             :items="$store.getters.tkNames"
@@ -68,11 +75,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import { DateTimeInput } from '@/shared/ui'
+
 export default {
   name: 'TruckStateOnDate',
   components: {
-    AppDateTimeInput,
+    DateTimeInput,
   },
   data() {
     return {
@@ -153,7 +161,7 @@ export default {
 #report-settings {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
 }
 #report-settings > * {
   margin: 10px;

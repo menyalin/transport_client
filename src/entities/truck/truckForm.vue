@@ -56,18 +56,24 @@
           </template>
         </div>
         <div class="servive-dates">
-          <app-date-time-input
+          <DateTimeInput
             v-model="$v.form.startServiceDate.$model"
             label="Дата ввода в эксплуатацию"
             hide-time-input
             hide-prepend-icon
+            outlined
+            dense
+            hide-details
           />
 
-          <app-date-time-input
+          <DateTimeInput
             v-model="$v.form.endServiceDate.$model"
             label="Дата вывода из эксплуатации"
             hide-time-input
             hide-prepend-icon
+            outlined
+            dense
+            hide-details
           />
         </div>
       </div>
@@ -142,11 +148,14 @@
           label="СТС"
           dense
         />
-        <app-date-time-input
+        <DateTimeInput
           v-model="$v.form.stsDate.$model"
           label="Дата СТС"
           hide-time-input
           hide-prepend-icon
+          outlined
+          dense
+          hide-details
         />
         <v-text-field
           v-model.trim="$v.form.pts.$model"
@@ -175,11 +184,14 @@
         v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
         id="sanpassport"
       >
-        <app-date-time-input
+        <DateTimeInput
           v-model="form.sanitaryPassportExpDate"
           label="Сан.паспорт действует до"
           hide-time-input
           hide-prepend-icon
+          outlined
+          dense
+          hide-details
         />
         <v-text-field
           v-model.trim="form.sanitaryPassportNote"
@@ -190,11 +202,14 @@
       </div>
 
       <div id="diagnostic-card">
-        <app-date-time-input
+        <DateTimeInput
           v-model="additionalDetails.diagnosticCardExpDate"
           label="ДК действительна до"
           hide-prepend-icon
           hide-time-input
+          outlined
+          dense
+          hide-details
         />
         <v-text-field
           v-model.trim="additionalDetails.diagnosticCardNote"
@@ -219,7 +234,7 @@
           dense
         />
       </div>
-      <app-additional-notifications v-model="additionalNotifications" />
+      <additional-notifications v-model="additionalNotifications" />
       <div class="row-wrapper my-3">
         <v-textarea
           v-model.trim="$v.form.note.$model"
@@ -258,24 +273,27 @@
 import { mapGetters } from 'vuex'
 import { required, numeric } from 'vuelidate/lib/validators'
 
-import { ButtonsPanel } from '@/shared/ui'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import {
+  ButtonsPanel,
+  DateTimeInput,
+  AdditionalNotifications,
+} from '@/shared/ui'
+
 import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'
 import AppPermits from './permits.vue'
 import AppAdditionalDetails from './additionalDetails .vue'
-import AppAdditionalNotifications from '@/modules/common/components/additionalNotifications'
 
 export default {
   name: 'TruckForm',
   components: {
     ButtonsPanel,
-    AppDateTimeInput,
+    DateTimeInput,
     AppAllowedDrivers,
     AppInsurance,
     AppPermits,
     AppAdditionalDetails,
-    AppAdditionalNotifications,
+    AdditionalNotifications,
   },
   props: {
     truck: {
