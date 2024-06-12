@@ -1,30 +1,30 @@
 <template>
   <div class="page-wrapper">
-    <report-title title="Отчет по не сданным документам" />
-    <report-settings
-      @refresh="refresh"
+    <report-title title="Отчет по рейсам, не включенным в акты" />
+    <ReportSettings
       v-model="settings"
+      :agreementItems="agreementItems"
       :allHeaders="allHeaders"
       @changeHeaders="changeHeaders"
+      @refresh="refresh"
     />
-    <report-data-table
+    <ReportDataTable
       :items="items"
       :headers="headers"
       :loading="loading"
+      :listOptions.sync="listOptions"
       :statisticData="statisticData"
     />
   </div>
 </template>
-
 <script>
 import { ref } from 'vue'
-import { ReportTitle } from '../../shared/ui'
+import { ReportTitle } from '@/shared/ui'
 
 import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
-
 export default {
-  name: 'OrderDocsReport',
+  name: 'OrdersWOInvoice',
   components: {
     ReportSettings,
     ReportTitle,
@@ -33,7 +33,15 @@ export default {
   setup() {
     const headers = ref([])
 
-    const { settings, items, refresh, loading, statisticData } = useReportData()
+    const {
+      settings,
+      items,
+      refresh,
+      loading,
+      statisticData,
+      agreementItems,
+      listOptions,
+    } = useReportData()
 
     function changeHeaders(value) {
       headers.value = value
@@ -43,16 +51,17 @@ export default {
       items,
       refresh,
       settings,
+      listOptions,
       headers,
       changeHeaders,
       loading,
       statisticData,
+      agreementItems,
       allHeaders: ALL_HEADERS,
     }
   },
 }
 </script>
-
 <style scoped>
 .page-wrapper {
   display: flex;

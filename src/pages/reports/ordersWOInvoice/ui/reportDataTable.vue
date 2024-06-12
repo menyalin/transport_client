@@ -15,27 +15,7 @@
     }"
     @dblclick:row="dblClickRow"
   >
-    <!-- <template #[`item.plannedDate`]="{ item }">
-      {{ new Date(item.plannedDate).toLocaleString() }}
-    </template> -->
-    <!-- <template #[`item.docsState.date`]="{ item }">
-      {{
-        item.docsState.date
-          ? new Date(item.docsState.date).toLocaleString()
-          : null
-      }}
-    </template> -->
-    <!-- <template #[`item.reviewDate`]="{ item }">
-      {{
-        item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null
-      }}
-    </template> -->
-    <!-- <template #[`item._docsStatusObj.text`]="{ item }">
-      <b :style="{ color: item._docsStatusObj.color }">{{
-        item._docsStatusObj.text
-      }}</b>
-    </template> -->
-    <template #footer.prepend>
+    <template #[`footer.prepend`]>
       <ReportStatisticData :data="statisticData" />
     </template>
   </v-data-table>

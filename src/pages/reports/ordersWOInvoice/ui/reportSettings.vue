@@ -51,8 +51,7 @@
 <script>
 import store from '@/store'
 import { watch, ref, computed } from 'vue'
-import { RefreshBtn } from '../../../shared/ui'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
 
 export default {
   name: 'ReportSettings',
