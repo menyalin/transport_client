@@ -2,6 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
+        <ReportTitle title="Простой транспорта" />
         <div id="report-settings">
           <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
@@ -56,9 +57,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
-
+import { ReportTitle } from '@/shared/ui'
 export default {
   name: 'OrdersInProgress',
+  components: {
+    ReportTitle,
+  },
   data() {
     return {
       formName: 'OrdersInProgressReport',

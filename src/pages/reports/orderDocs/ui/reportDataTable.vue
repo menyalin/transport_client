@@ -33,7 +33,7 @@
         item._docsStatusObj.text
       }}</b>
     </template>
-    <template #footer.prepend>
+    <template #[`footer.prepend`]>
       <order-list-footer-details
         :total="statisticData.totalCount"
         :needFix="statisticData.correctionCount"

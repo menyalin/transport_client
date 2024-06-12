@@ -23,11 +23,11 @@ export default [
         path: 'driversSalary',
         name: 'DriversSalary',
         component: () => import('@/pages/accounting/salaryByPeriod/index.vue'),
-        meta: { title: 'ЗП Водителей' },
+        meta: { title: 'Учет : ЗП Водителей' },
       },
     ],
     meta: {
-      title: 'Блок учета',
+      title: 'Учет',
       authRequired: true,
     },
   },

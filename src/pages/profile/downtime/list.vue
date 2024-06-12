@@ -10,7 +10,7 @@
           @refresh="refresh"
         />
         <div class="filter-wrapper">
-          <app-date-range v-model="settings.period" />
+          <DateRangeInput v-model="settings.period" />
           <v-autocomplete
             v-model="settings.truckFilter"
             label="Грузовик"
@@ -82,8 +82,7 @@ import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { DowntimeService } from '@/shared/services'
 
-import { ButtonsPanel } from '@/shared/ui'
-import AppDateRange from '@/modules/common/components/dateRange'
+import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 
 const _initPeriod = () => {
   const todayM = dayjs()
@@ -97,7 +96,7 @@ export default {
   name: 'DowntimeList',
   components: {
     ButtonsPanel,
-    AppDateRange,
+    DateRangeInput,
   },
   data: () => ({
     formName: 'downtimeList',

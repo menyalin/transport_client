@@ -2,6 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
+        <ReportTitle title="Статус транспорта на дату" />
         <div id="report-settings">
           <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
@@ -12,6 +13,7 @@
             outlined
             hideDetails
             dense
+            type="datetime-local"
             :style="{ 'max-width': '200px' }"
           />
           <v-select
@@ -75,12 +77,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
-import { DateTimeInput } from '@/shared/ui'
+import { DateTimeInput, ReportTitle } from '@/shared/ui'
 
 export default {
   name: 'TruckStateOnDate',
   components: {
     DateTimeInput,
+    ReportTitle,
   },
   data() {
     return {
@@ -162,6 +165,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: start;
+  margin-top: 20px;
 }
 #report-settings > * {
   margin: 10px;

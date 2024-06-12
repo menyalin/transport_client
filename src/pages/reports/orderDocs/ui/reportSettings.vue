@@ -120,7 +120,7 @@
 <script>
 import store from '@/store'
 import { watch, ref, computed } from 'vue'
-import { RefreshBtn } from '../../../shared/ui'
+import { RefreshBtn } from '@/shared/ui'
 import { AppTableColumnSetting } from '@/shared/ui'
 
 export default {

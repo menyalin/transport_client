@@ -4,7 +4,7 @@
       <v-btn icon @click.stop="getData">
         <v-icon> mdi-cached </v-icon>
       </v-btn>
-      <app-date-range v-model="settings.period" />
+      <DateRangeInput v-model="settings.period" />
 
       <v-select
         v-model="settings.group"
@@ -87,10 +87,9 @@
 <script>
 import dayjs from 'dayjs'
 import { CrewService } from '@/shared/services'
-
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import AppDateRange from '@/modules/common/components/dateRange'
-import getDaysFromPeriod from '../../../common/helpers/getDaysFromPeriod'
+import { DateRangeInput } from '@/shared/ui'
+import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
 
@@ -99,7 +98,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'CrewsReport',
   components: {
-    AppDateRange,
+    DateRangeInput,
     AppLoadSpinner,
   },
   data() {
@@ -370,3 +369,4 @@ table thead th:first-child {
   font-size: 0.95rem;
 }
 </style>
+../../../modules/common/helpers/getDaysFromPeriod

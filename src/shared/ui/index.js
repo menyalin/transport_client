@@ -11,6 +11,8 @@ import XlsxFileInput from './xlsxFileInput'
 import CardActionButtons from './cardActionButtons.vue'
 import DateTimeInput from './dateTimeInput.vue'
 import AdditionalNotifications from './additionalNotifications'
+import ReportTitle from './reportTitle.vue'
+import RefreshBtn from './refreshBtn.vue'
 
 export {
   AppTableColumnSetting,
@@ -26,4 +28,6 @@ export {
   CardActionButtons,
   DateTimeInput,
   AdditionalNotifications,
+  ReportTitle,
+  RefreshBtn,
 }

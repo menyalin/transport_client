@@ -2,6 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
+        <ReportTitle title="Контроль сроков" />
         <div id="report-settings">
           <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
@@ -51,9 +52,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
+import { ReportTitle } from '@/shared/ui'
 
 export default {
   name: 'DaysControl',
+  components: {
+    ReportTitle,
+  },
   data() {
     return {
       formName: 'DaysControlReport',
@@ -127,5 +132,6 @@ export default {
   display: grid;
   grid-template-columns: 50px 150px 300px;
   gap: 10px;
+  margin-top: 15px;
 }
 </style>

@@ -6,6 +6,7 @@ export default [
     name: 'DocsRegistryList',
     component: () => import('@/pages/accounting/docsRegistry/list.vue'),
     meta: {
+      title: 'Учет : Список описей',
       permission: 'docsRegistry:readList',
     },
   },
@@ -15,6 +16,7 @@ export default [
     component: () => import('@/pages/accounting/docsRegistry/details.vue'),
     props: true,
     meta: {
+      title: 'Учет : Новая опись',
       permission: 'docsRegistry:write',
     },
   },
@@ -24,6 +26,7 @@ export default [
     component: () => import('@/pages/accounting/docsRegistry/details.vue'),
     props: true,
     meta: {
+      title: 'Учет : Опись',
       permission: 'docsRegistry:readItem',
     },
   },
