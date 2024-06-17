@@ -34,7 +34,7 @@ export default {
         permission: 'agreement:readList',
       },
       {
-        text: 'Документы',
+        text: 'К УДАЛЕНИЮ! - Документы',
         icon: 'mdi-file-document-multiple',
         link: '/accounting/documents',
         onlyWithDirectoriesProfile: true,
@@ -66,7 +66,7 @@ export default {
         onlyWithDirectoriesProfile: true,
       },
       {
-        text: 'Тарифы клиентов',
+        text: 'К УДАЛЕНИЮ! - Тарифы клиентов',
         icon: 'mdi-cash-multiple',
         link: '/accounting/tariffs',
         onlyWithDirectoriesProfile: true,
