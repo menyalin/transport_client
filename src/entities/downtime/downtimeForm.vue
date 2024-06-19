@@ -53,6 +53,7 @@
       <DateTimeInput
         v-model="$v.form.startPositionDate.$model"
         label="Дата начала"
+        type="datetime-local"
         outlined
         dense
         :style="{ 'max-width': '200px' }"
@@ -60,6 +61,7 @@
       <DateTimeInput
         v-model="$v.form.endPositionDate.$model"
         label="Дата завешения"
+        type="datetime-local"
         :minDate="form.startPositionDate"
         outlined
         dense
