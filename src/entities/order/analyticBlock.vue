@@ -34,7 +34,7 @@
         @click:append="getDirectDistance"
       />
     </div>
-    <div class="zones-wrapper">
+    <div v-if="showDebugInfo" class="zones-wrapper">
       <div>Зоны погрузки: {{ loadingZones }}</div>
       <div>Зоны разгрузки: {{ unloadingZones }}</div>
       {{ item.routeStats }}
@@ -97,6 +97,9 @@ export default {
     },
   },
   computed: {
+    showDebugInfo() {
+      return this.$store.getters.hasPermission('fullAccess')
+    },
     loadingZones() {
       return (
         this.item.loadingZones?.map(
