@@ -24,7 +24,8 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn small color="primary" text @click="getPrePrices">
+        <!-- // TODO: переделать на новый механизм расчета преварительных цен в рейсе -->
+        <v-btn small color="primary" text @click="getPrePrices" disabled>
           обновить предв. цены
         </v-btn>
         <v-btn
