@@ -34,11 +34,6 @@ export default {
           permission: 'report:drivers_grades',
         },
         {
-          link: '/reports/gross_profit',
-          title: 'Валовая прибыль',
-          permission: 'report:gross_profit',
-        },
-        {
           link: '/reports/order_docs',
           title: 'Отчет по документам',
           permission: 'report:orderDocs',

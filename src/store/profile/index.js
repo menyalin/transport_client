@@ -130,6 +130,7 @@ export default {
         allTruckParams,
         tariffTypes,
         roundingWaitingByHours,
+        idleTimeRoundingIntervals,
         documents,
         zones,
         regions,
@@ -162,6 +163,8 @@ export default {
       if (tariffTypes) commit('setTariffTypes', tariffTypes)
       if (roundingWaitingByHours)
         commit('setRoundingWaitingByHours', roundingWaitingByHours)
+      if (idleTimeRoundingIntervals)
+        commit('setIdleTimeRoundingIntervals', idleTimeRoundingIntervals)
       if (documents?.length) commit('setDocuments', documents)
       if (zones?.length) commit('setZones', zones)
       if (regions?.length) commit('setRegions', regions)

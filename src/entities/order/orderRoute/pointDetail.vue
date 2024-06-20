@@ -13,8 +13,18 @@
           @change="setField($event, 'type')"
         />
         <v-checkbox
+          v-if="showMainLoadingPointSelector && tmpPoint.type === 'loading'"
+          v-model="tmpPoint.isMainLoadingPoint"
+          label="Основной пункт погрузки"
+          hide-details
+          dense
+          color="primary"
+          class="ml-4"
+          @change="setField($event, 'isMainLoadingPoint')"
+        />
+        <v-checkbox
           v-model="tmpPoint.useInterval"
-          label="Указать временнное окно"
+          label="Временнное окно"
           hide-details
           dense
           color="primary"
@@ -22,7 +32,10 @@
           @change="setField($event, 'useInterval')"
         />
         <v-checkbox
-          v-if="tmpPoint.isReturn || showReturnBtn"
+          v-if="
+            tmpPoint.isReturn ||
+            (showReturnBtn && tmpPoint.type === 'unloading')
+          "
           v-model="tmpPoint.isReturn"
           label="Возврат"
           :readonly="!showReturnBtn || tmpPoint.isPltReturn"
@@ -102,7 +115,7 @@
     </div>
     <div v-if="!isTemplate" class="dates-column">
       <BorderedBlock title="Временное окно" v-if="tmpPoint.useInterval">
-        <app-date-time-input
+        <DateTimeInput
           :value="tmpPoint.plannedDate"
           type="datetime-local"
           label="Начало периода"
@@ -113,7 +126,7 @@
           :readonly="readonly"
           @change="setField($event, 'plannedDate')"
         />
-        <app-date-time-input
+        <DateTimeInput
           :value="tmpPoint.intervalEndDate"
           type="datetime-local"
           label="Конец периода"
@@ -125,7 +138,7 @@
           @change="setField($event, 'intervalEndDate')"
         />
       </BorderedBlock>
-      <app-date-time-input
+      <DateTimeInput
         v-else
         :value="tmpPoint.plannedDate"
         type="datetime-local"
@@ -137,7 +150,7 @@
         :readonly="readonly"
         @change="setField($event, 'plannedDate')"
       />
-      <app-date-time-input
+      <DateTimeInput
         :value="tmpPoint.arrivalDate"
         type="datetime-local"
         label="Факт прибытия"
@@ -150,7 +163,7 @@
         :errorMessages="arrivalDateErrors"
         @change="setField($event, 'arrivalDate')"
       />
-      <app-date-time-input
+      <DateTimeInput
         :value="tmpPoint.departureDate"
         type="datetime-local"
         label="Факт убытия"
@@ -166,7 +179,7 @@
     </div>
     <div v-if="!isTemplate && isShowDocDates" class="dates-column">
       <BorderedBlock title="Временное окно (Док)" v-if="tmpPoint.useInterval">
-        <app-date-time-input
+        <DateTimeInput
           :value="tmpPoint.plannedDateDoc"
           type="datetime-local"
           label="Начало периода"
@@ -177,7 +190,7 @@
           :readonly="readonly"
           @change="setField($event, 'plannedDateDoc')"
         />
-        <app-date-time-input
+        <DateTimeInput
           :value="tmpPoint.intervalEndDateDoc"
           type="datetime-local"
           label="Конец периода"
@@ -189,7 +202,7 @@
           @change="setField($event, 'intervalEndDateDoc')"
         />
       </BorderedBlock>
-      <app-date-time-input
+      <DateTimeInput
         v-else
         :value="tmpPoint.plannedDateDoc"
         type="datetime-local"
@@ -201,7 +214,7 @@
         :readonly="readonly"
         @change="setField($event, 'plannedDateDoc')"
       />
-      <app-date-time-input
+      <DateTimeInput
         :value="tmpPoint.arrivalDateDoc"
         type="datetime-local"
         label="Факт прибытия (док)"
@@ -211,7 +224,7 @@
         outlined
         @change="setField($event, 'arrivalDateDoc')"
       />
-      <app-date-time-input
+      <DateTimeInput
         :value="tmpPoint.departureDateDoc"
         type="datetime-local"
         label="Факт убытия (док)"
@@ -275,14 +288,13 @@
 import { mapGetters } from 'vuex'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput2'
-import { BorderedBlock } from '@/shared/ui'
 
+import { BorderedBlock, DateTimeInput } from '@/shared/ui'
 export default {
   name: 'PointDetail',
   components: {
     AppAddressAutocomplete,
-    AppDateTimeInput,
+    DateTimeInput,
     BorderedBlock,
   },
   props: {
@@ -305,6 +317,7 @@ export default {
       type: Boolean,
       default: true,
     },
+    showMainLoadingPointSelector: Boolean,
     isTemplate: {
       type: Boolean,
       default: false,
@@ -331,6 +344,7 @@ export default {
         waitsForWaybills: false,
         note: null,
         fixedTime: null,
+        isMainLoadingPoint: null,
       },
     }
   },
@@ -384,7 +398,7 @@ export default {
   },
   methods: {
     setFields(point) {
-      this.tmpPoint = point
+      this.tmpPoint = { ...point }
     },
 
     setField(val, field) {

@@ -110,7 +110,7 @@
             <v-icon v-if="item.isWithheld" color="primary">mdi-check</v-icon>
             <v-icon v-else color="primary">mdi-minus</v-icon>
           </template>
-          <template #footer.prepend>
+          <template #[`footer.prepend`]>
             <FineListAnalitics :data="analyticData" />
           </template>
         </v-data-table>

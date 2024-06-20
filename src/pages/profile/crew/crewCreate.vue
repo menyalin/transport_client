@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-crew-form
+        <CrewForm
           :loading="loading"
           :crew="crew.tkName ? crew : null"
           :disabledSubmit="!$store.getters.hasPermission('crew:write')"
@@ -14,12 +14,12 @@
   </v-container>
 </template>
 <script>
-import AppCrewForm from '@/modules/profile/components/crewForm'
+import { CrewForm } from '@/entities/crew'
 
 export default {
   name: 'CrewCreate',
   components: {
-    AppCrewForm,
+    CrewForm,
   },
   data() {
     return {

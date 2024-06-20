@@ -1,5 +1,6 @@
 export default {
   state: {
+    roundingIntervals: [],
     tariffTypes: [],
     roundingWaitingByHours: [],
     tariffByItems: [
@@ -14,6 +15,9 @@ export default {
     setRoundingWaitingByHours(state, payload) {
       state.roundingWaitingByHours = payload
     },
+    setIdleTimeRoundingIntervals(state, payload) {
+      state.roundingIntervals = payload
+    },
   },
   actions: {},
   getters: {
@@ -25,6 +29,10 @@ export default {
       roundingWaitingByHours,
     roundingWaitingByHoursMap: ({ roundingWaitingByHours }) =>
       new Map(roundingWaitingByHours.map((i) => [i.value, i.text])),
+
+    idleTimeRoundingIntervals: ({ roundingIntervals }) => roundingIntervals,
+    idleTimeRoundingIntervalsMap: ({ roundingIntervals }) =>
+      new Map(roundingIntervals.map((i) => [i.value, i.text])),
 
     waitingTariffByItems: ({ tariffByItems }) => tariffByItems,
     waitingTariffByItemsMap: ({ tariffByItems }) =>

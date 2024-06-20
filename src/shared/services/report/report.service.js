@@ -59,18 +59,6 @@ class ReportService {
     }
   }
 
-  async grossProfit(body) {
-    try {
-      const { data } = await api.post(BASE_PATH + '/gross_profit', {
-        ...body,
-      })
-      return data
-    } catch (e) {
-      store.commit('setError', e.message)
-      return null
-    }
-  }
-
   async grossProfitPivot(body) {
     try {
       const { data } = await api.post(BASE_PATH + '/gross_profit_pivot', {

@@ -9,7 +9,7 @@
           @refresh="refresh"
         />
         <div class="filter-wrapper">
-          <app-date-range v-model="settings.period" />
+          <DateRangeInput v-model="settings.period" />
           <v-autocomplete
             v-model="settings.truckFilter"
             label="Грузовик"
@@ -51,9 +51,8 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 import { ScheduleNoteService } from '@/shared/services'
-import AppDateRange from '@/modules/common/components/dateRange'
 
 const _initPeriod = () => {
   const todayM = dayjs()
@@ -67,7 +66,7 @@ export default {
   name: 'ScheduleNoteList',
   components: {
     ButtonsPanel,
-    AppDateRange,
+    DateRangeInput,
   },
   data: () => ({
     formName: 'ScheduleNoteList',

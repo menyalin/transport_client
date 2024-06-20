@@ -1,4 +1,4 @@
-name: Docker Image CI (ALFA)
+name: Docker Image CI (logicore)
 on:
   # push:
   #   branches: ['alfa']
@@ -7,9 +7,9 @@ on:
       - closed
     branches: ['alfa']
 env:
-  VUE_APP_API_URL: https://alfa.s4log.ru/api
-  VUE_APP_API_WS_URL: https://alfa.s4log.ru
-  VUE_APP_STATIC_URL: https://alfa.s4log.ru
+  VUE_APP_API_URL: https://carrier.logicore.ru/api
+  VUE_APP_API_WS_URL: https://carrier.logicore.ru
+  VUE_APP_STATIC_URL: https://carrier.logicore.ru
 jobs:
   build:
     if: github.event.pull_request.merged == true
@@ -34,18 +34,18 @@ jobs:
           context: .
           file: ./Dockerfile.alfa
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/alfa_front2:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/carrier_client:latest
 
-  deploy:
-    runs-on: self-hosted
-    needs: build
-    steps:
-      - name: executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: alfa.s4log.ru
-          username: alexey
-          key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
-          port: 2233
-          script: |
-            docker service update --image ${{ secrets.DOCKERHUB_USERNAME }}/alfa_front2:latest alfa_stack_front2
+  # deploy:
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #     - name: executing remote ssh commands using ssh key
+  #       uses: appleboy/ssh-action@v0.1.10
+  #       with:
+  #         host: alfa.s4log.ru
+  #         username: alexey
+  #         key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+  #         port: 2233
+  #         script: |
+  #           docker service update --image ${{ secrets.DOCKERHUB_USERNAME }}/alfa_front2:latest alfa_stack_front2
