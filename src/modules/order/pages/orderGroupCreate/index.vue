@@ -11,7 +11,7 @@
       Рейсы успешно созданы
     </v-alert>
     <div class="settings">
-      <app-date-range v-model="period" />
+      <DateRangeInput v-model="period" />
       <v-spacer />
       <div>Будет создано рейсов: {{ totalOrderCount }}</div>
       <v-btn
@@ -92,13 +92,13 @@
 <script>
 import dayjs from 'dayjs'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
-import AppDateRange from '@/modules/common/components/dateRange'
 import { OrderService } from '@/shared/services'
+import { DateRangeInput } from '@/shared/ui'
 
 export default {
   name: 'CreateOrderGroup',
   components: {
-    AppDateRange,
+    DateRangeInput,
   },
   data() {
     return {

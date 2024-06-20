@@ -3,7 +3,7 @@
     <div class="text-caption">Выбор периода</div>
     <div class="inputs-row">
       <v-menu
-        v-model="startDateMenu"
+        v-model="menu"
         :close-on-content-click="false"
         transition="scale-transition"
         offset-y
@@ -17,27 +17,6 @@
               tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-'
             }}
           </span>
-        </template>
-        <v-date-picker
-          :value="tmpPeriod[0]"
-          no-title
-          :first-day-of-week="1"
-          :max="tmpPeriod[1]"
-          :min="min"
-          color="primary"
-          @change="changeStartDate"
-          @input="startDateMenu = false"
-        />
-      </v-menu>
-      <v-menu
-        v-model="endDateMenu"
-        :close-on-content-click="false"
-        transition="scale-transition"
-        offset-y
-        max-width="290px"
-        min-width="auto"
-      >
-        <template #activator="{ on, attrs }">
           <span class="date-text" v-bind="attrs" v-on="on">
             по:
             {{
@@ -46,14 +25,12 @@
           </span>
         </template>
         <v-date-picker
-          :value="tmpPeriod[1]"
+          v-model="tmpPeriod"
           no-title
+          range
           :first-day-of-week="1"
-          :disabled="!tmpPeriod[0]"
-          :min="tmpPeriod[0]"
           color="primary"
-          @change="changeEndDate"
-          @input="endDateMenu = false"
+          @change="changeDate"
         />
       </v-menu>
     </div>
@@ -79,8 +56,7 @@ export default {
   data() {
     return {
       tmpPeriod: [null, null],
-      startDateMenu: false,
-      endDateMenu: false,
+      menu: false,
     }
   },
   computed: {
@@ -96,22 +72,21 @@ export default {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpPeriod = [
-          val[0] ? dayjs(val[0]).startOf('day').format() : null,
-          val[1] ? dayjs(val[1]).endOf('day').format() : null,
-        ]
+        this.tmpPeriod = val
       },
     },
   },
   methods: {
-    changeStartDate(val) {
+    changeDate(val) {
+      if (!val || val.length !== 2) return
+      let tmpVal = val
+
+      if (dayjs(val[1]).isBefore(val[0], 'day')) tmpVal.reverse()
+
       this.$emit('change', [
-        dayjs(val).startOf('day').format(),
-        this.tmpPeriod[1],
+        dayjs(tmpVal[0]).startOf('day').toISOString(),
+        dayjs(tmpVal[1]).endOf('day').toISOString(),
       ])
-    },
-    changeEndDate(val) {
-      this.$emit('change', [this.period[0], dayjs(val).endOf('day').format()])
     },
   },
 }

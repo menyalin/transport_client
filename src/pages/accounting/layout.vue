@@ -34,11 +34,18 @@ export default {
         permission: 'agreement:readList',
       },
       {
-        text: 'Документы',
+        text: 'К УДАЛЕНИЮ! - Документы',
         icon: 'mdi-file-document-multiple',
         link: '/accounting/documents',
         onlyWithDirectoriesProfile: true,
         permission: 'document:readList',
+      },
+      {
+        text: 'Тарифные контракты',
+        icon: 'mdi-file-document-multiple',
+        link: '/accounting/tariff_contracts',
+        onlyWithDirectoriesProfile: true,
+        permission: 'tariffContract:readList',
       },
       {
         text: 'Акты',
@@ -59,7 +66,7 @@ export default {
         onlyWithDirectoriesProfile: true,
       },
       {
-        text: 'Тарифы клиентов',
+        text: 'К УДАЛЕНИЮ! - Тарифы клиентов',
         icon: 'mdi-cash-multiple',
         link: '/accounting/tariffs',
         onlyWithDirectoriesProfile: true,

@@ -218,7 +218,7 @@ import { OrderRoute } from '@/entities/order'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
-import AppAnalyticBlock from './analyticBlock.vue'
+import AppAnalyticBlock from '../../../../entities/order/analyticBlock.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 import {

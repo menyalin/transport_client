@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <div v-if="loading">Загружаю...</div>
-        <app-crew-form
+        <CrewForm
           v-else
           :crew="crew"
           :displayDeleteBtn="$store.getters.hasPermission('crew:delete')"
@@ -16,13 +16,13 @@
   </v-container>
 </template>
 <script>
-import AppCrewForm from '@/modules/profile/components/crewForm'
 import { CrewService } from '@/shared/services'
+import { CrewForm } from '@/entities/crew'
 
 export default {
   name: 'CrewDetails',
   components: {
-    AppCrewForm,
+    CrewForm,
   },
   props: {
     id: {

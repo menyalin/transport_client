@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import ProfileModule from '@/store/profile/index.js'
 import AuthModule from '@/modules/auth/auth.store'
-import AdminModule from '@/modules/admin/admin.store'
 import OrderModule from '@/modules/order/store/index.js'
 import AccountingModule from '@/store/accounting/index.js'
 
@@ -52,7 +51,6 @@ export default new Vuex.Store({
   },
   modules: {
     AuthModule,
-    AdminModule,
     ProfileModule,
     OrderModule,
     AccountingModule,

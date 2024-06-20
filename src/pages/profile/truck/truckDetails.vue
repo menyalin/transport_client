@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <div v-if="loading">Загружаю...</div>
-        <app-truck-form
+        <truck-form
           v-else
           :truck="truck"
           :displayDeleteBtn="$store.getters.hasPermission('truck:delete')"
@@ -17,11 +17,12 @@
 </template>
 <script>
 import { TruckService } from '@/shared/services'
-import AppTruckForm from '@/modules/profile/components/truckForm'
+import { TruckForm } from '@/entities/truck'
+
 export default {
   name: 'TruckDetails',
   components: {
-    AppTruckForm,
+    TruckForm,
   },
   props: {
     id: {

@@ -18,7 +18,7 @@
           dense
           :style="{ 'max-width': '500px' }"
         />
-        <app-date-time-input
+        <DateTimeInput
           v-model="$v.form.date.$model"
           label="Дата начала"
           hideTimeInput
@@ -164,8 +164,7 @@
 <script>
 import dayjs from 'dayjs'
 import { required } from 'vuelidate/lib/validators'
-import { ButtonsPanel } from '@/shared/ui'
-import AppDateTimeInput from '@/modules/common/components/dateTimeInput'
+import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 import AppClients from './clients.vue'
 import AppTknames from './tkNames.vue'
 
@@ -173,7 +172,7 @@ export default {
   name: 'AgreementForm',
   components: {
     ButtonsPanel,
-    AppDateTimeInput,
+    DateTimeInput,
     AppClients,
     AppTknames,
   },

@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <div v-if="loading">Загружаю...</div>
-        <app-driver-form
+        <DriverForm
           v-else
           :driver="driver"
           :displayDeleteBtn="$store.getters.hasPermission('driver:delete')"
@@ -16,12 +16,12 @@
   </v-container>
 </template>
 <script>
-import AppDriverForm from '@/modules/profile/components/driverForm'
+import { DriverForm } from '@/entities/driver'
 import { DriverService } from '@/shared/services'
 export default {
   name: 'DriverDetails',
   components: {
-    AppDriverForm,
+    DriverForm,
   },
   props: {
     id: {

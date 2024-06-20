@@ -13,7 +13,8 @@
     />
     <v-select
       v-if="!accountingMode"
-      v-model="settings.status"
+      v-model="settings.statuses"
+      multiple
       label="Статус"
       :items="orderStatuses"
       dense
@@ -21,7 +22,7 @@
       hide-details
       outlined
       clearable
-      :style="{ 'max-width': '220px' }"
+      :style="{ 'max-width': '250px' }"
       @change="settings.listOptions.page = 1"
     />
     <v-select

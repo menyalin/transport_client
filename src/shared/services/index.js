@@ -24,6 +24,7 @@ import TariffService from './tariff/tariff.service.js'
 import TkNameService from './tkName/tkName.service.js'
 import ReportService from './report/report.service.js'
 import SalaryTariffService from './salaryTariff/salaryTariff.service.js'
+import TariffContractService from './tariffContract/tariffContract.service.js'
 
 export {
   AddressService,
@@ -52,4 +53,5 @@ export {
   TkNameService,
   ReportService,
   SalaryTariffService,
+  TariffContractService,
 }

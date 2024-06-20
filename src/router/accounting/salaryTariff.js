@@ -9,6 +9,7 @@ export default [
     name: 'SalaryTariffList',
     component: List,
     meta: {
+      title: 'Учет : Зарплатные тарифы',
       permission: 'salaryTariff:readList',
     },
   },
@@ -18,6 +19,7 @@ export default [
     component: Create,
     props: true,
     meta: {
+      title: 'Учет :  Новый тариф',
       permission: 'salaryTariff:write',
     },
   },
