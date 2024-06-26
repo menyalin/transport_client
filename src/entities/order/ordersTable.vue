@@ -90,7 +90,7 @@
         @input="setDocStateStatus($event, item._id)"
       />
     </template>
-    <template #footer.prepend v-if="statisticData && statisticData.count">
+    <template #[`footer.prepend`] v-if="statisticData && statisticData.count">
       <order-list-footer-details
         :total="statisticData.count"
         :accepted="statisticData.acceptedDocs"
