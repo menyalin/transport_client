@@ -11,7 +11,7 @@ export const useListData = () => {
     const endDate = dayjs().endOf('month').toISOString()
     return [startDate, endDate]
   }
-  const initialState = { agreements: [], status: null, period: initialPeriod() }
+  const initialState = { agreements: [], statuses: [], period: initialPeriod() }
   const settings = useHistorySettings(
     initialState,
     'paymentInvoice_list_settings'
@@ -38,7 +38,7 @@ export const useListData = () => {
 
   const queryParams = computed(() => ({
     period: settings.value?.period,
-    status: settings.value?.status,
+    statuses: settings.value?.statuses,
     search: settings.value?.search,
     agreements: settings.value?.agreements,
     company: store.getters.directoriesProfile,
