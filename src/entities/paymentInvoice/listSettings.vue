@@ -25,15 +25,16 @@
       @change="updateSettings($event, 'agreements')"
     />
     <v-select
-      :value="settings.status"
+      :value="settings.statuses"
       label="Статус"
+      multiple
       dense
       clearable
       outlined
       hide-details
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'status')"
+      @change="updateSettings($event, 'statuses')"
     />
     <v-text-field
       :value="settings.search"
