@@ -31,10 +31,24 @@
       :style="{ 'max-width': '300px' }"
       @change="searchInputHandler"
     />
+    <order-doc-status-selector
+      v-model="settings.docStatuses"
+      multiple
+      dense
+      hide-details
+      outlined
+      clearable
+      :style="{ 'max-width': '400px' }"
+      @change="settings.listOptions.page = 1"
+    />
   </div>
 </template>
 <script>
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import {
+  AppTableColumnSetting,
+  DateRangeInput,
+  OrderDocStatusSelector,
+} from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 export default {
   name: 'PickOrdersForPaymentInvoiceSettings',
@@ -42,7 +56,7 @@ export default {
     prop: 'settings',
     event: 'change',
   },
-  components: { AppTableColumnSetting, DateRangeInput },
+  components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
   props: {
     settings: Object,
     allHeaders: Array,
@@ -50,7 +64,7 @@ export default {
   setup(props, { emit }) {
     const {
       orderStatuses,
-      docStatuses,
+
       trailers,
       trucks,
       drivers,
@@ -78,7 +92,7 @@ export default {
       searchInputHandler,
       updateSettings,
       orderStatuses,
-      docStatuses,
+
       trailers,
       trucks,
       drivers,

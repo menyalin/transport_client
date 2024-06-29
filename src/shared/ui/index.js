@@ -13,6 +13,7 @@ import DateTimeInput from './dateTimeInput.vue'
 import AdditionalNotifications from './additionalNotifications'
 import ReportTitle from './reportTitle.vue'
 import RefreshBtn from './refreshBtn.vue'
+import OrderDocStatusSelector from './orderDocStatusSelector.vue'
 
 export {
   AppTableColumnSetting,
@@ -30,4 +31,5 @@ export {
   AdditionalNotifications,
   ReportTitle,
   RefreshBtn,
+  OrderDocStatusSelector,
 }

@@ -19,6 +19,7 @@ export const useListData = ({ client, _id, agreementId }) => {
     paymentInvoiceId: null,
     onlySelectable: true,
     period: initPeriod(),
+    docStatuses: ['accepted'],
   }
   const settings = usePersistedRef(
     initialState,
@@ -51,6 +52,7 @@ export const useListData = ({ client, _id, agreementId }) => {
     truck: settings.value.truck,
     search: settings.value.search,
     driver: settings.value.driver,
+    docStatuses: settings.value.docStatuses,
   }))
 
   async function getData() {
