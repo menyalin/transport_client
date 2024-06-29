@@ -38,11 +38,9 @@
       @change="settings.listOptions.page = 1"
     />
 
-    <v-select
+    <order-doc-status-selector
       v-model="settings.docStatuses"
-      label="Документы"
       multiple
-      :items="docStatuses"
       dense
       hide-details
       outlined
@@ -211,12 +209,16 @@
 <script>
 import { computed } from 'vue'
 import store from '@/store'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import {
+  AppTableColumnSetting,
+  DateRangeInput,
+  OrderDocStatusSelector,
+} from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 
 export default {
   name: 'OrdersTableSettings',
-  components: { AppTableColumnSetting, DateRangeInput },
+  components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
   model: {
     prop: 'settings',
     event: 'change',
@@ -234,7 +236,6 @@ export default {
 
     const {
       orderStatuses,
-      docStatuses,
       trailers,
       trucks,
       drivers,
@@ -261,7 +262,6 @@ export default {
       accountingMode,
       availableAccountantMode,
       orderStatuses,
-      docStatuses,
       trailers,
       trucks,
       drivers,
