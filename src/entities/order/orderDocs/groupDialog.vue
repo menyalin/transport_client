@@ -14,10 +14,12 @@
             color="primary"
             hide-details
             dense
+            @change="changeDocTypesHandler"
           />
 
           <v-text-field
             v-model="numberStr"
+            ref="numberStrNode"
             label="Номера документов"
             hint="Номера документов через запятую"
             class="mt-5"
@@ -66,6 +68,7 @@ export default {
     },
   },
   setup(_props, { emit }) {
+    const numberStrNode = ref(null)
     const numberStr = ref('')
     const docTypes = ref([])
     const addToRegistry = ref(false)
@@ -128,6 +131,9 @@ export default {
       emit('pushDocs', res)
       clear()
     }
+    function changeDocTypesHandler() {
+      numberStrNode.value.focus()
+    }
 
     return {
       addHandler,
@@ -139,6 +145,8 @@ export default {
       docCount,
       docStatusItems,
       closeDialog,
+      numberStrNode,
+      changeDocTypesHandler,
     }
   },
 }
