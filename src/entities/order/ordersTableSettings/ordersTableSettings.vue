@@ -105,7 +105,7 @@
       outlined
       hide-details
       label="Грузовик"
-      :style="{ 'max-width': '200px' }"
+      :style="{ 'max-width': '350px', 'min-width': '280px' }"
       @change="settings.listOptions.page = 1"
     />
     <v-autocomplete
