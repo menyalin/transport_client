@@ -54,15 +54,7 @@
       :tariffFormComponent="directDistanceZonesTariffForm"
     />
     <v-divider />
-    <TariffListWrapper
-      title="Дополнительные точки"
-      formTitle="Тариф за дополнительную точку"
-      v-model="state.additionalPointsTariffs"
-      disabled
-      :tariffListComponent="additionalPointsTariffList"
-      :tariffFormComponent="additionalPointsTariffForm"
-    />
-    <v-divider />
+
     <TariffListWrapper
       title="Простой по типу рейса"
       formTitle="Тариф для расчета простоя ТС"
@@ -90,8 +82,6 @@ import ZoneBaseTariffList from './zonesBaseTariffList.vue'
 import ZoneBaseTariffForm from './zonesBaseTariffForm.vue'
 import DirectDistanceZonesTariffList from './directDistanceZonesTariffList.vue'
 import DirectDistanceZonesTariffForm from './directDistanceZonesTariffForm.vue'
-import AdditionalPointsTariffList from './additionalPointsTariffList.vue'
-import AdditionalPointsTariffForm from './additionalPointsTariffForm.vue'
 import IdleTimeTariffForm from './idleTimeTariffForm.vue'
 import IdleTimeTariffList from './idleTimeTariffList.vue'
 import ReturnPercentTariffForm from './returnPercentTariffForm.vue'
@@ -113,8 +103,6 @@ export default {
       zoneBaseTariffForm: ZoneBaseTariffForm,
       directDistanceZonesTariffList: DirectDistanceZonesTariffList,
       directDistanceZonesTariffForm: DirectDistanceZonesTariffForm,
-      additionalPointsTariffList: AdditionalPointsTariffList,
-      additionalPointsTariffForm: AdditionalPointsTariffForm,
       idleTimeTariffForm: IdleTimeTariffForm,
       idleTimeTariffList: IdleTimeTariffList,
       returnPercentTariffForm: ReturnPercentTariffForm,
