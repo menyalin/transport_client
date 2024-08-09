@@ -46,6 +46,7 @@ export default [
     align: 'right',
     width: '10rem',
   },
+  
   {
     value: 'total.priceWOVat',
     text: 'Сумма без НДС',
