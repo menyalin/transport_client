@@ -20,6 +20,7 @@ export const useListData = ({ client, _id, agreementId }) => {
     onlySelectable: true,
     period: initPeriod(),
     docStatuses: ['accepted'],
+    loadingZones: [],
   }
   const settings = usePersistedRef(
     initialState,
@@ -53,6 +54,7 @@ export const useListData = ({ client, _id, agreementId }) => {
     search: settings.value.search,
     driver: settings.value.driver,
     docStatuses: settings.value.docStatuses,
+    loadingZones: settings.value.loadingZones,
   }))
 
   async function getData() {
