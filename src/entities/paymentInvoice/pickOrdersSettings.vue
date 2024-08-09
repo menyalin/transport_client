@@ -41,6 +41,21 @@
       :style="{ 'max-width': '400px' }"
       @change="settings.listOptions.page = 1"
     />
+    <v-autocomplete
+      label="Зоны погрузки"
+      v-model="settings.loadingZones"
+      :items="loadingZoneItems"
+      item-value="_id"
+      item-text="name"
+      multiple
+      auto-select-first
+      dense
+      hide-details
+      outlined
+      clearable
+      :style="{ 'max-width': '500px' }"
+      @change="settings.listOptions.page = 1"
+    />
   </div>
 </template>
 <script>
@@ -62,14 +77,8 @@ export default {
     allHeaders: Array,
   },
   setup(props, { emit }) {
-    const {
-      orderStatuses,
-
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    } = useOrderListSettingsData()
+    const { orderStatuses, trailers, trucks, drivers, loadingZoneItems } =
+      useOrderListSettingsData()
     const refreshHandler = () => {
       emit('refresh')
     }
@@ -78,9 +87,9 @@ export default {
       emit('updateHeaders', val)
     }
 
-    function updateSettings(value, field) {
-      emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+    // function updateSettings(value, field) {
+    //   emit('change', Object.assign({}, props.settings, { [field]: value }))
+    // }
 
     function searchInputHandler(val) {
       emit('change', Object.assign({}, props.settings, { search: val }))
@@ -90,9 +99,8 @@ export default {
       refreshHandler,
       updateHeadersHandler,
       searchInputHandler,
-      updateSettings,
+      // updateSettings,
       orderStatuses,
-
       trailers,
       trucks,
       drivers,
