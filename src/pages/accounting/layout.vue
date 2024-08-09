@@ -33,13 +33,13 @@ export default {
         onlyWithDirectoriesProfile: true,
         permission: 'agreement:readList',
       },
-      {
-        text: 'К УДАЛЕНИЮ! - Документы',
-        icon: 'mdi-file-document-multiple',
-        link: '/accounting/documents',
-        onlyWithDirectoriesProfile: true,
-        permission: 'document:readList',
-      },
+      // {
+      //   text: 'К УДАЛЕНИЮ! - Документы',
+      //   icon: 'mdi-file-document-multiple',
+      //   link: '/accounting/documents',
+      //   onlyWithDirectoriesProfile: true,
+      //   permission: 'document:readList',
+      // },
       {
         text: 'Тарифные контракты',
         icon: 'mdi-file-document-multiple',
@@ -65,13 +65,13 @@ export default {
         link: '/accounting/driversSalary',
         onlyWithDirectoriesProfile: true,
       },
-      {
-        text: 'К УДАЛЕНИЮ! - Тарифы клиентов',
-        icon: 'mdi-cash-multiple',
-        link: '/accounting/tariffs',
-        onlyWithDirectoriesProfile: true,
-        permission: 'tariff:readList',
-      },
+      // {
+      //   text: 'К УДАЛЕНИЮ! - Тарифы клиентов',
+      //   icon: 'mdi-cash-multiple',
+      //   link: '/accounting/tariffs',
+      //   onlyWithDirectoriesProfile: true,
+      //   permission: 'tariff:readList',
+      // },
       {
         text: 'Зарплатные тарифы',
         icon: 'mdi-cash ',

@@ -24,10 +24,6 @@
         />
       </v-card-text>
       <v-card-actions>
-        <!-- // TODO: переделать на новый механизм расчета преварительных цен в рейсе -->
-        <v-btn small color="primary" text @click="getPrePrices" disabled>
-          обновить предв. цены
-        </v-btn>
         <v-btn
           small
           color="primary"
@@ -54,10 +50,9 @@
   </v-dialog>
 </template>
 <script>
-import { OrderService, TariffService } from '@/shared/services'
+import { OrderService } from '@/shared/services'
 import appFinalPriceTable from './finalPriceTable.vue'
 
-import DTO from '../priceBlock/Price.class'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -118,24 +113,6 @@ export default {
     },
   },
   methods: {
-    async getPrePrices() {
-      if (!this.order._id) {
-        this.$store.commit(
-          'setError',
-          'Запрос цен возможен для сохраненного рейса'
-        )
-        return null
-      }
-      const data = await TariffService.getOrderPrePrices(
-        DTO.prepareOrderForPrePriceQuery({
-          ...this.order,
-          orderId: this.order._id,
-        })
-      )
-      if (data) {
-        this.$emit('update:prePrices', data)
-      }
-    },
     inputDialog(val) {
       if (!val) this.cancel()
     },

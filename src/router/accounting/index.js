@@ -1,10 +1,10 @@
 import Layout from '@/pages/accounting/layout'
 import sararyTariffsRoutes from './salaryTariff.js'
 import agreementRoutes from './agreement.js'
-import documentRoutes from './document.js'
+// import documentRoutes from './document.js'
 import docsRegistryRoutes from './docsRegistry.js'
 import paymentInvoicesRoutes from '@/pages/accounting/paymentInvoice/routes'
-import tariffRoutes from './tariff'
+//  import tariffRoutes from './tariff'
 import tariffContractsRoutes from './tariffContracts.js'
 export default [
   {
@@ -14,9 +14,9 @@ export default [
       ...sararyTariffsRoutes,
       ...docsRegistryRoutes,
       ...paymentInvoicesRoutes,
-      ...tariffRoutes,
+      // ...tariffRoutes,
       ...agreementRoutes,
-      ...documentRoutes,
+      // ...documentRoutes,
       ...tariffContractsRoutes,
 
       {

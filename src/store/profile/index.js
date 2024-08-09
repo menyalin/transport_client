@@ -8,8 +8,8 @@ import DowntimeModule from './downtime'
 import OrderTemplateModule from './orderTemplate'
 import ScheduleNotes from './scheduleNote'
 import AgreementModule from './agreement'
-import TariffModule from './tariff'
-import DocumentModule from './document'
+// import TariffModule from './_tariff'
+// import DocumentModule from './_document'
 import ZoneModule from './zone'
 import RegionModule from './region'
 import CityModule from './city'
@@ -245,8 +245,6 @@ export default {
     OrderTemplateModule,
     ScheduleNotes,
     AgreementModule,
-    TariffModule,
-    DocumentModule,
     ZoneModule,
     RegionModule,
     CityModule,
