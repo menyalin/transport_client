@@ -1,3 +1,5 @@
+import TariffContractStore from './tariffContract'
+
 export default {
   state: {
     documentTypes: [],
@@ -28,15 +30,15 @@ export default {
     documentTypes: ({ documentTypes }) => documentTypes,
     documentTypesMap: ({ documentTypes }) =>
       new Map(documentTypes.map((i) => [i.value, i.text])),
-    
+
     documentStatuses: ({ documentStatuses }) => documentStatuses,
     documentStatusesMap: ({ documentStatuses }) =>
       new Map(documentStatuses.map((i) => [i.value, i.text])),
-    
+
     salaryTariffTypes: ({ salaryTariffTypes }) => salaryTariffTypes,
     salaryTariffTypesMap: ({ salaryTariffTypes }) =>
       new Map(salaryTariffTypes.map((i) => [i.value, i.text])),
-    
+
     docsRegistryStatuses: ({ docsRegistryStatuses }) => docsRegistryStatuses,
     docsRegistryStatusesMap: ({ docsRegistryStatuses }) =>
       new Map(docsRegistryStatuses.map((i) => [i.value, i.text])),
@@ -46,4 +48,5 @@ export default {
     paymentInvoiceStatusesMap: ({ paymentInvoiceStatuses }) =>
       new Map(paymentInvoiceStatuses.map((i) => [i.value, i.text])),
   },
+  modules: { TariffContractStore },
 }
