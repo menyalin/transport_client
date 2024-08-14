@@ -97,7 +97,7 @@ const _getBasePrice = (prices, agreement) => {
 const headers = [
   { val: 'plannedDate', text: 'Дата' },
   { val: 'plannedTime', text: 'Время' },
-  { val: 'clientName', text: 'Клиент' },
+  { val: 'agreementName', text: 'Соглашение' },
   { val: 'deliveryPlannedDate', text: 'Дата доставки (План)' },
   { val: null, text: 'Дата счета' },
   { val: 'regNum', text: 'Номер ТС' },
@@ -145,6 +145,7 @@ export default (items) => {
       ? new Date(unloadPoints[unloadPoints.length - 1].departureDate)
       : null
     return {
+      agreementName: row.agreement?.name || '__no name__',
       deliveryPlannedDate: getDeliveryPlannedDate(row),
       plannedDate: new Date(row.route[0].plannedDate).toLocaleDateString(),
       plannedTime: new Date(row.route[0].plannedDate).toLocaleTimeString(),
