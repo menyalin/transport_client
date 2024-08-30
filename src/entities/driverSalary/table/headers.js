@@ -85,12 +85,11 @@ export const DRIVER_DETAILS_HEADERS = [
   { text: 'Дата рейса', value: '_orderDate', sortable: false },
   { text: 'Грузовик', value: '_truckRegNum', sortable: false },
   { text: 'Прицеп', value: '_trailerRegNum', sortable: false },
-  { text: 'Клиент', value: '_client.name', sortable: false },
+  { text: 'Клиент', value: '_clientName', sortable: false },
   { text: 'Погрузка', value: '_loadingAddressesStr', sortable: false },
   { text: 'Выгрузка', value: '_unloadingAddressesStr', sortable: false },
   { text: 'Тип рейса', value: 'orderTypeStr', sortable: false },
-  
-  
+
   {
     text: 'Тип грузополучателя',
     value: '_consigneeType.text',
@@ -108,8 +107,20 @@ export const DRIVER_DETAILS_HEADERS = [
     align: 'right',
     _total: 'sum',
   },
-  { text: 'Простой', value: 'waiting', sortable: false, align: 'right',  _total: 'sum', },
-  { text: 'Возврат', value: 'returnSum', sortable: false, align: 'right',   _total: 'sum', },
+  {
+    text: 'Простой',
+    value: 'waiting',
+    sortable: false,
+    align: 'right',
+    _total: 'sum',
+  },
+  {
+    text: 'Возврат',
+    value: 'returnSum',
+    sortable: false,
+    align: 'right',
+    _total: 'sum',
+  },
   {
     text: 'Доп.точки',
     value: 'additionalPointsSum',
@@ -117,8 +128,20 @@ export const DRIVER_DETAILS_HEADERS = [
     align: 'right',
     _total: 'sum',
   },
-  { text: 'Доплата', value: 'payment', sortable: false, align: 'right',   _total: 'sum', },
-  { text: 'Итого', value: 'totalSum', sortable: false, align: 'right',   _total: 'sum', },
+  {
+    text: 'Доплата',
+    value: 'payment',
+    sortable: false,
+    align: 'right',
+    _total: 'sum',
+  },
+  {
+    text: 'Итого',
+    value: 'totalSum',
+    sortable: false,
+    align: 'right',
+    _total: 'sum',
+  },
   {
     text: 'Часы',
     value: 'duration',
