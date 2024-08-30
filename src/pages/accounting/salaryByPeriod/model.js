@@ -47,9 +47,21 @@ export const useDriversSalaryData = ({
     { deep: true, immediate: true }
   )
 
+  async function downloadReportHandler() {
+    try {
+      isLoading.value = true
+      await SalaryTariffService.getDriverSalaryByPeriodReport({
+        period: getPeriod(),
+      })
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     items,
     isLoading,
     setListSettings,
+    downloadReportHandler,
   }
 }

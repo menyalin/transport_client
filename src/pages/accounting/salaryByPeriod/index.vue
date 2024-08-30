@@ -54,9 +54,12 @@
         hide-details
         :style="{ 'max-width': '200px' }"
       />
+      <v-btn color="primary" @click="downloadReportHandler">
+        Скачать в excel
+      </v-btn>
     </div>
 
-    <app-drivers-salary-table
+    <DriverSalaryTable
       :items="items"
       :loading="isLoading"
       :driver="driver"
@@ -70,10 +73,10 @@ import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 import store from '@/store'
 import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalaryPeriod/index.vue'
-import AppDriversSalaryTable from '@/modules/accounting/components/driversSalaryTable/index.vue'
 import AppPartnersAutocomplete from '@/modules/common/components/partnerAutocomplete'
-import { useDriversSalaryData } from '@/modules/accounting/hooks/useDriversSalaryData.js'
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
+import { DriverSalaryTable } from '@/entities/driverSalary'
+import { useDriversSalaryData } from './model'
 
 const getInitialPeriod = (historyState) => {
   if (historyState.period) return historyState.period
@@ -84,7 +87,7 @@ export default {
   name: 'DriversSalary',
   components: {
     AppDriversSalaryPeriod,
-    AppDriversSalaryTable,
+    DriverSalaryTable,
     AppPartnersAutocomplete,
   },
   setup(_props, _ctx) {
@@ -96,14 +99,15 @@ export default {
     const orderType = ref(historyState.orderType)
     const period = useDebouncedRef(getInitialPeriod(historyState), 500)
 
-    const { items, isLoading, setListSettings } = useDriversSalaryData({
-      period,
-      driver,
-      clients,
-      orderType,
-      consigneeType,
-      tks,
-    })
+    const { items, isLoading, setListSettings, downloadReportHandler } =
+      useDriversSalaryData({
+        period,
+        driver,
+        clients,
+        orderType,
+        consigneeType,
+        tks,
+      })
 
     const drivers = computed(() => {
       const startPeriod = dayjs(period.value).startOf('month')
@@ -156,6 +160,7 @@ export default {
       setListSettings,
       consigneeType,
       tks,
+      downloadReportHandler,
     }
   },
 }

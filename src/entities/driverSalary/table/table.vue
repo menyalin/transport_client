@@ -13,7 +13,7 @@
   >
     <template
       v-if="preparedItems.length"
-      #body.append="{ headers, items: tableItems }"
+      #[`body.append`]="{ headers, items: tableItems }"
     >
       <app-append-pivor-row :headers="headers" :items="tableItems" />
     </template>

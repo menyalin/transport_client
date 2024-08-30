@@ -1,6 +1,9 @@
+import dayjs from 'dayjs'
+import FileSaver from 'file-saver'
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+
 const BASE_PATH = '/salary_tariffs'
 
 class SalaryTariffService {
@@ -50,6 +53,35 @@ class SalaryTariffService {
       company: store.getters.directoriesProfile,
     })
     return data
+  }
+
+  async getDriverSalaryByPeriodReport(params) {
+    function getFileName(params) {
+      if (!params.period[0])
+        throw new Error('getDriverSalaryByPeriodReport : Не указан период')
+      const startDate = dayjs(params.period[0])
+      return `${startDate.format('YYYY_MM')}_ЗП_Водителей.xlsx`
+    }
+
+    try {
+      const { data } = await api({
+        url: BASE_PATH + '/drivers_salary_by_period_report',
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+          ...params,
+          company: store.getters.directoriesProfile,
+        },
+      })
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      })
+
+      const filename = getFileName(params)
+      FileSaver.saveAs(blob, filename)
+    } catch (e) {
+      store.commit('setError', e.message)
+    }
   }
 
   async deleteById(id) {
