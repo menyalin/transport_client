@@ -10,11 +10,14 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { CompanyForm } from '@/entities/company'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
 
-export default {
+import { CompanyForm } from '@/entities/company'
+
+export default defineComponent({
   name: 'CreateCompany',
   components: {
     CompanyForm,
@@ -30,5 +33,5 @@ export default {
       })
     },
   },
-}
+})
 </script>

@@ -34,13 +34,16 @@
   </div>
 </template>
 
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-import { AppTableColumnSetting } from '@/shared/ui'
-import { DOCS_REGISTRY_TABLE_HEADERS } from '@/shared/constants'
 
-export default {
+import { DOCS_REGISTRY_TABLE_HEADERS } from '@/shared/constants'
+import { AppTableColumnSetting } from '@/shared/ui'
+import store from '@/store'
+
+export default defineComponent({
   name: 'DocsRegistryListSettingsWidget',
   components: { AppTableColumnSetting },
   model: {
@@ -50,7 +53,7 @@ export default {
   props: {
     settings: Object,
   },
-
+  emits: ['updateHeaders', 'change'],
   setup(props, ctx) {
     const clientItems = computed(() => {
       return store.getters.partners.filter((i) => i.isClient)
@@ -75,7 +78,7 @@ export default {
       DOCS_REGISTRY_TABLE_HEADERS,
     }
   },
-}
+})
 </script>
 <style scoped>
 .settings-wrapper {

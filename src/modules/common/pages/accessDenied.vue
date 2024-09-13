@@ -1,29 +1,27 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container fluid>
-        <v-row align="center" justify="center">
-          <v-col cols="12" md="6">
-            <v-alert type="error">
-              Доступ к запрашиваемой странице запрещен
-            </v-alert>
-            <router-link :to="$route.query.redirect">
-              {{
-                $route.query.redirect !== '/'
-                  ? 'Вернуться назад'
-                  : 'Перейти на главную страницу'
-              }}
-            </router-link>
-            <br />
-            <small>До автоматического перехода осталось {{ secBefore }}сек</small>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+  <v-container fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" md="6">
+        <v-alert type="error">
+          Доступ к запрашиваемой странице запрещен
+        </v-alert>
+        <router-link :to="$route.query.redirect">
+          {{
+            $route.query.redirect !== '/'
+              ? 'Вернуться назад'
+              : 'Перейти на главную страницу'
+          }}
+        </router-link>
+        <br />
+        <small>До автоматического перехода осталось {{ secBefore }}сек</small>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'AccessDenied',
   data() {
     return {
@@ -36,7 +34,7 @@ export default {
       this.intervalHandler()
     }, 1000)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {
@@ -49,6 +47,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

@@ -17,10 +17,13 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
 
-export default {
+export default defineComponent({
   name: 'TariffPointsType',
   components: {
     AppZoneAutocomplete,
@@ -61,7 +64,7 @@ export default {
       this.$refs.loadingEl.focus()
     },
   },
-}
+})
 </script>
 <style scoped>
 #zones-wrapper {

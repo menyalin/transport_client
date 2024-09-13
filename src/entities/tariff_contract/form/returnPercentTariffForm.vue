@@ -6,22 +6,22 @@
         <div class="input-fields-row">
           <v-select
             ref="focusableNodeRef"
+            v-model="form.truckKinds"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
-            v-model="form.truckKinds"
           />
           <v-select
+            v-model="form.liftCapacities"
             multiple
             label="Грузоподъемность"
             :items="liftCapacityItems"
-            v-model="form.liftCapacities"
           />
         </div>
         <div class="input-fields-row">
           <v-text-field
-            label="Процент от базовой стоимости рейса"
             v-model.number="form.percent"
+            label="Процент от базовой стоимости рейса"
           />
         </div>
       </v-card-text>
@@ -43,11 +43,15 @@
     </v-card>
   </form>
 </template>
-<script>
-import { computed, ref, watch } from 'vue'
+<script lang="ts">
+//@ts-nocheck
 import { useVuelidate } from '@vuelidate/core'
 import { required, numeric } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
+import { computed, ref, watch } from 'vue'
+
 import { CardActionButtons } from '@/shared/ui'
+
 import { useFormHelpers } from './useFormHelpers'
 
 /*
@@ -57,7 +61,7 @@ import { useFormHelpers } from './useFormHelpers'
 
 */
 
-export default {
+export default defineComponent({
   name: 'ReturnPercentTariffForm',
   components: {
     CardActionButtons,
@@ -141,7 +145,7 @@ export default {
       focusableNodeRef,
     }
   },
-}
+})
 </script>
 <style scoped>
 .input-fields-row {

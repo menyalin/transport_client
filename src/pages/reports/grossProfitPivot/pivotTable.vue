@@ -53,10 +53,13 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { useHistorySettings } from '@/shared/hooks'
 
-export default {
+export default defineComponent({
   name: 'PivotTable',
   props: {
     groupItems: { type: Array, required: true },
@@ -66,6 +69,7 @@ export default {
     agreements: Array,
     selectedGroups: Array,
   },
+  emits: ['updateSelected'],
   setup() {
     const selected = useHistorySettings([], 'selected_items')
     return { selected }
@@ -196,6 +200,6 @@ export default {
       return this.titlesMap.has(id) ? this.titlesMap.get(id) : '-'
     },
   },
-}
+})
 </script>
 <style></style>

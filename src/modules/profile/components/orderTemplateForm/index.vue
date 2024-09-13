@@ -61,14 +61,16 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+
+import { OrderRoute, ReqTransport, CargoParams } from '@/entities/order'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import { ButtonsPanel } from '@/shared/ui'
-import { OrderRoute } from '@/entities/order'
-import { ReqTransport, CargoParams } from '@/entities/order'
-export default {
+export default defineComponent({
   name: 'OrderTemplateForm',
   components: {
     ButtonsPanel,
@@ -187,7 +189,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped>
 .body-wrapper {

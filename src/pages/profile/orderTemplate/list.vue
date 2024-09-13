@@ -16,6 +16,7 @@
       />
     </div>
     <v-data-table
+      v-model:options="settings.listOptions"
       :headers="headers"
       :items="items"
       :loading="loading"
@@ -26,21 +27,38 @@
       :footer-props="{
         'items-per-page-options': [50, 100, -1],
       }"
-      :options.sync="settings.listOptions"
       @dblclick:row="dblClickRow"
     />
   </entity-list-wrapper>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { ButtonsPanel } from '@/shared/ui'
 import { EntityListWrapper } from '@/shared/ui/index'
+
 import { useListData } from './model'
 
-export default {
+export default defineComponent({
   name: 'OrderTemplateList',
   components: {
     ButtonsPanel,
     EntityListWrapper,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
+  },
+  setup() {
+    const { items, headers } = useListData()
+    return {
+      items,
+      headers,
+    }
   },
   data: () => ({
     formName: 'OrderTemplateList',
@@ -53,24 +71,10 @@ export default {
       },
     },
   }),
-  setup() {
-    const { items, headers } = useListData()
-    return {
-      items,
-      headers,
-    }
-  },
 
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
   },
   methods: {
     create() {
@@ -86,7 +90,7 @@ export default {
       this.$store.dispatch('getOrderTemplates')
     },
   },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

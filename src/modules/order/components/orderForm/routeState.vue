@@ -51,10 +51,13 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import { BlockTitle } from '@/entities/order'
-export default {
+export default defineComponent({
   name: 'RouteState',
   components: {
     BlockTitle,
@@ -73,6 +76,7 @@ export default {
     isValidGrade: Boolean,
     readonly: Boolean,
   },
+  emits: ['change'],
   data() {
     return {
       params: {
@@ -190,7 +194,7 @@ export default {
       return true
     },
   },
-}
+})
 </script>
 <style scoped>
 .state-block {

@@ -5,15 +5,15 @@
       :disabledSubmit="
         !$store.getters.hasPermission('crew:write') ||
         editTransportTable ||
-        !form.transport.length ||
-        $v.$invalid
+        !formState.transport.length ||
+        v$.$invalid
       "
       @cancel="cancel"
       @submit="submit"
     />
 
     <v-select
-      v-model.trim="$v.form.tkName.$model"
+      v-model.trim="v$.tkName.$model"
       :items="tkNames"
       item-text="name"
       item-value="_id"
@@ -24,7 +24,7 @@
       @change="tkNameChange"
     />
     <v-autocomplete
-      v-model="$v.form.driver.$model"
+      v-model="v$.driver.$model"
       outlined
       hide-details
       label="Водитель"
@@ -32,35 +32,35 @@
       :items="tkDrivers"
       item-value="_id"
       item-text="fullName"
-      :disabled="!form.tkName || !!crewId"
+      :disabled="!formState.tkName || !!crewId"
     />
     <div class="row-input">
-      <DateTimeInput
-        v-model="$v.form.startDate.$model"
+      <!-- <AppDateTimeInput
+        v-model="v$.startDate.$model"
         label="Дата начала"
         :errorMessages="startDateError"
         :disabled="!form.driver || !!crewId"
         :minDate="minValueForStartDate"
-        @blur="$v.form.startDate.$touch()"
+        @blur="v$.form.startDate.$touch()"
         dense
         hideDetails
         outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
       />
-      <DateTimeInput
-        v-model="$v.form.endDate.$model"
+      <AppDateTimeInput
+        v-model="v$.form.endDate.$model"
         :disabled="!form.startDate || (!!form.endDate && !crewEditable)"
         label="Дата завершения"
         :errorMessages="endDateError"
         :minDate="form.startDate"
-        @blur="$v.form.endDate.$touch()"
+        @blur="v$.form.endDate.$touch()"
         dense
         hideDetails
         outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
-      />
+      /> -->
     </div>
 
     <app-crew-message
@@ -69,12 +69,12 @@
       :visibleDate="actualDriverCrew.startDate"
       :date="form.startDate"
       :crew="actualDriverCrew"
-      :invalid="$v.form.startDate.$invalid"
+      :invalid="v$.form.startDate.$invalid"
       type="crew"
-      @clearCrew="clearActualCrew"
+      @clear-crew="clearActualCrew"
     />
 
-    <app-transport-table
+    <!-- <app-transport-table
       v-if="showTransportTable"
       :items="form.transport"
       :date="form.startDate"
@@ -86,10 +86,10 @@
       @addItem="addItem"
       @editMode="changeEditModeStatus"
       @itemsPop="deleteLastItemInTransport"
-    />
+    /> -->
 
     <v-text-field
-      v-model="$v.form.note.$model"
+      v-model="v$v$note.$model"
       label="Примечание"
       outlined
       dense
@@ -110,25 +110,28 @@
     </v-btn>
   </div>
 </template>
-<script>
+
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 
 import { CrewService } from '@/shared/services'
+import {
+  ButtonsPanel,
+  // AppDateTimeInput
+} from '@/shared/ui'
 
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
-
-import AppTransportTable from './transportTable.vue'
 import AppCrewMessage from './crewMessage'
+// import AppTransportTable from './transportTable.vue'
 
-export default {
+export default defineComponent({
   name: 'CrewForm',
   components: {
     ButtonsPanel,
-    DateTimeInput,
-    AppTransportTable,
+    // AppDateTimeInput,
+    // AppTransportTable,
     AppCrewMessage,
   },
   props: {
@@ -140,6 +143,10 @@ export default {
       default: false,
     },
   },
+  setup() {
+    const { v$, state: formState } = useCrewForm()
+    return { v$, formState }
+  },
   data() {
     return {
       crewId: null,
@@ -148,14 +155,6 @@ export default {
       crewEditable: false,
       actualDriverCrew: null,
       lastDriverCrew: null,
-      form: {
-        tkName: null,
-        transport: [],
-        driver: null,
-        startDate: null,
-        endDate: null,
-        note: null,
-      },
     }
   },
   computed: {
@@ -163,29 +162,30 @@ export default {
       'tkNames',
       'drivers',
       'myCompanies',
-
       'directoriesProfile',
       'allowedToUseTrailersTrucksSet',
     ]),
     tkDrivers() {
-      if (!this.form.tkName) return []
+      if (!this.formState.tkName) return []
       else
         return this.$store.getters
-          .driversForSelect(this.form.tkName)
+          .driversForSelect(this.formState.tkName)
           .filter((d) => !d.dismissalDate)
     },
     allowUseTrailers() {
-      return this.allowedToUseTrailersTrucksSet.has(this.form.truck)
+      return this.allowedToUseTrailersTrucksSet.has(this.formState.truck)
     },
     isInvalidForm() {
       if (!this.directoriesProfile) return true
-      return this.$v.$invalid || (this.allowUseTrailers && !this.form.trailer)
+      return (
+        this.v$.$invalid || (this.allowUseTrailers && !this.formState.trailer)
+      )
     },
     showTransportTable() {
       return (
-        this.form.driver &&
-        this.form.startDate &&
-        !this.$v.form.startDate.$invalid &&
+        this.formState.driver &&
+        this.formState.startDate &&
+        !this.v$.startDate.$invalid &&
         (this.actualDriverCrew?.endDate || !this.actualDriverCrew)
       )
     },
@@ -203,23 +203,20 @@ export default {
         : this.actualDriverCrew.transport.startDate
     },
     startDateError() {
-      let errors = []
-      if (this.$v.form.startDate.$dirty && !this.$v.form.startDate.required)
+      const errors = []
+      if (this.v$.startDate.$dirty && !this.v$.startDate.required)
         errors.push('Поле не может быть пустым')
-      if (
-        this.$v.form.startDate.$dirty &&
-        !this.$v.form.startDate.isLaterThan
-      ) {
-        const dateStr = dayjs(
-          this.$v.form.startDate.$params.isLaterThan.eq
-        ).format('DD.MM.YYYY HH:mm')
+      if (this.v$.startDate.$dirty && !this.v$.startDate.isLaterThan) {
+        const dateStr = dayjs(this.v$.startDate.$params.isLaterThan.eq).format(
+          'DD.MM.YYYY HH:mm'
+        )
         errors.push(`Дата должна быть больше ${dateStr}`)
       }
       return errors
     },
     endDateError() {
-      let errors = []
-      if (!this.$v.form.endDate.isLaterThan)
+      const errors = []
+      if (!this.v$.endDate.isLaterThan)
         errors.push('Дата должна быть больше начальной даты')
       return errors
     },
@@ -238,26 +235,12 @@ export default {
     ['form.driver']: {
       handler: async function (val) {
         this.actualDriverCrew = null
-        this.form.transport = []
+        this.formState.transport = []
         if (val) {
           this.actualDriverCrew = await CrewService.getActualCrewByDriver(val)
         }
       },
     },
-  },
-  validations() {
-    return {
-      form: {
-        tkName: { required },
-        driver: { required },
-        startDate: {
-          required,
-          isLaterThan: isLaterThan(this.minValueForStartDate),
-        },
-        endDate: { isLaterThan: isLaterThan(this.form.startDate) },
-        note: {},
-      },
-    }
   },
 
   methods: {
@@ -266,21 +249,21 @@ export default {
     },
     deleteLastItemInTransport() {
       this.crewEditable = false
-      this.form.transport.pop()
+      this.formState.transport.pop()
     },
     changeEditModeStatus(val) {
       this.editTransportTable = val
     },
     addItem(val) {
-      const idx = this.form.transport.length - 1
-      if (idx >= 0 && !this.form.transport[idx].endDate) {
-        this.form.transport[idx].endDate = val.startDate
-        this.form.transport[idx].updated = true
+      const idx = this.formState.transport.length - 1
+      if (idx >= 0 && !this.formState.transport[idx].endDate) {
+        this.formState.transport[idx].endDate = val.startDate
+        this.formState.transport[idx].updated = true
       }
-      this.form.transport.push(val)
+      this.formState.transport.push(val)
     },
     tkNameChange() {
-      this.form.driver = null
+      this.formState.driver = null
     },
     submit() {
       const item = { ...this.form, company: this.directoriesProfile }
@@ -292,23 +275,24 @@ export default {
       this.$emit('cancel')
     },
     setFormFields(val) {
-      this.form.tkName = val.tkName?._id || val.tkName
-      this.form.transport = val.transport
-      this.form.driver = val.driver?._id || val.driver
-      this.form.startDate = val.startDate || new Date().toISOString()
-      this.form.endDate = val.endDate
-      this.form.note = val.note
+      this.formState.tkName = val.tkName?._id || val.tkName
+      this.formState.transport = val.transport
+      this.formState.driver = val.driver?._id || val.driver
+      this.formState.startDate = val.startDate || new Date().toISOString()
+      this.formState.endDate = val.endDate
+      this.formState.note = val.note
     },
     resetForm() {
       const keys = Object.keys(this.form)
       keys.forEach((key) => {
         this.form[key] = null
       })
-      this.form.transport = []
+      this.formState.transport = []
     },
   },
-}
+})
 </script>
+
 <style>
 .row-input {
   display: flex;

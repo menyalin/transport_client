@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <app-city-form
           v-else
           :city="item"
@@ -17,17 +17,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import AppCityForm from '@/modules/profile/components/cityForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {CityService} from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import AppCityForm from '@/modules/profile/components/cityForm'
+import { CityService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'RegionDetails',
   components: {
     AppCityForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {
@@ -35,5 +38,5 @@ export default {
       service: CityService,
     }
   },
-}
+})
 </script>

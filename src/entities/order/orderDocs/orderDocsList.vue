@@ -20,11 +20,14 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref, watch } from 'vue'
+
 import { OrderDocsListForm, useOrderDocs } from '@/entities/order'
 
-export default {
+export default defineComponent({
   name: 'DocListForm',
   components: {
     OrderDocsListForm,
@@ -55,6 +58,6 @@ export default {
       tmpDocs,
     }
   },
-}
+})
 </script>
 <style scoped></style>

@@ -1,8 +1,8 @@
 <template>
   <v-data-table
+    v-model="selected"
     :items="preparedOrders"
     :headers="headers"
-    v-model="selected"
     multiple
     item-key="order._id"
     checkbox-color="primary"
@@ -14,7 +14,7 @@
     dense
     @dblclick:row="dblclickRowHandler"
   >
-    <template v-slot:top>
+    <template #top>
       <v-btn
         :disabled="!selectedOrderIds.length"
         small
@@ -27,10 +27,13 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, ref } from 'vue'
-import ALL_HEADERS from './headers.js'
-export default {
+
+import ALL_HEADERS from './headers'
+export default defineComponent({
   name: 'DocsRegistryOrdersList',
   props: {
     orders: {
@@ -70,6 +73,6 @@ export default {
       dblclickRowHandler,
     }
   },
-}
+})
 </script>
 <style scoped></style>

@@ -50,6 +50,7 @@
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="list"
           height="72vh"
@@ -59,7 +60,6 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           dense
           @dblclick:row="dblClickRow"
         >
@@ -91,15 +91,25 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
-import {CrewService } from '@/shared/services'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 
-export default {
+import { CrewService } from '@/shared/services'
+import { ButtonsPanel } from '@/shared/ui'
+
+export default defineComponent({
   name: 'CrewList',
   components: {
     ButtonsPanel,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   data: () => ({
     formName: 'crewList',
@@ -172,13 +182,6 @@ export default {
 
     // this.getData()
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
   methods: {
     async getData() {
       try {
@@ -233,7 +236,7 @@ export default {
       return !crew.transport[lastIdx].endDate
     },
   },
-}
+})
 </script>
 <style>
 .filters {

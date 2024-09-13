@@ -9,8 +9,10 @@
     @change="changeHandler"
   />
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'StaffRolesSelect',
   model: {
     prop: 'roles',
@@ -33,5 +35,5 @@ export default {
       changeHandler,
     }
   },
-}
+})
 </script>

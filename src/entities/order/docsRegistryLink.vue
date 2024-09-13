@@ -2,11 +2,14 @@
   <small v-if="!docsRegistry">Рейс не включен в опись</small>
   <router-link v-else :to="url">{{ linkText }}</router-link>
 </template>
-<script>
-import { computed } from 'vue'
+
+<script lang="ts">
+//@ts-nocheck
+import { computed, defineComponent } from 'vue'
+
 import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'OrderFormDocsRegistryLink',
   props: {
     docsRegistry: Object,
@@ -32,6 +35,6 @@ export default {
       url,
     }
   },
-}
+})
 </script>
 <style scoped></style>

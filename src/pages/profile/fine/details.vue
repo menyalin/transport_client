@@ -3,14 +3,14 @@
     <v-row>
       <v-col>
         <v-alert
+          v-model="showError"
           type="error"
           dismissible
-          v-model="showError"
           transition="scale-transition"
         >
           {{ errorMessage }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <FineForm
           v-else
           :item="item"
@@ -20,35 +20,38 @@
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
-          @fineNumberUpdated="checkFine"
+          @fine-number-updated="checkFine"
         />
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import { FineForm } from '@/entities/fine'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { FineService } from '@/shared/services'
-import router from '@/router'
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { watch, ref } from 'vue'
 
-export default {
+import { FineForm } from '@/entities/fine'
+import router from '@/router'
+import { FineService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui/index'
+import store from '@/store'
+
+export default defineComponent({
   name: 'FineDetails',
   components: {
     FineForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   props: {
     id: String,
   },
   setup(props) {
     const _id = ref(props.id)
-    let loading = ref(false)
+    const loading = ref(false)
     const showError = ref(false)
     const errorMessage = ref('')
-    let item = ref({})
+    const item = ref({})
 
     async function getItem() {
       if (!props.id) return null
@@ -112,6 +115,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

@@ -49,18 +49,21 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import { OrderService } from '@/shared/services'
-import appFinalPriceTable from './finalPriceTable.vue'
-
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 
-export default {
+import { OrderService } from '@/shared/services'
+
+import appFinalPriceTable from './finalPriceTable.vue'
+
+export default defineComponent({
   name: 'PriceDialog',
-  inject: ['updateFinalPrices'],
   components: {
     appFinalPriceTable,
   },
+  inject: ['updateFinalPrices'],
   props: {
     order: Object,
     dialog: Boolean,
@@ -148,5 +151,5 @@ export default {
       }
     },
   },
-}
+})
 </script>

@@ -54,10 +54,12 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   name: 'SalaryTariffCommonSettings',
   model: {
     prop: 'settings',
@@ -109,7 +111,7 @@ export default {
       this.tmpSettings.date = dayjs().format('YYYY-MM-DD')
     }
   },
-}
+})
 </script>
 <style scoped>
 #settings-wrapper {

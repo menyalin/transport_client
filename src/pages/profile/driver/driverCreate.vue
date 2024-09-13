@@ -7,10 +7,13 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { DriverForm } from '@/entities/driver/index.js'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { DriverForm } from '@/entities/driver'
+
+export default defineComponent({
   name: 'DriverCreate',
   components: { DriverForm },
   data() {
@@ -36,6 +39,6 @@ export default {
       this.$router.go(-1)
     },
   },
-}
+})
 </script>
 <style></style>

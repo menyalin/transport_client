@@ -52,9 +52,18 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
-export default {
+export default defineComponent({
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.$store.getters.isLoggedIn) {
+        vm.$router.push('/')
+      }
+    })
+  },
   data: () => ({
     formTitle: 'Войти в систему',
     loading: false,
@@ -64,13 +73,6 @@ export default {
     messageType: null,
     errorTimeoutMs: 5000,
   }),
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (vm.$store.getters.isLoggedIn) {
-        vm.$router.push('/')
-      }
-    })
-  },
   computed: {
     isFormValid() {
       return !!this.email && this.password
@@ -104,7 +106,7 @@ export default {
         .finally(() => (this.loading = false))
     },
   },
-}
+})
 </script>
 
 <style>

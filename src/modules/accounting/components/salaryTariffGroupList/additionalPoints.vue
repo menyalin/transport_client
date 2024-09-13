@@ -1,11 +1,14 @@
 <template>
   <span>
     Рейс:
-    <b>{{ orderTypeStr }}</b>, Кол-во точек: <b> {{ item.includedPoints }}</b>
+    <b>{{ orderTypeStr }}</b
+    >, Кол-во точек: <b> {{ item.includedPoints }}</b>
   </span>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'AdditionalPointsColumn',
   props: {
     item: Object,
@@ -15,6 +18,6 @@ export default {
       return this.$store.getters.orderAnalyticTypesMap.get(this.item.orderType)
     },
   },
-}
+})
 </script>
 <style />

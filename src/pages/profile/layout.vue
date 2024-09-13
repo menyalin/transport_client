@@ -10,12 +10,15 @@
     </v-main>
   </v-app>
 </template>
-<script>
-import AppAdminBar from '@/modules/common/components/appBar'
-import AppLeftNav from '@/modules/common/components/leftNav'
-import AppSnackbar from '@/modules/common/components/appSnackbar'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import AppAdminBar from '@/modules/common/components/appBar'
+import AppSnackbar from '@/modules/common/components/appSnackbar'
+import AppLeftNav from '@/modules/common/components/leftNav'
+
+export default defineComponent({
   name: 'ProfileLayout',
   components: {
     AppAdminBar,
@@ -146,7 +149,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped>
 .layout {

@@ -53,10 +53,13 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
-import store from '@/store/index'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-export default {
+
+import store from '@/store/index'
+export default defineComponent({
   name: 'NotificationListItem',
   props: {
     item: Object,
@@ -116,5 +119,5 @@ export default {
       this.switchStatus()
     },
   },
-}
+})
 </script>

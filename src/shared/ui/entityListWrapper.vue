@@ -7,9 +7,11 @@
     </v-row>
   </v-container>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'EntityListWrapper',
-}
+})
 </script>
 <style></style>

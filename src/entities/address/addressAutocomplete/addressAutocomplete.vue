@@ -17,8 +17,10 @@
     @change="changeValue"
   />
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'AddressAutocomplete',
 
   model: {
@@ -71,6 +73,6 @@ export default {
       this.$emit('change', null)
     },
   },
-}
+})
 </script>
 <style scoped></style>

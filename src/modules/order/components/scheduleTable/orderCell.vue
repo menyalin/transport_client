@@ -52,11 +52,13 @@
   </v-tooltip>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 
 import { roundingHours } from './helpers'
-export default {
+export default defineComponent({
   name: 'OrderCell',
   props: {
     orderId: {
@@ -78,7 +80,7 @@ export default {
       return !roundedPlannedDate.isSame(roundedStartPositionDate, 'hour')
     },
     orderClasses() {
-      let classes = ['order-wrapper']
+      const classes = ['order-wrapper']
       if (this.order.state.driverNotified) classes.push('driver-notified')
       if (this.order.state.status === 'needGet') classes.push('need-get')
       if (this.order.state.status === 'notСonfirmedByClient')
@@ -113,7 +115,7 @@ export default {
       return this.order.route.findIndex((p) => !p.departureDate)
     },
     points() {
-      let res = []
+      const res = []
       for (let i = 0; i < this.order.route.length; i++) {
         res.push(this.createPoint(i))
       }
@@ -163,7 +165,7 @@ export default {
     },
     getPointTitle(idx) {
       if (idx === null || undefined) return null
-      let res = []
+      const res = []
       const address = this.$store.getters.addressMap.get(
         this.order.route[idx].address
       )?.shortName
@@ -176,7 +178,7 @@ export default {
       return res.join(' ')
     },
   },
-}
+})
 </script>
 <style scoped>
 .order-wrapper {

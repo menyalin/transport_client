@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-autocomplete
+      v-model:search-input="search"
       :label="label"
       :items="items"
       :value="value"
@@ -9,15 +10,16 @@
       :hideDetails="hideDetails"
       :outlined="outlined"
       clearable
-      :search-input.sync="search"
       :append-outer-icon="appendIcon"
       @change="change"
       @click:append-outer="appendClick"
     />
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'Autocomplete',
   model: {
     prop: 'value',
@@ -81,6 +83,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

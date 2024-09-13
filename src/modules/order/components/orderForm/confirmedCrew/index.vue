@@ -20,8 +20,8 @@
         hide-details
       />
       <v-autocomplete
-        label="Водитель"
         v-model="params.driver"
+        label="Водитель"
         :items="drivers"
         :readonly="
           !$store.getters.hasPermission('fake permission. only for admin!')
@@ -31,8 +31,8 @@
         outlined
       />
       <v-autocomplete
-        label="Прицеп"
         v-model="params.trailer"
+        label="Прицеп"
         :items="trailers"
         :readonly="
           !$store.getters.hasPermission('fake permission. only for admin!')
@@ -51,13 +51,17 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import { BlockTitle } from '@/entities/order'
-import putCrewDataToClipboard from './putCrewDataToClipboard'
 import { AgreementService, CrewService } from '@/shared/services'
 
-export default {
+import putCrewDataToClipboard from './putCrewDataToClipboard'
+
+export default defineComponent({
   name: 'ConfirmedCrew',
   components: {
     BlockTitle,
@@ -217,7 +221,7 @@ export default {
       this.$emit('change', this.params)
     },
   },
-}
+})
 </script>
 <style scoped>
 .confirmed-crew-block {

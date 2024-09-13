@@ -12,7 +12,7 @@
         hide-details
         @change="change($event, 'dayPermitNumber')"
       />
-      <DateTimeInput
+      <!-- <DateTimeInput
         label="Действует до"
         :value="params.dayPermitExpDate"
         hide-prepend-icon
@@ -21,7 +21,7 @@
         outlined
         dense
         hide-details
-      />
+      /> -->
       <v-text-field
         label="Зона действия"
         :value="params.dayPermitZone"
@@ -39,7 +39,7 @@
         hide-details
         @change="change($event, 'nightPermitNumber')"
       />
-      <DateTimeInput
+      <!-- <DateTimeInput
         label="Действует до"
         :value="params.nightPermitExpDate"
         hide-prepend-icon
@@ -48,7 +48,7 @@
         outlined
         dense
         hide-details
-      />
+      /> -->
       <v-text-field
         label="Зона действия"
         :value="params.nightPermitZone"
@@ -60,14 +60,19 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+// TODO: uncomment DateTimeInput
+
+import { defineComponent } from 'vue'
+
 import AppBlockTitle from './blockTitle.vue'
-import { DateTimeInput } from '@/shared/ui'
-export default {
+// import { DateTimeInput } from '@/shared/ui'
+export default defineComponent({
   name: 'Permits',
   components: {
     AppBlockTitle,
-    DateTimeInput,
+    // DateTimeInput,
   },
   model: {
     prop: 'item',
@@ -119,7 +124,7 @@ export default {
       return 'light-green'
     },
   },
-}
+})
 </script>
 <style scoped>
 .fields-wrapper {

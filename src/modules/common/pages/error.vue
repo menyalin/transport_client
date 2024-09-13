@@ -1,27 +1,25 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container fluid>
-        <v-row align="center" justify="center">
-          <v-col cols="12" md="6">
-            <v-subheader>
-              Что-то пошло не так, скорее всего не доступен сервер или
-              отсутствует подключение к интернету
-            </v-subheader>
-            <v-alert type="error">
-              {{ $route.query.message }}
-            </v-alert>
-            <router-link to="/"> Перейти на главную </router-link>
-            <br />
-            <small>До автоматического перехода осталось {{ secBefore }}сек</small>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+  <v-container fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" md="6">
+        <v-subheader>
+          Что-то пошло не так, скорее всего не доступен сервер или отсутствует
+          подключение к интернету
+        </v-subheader>
+        <v-alert type="error">
+          {{ $route.query.message }}
+        </v-alert>
+        <router-link to="/"> Перейти на главную </router-link>
+        <br />
+        <small>До автоматического перехода осталось {{ secBefore }}сек</small>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'ErrorPage',
   data() {
     return {
@@ -34,7 +32,7 @@ export default {
       this.intervalHandler()
     }, 1000)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {
@@ -47,6 +45,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

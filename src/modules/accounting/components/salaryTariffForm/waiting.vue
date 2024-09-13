@@ -2,6 +2,7 @@
   <div id="wrapper">
     <v-autocomplete
       ref="first_field"
+      v-model="tmpItem.clients"
       label="Клиенты"
       dense
       :items="clients"
@@ -10,7 +11,6 @@
       multiple
       outlined
       hide-details
-      v-model="tmpItem.clients"
     />
     <v-select
       v-model="tmpItem.orderType"
@@ -46,8 +46,10 @@
     />
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'WaitingTariffType',
   model: {
     prop: 'item',
@@ -92,7 +94,7 @@ export default {
       this.$refs.first_field.focus()
     },
   },
-}
+})
 </script>
 <style scoped>
 #wrapper {

@@ -2,10 +2,10 @@
   <div class="page-wrapper">
     <report-title title="Отчет по не сданным документам" />
     <report-settings
-      @refresh="refresh"
       v-model="settings"
       :allHeaders="allHeaders"
-      @changeHeaders="changeHeaders"
+      @refresh="refresh"
+      @change-headers="changeHeaders"
     />
     <report-data-table
       :items="items"
@@ -16,14 +16,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
+
 import { ReportTitle } from '@/shared/ui'
 
-import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
+import { ReportSettings, ReportDataTable } from './ui'
 
-export default {
+export default defineComponent({
   name: 'OrderDocsReport',
   components: {
     ReportSettings,
@@ -50,7 +53,7 @@ export default {
       allHeaders: ALL_HEADERS,
     }
   },
-}
+})
 </script>
 
 <style scoped>

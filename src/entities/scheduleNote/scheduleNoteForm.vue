@@ -52,13 +52,15 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
 
 import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 
-export default {
+export default defineComponent({
   name: 'ScheduleNoteForm',
   components: {
     ButtonsPanel,
@@ -156,7 +158,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style>
 .row-input {

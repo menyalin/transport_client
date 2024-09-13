@@ -39,10 +39,13 @@
     </td>
   </tr>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 
-export default {
+export default defineComponent({
   name: 'CompareItemsTableRow',
   props: {
     item: Object,
@@ -56,7 +59,7 @@ export default {
       this.$router.push('/orders/' + item.orderId)
     },
   },
-}
+})
 </script>
 <style scoped>
 .has-diff {

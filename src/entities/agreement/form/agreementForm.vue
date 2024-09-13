@@ -57,19 +57,19 @@
       <div v-else class="mb-4">
         <v-divider />
         <v-text-field
+          v-model="form.executorName"
           label="Наименование исполнителя"
           outlined
-          v-model="form.executorName"
           class="mt-4"
           :style="{ width: '400px' }"
         />
         <v-select
+          v-model="form.allowedCarriers"
           multiple
           outlined
           :items="carriers"
           label="Разрешенные ТК"
           :style="{ width: '500px' }"
-          v-model="form.allowedCarriers"
           chips
           deletable-chips
         />
@@ -161,14 +161,18 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
-import { required } from 'vuelidate/lib/validators'
+import { defineComponent } from 'vue'
+
 import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
+
 import AppClients from './clients.vue'
 import AppTknames from './tkNames.vue'
 
-export default {
+export default defineComponent({
   name: 'AgreementForm',
   components: {
     ButtonsPanel,
@@ -291,7 +295,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style>
 .row-input {

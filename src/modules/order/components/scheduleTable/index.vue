@@ -170,25 +170,27 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 
-import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
-import { roundingHours } from './helpers'
-import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
-import getPeriodByWidthAndDate from './utils/getPeriodByWidthAndDate.js'
-
-import appTruckTitleCell from './truckTitleCell.vue'
-import appOrderCell from './orderCell.vue'
-import appDowntimeCell from './downtimeCell.vue'
-import appBgGrid from './bgGrid'
-import appNote from './note.vue'
-import appResultCell from './resultCell.vue'
-import AppSettingsCell from './settingsCell.vue'
+import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import { PermissionService } from '@/shared/services'
 
-export default {
+import appBgGrid from './bgGrid'
+import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
+import appDowntimeCell from './downtimeCell.vue'
+import { roundingHours } from './helpers'
+import appNote from './note.vue'
+import appOrderCell from './orderCell.vue'
+import appResultCell from './resultCell.vue'
+import AppSettingsCell from './settingsCell.vue'
+import appTruckTitleCell from './truckTitleCell.vue'
+import getPeriodByWidthAndDate from './utils/getPeriodByWidthAndDate'
+
+export default defineComponent({
   name: 'ScheduleTable',
   components: {
     appTruckTitleCell,
@@ -205,6 +207,7 @@ export default {
       required: true,
     },
   },
+  setup() {},
   data: () => ({
     tableWidth: 0,
     titleColumnWidth: 0,
@@ -321,9 +324,9 @@ export default {
     },
 
     lineForUndistributedOrdersMap() {
-      let tmpMap = new Map()
+      const tmpMap = new Map()
       // группируем рейсы по дате начала и определяем кол-во строк для отображения буферной зоны
-      for (let order of this.unDistributedOrders) {
+      for (const order of this.unDistributedOrders) {
         const group = Math.floor(this.getLeftShiftForOrder(order))
         if (tmpMap.has(group)) {
           const arr = tmpMap.get(group)
@@ -332,7 +335,7 @@ export default {
         } else tmpMap.set(group, [order._id])
       }
       const orderLinesMap = new Map()
-      for (let group of tmpMap) {
+      for (const group of tmpMap) {
         group[1].forEach((orderId) => {
           orderLinesMap.set(
             orderId,
@@ -344,7 +347,7 @@ export default {
     },
 
     bufferHeight() {
-      let arr = []
+      const arr = []
       if (this.lineForUndistributedOrdersMap.size === 0)
         return LINE_HEIGHT * 2 + 'px'
       this.lineForUndistributedOrdersMap.forEach((val) => arr.push(val))
@@ -361,14 +364,13 @@ export default {
       },
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.resizeScreen)
   },
   mounted() {
     window.addEventListener('resize', this.resizeScreen)
     this.resizeScreen()
   },
-  setup() {},
   methods: {
     dblclickHandler(e, isBuffer) {
       e.preventDefault()
@@ -614,7 +616,7 @@ export default {
       return !disabled && !confirmed
     },
   },
-}
+})
 </script>
 <style scoped>
 .table-wrapper {

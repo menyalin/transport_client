@@ -14,7 +14,7 @@
         <div class="text-h5 ma-3">
           {{ id ? 'Редактировать группу тарифов' : 'Создать группу тарифов' }}
         </div>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <div v-else class="pt-2">
           <buttons-panel
             panel-type="form"
@@ -44,26 +44,28 @@
           />
           <app-salary-tariff-group-list
             v-model="items"
-            @removeItem="deleteItem"
+            @remove-item="deleteItem"
           />
         </div>
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings'
-import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
-import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
-import { ButtonsPanel } from '@/shared/ui'
-import { SalaryTariffService } from '@/shared/services'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
+import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
+import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings'
+import { SalaryTariffService } from '@/shared/services'
+import { LoadSpinner, ButtonsPanel } from '@/shared/ui'
+
+export default defineComponent({
   name: 'CreateTariff',
   components: {
     ButtonsPanel,
-    AppLoadSpinner,
+    LoadSpinner,
     AppSalaryTariffSettings,
     AppSalaryTariffGroupList,
     AppSalaryTariffForm,
@@ -121,7 +123,7 @@ export default {
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('keyup', this.keypressEventHandler)
   },
   methods: {
@@ -192,6 +194,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

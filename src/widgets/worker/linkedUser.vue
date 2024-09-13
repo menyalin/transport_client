@@ -30,12 +30,16 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { LinkedUserInfo } from '@/entities/worker'
 import { PickUser, StaffRolesSelect } from '@/features/worker'
+
 import { useLinkedUserModel } from './useLinkedUserModel'
 
-export default {
+export default defineComponent({
   name: 'LinkedUserWidget',
   components: {
     PickUser,
@@ -85,5 +89,5 @@ export default {
       toggleDisableStatus,
     }
   },
-}
+})
 </script>

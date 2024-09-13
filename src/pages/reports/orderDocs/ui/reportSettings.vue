@@ -5,7 +5,7 @@
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
+    <refresh-btn @click="$emit('refresh')" />
     <v-text-field
       :value="settings.date"
       type="date"
@@ -117,13 +117,15 @@
   </div>
 </template>
 
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { watch, ref, computed } from 'vue'
-import { RefreshBtn } from '@/shared/ui'
-import { AppTableColumnSetting } from '@/shared/ui'
 
-export default {
+import { RefreshBtn, AppTableColumnSetting } from '@/shared/ui'
+import store from '@/store'
+
+export default defineComponent({
   name: 'ReportSettings',
   components: {
     RefreshBtn,
@@ -140,9 +142,9 @@ export default {
       required: true,
     },
   },
+  emits: ['refresh', 'changeHeaders', 'change'],
   setup(props, ctx) {
     const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
     const activeHeaders = ref([])
 
     function updateSettings(value, field) {
@@ -195,7 +197,6 @@ export default {
       updateActiveHeaders,
       updateSettings,
       listSettingsName,
-      allHeaders,
       activeHeaders,
       tkNameItems,
       clientItems,
@@ -205,7 +206,7 @@ export default {
       daysIntervalItems,
     }
   },
-}
+})
 </script>
 
 <style scoped>

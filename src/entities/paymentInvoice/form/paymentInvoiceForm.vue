@@ -3,27 +3,27 @@
     <buttons-panel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
       <download-doc-template-menu
         :templates="docTemplates"
         :disabledDownloadFiles="disabledDownloadFiles"
-        @downloadTemplate="downloadHandler"
+        @download-template="downloadHandler"
       />
       <download-doc-template-menu
         :templates="newDocTemplates"
         :disabledDownloadFiles="disabledDownloadFiles"
-        @downloadTemplate="newDownloadHandler"
         class="mx-3"
+        @download-template="newDownloadHandler"
       />
       <v-btn
         v-if="showLoaderBtn"
         class="mx-3"
-        @click="goToLoader"
         color="primary"
+        @click="goToLoader"
       >
         Загрузить из реестра
       </v-btn>
@@ -34,15 +34,15 @@
     <div id="form">
       <div class="fields-row">
         <v-text-field
-          label="Номер"
           v-model.trim="state.number"
+          label="Номер"
           dense
           outlined
           :style="{ maxWidth: '200px' }"
         />
         <v-text-field
-          label="Дата выставления"
           v-model="state.sendDate"
+          label="Дата выставления"
           dense
           outlined
           type="date"
@@ -50,8 +50,8 @@
           @paste="pasteDate"
         />
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
           dense
           outlined
@@ -69,8 +69,8 @@
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
+          @blur="v$.client.$touch"
           @change="changeClientHandler"
         />
         <v-autocomplete
@@ -85,21 +85,21 @@
           :disabled="!state.client || disabledMainFields"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.client.$touch"
           :error-messages="agreementErrorMessages"
+          @blur="v$.client.$touch"
         />
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Номер реестра клиента"
           v-model.trim="state.numberByClient"
+          label="Номер реестра клиента"
           dense
           outlined
           :style="{ maxWidth: '200px' }"
         />
         <v-text-field
-          label="Дата реестра клиента"
           v-model="state.dateByClient"
+          label="Дата реестра клиента"
           dense
           outlined
           type="date"
@@ -112,9 +112,9 @@
       </v-alert>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
         :disabled="disabledPickOrders || needSave || invalidForm"
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
@@ -123,24 +123,28 @@
         label="Примечание"
         dense
         outlined
-        @blur="v$.note.$touch"
         hide-details
+        @blur="v$.note.$touch"
       />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { computed, watch, ref } from 'vue'
-import router from '@/router'
-import store from '@/store'
-import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
-import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
-import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
-export default {
+import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
+import router from '@/router'
+import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
+import store from '@/store'
+
+import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates'
+import usePaymentInvoiceForm from './usePaymentInvoiceForm'
+
+export default defineComponent({
   name: 'PaymentInvoiceForm',
   components: {
     ButtonsPanel,
@@ -271,7 +275,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 
 <style scoped>

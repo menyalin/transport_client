@@ -11,25 +11,26 @@
 
     <DateRangeInput v-model="settings.period" />
     <v-text-field
+      v-model.number="settings.tripDurationInMinutes"
       dense
       type="number"
       min="10"
       outlined
       label="Время в пути, в минутах"
-      v-model.number="settings.tripDurationInMinutes"
       class="mt-3"
       :style="{ maxWidth: '300px' }"
     />
     <v-text-field
+      v-model.number="settings.unloadingDurationInMinutes"
       dense
       min="10"
       outlined
       type="number"
       label="Время погрузки/разгрузки, в минутах"
-      v-model.number="settings.unloadingDurationInMinutes"
       :style="{ maxWidth: '300px' }"
     />
     <v-autocomplete
+      v-model="settings.truckIds"
       outlined
       multiple
       multi-line
@@ -40,7 +41,6 @@
       clearable
       label="Грузовики"
       :items="truckItems"
-      v-model="settings.truckIds"
       :style="{ maxWidth: '600px' }"
       hide-details
     />
@@ -58,12 +58,16 @@
     </v-alert>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { DateRangeInput } from '@/shared/ui'
-import { useFeatureModel } from './model/model.js'
+
+import { useFeatureModel } from './model/model'
 import TopButtonsPanel from './topButtonsPanel.vue'
 
-export default {
+export default defineComponent({
   name: 'AutofillRouteDatesFeature',
   components: {
     DateRangeInput,
@@ -92,7 +96,7 @@ export default {
       selectAllTrucks,
     }
   },
-}
+})
 </script>
 <style scoped>
 #settings {

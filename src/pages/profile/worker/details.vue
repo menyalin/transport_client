@@ -1,27 +1,30 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="!!id && $store.getters.hasPermission('worker:delete')"
+    @delete="deleteHandler"
   >
     <worker-form :item="worker" @cancel="cancel" @submit="submit" />
     <linked-user
       v-if="id"
       :worker="worker"
-      @updateWorker="updateWorkerHandler"
+      @update-worker="updateWorkerHandler"
     />
   </form-wrapper>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
-import store from '@/store'
-import router from '@/router'
-import { FormWrapper } from '@/shared/ui'
-import { WorkerService } from '@/shared/services'
+
 import { WorkerForm } from '@/entities/worker'
+import router from '@/router'
+import { WorkerService } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
+import store from '@/store'
 import { LinkedUser } from '@/widgets/worker'
 
-export default {
+export default defineComponent({
   name: 'WorkerDetails',
   components: {
     FormWrapper,
@@ -32,8 +35,8 @@ export default {
     id: String,
   },
   setup(props) {
-    let worker = ref({})
-    let loading = ref(false)
+    const worker = ref({})
+    const loading = ref(false)
 
     async function getWorker() {
       if (!props.id) return null
@@ -83,6 +86,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

@@ -2,9 +2,9 @@
   <div>
     <buttons-panel
       panelType="form"
+      :disabledSubmit="invalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
-      :disabledSubmit="invalidForm"
     />
     <div class="form-wrapper">
       <v-text-field
@@ -14,19 +14,23 @@
         required
         clearable
         outlined
-        @blur="v$.fullName.$touch"
         :error-messages="fullNameErrorMessages"
         :style="{ maxWidth: '400px' }"
+        @blur="v$.fullName.$touch"
       />
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { watch } from 'vue'
+
 import router from '@/router'
 import { ButtonsPanel } from '@/shared/ui'
-import { useBaseFieldsForm } from './useBaseFieldsForm.js'
-export default {
+
+import { useBaseFieldsForm } from './useBaseFieldsForm'
+export default defineComponent({
   name: 'CompanyBaseFieldsForm',
   components: { ButtonsPanel },
   props: {
@@ -65,7 +69,7 @@ export default {
       saveHandler,
     }
   },
-}
+})
 </script>
 <style scoped>
 .form-wrapper {

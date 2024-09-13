@@ -16,11 +16,14 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
+
 import { WorkerService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'PickUserFeature',
   model: {
     prop: 'value',
@@ -55,6 +58,7 @@ export default {
           setCandidate(candidate)
         }
       } catch (e) {
+        this.$store.commit('setError', e.message)
         loading.value = false
       }
     }
@@ -67,5 +71,5 @@ export default {
       candidate,
     }
   },
-}
+})
 </script>

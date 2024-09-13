@@ -38,8 +38,10 @@
     </v-expansion-panels>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'MainFilters',
   model: {
     prop: 'filters',
@@ -50,6 +52,7 @@ export default {
     title: String,
     agreements: Array,
   },
+  emits: ['change'],
   data() {
     return {
       condItems: [
@@ -152,7 +155,7 @@ export default {
       },
     },
   },
-}
+})
 </script>
 <style scoped>
 .filter-row {

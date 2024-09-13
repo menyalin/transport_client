@@ -57,6 +57,7 @@
         </div>
 
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="filteredList"
           :loading="loading"
@@ -67,7 +68,6 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item._result`]="{ item }">
@@ -91,26 +91,30 @@
           :dialog="dialog"
           @cancel="cancelDialog"
           @update="updateItem"
-          @deletedItem="deletedItem"
+          @deleted-item="deletedItem"
         />
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
-import { SalaryTariffService } from '@/shared/services'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { useListColumnSetting } from '@/shared/hooks'
-import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
-import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
+
+import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
-import AppWaitingCell from '@/modules/accounting/components/salaryTariffGroupList/waiting.vue'
 import AppReturnCell from '@/modules/accounting/components/salaryTariffGroupList/return.vue'
+import AppWaitingCell from '@/modules/accounting/components/salaryTariffGroupList/waiting.vue'
+import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import { useListColumnSetting } from '@/shared/hooks'
+import { SalaryTariffService } from '@/shared/services'
 import { ButtonsPanel } from '@/shared/ui'
 
-export default {
+import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
+
+export default defineComponent({
   name: 'SalaryTariffList',
   components: {
     ButtonsPanel,
@@ -120,6 +124,13 @@ export default {
     AppRegionsCell,
     AppWaitingCell,
     AppReturnCell,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
 
   setup() {
@@ -189,13 +200,6 @@ export default {
   async created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
   },
   methods: {
     getResultStrByType(item) {
@@ -300,7 +304,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

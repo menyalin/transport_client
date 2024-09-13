@@ -9,8 +9,8 @@
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
-        :label="field.hiddenTitle || field.text"
         v-model="activeFields"
+        :label="field.hiddenTitle || field.text"
         :value="field.value"
         dense
         hide-details
@@ -18,10 +18,12 @@
     </v-list>
   </v-menu>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref, watch } from 'vue'
 
-export default {
+export default defineComponent({
   name: 'TableColumnSetting',
   props: {
     allHeaders: {
@@ -33,7 +35,7 @@ export default {
       required: true,
     },
   },
-
+  emits: ['change'],
   setup(props, ctx) {
     if (!props.listSettingsName) throw new Error('listSettingName is missing')
     const activeFields = ref([])
@@ -82,6 +84,6 @@ export default {
       inputHandler,
     }
   },
-}
+})
 </script>
 <style></style>

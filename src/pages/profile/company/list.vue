@@ -33,11 +33,14 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 
-export default {
+import { ButtonsPanel } from '@/shared/ui'
+
+export default defineComponent({
   name: 'CompanyList',
   components: {
     ButtonsPanel,
@@ -59,7 +62,7 @@ export default {
       this.$router.push({ name: 'createNewCompany' })
     },
   },
-}
+})
 </script>
 <style scoped>
 .current {

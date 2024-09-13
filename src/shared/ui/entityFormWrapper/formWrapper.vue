@@ -5,12 +5,12 @@
         <v-alert
           type="error"
           dismissible
-          v-model="showError"
+          :value="showError"
           transition="scale-transition"
         >
           {{ errorMessage }}
         </v-alert>
-        <load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <slot v-else />
         <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
           <v-icon left dark> mdi-delete </v-icon>
@@ -21,36 +21,27 @@
   </v-container>
 </template>
 
-<script>
+<script setup lang="ts">
 import { LoadSpinner } from '@/shared/ui'
 
-export default {
-  name: 'EntityFormWrapper',
-  components: {
-    LoadSpinner,
-  },
-  props: {
-    showError: Boolean,
-    errorMessage: Boolean,
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  methods: {
-    async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
-      if (res) {
-        this.$emit('delete')
-      }
-    },
-  },
+defineProps<{
+  showError: boolean
+  errorMessage: string
+  loading: boolean
+  displayDeleteBtn: boolean
+}>()
+
+const emit = defineEmits(['delete'])
+
+const deleteHandler = async () => {
+  // TODO: add confirmation
+
+  // const res = await this.$confirm(
+  //   'Вы действительно хотите удалить запись? '
+  // )
+  // if (res) {
+  emit('delete')
+  // }
 }
 </script>
 

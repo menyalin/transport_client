@@ -14,7 +14,7 @@
         </v-btn>
       </v-col>
       <v-col v-if="showSaveBtn" cols="auto">
-        <v-btn icon @click="$emit('save')" :disabled="disabledSubmit">
+        <v-btn icon :disabled="disabledSubmit" @click="$emit('save')">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
@@ -43,8 +43,9 @@
     </v-row>
   </v-container>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
   props: {
     submitTitle: { type: String },
     disabledSubmit: { type: Boolean, default: false },
@@ -53,11 +54,10 @@ export default {
     panelType: {
       type: String,
       require: true,
-      validator: function (value) {
-        return ['form', 'list'].indexOf(value) !== -1
-      },
+      validator: (value: string): boolean => ['form', 'list'].includes(value),
     },
   },
-}
+  emits: ['submit', 'refresh', 'save', 'cancel'],
+})
 </script>
 <style></style>

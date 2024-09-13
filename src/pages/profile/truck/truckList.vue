@@ -10,6 +10,7 @@
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :search="settings.search"
           :headers="filteredHeaders"
           dense
@@ -18,7 +19,6 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           :items="filteredTrucks"
           :loading="loading"
           @dblclick:row="dblClickRow"
@@ -76,16 +76,26 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+import { mapGetters } from 'vuex'
+
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import { CrewService } from '@/shared/services'
 import { ButtonsPanel } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-import { mapGetters } from 'vuex'
-export default {
+export default defineComponent({
   name: 'TruckList',
   components: {
     ButtonsPanel,
     AppTableColumnSettings,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   data: () => ({
     formName: 'TruckList',
@@ -245,7 +255,7 @@ export default {
         }))
     },
     crewsMapByTruck() {
-      let tmpMap = new Map()
+      const tmpMap = new Map()
       this.crews.forEach((cr) => {
         tmpMap.set(cr.transport.truck, { ...cr })
       })
@@ -261,13 +271,6 @@ export default {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getTrucks')
     this.getData()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
   },
 
   methods: {
@@ -294,7 +297,7 @@ export default {
       return this.$store.getters.driversMap.get(driverId)?.fullName || null
     },
   },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

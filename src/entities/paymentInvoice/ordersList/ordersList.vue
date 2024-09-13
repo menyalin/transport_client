@@ -1,8 +1,8 @@
 <template>
   <v-data-table
+    v-model="selected"
     :items="preparedOrders"
     :headers="headers"
-    v-model="selected"
     multiple
     item-key="_id"
     checkbox-color="primary"
@@ -14,7 +14,7 @@
     dense
     @dblclick:row="dblclickRowHandler"
   >
-    <template v-slot:top>
+    <template #top>
       <v-btn
         :disabled="!selectedOrderIds.length"
         small
@@ -58,12 +58,16 @@
     </template>
   </v-data-table>
 </template>
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, ref } from 'vue'
+
 import { moneyFormatter } from '@/shared/utils'
-import ALL_HEADERS from './headers.js'
-export default {
+import store from '@/store'
+
+import ALL_HEADERS from './headers'
+export default defineComponent({
   name: 'PaymentInvoiceOrdersList',
   props: {
     orders: {
@@ -134,7 +138,7 @@ export default {
       expanded,
     }
   },
-}
+})
 </script>
 <style scoped>
 .diff-cell {

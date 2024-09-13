@@ -15,10 +15,13 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { DriverForm } from '@/entities/driver'
 import { DriverService } from '@/shared/services'
-export default {
+export default defineComponent({
   name: 'DriverDetails',
   components: {
     DriverForm,
@@ -63,6 +66,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

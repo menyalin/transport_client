@@ -20,6 +20,7 @@
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="regions"
           :loading="loading"
@@ -30,20 +31,29 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         />
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-export default {
+
+import { ButtonsPanel } from '@/shared/ui'
+export default defineComponent({
   name: 'RegionList',
   components: {
     ButtonsPanel,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   data: () => ({
     formName: 'RegionList',
@@ -61,13 +71,6 @@ export default {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getRegions')
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
   methods: {
     create() {
       this.$router.push({ name: 'RegionCreate' })
@@ -79,7 +82,7 @@ export default {
       this.$router.push(`regions/${item._id}`)
     },
   },
-}
+})
 </script>
 <style scoped>
 #settings-wrapper {

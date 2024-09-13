@@ -16,12 +16,15 @@
   />
   <span v-else> {{ title }} </span>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-import { WorkerService } from '@/shared/services'
-import { useServerData } from '@/modules/common/hooks/useServerData'
 
-export default {
+import { useServerData } from '@/modules/common/hooks/useServerData'
+import { WorkerService } from '@/shared/services'
+
+export default defineComponent({
   name: 'WorkerAutocomplete',
   model: {
     prop: 'value',
@@ -59,6 +62,6 @@ export default {
       title,
     }
   },
-}
+})
 </script>
 <style></style>

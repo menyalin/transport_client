@@ -15,11 +15,14 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { CrewService } from '@/shared/services'
-import { CrewForm } from '@/entities/crew'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { CrewForm } from '@/entities/crew'
+import { CrewService } from '@/shared/services'
+
+export default defineComponent({
   name: 'CrewDetails',
   components: {
     CrewForm,
@@ -64,6 +67,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

@@ -16,8 +16,8 @@
     <NotificationListFeature
       :partnerId="partner._id"
       :items="partner.idleTruckNotifications"
-      @updatePartner="updatePartnerHandler"
-      @editNotify="editNotifyHandler"
+      @update-partner="updatePartnerHandler"
+      @edit-notify="editNotifyHandler"
     />
     <v-dialog :value="dialog" persistent max-width="1200" :loading="loading">
       <IdleTruckNotifyForm
@@ -31,17 +31,22 @@
   </div>
 </template>
 
-<script>
-import { NotificationListFeature } from '@/features/partner'
-import { useWidgetModel } from './model/model.js'
-import { IdleTruckNotifyForm } from '@/entities/partner'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { IdleTruckNotifyForm } from '@/entities/partner'
+import { NotificationListFeature } from '@/features/partner'
+
+import { useWidgetModel } from './model/model'
+
+export default defineComponent({
   name: 'IdleTruckNotificationsWidget',
   components: { NotificationListFeature, IdleTruckNotifyForm },
   props: {
     partner: Object,
   },
+  emits: ['updatePartner'],
   setup(props, ctx) {
     function updatePartnerHandler(payload) {
       ctx.emit('updatePartner', payload)
@@ -67,7 +72,7 @@ export default {
       editableItem,
     }
   },
-}
+})
 </script>
 
 <style scoped>

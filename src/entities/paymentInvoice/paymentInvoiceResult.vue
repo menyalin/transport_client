@@ -7,16 +7,18 @@
     <b>{{ vatSum }}</b> Кол-во рейсов: <b>{{ ordersCount }}</b>
   </v-alert>
 </template>
-<script>
-import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-export default {
+
+import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+export default defineComponent({
   name: 'PaymentInvoiceResult',
   props: {
     orders: { type: Array, required: true, default: () => [] },
   },
   setup(props) {
-    
     const total = computed(() => {
       const sum = props.orders.reduce(
         (res, item) => res + item?.savedTotal?.price,
@@ -49,6 +51,6 @@ export default {
 
     return { total, totalWOVat, vatSum, ordersCount }
   },
-}
+})
 </script>
 <style scoped></style>

@@ -26,12 +26,15 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-import store from '@/store'
-import { moneyFormatter } from '@/shared/utils'
 
-export default {
+import { moneyFormatter } from '@/shared/utils'
+import store from '@/store'
+
+export default defineComponent({
   props: {
     items: Array,
   },
@@ -89,7 +92,7 @@ export default {
       preparedItems,
     }
   },
-}
+})
 </script>
 <style scoped>
 .zone-row {

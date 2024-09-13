@@ -56,11 +56,14 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { required, minLength, sameAs } from 'vuelidate/lib/validators'
+<script lang="ts">
+//@ts-nocheck
+import { required, minLength, sameAs } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
+
 import { UserService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'RestorePassword',
   props: {
     token: {
@@ -84,17 +87,19 @@ export default {
     passwordErrors() {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
-      !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required &&
+      if (!this.$v.form.password.minLength)
+        errors.push('Слишком короткий пароль')
+      if (!this.$v.form.password.required)
         errors.push('Поле не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.form.confirmPassword.$dirty) return errors
-      !this.$v.form.confirmPassword.required &&
+      if (!this.$v.form.confirmPassword.required)
         errors.push('Поле не может быть пустым')
-      !this.$v.form.confirmPassword.sameAs && errors.push('Пароли не совпадают')
+      if (!this.$v.form.confirmPassword.sameAs)
+        errors.push('Пароли не совпадают')
       return errors
     },
   },
@@ -150,6 +155,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

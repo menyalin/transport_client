@@ -13,10 +13,13 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { CrewForm } from '@/entities/crew'
 
-export default {
+export default defineComponent({
   name: 'CrewCreate',
   components: {
     CrewForm,
@@ -58,6 +61,6 @@ export default {
       this.$router.go(-1)
     },
   },
-}
+})
 </script>
 <style></style>

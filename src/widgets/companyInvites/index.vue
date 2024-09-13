@@ -4,10 +4,13 @@
     <app-invites-table :invites="invites" />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppInvitesTable from './invitesTable.vue'
 
-export default {
+export default defineComponent({
   name: 'CompanyInvites',
   components: {
     AppInvitesTable,
@@ -18,7 +21,7 @@ export default {
       required: true,
     },
   },
-}
+})
 </script>
 <style scoped>
 .invite-wrapper {

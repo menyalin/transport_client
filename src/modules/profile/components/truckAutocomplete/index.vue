@@ -1,5 +1,6 @@
 <template>
   <v-autocomplete
+    v-model:search-input="search"
     clearable
     outlined
     dense
@@ -10,7 +11,6 @@
     :items="[...items, ...tmpItems]"
     hide-no-data
     :loading="isLoading"
-    :search-input.sync="search"
     :filter="() => true"
     :label="label"
     placeholder="Введите текст для поиска"
@@ -22,9 +22,12 @@
     @click:clear="clear"
   />
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import TruckService from '../../services/truck.service'
+
+import { TruckService } from '@/shared/services'
 
 const _getTruckNameString = (truck) => {
   let resStr = ''
@@ -38,7 +41,7 @@ const _getTruckNameString = (truck) => {
   return resStr
 }
 
-export default {
+export default defineComponent({
   name: 'TruckAutocomplete',
   model: {
     prop: 'truckId',
@@ -61,6 +64,7 @@ export default {
       default: false,
     },
   },
+  emits: ['change'],
 
   data() {
     return {
@@ -141,6 +145,6 @@ export default {
       this.$emit('change', null)
     },
   },
-}
+})
 </script>
 <style></style>

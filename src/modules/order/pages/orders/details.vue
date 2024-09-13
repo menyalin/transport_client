@@ -11,7 +11,7 @@
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <app-order-form
           v-else
           :order="item"
@@ -26,24 +26,32 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import socket from '@/socket'
-import { OrderService } from '@/shared/services'
-import AppOrderForm from '../../components/orderForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { useOrderValidations } from '@/entities/order'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { useOrderValidations } from '@/entities/order'
+import { OrderService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+import socket from '@/socket'
+
+import AppOrderForm from '../../components/orderForm/index.vue'
+
+export default defineComponent({
   name: 'DetailsOrder',
   components: {
     AppOrderForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
 
   props: {
     id: String,
     truckId: String,
     startDate: String,
+  },
+  setup() {
+    const { beforeSubmitOrderValidation } = useOrderValidations()
+    return { beforeSubmitOrderValidation }
   },
   data() {
     return {
@@ -57,6 +65,15 @@ export default {
       },
     }
   },
+  computed: {
+    showDeleteBtn() {
+      return (
+        !!this.id &&
+        this.$store.getters.hasPermission('order:delete') &&
+        this.item?.state?.status === 'needGet'
+      )
+    },
+  },
   watch: {
     id: {
       immediate: true,
@@ -67,15 +84,6 @@ export default {
           this.loading = false
         }
       },
-    },
-  },
-  computed: {
-    showDeleteBtn() {
-      return (
-        !!this.id &&
-        this.$store.getters.hasPermission('order:delete') &&
-        this.item?.state?.status === 'needGet'
-      )
     },
   },
 
@@ -100,10 +108,6 @@ export default {
         ],
       }
     }
-  },
-  setup() {
-    const { beforeSubmitOrderValidation } = useOrderValidations()
-    return { beforeSubmitOrderValidation }
   },
   methods: {
     toggleAlert() {
@@ -166,6 +170,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

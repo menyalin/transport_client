@@ -29,10 +29,10 @@
         >
           <v-list-item :to="item.link">
             <v-list-item-icon>
-              <v-icon v-text="item.icon" />
+              <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="item.text" />
+              <v-list-item-title> {{ item.text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-badge>
@@ -41,9 +41,11 @@
   </v-navigation-drawer>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
-export default {
+export default defineComponent({
   name: 'LeftAdminNav',
   props: {
     items: {
@@ -72,6 +74,6 @@ export default {
         )
     },
   },
-}
+})
 </script>
 <style></style>

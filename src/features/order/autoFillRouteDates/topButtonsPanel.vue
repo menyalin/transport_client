@@ -1,20 +1,22 @@
 <template>
   <div class="panel-wrapper">
     <v-btn @click="$router.go(-1)"> Отмена </v-btn>
-    <v-btn @click="$emit('submit')" color="primary" :disabled="disabled">
+    <v-btn color="primary" :disabled="disabled" @click="$emit('submit')">
       Заполнить временные метки
     </v-btn>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'TopButtonsPanel',
   props: {
     disabled: { type: Boolean, default: false },
     loading: { type: Boolean, default: false },
   },
   setup() {},
-}
+})
 </script>
 <style scoped>
 .panel-wrapper {

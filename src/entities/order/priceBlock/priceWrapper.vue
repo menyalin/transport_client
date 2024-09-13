@@ -14,17 +14,17 @@
       </v-btn>
     </div>
     <app-costs-table
-      v-model="items"
+      :items="items"
       :readonly="readonly"
-      @editPrice="editPrice"
-      @deletePrice="deletePrice"
       :basePrePrice="basePrePrice"
       :hidePrePrice="hidePrePrice"
       :usePriceWithVat="agreement.usePriceWithVAT"
+      @edit-price="editPrice"
+      @delete-price="deletePrice"
     />
     <app-dialog-form
+      v-model:dialog="dialog"
       :item="editedItem"
-      :dialog.sync="dialog"
       :allowedCashPayment="!!agreement.cashPayment"
       :allowedVat="agreement.vatRate !== 0"
       :availibleTypes="availibleTypes"
@@ -32,13 +32,17 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { BlockTitle } from '@/entities/order'
+
+import Price from './Price.class'
 import AppCostsTable from './costsTable.vue'
 import AppDialogForm from './dialogForm.vue'
-import Price from './Price.class'
 
-export default {
+export default defineComponent({
   name: 'PriceWrapper',
   components: {
     BlockTitle,
@@ -142,7 +146,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .button-panel {

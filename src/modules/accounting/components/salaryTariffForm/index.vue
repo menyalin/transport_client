@@ -45,13 +45,13 @@
             hide-details
           />
           <v-select
+            v-model="tmpItem.consigneeTypes"
             label="Типы грузополучателей"
             :items="$store.getters.partnerGroups"
             dense
             multiple
             outlined
             hide-details
-            v-model="tmpItem.consigneeTypes"
           />
           <app-points
             v-if="tmpItem.type === 'points'"
@@ -141,17 +141,21 @@
     </v-dialog>
   </div>
 </template>
-<script>
-import AppPoints from './points.vue'
-import AppZones from './zones.vue'
-import AppRegions from './regions.vue'
-import AppAdditionalPoints from './additionalPoints.vue'
-import AppWaiting from './waiting.vue'
-import AppReturn from './return.vue'
-import { SalaryTariffService } from '@/shared/services'
-import { SalaryTariffDTO } from './salaryTariff.dto'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { SalaryTariffService } from '@/shared/services'
+
+import AppAdditionalPoints from './additionalPoints.vue'
+import AppPoints from './points.vue'
+import AppRegions from './regions.vue'
+import AppReturn from './return.vue'
+import { SalaryTariffDTO } from './salaryTariff.dto'
+import AppWaiting from './waiting.vue'
+import AppZones from './zones.vue'
+
+export default defineComponent({
   name: 'TariffForm',
   components: {
     AppPoints,
@@ -237,7 +241,7 @@ export default {
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('keyup', this.keypressEventHandler)
   },
   methods: {
@@ -274,7 +278,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 #fields-wrapper {

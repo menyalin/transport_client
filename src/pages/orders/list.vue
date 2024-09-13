@@ -10,17 +10,17 @@
     <orders-table-settings
       v-model="settings"
       :minDate="minDate"
-      @putTableToClipboard="putOrdersTableToClipboard(items)"
       :allHeaders="allHeaders"
-      @updateHeaders="updateActiveHeaders"
+      @put-table-to-clipboard="putOrdersTableToClipboard(items)"
+      @update-headers="updateActiveHeaders"
     />
     <orders-table
+      v-model:listOptions="settings.listOptions"
       :items="items"
       :headers="headers"
       :loading="loading"
-      :listOptions.sync="settings.listOptions"
       :statisticData="statisticData"
-      @openDocsDialog="openDocsDialog"
+      @open-docs-dialog="openDocsDialog"
     />
     <v-dialog v-model="docDialog" max-width="1300" persistent>
       <order-docs-list
@@ -32,14 +32,23 @@
     </v-dialog>
   </entity-list-wrapper>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
-import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import { OrdersTable, OrderDocsList, useOrderDocs, OrdersTableSettings } from '@/entities/order'
-import { useListData, putOrdersTableToClipboard } from './model'
-import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 
-export default {
+import {
+  OrdersTable,
+  OrderDocsList,
+  useOrderDocs,
+  OrdersTableSettings,
+} from '@/entities/order'
+import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
+import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
+
+import { useListData, putOrdersTableToClipboard } from './model'
+
+export default defineComponent({
   name: 'OrdersListPage',
   components: {
     EntityListWrapper,
@@ -48,7 +57,7 @@ export default {
     OrdersTableSettings,
     OrderDocsList,
   },
-  setup(_props, _ctx) {
+  setup() {
     const allHeaders = ORDERS_TABLE_HEADERS
     const headers = ref([])
 
@@ -95,5 +104,5 @@ export default {
       cancelDocDialog,
     }
   },
-}
+})
 </script>

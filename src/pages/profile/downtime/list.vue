@@ -38,6 +38,7 @@
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="list"
           :loading="loading"
@@ -48,7 +49,6 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.type`]="{ item }">
@@ -77,11 +77,13 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { DowntimeService } from '@/shared/services'
 
+import { DowntimeService } from '@/shared/services'
 import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 
 const _initPeriod = () => {
@@ -92,11 +94,18 @@ const _initPeriod = () => {
   ]
 }
 
-export default {
+export default defineComponent({
   name: 'DowntimeList',
   components: {
     ButtonsPanel,
     DateRangeInput,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   data: () => ({
     formName: 'downtimeList',
@@ -149,13 +158,6 @@ export default {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
   methods: {
     create() {
       this.$router.push({ name: 'DowntimeCreate' })
@@ -199,7 +201,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

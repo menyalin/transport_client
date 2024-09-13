@@ -15,30 +15,34 @@
 
     <payment-invoices-list-settings
       v-model="settings"
-      @updateHeaders="changeHeaders"
+      @update-headers="changeHeaders"
     />
     <payment-invoice-data-table
       v-model="settings"
+      v-model:listOptions="listOptions"
       :items="items"
       :totalCount="totalCount"
       :routesCount="routesCount"
       :total="total"
       :headers="headers"
-      :listOptions.sync="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
-import { useListData } from './model/useListData.js'
-import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
+
 import {
   PaymentInvoicesListSettings,
   PaymentInvoiceDataTable,
 } from '@/entities/paymentInvoice'
+import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 
-export default {
+import { useListData } from './model/useListData'
+
+export default defineComponent({
   name: 'PaymentInvoiceList',
   components: {
     ButtonsPanel,
@@ -79,6 +83,6 @@ export default {
       downloadHandler,
     }
   },
-}
+})
 </script>
 <style></style>

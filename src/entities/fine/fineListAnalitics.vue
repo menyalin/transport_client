@@ -21,53 +21,58 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
+
 import store from '@/store'
 
-export default {
-  name: 'FineListAnalitics',
-  props: {
-    data: Object,
-  },
-  setup(props) {
-    function formatSum(sum) {
-      if (!sum) return '-'
-      if (!isFinite(sum)) return '__invalid number__'
-      return Intl.NumberFormat().format(sum)
-    }
+export default defineComponent(
+  {
+    name: 'FineListAnalitics',
+    props: {
+      data: Object,
+    },
+    setup(props) {
+      function formatSum(sum) {
+        if (!sum) return '-'
+        if (!isFinite(sum)) return '__invalid number__'
+        return Intl.NumberFormat().format(sum)
+      }
 
-    const showIsWithheld = computed(() => {
-      return store.getters.hasPermission('isWithheldRead')
-    })
-    const totalSum = computed(() => {
-      return formatSum(props.data.totalSum)
-    })
-    const totalSumWithDiscount = computed(() => {
-      return formatSum(props.data.totalSumWithDiscount)
-    })
-    const totalPayed = computed(() => {
-      return formatSum(props.data.totalPayed)
-    })
-    const needWithheld = computed(() => {
-      return formatSum(props.data.needWithheld)
-    })
+      const showIsWithheld = computed(() => {
+        return store.getters.hasPermission('isWithheldRead')
+      })
+      const totalSum = computed(() => {
+        return formatSum(props.data.totalSum)
+      })
+      const totalSumWithDiscount = computed(() => {
+        return formatSum(props.data.totalSumWithDiscount)
+      })
+      const totalPayed = computed(() => {
+        return formatSum(props.data.totalPayed)
+      })
+      const needWithheld = computed(() => {
+        return formatSum(props.data.needWithheld)
+      })
 
-    const isWithheld = computed(() => {
-      return formatSum(props.data.isWithheld)
-    })
+      const isWithheld = computed(() => {
+        return formatSum(props.data.isWithheld)
+      })
 
-    return {
-      showIsWithheld,
-      totalSum,
-      totalSumWithDiscount,
-      totalPayed,
-      needWithheld,
-      isWithheld,
-    }
-  },
-}
-// Итого штраф, итого штраф со скидкой, итого удержать
+      return {
+        showIsWithheld,
+        totalSum,
+        totalSumWithDiscount,
+        totalPayed,
+        needWithheld,
+        isWithheld,
+      }
+    },
+  }
+  // Итого штраф, итого штраф со скидкой, итого удержать
+)
 </script>
 <style scoped>
 .wrapper {

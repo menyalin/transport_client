@@ -7,9 +7,9 @@
         isInvalidForm ||
         !formChanged
       "
+      class="mb-3"
       @cancel="cancel"
       @submit="submit"
-      class="mb-3"
     />
     <div v-if="isAdmin">
       <v-text-field
@@ -61,18 +61,21 @@
       v-model="form.placesForTransferDocs"
       :partnerId="partner._id"
       :places="partner.placesForTransferDocs"
-      @updatePartner="updatePartnerHandler"
+      @update-partner="updatePartnerHandler"
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
 
 import { ButtonsPanel } from '@/shared/ui'
+
 import PlacesForTransferDocs from './placesForTransferDocs.vue'
 
-export default {
+export default defineComponent({
   name: 'PartnerForm',
   components: {
     ButtonsPanel,
@@ -174,5 +177,5 @@ export default {
       })
     },
   },
-}
+})
 </script>

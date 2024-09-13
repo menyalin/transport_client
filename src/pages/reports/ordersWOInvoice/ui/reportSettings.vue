@@ -1,11 +1,11 @@
 <template>
   <div class="settings-wrapper">
     <app-table-column-setting
-      :allHeaders="allHeaders"
+      :allHeaders="allHeadersProps"
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
+    <refresh-btn @click="$emit('refresh')" />
     <DateRangeInput
       :period="settings.period"
       @change="updateSettings($event, 'period')"
@@ -48,12 +48,15 @@
   </div>
 </template>
 
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { watch, ref, computed } from 'vue'
-import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
 
-export default {
+import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
+import store from '@/store'
+
+export default defineComponent({
   name: 'ReportSettings',
   components: {
     RefreshBtn,
@@ -72,9 +75,10 @@ export default {
       required: true,
     },
   },
+  emits: ['refresh', 'changeHeaders', 'change'],
   setup(props, ctx) {
     const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
+    const allHeadersProps = props.allHeaders
     const activeHeaders = ref([])
 
     function updateSettings(value, field) {
@@ -96,12 +100,12 @@ export default {
       updateActiveHeaders,
       updateSettings,
       listSettingsName,
-      allHeaders,
+      allHeadersProps,
       activeHeaders,
       tkNameItems,
     }
   },
-}
+})
 </script>
 
 <style scoped>

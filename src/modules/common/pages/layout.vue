@@ -24,12 +24,15 @@
     </v-main>
   </v-app>
 </template>
-<script>
-import AppAdminBar from '@/modules/common/components/appBar'
-import AppSnackbar from '@/modules/common/components/appSnackbar'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 
-export default {
+import AppAdminBar from '@/modules/common/components/appBar'
+import AppSnackbar from '@/modules/common/components/appSnackbar'
+
+export default defineComponent({
   name: 'ProfileLayout',
   components: {
     AppAdminBar,
@@ -40,6 +43,6 @@ export default {
     ...mapGetters(['isLoggedIn', 'user']),
   },
   methods: {},
-}
+})
 </script>
 <style></style>

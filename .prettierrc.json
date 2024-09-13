@@ -1,4 +1,6 @@
 {
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "plugins": ["prettier-plugin-organize-imports"],
   "tabWidth": 2,
   "semi": false,
   "singleQuote": true,

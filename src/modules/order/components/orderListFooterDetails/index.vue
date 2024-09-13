@@ -12,8 +12,10 @@
     </div>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'OrderListFooterDetails',
   props: {
     total: Number,
@@ -22,7 +24,7 @@ export default {
     onCheck: Number,
     missing: Number,
   },
-}
+})
 </script>
 <style scoped>
 .wrapper {

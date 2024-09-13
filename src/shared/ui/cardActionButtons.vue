@@ -3,18 +3,20 @@
     <slot />
     <v-spacer />
     <v-btn @click="cancelHandler">Отмена</v-btn>
-    <v-btn @click="saveHandler" color="primary" :disabled="submitDisabled">
+    <v-btn color="primary" :disabled="submitDisabled" @click="saveHandler">
       {{ submitBtnLabel }}
     </v-btn>
   </v-card-actions>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'CardActionButtons',
   props: {
     submitDisabled: { type: Boolean, default: false },
     submitBtnLabel: { type: String, default: 'Создать' },
   },
+  emits: ['cancel', 'submit'],
   methods: {
     cancelHandler() {
       this.$emit('cancel')
@@ -23,5 +25,5 @@ export default {
       this.$emit('submit')
     },
   },
-}
+})
 </script>

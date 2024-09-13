@@ -11,10 +11,12 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { computed, ref, watch } from 'vue'
-export default {
+export default defineComponent({
   name: 'DriversSalaryPeriod',
   model: {
     prop: 'value', // period
@@ -49,7 +51,7 @@ export default {
       changePeriod,
     }
   },
-}
+})
 </script>
 <style scoped>
 .period-wrapper {

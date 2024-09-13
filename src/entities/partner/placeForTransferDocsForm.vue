@@ -8,9 +8,9 @@
           label="Название площадки"
           dense
           outlined
-          @blur="v$.title.$touch"
           :errorMessages="titleErrorMessages"
           :style="{ maxWidth: '600px' }"
+          @blur="v$.title.$touch"
         />
         <address-autocomplete
           v-model="state.address"
@@ -18,8 +18,8 @@
           label="Адрес площадки"
           outlined
           :partnerId="resctrictAddresses ? partnerId : undefined"
-          @blur="v$.address.$touch"
           :errorMessages="addressErrorMessages"
+          @blur="v$.address.$touch"
         />
         <address-autocomplete
           v-model="state.allowedLoadingPoints"
@@ -55,20 +55,23 @@
     <v-card-actions>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" @click="submit" :disabled="invalidForm">
+      <v-btn color="primary" :disabled="invalidForm" @click="submit">
         Сохранить
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch, defineComponent } from 'vue'
+
 import { AddressAutocomplete } from '@/entities/address'
 
-export default {
+export default defineComponent({
   name: 'PlaceForTransferDocsForm',
   components: {
     AddressAutocomplete,
@@ -171,7 +174,7 @@ export default {
       resctrictAddresses,
     }
   },
-}
+})
 </script>
 
 <style scoped>

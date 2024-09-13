@@ -4,10 +4,13 @@
     <div v-else>Ошибка подтверждения: {{ error }}</div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { UserService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'ConfirmEmail',
   props: {
     token: {
@@ -29,6 +32,6 @@ export default {
       this.error = e?.response?.data || e.message
     }
   },
-}
+})
 </script>
 <style />

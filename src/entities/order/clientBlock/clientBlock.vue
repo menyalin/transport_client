@@ -36,7 +36,6 @@
       v-if="showChangeAgreementBtn"
       color="primary"
       outlined
-      text
       small
       class="mb-3 ml-5"
       @click="changeAgreementHandler"
@@ -45,12 +44,15 @@
     </v-btn>
   </div>
 </template>
-<script>
-import { AgreementService } from '@/shared/services'
-import { BlockTitle } from '@/entities/order'
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { BlockTitle } from '@/entities/order'
+import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete/index.vue'
+import { AgreementService } from '@/shared/services'
+
+export default defineComponent({
   name: 'ClientBlock',
   components: {
     BlockTitle,
@@ -216,7 +218,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .client-block {

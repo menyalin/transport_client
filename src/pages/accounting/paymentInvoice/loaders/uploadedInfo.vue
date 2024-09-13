@@ -16,10 +16,13 @@
     </div>
   </v-alert>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { moneyFormatter } from '@/shared/utils'
 
-export default {
+export default defineComponent({
   name: 'UploadedInformation',
   props: {
     items: Array,
@@ -41,6 +44,6 @@ export default {
       return this.ordersTotalSum !== this.totalPickedSum
     },
   },
-}
+})
 </script>
 <style scoped></style>

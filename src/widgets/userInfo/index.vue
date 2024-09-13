@@ -62,12 +62,16 @@
     />
   </div>
 </template>
-<script>
-import { UserService } from '@/shared/services'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
+import { UserService } from '@/shared/services'
+
 import AppChangePasswordDialog from './changePasswordDialog.vue'
 
-export default {
+export default defineComponent({
   name: 'UserInfo',
   components: { AppChangePasswordDialog },
   data() {
@@ -95,7 +99,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped>
 .list-row {

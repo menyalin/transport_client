@@ -21,8 +21,8 @@
           dense
         />
         <v-autocomplete
-          multiple
           v-model="v$.addresses.$model"
+          multiple
           label="Адреса"
           outlined
           chips
@@ -51,8 +51,8 @@
         <div class="row_section">
           <div class="column left_column">
             <v-text-field
-              type="number"
               v-model="state.idleHoursBeforeNotify"
+              type="number"
               label="Часов до отправки уведомления"
               outlined
             />
@@ -69,19 +69,19 @@
         </div>
 
         <v-select
-          :items="truckFilterStatusItems"
           v-model="state.useTruckFilter"
+          :items="truckFilterStatusItems"
           label="Фильтр по грузовикам"
           outlined
           hide-details
         />
         <v-autocomplete
           v-if="state.useTruckFilter !== 'notUsed'"
+          v-model="v$.trucks.$model"
           multiple
           chips
           item-value="_id"
           item-text="regNum"
-          v-model="v$.trucks.$model"
           label="Грузовики"
           deletable-chips
           auto-select-first
@@ -96,15 +96,18 @@
     </v-card-text>
     <v-card-actions class="buttons-wrapper">
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn @click="submit" :disabled="invalidForm || loading" color="primary">
+      <v-btn :disabled="invalidForm || loading" color="primary" @click="submit">
         Сохранить
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
-<script>
-import { useFormState } from './model/useFormState.js'
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
+import { useFormState } from './model/useFormState'
+export default defineComponent({
   name: 'IdleTruckNotifyForm',
   props: {
     partnerId: String,
@@ -143,7 +146,7 @@ export default {
       truckItems,
     }
   },
-}
+})
 </script>
 <style scoped>
 .form_wrapper {

@@ -40,8 +40,10 @@
     </v-list>
   </v-menu>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'SettingsCell',
   model: {
     prop: 'settings',
@@ -84,6 +86,6 @@ export default {
         showDowntimes: true,
       }
   },
-}
+})
 </script>
 <style scoped></style>

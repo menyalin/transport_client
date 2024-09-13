@@ -3,20 +3,24 @@
     <ButtonsPanel panelType="list" @submit="create" @refresh="refresh" />
     <TariffContractListSettings :settings="settings" />
     <TariffContractListDataTable
+      v-model:listOptions="listOptions"
       :items="items"
       :loading="loading"
-      :listOptions.sync="listOptions"
     />
   </EntityListWrapper>
 </template>
-<script>
-import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import { useListData } from './model/useListData'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import {
   TariffContractListSettings,
   TariffContractListDataTable,
 } from '@/entities/tariff_contract'
-export default {
+import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
+
+import { useListData } from './model/useListData'
+export default defineComponent({
   name: 'TariffContractList',
   components: {
     EntityListWrapper,
@@ -39,5 +43,5 @@ export default {
       this.$router.push({ name: 'TariffContractCreate' })
     },
   },
-}
+})
 </script>

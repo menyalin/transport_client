@@ -20,14 +20,18 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
-import { DateRangeInput } from '@/shared/ui'
-import initDateRange from './initDateRange.js'
+
 import { ReportService } from '@/shared/services'
+import { DateRangeInput } from '@/shared/ui'
 import store from '@/store'
 
-export default {
+import initDateRange from './initDateRange'
+
+export default defineComponent({
   name: 'DriversGradesReport',
   components: {
     DateRangeInput,
@@ -53,7 +57,7 @@ export default {
       getReportHandler,
     }
   },
-}
+})
 </script>
 <style scoped>
 #wrapper {

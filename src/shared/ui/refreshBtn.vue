@@ -4,10 +4,12 @@
   </v-btn>
 </template>
 
-<script>
-export default {
-  name: 'refreshBtn',
-}
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
+  name: 'RefreshBtn',
+})
 </script>
 
 <style></style>

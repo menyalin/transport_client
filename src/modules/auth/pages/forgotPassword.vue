@@ -41,10 +41,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { UserService } from '@/shared/services'
 
-export default {
+export default defineComponent({
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (vm.$store.getters.isLoggedIn) {
+        vm.$router.push('/')
+      }
+    })
+  },
   data: () => ({
     formTitle: 'Забыли пароль?',
     loading: false,
@@ -53,13 +63,6 @@ export default {
     messageType: null,
     errorTimeoutMs: 5000,
   }),
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (vm.$store.getters.isLoggedIn) {
-        vm.$router.push('/')
-      }
-    })
-  },
   computed: {
     isFormValid() {
       return !!this.email
@@ -94,7 +97,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 
 <style>

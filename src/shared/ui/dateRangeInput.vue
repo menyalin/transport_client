@@ -36,10 +36,12 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   name: 'DateRange',
   model: {
     prop: 'period',
@@ -53,6 +55,7 @@ export default {
       type: String,
     },
   },
+  emits: ['change'],
   data() {
     return {
       tmpPeriod: [null, null],
@@ -79,7 +82,7 @@ export default {
   methods: {
     changeDate(val) {
       if (!val || val.length !== 2) return
-      let tmpVal = val
+      const tmpVal = val
 
       if (dayjs(val[1]).isBefore(val[0], 'day')) tmpVal.reverse()
 
@@ -89,7 +92,7 @@ export default {
       ])
     },
   },
-}
+})
 </script>
 <style>
 .date-range-wrapper {

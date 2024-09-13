@@ -7,10 +7,13 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppTknameForm from '@/modules/profile/components/tkNameForm'
 
-export default {
+export default defineComponent({
   name: 'TkNameCreate',
   components: {
     AppTknameForm,
@@ -38,6 +41,6 @@ export default {
       this.$router.go(-1)
     },
   },
-}
+})
 </script>
 <style></style>

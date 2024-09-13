@@ -5,25 +5,29 @@
       v-model="settings"
       :agreementItems="agreementItems"
       :allHeaders="allHeaders"
-      @changeHeaders="changeHeaders"
+      @change-headers="changeHeaders"
       @refresh="refresh"
     />
     <ReportDataTable
+      v-model:listOptions="listOptions"
       :items="items"
       :headers="headers"
       :loading="loading"
-      :listOptions.sync="listOptions"
       :statisticData="statisticData"
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
+
 import { ReportTitle } from '@/shared/ui'
 
-import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
-export default {
+import { ReportSettings, ReportDataTable } from './ui'
+
+export default defineComponent({
   name: 'OrdersWOInvoice',
   components: {
     ReportSettings,
@@ -60,7 +64,7 @@ export default {
       allHeaders: ALL_HEADERS,
     }
   },
-}
+})
 </script>
 <style scoped>
 .page-wrapper {

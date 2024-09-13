@@ -18,9 +18,12 @@
     </tr>
   </table>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { moneyFormatter } from '@/shared/utils'
-export default {
+export default defineComponent({
   name: 'PaymentInvoiceListAnalitics',
   props: {
     data: {
@@ -42,7 +45,7 @@ export default {
       moneyFormatter,
     }
   },
-}
+})
 </script>
 <style scoped>
 tr .row-title {

@@ -5,7 +5,7 @@
       listSettingsName="pickOrdersForPaymentInvoiceTable"
       @change="updateHeadersHandler"
     />
-    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
+    <v-btn icon @click="refreshHandler"> <v-icon>mdi-refresh</v-icon></v-btn>
     <date-range-input v-model="settings.period" class="mx-2" />
 
     <v-autocomplete
@@ -42,8 +42,8 @@
       @change="settings.listOptions.page = 1"
     />
     <v-autocomplete
-      label="Зоны погрузки"
       v-model="settings.loadingZones"
+      label="Зоны погрузки"
       :items="loadingZoneItems"
       item-value="_id"
       item-text="name"
@@ -58,20 +58,23 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
+import { useOrderListSettingsData } from '@/shared/hooks'
 import {
   AppTableColumnSetting,
   DateRangeInput,
   OrderDocStatusSelector,
 } from '@/shared/ui'
-import { useOrderListSettingsData } from '@/shared/hooks'
-export default {
+export default defineComponent({
   name: 'PickOrdersForPaymentInvoiceSettings',
+  components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
   model: {
     prop: 'settings',
     event: 'change',
   },
-  components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
   props: {
     settings: Object,
     allHeaders: Array,
@@ -107,7 +110,7 @@ export default {
       loadingZoneItems,
     }
   },
-}
+})
 </script>
 <style scoped>
 .settings-wrapper {

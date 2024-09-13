@@ -11,7 +11,7 @@
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <agreement-form
           v-else
           :agreement="item"
@@ -26,17 +26,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { AgreementForm } from '@/entities/agreement'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { AgreementService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { AgreementForm } from '@/entities/agreement'
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { AgreementService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'AgreementDetails',
   components: {
     AgreementForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {
@@ -44,6 +47,6 @@ export default {
       service: AgreementService,
     }
   },
-}
+})
 </script>
 <style></style>

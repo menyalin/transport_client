@@ -47,11 +47,14 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { BlockTitle } from '@/entities/order'
 import { OrderService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'AnalyticBlock',
   components: {
     BlockTitle,
@@ -77,25 +80,6 @@ export default {
       },
     }
   },
-  watch: {
-    item: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        if (val) {
-          this.params.type = val.type
-          this.params.distanceRoad = val.distanceRoad
-          this.params.distanceDirect = val.distanceDirect
-        }
-      },
-    },
-    params: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
-      },
-    },
-  },
   computed: {
     showDebugInfo() {
       return this.$store.getters.hasPermission('fullAccess')
@@ -113,6 +97,25 @@ export default {
           (i) => this.$store.getters.zonesMap.get(i)?.name
         ) || null
       )
+    },
+  },
+  watch: {
+    item: {
+      immediate: true,
+      deep: true,
+      handler: function (val) {
+        if (val) {
+          this.params.type = val.type
+          this.params.distanceRoad = val.distanceRoad
+          this.params.distanceDirect = val.distanceDirect
+        }
+      },
+    },
+    params: {
+      deep: true,
+      handler: function (val) {
+        this.$emit('change', val)
+      },
     },
   },
   methods: {
@@ -135,7 +138,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .analytic-block-wrapper {

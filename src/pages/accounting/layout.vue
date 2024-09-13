@@ -10,12 +10,15 @@
     </v-main>
   </v-app>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
 import AppLeftNav from '@/modules/common/components/leftNav'
 
-export default {
+export default defineComponent({
   name: 'ProfileLayout',
 
   components: {
@@ -80,6 +83,6 @@ export default {
       },
     ],
   }),
-}
+})
 </script>
 <style></style>

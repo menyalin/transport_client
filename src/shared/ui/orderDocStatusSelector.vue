@@ -11,10 +11,12 @@
     @change="changeHandler"
   />
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
+
 import { ORDER_DOC_STATUSES } from '@/shared/constants'
-export default {
+export default defineComponent({
   name: 'OrderDocStatusSelector',
   model: {
     prop: 'value',
@@ -37,9 +39,10 @@ export default {
     outlined: Boolean,
     clearable: Boolean,
   },
+  emits: ['change'],
   setup(_props, ctx) {
     const items = ref(ORDER_DOC_STATUSES)
-    function changeHandler(value) {
+    function changeHandler(value: string | null) {
       ctx.emit('change', value)
     }
     return {
@@ -47,5 +50,5 @@ export default {
       changeHandler,
     }
   },
-}
+})
 </script>

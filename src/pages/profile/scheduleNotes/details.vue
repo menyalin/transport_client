@@ -11,7 +11,7 @@
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <ScheduleNoteForm
           v-else
           :scheduleNote="item"
@@ -26,17 +26,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { ScheduleNoteService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
-import { ScheduleNoteForm } from '@/entities/scheduleNote'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { ScheduleNoteForm } from '@/entities/scheduleNote'
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { ScheduleNoteService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'ScheduleNoteDetails',
   components: {
     ScheduleNoteForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   props: {
@@ -56,6 +59,6 @@ export default {
       }
     }
   },
-}
+})
 </script>
 <style></style>

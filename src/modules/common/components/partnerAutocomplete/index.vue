@@ -28,15 +28,18 @@
           openInModal
           @cancel="cancelDialog"
           @submit="submit"
-          @deleteItem="deleteHandler"
+          @delete-item="deleteHandler"
         />
       </v-card>
     </v-dialog>
   </div>
 </template>
-<script>
-import AppDetailsPartner from '@/pages/profile/partner/details'
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
+import AppDetailsPartner from '@/pages/profile/partner/details.vue'
+export default defineComponent({
   name: 'PartnerAutocomplete',
   components: {
     AppDetailsPartner,
@@ -98,6 +101,6 @@ export default {
       // this.dialog = false
     },
   },
-}
+})
 </script>
 <style scoped></style>

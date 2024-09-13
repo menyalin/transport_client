@@ -3,13 +3,13 @@
     <buttons-panel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small @click="downloadPdf" class="mx-2">Скачать PDF</v-btn>
-      <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
+      <v-btn small class="mx-2" @click="downloadPdf">Скачать PDF</v-btn>
+      <v-btn small class="mx-2" @click="downloadXlsx">Скачать DOCX</v-btn>
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
@@ -23,8 +23,8 @@
           :style="{ maxWidth: '100px' }"
         />
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
           dense
           outlined
@@ -42,8 +42,8 @@
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
+          @blur="v$.client.$touch"
           @change="changeClientHandler"
         />
         <v-select
@@ -59,14 +59,14 @@
           :loading="loadingAgreements"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.agreement.$touch"
           :error-messages="agreementErrorMessages"
+          @blur="v$.agreement.$touch"
           @change="changeAgreementHandler"
         />
 
         <v-select
-          label="Площадка"
           v-model="state.placeForTransferDocs"
+          label="Площадка"
           dense
           required
           clearable
@@ -78,8 +78,8 @@
           "
           :items="placeItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.placeForTransferDocs.$touch"
           :error-messages="placeErrorMessages"
+          @blur="v$.placeForTransferDocs.$touch"
         />
       </div>
 
@@ -88,11 +88,11 @@
       </v-alert>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
         :disabled="
           !state.placeForTransferDocs || disabledPickOrders || needSave
         "
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
@@ -108,16 +108,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
+import { computed, watch } from 'vue'
+
 import router from '@/router'
+import { ButtonsPanel } from '@/shared/ui'
 import store from '@/store'
 
-import { computed, watch } from 'vue'
-import { ButtonsPanel } from '@/shared/ui'
-import useDocsRegistryForm from './useDocsRegistryForm.js'
+import useDocsRegistryForm from './useDocsRegistryForm'
 
-export default {
+export default defineComponent({
   name: 'DocsRegistryForm',
   components: {
     ButtonsPanel,
@@ -227,7 +230,7 @@ export default {
       changeAgreementHandler,
     }
   },
-}
+})
 </script>
 
 <style scoped>

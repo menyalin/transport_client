@@ -2,8 +2,8 @@ a
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <TariffContractForm
       :item="item"
@@ -13,17 +13,20 @@ a
     />
   </form-wrapper>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, watch, ref } from 'vue'
-import store from '@/store'
-import router from '@/router'
-import { FormWrapper } from '@/shared/ui'
+
+import { useAgreements } from '@/entities/agreement'
 import {
   TariffContractForm,
   useTariffContract,
 } from '@/entities/tariff_contract'
-import { useAgreements } from '@/entities/agreement'
-export default {
+import router from '@/router'
+import { FormWrapper } from '@/shared/ui'
+import store from '@/store'
+export default defineComponent({
   name: 'TariffContractDetail',
   components: {
     FormWrapper,
@@ -106,5 +109,5 @@ export default {
       }
     },
   },
-}
+})
 </script>

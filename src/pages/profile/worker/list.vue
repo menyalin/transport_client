@@ -21,6 +21,7 @@
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="prepareDocuments"
           :loading="loading"
@@ -31,38 +32,33 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         />
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import store from '@/store'
-import { ButtonsPanel } from '@/shared/ui'
-import { WorkerService } from '@/shared/services'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, ref } from 'vue'
 
-export default {
+import { WorkerService } from '@/shared/services'
+import { ButtonsPanel } from '@/shared/ui'
+import store from '@/store'
+
+export default defineComponent({
   name: 'WorkerList',
   components: {
     ButtonsPanel,
   },
-  data: () => ({
-    formName: 'WorkerList',
-    settings: {
-      search: null,
-      listOptions: {},
-    },
-    headers: [
-      { value: 'name', text: 'Имя' },
-      { value: 'fullName', text: 'Полное имя' },
-      { value: 'position', text: 'Должность' },
-      { value: 'roles', text: 'Роли' },
-      { value: 'note', text: 'Примечание' },
-    ],
-  }),
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
+  },
   setup() {
     const workers = ref([])
     const loading = ref(false)
@@ -94,16 +90,23 @@ export default {
     getWorkers()
     return { prepareDocuments, loading, refetchWorkers: getWorkers }
   },
+  data: () => ({
+    formName: 'WorkerList',
+    settings: {
+      search: null,
+      listOptions: {},
+    },
+    headers: [
+      { value: 'name', text: 'Имя' },
+      { value: 'fullName', text: 'Полное имя' },
+      { value: 'position', text: 'Должность' },
+      { value: 'roles', text: 'Роли' },
+      { value: 'note', text: 'Примечание' },
+    ],
+  }),
   created() {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
   },
   methods: {
     create() {
@@ -116,7 +119,7 @@ export default {
       this.$router.push(`workers/${item._id}`)
     },
   },
-}
+})
 </script>
 <style scoped>
 #settings-wrapper {

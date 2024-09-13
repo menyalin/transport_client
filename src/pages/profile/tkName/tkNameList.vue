@@ -25,10 +25,13 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-export default {
+
+import { ButtonsPanel } from '@/shared/ui'
+export default defineComponent({
   name: 'TkNameList',
   components: {
     ButtonsPanel,
@@ -53,6 +56,6 @@ export default {
       this.$router.push(`tk_names/${item._id}`)
     },
   },
-}
+})
 </script>
 <style></style>

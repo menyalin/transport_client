@@ -26,7 +26,7 @@
         height="35"
         class="my-6"
       >
-        <template v-slot:default="{ value }">
+        <template #default="{ value }">
           <strong>{{ value }}%</strong>
         </template>
       </v-progress-linear>
@@ -35,21 +35,25 @@
 
     <v-btn
       v-else
-      @click="runOrderProcessing"
       color="error"
       :loading="processingState.isOrdersProcessing"
       :disabled="processingState.isOrdersProcessing"
+      @click="runOrderProcessing"
     >
       Обновить
     </v-btn>
   </div>
 </template>
-<script>
-import { DateRangeInput } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { useCompany } from '@/entities/company'
+import { DateRangeInput } from '@/shared/ui'
+
 import { useMassOrderUpdate } from './model/useMassOrderUpdate'
 
-export default {
+export default defineComponent({
   name: 'MassOrderUpdatePage',
   components: {
     DateRangeInput,
@@ -80,7 +84,7 @@ export default {
       cancelProcessing,
     }
   },
-}
+})
 </script>
 <style scoped>
 .page-wrapper {

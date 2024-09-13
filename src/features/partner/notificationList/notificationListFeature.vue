@@ -2,20 +2,24 @@
   <div class="notification_list_wrapper">
     <NotificationListItem
       v-for="item of items"
-      :partnerId="partnerId"
       :key="item._id"
+      :partnerId="partnerId"
       :item="item"
       @edit="editHandler"
       @delete="deleteHandler"
-      @switchStatus="switchStatusHandler"
+      @switch-status="switchStatusHandler"
     />
   </div>
 </template>
-<script>
-import { useListData } from './model'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { NotificationListItem } from '@/entities/partner'
 
-export default {
+import { useListData } from './model'
+
+export default defineComponent({
   name: 'NotificationListFeature',
   components: {
     NotificationListItem,
@@ -38,7 +42,7 @@ export default {
       switchStatusHandler,
     }
   },
-}
+})
 </script>
 <style scoped>
 .notification_list_wrapper {

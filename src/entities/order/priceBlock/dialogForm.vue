@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="800" persistent>
+  <v-dialog :value="dialog" max-width="800" persistent>
     <v-card>
       <v-card-title>Редактировать сумму</v-card-title>
       <v-card-text>
@@ -61,9 +61,13 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import { required, decimal } from 'vuelidate/lib/validators'
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { required, decimal } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
+
+// TODO: fix v-dialog props (close dialog event)
+export default defineComponent({
   name: 'DialogForm',
   model: {
     prop: 'item',
@@ -111,7 +115,7 @@ export default {
       return this.$v.$invalid
     },
     priceErrorMessages() {
-      let errors = []
+      const errors = []
       if (this.$v.tmpItem.price.$dirty && this.$v.tmpItem.price.$invalid)
         errors.push('Сумма обязательна к заполнению')
       return errors
@@ -141,7 +145,7 @@ export default {
       this.$v.$reset()
     },
   },
-}
+})
 </script>
 
 <style scoped>

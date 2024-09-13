@@ -5,10 +5,10 @@
       listSettingsName="pickOrdersTable"
       @change="updateHeadersHandler"
     />
-    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
-    <date-range-input v-model="settings.period" class="mx-2" />
+    <v-btn icon @click="refreshHandler"> <v-icon>mdi-refresh</v-icon></v-btn>
+    <date-range-input v-model="localSettings.period" class="mx-2" />
     <v-select
-      v-model="settings.docStatus"
+      v-model="localSettings.docStatus"
       label="Документы"
       :items="docStatuses"
       dense
@@ -16,10 +16,10 @@
       outlined
       clearable
       :style="{ 'max-width': '220px' }"
-      @change="settings.listOptions.page = 1"
+      @change="localSettings.listOptions.page = 1"
     />
     <v-autocomplete
-      v-model="settings.truck"
+      v-model="localSettings.truck"
       dense
       clearable
       auto-select-first
@@ -28,10 +28,10 @@
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @change="localSettings.listOptions.page = 1"
     />
     <v-autocomplete
-      v-model="settings.driver"
+      v-model="localSettings.driver"
       dense
       auto-select-first
       item-value="_id"
@@ -42,10 +42,10 @@
       hide-details
       label="Водитель"
       :style="{ 'max-width': '300px' }"
-      @change="settings.listOptions.page = 1"
+      @change="localSettings.listOptions.page = 1"
     />
     <v-autocomplete
-      v-model="settings.loadingZone"
+      v-model="localSettings.loadingZone"
       dense
       auto-select-first
       item-value="_id"
@@ -56,7 +56,7 @@
       hide-details
       label="Зона погрузки"
       :style="{ 'max-width': '250px' }"
-      @change="settings.listOptions.page = 1"
+      @change="localSettings.listOptions.page = 1"
     />
     <v-text-field
       :value="settings.search"
@@ -69,7 +69,7 @@
       @change="searchInputHandler"
     />
     <v-checkbox
-      v-model="settings.onlySelectable"
+      v-model="localSettings.onlySelectable"
       label="Только доступные рейсы"
       hide-details
       class="ml-2"
@@ -77,58 +77,41 @@
     />
   </div>
 </template>
-<script>
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+<script setup lang="ts">
+import { reactive } from 'vue'
+
 import { useOrderListSettingsData } from '@/shared/hooks'
-export default {
-  name: 'PickOrdersSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
+import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    required: true,
   },
-  components: { AppTableColumnSetting, DateRangeInput },
-  props: {
-    settings: Object,
-    allHeaders: Array,
+  allHeaders: {
+    type: Array,
+    required: true,
   },
-  setup(props, { emit }) {
-    const {
-      orderStatuses,
-      docStatuses,
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    } = useOrderListSettingsData()
-    const refreshHandler = () => {
-      emit('refresh')
-    }
+})
 
-    function updateHeadersHandler(val) {
-      emit('updateHeaders', val)
-    }
+const emit = defineEmits(['refresh', 'updateHeaders', 'change'])
 
-    function updateSettings(value, field) {
-      emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+const { docStatuses, trucks, drivers, loadingZoneItems } =
+  useOrderListSettingsData({})
 
-    function searchInputHandler(val) {
-      emit('change', Object.assign({}, props.settings, { search: val }))
-    }
+const localSettings = reactive({ ...props.settings })
 
-    return {
-      refreshHandler,
-      updateHeadersHandler,
-      searchInputHandler,
-      updateSettings,
-      orderStatuses,
-      docStatuses,
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    }
-  },
+function refreshHandler() {
+  emit('refresh')
+}
+
+function updateHeadersHandler(val: unknown[]) {
+  emit('updateHeaders', val)
+}
+
+function searchInputHandler(val: string | null) {
+  localSettings.search = val
+  emit('change', { ...localSettings })
 }
 </script>
 <style scoped>

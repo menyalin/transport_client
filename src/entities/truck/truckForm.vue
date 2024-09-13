@@ -55,7 +55,7 @@
             />
           </template>
         </div>
-        <div class="servive-dates">
+        <!-- <div class="servive-dates">
           <DateTimeInput
             v-model="$v.form.startServiceDate.$model"
             label="Дата ввода в эксплуатацию"
@@ -75,7 +75,7 @@
             dense
             hide-details
           />
-        </div>
+        </div> -->
       </div>
       <div class="row-wrapper second-row">
         <v-text-field
@@ -148,7 +148,7 @@
           label="СТС"
           dense
         />
-        <DateTimeInput
+        <!-- <DateTimeInput
           v-model="$v.form.stsDate.$model"
           label="Дата СТС"
           hide-time-input
@@ -156,7 +156,7 @@
           outlined
           dense
           hide-details
-        />
+        /> -->
         <v-text-field
           v-model.trim="$v.form.pts.$model"
           outlined
@@ -184,7 +184,7 @@
         v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
         id="sanpassport"
       >
-        <DateTimeInput
+        <!-- <DateTimeInput
           v-model="form.sanitaryPassportExpDate"
           label="Сан.паспорт действует до"
           hide-time-input
@@ -192,7 +192,7 @@
           outlined
           dense
           hide-details
-        />
+        /> -->
         <v-text-field
           v-model.trim="form.sanitaryPassportNote"
           outlined
@@ -202,7 +202,7 @@
       </div>
 
       <div id="diagnostic-card">
-        <DateTimeInput
+        <!-- <DateTimeInput
           v-model="additionalDetails.diagnosticCardExpDate"
           label="ДК действительна до"
           hide-prepend-icon
@@ -210,7 +210,7 @@
           outlined
           dense
           hide-details
-        />
+        /> -->
         <v-text-field
           v-model.trim="additionalDetails.diagnosticCardNote"
           outlined
@@ -269,26 +269,29 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+// TODO: uncomment DateTimeInput
+import { required, numeric } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required, numeric } from 'vuelidate/lib/validators'
 
 import {
   ButtonsPanel,
-  DateTimeInput,
-  AdditionalNotifications,
+  // DateTimeInput,
 } from '@/shared/ui'
+import AdditionalNotifications from '@/shared/ui/additionalNotifications/index.vue'
 
+import AppAdditionalDetails from './additionalDetails.vue'
 import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'
 import AppPermits from './permits.vue'
-import AppAdditionalDetails from './additionalDetails .vue'
 
-export default {
+export default defineComponent({
   name: 'TruckForm',
   components: {
     ButtonsPanel,
-    DateTimeInput,
+    // DateTimeInput,
     AppAllowedDrivers,
     AppInsurance,
     AppPermits,
@@ -474,7 +477,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped>
 .row-wrapper {

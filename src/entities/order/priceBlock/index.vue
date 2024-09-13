@@ -3,12 +3,12 @@
     <app-price-wrapper
       v-if="showPriceBlock"
       :items="prices"
-      @change="changePricesHandler"
       :isValid="isValidPrices"
       :readonly="readonlyPrice"
       :agreement="agreement"
       title="Стоимость рейса"
       :prePrices="prePrices"
+      @change="changePricesHandler"
     />
     <app-price-wrapper
       v-if="showOutsourceBlock"
@@ -21,11 +21,15 @@
     />
   </div>
 </template>
-<script>
-import AppPriceWrapper from './priceWrapper.vue'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { AgreementService } from '@/shared/services'
 
-export default {
+import AppPriceWrapper from './priceWrapper.vue'
+
+export default defineComponent({
   name: 'PriceBlock',
   components: {
     AppPriceWrapper,
@@ -118,5 +122,5 @@ export default {
       this.$emit('update:prices', prices)
     },
   },
-}
+})
 </script>

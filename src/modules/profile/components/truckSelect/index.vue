@@ -12,8 +12,10 @@
     @change="change"
   />
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'TruckSelect',
   model: {
     prop: 'value',
@@ -55,6 +57,6 @@ export default {
       this.$emit('change', val)
     },
   },
-}
+})
 </script>
 <style></style>

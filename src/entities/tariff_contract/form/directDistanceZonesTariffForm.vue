@@ -5,36 +5,36 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
+            v-model="form.truckKinds"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
-            v-model="form.truckKinds"
           />
           <v-select
+            v-model="form.liftCapacities"
             multiple
             label="Грузоподъемность"
             :items="liftCapacityItems"
-            v-model="form.liftCapacities"
           />
         </div>
         <div class="input-fields-row">
           <v-text-field
-            label="Кол-во точек, включенных в тариф"
             v-model.number="v$.includedPoints.$model"
+            label="Кол-во точек, включенных в тариф"
           />
           <v-text-field
-            label="Тариф за доп.точку"
             v-model.number="v$.pointPrice.$model"
+            label="Тариф за доп.точку"
           />
         </div>
         <div class="input-fields-row">
           <v-autocomplete
+            v-model="form.loadingZone"
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
             item-text="name"
             auto-select-first
-            v-model="form.loadingZone"
           />
         </div>
         <div v-for="(_zone, idx) of form.zones" :key="idx" class="zone-row">
@@ -87,11 +87,15 @@
     </v-card>
   </form>
 </template>
-<script>
-import { computed, ref, watch } from 'vue'
+<script lang="ts">
+//@ts-nocheck
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, numeric } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
+import { computed, ref, watch } from 'vue'
+
 import { CardActionButtons } from '@/shared/ui'
+
 import { useFormHelpers } from './useFormHelpers'
 
 const defaultFormState = () => ({
@@ -103,7 +107,7 @@ const defaultFormState = () => ({
   pointPrice: 0,
 })
 
-export default {
+export default defineComponent({
   name: 'DirectDistanceZonesTariffForm',
   components: {
     CardActionButtons,
@@ -214,7 +218,7 @@ export default {
       addRow,
     }
   },
-}
+})
 </script>
 <style scoped>
 .input-fields-row {
@@ -229,4 +233,3 @@ export default {
   align-items: center;
 }
 </style>
-import { numeric } from 'vuelidate/lib/validators'

@@ -8,8 +8,10 @@
     {{ note.text }}
   </span>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'Note',
   props: {
     styles: {
@@ -26,7 +28,7 @@ export default {
       this.$router.push('/profile/schedule_notes/' + this.note._id)
     },
   },
-}
+})
 </script>
 <style scoped>
 .note-wrapper {

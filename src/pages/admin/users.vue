@@ -16,9 +16,12 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import socket from '@/socket'
-export default {
+export default defineComponent({
   data() {
     return {
       activeConnection: [],
@@ -37,9 +40,9 @@ export default {
     socket.emit('getActiveUsers')
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     socket.off('activeUsers')
   },
-}
+})
 </script>
 <style></style>

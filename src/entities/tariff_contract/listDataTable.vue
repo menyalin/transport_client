@@ -8,10 +8,10 @@
     height="72vh"
     fixed-header
     :listOptions="listOptions"
-    @update:options="updateListOptions"
     :footer-props="{
       'items-per-page-options': [50, 100, 300],
     }"
+    @update:options="updateListOptions"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.createdAt`]="{ item }">
@@ -25,11 +25,14 @@
     </template>
   </v-data-table>
 </template>
-<script>
-import tableHeaders from './listDataTableHeaders'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
+// import tableHeaders from './listDataTableHeaders'
 import router from '@/router'
 
-export default {
+export default defineComponent({
   name: 'TariffContractDataTable',
   props: {
     items: Array,
@@ -48,8 +51,8 @@ export default {
     return {
       updateListOptions,
       dblClickRow,
-      headers: tableHeaders,
+      // headers: tableHeaders,
     }
   },
-}
+})
 </script>

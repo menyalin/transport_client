@@ -44,11 +44,14 @@
     </v-btn>
   </v-app-bar>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
+
 import AppReportsMenu from './reportsMenu.vue'
 
-export default {
+export default defineComponent({
   components: {
     AppReportsMenu,
   },
@@ -78,7 +81,7 @@ export default {
       if (this.$route.path !== '/') this.$router.push('/')
     },
   },
-}
+})
 </script>
 <style scoped>
 .app-title {

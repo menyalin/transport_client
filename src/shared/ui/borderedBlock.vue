@@ -4,13 +4,15 @@
     <slot />
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'BorderedBlock',
   props: {
     title: String,
   },
-}
+})
 </script>
 <style scoped>
 #block {

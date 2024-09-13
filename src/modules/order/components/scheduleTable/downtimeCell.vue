@@ -9,10 +9,12 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   name: 'DowntimeCell',
   props: {
     itemId: String,
@@ -40,7 +42,7 @@ export default {
       this.$router.push(this.downtimeUrl)
     },
   },
-}
+})
 </script>
 <style scoped>
 .downtime-wrapper {

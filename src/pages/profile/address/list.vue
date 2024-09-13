@@ -10,12 +10,12 @@
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :search="settings.search"
           :headers="filteredHeaders"
           :items="prepareAddresses"
           :loading="loading"
           fixed-header
-          :options.sync="settings.listOptions"
           height="72vh"
           dense
           :footer-props="{
@@ -99,16 +99,26 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
-
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-export default {
+
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import { ButtonsPanel } from '@/shared/ui'
+
+export default defineComponent({
   name: 'AddressList',
   components: {
     ButtonsPanel,
     AppTableColumnSettings,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   data: () => ({
     formName: 'AddressList',
@@ -180,13 +190,6 @@ export default {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getAddresses')
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
   methods: {
     createAddress() {
       this.$router.push({ name: 'AddressCreate' })
@@ -198,7 +201,7 @@ export default {
       this.$router.push(`address/${item._id}`)
     },
   },
-}
+})
 </script>
 <style scoped>
 .settings-wrapper {

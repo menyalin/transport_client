@@ -74,16 +74,26 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import { ReportService } from '@/shared/services'
 import { DateTimeInput, ReportTitle } from '@/shared/ui'
 
-export default {
+export default defineComponent({
   name: 'TruckStateOnDate',
   components: {
     DateTimeInput,
     ReportTitle,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: this.settings,
+    })
+    next()
   },
   data() {
     return {
@@ -138,15 +148,7 @@ export default {
     }
     await this.getData()
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: this.settings,
-    })
-    next()
-  },
   methods: {
-    dblClickRow(_, { _item }) {},
     async getData() {
       this.loading = true
       this.rows = await ReportService.truckStateOnDate({
@@ -158,7 +160,7 @@ export default {
       this.loading = false
     },
   },
-}
+})
 </script>
 <style scoped>
 #report-settings {

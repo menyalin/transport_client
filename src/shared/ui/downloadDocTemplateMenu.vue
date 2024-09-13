@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y :disabled="disabled">
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn v-bind="attrs" v-on="on" :disabled="disabled">Скачать</v-btn>
+    <template #activator="{ on, attrs }">
+      <v-btn v-bind="attrs" :disabled="disabled" v-on="on">Скачать</v-btn>
     </template>
 
     <v-list>
@@ -15,31 +15,33 @@
     </v-list>
   </v-menu>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-export default {
+export default defineComponent({
   name: 'DownloadDocTemplateMenu',
   props: {
     templates: {
       type: Array,
-      default: [],
     },
     disabledDownloadFiles: {
       type: Boolean,
       default: true,
     },
   },
+  emits: ['downloadTemplate'],
   setup(props, ctx) {
     const disabled = computed(
-      () => props.templates.length === 0 || props.disabledDownloadFiles
+      () => props.templates?.length === 0 || props.disabledDownloadFiles
     )
 
-    function itemClickHandler(templateId) {
-      const template = props.templates.find((i) => i._id === templateId)
+    function itemClickHandler(templateId: string) {
+      const template = props.templates?.find((i) => i._id === templateId)
       ctx.emit('downloadTemplate', template)
     }
 
     return { disabled, itemClickHandler }
   },
-}
+})
 </script>

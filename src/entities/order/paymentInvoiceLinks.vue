@@ -5,11 +5,14 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
+
 import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'PaymentInvoiceLinks',
   props: {
     items: {
@@ -39,7 +42,7 @@ export default {
       links,
     }
   },
-}
+})
 </script>
 <style scoped>
 .block-wrapper {

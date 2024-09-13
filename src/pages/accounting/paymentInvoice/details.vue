@@ -1,18 +1,18 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <payment-invoice-form
       :item="item"
-      @submit="submit($event, false)"
       :disabledPickOrders="disabledPickOrders"
       :disabledMainFields="disabledMainFields"
-      @save="submit($event, true)"
-      @pickOrders="openDialog"
-      @download="downloadHandler"
       :disabledDownloadFiles="disabledDownloadFiles"
+      @submit="submit($event, false)"
+      @save="submit($event, true)"
+      @pick-orders="openDialog"
+      @download="downloadHandler"
     />
 
     <payment-invoice-result :orders="item.orders" />
@@ -20,8 +20,8 @@
     <payment-invoice-orders-list
       :orders="item.orders"
       @delete="deleteOrderFromPaymentInvoice"
-      @dblRowClick="dblRowClickHandler"
-      @updateItemPrice="updateItemPrice"
+      @dbl-row-click="dblRowClickHandler"
+      @update-item-price="updateItemPrice"
     />
 
     <v-dialog
@@ -36,22 +36,26 @@
   </form-wrapper>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
-import socket from '@/socket'
-import router from '@/router'
-import store from '@/store'
-import { FormWrapper } from '@/shared/ui'
+
 import {
   PaymentInvoiceForm,
   PaymentInvoiceOrdersList,
   PaymentInvoiceResult,
 } from '@/entities/paymentInvoice'
 import { PickOrders } from '@/features/paymentInvoice'
+import router from '@/router'
 import { PaymentInvoiceService } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
+import socket from '@/socket'
+import store from '@/store'
+
 import { useDownloadTemplate } from './model/useDownloadTemplate'
 
-export default {
+export default defineComponent({
   name: 'PaymentInvoiceDetails',
   components: {
     FormWrapper,
@@ -114,7 +118,7 @@ export default {
       store.commit('setStoredValue', { name: storedSettingsName, value: false })
     }
 
-    let loading = ref(false)
+    const loading = ref(false)
     const showError = ref(false)
     const errorMessage = ref('')
 
@@ -235,7 +239,7 @@ export default {
       this.$router.go(-1)
     },
   },
-}
+})
 </script>
 
 <style></style>

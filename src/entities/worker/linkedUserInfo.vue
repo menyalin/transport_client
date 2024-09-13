@@ -17,9 +17,11 @@
     </v-alert>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-export default {
+export default defineComponent({
   name: 'LinkedUserInfo',
   props: {
     worker: {
@@ -55,6 +57,10 @@ export default {
           type: 'info',
           text: 'Ожидается подтверждение пользователя',
         }
+      return {
+        type: 'info',
+        text: 'Упс, что-то пошло не так',
+      }
     })
     return {
       isBlockedUser,
@@ -64,7 +70,7 @@ export default {
       message,
     }
   },
-}
+})
 </script>
 
 <style scoped>

@@ -32,16 +32,20 @@
   </div>
 </template>
 
-<script>
-import store from '@/store'
-import { ref } from 'vue'
-import PlaceItem from './placeItem.vue'
-import PlaceForTransferDocsForm from './placeForTransferDocsForm.vue'
-import { PartnerService } from '@/shared/services'
+<script lang="ts">
+//@ts-nocheck
 
-export default {
-  components: { PlaceItem, PlaceForTransferDocsForm },
+import { ref, defineComponent } from 'vue'
+
+import { PartnerService } from '@/shared/services'
+import store from '@/store'
+
+import PlaceForTransferDocsForm from './placeForTransferDocsForm.vue'
+import PlaceItem from './placeItem.vue'
+
+export default defineComponent({
   name: 'PlacesForTransferDocs',
+  components: { PlaceItem, PlaceForTransferDocsForm },
   model: {
     prop: 'places',
     event: 'change',
@@ -121,7 +125,7 @@ export default {
       placeForm,
     }
   },
-}
+})
 </script>
 
 <style scoped>

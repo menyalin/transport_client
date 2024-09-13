@@ -11,7 +11,7 @@
           hide-details
           @change="change($event, 'osagoNum')"
         />
-        <DateTimeInput
+        <!-- <DateTimeInput
           label="Дата окончания"
           :value="params.osagoExpDate"
           hide-prepend-icon
@@ -21,6 +21,7 @@
           dense
           hide-details
         />
+        -->
         <v-text-field
           label="Страховая компания"
           :value="params.osagoCompany"
@@ -38,7 +39,7 @@
         hide-details
         @change="change($event, 'kaskoNum')"
       />
-      <DateTimeInput
+      <!-- <DateTimeInput
         label="Дата окончания"
         :value="params.kaskoExpDate"
         hide-prepend-icon
@@ -47,7 +48,7 @@
         outlined
         dense
         hide-details
-      />
+      /> -->
       <v-text-field
         label="Страховая компания"
         :value="params.kaskoCompany"
@@ -67,15 +68,19 @@
     </div>
   </div>
 </template>
-<script>
-import AppBlockTitle from './blockTitle.vue'
-import { DateTimeInput } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+//TODO: uncomment DateTimeInput
+import { defineComponent } from 'vue'
 
-export default {
+import AppBlockTitle from './blockTitle.vue'
+// import { DateTimeInput } from '@/shared/ui'
+
+export default defineComponent({
   name: 'Insurance',
   components: {
     AppBlockTitle,
-    DateTimeInput,
+    // DateTimeInput,
   },
   model: {
     prop: 'item',
@@ -127,7 +132,7 @@ export default {
       return 'light-green'
     },
   },
-}
+})
 </script>
 <style scoped>
 .fields-wrapper {

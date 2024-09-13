@@ -1,12 +1,12 @@
 <template>
   <v-autocomplete
+    v-model:search-input="search"
     clearable
     auto-select-first
     solo
     :value="model"
     :items="items"
     :loading="isLoading"
-    :search-input.sync="search"
     hide-no-data
     :filter="() => true"
     item-text="value"
@@ -16,11 +16,15 @@
     @change="change"
   />
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { AddressService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'AddressAutocomplete',
+  emits: ['change'],
   data() {
     return {
       model: null,
@@ -59,6 +63,6 @@ export default {
       this.$emit('change', val)
     },
   },
-}
+})
 </script>
 <style></style>

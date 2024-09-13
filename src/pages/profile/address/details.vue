@@ -11,7 +11,7 @@
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <app-address-form
           v-else
           :address="item"
@@ -26,17 +26,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import AppAddressForm from '@/modules/profile/components/addressForm'
-import {AddressService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import AppAddressForm from '@/modules/profile/components/addressForm'
+import { AddressService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'AddressDetails',
   components: {
     AppAddressForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {
@@ -44,6 +47,6 @@ export default {
       service: AddressService,
     }
   },
-}
+})
 </script>
 <style></style>

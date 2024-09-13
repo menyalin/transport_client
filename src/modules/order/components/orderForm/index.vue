@@ -89,7 +89,7 @@
             :isValidNum="isValidClientNum(agreement, client, state)"
             :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
             :routeDate="routeDate"
-            @updateAgreement="updateAgreementHandler"
+            @update-agreement="updateAgreementHandler"
           />
           <CargoParams
             v-model="cargoParams"
@@ -145,10 +145,10 @@
             />
 
             <PriceBlock
+              v-model:prices="prices"
+              v-model:outsourceCosts="outsourceCosts"
               :isValidPrices="isValidPrices(agreement, prices, state)"
-              :prices.sync="prices"
               :prePrices="prePrices"
-              :outsourceCosts.sync="outsourceCosts"
               :agreement="agreement"
               :outsourceAgreementId="confirmedCrew.outsourceAgreement"
               :analytics="analytics"
@@ -157,11 +157,11 @@
 
             <PriceDialog
               v-if="showFinalPriceDialog"
+              v-model:prePrices="prePrices"
+              v-model:dialog="priceDialog"
               :order="order"
               :agreement="agreement"
-              :prePrices.sync="prePrices"
               :finalPrices="finalPrices"
-              :dialog.sync="priceDialog"
             />
           </div>
 
@@ -211,17 +211,12 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { OrderService, OrderTemplateService } from '@/shared/services'
-import { ButtonsPanel } from '@/shared/ui'
-import { OrderRoute } from '@/entities/order'
-import AppRouteState from './routeState.vue'
-import AppConfirmedCrew from './confirmedCrew/index.vue'
-import AppGradeBlock from './gradeBlock.vue'
-import AppAnalyticBlock from '../../../../entities/order/analyticBlock.vue'
-import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
 import {
+  OrderRoute,
   DocsRegistryLink,
   OrderDocsListForm,
   OrderPaymentParts,
@@ -235,10 +230,17 @@ import {
   PriceBlock,
   PriceDialog,
 } from '@/entities/order'
+import { OrderService, OrderTemplateService } from '@/shared/services'
+import { ButtonsPanel } from '@/shared/ui'
 
+import _putRouteDatesToClipboard from './_putRouteDatesToClipboard'
+import AppConfirmedCrew from './confirmedCrew/index.vue'
+import AppGradeBlock from './gradeBlock.vue'
 import AppPaymentToDriver from './paymentToDriver.vue'
+import AppRouteState from './routeState.vue'
+import AppAnalyticBlock from '../../../../entities/order/analyticBlock.vue'
 
-export default {
+export default defineComponent({
   name: 'OrderForm',
   components: {
     PaymentInvoiceLinks,
@@ -258,6 +260,13 @@ export default {
     OrderPaymentParts,
     OrderRoute,
   },
+  provide() {
+    return {
+      updateFinalPrices: (val) => {
+        this.finalPrices = [...val]
+      },
+    }
+  },
   props: {
     order: {
       type: Object,
@@ -267,13 +276,6 @@ export default {
       default: false,
     },
     loading: Boolean,
-  },
-  provide() {
-    return {
-      updateFinalPrices: (val) => {
-        this.finalPrices = [...val]
-      },
-    }
   },
   setup() {
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
@@ -404,7 +406,7 @@ export default {
     },
 
     isValidDatesInRoute() {
-      let dates = []
+      const dates = []
       this.route.forEach((p) => {
         if (p.arrivalDate) dates.push(new Date(p.arrivalDate))
         if (p.departureDate) dates.push(new Date(p.departureDate))
@@ -466,7 +468,7 @@ export default {
       return this.$store.getters.addressMap
     },
     coords() {
-      let tmp = []
+      const tmp = []
       this.route
         .filter((p) => !p.isReturn)
         .forEach((point) => {
@@ -721,7 +723,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped>
 .top-panel {

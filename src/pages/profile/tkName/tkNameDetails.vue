@@ -15,11 +15,14 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppTknameForm from '@/modules/profile/components/tkNameForm'
 import { TkNameService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'TkNameDetails',
   components: {
     AppTknameForm,
@@ -64,6 +67,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

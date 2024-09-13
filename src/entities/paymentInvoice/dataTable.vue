@@ -49,13 +49,17 @@
   </v-data-table>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, watch } from 'vue'
+
 import router from '@/router'
-import { moneyFormatter } from '@/shared/utils'
-import PaymentInvoiceListAnalitics from './listAnalitics.vue'
 import useHistorySettings from '@/shared/hooks/useHistorySettings'
-export default {
+import { moneyFormatter } from '@/shared/utils'
+
+import PaymentInvoiceListAnalitics from './listAnalitics.vue'
+export default defineComponent({
   name: 'PaymentInvoicesDataTable',
   components: { PaymentInvoiceListAnalitics },
   model: {
@@ -143,5 +147,5 @@ export default {
       selectedIds,
     }
   },
-}
+})
 </script>

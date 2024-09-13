@@ -12,10 +12,12 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   name: 'ResultCell',
   props: {
     date: {
@@ -31,7 +33,7 @@ export default {
       return this.$store.getters.orderCountByDates.get(dateStr)
     },
   },
-}
+})
 </script>
 <style scoped>
 .first-row {

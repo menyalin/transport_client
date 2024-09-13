@@ -1,49 +1,49 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" @input="closeDialog" persistent>
+  <v-dialog :value="dialog" max-width="800" persistent @input="closeDialog">
     <v-card>
       <v-card-title class="text-h5">{{ dialogTitle }}</v-card-title>
       <form @submit.prevent="submitHandler">
         <v-card-text class="form-wrapper">
           <v-autocomplete
+            v-model="state.client"
             label="Клиент"
             outlined
             dense
-            v-model="state.client"
             :items="clientItems"
             item-value="_id"
             item-text="name"
           />
 
           <v-autocomplete
+            v-model="state.agreement"
             label="Соглашение"
             outlined
             dense
-            v-model="state.agreement"
             :items="agreements"
             item-value="_id"
             item-text="name"
           />
           <div class="row-sum">
             <v-text-field
+              v-model.number="state.sum"
               label="Сумма"
               outlined
               dense
               :disabled="sumFieldIsDisabled"
-              v-model.number="state.sum"
               :style="{ maxWidth: '200px' }"
             />
             <v-checkbox
+              v-model="state.sumWithVAT"
               label="Сумма с НДС"
               dense
               :disabled="vatCheckboxIsDisabled"
-              v-model="state.sumWithVAT"
             />
           </div>
           <v-text-field
+            v-model.trim="state.note"
             label="Примечание"
             outlined
             dense
-            v-model.trim="state.note"
           />
         </v-card-text>
 
@@ -58,10 +58,13 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
+
 import { usePaymentPartForm } from './model/usePaymentPartForm'
-export default {
+export default defineComponent({
   name: 'PaymentPartsDialog',
   props: {
     routeDate: { type: String, required: true },
@@ -96,7 +99,7 @@ export default {
       submitHandler,
     }
   },
-}
+})
 </script>
 <style scoped>
 .row-sum {

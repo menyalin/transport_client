@@ -7,9 +7,12 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { TruckForm } from '@/entities/truck'
-export default {
+export default defineComponent({
   name: 'TruckCreate',
   components: {
     TruckForm,
@@ -37,6 +40,6 @@ export default {
       this.$router.go(-1)
     },
   },
-}
+})
 </script>
 <style></style>

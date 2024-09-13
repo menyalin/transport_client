@@ -1,8 +1,8 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <docs-registry-form
       :item="item"
@@ -11,14 +11,14 @@
       @cancel="cancel"
       @submit="submit"
       @save="submit($event, true)"
-      @pickOrders="openDialog"
-      @downloadPdf="downloadPdfHandler"
-      @downloadXlsx="downloadWordHandler"
+      @pick-orders="openDialog"
+      @download-pdf="downloadPdfHandler"
+      @download-xlsx="downloadWordHandler"
     />
     <docs-registry-orders-list
       :orders="item.orders"
       @delete="deleteOrderFromRegistry"
-      @dblRowClick="dblRowClickHandler"
+      @dbl-row-click="dblRowClickHandler"
     />
     <v-dialog
       v-if="item._id"
@@ -36,26 +36,27 @@
   </form-wrapper>
 </template>
 
-<script>
-import { watch, ref, onBeforeUnmount, computed } from 'vue'
-import socket from '@/socket'
-import router from '@/router'
-import store from '@/store'
-import { DocsRegistryService } from '@/shared/services'
-import { FormWrapper } from '@/shared/ui'
-import { PdfMaker } from '@/shared/utils'
+<script lang="ts">
+//@ts-nocheck
+import { watch, ref, onBeforeUnmount, computed, defineComponent } from 'vue'
+import {
+  DocsRegistryForm,
+  DocsRegistryOrdersList,
+} from '@/entities/docsRegistry'
 import {
   PickOrders,
   docsRegistryPdfReport,
   docsRegistryWordReport,
   DocsRegistryReportData,
 } from '@/features/docsRegistry'
-import {
-  DocsRegistryForm,
-  DocsRegistryOrdersList,
-} from '@/entities/docsRegistry'
+import router from '@/router'
+import { DocsRegistryService } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
+import { PdfMaker } from '@/shared/utils'
+import socket from '@/socket'
+import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'DocsRegistryDetail',
   components: {
     FormWrapper,
@@ -107,7 +108,7 @@ export default {
       store.commit('setStoredValue', { name: storedSettingsName, value: false })
     }
 
-    let loading = ref(false)
+    const loading = ref(false)
     const showError = ref(false)
     const errorMessage = ref('')
 
@@ -226,7 +227,7 @@ export default {
       this.$router.go(-1)
     },
   },
-}
+})
 </script>
 
 <style></style>

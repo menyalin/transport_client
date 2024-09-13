@@ -8,9 +8,12 @@
     @change="fileInputChanged"
   />
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { xlsxToJson } from '@/shared/utils'
-export default {
+export default defineComponent({
   name: 'XlsxFileInput',
   props: {
     label: {
@@ -18,6 +21,7 @@ export default {
       default: 'Select .XLSX file',
     },
   },
+  emits: ['change'],
   data() {
     return {
       file: null,
@@ -45,6 +49,6 @@ export default {
       this.$emit('change', res)
     },
   },
-}
+})
 </script>
 <style lang=""></style>

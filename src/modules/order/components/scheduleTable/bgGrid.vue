@@ -59,8 +59,10 @@
     </g>
   </svg>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'SvgGrid',
   props: {
     leftShift: {
@@ -82,6 +84,6 @@ export default {
       return (this.tableWidth - this.leftShift) / this.days.length
     },
   },
-}
+})
 </script>
 <style scoped></style>

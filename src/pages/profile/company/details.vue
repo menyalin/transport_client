@@ -9,15 +9,18 @@
     <company-settings :companyId="id" />
   </form-wrapper>
 </template>
-<script>
-import store from '@/store'
-import router from '@/router'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-import { FormWrapper } from '@/shared/ui'
-import { CompanyService } from '@/shared/services'
-import { CompanySettings, CompanyBaseFieldsForm } from '@/entities/company'
 
-export default {
+import { CompanySettings, CompanyBaseFieldsForm } from '@/entities/company'
+import router from '@/router'
+import { CompanyService } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
+import store from '@/store'
+
+export default defineComponent({
   name: 'CompanyDetails',
   components: {
     CompanySettings,
@@ -44,6 +47,6 @@ export default {
       submitHandler,
     }
   },
-}
+})
 </script>
 <style></style>

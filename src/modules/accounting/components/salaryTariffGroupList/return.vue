@@ -4,8 +4,10 @@
     <b>{{ item.isPltReturn ? 'Да' : 'Нет' }}</b>
   </span>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'ReturnColumn',
   props: {
     item: Object,
@@ -15,5 +17,5 @@ export default {
       return this.$store.getters.orderAnalyticTypesMap.get(this.item.orderType)
     },
   },
-}
+})
 </script>

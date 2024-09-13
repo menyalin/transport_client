@@ -38,10 +38,13 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { CrewService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'CrewMessage',
   props: {
     text: {
@@ -96,7 +99,7 @@ export default {
       if (res) this.$emit('clearCrew')
     },
   },
-}
+})
 </script>
 <style>
 .field-hint {

@@ -199,16 +199,19 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
-import { ButtonsPanel } from '@/shared/ui'
-import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
-import { CrewService } from '@/shared/services'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
-export default {
+import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
+import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
+import { CrewService } from '@/shared/services'
+import { ButtonsPanel } from '@/shared/ui'
+
+export default defineComponent({
   name: 'FineForm',
   components: {
     ButtonsPanel,
@@ -408,7 +411,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style>
 .row-input {

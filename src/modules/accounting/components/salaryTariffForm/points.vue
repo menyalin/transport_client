@@ -19,10 +19,13 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 
-export default {
+export default defineComponent({
   name: 'TariffPointsType',
   components: {
     AppAddressAutocomplete,
@@ -63,7 +66,7 @@ export default {
       this.$refs.loadingEl.focus()
     },
   },
-}
+})
 </script>
 <style scoped>
 #points-wrapper {

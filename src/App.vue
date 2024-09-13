@@ -1,21 +1,26 @@
 <template>
-  <div>
-    <app-load-spinner v-if="appLoading" />
-    <router-view v-else />
-  </div>
+  <v-app>
+    <v-main>
+      <LoadSpinner />
+      <!-- <app-load-spinner v-if="appLoading" /> -->
+      <!-- <router-view v-else /> -->
+    </v-main>
+  </v-app>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+<script lang="ts">
+// import { mapGetters } from 'vuex'
+import { defineComponent } from 'vue'
 
-export default {
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'App',
   components: {
-    AppLoadSpinner,
+    LoadSpinner,
   },
-  computed: {
-    ...mapGetters(['appLoading']),
-  },
-}
+  // computed: {
+  //   ...mapGetters(['appLoading']),
+  // },
+})
 </script>

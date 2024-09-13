@@ -19,8 +19,10 @@
     </v-list>
   </v-menu>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'TableColumnSettings',
   model: {
     prop: 'activeHeaders',
@@ -79,6 +81,6 @@ export default {
       this.$emit('change', this.tmpHeaders)
     },
   },
-}
+})
 </script>
 <style scoped></style>

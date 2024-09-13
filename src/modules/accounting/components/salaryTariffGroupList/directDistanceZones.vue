@@ -7,8 +7,10 @@
     }}
   </span>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'DirectDistanceZones',
   props: {
     item: Object,
@@ -21,6 +23,6 @@ export default {
       return this.$store.getters.addressMap
     },
   },
-}
+})
 </script>
 <style />

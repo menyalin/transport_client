@@ -8,12 +8,12 @@
       <span>{{ placeForTransferDocs.title }}</span>
     </v-card-subtitle>
     <v-card-actions>
-      <v-btn @click="cancelHandler" class="ma-2">Закрыть</v-btn>
+      <v-btn class="ma-2" @click="cancelHandler">Закрыть</v-btn>
       <v-btn
-        @click="addToRegistryHandler"
         class="ma-2"
         color="primary"
         :disabled="!selectedOrders.length"
+        @click="addToRegistryHandler"
       >
         Добавить в опись
       </v-btn>
@@ -22,18 +22,18 @@
       <pick-orders-settings
         v-model="settings"
         :allHeaders="allHeaders"
-        @updateHeaders="updateActiveHeaders"
+        @update-headers="updateActiveHeaders"
         @refresh="refreshHandler"
       />
       <orders-table
         v-model="selectedOrders"
+        v-model:listOptions="settings.listOptions"
         show-select
         :items="items"
         :headers="headers"
         :loading="loading"
-        :listOptions.sync="settings.listOptions"
-        @addItem="addItem"
-        @openDocsDialog="openDocsDialog"
+        @add-item="addItem"
+        @open-docs-dialog="openDocsDialog"
       />
       <v-dialog v-model="docDialog" max-width="1300" persistent>
         <order-docs-list
@@ -46,16 +46,20 @@
     </v-card-text>
   </v-card>
 </template>
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref, computed } from 'vue'
+
 import { PickOrdersSettings } from '@/entities/docsRegistry'
 import { OrdersTable, useOrderDocs, OrderDocsList } from '@/entities/order'
-import { useListData } from './model.js'
 import { PickOrdersForDocsRegistryHeaders } from '@/shared/constants'
 import { DocsRegistryService } from '@/shared/services'
+import store from '@/store'
 
-export default {
+import { useListData } from './model'
+
+export default defineComponent({
   name: 'PickOrdersFeature',
   components: { PickOrdersSettings, OrdersTable, OrderDocsList },
   props: {
@@ -155,5 +159,5 @@ export default {
       cancelDocDialog,
     }
   },
-}
+})
 </script>

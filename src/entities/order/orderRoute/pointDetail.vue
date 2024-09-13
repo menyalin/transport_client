@@ -114,7 +114,7 @@
       />
     </div>
     <div v-if="!isTemplate" class="dates-column">
-      <BorderedBlock title="Временное окно" v-if="tmpPoint.useInterval">
+      <BorderedBlock v-if="tmpPoint.useInterval" title="Временное окно">
         <DateTimeInput
           :value="tmpPoint.plannedDate"
           type="datetime-local"
@@ -178,7 +178,7 @@
       />
     </div>
     <div v-if="!isTemplate && isShowDocDates" class="dates-column">
-      <BorderedBlock title="Временное окно (Док)" v-if="tmpPoint.useInterval">
+      <BorderedBlock v-if="tmpPoint.useInterval" title="Временное окно (Док)">
         <DateTimeInput
           :value="tmpPoint.plannedDateDoc"
           type="datetime-local"
@@ -284,13 +284,15 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators'
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
 
+import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
+import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { BorderedBlock, DateTimeInput } from '@/shared/ui'
-export default {
+export default defineComponent({
   name: 'PointDetail',
   components: {
     AppAddressAutocomplete,
@@ -351,13 +353,13 @@ export default {
   computed: {
     ...mapGetters(['pointTypes']),
     departureDateErrors() {
-      let errors = []
+      const errors = []
       if (!this.$v.tmpPoint.departureDate.isLaterThan)
         errors.push('Дата не корректна')
       return errors
     },
     arrivalDateErrors() {
-      let errors = []
+      const errors = []
       if (!this.$v.tmpPoint.arrivalDate.isLaterThan)
         errors.push('Дата не корректна')
       return errors
@@ -416,7 +418,7 @@ export default {
       this.$emit('changePoint', { ...this.tmpPoint })
     },
   },
-}
+})
 </script>
 <style scoped>
 .settings_row {

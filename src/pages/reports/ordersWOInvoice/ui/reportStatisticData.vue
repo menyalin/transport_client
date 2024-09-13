@@ -14,10 +14,13 @@
     </tr>
   </table>
 </template>
-<script>
-import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-export default {
+
+import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+export default defineComponent({
   name: 'ReportStatisticData',
   components: {},
   props: {
@@ -38,7 +41,7 @@ export default {
       totalWithVat,
     }
   },
-}
+})
 </script>
 <style scoped>
 tr td:nth-child(2) {

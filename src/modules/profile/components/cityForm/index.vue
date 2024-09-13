@@ -2,11 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="
-        !$store.getters.hasPermission('region:write') ||
-        isInvalidForm ||
-        !formChanged
-      "
+      :disabledSubmit="isDisableSubmit"
       @cancel="cancel"
       @submit="submit"
     />
@@ -24,13 +20,15 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
 
 import { ButtonsPanel } from '@/shared/ui'
 
-export default {
+export default defineComponent({
   name: 'CityForm',
   components: {
     ButtonsPanel,
@@ -48,6 +46,7 @@ export default {
       default: false,
     },
   },
+  emits: ['cancel', 'submit', 'delete'],
   data() {
     return {
       initialFormState: null,
@@ -62,6 +61,13 @@ export default {
     isInvalidForm() {
       if (!this.directoriesProfile) return true
       return this.$v.$invalid
+    },
+    isDisableSubmit() {
+      return (
+        !this.$store.getters.hasPermission('region:write') ||
+        this.isInvalidForm ||
+        !this.formState
+      )
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
@@ -121,5 +127,5 @@ export default {
       })
     },
   },
-}
+})
 </script>

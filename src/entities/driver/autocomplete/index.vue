@@ -1,5 +1,6 @@
 <template>
   <v-autocomplete
+    v-model:search-input="search"
     clearable
     outlined
     dense
@@ -9,7 +10,6 @@
     :items="[...items, ...tmpItems]"
     hide-no-data
     :loading="isLoading"
-    :search-input.sync="search"
     :filter="() => true"
     :label="label"
     placeholder="Введите текст для поиска"
@@ -21,14 +21,17 @@
     @click:clear="clear"
   />
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { DriverService } from '@/shared/services'
 
 const _getDriverNameString = (driver) => {
   return driver?.surname + ' ' + driver?.name
 }
 
-export default {
+export default defineComponent({
   name: 'DriverAutocomplete',
   model: {
     prop: 'driverId',
@@ -122,6 +125,6 @@ export default {
       this.$emit('change', null)
     },
   },
-}
+})
 </script>
 <style></style>

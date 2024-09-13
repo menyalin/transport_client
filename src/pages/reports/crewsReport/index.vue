@@ -35,8 +35,7 @@
       />
     </div>
     <div v-if="!filteredCrews.length" class="text-center">
-      <app-load-spinner v-if="false" />
-      <h4 v-else>Нет данных для отображния</h4>
+      <h4>Нет данных для отображния</h4>
     </div>
     <div v-else class="table-wrapper">
       <table ref="tableBody" class="background-table">
@@ -84,22 +83,23 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
-import { CrewService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { DateRangeInput } from '@/shared/ui'
-import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
-import getRowsFromCrews from './utils/getRowsFromCrews'
-import getBlocksFromCrews from './utils/getBlocksFromCrews'
-
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 
-export default {
+import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
+import { CrewService } from '@/shared/services'
+import { DateRangeInput } from '@/shared/ui'
+
+import getBlocksFromCrews from './utils/getBlocksFromCrews'
+import getRowsFromCrews from './utils/getRowsFromCrews'
+
+export default defineComponent({
   name: 'CrewsReport',
   components: {
     DateRangeInput,
-    AppLoadSpinner,
   },
   data() {
     return {
@@ -161,7 +161,7 @@ export default {
       this.resizeHandler()
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.resizeHandler)
   },
   created() {
@@ -190,7 +190,7 @@ export default {
     },
     getBlocksWithStyles() {
       if (!this.filteredCrews) return null
-      let blocks = getBlocksFromCrews({
+      const blocks = getBlocksFromCrews({
         crews: this.filteredCrews,
         group: this.settings.group,
         analitic: this.settings.analitic,
@@ -272,7 +272,7 @@ export default {
       ]
     },
   },
-}
+})
 </script>
 <style scoped>
 .settings-wrapper {

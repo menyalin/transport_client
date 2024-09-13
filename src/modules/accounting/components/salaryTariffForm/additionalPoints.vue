@@ -2,6 +2,7 @@
   <div id="points-wrapper">
     <v-autocomplete
       ref="routeTypeEl"
+      v-model="tmpAdditionalPoints.clients"
       label="Клиенты"
       dense
       :items="clients"
@@ -10,7 +11,6 @@
       multiple
       outlined
       hide-details
-      v-model="tmpAdditionalPoints.clients"
     />
     <v-select
       v-model="tmpAdditionalPoints.orderType"
@@ -30,8 +30,10 @@
     />
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'TariffPointsType',
   model: {
     prop: 'additionalPoints',
@@ -74,7 +76,7 @@ export default {
       this.$refs.routeTypeEl.focus()
     },
   },
-}
+})
 </script>
 <style scoped>
 #points-wrapper {

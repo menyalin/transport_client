@@ -25,16 +25,19 @@
           openInModal
           @cancel="cancelDialog"
           @submit="submit"
-          @deleteItem="deleteHandler"
+          @delete-item="deleteHandler"
         />
       </v-card>
     </v-dialog>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppDetailsZone from '@/pages/profile/zone/details'
 
-export default {
+export default defineComponent({
   name: 'ZoneAutocomplete',
   components: {
     AppDetailsZone,
@@ -87,6 +90,6 @@ export default {
       this.$emit('change', null)
     },
   },
-}
+})
 </script>
 <style scoped></style>

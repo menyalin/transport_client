@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600" persistent>
+  <v-dialog
+    :value="dialog"
+    max-width="600"
+    persistent
+    @update:modal="closeDialog"
+  >
     <v-card>
       <v-card-title class="text-h5"> Изменение пароля </v-card-title>
       <v-card-text>
@@ -46,14 +51,19 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import { UserService} from '@/shared/services'
-import { required, minLength, sameAs } from 'vuelidate/lib/validators'
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { required, minLength, sameAs } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
+
+import { UserService } from '@/shared/services'
+export default defineComponent({
+  //TODO: fix v-dialog props
   name: 'ChangePasswordDialog',
   props: {
     dialog: Boolean,
   },
+  emits: ['cancel', 'save'],
   data() {
     return {
       password: '',
@@ -61,20 +71,22 @@ export default {
       confirmPassword: '',
     }
   },
+
   computed: {
     newPasswordErrors() {
       const errors = []
       if (!this.$v.newPassword.$dirty) return errors
-      !this.$v.newPassword.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.newPassword.required && errors.push('Поле не может быть пустым')
+      if (!this.$v.newPassword.minLength) errors.push('Слишком короткий пароль')
+      if (!this.$v.newPassword.required)
+        errors.push('Поле не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.confirmPassword.$dirty) return errors
-      !this.$v.confirmPassword.required &&
+      if (!this.$v.confirmPassword.required)
         errors.push('Поле не может быть пустым')
-      !this.$v.confirmPassword.sameAs && errors.push('Пароли не совпадают')
+      if (!this.$v.confirmPassword.sameAs) errors.push('Пароли не совпадают')
       return errors
     },
   },
@@ -108,6 +120,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

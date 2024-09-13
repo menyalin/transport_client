@@ -9,6 +9,7 @@
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="filteredDrivers"
           :search="settings.search"
@@ -19,7 +20,6 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.medBookState.validDays`]="{ item }">
@@ -74,15 +74,25 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { CrewService } from '@/shared/services'
-import { ButtonsPanel } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 
-export default {
+import { CrewService } from '@/shared/services'
+import { ButtonsPanel } from '@/shared/ui'
+
+export default defineComponent({
   name: 'DriverList',
   components: {
     ButtonsPanel,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
   data: () => ({
     formName: 'DriverList',
@@ -141,7 +151,7 @@ export default {
         }))
     },
     crewsMapByDriver() {
-      let tmpMap = new Map()
+      const tmpMap = new Map()
       this.crews.forEach((cr) => {
         tmpMap.set(cr.driver, { ...cr })
       })
@@ -154,13 +164,6 @@ export default {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getDrivers')
     this.getData()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
   },
   methods: {
     createDriver() {
@@ -209,7 +212,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

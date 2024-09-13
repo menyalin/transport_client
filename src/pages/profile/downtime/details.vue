@@ -11,7 +11,7 @@
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <DowntimeForm
           v-else
           :downtime="item"
@@ -26,17 +26,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { DowntimeService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
-import { DowntimeForm } from '@/entities/downtime'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { DowntimeForm } from '@/entities/downtime'
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { DowntimeService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'DowntimeDetails',
   components: {
     DowntimeForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   props: {
@@ -56,6 +59,6 @@ export default {
       }
     }
   },
-}
+})
 </script>
 <style></style>

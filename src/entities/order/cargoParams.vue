@@ -44,9 +44,12 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { BlockTitle } from '@/entities/order'
-export default {
+export default defineComponent({
   name: 'CargoParams',
   components: {
     BlockTitle,
@@ -75,7 +78,7 @@ export default {
       this.$emit('change', this.params)
     },
   },
-}
+})
 </script>
 <style scoped>
 .cargo-params-block {

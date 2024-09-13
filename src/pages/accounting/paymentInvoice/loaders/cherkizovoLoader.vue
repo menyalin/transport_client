@@ -21,24 +21,25 @@
   </FormWrapper>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
+
 import { PaymentInvoiceService } from '@/shared/services'
 import { FormWrapper, ButtonsPanel } from '@/shared/ui'
 import { XlsxFileInput } from '@/shared/ui/index'
+
 import {
   ParsedOrderDTO,
   usePageData,
   CompareItem,
 } from './cherkizovoLoader.model'
-import UploadedInfo from './uploadedInfo.vue'
 import CompareItemsTable from './compareItemsTable.vue'
-import dayjs from 'dayjs'
+import UploadedInfo from './uploadedInfo.vue'
 
-export default {
+export default defineComponent({
   name: 'CherkizovoInvoiceLoaderPage',
-  props: {
-    id: String,
-  },
   components: {
     FormWrapper,
     ButtonsPanel,
@@ -46,24 +47,19 @@ export default {
     UploadedInfo,
     CompareItemsTable,
   },
+  props: {
+    id: String,
+  },
+  setup() {
+    const { pickOrdersByClientNumbers, getCompareItems } = usePageData()
+    return { pickOrdersByClientNumbers, getCompareItems }
+  },
   data() {
     return {
       uploadedOrders: [],
       errors: [],
       pickedOrders: [],
       compareItems: [],
-    }
-  },
-  setup() {
-    const { pickOrdersByClientNumbers, getCompareItems } = usePageData()
-    return { pickOrdersByClientNumbers, getCompareItems }
-  },
-  mounted() {
-    if (sessionStorage.getItem(this.id)) {
-      this.uploadedOrders = JSON.parse(sessionStorage.getItem(this.id))?.map(
-        (i) => new ParsedOrderDTO(i)
-      )
-      this.pickOrders()
     }
   },
 
@@ -103,6 +99,14 @@ export default {
       if (this.pickedOrders.length === 0) return []
       return this.compareItems.filter((i) => i.isOrderPicked).map((i) => i._id)
     },
+  },
+  mounted() {
+    if (sessionStorage.getItem(this.id)) {
+      this.uploadedOrders = JSON.parse(sessionStorage.getItem(this.id))?.map(
+        (i) => new ParsedOrderDTO(i)
+      )
+      this.pickOrders()
+    }
   },
 
   methods: {
@@ -177,6 +181,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped></style>

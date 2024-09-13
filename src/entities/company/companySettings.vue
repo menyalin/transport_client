@@ -77,10 +77,13 @@
     </v-card>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { CompanyService } from '@/shared/services'
 
-export default {
+export default defineComponent({
   name: 'CompanySettings',
   props: {
     companyId: { type: String, required: true },
@@ -172,7 +175,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 #truck-kinds,

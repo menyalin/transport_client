@@ -12,102 +12,103 @@
       >
         Добавить документы
       </v-btn>
-      <slot #default />
+      <slot />
     </div>
-    <v-simple-table dense>
-      <template #default>
-        <thead>
-          <tr>
-            <th class="text-center" width="10px">Включать в опись</th>
-            <th class="text-left">Тип*</th>
-            <th class="text-left">Номер</th>
-            <th class="text-left">Комментарий</th>
-            <th class="text-left">Статус*</th>
-            <th class="text-left">Дата получения</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(item, idx) of docs"
-            :key="idx"
-            :class="{ 'not-accepted': item.status !== 'accepted' }"
-          >
-            <td class="text-center">
-              <v-simple-checkbox
-                v-model="item.addToRegistry"
-                dense
-                hide-details
-                color="primary"
-              />
-            </td>
-            <td>
-              <v-select
-                v-model="item.type"
-                dense
-                hide-details
-                :disabled="readonly"
-                :items="docTypes"
-                class="my-2"
-              />
-            </td>
-            <td>
-              <v-text-field
-                v-model.trim="item.number"
-                dense
-                hide-details
-                :disabled="readonly"
-              />
-            </td>
-            <td>
-              <v-text-field
-                v-model.trim="item.note"
-                dense
-                hide-details
-                :disabled="readonly"
-              />
-            </td>
-            <td>
-              <v-select
-                v-model="item.status"
-                dense
-                hide-details
-                :items="docStatuses"
-                :disabled="readonly"
-              />
-            </td>
-            <td>
-              <v-text-field
-                v-model="item.date"
-                type="date"
-                dense
-                hide-details
-                :disabled="readonly"
-              />
-            </td>
-            <td>
-              <v-icon small :disabled="readonly" @click="deleteRow(idx)">
-                mdi-delete
-              </v-icon>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+    <v-table dense>
+      <thead>
+        <tr>
+          <th class="text-center" width="10px">Включать в опись</th>
+          <th class="text-left">Тип*</th>
+          <th class="text-left">Номер</th>
+          <th class="text-left">Комментарий</th>
+          <th class="text-left">Статус*</th>
+          <th class="text-left">Дата получения</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(item, idx) of docs"
+          :key="idx"
+          :class="{ 'not-accepted': item.status !== 'accepted' }"
+        >
+          <td class="text-center">
+            <v-simple-checkbox
+              v-model="item.addToRegistry"
+              dense
+              hide-details
+              color="primary"
+            />
+          </td>
+          <td>
+            <v-select
+              v-model="item.type"
+              dense
+              hide-details
+              :disabled="readonly"
+              :items="docTypes"
+              class="my-2"
+            />
+          </td>
+          <td>
+            <v-text-field
+              v-model.trim="item.number"
+              dense
+              hide-details
+              :disabled="readonly"
+            />
+          </td>
+          <td>
+            <v-text-field
+              v-model.trim="item.note"
+              dense
+              hide-details
+              :disabled="readonly"
+            />
+          </td>
+          <td>
+            <v-select
+              v-model="item.status"
+              dense
+              hide-details
+              :items="docStatuses"
+              :disabled="readonly"
+            />
+          </td>
+          <td>
+            <v-text-field
+              v-model="item.date"
+              type="date"
+              dense
+              hide-details
+              :disabled="readonly"
+            />
+          </td>
+          <td>
+            <v-icon small :disabled="readonly" @click="deleteRow(idx)">
+              mdi-delete
+            </v-icon>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+
     <app-group-dialog
       :dialog="groupDialog"
-      @pushDocs="addGroup"
+      @push-docs="addGroup"
       @close="closeGroupDocDialog"
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import dayjs from 'dayjs'
 import appGroupDialog from './groupDialog.vue'
 
 const DATE_FORMAT = 'YYYY-MM-DD'
 
-export default {
+export default defineComponent({
   name: 'DocListForm',
   components: {
     appGroupDialog,
@@ -186,7 +187,7 @@ export default {
       this.docs.splice(idx, 1)
     },
   },
-}
+})
 </script>
 <style scoped>
 .docs-wrapper {

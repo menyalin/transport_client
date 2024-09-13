@@ -37,10 +37,13 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 
-export default {
+export default defineComponent({
   name: 'AgreementClientList',
   components: {
     AppPartnerAutocomplete,
@@ -93,6 +96,6 @@ export default {
       this.$emit('change', this.selectedClients)
     },
   },
-}
+})
 </script>
 <style></style>

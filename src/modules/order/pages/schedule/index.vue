@@ -1,17 +1,22 @@
 <template>
   <app-schedule-table
     :rows="scheduleRows"
-    @startDragOrder="startDragOrder"
-    @endDragOrder="endDragOrder"
-    @updateOrder="updateOrderHandler"
+    @start-drag-order="startDragOrder"
+    @end-drag-order="endDragOrder"
+    @update-order="updateOrderHandler"
   />
 </template>
-<script>
-import AppScheduleTable from '../../components/scheduleTable'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { OrderService as service } from '@/shared/services'
+
+import AppScheduleTable from '../../components/scheduleTable'
 import periodDifferernce from '../../utils/periodDifference'
 
-export default {
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Schedule',
   components: {
     AppScheduleTable,
@@ -82,6 +87,6 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped></style>

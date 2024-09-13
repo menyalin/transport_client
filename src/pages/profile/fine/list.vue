@@ -92,6 +92,7 @@
         </div>
         <v-data-table
           v-model="selected"
+          v-model:options="settings.listOptions"
           item-key="_id"
           show-select
           :headers="headers"
@@ -103,7 +104,6 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isWithheld`]="{ item }">
@@ -118,20 +118,32 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
 import { mapGetters } from 'vuex'
-import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
-import { useItemsForAutocomplete } from '@/entities/worker'
+
 import { FineListAnalitics } from '@/entities/fine'
+import { useItemsForAutocomplete } from '@/entities/worker'
+import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
+
 import { useFineList } from './useList'
 
-export default {
+export default defineComponent({
   name: 'FineList',
   components: {
     ButtonsPanel,
     DateRangeInput,
     FineListAnalitics,
+  },
+
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
   },
 
   setup(_props, ctx) {
@@ -219,15 +231,7 @@ export default {
       this.$router.push(`fines/${item._id}`)
     },
   },
-
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

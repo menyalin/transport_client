@@ -18,7 +18,7 @@
           :showMainLoadingPointSelector="showMainLoadingPointSelector"
           :showDeleteBtn="tmpPoints.length > 2"
           :isTemplate="isTemplate"
-          @changePoint="change($event, ind)"
+          @change-point="change($event, ind)"
           @delete="deleteHandler"
         />
       </div>
@@ -52,13 +52,17 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import draggable from 'vuedraggable'
-import AppPointDetail from './pointDetail'
-import { BlockTitle } from '@/entities/order'
-import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
 
-export default {
+import { BlockTitle } from '@/entities/order'
+
+import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
+import AppPointDetail from './pointDetail'
+
+export default defineComponent({
   name: 'RoutePoints',
   components: {
     AppPointDetail,
@@ -182,7 +186,7 @@ export default {
       this.$emit('changePoints', this.tmpPoints)
     },
   },
-}
+})
 </script>
 <style scoped>
 .route-wrapper {

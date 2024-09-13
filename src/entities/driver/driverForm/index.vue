@@ -191,17 +191,21 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
-import AppMedBook from './medBook.vue'
+
 import {
   ButtonsPanel,
   DateTimeInput,
   AdditionalNotifications,
 } from '@/shared/ui'
 
-export default {
+import AppMedBook from './medBook.vue'
+
+export default defineComponent({
   name: 'DriverForm',
   components: {
     ButtonsPanel,
@@ -350,7 +354,7 @@ export default {
       })
     },
   },
-}
+})
 </script>
 <style scoped>
 .row-wrapper {

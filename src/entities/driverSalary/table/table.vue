@@ -1,15 +1,15 @@
 <template>
   <v-data-table
+    v-model:options="options"
     :items="preparedItems"
     :headers="tableHeaders"
     dense
     fixed-header
-    :options.sync="options"
     height="75vh"
     :loading="loading"
     :items-per-page="-1"
-    @dblclick:row="dblClickRow"
     :style="{ boxSizing: 'border-box' }"
+    @dblclick:row="dblClickRow"
   >
     <template
       v-if="preparedItems.length"
@@ -42,14 +42,18 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, ref, watch } from 'vue'
-import store from '@/store'
-import router from '@/router'
-import AppAppendPivorRow from './appendPivotRow.vue'
-import { PIVOT_HEADERS, DRIVER_DETAILS_HEADERS } from './headers.js'
 
-export default {
+import router from '@/router'
+import store from '@/store'
+
+import AppAppendPivorRow from './appendPivotRow.vue'
+import { PIVOT_HEADERS, DRIVER_DETAILS_HEADERS } from './headers'
+
+export default defineComponent({
   name: 'DriversSalaryTable',
   components: {
     AppAppendPivorRow,
@@ -124,6 +128,6 @@ export default {
       options,
     }
   },
-}
+})
 </script>
 <style></style>

@@ -1,146 +1,139 @@
 <template>
   <div>
-    <v-simple-table dense class="mb-3">
-      <template #default>
-        <thead>
-          <tr>
-            <th class="date-col">Дата начала</th>
-            <th class="date-col">Дата завершения</th>
-            <th>Грузовик</th>
-            <th>Прицеп</th>
-            <th>Примечание</th>
-            <th class="text-center">Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(item, ind) in items"
-            :key="item._id || item.startDate"
-            :class="{
-              'not-saved-row': !item._id || item.updated,
-            }"
-          >
-            <td>
-              {{ new Date(item.startDate).toLocaleString() }}
-            </td>
-            <td>
-              {{
-                item.endDate ? new Date(item.endDate).toLocaleString() : null
-              }}
-            </td>
-            <td>
-              {{
-                $store.getters.truckById(item.truck)
-                  ? $store.getters.truckById(item.truck).regNum
-                  : null
-              }}
-            </td>
-            <td>
-              {{
-                $store.getters.truckById(item.trailer)
-                  ? $store.getters.truckById(item.trailer).regNum
-                  : null
-              }}
-            </td>
-            <td>
-              {{ item.note }}
-            </td>
-            <td class="action-column text-center">
-              <v-icon
-                v-if="ind === items.length - 1 && crewEditable"
-                color="green"
-                class="px-1"
-                @click="editItem"
-              >
-                mdi-pencil
-              </v-icon>
-              <v-icon
-                v-if="ind > 0 && ind === items.length - 1 && crewEditable"
-                color="red"
-                class="px-1"
-                @click="popItem"
-              >
-                mdi-delete
-              </v-icon>
-            </td>
-          </tr>
-          <tr v-if="date && driver && editMode">
-            <td class="date-col">
-              <div v-if="fixedStartDateInRow">
-                {{ new Date(newItem.startDate).toLocaleString() }}
-              </div>
-              <DateTimeInput
-                v-else
-                v-model="$v.newItem.startDate.$model"
-                class="my-2"
-                label="Дата начала"
-                hideDetails
-                :minDate="minDateValue"
-                type="datetime-local"
-                :dense="true"
-                :outlined="true"
-                hide-details
-              />
-            </td>
-            <td>
-              <DateTimeInput
-                v-if="newItem.startDate"
-                v-model="newItem.endDate"
-                class="my-2"
-                label="Дата завершения"
-                hideDetails
-                :errorMessages="endDateErrors"
-                :minDate="newItem.startDate"
-                type="datetime-local"
-                :dense="true"
-                :outlined="true"
-                hide-details
-              />
-            </td>
-            <td class="truck-col">
-              <v-select
-                v-model="newItem.truck"
-                :disabled="!isValidDate"
-                class="pa-0 ma-0"
-                :items="trucksByDriver"
-                hide-details
-                item-value="_id"
-                item-text="regNum"
-              />
-            </td>
-            <td class="truck-col">
-              <v-autocomplete
-                v-model="newItem.trailer"
-                :disabled="trailerDisabled"
-                class="pa-0 ma-0"
-                :items="trailers"
-                hide-details
-                item-value="_id"
-                item-text="regNum"
-              />
-            </td>
-            <td>
-              <v-text-field
-                v-model="newItem.note"
-                class="pa-0 ma-0"
-                hide-details
-              />
-            </td>
-            <td class="text-center action-column">
-              <v-icon
-                :color="isValidNewItem ? 'green' : 'grey'"
-                @click="addItem"
-              >
-                mdi-content-save
-              </v-icon>
-              <v-icon @click="cancelAddRow"> mdi-cancel </v-icon>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+    <v-table dense class="mb-3">
+      <thead>
+        <tr>
+          <th class="date-col">Дата начала</th>
+          <th class="date-col">Дата завершения</th>
+          <th>Грузовик</th>
+          <th>Прицеп</th>
+          <th>Примечание</th>
+          <th class="text-center">Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(item, ind) in items"
+          :key="item._id || item.startDate"
+          :class="{
+            'not-saved-row': !item._id || item.updated,
+          }"
+        >
+          <td>
+            {{ new Date(item.startDate).toLocaleString() }}
+          </td>
+          <td>
+            {{ item.endDate ? new Date(item.endDate).toLocaleString() : null }}
+          </td>
+          <td>
+            {{
+              $store.getters.truckById(item.truck)
+                ? $store.getters.truckById(item.truck).regNum
+                : null
+            }}
+          </td>
+          <td>
+            {{
+              $store.getters.truckById(item.trailer)
+                ? $store.getters.truckById(item.trailer).regNum
+                : null
+            }}
+          </td>
+          <td>
+            {{ item.note }}
+          </td>
+          <td class="action-column text-center">
+            <v-icon
+              v-if="ind === items.length - 1 && crewEditable"
+              color="green"
+              class="px-1"
+              @click="editItem"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              v-if="ind > 0 && ind === items.length - 1 && crewEditable"
+              color="red"
+              class="px-1"
+              @click="popItem"
+            >
+              mdi-delete
+            </v-icon>
+          </td>
+        </tr>
+        <tr v-if="date && driver && editMode">
+          <td class="date-col">
+            <div v-if="fixedStartDateInRow">
+              {{ new Date(newItem.startDate).toLocaleString() }}
+            </div>
+            <DateTimeInput
+              v-else
+              v-model="v$.startDate.$model"
+              class="my-2"
+              label="Дата начала"
+              hideDetails
+              :minDate="minDateValue"
+              type="datetime-local"
+              :dense="true"
+              :outlined="true"
+              hide-details
+            />
+          </td>
+          <td>
+            <DateTimeInput
+              v-if="newItem.startDate"
+              v-model="newItem.endDate"
+              class="my-2"
+              label="Дата завершения"
+              hideDetails
+              :errorMessages="endDateErrors"
+              :minDate="newItem.startDate"
+              type="datetime-local"
+              :dense="true"
+              :outlined="true"
+              hide-details
+            />
+          </td>
+          <td class="truck-col">
+            <v-select
+              v-model="newItem.truck"
+              :disabled="!isValidDate"
+              class="pa-0 ma-0"
+              :items="trucksByDriver"
+              hide-details
+              item-value="_id"
+              item-text="regNum"
+            />
+          </td>
+          <td class="truck-col">
+            <v-autocomplete
+              v-model="newItem.trailer"
+              :disabled="trailerDisabled"
+              class="pa-0 ma-0"
+              :items="trailers"
+              hide-details
+              item-value="_id"
+              item-text="regNum"
+            />
+          </td>
+          <td>
+            <v-text-field
+              v-model="newItem.note"
+              class="pa-0 ma-0"
+              hide-details
+            />
+          </td>
+          <td class="text-center action-column">
+            <v-icon :color="isValidNewItem ? 'green' : 'grey'" @click="addItem">
+              mdi-content-save
+            </v-icon>
+            <v-icon @click="cancelAddRow"> mdi-cancel </v-icon>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
     <div
-      v-if="editMode && !$v.newItem.startDate.isLaterThan"
+      v-if="editMode && !v$.startDate.isLaterThan"
       class="text-caption error-message"
     >
       Начальная дата должна быть больше
@@ -156,7 +149,7 @@
       :transportId="actualTruckCrew.transport._id"
       :invalid="!truckClosureAvailable"
       type="transport"
-      @clearCrew="clearTruckCrew"
+      @clear-crew="clearTruckCrew"
     />
 
     <app-crew-message
@@ -168,7 +161,7 @@
       :invalid="!trailerClosureAvailable"
       :transportId="actualTrailerCrew.transport._id"
       type="transport"
-      @clearCrew="clearTrailerCrew"
+      @clear-crew="clearTrailerCrew"
     />
 
     <v-btn
@@ -183,16 +176,19 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { CrewService } from '@/shared/services'
-import AppCrewMessage from './crewMessage.vue'
-import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
-import { DateTimeInput } from '@/shared/ui'
 
-export default {
+import { CrewService } from '@/shared/services'
+import { DateTimeInput } from '@/shared/ui/index'
+
+import AppCrewMessage from './crewMessage.vue'
+import { useTransportTableForm } from './useTransportTableForm'
+
+export default defineComponent({
   name: 'TransportTable',
   components: {
     DateTimeInput,
@@ -221,32 +217,15 @@ export default {
     },
     tkName: String,
   },
+  setup() {
+    const { v$, state: newItem } = useTransportTableForm()
+    return { v$, newItem }
+  },
   data: () => ({
     editMode: false,
     actualTruckCrew: null,
     actualTrailerCrew: null,
-    newItem: {
-      startDate: null,
-      endDate: null,
-      truck: null,
-      trailer: null,
-      note: null,
-    },
   }),
-
-  validations() {
-    return {
-      newItem: {
-        startDate: {
-          required,
-          isLaterThan: isLaterThan(this.minDateValue),
-        },
-        endDate: {
-          isLaterThan: isLaterThan(this.newItem.startDate),
-        },
-      },
-    }
-  },
 
   computed: {
     ...mapGetters(['trucks', 'allowedToUseTrailersTrucksSet']),
@@ -269,10 +248,10 @@ export default {
     },
     isValidDate() {
       if (!this.items.length) return true
-      else return !this.$v.newItem.startDate.$invalid
+      else return !this.v$.startDate.$invalid
     },
     endDateErrors() {
-      if (this.$v.newItem.endDate.$invalid) return ['Значение не корректно']
+      if (this.v$.endDate.$invalid) return ['Значение не корректно']
       else return null
     },
     isValidNewItem() {
@@ -280,11 +259,10 @@ export default {
         (this.newItem.truck && this.allowUseTrailer && this.newItem.trailer) ||
         (this.newItem.truck && !this.allowUseTrailer && !this.newItem.trailer)
       const startDateValid =
-        (this.items.length && !this.$v.newItem.startDate.$invalid) ||
-        !this.items.length
+        (this.items.length && !this.v$.startDate.$invalid) || !this.items.length
       const truckAvailable = this.showTruckMessage
       const trailerAvailable = this.showTrailerMessage
-      const validEndDate = !this.$v.newItem.endDate.$invalid
+      const validEndDate = !this.v$.endDate.$invalid
       return (
         fullCrew &&
         startDateValid &&
@@ -446,7 +424,7 @@ export default {
       return this.items[idx].endDate ? this.items[idx].endDate : null
     },
   },
-}
+})
 </script>
 <style>
 .date-col {

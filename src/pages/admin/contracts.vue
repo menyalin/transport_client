@@ -1,7 +1,5 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div>тут будет список договоров</div>
 </template>
-<script>
-export default {}
-</script>
-<style></style>
+<script lang="ts"></script>

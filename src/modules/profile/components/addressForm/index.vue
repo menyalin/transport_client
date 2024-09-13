@@ -10,7 +10,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    
+
     <app-address-suggestion class="mt-3" @change="getParsedAddress" />
 
     <v-text-field
@@ -104,16 +104,19 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
 
-import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
-import { ButtonsPanel } from '@/shared/ui'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
-import AppSimilarAddresses from './similarAddresses.vue'
+import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
 import { AddressService } from '@/shared/services'
+import { ButtonsPanel } from '@/shared/ui'
+
+import AppSimilarAddresses from './similarAddresses.vue'
 
 const validCoordinates = (val) => {
   if (!val) return true
@@ -127,7 +130,7 @@ const validCoordinates = (val) => {
   )
 }
 
-export default {
+export default defineComponent({
   name: 'AddressForm',
   components: {
     AppAddressSuggestion,
@@ -294,6 +297,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

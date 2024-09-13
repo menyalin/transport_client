@@ -1,14 +1,14 @@
 <template>
   <div class="wrapper ma-2">
     <h5>{{ title }}</h5>
-    <v-btn color="primary" @click="addHandler" small :disabled="disabled">
+    <v-btn color="primary" small :disabled="disabled" @click="addHandler">
       Добавить
     </v-btn>
     <component
       :is="tariffListComponent"
       :items="itemsWithIdx"
-      @deleteByIdx="removeHandler"
-      @updateByIdx="updateHandler"
+      @delete-by-idx="removeHandler"
+      @update-by-idx="updateHandler"
     />
     <v-dialog v-model="dialog" max-width="800" persistent>
       <component
@@ -24,9 +24,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref, computed } from 'vue'
-export default {
+export default defineComponent({
   name: 'TariffListWrapper',
   model: {
     prop: 'items',
@@ -110,7 +112,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .wrapper {

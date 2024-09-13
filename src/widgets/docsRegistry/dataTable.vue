@@ -25,11 +25,14 @@
   </v-data-table>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { ref } from 'vue'
+
 import router from '@/router'
 
-export default {
+export default defineComponent({
   name: 'DocsRegistryDataTable',
   model: {
     prop: 'settings',
@@ -42,6 +45,7 @@ export default {
     headers: Array,
     loading: Boolean,
   },
+  emits: ['dblclick:row', 'update:listOptions'],
   setup(props, ctx) {
     const listOptions = ref(props.settings?.listOptions || {})
 
@@ -71,5 +75,5 @@ export default {
       updateListOptionsHandler,
     }
   },
-}
+})
 </script>

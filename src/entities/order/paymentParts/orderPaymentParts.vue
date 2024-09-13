@@ -7,8 +7,8 @@
         small
         color="primary"
         outlined
-        @click="openDialog"
         :disabled="loading"
+        @click="openDialog"
       >
         Добавить часть
       </v-btn>
@@ -17,7 +17,7 @@
     <payment-parts-table
       v-else
       :items="preparedItems"
-      @deleteRow="deleteRowHandler"
+      @delete-row="deleteRowHandler"
     />
     <payment-part-form-dialog
       :routeDate="routeDate"
@@ -27,12 +27,16 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { AgreementService } from '@/shared/services/index'
+
 import PaymentPartFormDialog from './formDialog.vue'
 import PaymentPartsTable from './paymentPartsTable.vue'
 
-export default {
+export default defineComponent({
   name: 'OrderPaymentParts',
   components: {
     PaymentPartFormDialog,
@@ -133,7 +137,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style scoped>
 .docs-wrapper {

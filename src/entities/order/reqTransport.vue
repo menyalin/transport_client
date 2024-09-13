@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <!-- <BlockTitle>{{ title }}</BlockTitle> -->
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="req-transport-block">
       <v-select
@@ -37,11 +37,14 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import BlockTitle from './blockTitle/blockTitle.vue'
 
-export default {
+export default defineComponent({
   name: 'ReqTransport',
   components: {
     BlockTitle,
@@ -122,7 +125,7 @@ export default {
       this.$emit('change', this.params)
     },
   },
-}
+})
 </script>
 <style scoped>
 .req-transport-block {

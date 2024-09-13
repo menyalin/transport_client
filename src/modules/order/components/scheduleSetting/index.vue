@@ -17,12 +17,15 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
+
 import { PermissionService } from '@/shared/services'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
+export default defineComponent({
   name: 'ScheduleSettings',
   components: {
     DateTimeInput,
@@ -50,7 +53,7 @@ export default {
       else this.$store.commit('setScheduleDate', date)
     },
   },
-}
+})
 </script>
 <style scoped>
 .date-settings {

@@ -1,70 +1,70 @@
 <template>
-  <v-simple-table dense>
-    <template #default>
-      <thead>
-        <tr>
-          <th class="text-center" width="180">Тип</th>
-          <th v-if="usePriceWithVat" class="text-center" width="130">
-            Цена c НДС
-          </th>
-          <th v-else class="text-center" width="130">Цена без НДС</th>
-          <th class="text-center">Примечание</th>
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="showPrePrice">
-          <td>Тариф из ДС</td>
-          <td v-if="usePriceWithVat" class="text-right">
-            {{ basePrePrice ? moneyFormatter.format(basePrePrice.price) : 0 }}
-          </td>
+  <v-table dense>
+    <thead>
+      <tr>
+        <th class="text-center" width="180">Тип</th>
+        <th v-if="usePriceWithVat" class="text-center" width="130">
+          Цена c НДС
+        </th>
+        <th v-else class="text-center" width="130">Цена без НДС</th>
+        <th class="text-center">Примечание</th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-if="showPrePrice">
+        <td>Тариф из ДС</td>
+        <td v-if="usePriceWithVat" class="text-right">
+          {{ basePrePrice ? moneyFormatter.format(basePrePrice.price) : 0 }}
+        </td>
 
-          <td v-else class="text-right">
-            {{
-              basePrePrice ? moneyFormatter.format(basePrePrice.priceWOVat) : 0
-            }}
-          </td>
+        <td v-else class="text-right">
+          {{
+            basePrePrice ? moneyFormatter.format(basePrePrice.priceWOVat) : 0
+          }}
+        </td>
 
-          <td colspan="4" />
-        </tr>
+        <td colspan="4" />
+      </tr>
 
-        <tr v-for="(item, idx) in sortedItems" :key="idx">
-          <td class="text-start">
-            {{
-              $store.getters.orderPriceTypesMap.has(item.type)
-                ? $store.getters.orderPriceTypesMap.get(item.type)
-                : '-'
-            }}
-          </td>
-          <td v-if="usePriceWithVat" class="text-right">
-            {{ moneyFormatter.format(item.price) }}
-          </td>
-          <td v-else class="text-right">
-            {{ moneyFormatter.format(item.priceWOVat) }}
-          </td>
+      <tr v-for="(item, idx) in sortedItems" :key="idx">
+        <td class="text-start">
+          {{
+            $store.getters.orderPriceTypesMap.has(item.type)
+              ? $store.getters.orderPriceTypesMap.get(item.type)
+              : '-'
+          }}
+        </td>
+        <td v-if="usePriceWithVat" class="text-right">
+          {{ moneyFormatter.format(item.price) }}
+        </td>
+        <td v-else class="text-right">
+          {{ moneyFormatter.format(item.priceWOVat) }}
+        </td>
 
-          <td>
-            <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2">
-              mdi-cash
-            </v-icon>
+        <td>
+          <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2">
+            mdi-cash
+          </v-icon>
 
-            {{ item.note }}
-          </td>
-          <td v-if="!readonly" class="text-right">
-            <v-btn icon @click="$emit('editPrice', item.type)">
-              <v-icon color="green" small> mdi-pencil </v-icon>
-            </v-btn>
-            <v-btn icon @click="$emit('deletePrice', item.type)">
-              <v-icon color="red" small> mdi-delete </v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
+          {{ item.note }}
+        </td>
+        <td v-if="!readonly" class="text-right">
+          <v-btn icon @click="$emit('editPrice', item.type)">
+            <v-icon color="green" small> mdi-pencil </v-icon>
+          </v-btn>
+          <v-btn icon @click="$emit('deletePrice', item.type)">
+            <v-icon color="red" small> mdi-delete </v-icon>
+          </v-btn>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'CostsTable',
   model: {
     prop: 'items',
@@ -101,6 +101,6 @@ export default {
       return !this.hidePrePrice
     },
   },
-}
+})
 </script>
 <style></style>

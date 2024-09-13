@@ -49,15 +49,25 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import { ReportService } from '@/shared/services'
 import { ReportTitle } from '@/shared/ui'
 
-export default {
+export default defineComponent({
   name: 'DaysControl',
   components: {
     ReportTitle,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: this.settings,
+    })
+    next()
   },
   data() {
     return {
@@ -105,13 +115,6 @@ export default {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     }
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: this.settings,
-    })
-    next()
-  },
   methods: {
     dblClickRow(_, { item }) {
       this.$router.push(`/profile/${item.collection}/${item._id}`)
@@ -125,7 +128,7 @@ export default {
       this.loading = false
     },
   },
-}
+})
 </script>
 <style scoped>
 #report-settings {

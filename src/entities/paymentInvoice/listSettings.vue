@@ -49,14 +49,17 @@
   </div>
 </template>
 
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed, ref, onMounted } from 'vue'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+
 import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
+import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'DocsRegistryListSettingsWidget',
   components: { AppTableColumnSetting, DateRangeInput },
   model: {
@@ -99,7 +102,7 @@ export default {
       PAYMENT_INVOICE_TABLE_HEADERS,
     }
   },
-}
+})
 </script>
 <style scoped>
 .settings-wrapper {

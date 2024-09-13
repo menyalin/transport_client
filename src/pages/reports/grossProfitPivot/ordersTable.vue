@@ -12,12 +12,12 @@
     </div>
 
     <v-data-table
+      v-model:options="listOptions"
       checkbox-color="primary"
       :headers="filteredHeaders"
       :items="preparedItems"
       :server-items-length="totalCount"
       :loading="loading"
-      :options.sync="listOptions"
       :items-per-page="50"
       dense
       :footer-props="{
@@ -37,15 +37,26 @@
     </v-data-table>
   </div>
 </template>
-<script>
-import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import useHistorySettings from '@/shared/hooks/useHistorySettings'
 import { ReportService } from '@/shared/services'
 
-export default {
+import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants'
+
+export default defineComponent({
   name: 'OrdersTable',
   components: { AppTableColumnSettings },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: { ...this.settings },
+    })
+    next()
+  },
   props: {
     mainFilters: Object,
     additionalFilters: Object,
@@ -166,13 +177,6 @@ export default {
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
   methods: {
     getBasePrice(order, type, withVat) {
       if (!['prices', 'prePrices'].includes(type))
@@ -215,7 +219,7 @@ export default {
       this.$router.push(`/orders/${item._id}`)
     },
   },
-}
+})
 </script>
 <style scoped>
 .table-wrapper {

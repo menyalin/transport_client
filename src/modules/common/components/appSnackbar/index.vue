@@ -12,9 +12,11 @@
     </v-snackbar>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-export default {
+export default defineComponent({
   name: 'AppSnackbar',
   data() {
     return {
@@ -48,6 +50,6 @@ export default {
       this.$store.commit('clearError')
     },
   },
-}
+})
 </script>
 <style></style>

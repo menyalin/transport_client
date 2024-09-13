@@ -2,6 +2,7 @@
   <div id="wrapper">
     <v-autocomplete
       ref="first_field"
+      v-model="tmpItem.clients"
       label="Клиенты"
       dense
       :items="clients"
@@ -10,9 +11,8 @@
       multiple
       outlined
       hide-details
-      v-model="tmpItem.clients"
     />
-    
+
     <v-select
       v-model="tmpItem.orderType"
       label="Тип рейса"
@@ -22,14 +22,16 @@
       hide-details
     />
     <v-checkbox
-      label="Возврат паллет"
       v-model="tmpItem.isPltReturn"
+      label="Возврат паллет"
       color="primary"
     />
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'ReturnTariffType',
   model: {
     prop: 'item',
@@ -73,7 +75,7 @@ export default {
       this.$refs.first_field.focus()
     },
   },
-}
+})
 </script>
 <style scoped>
 #wrapper {

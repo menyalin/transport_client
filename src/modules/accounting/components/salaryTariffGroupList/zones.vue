@@ -5,8 +5,10 @@
     <b>{{ zonesMap.get(item.unloadingZone).name }} </b>
   </span>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'ZonesColumn',
   props: {
     item: Object,
@@ -16,5 +18,5 @@ export default {
       return this.$store.getters.zonesMap
     },
   },
-}
+})
 </script>

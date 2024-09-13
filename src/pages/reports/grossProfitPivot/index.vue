@@ -47,10 +47,10 @@
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
-        @updateSelected="updateSelected"
         :daysCount="daysInRange"
         :agreements="agreements"
         :selectedGroups="selectedGroups"
+        @update-selected="updateSelected"
       />
       <v-divider />
       <app-orders-table
@@ -63,15 +63,19 @@
   </div>
 </template>
 
-<script>
-import { useReportSettings } from './model/useReportSettings'
-import { DateRangeInput } from '@/shared/ui'
-import AppGroupBySettings from './groupBySettings.vue'
-import AppPivotTable from './pivotTable.vue'
-import AppOrdersTable from './ordersTable.vue'
-import AppFilters from './filters.vue'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { DateRangeInput } from '@/shared/ui'
+
+import AppFilters from './filters.vue'
+import AppGroupBySettings from './groupBySettings.vue'
+import { useReportSettings } from './model/useReportSettings'
+import AppOrdersTable from './ordersTable.vue'
+import AppPivotTable from './pivotTable.vue'
+
+export default defineComponent({
   name: 'GrossProfitReport',
   components: {
     DateRangeInput,
@@ -113,7 +117,7 @@ export default {
       getPivotData,
     }
   },
-}
+})
 </script>
 <style scoped>
 #wrapper {

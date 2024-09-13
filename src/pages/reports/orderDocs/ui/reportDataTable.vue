@@ -44,12 +44,15 @@
   </v-data-table>
 </template>
 
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
+
 import router from '@/router'
 import { OrderListFooterDetails } from '@/shared/ui'
 
-export default {
+export default defineComponent({
   name: 'ReportDataTable',
   components: {
     OrderListFooterDetails,
@@ -70,7 +73,7 @@ export default {
       dblClickRow,
     }
   },
-}
+})
 </script>
 
 <style scoped>

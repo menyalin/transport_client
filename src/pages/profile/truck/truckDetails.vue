@@ -15,11 +15,14 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { TruckService } from '@/shared/services'
-import { TruckForm } from '@/entities/truck'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import { TruckForm } from '@/entities/truck'
+import { TruckService } from '@/shared/services'
+
+export default defineComponent({
   name: 'TruckDetails',
   components: {
     TruckForm,
@@ -53,6 +56,7 @@ export default {
           this.$router.go(-1)
         }
       } catch (e) {
+        this.$store.commit('setError', e)
         this.loading = false
       }
     },
@@ -71,6 +75,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

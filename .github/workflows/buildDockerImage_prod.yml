@@ -5,9 +5,9 @@ on:
       - closed
     branches: ['main']
 env:
-  VUE_APP_API_URL: https://s4log.ru/api
-  VUE_APP_API_WS_URL: https://s4log.ru
-  VUE_APP_STATIC_URL: https://s4log.ru
+  VITE_API_URL: https://s4log.ru/api
+  VITE_API_WS_URL: https://s4log.ru
+  VITE_STATIC_URL: https://s4log.ru
 jobs:
   build:
     if: github.event.pull_request.merged == true

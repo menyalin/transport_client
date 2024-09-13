@@ -26,11 +26,14 @@
     </v-card>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
+
 import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'PlaceTransferDocsItem',
   props: {
     value: Object,
@@ -60,7 +63,7 @@ export default {
       editHandler,
     }
   },
-}
+})
 </script>
 <style scoped>
 .item-wrapper {

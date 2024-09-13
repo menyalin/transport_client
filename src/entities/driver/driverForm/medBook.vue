@@ -63,13 +63,17 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
-import AppBlockTitle from './blockTitle.vue'
+
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
+import AppBlockTitle from './blockTitle.vue'
+
+export default defineComponent({
   name: 'MedBook',
   components: {
     AppBlockTitle,
@@ -137,7 +141,7 @@ export default {
       return 'light-green'
     },
   },
-}
+})
 </script>
 <style scoped>
 .med-book-wrapper {

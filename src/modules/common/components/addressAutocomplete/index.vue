@@ -24,15 +24,18 @@
           openInModal
           @cancel="cancelDialog"
           @submit="submit"
-          @deleteItem="deleteHandler"
+          @delete-item="deleteHandler"
         />
       </v-card>
     </v-dialog>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppDetailsAddress from '@/pages/profile/address/details'
-export default {
+export default defineComponent({
   name: 'AddressAutocomplete',
   components: {
     AppDetailsAddress,
@@ -102,6 +105,6 @@ export default {
       this.$emit('change', null)
     },
   },
-}
+})
 </script>
 <style scoped></style>

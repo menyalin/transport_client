@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <app-zone-form
           v-else
           :zone="item"
@@ -17,17 +17,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import AppZoneForm from '@/modules/profile/components/zoneForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { ZoneService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import AppZoneForm from '@/modules/profile/components/zoneForm'
+import { ZoneService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+
+export default defineComponent({
   name: 'PartnerDetails',
   components: {
     AppZoneForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {
@@ -35,6 +38,6 @@ export default {
       service: ZoneService,
     }
   },
-}
+})
 </script>
 <style></style>

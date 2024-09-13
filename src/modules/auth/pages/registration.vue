@@ -77,10 +77,12 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { required, minLength, sameAs, email } from '@vuelidate/validators'
+import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
-import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
-export default {
+export default defineComponent({
   data: () => ({
     formTitle: 'Форма регистрации',
     loading: false,
@@ -125,30 +127,33 @@ export default {
     nameErrors() {
       const errors = []
       if (!this.$v.form.name.$dirty) return errors
-      !this.$v.form.name.required && errors.push('Имя не может быть пустым')
+      if (!this.$v.form.name.required) errors.push('Имя не может быть пустым')
       return errors
     },
     emailErrors() {
       const errors = []
       if (!this.$v.form.email.$dirty) return errors
-      !this.$v.form.email.email && errors.push('Не корректный email')
-      !this.$v.form.email.required && errors.push('Email не может быть пустым')
+      if (!this.$v.form.email.email) errors.push('Не корректный email')
+      if (!this.$v.form.email.required)
+        errors.push('Email не может быть пустым')
       return errors
     },
     passwordErrors() {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
-      !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required &&
+      if (!this.$v.form.password.minLength)
+        errors.push('Слишком короткий пароль')
+      if (!this.$v.form.password.required)
         errors.push('Пароль не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.form.confirmPassword.$dirty) return errors
-      !this.$v.form.confirmPassword.required &&
+      if (!this.$v.form.confirmPassword.required)
         errors.push('Подтверждение пароля не может быть пустым')
-      !this.$v.form.confirmPassword.sameAs && errors.push('Password mismatch')
+      if (!this.$v.form.confirmPassword.sameAs)
+        errors.push('Введенные пароли не совпадают')
       return errors
     },
   },
@@ -192,7 +197,7 @@ export default {
         .finally(() => (this.loading = false))
     },
   },
-}
+})
 </script>
 
 <style>

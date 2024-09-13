@@ -48,8 +48,10 @@
     </div>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'AllowedDrivers',
   model: {
     prop: 'driverList',
@@ -118,6 +120,6 @@ export default {
       this.$emit('change', this.selectedDrivers)
     },
   },
-}
+})
 </script>
 <style></style>

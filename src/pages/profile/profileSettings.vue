@@ -24,12 +24,15 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import AppCompanyInvites from '@/widgets/companyInvites' // TODO: переместить в entity
 import AppUserInfo from '@/widgets/userInfo' // TODO: переместить в entity
 
-export default {
+export default defineComponent({
   name: 'ProfileSettingsPage',
   components: {
     AppCompanyInvites,
@@ -60,6 +63,6 @@ export default {
       if (val) await this.$store.dispatch('getUserData')
     },
   },
-}
+})
 </script>
 <style></style>

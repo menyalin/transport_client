@@ -206,17 +206,20 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { computed } from 'vue'
-import store from '@/store'
+
+import { useOrderListSettingsData } from '@/shared/hooks'
 import {
   AppTableColumnSetting,
   DateRangeInput,
   OrderDocStatusSelector,
 } from '@/shared/ui'
-import { useOrderListSettingsData } from '@/shared/hooks'
+import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'OrdersTableSettings',
   components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
   model: {
@@ -273,7 +276,7 @@ export default {
       agreementItems,
     }
   },
-}
+})
 </script>
 <style scoped>
 .filter-wrapper {

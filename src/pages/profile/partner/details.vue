@@ -1,31 +1,34 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="
       !!id && $store.getters.hasPermission('docsRegistry:delete')
     "
+    @delete="deleteHandler"
   >
     <PartnerForm
       :partner="item"
       @cancel="cancel"
       @submit="submit"
-      @updatePartner="updatePartnerHandler"
+      @update-partner="updatePartnerHandler"
     />
     <IdleTruckNotificationsWidget
       :partner="item"
-      @updatePartner="updatePartnerHandler"
+      @update-partner="updatePartnerHandler"
     />
   </form-wrapper>
 </template>
-<script>
-import { PartnerService as service } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
-import { FormWrapper } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import { PartnerForm } from '@/entities/partner'
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { PartnerService as service } from '@/shared/services'
+import { FormWrapper } from '@/shared/ui'
 import { IdleTruckNotifications as IdleTruckNotificationsWidget } from '@/widgets/idleTruckNotifications'
 
-export default {
+export default defineComponent({
   name: 'PartnerDetails',
   components: {
     PartnerForm,
@@ -54,6 +57,6 @@ export default {
       }
     },
   },
-}
+})
 </script>
 <style></style>

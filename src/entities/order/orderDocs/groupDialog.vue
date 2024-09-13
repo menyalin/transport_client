@@ -18,8 +18,8 @@
           />
 
           <v-text-field
-            v-model="numberStr"
             ref="numberStrNode"
+            v-model="numberStr"
             label="Номера документов"
             hint="Номера документов через запятую"
             class="mt-5"
@@ -36,8 +36,8 @@
             />
           </v-radio-group>
           <v-checkbox
-            label="Включать документы в опись"
             v-model="addToRegistry"
+            label="Включать документы в опись"
             color="primary"
           />
           <span>Будет создано документов: </span>{{ docCount }}
@@ -54,12 +54,15 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import { computed, ref } from 'vue'
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
+import { computed, ref } from 'vue'
+
 import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'GroupDocDialog',
   props: {
     dialog: {
@@ -149,6 +152,6 @@ export default {
       changeDocTypesHandler,
     }
   },
-}
+})
 </script>
 <style scoped></style>

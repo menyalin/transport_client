@@ -11,7 +11,7 @@
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <app-order-template-form
           v-else
           :orderTemplate="item"
@@ -26,17 +26,20 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {OrderTemplateService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 
-export default {
+import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm'
+import { OrderTemplateService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui/index'
+
+export default defineComponent({
   name: 'OrderTemplateDetails',
   components: {
     AppOrderTemplateForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {
@@ -44,6 +47,6 @@ export default {
       service: OrderTemplateService,
     }
   },
-}
+})
 </script>
 <style></style>

@@ -9,12 +9,15 @@
     </v-main>
   </v-app>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+
 import AppBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
 import AppScheduleSettings from '@/modules/order/components/scheduleSetting'
 
-export default {
+export default defineComponent({
   name: 'ProfileLayout',
 
   components: {
@@ -23,6 +26,6 @@ export default {
     AppScheduleSettings,
   },
   data: () => ({}),
-}
+})
 </script>
 <style></style>

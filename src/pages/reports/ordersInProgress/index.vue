@@ -54,14 +54,24 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
+
 import { ReportService } from '@/shared/services'
 import { ReportTitle } from '@/shared/ui'
-export default {
+export default defineComponent({
   name: 'OrdersInProgress',
   components: {
     ReportTitle,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('setFormSettings', {
+      formName: this.formName,
+      settings: this.settings,
+    })
+    next()
   },
   data() {
     return {
@@ -122,13 +132,6 @@ export default {
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     }
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: this.settings,
-    })
-    next()
-  },
   methods: {
     getTableForClipboard() {
       // if (this.filteredRows.length === 0) return null
@@ -166,7 +169,7 @@ export default {
     },
     copyHandler() {
       const text = this.getTableForClipboard()
-      var data = [
+      const data = [
         // eslint-disable-next-line no-undef
         new ClipboardItem({
           'text/html': new Blob([text], { type: 'text/html' }),
@@ -175,7 +178,7 @@ export default {
       navigator.clipboard.write(data).then()
     },
   },
-}
+})
 </script>
 <style scoped>
 #report-settings {

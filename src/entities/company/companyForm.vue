@@ -47,13 +47,16 @@
     </form>
   </v-card>
 </template>
-<script>
-import { required } from 'vuelidate/lib/validators'
-import { ButtonsPanel } from '@/shared/ui'
+<script lang="ts">
+//@ts-nocheck
+import { defineComponent } from 'vue'
+import { required } from '@vuelidate/validators'
 import { mapActions } from 'vuex'
+import { ButtonsPanel } from '@/shared/ui'
+
 const touchMap = new WeakMap()
 
-export default {
+export default defineComponent({
   name: 'CompanyForm',
   components: {
     ButtonsPanel,
@@ -129,6 +132,6 @@ export default {
       },
     },
   },
-}
+})
 </script>
 <style></style>

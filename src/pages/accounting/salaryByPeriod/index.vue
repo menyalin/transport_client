@@ -16,8 +16,8 @@
       />
 
       <v-autocomplete
-        label="Водитель"
         v-model="driver"
+        label="Водитель"
         :items="drivers"
         item-value="_id"
         item-text="fullName"
@@ -64,18 +64,22 @@
       :loading="isLoading"
       :driver="driver"
       :setListSettings="setListSettings"
-      @chooseDriver="setDriver"
+      @choose-driver="setDriver"
     />
   </div>
 </template>
-<script>
+<script lang="ts">
+//@ts-nocheck
 import dayjs from 'dayjs'
+import { defineComponent } from 'vue'
 import { computed, ref, watch } from 'vue'
-import store from '@/store'
+
+import { DriverSalaryTable } from '@/entities/driverSalary'
 import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalaryPeriod/index.vue'
 import AppPartnersAutocomplete from '@/modules/common/components/partnerAutocomplete'
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
-import { DriverSalaryTable } from '@/entities/driverSalary'
+import store from '@/store'
+
 import { useDriversSalaryData } from './model'
 
 const getInitialPeriod = (historyState) => {
@@ -83,14 +87,14 @@ const getInitialPeriod = (historyState) => {
   else return new Date().toISOString()
 }
 
-export default {
+export default defineComponent({
   name: 'DriversSalary',
   components: {
     AppDriversSalaryPeriod,
     DriverSalaryTable,
     AppPartnersAutocomplete,
   },
-  setup(_props, _ctx) {
+  setup() {
     const historyState = window.history.state
     const tks = ref(historyState.tks || [])
     const driver = ref(historyState.driver)
@@ -163,7 +167,7 @@ export default {
       downloadReportHandler,
     }
   },
-}
+})
 </script>
 <style scoped>
 .page-wrapper {

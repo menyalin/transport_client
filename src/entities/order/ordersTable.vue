@@ -32,8 +32,8 @@
         small
         color="primary"
         :disabled="!item.isSelectable"
-        @click="addItem(item._id)"
         :style="{ cursor: 'pointer' }"
+        @click="addItem(item._id)"
       >
         mdi-arrow-up-left
       </v-icon>
@@ -90,7 +90,7 @@
         @input="setDocStateStatus($event, item._id)"
       />
     </template>
-    <template #[`footer.prepend`] v-if="statisticData && statisticData.count">
+    <template v-if="statisticData && statisticData.count" #[`footer.prepend`]>
       <order-list-footer-details
         :total="statisticData.count"
         :accepted="statisticData.acceptedDocs"
@@ -121,14 +121,16 @@
     </template>
   </v-data-table>
 </template>
-<script>
-import store from '@/store'
+<script lang="ts">
+//@ts-nocheck
+import { computed, defineComponent } from 'vue'
+
 import router from '@/router'
-import { computed } from 'vue'
 import { OrderService } from '@/shared/services'
 import { OrderListFooterDetails } from '@/shared/ui'
+import store from '@/store'
 
-export default {
+export default defineComponent({
   name: 'OrdersTable',
   components: {
     OrderListFooterDetails,
@@ -244,5 +246,5 @@ export default {
       addItem,
     }
   },
-}
+})
 </script>
