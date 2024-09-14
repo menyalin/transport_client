@@ -49,8 +49,8 @@
 
           <td>{{ item.note }}</td>
           <td class="text-right">
-            <v-btn small icon @click="removeHandler(ind)">
-              <v-icon small color="red"> mdi-delete </v-icon>
+            <v-btn size="small" icon @click="removeHandler(ind)">
+              <v-icon size="small" color="red"> mdi-delete </v-icon>
             </v-btn>
           </td>
         </tr>

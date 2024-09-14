@@ -4,9 +4,8 @@
       <v-col>
         <v-alert
           v-model="error.show"
-          dismissible
+          closable
           type="error"
-          transition="scale-transition"
           @change="toggleAlert"
         >
           {{ error.message }}
@@ -28,7 +27,7 @@
           />
           <v-btn
             color="primary"
-            small
+            size="small"
             class="ma-2"
             hint="alt + N"
             :disabled="!allowCreateTariffItem"

@@ -59,8 +59,8 @@ const isValidForm = computed(() => {
       <BlockTitle>Доплата водителю</BlockTitle>
       <v-btn
         v-if="!showDataRow && hasWritePermission"
-        small
-        outlined
+        size="small"
+        variant="outlined"
         color="primary"
         @click="add"
       >
@@ -78,8 +78,8 @@ const isValidForm = computed(() => {
         <i>Отв:</i>
         <app-worker-autocomplete :value="value.worker" labelOnly />
       </div>
-      <v-btn v-if="hasWritePermission" icon small @click="deletePayment">
-        <v-icon color="red" small>mdi-delete</v-icon>
+      <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment">
+        <v-icon color="red" size="small">mdi-delete</v-icon>
       </v-btn>
     </div>
     <v-dialog v-model="dialog" max-width="800px">
@@ -89,15 +89,15 @@ const isValidForm = computed(() => {
           <v-text-field
             v-model.number="tmpVal.sum"
             type="number"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             label="Сумма"
             :style="{ maxWidth: '200px' }"
           />
           <v-text-field
             v-model.trim="tmpVal.note"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             label="Примечание"
           />
           <app-worker-autocomplete

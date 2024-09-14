@@ -4,28 +4,28 @@
       ref="routeTypeEl"
       v-model="tmpAdditionalPoints.clients"
       label="Клиенты"
-      dense
+      density="compact"
       :items="clients"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      outlined
+      variant="outlined"
       hide-details
     />
     <v-select
       v-model="tmpAdditionalPoints.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-text-field
       v-model.number="tmpAdditionalPoints.includedPoints"
       label="Кол-во точек включенных в тариф"
-      dense
+      density="compact"
       type="number"
-      outlined
+      variant="outlined"
       hide-details
     />
   </div>

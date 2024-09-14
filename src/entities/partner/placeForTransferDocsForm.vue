@@ -6,8 +6,8 @@
         <v-text-field
           v-model="state.title"
           label="Название площадки"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :errorMessages="titleErrorMessages"
           :style="{ maxWidth: '600px' }"
           @blur="v$.title.$touch"
@@ -33,16 +33,16 @@
         <v-text-field
           v-model="state.contacts"
           label="Контакты"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           @blur="v$.contacts.$touch"
         />
 
         <v-text-field
           v-model="v$.note.$model"
           label="Примечание"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           @blur="v$.note.$touch"
         />
         <v-checkbox

@@ -11,7 +11,7 @@
       <v-autocomplete
         v-model="state.agreement"
         :items="agreements"
-        item-text="name"
+        item-title="name"
         item-value="_id"
         label="Соглашение"
         :readonly="agreementReadonly"

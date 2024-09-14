@@ -8,16 +8,15 @@
           class="my-3"
           :invites="companyInvites"
         />
+        {{ directoriesProfile }}
         <div v-if="user" class="mt-3">
           <h4>Выбрать профиль компании:</h4>
           <v-select
             class="ma-4"
-            solo
-            :value="directoriesProfile"
+            :model-value="directoriesProfile"
             :items="companies"
             clearable
-            label="Профиль компании"
-            @change="changeDirectoriesProfile"
+            @update:model-value="changeDirectoriesProfile"
           />
         </div>
       </v-col>
@@ -51,7 +50,7 @@ export default defineComponent({
           // .filter((item) => item.hasOwnDirectories)
           .map((item) => ({
             value: item._id,
-            text: item.name,
+            title: item.name,
           }))
       )
     },

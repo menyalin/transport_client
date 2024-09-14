@@ -15,38 +15,38 @@
     <v-select
       v-model.trim="v$.tkName.$model"
       :items="tkNames"
-      item-text="name"
+      item-title="name"
       item-value="_id"
       label="ТК"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       :disabled="!!crewId"
-      @change="tkNameChange"
+      @update:model-value="tkNameChange"
     />
     <v-autocomplete
       v-model="v$.driver.$model"
-      outlined
+      variant="outlined"
       hide-details
       label="Водитель"
       class="mb-2"
       :items="tkDrivers"
       item-value="_id"
-      item-text="fullName"
+      item-title="fullName"
       :disabled="!formState.tkName || !!crewId"
     />
     <div class="row-input">
-      <!-- <AppDateTimeInput
+      <AppDateTimeInput
         v-model="v$.startDate.$model"
         label="Дата начала"
         :errorMessages="startDateError"
         :disabled="!form.driver || !!crewId"
         :minDate="minValueForStartDate"
-        @blur="v$.form.startDate.$touch()"
         dense
         hideDetails
         outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
+        @blur="v$.form.startDate.$touch()"
       />
       <AppDateTimeInput
         v-model="v$.form.endDate.$model"
@@ -54,13 +54,13 @@
         label="Дата завершения"
         :errorMessages="endDateError"
         :minDate="form.startDate"
-        @blur="v$.form.endDate.$touch()"
         dense
         hideDetails
         outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
-      /> -->
+        @blur="v$.form.endDate.$touch()"
+      />
     </div>
 
     <app-crew-message
@@ -74,7 +74,7 @@
       @clear-crew="clearActualCrew"
     />
 
-    <!-- <app-transport-table
+    <app-transport-table
       v-if="showTransportTable"
       :items="form.transport"
       :date="form.startDate"
@@ -83,16 +83,16 @@
       :crewEditable="crewEditable"
       :isClosedCrew="!!form.endDate"
       :tkName="form.tkName"
-      @addItem="addItem"
-      @editMode="changeEditModeStatus"
-      @itemsPop="deleteLastItemInTransport"
-    /> -->
+      @add-item="addItem"
+      @edit-mode="changeEditModeStatus"
+      @items-pop="deleteLastItemInTransport"
+    />
 
     <v-text-field
       v-model="v$v$note.$model"
       label="Примечание"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       class="mt-6"
     />
     <div v-if="crew && crew.manager" class="pb-4 text-caption">
@@ -105,7 +105,7 @@
       </span>
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

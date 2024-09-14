@@ -11,23 +11,22 @@
             v-model.trim="settings.search"
             label="Поиск"
             hideDetails
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             :style="{ 'max-width': '300px' }"
           />
           <v-checkbox
             v-model="settings.selectedOnly"
             label="Только выделенные"
             hideDetails
-            dense
             class="py-0 my-0"
           />
           <v-spacer />
           <v-btn
             v-if="showCopyButton"
-            text
+            variant="text"
             color="primary"
-            small
+            size="small"
             @click="copyHandler"
           >
             скопировать в буфер

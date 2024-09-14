@@ -19,11 +19,11 @@
           <v-select
             v-model="settings.tkName"
             :items="$store.getters.tkNames"
-            item-text="name"
+            item-title="name"
             item-value="_id"
             label="ТК"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             clearable
             :style="{ 'max-width': '260px' }"

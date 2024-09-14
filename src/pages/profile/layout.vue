@@ -1,29 +1,20 @@
 <template>
-  <v-app>
-    <app-admin-bar title="User profile" />
-    <v-main>
-      <div class="layout">
-        <app-left-nav :items="navButtonsWithBadges" />
-        <router-view />
-      </div>
-      <app-snackbar />
-    </v-main>
-  </v-app>
+  <div class="layout">
+    <app-left-nav :items="navButtonsWithBadges" />
+    <router-view />
+    <app-snackbar />
+  </div>
 </template>
 <script lang="ts">
-//@ts-nocheck
+//@ ts-nocheck
 import { defineComponent } from 'vue'
 
-import AppAdminBar from '@/modules/common/components/appBar'
-import AppSnackbar from '@/modules/common/components/appSnackbar'
-import AppLeftNav from '@/modules/common/components/leftNav'
+import AppLeftNav from '@/modules/common/components/leftNav/index.vue'
 
 export default defineComponent({
   name: 'ProfileLayout',
   components: {
-    AppAdminBar,
     AppLeftNav,
-    AppSnackbar,
   },
   data: () => ({
     navButtons: [

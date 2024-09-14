@@ -11,7 +11,7 @@
         />
         <div class="filter-wrapper" />
 
-        <v-data-table
+        <v-data-table-server
           v-model:options="settings.listOptions"
           :headers="headers"
           :items="filteredList"
@@ -39,7 +39,7 @@
           <template #[`item.endPositionDate`]="{ item }">
             <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

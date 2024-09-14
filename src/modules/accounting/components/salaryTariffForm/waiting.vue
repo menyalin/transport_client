@@ -4,44 +4,44 @@
       ref="first_field"
       v-model="tmpItem.clients"
       label="Клиенты"
-      dense
+      density="compact"
       :items="clients"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      outlined
+      variant="outlined"
       hide-details
     />
     <v-select
       v-model="tmpItem.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-text-field
       v-model.number="tmpItem.includeHours"
       type="number"
       label="Кол-во часов включенных в тариф"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-select
       v-model="tmpItem.roundByHours"
       label="Округление времени"
       :items="$store.getters.roundingWaitingByHours"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-select
       v-model="tmpItem.tariffBy"
       label="Тариф за"
       :items="$store.getters.waitingTariffByItems"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
   </div>

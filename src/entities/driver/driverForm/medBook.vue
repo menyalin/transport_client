@@ -7,9 +7,9 @@
       <div class="first-column">
         <v-text-field
           hide-details
-          outlined
-          :value="params.number"
-          dense
+          variant="outlined"
+          :model-value="params.number"
+          density="compact"
           label="Номер"
           @change="change($event, 'number')"
         />
@@ -55,8 +55,8 @@
       </div>
       <v-textarea
         label="Примечание"
-        :value="params.note"
-        outlined
+        :model-value="params.note"
+        variant="outlined"
         hide-details
         @change="change($event, 'note')"
       />

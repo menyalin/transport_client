@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" outlined class="ma-5">
+  <v-card elevation="2" border class="ma-5">
     <v-card-title>
       Подобрать рейсы для описи № {{ docsRegistry.number }}
     </v-card-title>

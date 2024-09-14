@@ -36,27 +36,27 @@
               <v-select
                 v-model="settings.serviceStatus"
                 label="Статус ТС"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 hide-details
                 :items="serviceStatusItems"
               />
               <v-select
                 v-model="settings.tkNameFilter"
-                dense
-                outlined
+                density="compact"
+                variant="outlined"
                 hide-details
                 label="ТК"
                 clearable
                 :items="tkNames"
                 item-value="_id"
-                item-text="name"
+                item-title="name"
               />
               <v-select
                 v-model="settings.truckFilter"
-                dense
+                density="compact"
                 multiple
-                outlined
+                variant="outlined"
                 hide-details
                 label="Тип транспорта"
                 clearable
@@ -64,9 +64,9 @@
               />
               <v-text-field
                 v-model="settings.search"
-                outlined
+                variant="outlined"
                 hide-details
-                dense
+                density="compact"
                 label="Быстрый поиск"
               />
             </div>

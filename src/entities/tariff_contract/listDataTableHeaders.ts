@@ -1,7 +1,7 @@
 export default [
-  { value: 'name', text: 'Имя' },
-  { value: 'agreementName', text: 'Соглашение' },
-  { value: 'startDate', text: 'Дата начала' },
-  { value: 'endDate', text: 'Дата завершения' },
-  { value: 'createdAt', text: 'Дата/время создания' },
+  { key: 'name', title: 'Имя' },
+  { key: 'agreementName', title: 'Соглашение' },
+  { key: 'startDate', title: 'Дата начала' },
+  { key: 'endDate', title: 'Дата завершения' },
+  { key: 'createdAt', title: 'Дата/время создания' },
 ]

@@ -16,6 +16,9 @@ export default defineConfig({
       exclude: ['node_modules'],
     }),
   ],
+  server: {
+    port: 8080,
+  },
   resolve: {
     extensions: ['.vue', '.ts', '.js', '.json'],
     alias: {

@@ -6,63 +6,64 @@
       @change="updateHeadersHandler"
     />
     <v-btn icon @click="refreshHandler"> <v-icon>mdi-refresh</v-icon></v-btn>
-    <date-range-input v-model="localSettings.period" class="mx-2" />
+    <!-- TODO: fix this -->
+    <!-- <date-range-input v-model="localSettings.period" class="mx-2" /> -->
     <v-select
       v-model="localSettings.docStatus"
       label="Документы"
       :items="docStatuses"
-      dense
+      density="compact"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '220px' }"
-      @change="localSettings.listOptions.page = 1"
+      @update:model-value="localSettings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="localSettings.truck"
-      dense
+      density="compact"
       clearable
       auto-select-first
       :items="trucks"
-      outlined
+      variant="outlined"
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="localSettings.listOptions.page = 1"
+      @update:model-value="localSettings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="localSettings.driver"
-      dense
+      density="compact"
       auto-select-first
       item-value="_id"
-      item-text="fullName"
+      item-title="fullName"
       clearable
       :items="drivers"
-      outlined
+      variant="outlined"
       hide-details
       label="Водитель"
       :style="{ 'max-width': '300px' }"
-      @change="localSettings.listOptions.page = 1"
+      @update:model-value="localSettings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="localSettings.loadingZone"
-      dense
+      density="compact"
       auto-select-first
       item-value="_id"
-      item-text="name"
+      item-title="name"
       clearable
       :items="loadingZoneItems"
-      outlined
+      variant="outlined"
       hide-details
       label="Зона погрузки"
       :style="{ 'max-width': '250px' }"
-      @change="localSettings.listOptions.page = 1"
+      @update:model-value="localSettings.listOptions.page = 1"
     />
     <v-text-field
-      :value="settings.search"
-      dense
+      :model-value="settings.search"
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
@@ -73,7 +74,6 @@
       label="Только доступные рейсы"
       hide-details
       class="ml-2"
-      dense
     />
   </div>
 </template>
@@ -81,7 +81,7 @@
 import { reactive } from 'vue'
 
 import { useOrderListSettingsData } from '@/shared/hooks'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { AppTableColumnSetting } from '@/shared/ui'
 
 const props = defineProps({
   settings: {

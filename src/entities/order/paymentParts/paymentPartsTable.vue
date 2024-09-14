@@ -38,7 +38,7 @@
         </td>
         <td>{{ item.note }}</td>
         <td class="text-right">
-          <v-icon small :disabled="readonly" @click="deleteRow(idx)">
+          <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
             mdi-delete
           </v-icon>
         </td>

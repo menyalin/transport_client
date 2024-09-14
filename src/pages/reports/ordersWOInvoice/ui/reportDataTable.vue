@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="preparedItems"
     dense
     :headers="headers"
@@ -18,7 +18,7 @@
     <template #[`footer.prepend`]>
       <ReportStatisticData :data="statisticData" />
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script lang="ts">

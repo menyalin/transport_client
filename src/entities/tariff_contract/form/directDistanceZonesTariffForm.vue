@@ -33,7 +33,7 @@
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
           />
         </div>
@@ -42,22 +42,22 @@
             v-model.number="form.zones[idx].distance"
             label="До, км"
             :style="{ 'max-width': '100px' }"
-            dense
+            density="compact"
           />
           <v-text-field
             v-model.number="form.zones[idx].price"
             label="Тариф"
-            dense
+            density="compact"
             :style="{ 'max-width': '160px' }"
           />
           <v-btn
             v-if="showDeleteBtn(idx)"
             icon
-            small
+            size="small"
             color="red"
             @click="deleteRow"
           >
-            <v-icon small> mdi-delete </v-icon>
+            <v-icon size="small"> mdi-delete </v-icon>
           </v-btn>
           <v-btn
             v-if="showAddBtn(idx) && !invalidZones"

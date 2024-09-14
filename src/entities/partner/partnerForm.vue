@@ -15,46 +15,46 @@
       <v-text-field
         v-model.trim="$v.form.invoiceLoader.$model"
         label="invoiceLoader(admin only)"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
     </div>
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
-      outlined
+      variant="outlined"
       label="Название"
-      dense
+      density="compact"
     />
     <v-text-field
       v-model.trim="$v.form.fullName.$model"
-      outlined
+      variant="outlined"
       label="Полное наименование"
-      dense
+      density="compact"
     />
     <v-text-field
       v-model.trim="$v.form.inn.$model"
-      outlined
+      variant="outlined"
       label="ИНН"
-      dense
+      density="compact"
     />
     <v-select
       v-model="form.group"
       label="Группа"
       :items="$store.getters.partnerGroups"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       clearable
     />
     <v-text-field
       v-model.trim="form.contacts"
-      outlined
+      variant="outlined"
       clearable
       label="Контакты"
-      dense
+      density="compact"
     />
-    <v-checkbox v-model="form.isClient" label="Заказчик" hide-details dense />
-    <v-checkbox v-model="form.isService" label="Сервис" dense />
+    <v-checkbox v-model="form.isClient" label="Заказчик" hide-details />
+    <v-checkbox v-model="form.isService" label="Сервис" />
 
     <places-for-transfer-docs
       v-if="form.isClient"

@@ -14,15 +14,15 @@
             v-model="settings.truckFilter"
             label="Грузовик"
             :items="trucks"
-            item-text="regNum"
+            item-title="regNum"
             item-value="_id"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             clearable
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           v-model:options="settings.listOptions"
           :headers="headers"
           :items="list"
@@ -44,7 +44,7 @@
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

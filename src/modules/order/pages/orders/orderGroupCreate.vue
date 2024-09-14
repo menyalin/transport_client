@@ -4,9 +4,8 @@
       v-model="showAlert"
       type="info"
       class="my-4"
-      dense
-      transition="fade-transition"
-      dismissible
+      density="compact"
+      closable
     >
       Рейсы успешно созданы
     </v-alert>
@@ -16,7 +15,7 @@
       <div>Будет создано рейсов: {{ totalOrderCount }}</div>
       <v-btn
         :disabled="!totalOrderCount || loading"
-        small
+        size="small"
         class="mx-3"
         @click="crearTable"
       >
@@ -26,7 +25,7 @@
         :disabled="!totalOrderCount || loading"
         :loading="loading"
         color="error"
-        small
+        size="small"
         @click="createOrders"
       >
         Создать рейсы
@@ -50,7 +49,12 @@
           <tr v-for="t of templates" :key="t">
             <td>
               {{ templatesMap.get(t).name }}
-              <v-icon small color="red" class="ml-3" @click="deleteTemplate(t)">
+              <v-icon
+                size="small"
+                color="red"
+                class="ml-3"
+                @click="deleteTemplate(t)"
+              >
                 mdi-delete
               </v-icon>
             </td>
@@ -70,11 +74,11 @@
         <v-autocomplete
           v-model="templateSearch"
           label="Добавить шаблон"
-          dense
+          density="compact"
           hide-details
           :items="$store.getters.orderTemplatesForSelect"
         />
-        <v-btn small color="primary" @click="addAllTemplates">
+        <v-btn size="small" color="primary" @click="addAllTemplates">
           Добавить все шаблоны
         </v-btn>
       </div>

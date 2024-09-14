@@ -3,10 +3,9 @@
     <h5>Документы:</h5>
     <div class="btn-wrapper">
       <v-btn
-        text
-        small
+        variant="text"
+        size="small"
         color="primary"
-        outlined
         :disabled="readonly || !isValid"
         @click="openGroupDocDialog"
       >
@@ -33,7 +32,7 @@
           :class="{ 'not-accepted': item.status !== 'accepted' }"
         >
           <td class="text-center">
-            <v-simple-checkbox
+            <v-checkbox-btn
               v-model="item.addToRegistry"
               dense
               hide-details
@@ -43,7 +42,7 @@
           <td>
             <v-select
               v-model="item.type"
-              dense
+              density="compact"
               hide-details
               :disabled="readonly"
               :items="docTypes"
@@ -53,7 +52,7 @@
           <td>
             <v-text-field
               v-model.trim="item.number"
-              dense
+              density="compact"
               hide-details
               :disabled="readonly"
             />
@@ -61,7 +60,7 @@
           <td>
             <v-text-field
               v-model.trim="item.note"
-              dense
+              density="compact"
               hide-details
               :disabled="readonly"
             />
@@ -69,7 +68,7 @@
           <td>
             <v-select
               v-model="item.status"
-              dense
+              density="compact"
               hide-details
               :items="docStatuses"
               :disabled="readonly"
@@ -79,13 +78,13 @@
             <v-text-field
               v-model="item.date"
               type="date"
-              dense
+              density="compact"
               hide-details
               :disabled="readonly"
             />
           </td>
           <td>
-            <v-icon small :disabled="readonly" @click="deleteRow(idx)">
+            <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
               mdi-delete
             </v-icon>
           </td>

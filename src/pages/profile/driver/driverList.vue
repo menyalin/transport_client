@@ -25,7 +25,7 @@
           <template #[`item.medBookState.validDays`]="{ item }">
             <v-chip
               v-if="item.medBookState.validDays !== null"
-              small
+              size="small"
               class="my-0 mx-4"
               :color="item.medBookState.color"
             >
@@ -37,34 +37,34 @@
             <div class="filter-wrapper">
               <v-select
                 v-model="settings.tkNameFilter"
-                dense
-                outlined
+                density="compact"
+                variant="outlined"
                 hide-details
                 label="ТК"
                 clearable
                 :items="tkNames"
                 item-value="_id"
-                item-text="name"
+                item-title="name"
               />
               <v-select
                 v-model="settings.workState"
                 label="Статус"
                 :items="workStateItems"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
               />
               <v-select
                 v-model="settings.stuffStatus"
                 label="Сотрудники"
                 :items="stuffStatusItems"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
               />
               <v-text-field
                 v-model="settings.search"
-                outlined
+                variant="outlined"
                 hide-details
-                dense
+                density="compact"
                 label="Быстрый поиск"
               />
             </div>

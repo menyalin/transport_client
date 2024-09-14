@@ -10,8 +10,8 @@
       <v-text-field
         v-model="settings.search"
         label="Поиск"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         hide-details
       />
     </div>

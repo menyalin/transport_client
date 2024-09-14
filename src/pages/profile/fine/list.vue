@@ -14,9 +14,9 @@
           <v-select
             v-model="settings.status"
             :items="fineStatuses"
-            dense
+            density="compact"
             hide-details
-            outlined
+            variant="outlined"
             label="Статус"
             :style="{ maxWidth: '200px' }"
           />
@@ -26,9 +26,9 @@
             :items="trucks"
             clearable
             auto-select-first
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             :style="{ maxWidth: '250px' }"
           />
           <v-autocomplete
@@ -37,40 +37,38 @@
             :items="drivers"
             auto-select-first
             clearable
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             :style="{ maxWidth: '350px' }"
           />
           <v-select
             v-model.trim="settings.category"
             :items="$store.getters.fineCategories"
             label="Категория"
-            outlined
+            variant="outlined"
             clearable
             hide-details
-            dense
+            density="compact"
             :style="{ maxWidth: '450px' }"
           />
           <v-checkbox
             v-model="showOnlySelected"
             label="Только отмеченные"
             hide-details
-            dense
           />
           <v-checkbox
             v-model="settings.needToWithheld"
             label="Удержать из ЗП водителя"
             hide-details
-            dense
           />
           <v-text-field
             v-model.lazy.trim="settings.searchStr"
             label="Поиск"
-            outlined
+            variant="outlined"
             clearable
             hide-details
-            dense
+            density="compact"
             :style="{ minWidth: '450px', maxWidth: '600px' }"
           />
           <v-autocomplete
@@ -79,18 +77,18 @@
             :items="workerItems"
             auto-select-first
             clearable
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             :loading="workerIsLoading"
             :style="{ maxWidth: '350px' }"
-            :filter="() => true"
-            :search-input="searchString"
-            @update:search-input="handleSearchInputUpdate"
-            @change="handleChange"
+            :customFilter="() => true"
+            :search="searchString"
+            @update:search="handleSearchInputUpdate"
+            @update:model-value="handleChange"
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           v-model="selected"
           v-model:options="settings.listOptions"
           item-key="_id"
@@ -113,7 +111,7 @@
           <template #[`footer.prepend`]>
             <FineListAnalitics :data="analyticData" />
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

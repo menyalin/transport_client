@@ -6,9 +6,9 @@
     <div class="fields-wrapper">
       <v-text-field
         label="Пропуск ДЕНЬ, №"
-        :value="params.dayPermitNumber"
-        outlined
-        dense
+        :model-value="params.dayPermitNumber"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'dayPermitNumber')"
       />
@@ -24,18 +24,18 @@
       /> -->
       <v-text-field
         label="Зона действия"
-        :value="params.dayPermitZone"
-        outlined
-        dense
+        :model-value="params.dayPermitZone"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'dayPermitZone')"
       />
 
       <v-text-field
         label="Пропуск НОЧЬ, №"
-        :value="params.nightPermitNumber"
-        outlined
-        dense
+        :model-value="params.nightPermitNumber"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'nightPermitNumber')"
       />
@@ -51,9 +51,9 @@
       /> -->
       <v-text-field
         label="Зона действия"
-        :value="params.nightPermitZone"
-        outlined
-        dense
+        :model-value="params.nightPermitZone"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'nightPermitZone')"
       />

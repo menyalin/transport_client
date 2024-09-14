@@ -1,11 +1,11 @@
 <template>
   <div class="main-filter-wrapper">
-    <v-expansion-panels v-if="Object.keys(tmpFilters).length > 0" focusable>
+    <v-expansion-panels v-if="Object.keys(tmpFilters).length > 0">
       <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <h5>{{ title }}</h5>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <div
             v-for="(filter, idx) of filterItems"
             :key="idx"
@@ -15,8 +15,8 @@
               v-model="tmpFilters[filter.value].cond"
               label="Сравнение"
               :items="condItems"
-              dense
-              outlined
+              density="compact"
+              variant="outlined"
               hide-details
               :style="{ 'max-width': '180px' }"
             />
@@ -27,13 +27,13 @@
               multiple
               auto-select-first
               clearable
-              dense
-              outlined
+              density="compact"
+              variant="outlined"
               hide-details
               :style="{ 'max-width': '400px' }"
             />
           </div>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>

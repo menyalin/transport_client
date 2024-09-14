@@ -10,22 +10,22 @@
 
     <v-autocomplete
       v-model="settings.truck"
-      dense
+      density="compact"
       clearable
       auto-select-first
       :items="trucks"
-      outlined
+      variant="outlined"
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
 
     <v-text-field
-      :value="settings.search"
-      dense
+      :model-value="settings.search"
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
@@ -46,15 +46,15 @@
       label="Зоны погрузки"
       :items="loadingZoneItems"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
       auto-select-first
-      dense
+      density="compact"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '500px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
   </div>
 </template>

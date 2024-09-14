@@ -5,27 +5,27 @@
     </div>
     <div class="cargo-params-block py-2">
       <v-text-field
-        :value="cargoParams.weight"
-        outlined
-        dense
+        :model-value="cargoParams.weight"
+        variant="outlined"
+        density="compact"
         type="Number"
         hide-details
         label="Вес, тонн"
         @change="change($event, 'weight')"
       />
       <v-text-field
-        :value="cargoParams.places"
-        outlined
-        dense
+        :model-value="cargoParams.places"
+        variant="outlined"
+        density="compact"
         type="Number"
         hide-details
         label="Плт, шт"
         @change="change($event, 'places')"
       />
       <v-text-field
-        :value="cargoParams.tRegime"
-        outlined
-        dense
+        :model-value="cargoParams.tRegime"
+        variant="outlined"
+        density="compact"
         hide-details
         label="t-режим"
         @change="change($event, 'tRegime')"
@@ -33,9 +33,9 @@
     </div>
     <div>
       <v-text-field
-        :value="cargoParams.note"
-        outlined
-        dense
+        :model-value="cargoParams.note"
+        variant="outlined"
+        density="compact"
         hide-details
         label="Примечание"
         :style="{ 'max-width': '500px' }"

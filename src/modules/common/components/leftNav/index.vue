@@ -1,79 +1,79 @@
 <template>
   <v-navigation-drawer permanent>
-    <v-list>
+    <v-list density="compact">
       <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6 center">
-            {{ user ? user.name : null }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ user ? user.email : null }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
+        <v-list-item-title class="text-h6 text-center">
+          {{ user?.name }}
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          {{ user?.email }}
+        </v-list-item-subtitle>
       </v-list-item>
     </v-list>
     <v-divider />
-    <v-list nav dense>
-      <v-list-item-group v-model="selectedItem" color="primary">
-        <v-badge
-          v-for="item in menuItems"
-          :key="item.link"
-          color="error"
-          :content="item.badge ? item.badge : null"
-          :value="item.badge ? item.badge : null"
-          :style="{ width: '100%' }"
-          offset-x="20"
-          offset-y="10"
-          overlap
-          bordered
-        >
-          <v-list-item :to="item.link">
-            <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title> {{ item.text }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-badge>
-      </v-list-item-group>
+
+    <v-list density="compact">
+      <v-list-item
+        v-for="item in menuItems"
+        :key="item.link"
+        :value="item"
+        color="primary"
+        :to="item.link"
+      >
+        <template #prepend>
+          <v-icon :icon="item.icon" />
+        </template>
+
+        <v-list-item-title>
+          {{ item.text }}
+        </v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 //@ts-nocheck
-import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
-export default defineComponent({
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+interface MenuItem {
+  link: string
+  text: string
+  icon: string
+  badge?: number
+  permission?: string
+  onlyWithDirectoriesProfile?: boolean
+}
+
+interface Props {
+  items: MenuItem[]
+}
+
+const props = defineProps<Props>()
+
+const store = useStore()
+const user = computed(() => store.state.AuthModule.user)
+
+const menuItems = computed(() => {
+  return props.items
+    .filter(
+      (item) =>
+        !item.onlyWithDirectoriesProfile || !!store.getters.directoriesProfile
+    )
+    .filter((item) =>
+      item.permission
+        ? store.getters.userRoles.includes('admin') ||
+          store.getters.permissionsMap.get(item.permission)
+        : true
+    )
+})
+
+defineOptions({
   name: 'LeftAdminNav',
-  props: {
-    items: {
-      type: Array,
-    },
-  },
-  data: () => ({
-    selectedItem: 0,
-  }),
-  computed: {
-    ...mapState({
-      user: (state) => state.AuthModule.user,
-    }),
-    menuItems() {
-      return this.items
-        .filter(
-          (i) =>
-            !i.onlyWithDirectoriesProfile ||
-            !!this.$store.getters.directoriesProfile
-        )
-        .filter((i) =>
-          i.permission
-            ? this.$store.getters.userRoles.includes('admin') ||
-              this.$store.getters.permissionsMap.get(i.permission)
-            : true
-        )
-    },
-  },
 })
 </script>
-<style></style>
+
+<style scoped>
+/* Добавьте здесь стили, если необходимо */
+</style>

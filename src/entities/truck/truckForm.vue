@@ -14,25 +14,25 @@
           <v-select
             v-model.trim="$v.form.tkName.$model"
             :items="tkNames"
-            item-text="name"
+            item-title="name"
             item-value="_id"
             label="ТК"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
           />
           <v-select
             v-model="$v.form.type.$model"
-            outlined
+            variant="outlined"
             label="Тип ТС"
-            dense
+            density="compact"
             :items="truckTypes"
             :error-messages="typeErrors"
           />
           <v-select
             v-model="$v.form.liftCapacityType.$model"
-            outlined
+            variant="outlined"
             label="Грузоподъемность, тн"
-            dense
+            density="compact"
             :items="liftCapacityTypes"
           />
           <template
@@ -40,17 +40,17 @@
           >
             <v-select
               v-model="$v.form.kind.$model"
-              outlined
+              variant="outlined"
               label="Вид ТС"
-              dense
+              density="compact"
               :items="truckKinds"
             />
 
             <v-text-field
               v-model.number="$v.form.pltCount.$model"
-              outlined
+              variant="outlined"
               label="Макс.кол-во плт"
-              dense
+              density="compact"
               type="number"
             />
           </template>
@@ -80,73 +80,73 @@
       <div class="row-wrapper second-row">
         <v-text-field
           v-model.trim="$v.form.regNum.$model"
-          outlined
+          variant="outlined"
           label="Гос.номер"
-          dense
+          density="compact"
           :error-messages="regNumErrors"
         />
         <v-text-field
           v-model.trim="$v.form.brand.$model"
-          outlined
+          variant="outlined"
           label="Марка"
-          dense
+          density="compact"
         />
 
         <v-text-field
           v-model.trim="$v.form.model.$model"
-          outlined
+          variant="outlined"
           label="Модель"
-          dense
+          density="compact"
         />
 
         <v-text-field
           v-model.trim="$v.form.issueYear.$model"
-          outlined
+          variant="outlined"
           label="Год выпуска"
-          dense
+          density="compact"
         />
 
         <v-text-field
           v-model.number="$v.form.order.$model"
-          outlined
+          variant="outlined"
           label="Индекс в списке"
-          dense
+          density="compact"
           type="number"
         />
         <v-text-field
           v-model.number="$v.form.volumeFuel.$model"
-          outlined
+          variant="outlined"
           label="Объем топливного бака"
-          dense
+          density="compact"
           type="number"
         />
         <v-text-field
           v-model.number="$v.form.volumeRef.$model"
-          outlined
+          variant="outlined"
           label="Объем бака рефа"
-          dense
+          density="compact"
           type="number"
         />
       </div>
       <div class="row-wrapper third-row">
         <v-text-field
           v-model.trim="$v.form.win.$model"
-          outlined
+          variant="outlined"
           label="WIN"
-          dense
+          density="compact"
         />
         <v-text-field
           v-model.trim="$v.form.owner.$model"
-          outlined
+          variant="outlined"
           label="Собственник"
-          dense
+          density="compact"
         />
 
         <v-text-field
           v-model.trim="$v.form.sts.$model"
-          outlined
+          variant="outlined"
           label="СТС"
-          dense
+          density="compact"
         />
         <!-- <DateTimeInput
           v-model="$v.form.stsDate.$model"
@@ -159,9 +159,9 @@
         /> -->
         <v-text-field
           v-model.trim="$v.form.pts.$model"
-          outlined
+          variant="outlined"
           label="ПТС"
-          dense
+          density="compact"
         />
       </div>
       <app-insurance
@@ -195,9 +195,9 @@
         /> -->
         <v-text-field
           v-model.trim="form.sanitaryPassportNote"
-          outlined
+          variant="outlined"
           label="Комментарий к сан.паспорту"
-          dense
+          density="compact"
         />
       </div>
 
@@ -213,35 +213,35 @@
         /> -->
         <v-text-field
           v-model.trim="additionalDetails.diagnosticCardNote"
-          outlined
+          variant="outlined"
           label="Комментарий к диагностической карте"
-          dense
+          density="compact"
         />
       </div>
       <div id="leaders">
         <v-autocomplete
           v-model="form.brigadier"
           label="Бригадир"
-          outlined
+          variant="outlined"
           :items="brigadiers"
-          dense
+          density="compact"
         />
         <v-autocomplete
           v-model="form.mechanic"
           label="Механик"
           :items="mechanics"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
       </div>
       <additional-notifications v-model="additionalNotifications" />
       <div class="row-wrapper my-3">
         <v-textarea
           v-model.trim="$v.form.note.$model"
-          outlined
+          variant="outlined"
           rows="3"
           label="Примечание"
-          dense
+          density="compact"
         />
       </div>
 
@@ -263,7 +263,7 @@
     </div>
     <div class="delete-btn-row mt-3">
       <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-        <v-icon left dark> mdi-delete </v-icon>
+        <v-icon start> mdi-delete </v-icon>
         Удалить
       </v-btn>
     </div>

@@ -3,10 +3,9 @@
     <h5>Деление стоимости рейса:</h5>
     <div class="btn-wrapper">
       <v-btn
-        text
-        small
+        variant="text"
+        size="small"
         color="primary"
-        outlined
         :disabled="loading"
         @click="openDialog"
       >

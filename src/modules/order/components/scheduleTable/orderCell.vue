@@ -1,16 +1,14 @@
 <template>
   <v-tooltip
-    bottom
-    nudge-left="70"
+    location="bottom"
     open-delay="700"
     close-delay="50"
     transition="fade-transition"
   >
-    <template #activator="{ on, attrs }">
+    <template #activator="{ props }">
       <div
-        v-bind="attrs"
         :class="orderClasses"
-        v-on="on"
+        v-bind="props"
         @dblclick.stop="dblclickHandler"
       >
         <div class="row-text">

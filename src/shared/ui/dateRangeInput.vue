@@ -2,33 +2,27 @@
   <div class="date-range-wrapper">
     <div class="text-caption">Выбор периода</div>
     <div class="inputs-row">
+      <span id="menu-activator">
+        <span class="date-text">
+          c:
+          {{ tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-' }}
+        </span>
+        <span class="date-text">
+          по:
+          {{ tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-' }}
+        </span>
+      </span>
+
       <v-menu
-        v-model="menu"
+        activator="#menu-activator"
         :close-on-content-click="false"
         transition="scale-transition"
-        offset-y
         max-width="290px"
         min-width="auto"
       >
-        <template #activator="{ on, attrs }">
-          <span class="date-text" v-bind="attrs" v-on="on">
-            c:
-            {{
-              tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-'
-            }}
-          </span>
-          <span class="date-text" v-bind="attrs" v-on="on">
-            по:
-            {{
-              tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-'
-            }}
-          </span>
-        </template>
         <v-date-picker
           v-model="tmpPeriod"
           no-title
-          range
-          :first-day-of-week="1"
           color="primary"
           @change="changeDate"
         />
@@ -36,63 +30,43 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-//@ts-nocheck
+<script setup lang="ts">
+import { ref, watch } from 'vue'
 import dayjs from 'dayjs'
-import { defineComponent } from 'vue'
 
-export default defineComponent({
-  name: 'DateRange',
-  model: {
-    prop: 'period',
-    event: 'change',
-  },
-  props: {
-    period: {
-      type: Array,
-    },
-    min: {
-      type: String,
-    },
-  },
-  emits: ['change'],
-  data() {
-    return {
-      tmpPeriod: [null, null],
-      menu: false,
-    }
-  },
-  computed: {
-    startDate() {
-      return this.period && this.period[0] ? this.period[0] : null
-    },
-    endDate() {
-      return this.period && this.period[1] ? this.period[1] : null
-    },
-  },
-  watch: {
-    period: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        this.tmpPeriod = val
-      },
-    },
-  },
-  methods: {
-    changeDate(val) {
-      if (!val || val.length !== 2) return
-      const tmpVal = val
+type Period = [string | null, string | null]
 
-      if (dayjs(val[1]).isBefore(val[0], 'day')) tmpVal.reverse()
+const props = defineProps<{
+  period: Period
+  min: string
+}>()
 
-      this.$emit('change', [
-        dayjs(tmpVal[0]).startOf('day').toISOString(),
-        dayjs(tmpVal[1]).endOf('day').toISOString(),
-      ])
-    },
+const emit = defineEmits<{
+  (e: 'change', value: string[]): void
+}>()
+
+const tmpPeriod = ref<Period>([null, null])
+
+watch(
+  () => props.period,
+  (val) => {
+    console.log('val in dateRangeInput', val)
+    tmpPeriod.value = val
   },
-})
+  { immediate: true, deep: true }
+)
+
+const changeDate = (val: string[]) => {
+  if (!val || val.length !== 2) return
+  const tmpVal = val
+
+  if (dayjs(val[1]).isBefore(val[0], 'day')) tmpVal.reverse()
+
+  emit('change', [
+    dayjs(tmpVal[0]).startOf('day').toISOString(),
+    dayjs(tmpVal[1]).endOf('day').toISOString(),
+  ])
+}
 </script>
 <style>
 .date-range-wrapper {

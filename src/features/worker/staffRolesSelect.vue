@@ -1,12 +1,12 @@
 <template>
   <v-select
-    :value="roles"
+    :model-value="roles"
     :items="$store.getters.staffRoles"
     multiple
     label="Роли пользователя"
-    outlined
+    variant="outlined"
     :disabled="disabled"
-    @change="changeHandler"
+    @update:model-value="changeHandler"
   />
 </template>
 <script lang="ts">

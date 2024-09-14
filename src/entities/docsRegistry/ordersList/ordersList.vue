@@ -17,8 +17,8 @@
     <template #top>
       <v-btn
         :disabled="!selectedOrderIds.length"
-        small
-        text
+        size="small"
+        variant="text"
         color="error"
         @click="deleteHandler"
       >

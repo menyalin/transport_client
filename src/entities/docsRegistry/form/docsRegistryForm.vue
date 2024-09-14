@@ -8,71 +8,73 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small class="mx-2" @click="downloadPdf">Скачать PDF</v-btn>
-      <v-btn small class="mx-2" @click="downloadXlsx">Скачать DOCX</v-btn>
+      <v-btn size="small" class="mx-2" @click="downloadPdf">Скачать PDF</v-btn>
+      <v-btn size="small" class="mx-2" @click="downloadXlsx"
+        >Скачать DOCX</v-btn
+      >
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
         <v-text-field
           v-if="state.number"
           label="Номер"
-          :value="state.number"
+          :model-value="state.number"
           readonly
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '100px' }"
         />
         <v-select
           v-model="state.status"
           label="Статус"
           :items="statusItems"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
           :error-messages="clientErrorMessages"
           @blur="v$.client.$touch"
-          @change="changeClientHandler"
+          @update:model-value="changeClientHandler"
         />
         <v-select
           v-model="state.agreement"
           label="Соглашение"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledAgreements || disabledMainFields"
           :loading="loadingAgreements"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
           :error-messages="agreementErrorMessages"
           @blur="v$.agreement.$touch"
-          @change="changeAgreementHandler"
+          @update:model-value="changeAgreementHandler"
         />
 
         <v-select
           v-model="state.placeForTransferDocs"
           label="Площадка"
-          dense
+          density="compact"
           required
           clearable
-          item-text="title"
+          item-title="title"
           item-value="address"
-          outlined
+          variant="outlined"
           :disabled="
             !placeItems || placeItems.length === 0 || disabledMainFields
           "
@@ -100,8 +102,8 @@
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         @blur="v$.note.$touch"
       />
     </div>

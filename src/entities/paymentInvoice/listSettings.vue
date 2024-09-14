@@ -6,42 +6,42 @@
       @change="updateHeadersHandler"
     />
     <DateRangeInput
-      :period="settings.period"
+      :period="settings?.period"
       @change="updateSettings($event, 'period')"
     />
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
+      :model-value="settings?.agreements"
+      item-title="name"
       item-value="_id"
       label="Соглашения"
       :disabled="agreementItems.length === 0"
-      dense
+      density="compact"
       clearable
       multiple
-      outlined
+      variant="outlined"
       :items="agreementItems"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
     <v-select
-      :value="settings.statuses"
+      :model-value="settings?.statuses"
       label="Статус"
       multiple
-      dense
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'statuses')"
+      @update:model-value="updateSettings($event, 'statuses')"
     />
     <v-text-field
-      :value="settings.search"
+      :model-value="settings?.search"
       label="Поиск по номеру"
-      dense
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       :style="{ maxWidth: '200px' }"
       @change="updateSettings($event, 'search')"
@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-//@ts-nocheck
+//@ ts-nocheck
 import { defineComponent } from 'vue'
 import { computed, ref, onMounted } from 'vue'
 
@@ -69,9 +69,11 @@ export default defineComponent({
   props: {
     settings: Object,
   },
-
+  // TODO: fix dateRange input
   setup(props, ctx) {
-    const agreements = ref([])
+    const agreements = ref<
+      { _id: string; name: string; isOutsourceAgreement: boolean }[]
+    >([])
     const agreementItems = computed(() =>
       agreements.value
         .filter((i) => i.isOutsourceAgreement !== true)
@@ -82,11 +84,11 @@ export default defineComponent({
       return store.getters.docsRegistryStatuses
     })
 
-    function updateSettings(value, field) {
+    function updateSettings(value: unknown, field: string) {
       ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
     }
 
-    function updateHeadersHandler(val) {
+    function updateHeadersHandler(val: unknown) {
       ctx.emit('updateHeaders', val)
     }
 

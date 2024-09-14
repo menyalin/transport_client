@@ -4,9 +4,8 @@
       <v-col>
         <v-alert
           v-model="error.show"
-          dismissible
+          closable
           type="error"
-          transition="scale-transition"
           @change="toggleAlert"
         >
           {{ error.message }}

@@ -7,15 +7,14 @@
       </div>
       <v-list v-else>
         <v-list-item v-for="item in list" :key="item">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{
-                itemsMap.has(item) ? itemsMap.get(item).name : 'запись удалена'
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>
+            {{
+              itemsMap.has(item) ? itemsMap.get(item).name : 'запись удалена'
+            }}
+          </v-list-item-title>
+
           <v-list-item-action>
-            <v-icon small color="error" @click="deleteItem(item)">
+            <v-icon size="small" color="error" @click="deleteItem(item)">
               mdi-delete
             </v-icon>
           </v-list-item-action>
@@ -25,9 +24,15 @@
         v-if="!isVisibleBtn"
         label="Перевозчик"
         :items="itemsForSelect"
-        @change="addItem"
+        @update:model-value="addItem"
       />
-      <v-btn v-else small text color="primary" @click="showAutocomplete">
+      <v-btn
+        v-else
+        size="small"
+        variant="text"
+        color="primary"
+        @click="showAutocomplete"
+      >
         Добавить перевозчика
       </v-btn>
     </div>

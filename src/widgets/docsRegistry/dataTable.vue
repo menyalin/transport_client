@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :headers="headers"
     :items="items"
     :loading="loading"
@@ -22,7 +22,7 @@
         {{ item.note }}
       </span>
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script lang="ts">

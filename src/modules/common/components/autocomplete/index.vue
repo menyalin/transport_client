@@ -4,15 +4,15 @@
       v-model:search-input="search"
       :label="label"
       :items="items"
-      :value="value"
-      :dense="dense"
+      :model-value="value"
+      :density="dense ? 'compact' : undefined"
       :disabled="disabled"
       :hideDetails="hideDetails"
       :outlined="outlined"
       clearable
-      :append-outer-icon="appendIcon"
-      @change="change"
-      @click:append-outer="appendClick"
+      :append-icon="appendIcon"
+      @update:model-value="change"
+      @click:append="appendClick"
     />
   </div>
 </template>

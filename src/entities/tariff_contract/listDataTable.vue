@@ -1,10 +1,13 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="items"
+    :items-length="count"
+    :items-per-page="50"
     dense
     :headers="headers"
     :loading="loading"
-    :serverItemsLength="count"
+    density="compact"
+    item-value="_id"
     height="72vh"
     fixed-header
     :listOptions="listOptions"
@@ -23,25 +26,24 @@
     <template #[`item.endDate`]="{ item }">
       {{ item.endDate ? new Date(item.endDate).toLocaleDateString() : null }}
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script lang="ts">
 //@ts-nocheck
 import { defineComponent } from 'vue'
-
-// import tableHeaders from './listDataTableHeaders'
-import router from '@/router'
+import { useRouter } from 'vue-router'
+import tableHeaders from './listDataTableHeaders'
 
 export default defineComponent({
   name: 'TariffContractDataTable',
   props: {
     items: Array,
-    headers: Array,
     loading: Boolean,
     listOptions: Object,
     count: Number,
   },
   setup(_props, ctx) {
+    const router = useRouter()
     function updateListOptions(val) {
       ctx.emit('update:listOptions', val)
     }
@@ -51,7 +53,7 @@ export default defineComponent({
     return {
       updateListOptions,
       dblClickRow,
-      // headers: tableHeaders,
+      headers: tableHeaders,
     }
   },
 })

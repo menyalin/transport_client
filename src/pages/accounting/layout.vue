@@ -1,29 +1,17 @@
 <template>
-  <v-app>
-    <app-bar />
-    <v-main>
-      <div class="layout">
-        <app-left-nav :items="navButtons" />
-        <router-view />
-      </div>
-      <app-snackbar />
-    </v-main>
-  </v-app>
+  <div class="layout">
+    <app-left-nav :items="navButtons" />
+    <router-view />
+  </div>
 </template>
 <script lang="ts">
-//@ts-nocheck
 import { defineComponent } from 'vue'
 
-import AppBar from '@/modules/common/components/appBar'
-import AppSnackbar from '@/modules/common/components/appSnackbar'
-import AppLeftNav from '@/modules/common/components/leftNav'
+import AppLeftNav from '@/modules/common/components/leftNav/index.vue'
 
 export default defineComponent({
   name: 'ProfileLayout',
-
   components: {
-    AppBar,
-    AppSnackbar,
     AppLeftNav,
   },
 
@@ -36,13 +24,6 @@ export default defineComponent({
         onlyWithDirectoriesProfile: true,
         permission: 'agreement:readList',
       },
-      // {
-      //   text: 'К УДАЛЕНИЮ! - Документы',
-      //   icon: 'mdi-file-document-multiple',
-      //   link: '/accounting/documents',
-      //   onlyWithDirectoriesProfile: true,
-      //   permission: 'document:readList',
-      // },
       {
         text: 'Тарифные контракты',
         icon: 'mdi-file-document-multiple',
@@ -68,13 +49,6 @@ export default defineComponent({
         link: '/accounting/driversSalary',
         onlyWithDirectoriesProfile: true,
       },
-      // {
-      //   text: 'К УДАЛЕНИЮ! - Тарифы клиентов',
-      //   icon: 'mdi-cash-multiple',
-      //   link: '/accounting/tariffs',
-      //   onlyWithDirectoriesProfile: true,
-      //   permission: 'tariff:readList',
-      // },
       {
         text: 'Зарплатные тарифы',
         icon: 'mdi-cash ',

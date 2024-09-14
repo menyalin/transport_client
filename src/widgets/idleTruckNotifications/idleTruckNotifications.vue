@@ -6,7 +6,7 @@
     </v-alert>
     <v-btn
       v-else
-      small
+      size="small"
       color="primary"
       :style="{ maxWidth: '200px' }"
       @click="addNotificationHandler"
@@ -19,7 +19,12 @@
       @update-partner="updatePartnerHandler"
       @edit-notify="editNotifyHandler"
     />
-    <v-dialog :value="dialog" persistent max-width="1200" :loading="loading">
+    <v-dialog
+      :model-value="dialog"
+      persistent
+      max-width="1200"
+      :loading="loading"
+    >
       <IdleTruckNotifyForm
         :partnerId="partner._id"
         :loading="loading"

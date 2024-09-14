@@ -2,12 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="showError"
-          type="error"
-          dismissible
-          transition="scale-transition"
-        >
+        <v-alert v-model="showError" type="error" closable>
           {{ errorMessage }}
         </v-alert>
         <LoadSpinner v-if="loading" />

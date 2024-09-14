@@ -15,16 +15,16 @@
 
     <v-text-field
       v-model.trim="$v.form.name.$model"
-      outlined
+      variant="outlined"
       label="Наименование"
-      dense
+      density="compact"
       :hint="addressNameHint"
       :error-messages="nameErrors"
     />
     <v-text-field
       v-model="$v.form.shortName.$model"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Сокращенное наименование адреса"
       :hint="addressShortNameHint"
     />
@@ -32,16 +32,16 @@
       v-model="form.region"
       :items="$store.getters.regionsForAutocomplete"
       auto-select-first
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Регион"
     />
     <v-autocomplete
       v-model="form.city"
       :items="$store.getters.citiesForAutocomplete"
       auto-select-first
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Город"
     />
     <app-partner-autocomplete
@@ -52,15 +52,15 @@
     />
     <v-text-field
       v-model="$v.form.note.$model"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Примечание к адресу"
       :hint="addressShortNameHint"
     />
     <v-text-field
       v-model="$v.form.geo.$model"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Координаты"
       :hint="addressGeoHint"
       :error-messages="geoErrors"
@@ -74,20 +74,20 @@
     />
     <v-text-field
       v-model="$v.form.contacts.$model"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Контакты"
     />
     <v-text-field
       v-model="$v.form.label.$model"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       label="Метки для поиска"
       :hint="addressLabelHint"
     />
-    <v-checkbox v-model="form.isShipmentPlace" label="Место погрузки" dense />
-    <v-checkbox v-model="form.isDeliveryPlace" label="Место разгрузки" dense />
-    <v-checkbox v-model="form.isService" label="Сервис" dense />
+    <v-checkbox v-model="form.isShipmentPlace" label="Место погрузки" />
+    <v-checkbox v-model="form.isDeliveryPlace" label="Место разгрузки" />
+    <v-checkbox v-model="form.isService" label="Сервис" />
     <app-similar-addresses
       v-if="!displayDeleteBtn && similarAddresses.length"
       :addresses="similarAddresses"
@@ -99,7 +99,7 @@
       class="mt-4"
       @click="$emit('delete')"
     >
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

@@ -25,7 +25,7 @@
       v-model="showPickOrderDialog"
       fullscreen
       persistent
-      hide-overlay
+      :scrim="false"
     >
       <pick-orders
         :docsRegistry="item"

@@ -9,25 +9,25 @@
           v-model="v$.title.$model"
           label="Название оповещения"
           :errorMessages="titleFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-text-field
           v-model="v$.companyName.$model"
           label="Название компании"
           hint="Отвечает за название компании в теме письма и подписи"
           :errorMessages="companyNameFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-autocomplete
           v-model="v$.addresses.$model"
           multiple
           label="Адреса"
-          outlined
+          variant="outlined"
           chips
           :errorMessages="addressFieldErrors"
-          deletable-chips
+          closable-chips
           :items="addressItems"
           clearable
           auto-select-first
@@ -37,16 +37,16 @@
           label="Получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="emailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-text-field
           v-model="v$.ccEmails.$model"
           label="Получатели копии оповещений"
           hint="email адреса через ','"
           :errorMessages="ccEmailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <div class="row_section">
           <div class="column left_column">
@@ -54,7 +54,7 @@
               v-model="state.idleHoursBeforeNotify"
               type="number"
               label="Часов до отправки уведомления"
-              outlined
+              variant="outlined"
             />
           </div>
           <div class="column">
@@ -72,7 +72,7 @@
           v-model="state.useTruckFilter"
           :items="truckFilterStatusItems"
           label="Фильтр по грузовикам"
-          outlined
+          variant="outlined"
           hide-details
         />
         <v-autocomplete
@@ -81,17 +81,22 @@
           multiple
           chips
           item-value="_id"
-          item-text="regNum"
+          item-title="regNum"
           label="Грузовики"
-          deletable-chips
+          closable-chips
           auto-select-first
-          outlined
+          variant="outlined"
           :items="truckItems"
           clearable
           hide-details
           :style="{ width: '100%' }"
         />
-        <v-text-field v-model="state.note" label="Примечание" outlined dense />
+        <v-text-field
+          v-model="state.note"
+          label="Примечание"
+          variant="outlined"
+          density="compact"
+        />
       </div>
     </v-card-text>
     <v-card-actions class="buttons-wrapper">

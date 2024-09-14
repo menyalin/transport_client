@@ -1,5 +1,5 @@
 <template>
-  <v-alert outlined dense>
+  <v-alert variant="outlined" density="compact">
     Сумма: <b>{{ total }}</b
     ><br />
 

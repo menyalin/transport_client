@@ -2,18 +2,13 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          type="error"
-          dismissible
-          :value="showError"
-          transition="scale-transition"
-        >
+        <v-alert type="error" closable :value="showError">
           {{ errorMessage }}
         </v-alert>
         <LoadSpinner v-if="loading" />
         <slot v-else />
         <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
-          <v-icon left dark> mdi-delete </v-icon>
+          <v-icon start> mdi-delete </v-icon>
           Удалить
         </v-btn>
       </v-col>

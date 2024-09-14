@@ -1,6 +1,6 @@
 <template>
   <div class="item-wrapper">
-    <v-card outlined>
+    <v-card border>
       <v-card-title>{{ value.title }}</v-card-title>
       <v-card-subtitle>{{ address.name }}</v-card-subtitle>
       <v-card-text>
@@ -18,10 +18,10 @@
         <div>{{ value.note }}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn small color="secondary" @click="editHandler">
+        <v-btn size="small" color="secondary" @click="editHandler">
           Редактировать
         </v-btn>
-        <v-btn small color="error" @click="deleteHandler">Удалить</v-btn>
+        <v-btn size="small" color="error" @click="deleteHandler">Удалить</v-btn>
       </v-card-actions>
     </v-card>
   </div>

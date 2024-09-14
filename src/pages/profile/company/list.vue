@@ -14,19 +14,17 @@
     <v-row>
       <v-col>
         <v-list>
-          <v-subheader>Мои компании</v-subheader>
+          <v-list-subheader>Мои компании</v-list-subheader>
           <v-list-item
             v-for="(item, ind) in myCompanies"
             :key="ind"
-            two-line
+            lines="two"
             :to="{ name: 'companyDetails', params: { id: item._id } }"
           >
-            <v-list-item-content>
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
-              <v-list-item-subtitle>
-                <small>ИНН: {{ item.inn }}</small>
-              </v-list-item-subtitle>
-            </v-list-item-content>
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+            <v-list-item-subtitle>
+              <small>ИНН: {{ item.inn }}</small>
+            </v-list-item-subtitle>
           </v-list-item>
         </v-list>
       </v-col>

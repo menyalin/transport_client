@@ -24,14 +24,19 @@
       </div>
     </draggable>
     <div v-if="!readonly" class="row py-3">
-      <v-btn text color="primary" small outlined class="ma-2" @click="addPoint">
+      <v-btn
+        variant="text"
+        color="primary"
+        size="small"
+        class="ma-2"
+        @click="addPoint"
+      >
         Добавить адрес
       </v-btn>
       <v-btn
         v-if="!isTemplate && state.status === 'inProgress'"
-        text
-        outlined
-        small
+        variant="text"
+        size="small"
         color="red"
         class="ma-2"
         @click="addReturn"
@@ -40,9 +45,8 @@
       </v-btn>
       <v-btn
         v-if="!isTemplate"
-        text
-        outlined
-        small
+        variant="text"
+        size="small"
         color="primary"
         class="ma-2"
         @click="getDriverRouteHandler"

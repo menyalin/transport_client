@@ -1,8 +1,8 @@
 <template>
   <div :class="{ 'mb-4': showHint && hint }">
     <v-autocomplete
-      :value="value"
-      dense
+      :model-value="value"
+      density="compact"
       :hide-details="hideDetails"
       hide-no-data
       :items="items"
@@ -19,7 +19,7 @@
       :error="error"
       :append-icon="hideAppendIcon ? null : appendIcon"
       @click:append="appendClick"
-      @change="changeValue"
+      @update:model-value="changeValue"
     />
     <v-dialog v-model="dialog" max-width="1100" persistent>
       <v-card>

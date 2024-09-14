@@ -10,17 +10,16 @@
       </div>
       <v-list v-else>
         <v-list-item v-for="item in clientList" :key="item">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{
-                partnersMap.has(item)
-                  ? partnersMap.get(item).name
-                  : 'запись удалена'
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>
+            {{
+              partnersMap.has(item)
+                ? partnersMap.get(item).name
+                : 'запись удалена'
+            }}
+          </v-list-item-title>
+
           <v-list-item-action>
-            <v-icon small color="error" @click="deleteClient(item)">
+            <v-icon size="small" color="error" @click="deleteClient(item)">
               mdi-delete
             </v-icon>
           </v-list-item-action>
@@ -31,7 +30,13 @@
         onlyClients
         @change="addClient"
       />
-      <v-btn v-else small text color="primary" @click="showAutocomplete">
+      <v-btn
+        v-else
+        size="small"
+        variant="text"
+        color="primary"
+        @click="showAutocomplete"
+      >
         Добавить клиента
       </v-btn>
     </div>

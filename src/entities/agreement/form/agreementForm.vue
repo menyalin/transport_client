@@ -14,8 +14,8 @@
           v-model="$v.form.name.$model"
           class="mt-3"
           label="Название"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           :style="{ 'max-width': '500px' }"
         />
         <DateTimeInput
@@ -31,8 +31,8 @@
           label="Ставка НДС"
           :items="vatRates"
           :readonly="!!agreement && !!agreement._id"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ 'max-width': '130px' }"
         />
         <v-checkbox
@@ -59,19 +59,19 @@
         <v-text-field
           v-model="form.executorName"
           label="Наименование исполнителя"
-          outlined
+          variant="outlined"
           class="mt-4"
           :style="{ width: '400px' }"
         />
         <v-select
           v-model="form.allowedCarriers"
           multiple
-          outlined
+          variant="outlined"
           :items="carriers"
           label="Разрешенные ТК"
           :style="{ width: '500px' }"
           chips
-          deletable-chips
+          closable-chips
         />
         <app-clients v-model="form.clients" :style="{ 'max-width': '400px' }" />
 
@@ -134,13 +134,18 @@
         v-model.number="form.commsission"
         type="number"
         label="Комиссия экспедитора (скидка в акте)"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         class="mt-5"
         suffix="%"
         :style="{ maxWidth: '400px' }"
       />
-      <v-text-field v-model="form.note" label="Примечание" outlined dense />
+      <v-text-field
+        v-model="form.note"
+        label="Примечание"
+        variant="outlined"
+        density="compact"
+      />
       <div class="row mb-2">
         <v-checkbox
           v-model="form.useCustomPrices"
@@ -156,7 +161,7 @@
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

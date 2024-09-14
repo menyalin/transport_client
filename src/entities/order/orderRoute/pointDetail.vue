@@ -3,33 +3,31 @@
     <div class="main-column-wrapper">
       <div class="settings_row">
         <v-select
-          :value="tmpPoint.type"
+          :value-model="tmpPoint.type"
           :items="pointTypes"
-          dense
+          density="compact"
           :readonly="readonly"
           hide-details
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '150px' }"
-          @change="setField($event, 'type')"
+          @update:model-value="setField($event, 'type')"
         />
         <v-checkbox
           v-if="showMainLoadingPointSelector && tmpPoint.type === 'loading'"
           v-model="tmpPoint.isMainLoadingPoint"
           label="Основной пункт погрузки"
           hide-details
-          dense
           color="primary"
           class="ml-4"
-          @change="setField($event, 'isMainLoadingPoint')"
+          @update:model-value="setField($event, 'isMainLoadingPoint')"
         />
         <v-checkbox
           v-model="tmpPoint.useInterval"
           label="Временнное окно"
           hide-details
-          dense
           color="primary"
           class="ml-4"
-          @change="setField($event, 'useInterval')"
+          @update:model-value="setField($event, 'useInterval')"
         />
         <v-checkbox
           v-if="
@@ -40,27 +38,24 @@
           label="Возврат"
           :readonly="!showReturnBtn || tmpPoint.isPltReturn"
           hide-details
-          dense
           color="red"
           class="ml-4"
-          @change="setField($event, 'isReturn')"
+          @update:model-value="setField($event, 'isReturn')"
         />
         <v-checkbox
           v-if="tmpPoint.isReturn || tmpPoint.isPltReturn"
           v-model="tmpPoint.isPltReturn"
           label="Возврат паллет"
           hide-details
-          dense
           color="primary"
           class="ml-4"
-          @change="setField($event, 'isPltReturn')"
+          @update:model-value="setField($event, 'isPltReturn')"
         />
         <v-checkbox
           v-if="tmpPoint.isAutofilled"
           v-model="tmpPoint.isAutofilled"
           label="Автозаполнение"
           hide-details
-          dense
           disabled
           color="grey"
           class="ml-4"
@@ -71,10 +66,9 @@
           v-model="tmpPoint.waitsForWaybills"
           label="Ожидает документы"
           hide-details
-          dense
           color="primary"
           class="mx-4"
-          @change="setField($event, 'waitsForWaybills')"
+          @update:model-value="setField($event, 'waitsForWaybills')"
         />
       </div>
 
@@ -93,23 +87,23 @@
 
       <v-text-field
         v-if="tmpPoint.type === 'unloading'"
-        :value="tmpPoint.waybills"
+        :model-value="tmpPoint.waybills"
         label="Накладные"
         hide-details
         :readonly="readonly"
-        outlined
+        variant="outlined"
         :style="{ 'min-width': '550px' }"
-        dense
+        density="compact"
         @change="setField($event, 'waybills')"
       />
       <v-text-field
-        :value="tmpPoint.note"
+        :model-value="tmpPoint.note"
         label="Примечание"
         hide-details
         :readonly="readonly"
-        outlined
+        variant="outlined"
         :style="{ 'min-width': '550px' }"
-        dense
+        density="compact"
         @change="setField($event, 'note')"
       />
     </div>
@@ -238,25 +232,25 @@
     <div v-if="isTemplate && fixedTimeSlots" id="fixedTimeBlock">
       <div class="time-row">
         <v-text-field
-          :value="tmpPoint.fixedTime"
+          :model-value="tmpPoint.fixedTime"
           label="Время"
           tag="div"
           type="time"
-          dense
+          density="compact"
           hide-details
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '100px' }"
           @change="setField($event, 'fixedTime')"
         />
         <v-text-field
           v-if="tmpPoint.useInterval"
-          :value="tmpPoint.hoursInterval"
+          :model-value="tmpPoint.hoursInterval"
           label="Окно, часов"
           type="number"
-          dense
+          density="compact"
           min="0"
           hide-details
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '130px' }"
           @change="setField($event, 'hoursInterval')"
         />
@@ -271,14 +265,14 @@
         hint="Смещение в днях относительно даты начала рейса"
         type="number"
         tag="div"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         min="0"
         @change="setField($event, 'offsetDays')"
       />
     </div>
     <div v-if="showDeleteBtn && !readonly" class="remove-btn-wrapper">
-      <v-btn icon dark color="error" @click="$emit('delete', ind)">
+      <v-btn icon color="error" @click="$emit('delete', ind)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>

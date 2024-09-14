@@ -11,7 +11,7 @@
       </v-btn>
     </div>
 
-    <v-data-table
+    <v-data-table-server
       v-model:options="listOptions"
       checkbox-color="primary"
       :headers="filteredHeaders"
@@ -34,7 +34,7 @@
           />
         </div>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </div>
 </template>
 <script lang="ts">

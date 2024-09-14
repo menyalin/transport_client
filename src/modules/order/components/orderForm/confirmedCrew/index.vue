@@ -9,14 +9,14 @@
         v-model="params.truck"
         label="Грузовик"
         :loading="loading"
-        dense
+        density="compact"
         :clearable="!confirmed"
         :readonly="
           confirmed &&
           !$store.getters.hasPermission('fake permission. only for admin!')
         "
         :items="trucks"
-        outlined
+        variant="outlined"
         hide-details
       />
       <v-autocomplete
@@ -27,8 +27,8 @@
           !$store.getters.hasPermission('fake permission. only for admin!')
         "
         hide-details
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
       />
       <v-autocomplete
         v-model="params.trailer"
@@ -37,11 +37,11 @@
         :readonly="
           !$store.getters.hasPermission('fake permission. only for admin!')
         "
-        dense
+        density="compact"
         hide-details
-        outlined
+        variant="outlined"
       />
-      <v-btn text small color="primary" @click="copyHandler">
+      <v-btn variant="text" size="small" color="primary" @click="copyHandler">
         Скопировать данные
       </v-btn>
     </div>

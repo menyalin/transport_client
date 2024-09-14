@@ -18,8 +18,8 @@
           <v-text-field
             v-model="settings.date"
             type="date"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             hide-details
             label="Тарифы на дату"
             :style="{ 'max-width': '220px' }"
@@ -28,8 +28,8 @@
             v-model="settings.tk"
             label="ТК"
             :items="$store.getters.tkNamesForSelect"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             clearable
             hide-details
             :style="{ 'max-width': '220px' }"
@@ -37,9 +37,9 @@
           <v-select
             v-model="settings.type"
             :items="$store.getters.salaryTariffTypes"
-            outlined
+            variant="outlined"
             clearable
-            dense
+            density="compact"
             hide-details
             label="Тип тарифа"
             :style="{ 'max-width': '250px' }"
@@ -47,16 +47,16 @@
           <v-select
             v-model="settings.liftCapacity"
             :items="$store.getters.liftCapacityTypes"
-            outlined
+            variant="outlined"
             clearable
-            dense
+            density="compact"
             hide-details
             label="Грузоподъемность"
             :style="{ 'max-width': '180px' }"
           />
         </div>
 
-        <v-data-table
+        <v-data-table-server
           v-model:options="settings.listOptions"
           :headers="headers"
           :items="filteredList"
@@ -85,7 +85,7 @@
               {{ item._result }}
             </div>
           </template>
-        </v-data-table>
+        </v-data-table-server>
         <app-salary-tariff-form
           v-model="editableItem"
           :dialog="dialog"

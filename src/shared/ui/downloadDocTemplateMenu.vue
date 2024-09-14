@@ -1,7 +1,7 @@
 <template>
-  <v-menu offset-y :disabled="disabled">
-    <template #activator="{ on, attrs }">
-      <v-btn v-bind="attrs" :disabled="disabled" v-on="on">Скачать</v-btn>
+  <v-menu :disabled="disabled">
+    <template #activator="{ props }">
+      <v-btn :disabled="disabled" v-bind="props">Скачать</v-btn>
     </template>
 
     <v-list>

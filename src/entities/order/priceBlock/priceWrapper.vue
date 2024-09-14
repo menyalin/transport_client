@@ -3,10 +3,9 @@
     <div class="button-panel">
       <BlockTitle>{{ title }}</BlockTitle>
       <v-btn
-        small
-        text
+        size="small"
+        variant="text"
         :disabled="readonly || !availibleTypes.length"
-        outlined
         color="primary"
         @click="addNewItem"
       >

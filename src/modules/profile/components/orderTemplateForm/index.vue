@@ -11,9 +11,9 @@
     <div class="body-wrapper">
       <v-text-field
         v-model.trim="$v.form.name.$model"
-        outlined
+        variant="outlined"
         label="Название шаблона"
-        dense
+        density="compact"
       />
       <div id="client-row">
         <app-partner-autocomplete
@@ -32,8 +32,8 @@
           :items="$store.getters.orderAnalyticTypes"
           clearable
           hide-details
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ 'max-width': '180px' }"
         />
       </div>
@@ -56,7 +56,7 @@
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

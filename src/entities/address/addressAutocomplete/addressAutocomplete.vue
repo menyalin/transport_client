@@ -1,20 +1,19 @@
 <template>
   <v-autocomplete
     ref="input"
-    :value="value"
-    :dense="dense"
+    :model-value="value"
+    :density="dense ? 'compact' : undefined"
     auto-select-first
     :hide-details="hideDetails"
     :readonly="readonly"
     hide-no-data
-    cache-items
     :items="items"
     :disabled="disabled"
     :clearable="!readonly"
     :label="label"
     :outlined="outlined"
     :multiple="multiple"
-    @change="changeValue"
+    @update:model-value="changeValue"
   />
 </template>
 <script lang="ts">

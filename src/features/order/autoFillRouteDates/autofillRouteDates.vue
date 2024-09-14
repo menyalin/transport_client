@@ -5,38 +5,38 @@
       @submit="autoFillDatesHandler"
     />
 
-    <v-alert type="info" text dismissible>
+    <v-alert type="info" text closable>
       {{ infoText }}
     </v-alert>
 
     <DateRangeInput v-model="settings.period" />
     <v-text-field
       v-model.number="settings.tripDurationInMinutes"
-      dense
+      density="compact"
       type="number"
       min="10"
-      outlined
+      variant="outlined"
       label="Время в пути, в минутах"
       class="mt-3"
       :style="{ maxWidth: '300px' }"
     />
     <v-text-field
       v-model.number="settings.unloadingDurationInMinutes"
-      dense
+      density="compact"
       min="10"
-      outlined
+      variant="outlined"
       type="number"
       label="Время погрузки/разгрузки, в минутах"
       :style="{ maxWidth: '300px' }"
     />
     <v-autocomplete
       v-model="settings.truckIds"
-      outlined
+      variant="outlined"
       multiple
       multi-line
       chips
       auto-select-first
-      deletable-chips
+      closable-chips
       color="primary"
       clearable
       label="Грузовики"
@@ -44,15 +44,15 @@
       :style="{ maxWidth: '600px' }"
       hide-details
     />
-    <v-btn small class="ma-2" color="primary" @click="selectAllTrucks">
+    <v-btn size="small" class="ma-2" color="primary" @click="selectAllTrucks">
       Выбрать все
     </v-btn>
     <v-alert
       v-for="(message, idx) in messages"
       :key="idx"
       :type="message.type"
-      dismissible
-      dense
+      closable
+      density="compact"
     >
       {{ message.content }}
     </v-alert>

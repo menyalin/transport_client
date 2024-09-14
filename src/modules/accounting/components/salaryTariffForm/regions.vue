@@ -6,18 +6,18 @@
       label="Регион погрузки"
       :items="$store.getters.regions"
       item-value="_id"
-      item-text="name"
-      dense
-      outlined
+      item-title="name"
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-autocomplete
       v-model="tmpPoints.unloadingRegion"
       label="Регион разгрузки"
-      dense
+      density="compact"
       item-value="_id"
-      item-text="name"
-      outlined
+      item-title="name"
+      variant="outlined"
       :items="$store.getters.regions"
       hide-details
     />

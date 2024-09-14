@@ -5,9 +5,9 @@
       <div id="platon">
         <v-text-field
           label="Платон №"
-          :value="params.platonNumber"
-          outlined
-          dense
+          :model-value="params.platonNumber"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'platonNumber')"
         />
@@ -25,9 +25,9 @@
       <div id="tachograph">
         <v-text-field
           label="Тахограф №"
-          :value="params.tachographNumber"
-          outlined
-          dense
+          :model-value="params.tachographNumber"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'tachographNumber')"
         />
@@ -43,9 +43,9 @@
         /> -->
         <v-text-field
           label="Примечание (тахограф)"
-          :value="params.tachographNote"
-          outlined
-          dense
+          :model-value="params.tachographNote"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'tachographNote')"
         />
@@ -54,9 +54,9 @@
       <div id="transponder">
         <v-text-field
           label="Транспондер, №"
-          :value="params.transponderNumber"
-          outlined
-          dense
+          :model-value="params.transponderNumber"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'transponderNumber')"
         />
@@ -74,9 +74,9 @@
       <div id="fuel-card">
         <v-text-field
           label="Топливная карта"
-          :value="params.fuelCardNumber"
-          outlined
-          dense
+          :model-value="params.fuelCardNumber"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'fuelCardNumber')"
         />
@@ -92,9 +92,9 @@
         /> -->
         <v-text-field
           label="Примечание (Топливная карта)"
-          :value="params.fuelCardNote"
-          outlined
-          dense
+          :model-value="params.fuelCardNote"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'fuelCardNote')"
         />

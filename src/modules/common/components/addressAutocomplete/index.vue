@@ -2,8 +2,8 @@
   <div>
     <v-autocomplete
       ref="input"
-      :value="value"
-      dense
+      :model-value="value"
+      density="compact"
       :hide-details="hideDetails"
       :readonly="readonly"
       hide-no-data
@@ -15,7 +15,7 @@
       :outlined="outlined"
       :append-icon="!readonly && !hideAppendIcon ? appendIcon : null"
       @click:append="appendClick"
-      @change="changeValue"
+      @update:model-value="changeValue"
     />
     <v-dialog v-model="dialog" max-width="1100" persistent>
       <v-card>

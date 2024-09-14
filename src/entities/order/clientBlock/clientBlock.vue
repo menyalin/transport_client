@@ -17,16 +17,16 @@
 
       <v-text-field
         v-model.trim="params.num"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
         :style="{ maxWidth: '300px' }"
       />
       <v-text-field
         v-model.trim="params.auctionNum"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
         :style="{ maxWidth: '300px' }"
@@ -35,8 +35,8 @@
     <v-btn
       v-if="showChangeAgreementBtn"
       color="primary"
-      outlined
-      small
+      variant="outlined"
+      size="small"
       class="mb-3 ml-5"
       @click="changeAgreementHandler"
     >

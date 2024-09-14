@@ -1,14 +1,14 @@
 <template>
   <v-select
-    :value="value"
+    :model-value="value"
     :label="label"
     :multiple="multiple"
     :items="items"
-    :dense="dense"
+    :density="dense ? 'compact' : undefined"
     :hideDetails="hideDetails"
     :outlined="outlined"
     :clearable="clearable"
-    @change="changeHandler"
+    @update:model-value="changeHandler"
   />
 </template>
 <script lang="ts">

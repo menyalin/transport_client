@@ -1,7 +1,12 @@
 <template>
   <div class="wrapper ma-2">
     <h5>{{ title }}</h5>
-    <v-btn color="primary" small :disabled="disabled" @click="addHandler">
+    <v-btn
+      color="primary"
+      size="small"
+      :disabled="disabled"
+      @click="addHandler"
+    >
       Добавить
     </v-btn>
     <component

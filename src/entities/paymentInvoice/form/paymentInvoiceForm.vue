@@ -36,15 +36,15 @@
         <v-text-field
           v-model.trim="state.number"
           label="Номер"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '200px' }"
         />
         <v-text-field
           v-model="state.sendDate"
           label="Дата выставления"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           type="date"
           :style="{ maxWidth: '250px' }"
           @paste="pasteDate"
@@ -53,35 +53,35 @@
           v-model="state.status"
           label="Статус"
           :items="statusItems"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
           :error-messages="clientErrorMessages"
           @blur="v$.client.$touch"
-          @change="changeClientHandler"
+          @update:model-value="changeClientHandler"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="!state.client || disabledMainFields"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
@@ -93,15 +93,15 @@
         <v-text-field
           v-model.trim="state.numberByClient"
           label="Номер реестра клиента"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '200px' }"
         />
         <v-text-field
           v-model="state.dateByClient"
           label="Дата реестра клиента"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           type="date"
           :style="{ maxWidth: '250px' }"
           @paste="pasteDate"
@@ -121,8 +121,8 @@
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         hide-details
         @blur="v$.note.$touch"
       />

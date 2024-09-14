@@ -4,12 +4,12 @@
       ref="first_field"
       v-model="tmpItem.clients"
       label="Клиенты"
-      dense
+      density="compact"
       :items="clients"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      outlined
+      variant="outlined"
       hide-details
     />
 
@@ -17,8 +17,8 @@
       v-model="tmpItem.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-checkbox

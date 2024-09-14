@@ -10,7 +10,7 @@
       </div>
       <v-list v-else>
         <v-list-item v-for="item in driverList" :key="item.driver">
-          <v-list-item-avatar
+          <v-avatar
             :style="{ cursor: 'pointer' }"
             @click="changeDriverState(item)"
           >
@@ -18,18 +18,22 @@
               mdi-account-lock-outline
             </v-icon>
             <v-icon v-else color="orange"> mdi-account-clock-outline </v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{
-                driversMap.has(item.driver)
-                  ? driversMap.get(item.driver).fullName
-                  : 'запись удалена'
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
+          </v-avatar>
+
+          <v-list-item-title>
+            {{
+              driversMap.has(item.driver)
+                ? driversMap.get(item.driver).fullName
+                : 'запись удалена'
+            }}
+          </v-list-item-title>
+
           <v-list-item-action>
-            <v-icon small color="error" @click="deleteDriver(item.driver)">
+            <v-icon
+              size="small"
+              color="error"
+              @click="deleteDriver(item.driver)"
+            >
               mdi-delete
             </v-icon>
           </v-list-item-action>
@@ -38,11 +42,17 @@
       <v-autocomplete
         v-if="!isVisibleBtn"
         :items="driversForSelect"
-        item-text="fullName"
+        item-title="fullName"
         item-value="_id"
-        @change="changeDriver"
+        @update:model-value="changeDriver"
       />
-      <v-btn v-else small text color="primary" @click="addDriver">
+      <v-btn
+        v-else
+        size="small"
+        variant="text"
+        color="primary"
+        @click="addDriver"
+      >
         Добавить водителя
       </v-btn>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :value="selected"
     :headers="headers"
     dense
@@ -29,7 +29,7 @@
     <template #[`item.addItemColumn`]="{ item }">
       <v-icon
         v-if="item.isSelectable"
-        small
+        size="small"
         color="primary"
         :disabled="!item.isSelectable"
         :style="{ cursor: 'pointer' }"
@@ -83,7 +83,7 @@
       </b>
     </template>
     <template #[`item.docsGetted`]="{ item }">
-      <v-simple-checkbox
+      <v-checkbox-btn
         :value="item.docsState ? item.docsState.getted : false"
         :disabled="!!item.docs && !!item.docs.length"
         color="primary"
@@ -103,11 +103,10 @@
       <v-btn
         color="primary"
         icon
-        small
-        dark
+        size="small"
         @click="$emit('openDocsDialog', item[itemIdField])"
       >
-        <v-icon small> mdi-file-document-multiple </v-icon>
+        <v-icon size="small"> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>
     <template #[`item.total.price`]="{ item }">
@@ -119,7 +118,7 @@
     <template #[`item.total.sumVat`]="{ item }">
       {{ new Intl.NumberFormat().format(item.total.sumVat) }}
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script lang="ts">
 //@ts-nocheck

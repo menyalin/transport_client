@@ -1,40 +1,40 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu :close-on-content-click="false">
+    <template #activator="{ props }">
+      <v-btn color="primary" icon v-bind="props">
+        <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
     <v-list class="px-3">
       <v-switch
         label="Планируемые даты"
-        dense
+        density="compact"
         hide-details
         :value="$store.getters.onlyPlannedDates"
-        @change="$store.commit('changeOnlyPlannedDates')"
+        @update:model-value="$store.commit('changeOnlyPlannedDates')"
       />
       <v-switch
         v-model="tmpSettings.showBufferZone"
         label="Показать буферную зону"
-        dense
+        density="compact"
         hide-details
       />
       <v-switch
         v-model="tmpSettings.controlOnly"
         label="Показывать 'на контроле'"
-        dense
+        density="compact"
         hide-details
       />
       <v-switch
         v-model="tmpSettings.showDowntimes"
         label="Показывать сервисы/выходные"
-        dense
+        density="compact"
         hide-details
       />
       <v-switch
         v-model="tmpSettings.showNotes"
         label="Показать заметки"
-        dense
+        density="compact"
         hide-details
       />
     </v-list>

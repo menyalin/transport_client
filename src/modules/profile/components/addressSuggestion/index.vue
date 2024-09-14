@@ -3,17 +3,17 @@
     v-model:search-input="search"
     clearable
     auto-select-first
-    solo
-    :value="model"
+    variant="solo"
+    :model-value="model"
     :items="items"
     :loading="isLoading"
     hide-no-data
-    :filter="() => true"
-    item-text="value"
+    :customFilter="() => true"
+    item-title="value"
     placeholder="Начните вводить адрес для поиска"
     prepend-icon="mdi-database-search"
     return-object
-    @change="change"
+    @update:model-value="change"
   />
 </template>
 <script lang="ts">

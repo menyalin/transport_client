@@ -15,10 +15,10 @@
             v-model="settings.truckFilter"
             label="Грузовик"
             :items="trucks"
-            item-text="regNum"
+            item-title="regNum"
             item-value="_id"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             clearable
             :style="{ maxWidth: '250px' }"
@@ -27,17 +27,17 @@
             v-model="settings.partner"
             label="Партнер"
             :items="partners"
-            item-text="name"
+            item-title="name"
             item-value="_id"
             auto-select-first
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             clearable
             :style="{ maxWidth: '350px' }"
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           v-model:options="settings.listOptions"
           :headers="headers"
           :items="list"
@@ -72,7 +72,7 @@
           <template #[`item.endPositionDate`]="{ item }">
             <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

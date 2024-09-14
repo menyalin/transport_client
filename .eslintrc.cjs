@@ -24,6 +24,7 @@ module.exports = {
   ],
   extends: [
     'plugin:vue/vue3-recommended', // Рекомендуемые правила для Vue 3
+    'plugin:vuetify/base',
     'plugin:@typescript-eslint/recommended', // Рекомендуемые правила для TypeScript
     'plugin:prettier/recommended', // Интеграция с Prettier
   ],

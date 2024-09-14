@@ -11,27 +11,27 @@
         label="Группировать по"
         :items="groupItems"
         hide-details
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
       <v-select
         v-model="settings.analitic"
         label="Детализация"
         :items="analiticItems"
         hide-details
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
       <v-select
         v-model="settings.tkNameFilter"
         label="Фильтр по ТК"
         :items="tkNames"
         item-value="_id"
-        item-text="name"
+        item-title="name"
         hide-details
-        outlined
+        variant="outlined"
         clearable
-        dense
+        density="compact"
       />
     </div>
     <div v-if="!filteredCrews.length" class="text-center">

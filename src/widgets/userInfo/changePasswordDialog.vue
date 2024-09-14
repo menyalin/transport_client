@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    :value="dialog"
+    :model-value="dialog"
     max-width="600"
     persistent
     @update:modal="closeDialog"
@@ -21,7 +21,7 @@
             label="Новый пароль"
             autocomplete="off"
             :error-messages="newPasswordErrors"
-            @input="$v.newPassword.$touch()"
+            @update:model-value="$v.newPassword.$touch()"
             @blur="$v.newPassword.$touch()"
           />
           <v-text-field
@@ -30,19 +30,19 @@
             label="Новый пароль"
             autocomplete="off"
             :error-messages="confirmPasswordErrors"
-            @input="$v.confirmPassword.$touch()"
+            @update:model-value="$v.confirmPassword.$touch()"
             @blur="$v.confirmPassword.$touch()"
           />
         </form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="cancel"> Отмена </v-btn>
+        <v-btn variant="text" @click="cancel"> Отмена </v-btn>
 
         <v-btn
           :disabled="$v.$invalid"
           color="primary"
-          text
+          variant="text"
           @click="saveHandler"
         >
           Agree

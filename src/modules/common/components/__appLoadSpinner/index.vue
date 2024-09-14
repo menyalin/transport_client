@@ -2,7 +2,7 @@
   <v-container>
     <v-row align="center" justify="center">
       <v-col cols="auto">
-        <v-subheader>Загрузка... </v-subheader>
+        <v-list-subheader>Загрузка... </v-list-subheader>
         <v-progress-circular
           :size="90"
           :width="5"

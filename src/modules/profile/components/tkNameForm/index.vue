@@ -10,7 +10,12 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
+    <v-alert
+      v-if="!directoriesProfile"
+      variant="outlined"
+      class="ma-3 mb-5"
+      type="error"
+    >
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
     <div v-else class="ma-3 text-caption">
@@ -19,14 +24,14 @@
     <v-text-field
       v-model.trim="$v.form.name.$model"
       :error-messages="nameErrors"
-      outlined
+      variant="outlined"
       label="Название ТК"
-      dense
+      density="compact"
     />
     <v-checkbox v-model="form.outsource" label="Привлеченный перевозчик" />
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

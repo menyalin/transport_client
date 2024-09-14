@@ -5,9 +5,9 @@
       <template v-if="truckType === 'truck'">
         <v-text-field
           label="Осаго №"
-          :value="params.osagoNum"
-          outlined
-          dense
+          :model-value="params.osagoNum"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'osagoNum')"
         />
@@ -24,18 +24,18 @@
         -->
         <v-text-field
           label="Страховая компания"
-          :value="params.osagoCompany"
-          outlined
-          dense
+          :model-value="params.osagoCompany"
+          variant="outlined"
+          density="compact"
           hide-details
           @change="change($event, 'osagoCompany')"
         />
       </template>
       <v-text-field
         label="Каско №"
-        :value="params.kaskoNum"
-        outlined
-        dense
+        :model-value="params.kaskoNum"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'kaskoNum')"
       />
@@ -51,17 +51,17 @@
       /> -->
       <v-text-field
         label="Страховая компания"
-        :value="params.kaskoCompany"
-        outlined
-        dense
+        :model-value="params.kaskoCompany"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'kaskoCompany')"
       />
       <v-text-field
         label="Лизинговая компания"
-        :value="params.leasingСompany"
-        outlined
-        dense
+        :model-value="params.leasingСompany"
+        variant="outlined"
+        density="compact"
         hide-details
         @change="change($event, 'leasingСompany')"
       />

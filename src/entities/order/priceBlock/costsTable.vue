@@ -43,7 +43,7 @@
         </td>
 
         <td>
-          <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2">
+          <v-icon v-if="item.cashPayment" class="px-2" color="teal-darken-2">
             mdi-cash
           </v-icon>
 
@@ -51,10 +51,10 @@
         </td>
         <td v-if="!readonly" class="text-right">
           <v-btn icon @click="$emit('editPrice', item.type)">
-            <v-icon color="green" small> mdi-pencil </v-icon>
+            <v-icon color="green" size="small"> mdi-pencil </v-icon>
           </v-btn>
           <v-btn icon @click="$emit('deletePrice', item.type)">
-            <v-icon color="red" small> mdi-delete </v-icon>
+            <v-icon color="red" size="small"> mdi-delete </v-icon>
           </v-btn>
         </td>
       </tr>

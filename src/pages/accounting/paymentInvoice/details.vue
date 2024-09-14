@@ -29,7 +29,7 @@
       v-model="showPickOrderDialog"
       fullscreen
       persistent
-      hide-overlay
+      :scrim="false"
     >
       <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>

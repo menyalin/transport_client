@@ -31,7 +31,7 @@
       </tr>
     </tbody>
     <tfoot>
-      <v-btn color="primary" small class="ma-2" @click="openDialog(-1)">
+      <v-btn color="primary" size="small" class="ma-2" @click="openDialog(-1)">
         Добавить напоминание
       </v-btn>
     </tfoot>
@@ -44,8 +44,8 @@
             v-model="v$.title.$model"
             label="Заголовок"
             :errorMessages="titleErrors"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             @blur="v$.title.$touch()"
           />
           <div class="dates-row">
@@ -61,16 +61,16 @@
               v-model="v$.daysBeforeRemind.$model"
               label="Дней до напоминания"
               class="days-count"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               :error-messages="daysBeforeRemindErrors"
               @blur="v$.daysBeforeRemind.$touch()"
             />
             <v-text-field
               v-model="v$.note.$model"
               label="Примечание"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
             />
           </div>
         </v-card-text>

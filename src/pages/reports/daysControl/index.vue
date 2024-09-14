@@ -11,15 +11,15 @@
             v-model.number="settings.dayCount"
             label="Кол-во дней"
             hideDetails
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
           />
           <v-text-field
             v-model.trim="settings.search"
             label="Поиск"
             hideDetails
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
           />
         </div>
         <v-data-table

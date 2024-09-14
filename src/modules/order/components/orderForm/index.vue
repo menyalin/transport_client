@@ -18,9 +18,9 @@
               v-model="templateSelector"
               label="Заполнить из шаблона"
               clearable
-              outlined
+              variant="outlined"
               :disabled="state.status !== 'needGet'"
-              dense
+              density="compact"
               hide-details
               :items="$store.getters.orderTemplatesForSelect"
               :style="{ width: '350px' }"
@@ -168,15 +168,15 @@
           <div id="note">
             <v-text-field
               v-model="form.note"
-              outlined
+              variant="outlined"
               label="Примечание"
-              dense
+              density="compact"
             />
             <v-text-field
               v-model="form.noteAccountant"
-              outlined
+              variant="outlined"
               label="Примечание для бухгалтера"
-              dense
+              density="compact"
             />
           </div>
 
@@ -204,7 +204,7 @@
           class="ma-4"
           @click="$emit('delete')"
         >
-          <v-icon left dark> mdi-delete </v-icon>
+          <v-icon start> mdi-delete </v-icon>
           Удалить
         </v-btn>
       </v-col>

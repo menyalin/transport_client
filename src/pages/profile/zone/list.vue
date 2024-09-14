@@ -13,9 +13,9 @@
           <v-text-field
             v-model="settings.search"
             label="Поиск"
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             clearable
           />
         </div>

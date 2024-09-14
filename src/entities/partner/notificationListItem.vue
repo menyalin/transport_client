@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined min-width="800px" max-width="800px" class="ma-3" fill-height>
+  <v-card border min-width="800px" max-width="800px" class="ma-3" fill-height>
     <v-card-title> {{ item.title }}</v-card-title>
     <v-card-subtitle> {{ item.companyName }}</v-card-subtitle>
     <v-card-text>
@@ -40,11 +40,13 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-btn small color="secondary" @click="editHandler">Редактировать</v-btn>
-      <v-btn small color="error" @click="deleteHandler">Удалить</v-btn>
+      <v-btn size="small" color="secondary" @click="editHandler"
+        >Редактировать</v-btn
+      >
+      <v-btn size="small" color="error" @click="deleteHandler">Удалить</v-btn>
       <v-spacer />
       <v-btn
-        small
+        size="small"
         :color="isActive ? 'primary' : null"
         @click="switchStatusHandler"
       >

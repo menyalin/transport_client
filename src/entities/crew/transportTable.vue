@@ -102,7 +102,7 @@
               :items="trucksByDriver"
               hide-details
               item-value="_id"
-              item-text="regNum"
+              item-title="regNum"
             />
           </td>
           <td class="truck-col">
@@ -113,7 +113,7 @@
               :items="trailers"
               hide-details
               item-value="_id"
-              item-text="regNum"
+              item-title="regNum"
             />
           </td>
           <td>
@@ -166,10 +166,10 @@
 
     <v-btn
       v-if="showAddRowBtn"
-      text
+      variant="text"
       class="ma-3"
       color="green"
-      small
+      size="small"
       @click="addRow"
     >
       Добавить запись

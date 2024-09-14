@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     v-model="selected"
     :headers="headers"
     checkbox-color="primary"
@@ -46,7 +46,7 @@
     <template #[`footer.prepend`]>
       <PaymentInvoiceListAnalitics :data="analiticsData" />
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script lang="ts">

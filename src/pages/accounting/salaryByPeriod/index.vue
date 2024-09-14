@@ -6,9 +6,9 @@
         v-model="tks"
         :items="$store.getters.tkNames"
         label="ТК"
-        dense
+        density="compact"
         multiple
-        item-text="name"
+        item-title="name"
         item-value="_id"
         clearable
         hide-details
@@ -20,10 +20,10 @@
         label="Водитель"
         :items="drivers"
         item-value="_id"
-        item-text="fullName"
+        item-title="fullName"
         hide-details
         auto-select-first
-        dense
+        density="compact"
         clearable
         :style="{ maxWidth: '300px' }"
       />
@@ -40,7 +40,7 @@
         v-model="consigneeType"
         :items="$store.getters.partnerGroups"
         label="Тип грузополучателя"
-        dense
+        density="compact"
         clearable
         hide-details
         :style="{ 'max-width': '250px' }"
@@ -49,7 +49,7 @@
         v-model="orderType"
         :items="$store.getters.orderAnalyticTypes"
         label="Тип рейса"
-        dense
+        density="compact"
         clearable
         hide-details
         :style="{ 'max-width': '200px' }"

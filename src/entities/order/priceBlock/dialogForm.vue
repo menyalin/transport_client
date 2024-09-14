@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" persistent>
+  <v-dialog :model-value="dialog" max-width="800" persistent>
     <v-card>
       <v-card-title>Редактировать сумму</v-card-title>
       <v-card-text>
@@ -9,8 +9,8 @@
               v-model="$v.tmpItem.type.$model"
               label="Тип затрат"
               :items="availablePriceTypes"
-              dense
-              outlined
+              density="compact"
+              variant="outlined"
               clearable
               :style="{ 'max-width': '300px' }"
               :errorMessages="typeErrorMessages"
@@ -19,8 +19,8 @@
             <v-text-field
               v-model="$v.tmpItem.price.$model"
               label="Сумма"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               type="number"
               :errorMessages="priceErrorMessages"
               :style="{ 'max-width': '200px' }"
@@ -31,22 +31,20 @@
               v-model="tmpItem.withVat"
               :disabled="disabledVatRateCheckbox"
               label="c НДС"
-              dense
             />
             <v-checkbox
               v-if="allowedCashPayment"
               v-model="tmpItem.cashPayment"
               label="Оплата наличными"
               hide-details
-              dense
             />
           </div>
           <div class="fields-row">
             <v-text-field
               v-model.lazy="tmpItem.note"
               label="Комментарий"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               hide-details
             />
           </div>

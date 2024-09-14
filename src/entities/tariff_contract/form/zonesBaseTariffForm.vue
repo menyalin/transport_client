@@ -33,7 +33,7 @@
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
           />
           <v-autocomplete
@@ -43,7 +43,7 @@
             multiple
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
             hint="Важна последовательность зон"
           />
