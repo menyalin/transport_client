@@ -6,10 +6,10 @@ module.exports = {
   },
 
   extends: ['eslint:recommended', 'plugin:vue/base'],
-  plugins: ['prettier', 'vue'],
+  plugins: ['prettier'],
   parserOptions: {
     sourceType: 'module',
-    ecmaVersion: 2020,
+ 
   },
 
   rules: {
