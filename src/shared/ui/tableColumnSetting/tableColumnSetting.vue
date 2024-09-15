@@ -37,6 +37,7 @@ export default {
   setup(props, ctx) {
     if (!props.listSettingsName) throw new Error('listSettingName is missing')
     const activeFields = ref([])
+    const savedFields = JSON.parse(localStorage.getItem(props.listSettingsName))
 
     function getHeaders() {
       if (activeFields.value.length === 0)
@@ -56,14 +57,11 @@ export default {
       ctx.emit('change', getHeaders())
     }
 
-    const savedFields = JSON.parse(localStorage.getItem(props.listSettingsName))
     if (savedFields && savedFields.length) activeFields.value = savedFields
     else
       activeFields.value = props.allHeaders
         .filter((i) => i.default)
         .map((i) => i.value)
-
-    emitHeaders()
 
     watch(
       activeFields,
@@ -74,7 +72,7 @@ export default {
         )
         emitHeaders()
       },
-      { deep: true }
+      { deep: true, immediate: true }
     )
 
     return {
