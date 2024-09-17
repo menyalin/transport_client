@@ -1,7 +1,7 @@
 <template>
   <v-card outlined min-width="800px" max-width="800px" class="ma-3" fill-height>
     <v-card-title> {{ item.title }}</v-card-title>
-    <v-card-subtitle> {{ item.companyName }}</v-card-subtitle>
+    <!-- <v-card-subtitle> {{ item.companyName }}</v-card-subtitle> -->
     <v-card-text>
       <div>
         Адреса клиента: <b>{{ addresses }}</b>
@@ -23,7 +23,7 @@
         используется плановая дата доставки:
         <b> {{ item.usePlannedDate ? 'Да' : 'Нет' }}</b>
       </div>
-      <div v-if="item.useTruckFilter !== 'notUsed'" class="ma-3">
+      <!-- <div v-if="item.useTruckFilter !== 'notUsed'" class="ma-3">
         <v-divider />
         <div>
           {{
@@ -34,7 +34,7 @@
         </div>
         <b>{{ trucks }}</b>
         <v-divider />
-      </div>
+      </div> -->
       <div v-if="item.note">
         <i>{{ item.note }}</i>
       </div>
@@ -62,11 +62,11 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const trucks = computed(() => {
-      return props.item.trucks
-        .map((t) => store.getters.trucksMap.get(t)?.regNum)
-        .join(', ')
-    })
+    // const trucks = computed(() => {
+    //   return props.item.trucks
+    //     ?.map((t) => store.getters.trucksMap.get(t)?.regNum)
+    //     .join(', ')
+    // })
 
     const addresses = computed(() => {
       return store.getters.addresses
@@ -95,7 +95,7 @@ export default {
       editHandler,
       remove,
       addresses,
-      trucks,
+      // trucks,
       isActive,
       switchStatus,
     }
