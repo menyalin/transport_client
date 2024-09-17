@@ -12,14 +12,14 @@
           outlined
           dense
         />
-        <v-text-field
+        <!-- <v-text-field
           v-model="v$.companyName.$model"
           label="Название компании"
           hint="Отвечает за название компании в теме письма и подписи"
           :errorMessages="companyNameFieldErrors"
           outlined
           dense
-        />
+        /> -->
         <v-autocomplete
           multiple
           v-model="v$.addresses.$model"
@@ -67,7 +67,7 @@
             />
           </div>
         </div>
-
+        <!-- 
         <v-select
           :items="truckFilterStatusItems"
           v-model="state.useTruckFilter"
@@ -90,7 +90,7 @@
           clearable
           hide-details
           :style="{ width: '100%' }"
-        />
+        /> -->
         <v-text-field v-model="state.note" label="Примечание" outlined dense />
       </div>
     </v-card-text>
@@ -123,9 +123,9 @@ export default {
       addressFieldErrors,
       emailFieldErrors,
       ccEmailFieldErrors,
-      companyNameFieldErrors,
-      truckFilterStatusItems,
-      truckItems,
+      // companyNameFieldErrors,
+      // truckFilterStatusItems,
+      // truckItems,
     } = useFormState(props, ctx)
     return {
       v$,
@@ -138,9 +138,9 @@ export default {
       addressFieldErrors,
       emailFieldErrors,
       ccEmailFieldErrors,
-      companyNameFieldErrors,
-      truckFilterStatusItems,
-      truckItems,
+      // companyNameFieldErrors,
+      // truckFilterStatusItems,
+      // truckItems,
     }
   },
 }
