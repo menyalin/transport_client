@@ -23,25 +23,25 @@ export const useFormState = (props, { emit }) => {
       notUsed = 'notUsed',
 }
   */
-  const truckFilterStatusItems = [
-    { value: 'notUsed', text: 'Все грузовики' },
-    { value: 'included', text: 'Разрешенные грузовики' },
-    { value: 'excluded', text: 'Кроме грузовиков' },
-  ]
+  // const truckFilterStatusItems = [
+  //   { value: 'notUsed', text: 'Все грузовики' },
+  //   { value: 'included', text: 'Разрешенные грузовики' },
+  //   { value: 'excluded', text: 'Кроме грузовиков' },
+  // ]
 
   function getInitialState() {
     if (props.initialState?._id) return props.initialState
     return {
       title: '',
       addresses: [],
-      companyName: '',
+      // companyName: '',
       idleHoursBeforeNotify: 0,
       emails: '',
       ccEmails: '',
       templateName: '',
       note: '',
       usePlannedDate: false,
-      useTruckFilter: 'notUsed',
+      // useTruckFilter: 'notUsed',
     }
   }
 
@@ -50,9 +50,9 @@ export const useFormState = (props, { emit }) => {
   const rules = {
     title: { required, $autoDirty: true },
     addresses: { required, $autoDirty: true },
-    useTruckFilter: { $autoDirty: true },
-    trucks: { $autoDirty: true },
-    companyName: { required, $autoDirty: true },
+    // useTruckFilter: { $autoDirty: true },
+    // trucks: { $autoDirty: true },
+    // companyName: { required, $autoDirty: true },
     emails: {
       required,
       $autoDirty: true,
@@ -90,9 +90,9 @@ export const useFormState = (props, { emit }) => {
     return v$.value.title.$errors.map((error) => error.$message)
   })
 
-  const companyNameFieldErrors = computed(() => {
-    return v$.value.companyName.$errors.map((error) => error.$message)
-  })
+  // const companyNameFieldErrors = computed(() => {
+  //   return v$.value.companyName.$errors.map((error) => error.$message)
+  // })
 
   const addressFieldErrors = computed(() => {
     return v$.value.addresses.$errors.map((error) => error.$message)
@@ -114,9 +114,9 @@ export const useFormState = (props, { emit }) => {
     return store.getters.addressesForAutocomplete.filter((i) => i.loading)
   })
 
-  const truckItems = computed(() => {
-    return store.getters.trucks.filter((i) => i.type === 'truck')
-  })
+  // const truckItems = computed(() => {
+  //   return store.getters.trucks.filter((i) => i.type === 'truck')
+  // })
 
   watch(
     () => props.initialState,
@@ -138,8 +138,8 @@ export const useFormState = (props, { emit }) => {
     addressFieldErrors,
     emailFieldErrors,
     ccEmailFieldErrors,
-    companyNameFieldErrors,
-    truckFilterStatusItems,
-    truckItems,
+    // companyNameFieldErrors,
+    // truckFilterStatusItems,
+    // truckItems,
   }
 }
