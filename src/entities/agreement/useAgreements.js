@@ -17,8 +17,17 @@ export const useAgreements = () => {
       .sort((a, b) => (a.name > b.name ? 1 : -1))
   })
 
+  const allAgreementMap = computed(() => {
+    return new Map(
+      allAgreements.value.length
+        ? allAgreements.value.map((i) => [i._id, i])
+        : null
+    )
+  })
+
   return {
     allAgreements,
+    allAgreementMap,
     allClientAgreements,
     loading,
   }
