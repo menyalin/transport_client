@@ -26,15 +26,18 @@
         :initialState="editableItem"
         @submit="submitHandler"
         @cancel="cancelHandler"
+        :agreements="agreemenstByClient"
       />
     </v-dialog>
   </div>
 </template>
 
 <script>
+import { computed } from 'vue'
 import { NotificationListFeature } from '@/features/partner'
 import { useWidgetModel } from './model/model.js'
 import { IdleTruckNotifyForm } from '@/entities/partner'
+import { useAgreements } from '@/entities/agreement'
 
 export default {
   name: 'IdleTruckNotificationsWidget',
@@ -46,6 +49,15 @@ export default {
     function updatePartnerHandler(payload) {
       ctx.emit('updatePartner', payload)
     }
+    const { allClientAgreements } = useAgreements()
+    const agreemenstByClient = computed(() => {
+      return allClientAgreements.value
+        .filter((agreement) => agreement.clients.includes(props.partner._id))
+        .map((i) => ({
+          value: i._id,
+          text: i.name,
+        }))
+    })
 
     const {
       editNotifyHandler,
@@ -65,6 +77,7 @@ export default {
       dialog,
       loading,
       editableItem,
+      agreemenstByClient,
     }
   },
 }

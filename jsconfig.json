@@ -11,7 +11,6 @@
 
   "vueCompilerOptions": {
     "target": 2.7,
-    "extensions": [".vue"],
-    "allowJs": true
+    "extensions": [".vue"]
   }
 }

@@ -12,14 +12,7 @@
           outlined
           dense
         />
-        <!-- <v-text-field
-          v-model="v$.companyName.$model"
-          label="Название компании"
-          hint="Отвечает за название компании в теме письма и подписи"
-          :errorMessages="companyNameFieldErrors"
-          outlined
-          dense
-        /> -->
+
         <v-autocomplete
           multiple
           v-model="v$.addresses.$model"
@@ -32,6 +25,17 @@
           clearable
           auto-select-first
         />
+        <v-autocomplete
+          :items="agreements"
+          v-model="v$.agreement.$model"
+          label="Соглашение"
+          outlined
+          :errorMessages="addressFieldErrors"
+          deletable-chips
+          clearable
+          auto-select-first
+        />
+
         <v-text-field
           v-model="v$.emails.$model"
           label="Получатели оповещений"
@@ -45,6 +49,14 @@
           label="Получатели копии оповещений"
           hint="email адреса через ','"
           :errorMessages="ccEmailFieldErrors"
+          outlined
+          dense
+        />
+        <v-text-field
+          v-model="v$.bccEmails.$model"
+          label="Скрытые получатели оповещений"
+          hint="email адреса через ','"
+          :errorMessages="bccEmailFieldErrors"
           outlined
           dense
         />
@@ -67,30 +79,7 @@
             />
           </div>
         </div>
-        <!-- 
-        <v-select
-          :items="truckFilterStatusItems"
-          v-model="state.useTruckFilter"
-          label="Фильтр по грузовикам"
-          outlined
-          hide-details
-        />
-        <v-autocomplete
-          v-if="state.useTruckFilter !== 'notUsed'"
-          multiple
-          chips
-          item-value="_id"
-          item-text="regNum"
-          v-model="v$.trucks.$model"
-          label="Грузовики"
-          deletable-chips
-          auto-select-first
-          outlined
-          :items="truckItems"
-          clearable
-          hide-details
-          :style="{ width: '100%' }"
-        /> -->
+
         <v-text-field v-model="state.note" label="Примечание" outlined dense />
       </div>
     </v-card-text>
@@ -110,6 +99,7 @@ export default {
     partnerId: String,
     loading: Boolean,
     initialState: Object,
+    agreements: Array,
   },
   setup(props, ctx) {
     const {
@@ -123,9 +113,7 @@ export default {
       addressFieldErrors,
       emailFieldErrors,
       ccEmailFieldErrors,
-      // companyNameFieldErrors,
-      // truckFilterStatusItems,
-      // truckItems,
+      bccEmailFieldErrors,
     } = useFormState(props, ctx)
     return {
       v$,
@@ -138,9 +126,7 @@ export default {
       addressFieldErrors,
       emailFieldErrors,
       ccEmailFieldErrors,
-      // companyNameFieldErrors,
-      // truckFilterStatusItems,
-      // truckItems,
+      bccEmailFieldErrors,
     }
   },
 }

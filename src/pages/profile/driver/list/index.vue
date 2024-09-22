@@ -66,7 +66,9 @@
         <v-icon v-else small color="red"> mdi-minus </v-icon>
       </template>
       <template #[`item.isCalcSalary`]="{ item }">
-        <v-icon v-if="item.hasScans" small color="green"> mdi-check </v-icon>
+        <v-icon v-if="item.isCalcSalary" small color="green">
+          mdi-check
+        </v-icon>
         <v-icon v-else small color="red"> mdi-minus </v-icon>
       </template>
     </v-data-table>
