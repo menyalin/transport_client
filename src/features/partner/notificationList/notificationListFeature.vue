@@ -39,7 +39,7 @@
         <v-icon small color="green" @click="editHandler(item._id)">
           mdi-pencil
         </v-icon>
-        <v-icon small color="red" @click="remove(item._id)">
+        <v-icon small color="red" @click="removeItem(item._id)">
           mdi-delete
         </v-icon>
       </div>
@@ -79,18 +79,18 @@ export default {
     }
   },
   methods: {
-    switchStatus(id, currentStatus) {
+    async switchStatus(id, currentStatus) {
       if (!currentStatus) this.switchStatusHandler(id)
       else {
-        const res = this.$confirm(
+        const res = await this.$confirm(
           'Уверены? Выключение уведомления отменит созданные задачи'
         )
         if (!res) return
         this.switchStatusHandler(id)
       }
     },
-    remove(id) {
-      const res = this.$confirm('Вы уверены?')
+    async removeItem(id) {
+      const res = await this.$confirm('Вы уверены?')
       if (res) this.deleteHandler(id)
     },
   },
