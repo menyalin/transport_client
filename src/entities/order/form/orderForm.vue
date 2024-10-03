@@ -218,7 +218,7 @@ import { OrderRoute } from '@/entities/order'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
-import AppAnalyticBlock from '../../../../entities/order/analyticBlock.vue'
+import AppAnalyticBlock from '@/entities/order/analyticBlock.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 import {
@@ -267,9 +267,11 @@ export default {
       default: false,
     },
     loading: Boolean,
+    addressActions: Object,
   },
   provide() {
     return {
+      addressActions: this.addressActions,
       updateFinalPrices: (val) => {
         this.finalPrices = [...val]
       },

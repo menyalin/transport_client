@@ -30,6 +30,7 @@
             </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </td>
+
           <td>
             <v-icon v-if="item.isDeliveryPlace" color="green">
               mdi-check

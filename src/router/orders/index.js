@@ -1,4 +1,4 @@
-import Layout from '../pages/layout'
+import Layout from '@/pages/orders/layout'
 import orderRoutes from './orders'
 
 export default [
@@ -9,7 +9,7 @@ export default [
       {
         path: '/',
         name: 'Schedule',
-        component: () => import('../pages/schedule'),
+        component: () => import('@/pages/orders/schedule'),
         meta: { title: 'Распределение' },
       },
     ],
@@ -23,7 +23,7 @@ export default [
     children: [...orderRoutes],
     meta: {
       authRequired: true,
-      title: 'Список рейсов',
+      title: 'Рейсы',
     },
   },
 ]

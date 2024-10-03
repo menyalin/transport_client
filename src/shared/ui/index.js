@@ -14,6 +14,7 @@ import AdditionalNotifications from './additionalNotifications'
 import ReportTitle from './reportTitle.vue'
 import RefreshBtn from './refreshBtn.vue'
 import OrderDocStatusSelector from './orderDocStatusSelector.vue'
+import AutoCompleteWithActions from './AutoCompleteWithActions.vue'
 
 export {
   AppTableColumnSetting,
@@ -32,4 +33,5 @@ export {
   ReportTitle,
   RefreshBtn,
   OrderDocStatusSelector,
+  AutoCompleteWithActions,
 }

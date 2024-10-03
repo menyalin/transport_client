@@ -23,7 +23,7 @@
     />
     <v-dialog v-model="dialog" max-width="1100" persistent>
       <v-card>
-        <app-details-partner
+        <AppDetailsPartner
           :id="value"
           openInModal
           @cancel="cancelDialog"
@@ -36,6 +36,7 @@
 </template>
 <script>
 import AppDetailsPartner from '@/pages/profile/partner/details'
+
 export default {
   name: 'PartnerAutocomplete',
   components: {

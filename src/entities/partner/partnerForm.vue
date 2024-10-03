@@ -57,7 +57,7 @@
     <v-checkbox v-model="form.isService" label="Сервис" dense />
 
     <places-for-transfer-docs
-      v-if="form.isClient"
+      v-if="form.isClient && !!partner"
       v-model="form.placesForTransferDocs"
       :partnerId="partner._id"
       :places="partner.placesForTransferDocs"

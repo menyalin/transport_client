@@ -8,7 +8,7 @@ import accountingRoutes from './accounting/index.js'
 
 import authRoutes from '@/modules/auth/auth.routes'
 import adminRoutes from '@/router/admin.routes.js'
-import orderRoutes from '@/modules/order/routes/index.js'
+import orderRoutes from '@/router/orders/index.js'
 import reportsRoutes from '@/router/reports.routes.js'
 
 import serverNotAvailablePage from '@/modules/common/pages/error'

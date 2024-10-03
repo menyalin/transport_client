@@ -4,7 +4,8 @@
       <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="client-block">
-      <app-partner-autocomplete
+      <v-autocomplete
+        :items="clientItems"
         v-model="params.client"
         label="Заказчик"
         outlined
@@ -12,7 +13,7 @@
         :messages="agreementNameSring"
         :error="!agreement"
         dense
-        only-clients
+        :style="{ maxWidth: '300px' }"
       />
 
       <v-text-field
@@ -49,6 +50,7 @@
 import { AgreementService } from '@/shared/services'
 import { BlockTitle } from '@/entities/order'
 import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import { useClientBlock } from './useClientBlock'
 
 export default {
   name: 'ClientBlock',
@@ -73,6 +75,10 @@ export default {
       type: Boolean,
       default: true,
     },
+  },
+  setup() {
+    const { clientItems } = useClientBlock()
+    return { clientItems }
   },
   data() {
     return {
