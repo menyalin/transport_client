@@ -1,5 +1,5 @@
 <template>
-  <app-schedule-table
+  <ScheduleTable
     :rows="scheduleRows"
     @startDragOrder="startDragOrder"
     @endDragOrder="endDragOrder"
@@ -7,14 +7,14 @@
   />
 </template>
 <script>
-import AppScheduleTable from '../../components/scheduleTable'
+import { ScheduleTable } from '@/entities/order'
 import { OrderService as service } from '@/shared/services'
-import periodDifferernce from '../../utils/periodDifference'
+import periodDifferernce from '../../modules/order/utils/periodDifference'
 
 export default {
   name: 'Schedule',
   components: {
-    AppScheduleTable,
+    ScheduleTable,
   },
   data() {
     return {

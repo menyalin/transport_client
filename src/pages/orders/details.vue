@@ -12,11 +12,12 @@
           {{ error.message }}
         </v-alert>
         <app-load-spinner v-if="loading" />
-        <app-order-form
+        <OrderForm
           v-else
           :order="item"
           :displayDeleteBtn="showDeleteBtn"
           :loading="loading"
+          :addressActions="addressActions"
           @cancel="cancel"
           @submit="submit($event)"
           @save="submit($event, true)"
@@ -29,14 +30,15 @@
 <script>
 import socket from '@/socket'
 import { OrderService } from '@/shared/services'
-import AppOrderForm from '../../components/orderForm'
+
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { useOrderValidations } from '@/entities/order'
+import { OrderForm, useOrderValidations } from '@/entities/order'
+import { useAddress } from '@/entities/address'
 
 export default {
   name: 'DetailsOrder',
   components: {
-    AppOrderForm,
+    OrderForm,
     AppLoadSpinner,
   },
 
@@ -102,8 +104,9 @@ export default {
     }
   },
   setup() {
+    const { actions: addressActions } = useAddress()
     const { beforeSubmitOrderValidation } = useOrderValidations()
-    return { beforeSubmitOrderValidation }
+    return { beforeSubmitOrderValidation, addressActions }
   },
   methods: {
     toggleAlert() {

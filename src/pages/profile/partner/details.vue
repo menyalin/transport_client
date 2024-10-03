@@ -20,10 +20,11 @@
 </template>
 <script>
 import { PartnerService as service } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+
 import { FormWrapper } from '@/shared/ui'
 import { PartnerForm } from '@/entities/partner'
 import { IdleTruckNotifications as IdleTruckNotificationsWidget } from '@/widgets/idleTruckNotifications'
+import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'
 
 export default {
   name: 'PartnerDetails',
@@ -32,13 +33,57 @@ export default {
     FormWrapper,
     IdleTruckNotificationsWidget,
   },
-  mixins: [pageDetailsMixin],
+  props: {
+    id: String,
+  },
+  setup() {
+    const { updatePrevFormValue } = usePersistedFormState()
+    return {
+      updatePrevFormValue,
+    }
+  },
   data() {
     return {
       service: service,
+      item: null,
+      loading: false,
+      tmpVal: null,
+      error: {
+        message: null,
+        show: false,
+      },
     }
   },
   methods: {
+    toggleAlert() {
+      this.error = {
+        show: false,
+        message: null,
+      }
+    },
+    async submit(val) {
+      this.tmpVal = val
+      try {
+        this.loading = true
+        if (this.id) {
+          this.item = await this.service.updateOne(this.id, val)
+        } else this.item = await this.service.create(val)
+        this.tmpVal = null
+        this.updatePrevFormValue(this.$route, this.item._id)
+        this.$router.go(-1)
+      } catch (e) {
+        this.item = this.tmpVal
+        if (e.response.status === 400 || e.response.status === 403) {
+          this.error.message = e.response.data
+          this.error.show = true
+        }
+      } finally {
+        this.loading = false
+      }
+    },
+    cancel() {
+      this.$router.go(-1)
+    },
     async updatePartnerHandler(updatedItem) {
       this.item = Object.assign({}, updatedItem)
     },
@@ -52,6 +97,18 @@ export default {
         this.loading = false
         this.$store.commit('setError', e.message)
       }
+    },
+  },
+  watch: {
+    id: {
+      immediate: true,
+      handler: async function (newVal, oldVal) {
+        if (newVal && newVal !== oldVal) {
+          this.loading = true
+          this.item = await this.service.getById(newVal)
+          this.loading = false
+        }
+      },
     },
   },
 }

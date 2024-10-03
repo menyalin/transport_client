@@ -1,5 +1,5 @@
 <template>
-  <div class="idle_truck_notifications_wrapper">
+  <div v-if="partner && partner._id" class="idle_truck_notifications_wrapper">
     <h5 class="ml-3">Настройка оповещений при простое транспорта</h5>
     <v-alert v-if="!partner._id" type="info">
       Добавление площадок возможно только после сохранения партнера
@@ -52,7 +52,7 @@ export default {
     const { allClientAgreements } = useAgreements()
     const agreemenstByClient = computed(() => {
       return allClientAgreements.value
-        .filter((agreement) => agreement.clients.includes(props.partner._id))
+        .filter((agreement) => agreement.clients.includes(props.partner?._id))
         .map((i) => ({
           value: i._id,
           text: i.name,
