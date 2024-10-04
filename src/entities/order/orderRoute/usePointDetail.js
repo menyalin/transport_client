@@ -46,6 +46,11 @@ export const usePointDetail = (props, ctx, addressActions) => {
     return item[state.value.type]
   }
   // #region computeds
+  const addressContactsHint = computed(() => {
+    if (!state.value.address) return null
+    const contacts = store.getters.addressMap.get(state.value.address)?.contacts
+    return contacts ? `Контакты: ${contacts}` : null
+  })
   const pointTypes = computed(() => store.getters.pointTypes)
   const addressItems = computed(() =>
     store.getters.addressesForAutocomplete.filter(addressFilter)
@@ -109,5 +114,6 @@ export const usePointDetail = (props, ctx, addressActions) => {
     setField,
     createAddressHandler,
     editAddressHandler,
+    addressContactsHint,
   }
 }
