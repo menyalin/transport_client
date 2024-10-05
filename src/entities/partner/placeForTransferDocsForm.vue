@@ -12,22 +12,22 @@
           :errorMessages="titleErrorMessages"
           :style="{ maxWidth: '600px' }"
         />
-        <address-autocomplete
+        <v-autocomplete
           v-model="state.address"
           dense
           label="Адрес площадки"
+          :items="addressItems"
           outlined
-          :partnerId="resctrictAddresses ? partnerId : undefined"
           @blur="v$.address.$touch"
           :errorMessages="addressErrorMessages"
         />
-        <address-autocomplete
+        <v-autocomplete
           v-model="state.allowedLoadingPoints"
           label="Разрешенные пункты погрузки"
+          :items="addressItems"
           outlined
           multiple
           dense
-          :partnerId="resctrictAddresses ? partnerId : undefined"
           @blur="v$.allowedLoadingPoints.$touch"
         />
         <v-text-field
@@ -47,7 +47,7 @@
         />
         <v-checkbox
           v-model="resctrictAddresses"
-          label="Скрывать адреса других клиентов"
+          label="Скрывать адреса других партнеров"
           color="primary"
         />
       </form>
@@ -63,16 +63,13 @@
 </template>
 
 <script>
+import store from '@/store'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { computed, nextTick, ref, watch } from 'vue'
-import { AddressAutocomplete } from '@/entities/address'
+import { computed, ref, watch } from 'vue'
 
 export default {
   name: 'PlaceForTransferDocsForm',
-  components: {
-    AddressAutocomplete,
-  },
   props: {
     item: Object,
     partnerId: { type: String, required: true },
@@ -80,7 +77,6 @@ export default {
   setup(props, ctx) {
     const resctrictAddresses = ref(true)
     const state = ref({})
-
     const initialState = {
       title: null,
       address: null,
@@ -93,14 +89,10 @@ export default {
       return state ? state : initialState
     }
 
-    const itemComputed = computed(() => {
-      return props.item
-    })
-
     watch(
-      itemComputed,
-      () => {
-        state.value = setState(itemComputed.value)
+      () => props.item,
+      (value) => {
+        state.value = setState(value)
       },
       { immediate: true }
     )
@@ -139,15 +131,21 @@ export default {
 
     const invalidForm = computed(() => v$.value.$invalid)
 
+    const addressItems = computed(() => {
+      if (!props.partnerId) return []
+      return store.getters.addressesForAutocomplete.filter((i) => {
+        if (resctrictAddresses.value) return i.partner === props.partnerId
+        else return true
+      })
+    })
+
     function clear() {
       resetForm()
     }
 
     function resetForm() {
       v$.value.$reset()
-      nextTick(() => {
-        state.value = setState()
-      })
+      state.value = setState()
     }
 
     function submit() {
@@ -169,6 +167,7 @@ export default {
       state,
       clear,
       resctrictAddresses,
+      addressItems,
     }
   },
 }

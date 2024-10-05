@@ -13,10 +13,12 @@ export const usePersistedFormState = () => {
     sessionStorage.setItem(getFormKey(formId, scope), stateString)
   }
 
-  const savedForm = (scope) =>
-    formId.value
-      ? sessionStorage.getItem(getFormKey(formId.value, scope))
-      : null
+  const savedForm = (scope, needClear = false) => {
+    const state = sessionStorage.getItem(getFormKey(formId.value, scope))
+    if (!state) return null
+    if (needClear) sessionStorage.removeItem(getFormKey(formId.value, scope))
+    return state
+  }
 
   function updatePrevFormValue(route, value) {
     const prevFormId = route.query?.prevFormId
@@ -46,10 +48,20 @@ export const usePersistedFormState = () => {
     })
   }
 
+  function getState(formScope, item, initialState) {
+    if (savedForm(formScope)) return JSON.parse(savedForm(formScope))
+    else return item ? item : initialState
+  }
+  function clearStoredForm(formScope) {
+    sessionStorage.removeItem(getFormKey(formId.value, formScope))
+  }
+
   return {
     saveForm,
     updatePrevFormValue,
     formId,
     savedForm,
+    getState,
+    clearStoredForm,
   }
 }

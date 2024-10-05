@@ -8,50 +8,47 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
 
     <v-autocomplete
-      v-model="$v.form.truck.$model"
+      v-model="state.truck"
       label="Грузовик"
-      :items="trucks"
+      :items="truckItems"
       auto-select-first
       outlined
       dense
     />
     <v-select
-      v-model="$v.form.type.$model"
+      v-model="state.type"
       label="Тип простоя"
       :items="downtimeTypes"
       outlined
       dense
     />
-    <v-text-field
-      v-model.trim="$v.form.title.$model"
-      outlined
-      label="Заголовок"
-      dense
-    />
-    <app-partner-autocomplete
-      v-if="form.type === 'repair'"
-      v-model="form.partner"
+    <v-text-field v-model.trim="state.title" outlined label="Заголовок" dense />
+
+    <AutoCompleteWithActions
+      v-if="state.type === 'repair'"
+      v-model="state.partner"
+      :items="serviceItems"
       label="Партнер"
-      showHint
-      onlyServices
       outlined
+      @create="createPartnerHandler"
+      @edit="updatePartnerHandler"
     />
-    <app-address-autocomplete
-      v-if="form.type === 'repair'"
-      v-model="form.address"
-      pointType="service"
-      label="Адрес"
+
+    <AutoCompleteWithActions
+      v-if="state.type === 'repair'"
+      :items="serviceAdressItems"
+      v-model="state.address"
+      label="Адрес сервиса"
       outlined
-      dense
+      @create="createAddressHandler"
+      @edit="updateAddressHandler"
     />
+
     <div class="row-input my-4">
       <DateTimeInput
-        v-model="$v.form.startPositionDate.$model"
+        v-model="state.startPositionDate"
         label="Дата начала"
         type="datetime-local"
         outlined
@@ -59,24 +56,24 @@
         :style="{ 'max-width': '200px' }"
       />
       <DateTimeInput
-        v-model="$v.form.endPositionDate.$model"
+        v-model="state.endPositionDate"
         label="Дата завешения"
         type="datetime-local"
-        :minDate="form.startPositionDate"
+        :minDate="state.startPositionDate"
         outlined
         dense
         :style="{ 'max-width': '200px' }"
       />
     </div>
     <v-text-field
-      v-model="$v.form.note.$model"
+      v-model="state.note"
       label="Примечание"
       outlined
       hide-details
       dense
     />
     <v-checkbox
-      v-model="form.inOrderTime"
+      v-model="state.inOrderTime"
       label="Разрешить пересечение с рейсом"
     />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
@@ -86,113 +83,64 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import {
+  ButtonsPanel,
+  DateTimeInput,
+  AutoCompleteWithActions,
+} from '@/shared/ui'
+
+import { useForm } from './useForm'
 
 export default {
   name: 'DowntimeForm',
   components: {
     ButtonsPanel,
     DateTimeInput,
-    AppPartnerAutocomplete,
-    AppAddressAutocomplete,
+    AutoCompleteWithActions,
   },
   props: {
     downtime: { type: Object },
     displayDeleteBtn: { type: Boolean, default: false },
-    openInModal: { type: Boolean, default: false },
+    addressActions: {
+      type: Object,
+      required: true,
+    },
+    partnerActions: {
+      type: Object,
+      required: true,
+    },
   },
-  data() {
+  setup(props) {
+    const {
+      state,
+      isInvalidForm,
+      resetForm,
+      submit,
+      cancel,
+      truckItems,
+      serviceAdressItems,
+      serviceItems,
+      downtimeTypes,
+      createAddressHandler,
+      updateAddressHandler,
+      createPartnerHandler,
+      updatePartnerHandler,
+    } = useForm(props)
     return {
-      form: {
-        title: null,
-        truck: null,
-        type: null,
-        note: null,
-        partner: null,
-        address: null,
-        startPositionDate: null,
-        endPositionDate: null,
-        inOrderTime: false,
-      },
+      state,
+      isInvalidForm,
+      resetForm,
+      submit,
+      cancel,
+      truckItems,
+      serviceAdressItems,
+      serviceItems,
+      downtimeTypes,
+      createAddressHandler,
+      updateAddressHandler,
+      createPartnerHandler,
+      updatePartnerHandler,
     }
-  },
-
-  computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile']),
-    isInvalidForm() {
-      if (!this.directoriesProfile) return true
-      return this.$v.$invalid
-    },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
-    },
-
-    formState() {
-      return { ...this.form, company: this.directoriesProfile }
-    },
-    trucks() {
-      return this.$store.getters.trucks
-        .filter((item) => item.type === 'truck')
-        .map((item) => ({ value: item._id, text: item.regNum }))
-    },
-    downtimeTypes() {
-      return this.$store.getters.downtimeTypes
-    },
-  },
-  watch: {
-    downtime: {
-      immediate: true,
-      handler: function (val) {
-        if (val) this.setFormFields(val)
-      },
-    },
-  },
-
-  validations() {
-    return {
-      form: {
-        title: { required },
-        truck: { required },
-        type: { required },
-        note: {},
-        startPositionDate: { required },
-        endPositionDate: {
-          required,
-          isLaterThan: isLaterThan(this.form.startPositionDate),
-        },
-      },
-    }
-  },
-
-  methods: {
-    submit() {
-      this.$emit('submit', this.formState)
-      this.resetForm()
-    },
-    cancel() {
-      this.resetForm()
-      this.$emit('cancel')
-    },
-    setFormFields(val) {
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        this.form[key] = val[key]
-      })
-    },
-    resetForm() {
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        this.form[key] = null
-      })
-    },
   },
 }
 </script>

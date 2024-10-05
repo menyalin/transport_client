@@ -1,16 +1,18 @@
 <template>
   <div id="points-wrapper">
-    <app-address-autocomplete
+    <v-autocomplete
       ref="loadingEl"
-      v-model="tmpPoints.loading"
+      v-model="state.loading"
+      :items="loadingAddressItems"
       pointType="loading"
       label="Погрузка"
       dense
       outlined
       hide-details
     />
-    <app-address-autocomplete
-      v-model="tmpPoints.unloading"
+    <v-autocomplete
+      v-model="state.unloading"
+      :items="unloadingAddressItems"
       label="Разгрузка"
       pointType="unloading"
       dense
@@ -20,19 +22,37 @@
   </div>
 </template>
 <script>
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
+import store from '@/store'
+import { ref, computed, watch } from 'vue'
 
 export default {
   name: 'TariffPointsType',
-  components: {
-    AppAddressAutocomplete,
-  },
+
   model: {
     prop: 'points',
     event: 'change',
   },
   props: {
     points: Object,
+  },
+  setup(props) {
+    const initialState = { loading: null, unloading: null }
+    const state = ref(props.points ? { ...props.points } : initialState)
+
+    const loadingAddressItems = computed(() => {
+      return store.getters.addressesForAutocomplete.filter((i) => i.loading)
+    })
+    const unloadingAddressItems = computed(() => {
+      return store.getters.addressesForAutocomplete.filter((i) => i.unloading)
+    })
+    watch(
+      () => props.points,
+      (val) => {
+        state.value = { ...val }
+      },
+      { deep: true }
+    )
+    return { state, loadingAddressItems, unloadingAddressItems }
   },
   data() {
     return {
@@ -43,21 +63,6 @@ export default {
     }
   },
 
-  watch: {
-    points: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        this.tmpPoints = val
-      },
-    },
-    tmpPoints: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
-      },
-    },
-  },
   methods: {
     focus() {
       this.$refs.loadingEl.focus()

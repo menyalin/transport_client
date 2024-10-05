@@ -285,7 +285,7 @@
 </template>
 <script>
 import { inject } from 'vue'
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
+
 import {
   BorderedBlock,
   DateTimeInput,
@@ -297,7 +297,6 @@ export default {
   name: 'PointDetail',
   components: {
     AutoCompleteWithActions,
-    AppAddressAutocomplete,
     DateTimeInput,
     BorderedBlock,
   },

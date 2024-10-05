@@ -55,13 +55,6 @@
       label="Город"
     />
 
-    <app-partner-autocomplete
-      v-model="v$.partner.$model"
-      dense
-      outlined
-      label="Партнер"
-    />
-
     <v-text-field
       v-model="v$.note.$model"
       outlined

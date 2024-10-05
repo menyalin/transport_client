@@ -49,14 +49,13 @@
 <script>
 import { AgreementService } from '@/shared/services'
 import { BlockTitle } from '@/entities/order'
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+
 import { useClientBlock } from './useClientBlock'
 
 export default {
   name: 'ClientBlock',
   components: {
     BlockTitle,
-    AppPartnerAutocomplete,
   },
   model: {
     prop: 'item',
