@@ -17,6 +17,9 @@ import { OrderRoute } from './orderRoute'
 import PriceBlock from './priceBlock'
 import PriceDialog from './priceDialog'
 import AnalyticBlock from './analyticBlock.vue'
+import OrderForm from './form/orderForm.vue'
+import ScheduleSettings from './scheduleSetting/index.vue'
+import ScheduleTable from './scheduleTable/index.vue'
 
 export {
   OrdersTable,
@@ -38,4 +41,7 @@ export {
   PriceBlock,
   PriceDialog,
   AnalyticBlock,
+  OrderForm,
+  ScheduleSettings,
+  ScheduleTable,
 }

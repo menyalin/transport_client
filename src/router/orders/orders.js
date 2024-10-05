@@ -1,5 +1,5 @@
-import DetailsOrder from '../pages/orders/details'
-import CreateOrderGroup from '../pages/orderGroupCreate/index.vue'
+import DetailsOrder from '@/pages/orders/details'
+import CreateOrderGroup from '@/pages/orders/orderGroupCreate.vue'
 
 export default [
   {

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <app-bar title="Рейсы">
-      <app-schedule-settings v-if="$route.fullPath === '/schedule/'" />
+      <ScheduleSettings v-if="$route.fullPath === '/schedule/'" />
     </app-bar>
     <v-main>
       <router-view />
@@ -12,7 +12,7 @@
 <script>
 import AppBar from '@/modules/common/components/appBar'
 import AppSnackbar from '@/modules/common/components/appSnackbar'
-import AppScheduleSettings from '@/modules/order/components/scheduleSetting'
+import { ScheduleSettings } from '@/entities/order'
 
 export default {
   name: 'ProfileLayout',
@@ -20,9 +20,8 @@ export default {
   components: {
     AppBar,
     AppSnackbar,
-    AppScheduleSettings,
+    ScheduleSettings,
   },
-  data: () => ({}),
 }
 </script>
 <style></style>

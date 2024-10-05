@@ -9,6 +9,7 @@ export default [
     name: 'AddressList',
     component: List,
     meta: {
+      title: 'Список адресов',
       permission: 'address:readList',
     },
   },

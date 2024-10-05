@@ -69,6 +69,7 @@ export default {
     prop: 'points',
     event: 'changePoints',
   },
+
   props: {
     driverId: String,
     points: Array,

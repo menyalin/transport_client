@@ -27,14 +27,14 @@
         clearable
         :style="{ maxWidth: '300px' }"
       />
-      <app-partners-autocomplete
+      <v-autocomplete
         v-model="clients"
+        :items="clientItems"
         label="Клиент"
         dense
         hide-details
         multiple
-        onlyClients
-        hideAppendIcon
+        :style="{ 'max-width': '250px' }"
       />
       <v-select
         v-model="consigneeType"
@@ -73,7 +73,7 @@ import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 import store from '@/store'
 import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalaryPeriod/index.vue'
-import AppPartnersAutocomplete from '@/modules/common/components/partnerAutocomplete'
+
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
@@ -88,9 +88,8 @@ export default {
   components: {
     AppDriversSalaryPeriod,
     DriverSalaryTable,
-    AppPartnersAutocomplete,
   },
-  setup(_props, _ctx) {
+  setup() {
     const historyState = window.history.state
     const tks = ref(historyState.tks || [])
     const driver = ref(historyState.driver)
@@ -119,6 +118,12 @@ export default {
             (!i.dismissalDate || startPeriod.isBefore(i.dismissalDate)) &&
             (!i.employmentDate || endPeriod.isAfter(i.employmentDate))
         )
+    })
+
+    const clientItems = computed(() => {
+      return store.getters.partners
+        .filter((i) => i.isClient)
+        .map((i) => ({ value: i._id, text: i.name }))
     })
 
     watch([period, driver, clients, consigneeType, orderType, tks], () => {
@@ -156,6 +161,7 @@ export default {
       clients,
       orderType,
       drivers,
+      clientItems,
       setDriver,
       setListSettings,
       consigneeType,
