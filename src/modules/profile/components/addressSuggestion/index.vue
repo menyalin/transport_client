@@ -20,7 +20,7 @@
 import { AddressService } from '@/shared/services'
 
 export default {
-  name: 'AddressAutocomplete',
+  name: 'AddressSuggestion',
   data() {
     return {
       model: null,

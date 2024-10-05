@@ -83,12 +83,15 @@
         :readonly="readonly"
         :style="{ 'min-width': '550px' }"
         outlined
-        hide-details
+        :hint="addressContactsHint"
+        :persistentHint="!!addressContactsHint"
+        :hideDetails="!addressContactsHint"
         @update="setField($event, 'address')"
         @edit="editAddressHandler"
         @create="createAddressHandler"
       />
 
+      <v-spacer />
       <v-text-field
         v-if="state.type === 'unloading'"
         :value="state.waybills"
@@ -282,7 +285,7 @@
 </template>
 <script>
 import { inject } from 'vue'
-import AppAddressAutocomplete from '@/modules/common/components/addressAutocomplete'
+
 import {
   BorderedBlock,
   DateTimeInput,
@@ -294,7 +297,6 @@ export default {
   name: 'PointDetail',
   components: {
     AutoCompleteWithActions,
-    AppAddressAutocomplete,
     DateTimeInput,
     BorderedBlock,
   },
@@ -335,6 +337,7 @@ export default {
       addressItems,
       createAddressHandler,
       editAddressHandler,
+      addressContactsHint,
     } = usePointDetail(props, ctx, addressActions)
     return {
       state,
@@ -346,6 +349,7 @@ export default {
       addressItems,
       createAddressHandler,
       editAddressHandler,
+      addressContactsHint,
     }
   },
 }

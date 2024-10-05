@@ -15,7 +15,7 @@
               {{
                 partnersMap.has(item)
                   ? partnersMap.get(item).name
-                  : 'запись удалена'
+                  : 'запись недоступна'
               }}
             </v-list-item-title>
           </v-list-item-content>
@@ -26,7 +26,8 @@
           </v-list-item-action>
         </v-list-item>
       </v-list>
-      <app-partner-autocomplete
+      <v-autocomplete
+        :items="clientItems"
         v-if="!isVisibleBtn"
         onlyClients
         @change="addClient"
@@ -38,13 +39,12 @@
   </div>
 </template>
 <script>
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+import { computed } from 'vue'
+
+import store from '@/store/index'
 
 export default {
   name: 'AgreementClientList',
-  components: {
-    AppPartnerAutocomplete,
-  },
   model: {
     prop: 'clientList',
     event: 'change',
@@ -53,6 +53,14 @@ export default {
     clientList: {
       type: Array,
     },
+  },
+  setup() {
+    const clientItems = computed(() => {
+      return store.getters.partners
+        .filter((i) => i.isClient)
+        .map((i) => ({ value: i._id, text: i.name }))
+    })
+    return { clientItems }
   },
   data() {
     return {

@@ -27,10 +27,12 @@
   </v-container>
 </template>
 <script>
+import { provide } from 'vue'
 import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {OrderTemplateService } from '@/shared/services'
+import { OrderTemplateService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { useAddress } from '@/entities/address'
 
 export default {
   name: 'OrderTemplateDetails',
@@ -39,6 +41,10 @@ export default {
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],
+  setup() {
+    const { actions: addressActions } = useAddress()
+    provide('addressActions', addressActions)
+  },
   data() {
     return {
       service: OrderTemplateService,

@@ -18,6 +18,7 @@ const getPointStr = (point) => {
   res += `**${store.getters.partnersMap.get(address.partner)?.name}** \n`
   res += `${address.name}\n`
   if (point.note) res += `__${point.note}__ \n`
+  if (address.contacts) res += `**Контакты:** ${address.contacts} \n`
   res += '**Координаты: ** `' + address.geo + '`'
   return res + '\n'
 }

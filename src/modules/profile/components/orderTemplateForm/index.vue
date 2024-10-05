@@ -16,12 +16,14 @@
         dense
       />
       <div id="client-row">
-        <app-partner-autocomplete
+        <v-autocomplete
           v-model="$v.form.client.$model"
+          :items="clientItems"
+          item-text="name"
+          item-value="_id"
           label="Заказчик"
           outlined
           dense
-          only-clients
           hide-details
           :style="{ 'max-width': '350px' }"
         />
@@ -64,15 +66,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
-import AppPartnerAutocomplete from '@/modules/common/components/partnerAutocomplete'
+
 import { ButtonsPanel } from '@/shared/ui'
 import { OrderRoute } from '@/entities/order'
 import { ReqTransport, CargoParams } from '@/entities/order'
+import store from '@/store/index'
 export default {
   name: 'OrderTemplateForm',
   components: {
     ButtonsPanel,
-    AppPartnerAutocomplete,
+
     OrderRoute,
     ReqTransport,
     CargoParams,
@@ -89,6 +92,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    return {
+      clientItems: store.getters.partners.filter((partner) => partner.isClient),
+    }
   },
   data() {
     return {

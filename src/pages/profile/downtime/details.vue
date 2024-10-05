@@ -18,6 +18,8 @@
           :displayDeleteBtn="
             !!id && $store.getters.hasPermission('downtime:delete')
           "
+          :addressActions="addressActions"
+          :partnerActions="partnerActions"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -31,6 +33,8 @@ import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { DowntimeService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import { DowntimeForm } from '@/entities/downtime'
+import { useAddress } from '@/entities/address'
+import { usePartners } from '@/entities/partner'
 
 export default {
   name: 'DowntimeDetails',
@@ -39,9 +43,18 @@ export default {
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],
+
   props: {
     truckId: String,
     startDate: String,
+  },
+  setup() {
+    const { actions: addressActions } = useAddress()
+    const { actions: partnerActions } = usePartners()
+    return {
+      addressActions,
+      partnerActions,
+    }
   },
   data() {
     return {
