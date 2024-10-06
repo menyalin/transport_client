@@ -45,7 +45,12 @@ export const useForm = (props, ctx) => {
       .filter((item) => item.type === 'truck')
       .map((item) => ({ value: item._id, text: item.regNum }))
   )
-
+  const partnerContactsHint = computed(() => {
+    if (!state.value.partner) return null
+    const partner = store.getters.partnersMap.get(state.value.partner)
+    if (!partner) return null
+    return partner.contacts
+  })
   const downtimeTypes = computed(() => store.getters.downtimeTypes)
 
   const serviceAdressItems = computed(() =>
@@ -121,5 +126,6 @@ export const useForm = (props, ctx) => {
     updateAddressHandler,
     createPartnerHandler,
     updatePartnerHandler,
+    partnerContactsHint,
   }
 }

@@ -31,6 +31,8 @@
       v-model="state.partner"
       :items="serviceItems"
       label="Партнер"
+      :hint="partnerContactsHint"
+      :persistentHint="!!partnerContactsHint"
       outlined
       @create="createPartnerHandler"
       @edit="updatePartnerHandler"
@@ -125,6 +127,7 @@ export default {
       updateAddressHandler,
       createPartnerHandler,
       updatePartnerHandler,
+      partnerContactsHint,
     } = useForm(props, ctx)
     return {
       state,
@@ -140,6 +143,7 @@ export default {
       updateAddressHandler,
       createPartnerHandler,
       updatePartnerHandler,
+      partnerContactsHint,
     }
   },
 }
