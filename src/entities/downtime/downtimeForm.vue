@@ -110,7 +110,7 @@ export default {
       required: true,
     },
   },
-  setup(props) {
+  setup(props, ctx) {
     const {
       state,
       isInvalidForm,
@@ -125,7 +125,7 @@ export default {
       updateAddressHandler,
       createPartnerHandler,
       updatePartnerHandler,
-    } = useForm(props)
+    } = useForm(props, ctx)
     return {
       state,
       isInvalidForm,
