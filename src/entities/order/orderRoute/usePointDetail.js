@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { useVuelidate } from '@vuelidate/core'
 import store from '@/store'
@@ -68,7 +68,11 @@ export const usePointDetail = (props, ctx, addressActions) => {
     return !store.getters.hasPermission('order:writeDocDates')
   })
   // #endregion
-
+  watch(
+    () => props.point,
+    (val) => (state.value = val),
+    { deep: true }
+  )
   function setField(val, field) {
     const DATE_FIELDS = [
       'plannedDate',
