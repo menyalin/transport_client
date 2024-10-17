@@ -7,6 +7,7 @@ import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'
 export const usePointDetail = (props, ctx, addressActions) => {
   const formScope = 'route_point_' + props.ind
   const { savedForm, saveForm, formId } = usePersistedFormState()
+
   const initialState = {
     type: null,
     waybills: null,
@@ -26,7 +27,7 @@ export const usePointDetail = (props, ctx, addressActions) => {
     waitsForWaybills: false,
     note: null,
     fixedTime: null,
-    isMainLoadingPoint: null,
+    isMainLoadingPoint: false,
   }
 
   const getState = (point, initialState) => {
@@ -35,6 +36,7 @@ export const usePointDetail = (props, ctx, addressActions) => {
   }
 
   const state = ref(getState(props.point, initialState))
+
   const rules = {
     departureDate: {
       isLaterThan: isLaterThan(state.value.arrivalDate),
@@ -68,12 +70,14 @@ export const usePointDetail = (props, ctx, addressActions) => {
     return !store.getters.hasPermission('order:writeDocDates')
   })
   // #endregion
+
   watch(
     () => props.point,
     (val) => (state.value = val),
     { deep: true }
   )
   function setField(val, field) {
+    console.log(val)
     const DATE_FIELDS = [
       'plannedDate',
       'arrivalDate',
@@ -85,7 +89,7 @@ export const usePointDetail = (props, ctx, addressActions) => {
     if (['arrivalDate', 'departureDate'].includes(field))
       state.value.isAutofilled = false
 
-    ctx.emit('changePoint', state.value)
+    ctx.emit('changePoint', { ...state.value })
   }
   function editAddressHandler(val) {
     saveForm(formId.value, formScope, JSON.stringify(state.value))
