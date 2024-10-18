@@ -23,8 +23,8 @@ const getPointStr = (point) => {
   return res + '\n'
 }
 
-export default async (userId, route, params, agreement) => {
-  if (!userId) {
+export default async (driverId, route, params, agreement) => {
+  if (!driverId) {
     store.commit('setError', 'Водитель не определен')
     return null
   }
@@ -32,7 +32,7 @@ export default async (userId, route, params, agreement) => {
     store.commit('setError', 'не корректный маршрут')
     return null
   }
-  const user = store.getters.driversMap.get(userId)
+  const user = store.getters.driversMap.get(driverId)
   const title = '__' + user.name + ', Ваш рейс:__ \n'
   const executor = '\n **ТК: ' + agreement.executorName + '**'
   const points = route.reduce(
