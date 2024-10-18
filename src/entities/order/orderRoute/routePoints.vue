@@ -138,13 +138,15 @@ export default {
     }
 
     async function getDriverRouteHandler() {
-      await putRouteForDriverToClipboard(
-        this.driverId,
-        this.points,
-        this.cargoParams,
-        this.agreement
+      
+    await putRouteForDriverToClipboard(
+        props.driverId,
+        props.points,
+        props.cargoParams,
+        props.agreement
       )
     }
+
     function addPoint() {
       ctx.emit('changePoints', [...props.points, { type: 'unloading' }])
     }

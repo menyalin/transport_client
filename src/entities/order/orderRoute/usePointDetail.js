@@ -77,7 +77,6 @@ export const usePointDetail = (props, ctx, addressActions) => {
     { deep: true }
   )
   function setField(val, field) {
-    console.log(val)
     const DATE_FIELDS = [
       'plannedDate',
       'arrivalDate',
