@@ -139,7 +139,7 @@
             />
 
             <app-payment-to-driver
-              v-if="$store.getters.hasPermission('order:readPaymentToDriver')"
+              v-if="showPaymentToDriver"
               id="payment-to-driver"
               v-model="paymentToDriver"
             />
@@ -343,6 +343,13 @@ export default {
   },
 
   computed: {
+    showPaymentToDriver() {
+      return (
+        this.$store.getters.hasPermission('order:readPaymentToDriver') &&
+        !this.confirmedCrew.outsourceAgreement
+      )
+    },
+
     showFinalPriceDialog() {
       return (
         !!this.$store.getters.hasPermission('order:readFinalPrices') &&

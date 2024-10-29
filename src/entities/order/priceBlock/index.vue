@@ -12,7 +12,8 @@
     />
     <app-price-wrapper
       v-if="showOutsourceBlock"
-      v-model="tmpCosts"
+      :items="outsourceCosts"
+      @change="changeOutsourceCostsHandler"
       class="mt-4"
       :readonly="readonlyCosts"
       :agreement="outsourceAgreement"
@@ -116,6 +117,9 @@ export default {
   methods: {
     changePricesHandler(prices) {
       this.$emit('update:prices', prices)
+    },
+    changeOutsourceCostsHandler(costs) {
+      this.$emit('update:outsourceCosts', costs)
     },
   },
 }

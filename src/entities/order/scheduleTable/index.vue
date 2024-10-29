@@ -106,7 +106,7 @@
         >
           <v-list>
             <v-list-item
-              :disabled="!$store.getters.hasPermission('order:daysForWrite')"
+              :disabled="!$store.getters.hasPermission('order:create')"
               @click="createOrder"
             >
               <v-list-item-title>Создать рейс</v-list-item-title>
@@ -383,17 +383,15 @@ export default {
       startDateM = startDateM.hour(roundingHours(startDateM.hour()))
       this.tmpStartDate = startDateM.format('YYYY-MM-DD HH:00')
 
-      if (isBuffer) this.createOrder()
-      else {
+      if (isBuffer && this.$store.getters.hasPermission('order:create'))
+        this.createOrder()
+      else if (!isBuffer) {
         const rowInd = Math.floor(offsetY / LINE_HEIGHT)
         this.truckId = this.rows[rowInd]._id
-        this.showMenu = false
+
         this.menuX = e.clientX
         this.menuY = e.clientY
-
-        this.$nextTick(() => {
-          this.showMenu = true
-        })
+        this.showMenu = true
       }
     },
 
