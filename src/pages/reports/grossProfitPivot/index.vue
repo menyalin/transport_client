@@ -15,6 +15,12 @@
           hide-details
           class="ml-3"
         />
+        <v-checkbox
+          v-model="showOutsourceCosts"
+          label="Стоимость с учетом наемников"
+          hide-details
+          class="ml-3"
+        />
       </div>
 
       <app-group-by-settings
@@ -51,6 +57,7 @@
         :daysCount="daysInRange"
         :agreements="agreements"
         :selectedGroups="selectedGroups"
+        :showOutsourceCosts="showOutsourceCosts"
       />
       <v-divider />
       <app-orders-table
@@ -70,6 +77,7 @@ import AppGroupBySettings from './groupBySettings.vue'
 import AppPivotTable from './pivotTable.vue'
 import AppOrdersTable from './ordersTable.vue'
 import AppFilters from './filters.vue'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 
 export default {
   name: 'GrossProfitReport',
@@ -81,6 +89,10 @@ export default {
     AppOrdersTable,
   },
   setup() {
+    const showOutsourceCosts = usePersistedRef(
+      false,
+      'grossProfitPivot:showOutsourceCosts'
+    )
     const {
       settings,
       groupItems,
@@ -98,6 +110,7 @@ export default {
     } = useReportSettings()
 
     return {
+      showOutsourceCosts,
       settings,
       groupItems,
       mainFilters,
