@@ -75,6 +75,7 @@
         />
       </div>
       <AutoCompleteWithActions
+        auto-select-first
         :value="state.address"
         :items="addressItems"
         :pointType="!state.isReturn ? state.type : null"
