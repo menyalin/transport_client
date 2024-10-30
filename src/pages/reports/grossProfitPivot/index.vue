@@ -17,7 +17,7 @@
         />
         <v-checkbox
           v-model="showOutsourceCosts"
-          label="Стоимость с учетом наемников"
+          label="Наемники"
           hide-details
           class="ml-3"
         />
@@ -58,6 +58,7 @@
         :agreements="agreements"
         :selectedGroups="selectedGroups"
         :showOutsourceCosts="showOutsourceCosts"
+        :priceWithVat="usePriceWithVat"
       />
       <v-divider />
       <app-orders-table
