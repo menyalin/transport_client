@@ -27,10 +27,12 @@ export default {
   },
   setup(props) {
     const totalWOVat = computed(() => {
+      if (!props.data?.total?.woVat) return 0
       return moneyFormatter(props.data.total.woVat, 0)
     })
 
     const totalWithVat = computed(() => {
+      if (!props.data?.total?.withVat) return 0
       return moneyFormatter(props.data.total.withVat, 0)
     })
     return {
