@@ -3,9 +3,9 @@
     <v-row>
       <v-col>
         <div v-if="loading">Загружаю...</div>
-        <app-tkname-form
+        <CarrierForm
           v-else
-          :tkName="tkName"
+          :item="tkName"
           :displayDeleteBtn="$store.getters.hasPermission('tkName:delete')"
           @cancel="cancel"
           @submit="submit"
@@ -16,13 +16,13 @@
   </v-container>
 </template>
 <script>
-import AppTknameForm from '@/modules/profile/components/tkNameForm'
+import { CarrierForm } from '@/entities/carrier'
 import { TkNameService } from '@/shared/services'
 
 export default {
   name: 'TkNameDetails',
   components: {
-    AppTknameForm,
+    CarrierForm,
   },
   props: {
     id: {

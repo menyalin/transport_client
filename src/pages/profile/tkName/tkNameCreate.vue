@@ -2,18 +2,18 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-tkname-form :loading="loading" @submit="submit" @cancel="cancel" />
+        <CarrierForm :loading="loading" @submit="submit" @cancel="cancel" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
-import AppTknameForm from '@/modules/profile/components/tkNameForm'
+import { CarrierForm } from '@/entities/carrier'
 
 export default {
-  name: 'TkNameCreate',
+  name: 'CarrierCreatePage',
   components: {
-    AppTknameForm,
+    CarrierForm,
   },
   data() {
     return {
