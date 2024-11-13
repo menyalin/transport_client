@@ -1,19 +1,30 @@
 import { ref, watch, computed } from 'vue'
 import store from '@/store'
 import router from '@/router'
-import { PaymentInvoiceService } from '@/shared/services'
-import { usePersistedRef } from '@/shared/hooks'
+import { IncomingInvoiceService } from '@/shared/services'
 import dayjs from 'dayjs'
+import { usePersistedRef } from '@/shared/hooks'
 
 export const useListData = () => {
+  const headers = ref([])
   function initialPeriod() {
     const startDate = dayjs().startOf('month').toISOString()
     const endDate = dayjs().endOf('month').toISOString()
     return [startDate, endDate]
   }
-  const initialState = { agreements: [], statuses: [], period: initialPeriod() }
-  const settings = usePersistedRef(initialState, 'paymentInvoice_list_settings')
-  const listOptions = usePersistedRef({}, 'paymentInvoice_list_options')
+
+  const initialState = {
+    agreements: [],
+    statuses: [],
+    period: initialPeriod(),
+    number: null,
+  }
+
+  const settings = usePersistedRef(
+    initialState,
+    'incomingInvoice_list_settings'
+  )
+  const listOptions = usePersistedRef({}, 'incomingInvoice_list_options')
 
   const items = ref([])
   const totalCount = ref(0)
@@ -24,14 +35,6 @@ export const useListData = () => {
   })
 
   const loading = ref(false)
-
-  async function refresh() {
-    await getData()
-  }
-
-  function create() {
-    router.push('/accounting/paymentInvoice/create')
-  }
 
   const queryParams = computed(() => ({
     period: settings.value?.period,
@@ -48,7 +51,7 @@ export const useListData = () => {
   async function getData() {
     try {
       loading.value = true
-      const data = await PaymentInvoiceService.getList(queryParams.value)
+      const data = await IncomingInvoiceService.getList(queryParams.value)
       items.value = data.items
       totalCount.value = data.count
       routesCount.value = data.routesCount
@@ -59,22 +62,20 @@ export const useListData = () => {
       store.commit('setError', e.message)
     }
   }
+  async function refresh() {
+    await getData()
+  }
 
+  function create() {
+    router.push('/accounting/incomingInvoice/create')
+  }
   function onDeleteHandler(itemId) {
     items.value = items.value.filter((i) => i._id !== itemId)
   }
 
-  async function downloadHandler() {
-    try {
-      loading.value = true
-      await PaymentInvoiceService.getPaymentInvocesListFile(queryParams.value)
-      loading.value = false
-    } catch (e) {
-      loading.value = false
-      store.commit('setError', e.message)
-    }
+  function changeHeaders(val) {
+    headers.value = val
   }
-
   watch(
     settings,
     () => {
@@ -102,6 +103,7 @@ export const useListData = () => {
     onDeleteHandler,
     totalCount,
     routesCount,
-    downloadHandler,
+    changeHeaders,
+    headers,
   }
 }

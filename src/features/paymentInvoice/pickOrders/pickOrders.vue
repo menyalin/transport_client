@@ -142,7 +142,6 @@ export default {
       clientName,
       client,
       addOrderToInvoice,
-
       editableOrderId,
       openDocsDialog,
       docDialog,

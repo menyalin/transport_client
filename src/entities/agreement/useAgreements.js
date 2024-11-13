@@ -29,6 +29,9 @@ export const useAgreements = () => {
     allAgreements,
     allAgreementMap,
     allClientAgreements,
+    allCarrierAgreements: computed(() => {
+      return allAgreements.value.filter((i) => i.isOutsourceAgreement)
+    }),
     loading,
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <v-select
     :value="roles"
-    :items="$store.getters.staffRoles"
+    :items="allRoles"
     multiple
     label="Роли пользователя"
     outlined
@@ -10,6 +10,7 @@
   />
 </template>
 <script>
+import { computed, getCurrentInstance } from 'vue'
 export default {
   name: 'StaffRolesSelect',
   model: {
@@ -25,12 +26,18 @@ export default {
       default: true,
     },
   },
-  setup(_props, ctx) {
+  setup(props, ctx) {
+    const { proxy } = getCurrentInstance()
+    console.log('props: ', props)
     function changeHandler(val) {
       ctx.emit('change', val)
     }
+    const allRoles = computed(() => {
+      return proxy.$store.getters.staffRoles
+    })
     return {
       changeHandler,
+      allRoles,
     }
   },
 }
