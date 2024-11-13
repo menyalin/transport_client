@@ -33,13 +33,7 @@ export default {
         onlyWithDirectoriesProfile: true,
         permission: 'agreement:readList',
       },
-      // {
-      //   text: 'К УДАЛЕНИЮ! - Документы',
-      //   icon: 'mdi-file-document-multiple',
-      //   link: '/accounting/documents',
-      //   onlyWithDirectoriesProfile: true,
-      //   permission: 'document:readList',
-      // },
+
       {
         text: 'Тарифные контракты',
         icon: 'mdi-file-document-multiple',
@@ -52,31 +46,36 @@ export default {
         icon: 'mdi-list-box ',
         link: '/accounting/paymentInvoice',
         onlyWithDirectoriesProfile: true,
+        permission: 'paymentInvoice:readList',
       },
+
       {
         text: 'Описи документов',
         icon: 'mdi-list-box ',
         link: '/accounting/docsRegistry',
         onlyWithDirectoriesProfile: true,
+        permission: 'docsRegistry:readList',
       },
       {
         text: 'ЗП Водителей',
         icon: 'mdi-cash ',
         link: '/accounting/driversSalary',
         onlyWithDirectoriesProfile: true,
+        permission: 'salaryTariff:readList',
       },
-      // {
-      //   text: 'К УДАЛЕНИЮ! - Тарифы клиентов',
-      //   icon: 'mdi-cash-multiple',
-      //   link: '/accounting/tariffs',
-      //   onlyWithDirectoriesProfile: true,
-      //   permission: 'tariff:readList',
-      // },
       {
         text: 'Зарплатные тарифы',
         icon: 'mdi-cash ',
         link: '/accounting/salaryTariffs',
         onlyWithDirectoriesProfile: true,
+        permission: 'salaryTariff:readList',
+      },
+      {
+        text: 'wip_incoming_invoices',
+        icon: 'mdi-list-box ',
+        link: '/accounting/incomingInvoice',
+        onlyWithDirectoriesProfile: true,
+        permission: 'incomingInvoice:readList',
       },
     ],
   }),

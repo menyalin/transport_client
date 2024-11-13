@@ -34,6 +34,7 @@
     <order-doc-status-selector
       v-model="settings.docStatuses"
       multiple
+      label="Документы"
       dense
       hide-details
       outlined

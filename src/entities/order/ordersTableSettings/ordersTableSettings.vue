@@ -42,6 +42,7 @@
       v-model="settings.docStatuses"
       multiple
       dense
+      label="Документы"
       hide-details
       outlined
       clearable
