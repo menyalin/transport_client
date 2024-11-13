@@ -11,6 +11,13 @@
           {{ errorMessage }}
         </v-alert>
         <load-spinner v-if="loading" />
+        <v-alert
+          type="error"
+          v-if="itemIsMissing"
+          transition="scale-transition"
+        >
+          Запись не найдена
+        </v-alert>
         <slot v-else />
         <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
           <v-icon left dark> mdi-delete </v-icon>
@@ -30,6 +37,10 @@ export default {
     LoadSpinner,
   },
   props: {
+    itemIsMissing: {
+      type: Boolean,
+      default: false,
+    },
     showError: Boolean,
     errorMessage: Boolean,
     loading: {

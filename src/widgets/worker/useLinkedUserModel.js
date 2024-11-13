@@ -32,7 +32,7 @@ export const useLinkedUserModel = (props, ctx) => {
 
   const isRolesNotChanged = computed(() => {
     return (
-      props.worker.roles.length === roles.value.length &&
+      props.worker.roles?.length === roles.value?.length &&
       roles.value.every((item) => props.worker.roles.includes(item))
     )
   })
@@ -44,7 +44,7 @@ export const useLinkedUserModel = (props, ctx) => {
   async function sendInviteHandler() {
     const workerId = props.worker._id
     const userId = candidate.value._id
-    if (!workerId || !userId || roles.value.length === 0) {
+    if (!workerId || !userId || roles.value?.length === 0) {
       store.commit('setError', 'required params is missing!')
       return
     }
@@ -65,7 +65,7 @@ export const useLinkedUserModel = (props, ctx) => {
   async function resendInviteHandler() {
     const workerId = props.worker._id
     const userId = props.worker.user._id
-    if (!workerId || !userId || roles.value.length === 0) {
+    if (!workerId || !userId || roles.value?.length === 0) {
       store.commit('setError', 'required params is missing!')
       return
     }
@@ -89,7 +89,7 @@ export const useLinkedUserModel = (props, ctx) => {
       store.commit('setError', 'Нарушение прав доступа!')
       return null
     }
-    if (roles.value.length === 0 || !props.worker._id) return null
+    if (roles.value?.length === 0 || !props.worker._id) return null
     try {
       loading.value = true
       const updatedWorker = await WorkerService.updateOne(props.worker._id, {
@@ -121,11 +121,11 @@ export const useLinkedUserModel = (props, ctx) => {
   }
 
   watch(
-    props.worker,
+    () => props.worker,
     (worker) => {
       roles.value = worker.roles
     },
-    { immediate: true }
+    { immediate: true, deep: true }
   )
 
   return {

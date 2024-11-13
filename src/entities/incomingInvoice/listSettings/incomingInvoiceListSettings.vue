@@ -1,7 +1,7 @@
 <template>
   <div class="settings-wrapper">
     <app-table-column-setting
-      :allHeaders="PAYMENT_INVOICE_TABLE_HEADERS"
+      :allHeaders="allHeaders"
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
@@ -48,16 +48,13 @@
     />
   </div>
 </template>
-
 <script>
-import store from '@/store'
-import { computed, ref, onMounted } from 'vue'
+import { computed } from 'vue'
+import { incomingInvoiceStatuses } from '../config.js'
+import allHeaders from './allHeaders.js'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
-import { AgreementService } from '@/shared/services/index'
-
 export default {
-  name: 'PymentInvoiceListSettingsWidget',
+  name: 'IncomingInvoiceListSettings',
   components: { AppTableColumnSetting, DateRangeInput },
   model: {
     prop: 'settings',
@@ -65,18 +62,11 @@ export default {
   },
   props: {
     settings: Object,
+    agreementItems: Array,
   },
-
   setup(props, ctx) {
-    const agreements = ref([])
-    const agreementItems = computed(() =>
-      agreements.value
-        .filter((i) => i.isOutsourceAgreement !== true)
-        .sort((a, b) => (a.name < b.name ? -1 : 1))
-    )
-
     const statusItems = computed(() => {
-      return store.getters.docsRegistryStatuses
+      return incomingInvoiceStatuses
     })
 
     function updateSettings(value, field) {
@@ -86,17 +76,11 @@ export default {
     function updateHeadersHandler(val) {
       ctx.emit('updateHeaders', val)
     }
-
-    onMounted(async () => {
-      agreements.value = await AgreementService.getActiveAgreements()
-    })
-
     return {
-      agreementItems,
       statusItems,
       updateHeadersHandler,
       updateSettings,
-      PAYMENT_INVOICE_TABLE_HEADERS,
+      allHeaders,
     }
   },
 }

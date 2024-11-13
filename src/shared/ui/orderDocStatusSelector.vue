@@ -1,13 +1,8 @@
 <template>
   <v-select
+    v-bind="$attrs"
     :value="value"
-    :label="label"
-    :multiple="multiple"
     :items="items"
-    :dense="dense"
-    :hideDetails="hideDetails"
-    :outlined="outlined"
-    :clearable="clearable"
     @change="changeHandler"
   />
 </template>
@@ -24,18 +19,6 @@ export default {
     value: {
       type: Array || String,
     },
-    label: {
-      type: String,
-      default: 'Документы',
-    },
-    multiple: {
-      type: Boolean,
-      default: false,
-    },
-    dense: Boolean,
-    hideDetails: Boolean,
-    outlined: Boolean,
-    clearable: Boolean,
   },
   setup(_props, ctx) {
     const items = ref(ORDER_DOC_STATUSES)
