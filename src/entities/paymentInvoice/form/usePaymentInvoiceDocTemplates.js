@@ -1,4 +1,4 @@
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import store from '@/store/index'
 import { DocTemplateService } from '@/shared/services'
 import { PaymentInvoiceService } from '@/shared/services'
@@ -44,12 +44,14 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
       type: 'paymentInvoice',
     })
   }
-
-  onMounted(async () => {
-    await getAllowedPrintForms()
-  })
-
-  watch(formState, getTemplates)
+  watch(
+    () => formState,
+    async () => {
+      await getTemplates()
+      await getAllowedPrintForms()
+    },
+    { deep: true }
+  )
   return {
     docTemplates,
     newDocTemplates,
