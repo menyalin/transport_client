@@ -19,7 +19,7 @@
       dense
     />
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
-
+    <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
     <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
       <v-icon left dark> mdi-delete </v-icon>
@@ -30,12 +30,14 @@
 <script>
 import { ButtonsPanel, BankAccountInfoForm } from '@/shared/ui'
 import { useForm } from './useForm'
+import { CompanyInfoForm } from '@/shared/ui'
 
 export default {
   name: 'CarrierForm',
   components: {
     ButtonsPanel,
     BankAccountInfoForm,
+    CompanyInfoForm,
   },
   props: {
     loading: Boolean,

@@ -1,22 +1,16 @@
 <template>
   <div class="wrapper">
-    <div class="text-h6">Банковские реквизиты:</div>
-    <v-text-field label="Расчетный счет" v-model="state.accountNumber" dense />
-    <v-text-field label="Банк" v-model="state.bankName" dense />
-    <v-text-field label="БИК" v-model="state.bankCode" dense />
-    <v-text-field
-      label="Корр.счет"
-      v-model="state.correspondentAccount"
-      dense
-    />
+    <div class="text-h6">Общая информация о компании:</div>
+    <v-select label="Тип" :items="legalFormItems" v />
   </div>
 </template>
 <script>
+import { LEGAL_ENTITY_TYPES } from '@/shared/constants/legalEntityTypes'
 import { useVuelidate } from '@vuelidate/core'
 import { computed, ref, watch } from 'vue'
 
 export default {
-  name: 'BankAccountInfoForm',
+  name: 'CompanyInfoForm',
   model: {
     prop: 'value',
     event: 'change',
@@ -26,20 +20,34 @@ export default {
       type: Object,
     },
   },
+
   setup(props, ctx) {
+    /*
+
+  director?: Director
+  signatory?: Signatory
+*/
     const initialState = () => ({
-      accountNumber: '',
-      bankName: '',
-      bankCode: '',
-      correspondentAccount: '',
+      legalForm: null,
+      fullName: null,
+      postalAddress: null,
+      legalAddress: null,
+      inn: null,
+      ogrn: null,
+      ogrnip: null,
+      kpp: null,
     })
     const state = ref(props.value || initialState())
     const rules = computed(() => {
       return {
-        bankName: {},
-        accountNumber: {},
-        bankCode: {},
-        correspondentAccount: {},
+        legalForm: {},
+        fullName: {},
+        postalAddress: {},
+        legalAddress: {},
+        inn: {},
+        ogrn: {},
+        ogrnip: {},
+        kpp: {},
       }
     })
     const v$ = useVuelidate(rules, state)
@@ -50,7 +58,7 @@ export default {
       { deep: true }
     )
     watch(state.value, (val) => ctx.emit('change', val))
-    return { v$, state }
+    return { v$, state, legalFormItems: LEGAL_ENTITY_TYPES }
   },
 }
 </script>

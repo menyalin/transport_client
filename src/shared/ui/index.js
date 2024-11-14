@@ -16,6 +16,8 @@ import RefreshBtn from './refreshBtn.vue'
 import OrderDocStatusSelector from './orderDocStatusSelector.vue'
 import AutoCompleteWithActions from './AutoCompleteWithActions.vue'
 import BankAccountInfoForm from './bankAccountInfo/bankAccountInfoForm.vue'
+import CompanyInfoForm from './companyInfo/companyInfoForm.vue'
+
 export {
   AppTableColumnSetting,
   ButtonsPanel,
@@ -35,4 +37,5 @@ export {
   OrderDocStatusSelector,
   AutoCompleteWithActions,
   BankAccountInfoForm,
+  CompanyInfoForm,
 }
