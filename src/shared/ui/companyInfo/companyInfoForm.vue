@@ -12,25 +12,67 @@
     <v-text-field label="Почтовый адрес" v-model="state.postalAddress" dense />
     <v-text-field label="Юр. адрес" v-model="state.legalAddress" dense />
     <v-text-field label="ИНН" v-model="state.inn" dense />
-    <v-text-field label="ОГРН" v-model="state.ogrn" dense />
-    <v-text-field label="ОГРНИП" v-model="state.ogrnip" dense />
-    <v-text-field label="КПП" v-model="state.kpp" dense />
-
     <v-text-field
-      v-if="directorPosition"
-      :label="directorPosition"
-      v-model="state.director.name"
+      v-if="state.legalForm === 'legalEntity'"
+      label="ОГРН"
+      v-model="state.ogrn"
       dense
     />
+    <v-text-field
+      v-if="state.legalForm === 'soleProprietor'"
+      label="ОГРНИП"
+      v-model="state.ogrnip"
+      dense
+    />
+    <v-text-field label="КПП" v-model="state.kpp" dense />
+    <div class="director-wrapper">
+      <v-text-field
+        v-if="directorPosition"
+        :label="directorPosition"
+        v-model="state.director.name"
+        hide-details
+        dense
+      />
+      <v-checkbox
+        v-model="state.director.isMainSignatory"
+        color="primary"
+        label="Основной подписант"
+        dense
+        hide-details
+        @change="isMainSignatoryChangedHandler"
+      />
+    </div>
+    <div v-if="showSignatory" class="signatory-wrapper">
+      <div class="text-subtitle-2 pb-3">Подписант:</div>
+      <v-text-field
+        label="Должность"
+        v-model="state.signatory.position"
+        dense
+      />
+      <v-text-field label="ФИО" v-model="state.signatory.fullName" dense />
+      <v-text-field
+        label="Номер доверенности"
+        v-model="state.signatory.number"
+        dense
+      />
+      <DateTimeInput
+        type="date"
+        label="Дата доверенности"
+        v-model="state.signatory.date"
+        dense
+      />
+    </div>
   </div>
 </template>
 <script>
 import { LEGAL_ENTITY_TYPES } from '@/shared/constants/legalEntityTypes'
 import { useVuelidate } from '@vuelidate/core'
 import { computed, ref, watch } from 'vue'
+import { DateTimeInput } from '@/shared/ui'
 
 export default {
   name: 'CompanyInfoForm',
+  components: { DateTimeInput },
   model: {
     prop: 'value',
     event: 'change',
@@ -42,11 +84,12 @@ export default {
   },
 
   setup(props, ctx) {
-    /*
-
-  director?: Director
-  signatory?: Signatory
-*/
+    const defaultSignatoryState = () => ({
+      position: null,
+      fullName: null,
+      number: null,
+      date: null,
+    })
     const initialState = () => ({
       legalForm: null,
       fullName: null,
@@ -57,11 +100,18 @@ export default {
       ogrnip: null,
       kpp: null,
       director: {
+        isMainSignatory: true,
         position: null,
         name: null,
       },
+      signatory: defaultSignatoryState(),
     })
-    const state = ref(props.value || initialState())
+    const state = ref(
+      {
+        signatory: defaultSignatoryState(),
+        ...props.value,
+      } || initialState()
+    )
     const rules = computed(() => {
       return {
         legalForm: {},
@@ -73,18 +123,19 @@ export default {
         ogrnip: {},
         kpp: {},
         director: {
+          isMainSignatory: {},
           position: {},
           name: {},
+        },
+        signatory: {
+          position: {},
+          fullName: {},
+          number: {},
+          date: {},
         },
       }
     })
     const v$ = useVuelidate(rules, state)
-
-    /*
-  { value: 'legalEntity', text: 'Юр.лицо' },
-  { value: 'soleProprietor', text: 'ИП' },
-  { value: 'privatePerson', text: 'Частное лицо' },
-    */
 
     const directorPosition = computed(() => {
       if (state.value.legalForm === 'legalEntity') return 'Генеральный директор'
@@ -93,6 +144,20 @@ export default {
       else if (state.value.legalForm === 'privatePerson') return 'Частное лицо'
       else return null
     })
+
+    const showSignatory = computed(() => {
+      if (
+        !!state.value.legalForm &&
+        state.value.director.isMainSignatory === false
+      )
+        return true
+      else return false
+    })
+
+    function isMainSignatoryChangedHandler(val) {
+      if (!val && !state.value.signatory?.position)
+        state.value = { ...state.value, signatory: defaultSignatoryState() }
+    }
 
     watch(
       () => props.value,
@@ -115,6 +180,8 @@ export default {
       state,
       legalFormItems: LEGAL_ENTITY_TYPES,
       directorPosition,
+      showSignatory,
+      isMainSignatoryChangedHandler,
     }
   },
 }
@@ -125,6 +192,13 @@ export default {
   flex-direction: column;
   gap: 15px;
   padding: 20px;
+  max-width: 700px;
+}
+.signatory-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px;
   max-width: 700px;
 }
 </style>
