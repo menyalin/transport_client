@@ -17,6 +17,7 @@ import OrderDocStatusSelector from './orderDocStatusSelector.vue'
 import AutoCompleteWithActions from './AutoCompleteWithActions.vue'
 import BankAccountInfoForm from './bankAccountInfo/bankAccountInfoForm.vue'
 import CompanyInfoForm from './companyInfo/companyInfoForm.vue'
+import ContactsInfo from './contactsInfo/contactsInfo.vue'
 
 export {
   AppTableColumnSetting,
@@ -38,4 +39,5 @@ export {
   AutoCompleteWithActions,
   BankAccountInfoForm,
   CompanyInfoForm,
+  ContactsInfo,
 }

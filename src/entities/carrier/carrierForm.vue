@@ -11,26 +11,31 @@
       @submit="submitHandler"
     />
 
-    <v-text-field
-      v-model.trim="state.name"
-      :error-messages="nameErrors"
-      outlined
-      label="Название ТК"
-      dense
-    />
+    <v-text-field v-model="state.name" outlined label="Название ТК" dense />
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
-    <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
+    <!-- <ContactsInfo v-model="state.contacts" /> -->
+
+    <v-btn
+      v-if="displayDeleteBtn"
+      color="error"
+      @click="deleteHandler"
+      class="mt-5"
+    >
       <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
 <script>
-import { ButtonsPanel, BankAccountInfoForm } from '@/shared/ui'
 import { useForm } from './useForm'
-import { CompanyInfoForm } from '@/shared/ui'
+import {
+  ButtonsPanel,
+  BankAccountInfoForm,
+  CompanyInfoForm,
+  ContactsInfo,
+} from '@/shared/ui'
 
 export default {
   name: 'CarrierForm',
@@ -38,6 +43,7 @@ export default {
     ButtonsPanel,
     BankAccountInfoForm,
     CompanyInfoForm,
+    ContactsInfo,
   },
   props: {
     loading: Boolean,
@@ -56,7 +62,7 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      nameErrors,
+      // nameErrors,
     } = useForm(props, ctx)
 
     return {
@@ -65,7 +71,7 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      nameErrors,
+      // nameErrors,
     }
   },
 }
