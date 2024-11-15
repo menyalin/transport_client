@@ -25,7 +25,7 @@
       dense
     />
     <v-text-field label="КПП" v-model="state.kpp" dense />
-    <div v-if="directorPosition" class="director-wrapper">
+    <div v-if="directorPosition && !!state.director" class="director-wrapper">
       <v-text-field
         :label="directorPosition"
         v-model="state.director.name"
