@@ -25,9 +25,8 @@
       dense
     />
     <v-text-field label="КПП" v-model="state.kpp" dense />
-    <div class="director-wrapper">
+    <div v-if="directorPosition && !!state.director" class="director-wrapper">
       <v-text-field
-        v-if="directorPosition"
         :label="directorPosition"
         v-model="state.director.name"
         hide-details
@@ -90,6 +89,11 @@ export default {
       number: null,
       date: null,
     })
+    const directorDefaultState = () => ({
+      isMainSignatory: true,
+      position: null,
+      name: null,
+    })
     const initialState = () => ({
       legalForm: null,
       fullName: null,
@@ -99,15 +103,12 @@ export default {
       ogrn: null,
       ogrnip: null,
       kpp: null,
-      director: {
-        isMainSignatory: true,
-        position: null,
-        name: null,
-      },
+      director: directorDefaultState(),
       signatory: defaultSignatoryState(),
     })
     const state = ref(
       {
+        director: directorDefaultState(),
         signatory: defaultSignatoryState(),
         ...props.value,
       } || initialState()

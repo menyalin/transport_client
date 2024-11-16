@@ -1,4 +1,4 @@
-import TkNameCreate from '@/pages/profile/tkName/tkNameCreate'
+import TkNameCreate from '@/pages/profile/tkName/create'
 import TkNameList from '@/pages/profile/tkName/tkNameList'
 import TkNameDetails from '@/pages/profile/tkName/tkNameDetails'
 
