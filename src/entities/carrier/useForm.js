@@ -58,7 +58,6 @@ export const useForm = (props, ctx) => {
   watch(
     () => props.item,
     (value) => {
-      console.log('watch ', value)
       if (!value) return
       state.value = getState(value)
     },

@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 export const useForm = (props, ctx) => {
   const initialState = () => ({
@@ -28,7 +28,17 @@ export const useForm = (props, ctx) => {
   }
 
   function submitHandler() {
-    if (!invalidForm.value) ctx.emit('submit')
+    if (!invalidForm.value) ctx.emit('submit', { ...state.value })
+    state.value = initialState()
   }
+
+  watch(
+    () => props.item,
+    (val) => {
+      state.value = val || initialState()
+    },
+    { immediate: true }
+  )
+
   return { state, invalidForm, cancelHandler, submitHandler }
 }

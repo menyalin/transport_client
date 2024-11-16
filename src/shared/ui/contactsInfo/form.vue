@@ -2,12 +2,11 @@
   <v-card>
     <v-card-title>Новый контакт</v-card-title>
     <v-card-text class="form-wrapper">
-      <v-text-field label="ФИО" />
-      <v-text-field label="Должность" />
-      <v-text-field label="Телефон" />
-      <v-text-field label="email" />
-
-      <v-textarea label="Примечание" auto-grow />
+      <v-text-field label="ФИО" v-model="state.name" />
+      <v-text-field label="Должность" v-model="state.position" />
+      <v-text-field label="Телефон" v-model="state.phone" />
+      <v-text-field label="email" v-model="state.email" />
+      <v-textarea label="Примечание" auto-grow v-model="state.note" />
     </v-card-text>
     <v-card-actions>
       <v-spacer />
@@ -28,7 +27,6 @@ export default {
       props,
       ctx
     )
-
     return {
       state,
       invalidForm,

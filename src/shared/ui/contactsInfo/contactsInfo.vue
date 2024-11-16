@@ -7,10 +7,15 @@
       v-for="(item, idx) of items"
       :item="item"
       :key="idx"
+      @edit="editHandler(idx)"
       @remove="removeItem(idx)"
     />
     <v-dialog max-width="800" persistent v-model="dialog">
-      <ContactForm @cancel="dialog = false" @submit="dialog = false" />
+      <ContactForm
+        :item="editedItem"
+        @cancel="cancelHandler"
+        @submit="submitHandler"
+      />
     </v-dialog>
   </div>
 </template>
@@ -34,6 +39,7 @@ export default {
   },
   setup(props, ctx) {
     const dialog = ref(false)
+    const editedItem = ref(null)
     const emptyContacts = computed(
       () => !props.items || props.items?.length === 0
     )
@@ -44,8 +50,27 @@ export default {
       emitChange(props.items.filter((i, index) => index !== idx))
     }
 
+    function editHandler(idx) {
+      editedItem.value = { ...props.items[idx] }
+      dialog.value = true
+    }
+
     function emitChange(value) {
       ctx.emit('change', value)
+    }
+
+    function cancelHandler() {
+      dialog.value = false
+      editedItem.value = null
+    }
+    
+    function submitHandler(formState) {
+      const tmpItems = [...(props.items || [])]
+      if (editedItem.value) tmpItems.splice(editedItem.value.idx, 1, formState)
+      else tmpItems.push(formState)
+      emitChange(tmpItems)
+      dialog.value = false
+      editedItem.value = null
     }
 
     return {
@@ -53,6 +78,10 @@ export default {
       removeItem,
       addItem,
       dialog,
+      cancelHandler,
+      submitHandler,
+      editHandler,
+      editedItem,
     }
   },
 }
