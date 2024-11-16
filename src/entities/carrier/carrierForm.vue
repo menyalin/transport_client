@@ -15,7 +15,7 @@
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
-    <!-- <ContactsInfo v-model="state.contacts" /> -->
+    <ContactsInfo v-model="state.contacts" />
 
     <v-btn
       v-if="displayDeleteBtn"
