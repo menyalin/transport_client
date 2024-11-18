@@ -28,16 +28,12 @@
       }}
     </template>
 
-    <template #[`item.total.priceWOVat`]="{ item }">
-      {{ moneyFormatter(item.total.priceWOVat) }}
+    <template #[`item.priceWOVat`]="{ item }">
+      {{ moneyFormatter(item.priceWOVat) }}
     </template>
 
-    <template #[`item.vatSum`]="{ item }">
-      {{ moneyFormatter(item.total.price - item.total.priceWOVat) }}
-    </template>
-
-    <template #[`item.total.price`]="{ item }">
-      {{ moneyFormatter(item.total.price) }}
+    <template #[`item.priceWithVat`]="{ item }">
+      {{ moneyFormatter(item.priceWithVat) }}
     </template>
 
     <template #[`item.note`]="{ item }">

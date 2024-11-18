@@ -8,7 +8,6 @@
       @submit="submitHandler"
       @save="saveHandler"
     />
-    {{ state }}
     <div id="form">
       <div class="fields-row">
         <v-text-field
@@ -18,14 +17,13 @@
           outlined
           :style="{ maxWidth: '250px' }"
         />
-        <v-text-field
+        <DateTimeInput
           label="Дата"
           v-model="state.date"
           dense
           outlined
           type="date"
           :style="{ maxWidth: '250px' }"
-          @paste="pasteDate"
         />
         <v-select
           label="Статус"
@@ -45,19 +43,19 @@
           item-text="name"
           clearable
           outlined
+          :disabled="disabledAgreements"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
         />
       </div>
       <div class="fields-row">
-        <v-text-field
+        <DateTimeInput
           label="Плановая дата оплаты"
           v-model="state.plannedPayDate"
           dense
           outlined
           type="date"
           :style="{ maxWidth: '250px' }"
-          @paste="pasteDate"
         />
       </div>
 
@@ -68,10 +66,20 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="disabledPickOrders || needSave || invalidForm"
+        :disabled="
+          disabledPickOrders ||
+          needSave ||
+          invalidForm ||
+          !allowedToChangeOrders
+        "
       >
         Подобрать рейсы
       </v-btn>
+      <OrdersTable
+        :invoiceId="item._id"
+        :allowDeleteOrders="allowedToChangeOrders"
+        class="ma-3"
+      />
       <v-text-field
         v-model="state.note"
         label="Примечание"
@@ -86,14 +94,22 @@
 <script>
 import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
+import OrdersTable from './ordersTable/ordersTable.vue'
 import { useForm } from './useForm.js'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
-import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
+
+import {
+  ButtonsPanel,
+  DownloadDocTemplateMenu,
+  DateTimeInput,
+} from '@/shared/ui'
+
 export default {
   name: 'IncomingInvoiceForm',
   components: {
+    DateTimeInput,
     ButtonsPanel,
     DownloadDocTemplateMenu,
+    OrdersTable,
   },
   props: {
     disabledPickOrders: Boolean,
@@ -102,10 +118,10 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const { pasteDate } = usePasteDateInput()
-
     const needSave = computed(() => false) // TODO: fix it
-
+    const disabledAgreements = computed(() => {
+      return props.item?.orders?.length > 0
+    })
     function pickOrdersHandler() {
       ctx.emit('pickOrders')
     }
@@ -118,6 +134,7 @@ export default {
       saveHandler,
       statusItems,
       invalidForm,
+      allowedToChangeOrders,
     } = useForm(props, ctx)
     return {
       state,
@@ -126,11 +143,12 @@ export default {
       cancelHandler,
       saveHandler,
       statusItems,
-      pasteDate,
       invalidForm,
       incomingInvoiceStatuses,
       needSave,
       pickOrdersHandler,
+      allowedToChangeOrders,
+      disabledAgreements,
     }
   },
 }

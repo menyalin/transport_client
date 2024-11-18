@@ -3,18 +3,6 @@ import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import router from '@/router'
 import store from '@/store/index'
-import dayjs from 'dayjs'
-/*
-  company: string
-  number: string
-  date: Date
-  plannedPayDate: Date | null
-  agreement: string
-  status: string
-  isActive: boolean
-  note?: string
-  orders: IncomingInvoiceOrder[] = []
-*/
 
 export const useForm = (props, ctx) => {
   const initialState = ref({
@@ -40,16 +28,14 @@ export const useForm = (props, ctx) => {
   const formState = computed(() => {
     return {
       ...state.value,
-      date: new Date(state.value.date).toISOString(),
-      plannedPayDate: state.value.plannedPayDate
-        ? new Date(state.value.plannedPayDate).toISOString()
-        : null,
       company: store.getters.directoriesProfile,
     }
   })
 
   const invalidForm = computed(() => v$.value.$invalid)
-
+  const allowedToChangeOrders = computed(() => {
+    return state.value.status === 'preparing'
+  })
   function cancelHandler() {
     router.go(-1)
   }
@@ -71,10 +57,6 @@ export const useForm = (props, ctx) => {
   function setFormState(newState) {
     state.value = {
       ...newState,
-      date: dayjs(newState.date).format('YYYY-MM-DD'),
-      plannedPayDate: newState.plannedPayDate
-        ? dayjs(newState.plannedPayDate).format('YYYY-MM-DD')
-        : null,
     }
   }
   watch(
@@ -93,5 +75,6 @@ export const useForm = (props, ctx) => {
     saveHandler,
     statusItems,
     invalidForm,
+    allowedToChangeOrders,
   }
 }

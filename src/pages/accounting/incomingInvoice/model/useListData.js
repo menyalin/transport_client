@@ -28,11 +28,6 @@ export const useListData = () => {
 
   const items = ref([])
   const totalCount = ref(0)
-  const routesCount = ref(0)
-  const total = ref({
-    sum: 0,
-    sumWOVat: 0,
-  })
 
   const loading = ref(false)
 
@@ -54,8 +49,7 @@ export const useListData = () => {
       const data = await IncomingInvoiceService.getList(queryParams.value)
       items.value = data.items
       totalCount.value = data.count
-      routesCount.value = data.routesCount
-      total.value = data.total
+
       loading.value = false
     } catch (e) {
       loading.value = false
@@ -99,10 +93,8 @@ export const useListData = () => {
     listOptions,
     items,
     loading,
-    total,
     onDeleteHandler,
     totalCount,
-    routesCount,
     changeHeaders,
     headers,
   }
