@@ -21,6 +21,12 @@
           hide-details
           class="ml-3"
         />
+        <v-checkbox
+          v-model="withRound"
+          label="Округление"
+          hide-details
+          class="ml-3"
+        />
       </div>
 
       <app-group-by-settings
@@ -59,6 +65,7 @@
         :selectedGroups="selectedGroups"
         :showOutsourceCosts="showOutsourceCosts"
         :priceWithVat="usePriceWithVat"
+        :withRound="withRound"
       />
       <v-divider />
       <app-orders-table
@@ -108,6 +115,7 @@ export default {
       updateSelected,
       selectedGroups,
       getPivotData,
+      withRound,
     } = useReportSettings()
 
     return {
@@ -125,6 +133,7 @@ export default {
       updateSelected,
       selectedGroups,
       getPivotData,
+      withRound,
     }
   },
 }

@@ -25,12 +25,7 @@
         <th class="text-right">
           {{ totalAvg }}
         </th>
-        <!-- <th class="text-right">
-          {{ totalSumWithVat }}
-        </th>
-        <th class="text-right">
-          {{ totalAvgWithVat }}
-        </th> -->
+
         <template v-if="showOutsourceCosts">
           <th class="text-right">
             {{
@@ -88,8 +83,9 @@
   </v-data-table>
 </template>
 <script>
-import { useHistorySettings } from '@/shared/hooks'
+import { usePersistedRef } from '@/shared/hooks'
 import { usePivotTable } from './usePivotTable'
+
 export default {
   name: 'PivotTable',
   props: {
@@ -101,9 +97,10 @@ export default {
     selectedGroups: Array,
     priceWithVat: { type: Boolean, default: false },
     showOutsourceCosts: { type: Boolean, default: false },
+    withRound: { type: Boolean, default: true },
   },
   setup(props) {
-    const selected = useHistorySettings([], 'selected_items')
+    const selected = usePersistedRef([], 'selected_items')
     const {
       headers,
       totalAvgByDay,
@@ -123,26 +120,11 @@ export default {
     }
   },
 
-  computed: {
-    totalAvgByDayWOVat() {
-      const sum = this.pivotData.totalWOVat / 1000
-      if (isNaN(sum)) return null
-      if (!this.daysCount) return null
-      return Intl.NumberFormat().format(Math.round(sum / this.daysCount))
-    },
-
-    totalAvgWithVat() {},
-    totalAvgWOVat() {
-      const avg = this.pivotData.totalWOVat / this.pivotData.totalCount / 1000
-      if (isNaN(avg)) return null
-      return Intl.NumberFormat().format(Math.round(avg))
-    },
-  },
-
   methods: {
     prepareSum(sum) {
       if (isNaN(sum)) return null
-      return Intl.NumberFormat().format(Math.round(sum / 1000))
+      const roundBy = this.withRound ? 1000 : 1
+      return Intl.NumberFormat().format(Math.round(sum / roundBy))
     },
     selectHandler(val) {
       this.$emit(

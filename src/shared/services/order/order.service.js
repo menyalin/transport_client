@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+import FileSaver from 'file-saver'
 import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
 
 const BASE_PATH = '/orders'
@@ -100,6 +101,7 @@ class OrderService {
     let { data } = await api.post(BASE_PATH + '/get_distance', { coords })
     return data
   }
+
   getDirectDistance(coords) {
     return getMaxDistance(coords)
   }
@@ -114,6 +116,36 @@ class OrderService {
       state,
     })
     return data
+  }
+
+  async getAllowedPrintForms() {
+    const { data } = await api.get(BASE_PATH + '/allowed_print_forms')
+    return data
+  }
+
+  async downloadDoc(
+    id,
+    body,
+    // filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_order_contract'
+    filename = 'order'
+  ) {
+    try {
+      const { data } = await api({
+        url: BASE_PATH + '/' + id + '/download_doc',
+        method: 'POST',
+        responseType: 'blob',
+        data: body,
+      })
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      })
+
+      FileSaver.saveAs(blob, filename + '.docx')
+      return data || null
+    } catch (e) {
+      store.commit('setError', e.message)
+      return null
+    }
   }
 
   async autoFillOrderDates(params) {

@@ -23,7 +23,6 @@ const allHeaders = [
     value: 'tk',
     text: 'TK',
     sortable: false,
-    width: '9rem',
     default: true,
   },
 
