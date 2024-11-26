@@ -1,33 +1,35 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import store from '@/store'
 import { AgreementService, ReportService } from '@/shared/services'
-import { useHistorySettings } from '@/shared/hooks'
+
 import {
   ADDITIONAL_FILTER_LIST,
   MAIN_FILTER_LIST,
   GROUP_BY_ITEMS,
 } from './constants.js'
 import initDateRange from './initDateRange.js'
+import usePersistedRef from '@/shared/hooks/usePersistedRef.js'
 
 export const useReportSettings = () => {
-  const mainFilters = useHistorySettings(MAIN_FILTER_LIST, 'main_filters')
-  const selectedGroups = useHistorySettings([], 'selected_groups')
-  const additionalFilters = useHistorySettings(
+  const mainFilters = usePersistedRef(MAIN_FILTER_LIST, 'main_filters')
+  const selectedGroups = usePersistedRef([], 'selected_groups')
+  const additionalFilters = usePersistedRef(
     ADDITIONAL_FILTER_LIST,
-    'additional_filters'
+    'grossProfitPivot:additional_filters'
   )
-  const usePriceWithVat = useHistorySettings(false, 'usePriceWithVat')
+  const usePriceWithVat = usePersistedRef(false, 'usePriceWithVat')
+  const withRound = usePersistedRef(true, 'grossProfitPivot:withRound')
   const loading = ref(false)
 
   const agreements = ref([])
   const pivotData = ref({})
 
-  const settings = useHistorySettings(
+  const settings = usePersistedRef(
     {
       dateRange: initDateRange(),
       groupBy: 'client',
     },
-    'settings'
+    'grossProfitPivot:settings'
   )
 
   const daysInRange = computed(() => {
@@ -90,6 +92,7 @@ export const useReportSettings = () => {
 
   return {
     settings,
+    withRound,
     groupItems: GROUP_BY_ITEMS,
     mainFilters,
     additionalFilters,

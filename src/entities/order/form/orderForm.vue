@@ -11,6 +11,12 @@
             @submit="submit($event)"
             @save="submit($event, true)"
           >
+            <DownloadDocTemplateMenu
+              v-if="docTemplateIsVisible && false"
+              :templates="templates"
+              :disabledDownloadFiles="downloadDisabled"
+              @downloadTemplate="downloadTemplateHandler"
+            />
             <PaymentInvoiceLinks :items="form.paymentInvoices" />
           </buttons-panel>
           <div class="template-panel">
@@ -213,8 +219,8 @@
 </template>
 <script>
 import { OrderService, OrderTemplateService } from '@/shared/services'
-import { ButtonsPanel } from '@/shared/ui'
-import { OrderRoute } from '@/entities/order'
+import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
+
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
@@ -222,6 +228,7 @@ import AppAnalyticBlock from '@/entities/order/analyticBlock.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 import {
+  OrderRoute,
   DocsRegistryLink,
   OrderDocsListForm,
   OrderPaymentParts,
@@ -232,6 +239,7 @@ import {
   useOrderDocs,
   ClientBlock,
   useOrderValidations,
+  useOrderPrintForms,
   PriceBlock,
   PriceDialog,
 } from '@/entities/order'
@@ -241,6 +249,7 @@ import AppPaymentToDriver from './paymentToDriver.vue'
 export default {
   name: 'OrderForm',
   components: {
+    DownloadDocTemplateMenu,
     PaymentInvoiceLinks,
     ButtonsPanel,
     ReqTransport,
@@ -277,12 +286,23 @@ export default {
       },
     }
   },
-  setup() {
+  setup(props) {
+    const {
+      templates,
+      docTemplateIsVisible,
+      downloadTemplateHandler,
+      downloadDisabled,
+    } = useOrderPrintForms({ order: props.order })
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
     const { isValidPrices, isValidClientNum, isValidAuctionNum } =
       useOrderValidations()
 
     return {
+      templates,
+      docTemplateIsVisible,
+      downloadDisabled,
+      downloadTemplateHandler,
+
       isValidDocs,
       isReadonlyDocs,
       isShowDocs,

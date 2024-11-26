@@ -32,7 +32,15 @@ export default [
     default: true,
   },
   {
-    value: 'total.priceWOVat',
+    value: 'ordersCount',
+    text: 'Кол-во рейсов',
+    sortable: true,
+    default: false,
+    align: 'right',
+    width: '10rem',
+  },
+  {
+    value: 'priceWOVat',
     text: 'Сумма без НДС',
     sortable: true,
     default: true,
@@ -41,7 +49,7 @@ export default [
   },
 
   {
-    value: 'total.price',
+    value: 'priceWithVat',
     text: 'Сумма',
     sortable: true,
     default: false,

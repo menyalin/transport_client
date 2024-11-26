@@ -4,6 +4,7 @@ import router from '@/router'
 import store from '@/store'
 import socket from '@/socket'
 import { OrderService, PermissionService } from '@/shared/services'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 
 const _initPeriod = () => {
   const todayM = dayjs()
@@ -42,7 +43,10 @@ export const useListData = () => {
   }
 
   const loading = ref(false)
-  const settings = ref(historyState?.settings || initialState)
+  const settings = usePersistedRef(
+    historyState?.settings || initialState,
+    'ordersListSettings'
+  )
   const items = ref([])
   const statisticData = ref({
     count: 0,
@@ -56,18 +60,7 @@ export const useListData = () => {
     router.push('/orders/create')
   }
 
-  watch(
-    settings,
-    async () => {
-      window.history.pushState({ settings: settings.value }, '')
-      localStorage.setItem(
-        'orders:accontingMode',
-        settings.value.accountingMode ? 1 : 0
-      )
-      await getData()
-    },
-    { deep: true }
-  )
+  watch(settings, async () => await getData(), { deep: true })
 
   const queryParams = computed(() => ({
     clients: settings.value.clients,
@@ -116,10 +109,6 @@ export const useListData = () => {
   socket.on('order:updated', updateItems)
   onBeforeUnmount(() => {
     socket.off('order:updated', updateItems)
-  })
-
-  addEventListener('popstate', (e) => {
-    settings.value = e.state.settings
   })
 
   return {

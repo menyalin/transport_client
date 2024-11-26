@@ -21,6 +21,33 @@ class IncomingInvoiceService {
     return data
   }
 
+  async getInvoiceOrders(params) {
+    try {
+      const payloadSchema = z.object({
+        incomingInvoiceId: z.string(),
+        limit: z.number().optional().default(100),
+        skip: z.number().optional().default(0),
+        company: z.string().default(store.getters.directoriesProfile),
+      })
+      const parsedBody = payloadSchema.parse(params)
+
+      const { data } = await api.get(
+        BASE_PATH + '/orders/' + parsedBody.incomingInvoiceId,
+        {
+          params: {
+            limit: parsedBody.limit,
+            skip: parsedBody.skip,
+            company: parsedBody.company,
+          },
+        }
+      )
+      return data
+    } catch (e) {
+      store.commit('setError', e.message)
+      return null
+    }
+  }
+
   // async getPaymentInvocesListFile(params) {
   //   try {
   //     const { data } = await api({
@@ -97,21 +124,10 @@ class IncomingInvoiceService {
     }
   }
 
-  async deleteOrdersFromIncomingInvoice(params) {
-    if (!params.rowIds || params.rowIds.length === 0)
-      throw new Error(
-        'IncomingInvoiceService : deleteOrdersFromIncomingInvoice: _id is missing!'
-      )
-
-    if (!params.paymentInvoiceId)
-      throw new Error(
-        'IncomingInvoiceService : deleteOrdersFromIncomingInvoice : incomingInvoiceId is missing!'
-      )
-
-    const { data } = await api.post(
-      BASE_PATH + '/remove_orders_from_invoice',
-      params
-    )
+  async removeOrders(invoiceId, orderIds) {
+    let { data } = await api.delete(BASE_PATH + '/orders/' + invoiceId, {
+      data: { orderIds },
+    })
     return data
   }
 

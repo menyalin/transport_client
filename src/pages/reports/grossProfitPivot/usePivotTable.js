@@ -49,10 +49,11 @@ export const usePivotTable = (props) => {
     }
     return res
   })
-
+  const roundBy = computed(() => (props.withRound ? 1000 : 1))
   const totalAvgByDay = computed(() => {
     const sum =
-      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
+      roundBy.value
     if (isNaN(sum)) return null
     if (!props.daysCount) return null
     return Intl.NumberFormat().format(Math.round(sum / props.daysCount))
@@ -101,7 +102,8 @@ export const usePivotTable = (props) => {
 
   const totalSum = computed(() => {
     const sum =
-      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
+      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
+      roundBy.value
     if (isNaN(sum)) return null
     return Intl.NumberFormat().format(Math.round(sum))
   })
@@ -110,7 +112,7 @@ export const usePivotTable = (props) => {
     const avg =
       props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
       props.pivotData.totalCount /
-      1000
+      roundBy.value
     if (isNaN(avg)) return null
     return Intl.NumberFormat().format(Math.round(avg))
   })
@@ -135,32 +137,35 @@ export const usePivotTable = (props) => {
       titleColumn: setTitleColumn(i._id),
       count: i.totalCount,
       sum: Intl.NumberFormat().format(
-        Math.round(i[withVat ? 'totalWithVat' : 'totalWOVat'] / 1000)
+        Math.round(i[withVat ? 'totalWithVat' : 'totalWOVat'] / roundBy.value)
       ),
 
       avg: Intl.NumberFormat().format(
-        Math.round(i[withVat ? 'avgWithVat' : 'avgWOVat'] / 1000)
+        Math.round(i[withVat ? 'avgWithVat' : 'avgWOVat'] / roundBy.value)
       ),
 
       isSelectable: !!i._id,
       outsourceCosts: Intl.NumberFormat().format(
         Math.round(
-          i[withVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat'] / 1000
+          i[withVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat'] /
+            roundBy.value
         )
       ),
       totalProfit: Intl.NumberFormat().format(
         Math.round(
-          i[withVat ? 'totalProfitWithVat' : 'totalProfitWOVat'] / 1000
+          i[withVat ? 'totalProfitWithVat' : 'totalProfitWOVat'] / roundBy.value
         )
       ),
       avgOutsourceCosts: Intl.NumberFormat().format(
         Math.round(
           i[withVat ? 'avgOutsourceCostsWithVat' : 'avgOutsourceCostsWOVat'] /
-            1000
+            roundBy.value
         )
       ),
       avgProfit: Intl.NumberFormat().format(
-        Math.round(i[withVat ? 'avgProfitWithVat' : 'avgProfitWOVat'] / 1000)
+        Math.round(
+          i[withVat ? 'avgProfitWithVat' : 'avgProfitWOVat'] / roundBy.value
+        )
       ),
       avgProfitWOVatPercent: Intl.NumberFormat().format(
         Math.round(i.avgProfitWOVatPercent * 100) / 100
