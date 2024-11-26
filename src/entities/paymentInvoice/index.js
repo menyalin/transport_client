@@ -5,8 +5,6 @@ import PickOrdersSettings from './pickOrdersSettings.vue'
 import PaymentInvoiceOrdersList from './ordersList/ordersList.vue'
 import PaymentInvoiceResult from './paymentInvoiceResult.vue'
 
-
-
 export {
   PickOrdersSettings,
   PaymentInvoiceForm,

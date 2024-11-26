@@ -27,7 +27,7 @@ export default [
     props: true,
     meta: {
       title: 'Входящий акт',
-      permission: 'incomingInvoice:read',
+      permission: 'incomingInvoice:readItem',
     },
   },
   {

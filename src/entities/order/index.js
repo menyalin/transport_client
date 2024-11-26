@@ -13,6 +13,7 @@ import { OrderModel } from './model/orderModel.js'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 import { useOrderListUtils } from './hooks/useOrderListUtils'
 import { useOrderValidations } from './hooks/useOrderValidations'
+import { useOrderPrintForms } from './hooks/useOrderPrintForms'
 import { OrderRoute } from './orderRoute'
 import PriceBlock from './priceBlock'
 import PriceDialog from './priceDialog'
@@ -44,4 +45,5 @@ export {
   OrderForm,
   ScheduleSettings,
   ScheduleTable,
+  useOrderPrintForms,
 }
