@@ -1,19 +1,9 @@
 <template>
   <div>
     <div>
-      <!-- <BlockTitle>{{ title }}</BlockTitle> -->
+      <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <div class="req-transport-block">
-      <v-select
-        v-if="!hideTruckKindField"
-        :value="reqTransport.kind"
-        :items="truckKinds"
-        :error-messages="truckKindErrors"
-        outlined
-        dense
-        label="Вид ТС"
-        @change="change($event, 'kind')"
-      />
       <v-select
         v-if="!hideLiftCapacityField"
         :value="reqTransport.liftCapacity"
@@ -25,6 +15,17 @@
         @change="change($event, 'liftCapacity')"
       />
       <v-select
+        v-if="!hideTruckKindField"
+        :value="reqTransport.kind"
+        :items="truckKinds"
+        :error-messages="truckKindErrors"
+        outlined
+        dense
+        label="Вид ТС"
+        @change="change($event, 'kind')"
+      />
+
+      <v-select
         v-if="!hideLoadDirectionField"
         :value="reqTransport.loadDirection"
         :items="loadDirection"
@@ -33,6 +34,12 @@
         hide-details
         label="Загрузка"
         @change="change($event, 'loadDirection')"
+      />
+      <v-checkbox
+        dense
+        hide-details
+        label="Гидроборт"
+        v-model="reqTransport.tailLift"
       />
     </div>
   </div>
@@ -60,6 +67,7 @@ export default {
         kind: null,
         liftCapacity: null,
         loadDirection: null,
+        tailLift: false,
       },
     }
   },

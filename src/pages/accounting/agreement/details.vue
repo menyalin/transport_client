@@ -18,6 +18,7 @@
           :displayDeleteBtn="
             !!id && $store.getters.hasPermission('agreement:delete')
           "
+          :ownCarriers="ownCarriers"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -29,6 +30,7 @@
 <script>
 import { AgreementForm } from '@/entities/agreement'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { useCarriers } from '@/entities/carrier'
 import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
@@ -39,6 +41,10 @@ export default {
     AppLoadSpinner,
   },
   mixins: [pageDetailsMixin],
+  setup() {
+    const { ownCarriers } = useCarriers()
+    return { ownCarriers }
+  },
   data() {
     return {
       service: AgreementService,
