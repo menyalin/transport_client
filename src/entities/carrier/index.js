@@ -1,2 +1,3 @@
 import CarrierForm from './carrierForm.vue'
-export { CarrierForm }
+import { useCarriers } from './useCarriers'
+export { CarrierForm, useCarriers }

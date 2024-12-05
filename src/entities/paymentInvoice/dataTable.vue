@@ -54,7 +54,7 @@ import { computed, watch } from 'vue'
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
 import PaymentInvoiceListAnalitics from './listAnalitics.vue'
-import useHistorySettings from '@/shared/hooks/useHistorySettings'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 export default {
   name: 'PaymentInvoicesDataTable',
   components: { PaymentInvoiceListAnalitics },
@@ -76,7 +76,7 @@ export default {
     loading: Boolean,
   },
   setup(props, ctx) {
-    const selected = useHistorySettings([], 'selectedInvoicesInList')
+    const selected = usePersistedRef([], 'selectedInvoicesInList')
 
     function dblClickRow(_event, { item }) {
       router.push(`paymentInvoice/${item._id}`)

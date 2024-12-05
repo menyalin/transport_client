@@ -1,14 +1,21 @@
 import { OrderService } from '@/shared/services'
-import { onMounted, ref } from 'vue'
+import { getCurrentInstance, onMounted, ref, computed } from 'vue'
 
 export const useOrderPrintForms = ({ order }) => {
-  const docTemplateIsVisible = ref(true)
-  const downloadDisabled = ref(false)
+  const permissionName = 'order:printForms'
   const templates = ref([])
+  const downloadDisabled = ref(false)
+  const { proxy } = getCurrentInstance()
+
+  const docTemplateIsVisible = computed(() =>
+    proxy.$store.getters.hasPermission(permissionName)
+  )
 
   async function getTemplates() {
-    const res = await OrderService.getAllowedPrintForms()
-    templates.value = res
+    if (proxy.$store.getters.hasPermission(permissionName)) {
+      const res = await OrderService.getAllowedPrintForms()
+      templates.value = res
+    }
   }
 
   async function downloadTemplateHandler(template) {
