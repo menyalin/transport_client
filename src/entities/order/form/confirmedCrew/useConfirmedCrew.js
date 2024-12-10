@@ -74,23 +74,25 @@ export const useConfirmedCrew = (props, ctx) => {
   }
 
   async function getCrew() {
+    const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
+    const tkNameId = truck?.tkName?._id || truck?.tkName || null
+
+    if (isOutsourceTruck.value && tkNameId)
+      outsourceAgreement.value = await AgreementService.getForOrder({
+        company: proxy.$store.getters.directoriesProfile,
+        date: props.date,
+        tkNameId,
+      })
+
     if (isNeedUpdateCrew.value) {
       try {
         loading.value = true
-        const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
-        const tkNameId = truck?.tkName?._id || truck?.tkName || null
+
         const crew = await CrewService.getCrewByTruckAndDate({
           truck: state.value.truck,
           date: props.date,
         })
         crewEmptyError.value = !crew
-        if (isOutsourceTruck.value && tkNameId) {
-          outsourceAgreement.value = await AgreementService.getForOrder({
-            company: proxy.$store.getters.directoriesProfile,
-            date: props.date,
-            tkNameId,
-          })
-        }
 
         setState({
           truck: state.value.truck,
