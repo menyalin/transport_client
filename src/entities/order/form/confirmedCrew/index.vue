@@ -6,37 +6,31 @@
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
-        v-model="params.truck"
+        :value="state.truck"
         label="Грузовик"
         :loading="loading"
         dense
         :clearable="!confirmed"
-        :readonly="
-          confirmed &&
-          !$store.getters.hasPermission('fake permission. only for admin!')
-        "
+        :readonly="truckReadOnly"
         :items="trucks"
         outlined
         hide-details
+        @change="changeTruckHandler"
       />
       <v-autocomplete
         label="Водитель"
-        v-model="params.driver"
+        :value="state.driver"
         :items="drivers"
-        :readonly="
-          !$store.getters.hasPermission('fake permission. only for admin!')
-        "
+        readonly
         hide-details
         dense
         outlined
       />
       <v-autocomplete
         label="Прицеп"
-        v-model="params.trailer"
+        :value="state.trailer"
         :items="trailers"
-        :readonly="
-          !$store.getters.hasPermission('fake permission. only for admin!')
-        "
+        readonly
         dense
         hide-details
         outlined
@@ -46,16 +40,14 @@
       </v-btn>
     </div>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
-      <small>Перевозчик: {{ tkName }}</small>
+      <small>Перевозчик: {{ tkName ? tkName : 'Не указан' }}</small>
       <small>Соглашение: {{ outsourceAgreementName }}</small>
     </div>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import { BlockTitle } from '@/entities/order'
-import putCrewDataToClipboard from './putCrewDataToClipboard'
-import { AgreementService, CrewService } from '@/shared/services'
+import { useConfirmedCrew } from './useConfirmedCrew'
 
 export default {
   name: 'ConfirmedCrew',
@@ -67,155 +59,44 @@ export default {
     event: 'change',
   },
   props: {
+    confirmed: Boolean,
     crew: Object,
     title: String,
     date: String,
-    confirmed: Boolean,
   },
-  data() {
+  setup(props, ctx) {
+    const {
+      state,
+      loading,
+      outsourceAgreement,
+      showOutsourceAgreementRow,
+      tkName,
+      outsourceAgreementName,
+      trucks,
+      drivers,
+      trailers,
+      hasTruck,
+      isOutsourceTruck,
+      changeTruckHandler,
+      copyHandler,
+      truckReadOnly,
+    } = useConfirmedCrew(props, ctx)
     return {
-      loading: false,
-      outsourceAgreement: {},
-      params: {
-        truck: null,
-        trailer: null,
-        driver: null,
-        outsourceAgreement: null,
-        tkName: null,
-      },
+      state,
+      loading,
+      outsourceAgreement,
+      showOutsourceAgreementRow,
+      tkName,
+      outsourceAgreementName,
+      trucks,
+      drivers,
+      trailers,
+      hasTruck,
+      isOutsourceTruck,
+      changeTruckHandler,
+      copyHandler,
+      truckReadOnly,
     }
-  },
-  computed: {
-    ...mapGetters([]),
-    showOutsourceAgreementRow() {
-      return (
-        this.params.truck &&
-        this.$store.getters.outsourceTruckIds.includes(this.params.truck)
-      )
-    },
-    tkName() {
-      return (
-        this.$store.getters.trucksMap.get(this.params.truck)?.tkName?.name ||
-        '-'
-      )
-    },
-    outsourceAgreementName() {
-      return this.outsourceAgreement.name
-    },
-    trucks() {
-      return this.$store.getters.trucks
-        .filter((item) => item.type === 'truck')
-        .map((item) => ({ value: item._id, text: item.regNum }))
-    },
-    drivers() {
-      return this.$store.getters.drivers.map((item) => ({
-        value: item._id,
-        text: item.fullName,
-      }))
-    },
-    trailers() {
-      return this.$store.getters.trucks
-        .filter((item) => item.type === 'trailer')
-        .map((item) => ({ value: item._id, text: item.regNum }))
-    },
-  },
-  watch: {
-    crew: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          const keys = Object.keys(this.params)
-          keys.forEach((key) => {
-            this.params[key] = val[key]
-          })
-        }
-      },
-    },
-    date: {
-      handler: async function (val) {
-        if (val) {
-          await this.getCrew()
-        }
-      },
-    },
-    ['params.truck']: {
-      handler: async function (val) {
-        if (!val) {
-          this.params.driver = null
-          this.params.trailer = null
-          this.params.outsourceAgreement = null
-          this.params.tkName = null
-        }
-        await this.getCrew()
-
-        if (this.$store.getters.outsourceTruckIds.includes(val))
-          await this.getAgreement()
-        else this.params.outsourceAgreement = null
-        this.$emit('change', this.params)
-      },
-    },
-    ['params.driver']: {
-      handler: function () {
-        if (
-          this.$store.getters.hasPermission('fake permission. only for admin!')
-        ) {
-          this.$emit('change', this.params)
-        }
-      },
-    },
-    ['params.trailer']: {
-      handler: function () {
-        if (
-          this.$store.getters.hasPermission('fake permission. only for admin!')
-        ) {
-          this.$emit('change', this.params)
-        }
-      },
-    },
-  },
-  async created() {
-    await this.getCrew()
-    if (this.params.outsourceAgreement)
-      this.outsourceAgreement = await AgreementService.getById(
-        this.params.outsourceAgreement
-      )
-  },
-
-  methods: {
-    copyHandler() {
-      if (!this.params.truck || !this.params.driver) return null
-      const truck = this.$store.getters.trucksMap.get(this.params.truck)
-      const driver = this.$store.getters.driversMap.get(this.params.driver)
-      const trailer = this.$store.getters.trucksMap.get(this.params.trailer)
-      putCrewDataToClipboard({ truck, driver, trailer })
-    },
-    async getAgreement() {
-      const truck = this.$store.getters.trucksMap.get(this.params.truck)
-      this.outsourceAgreement = await AgreementService.getForOrder({
-        company: this.$store.getters.directoriesProfile,
-        date: this.date,
-        tkNameId: truck?.tkName?._id || truck.tkName,
-      })
-      this.params.outsourceAgreement = this.outsourceAgreement._id
-    },
-    async getCrew() {
-      if (!this.date || !this.params.truck || this.confirmed) return null
-      this.loading = true
-      this.params.driver = null
-      this.params.trailer = null
-      this.params.tkName = null
-      const crew = await CrewService.getCrewByTruckAndDate({
-        truck: this.params.truck,
-        date: new Date(this.date),
-      })
-      this.params.driver = crew?.driver
-      this.params.trailer = crew?.transport?.trailer
-      this.params.tkName = this.$store.getters.trucksMap.get(
-        this.params.truck
-      )?.tkName?._id
-      this.loading = false
-      this.$emit('change', this.params)
-    },
   },
 }
 </script>
