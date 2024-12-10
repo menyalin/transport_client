@@ -9,12 +9,12 @@ class DocTemplateService {
     this.eo = new EventObserver()
   }
 
-  async getAllowedTemplates({ client, type }) {
+  async getAllowedTemplates({ client, type, agreement }) {
     if (!client || !type)
       throw new Error(
         'DocTemplateService:getAllowedTemplates: missing required params!'
       )
-    const cacheKey = client + type
+    const cacheKey = client + type + agreement
     if (this._templatesMap.has(cacheKey))
       return this._templatesMap.get(cacheKey)
 
@@ -32,6 +32,7 @@ class DocTemplateService {
           company: store.getters.directoriesProfile,
           client,
           type,
+          agreement,
         },
       })
       this._templatesMap.set(cacheKey, data)

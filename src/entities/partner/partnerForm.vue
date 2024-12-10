@@ -53,6 +53,14 @@
       label="Контакты"
       dense
     />
+    <v-text-field
+      v-if="form.isClient"
+      v-model.trim="form.cargoDescription"
+      outlined
+      clearable
+      label="Описание груза"
+      dense
+    />
     <v-checkbox v-model="form.isClient" label="Заказчик" hide-details dense />
     <v-checkbox v-model="form.isService" label="Сервис" dense />
 
@@ -98,6 +106,7 @@ export default {
         contacts: null,
         isClient: false,
         isService: false,
+        cargoDescription: null,
         placesForTransferDocs: [],
         invoiceLoader: null,
         idleTruckNotifications: [],

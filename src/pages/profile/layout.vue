@@ -35,6 +35,7 @@ export default {
         icon: 'mdi-factory',
         link: '/profile/companies',
         onlyWithDirectoriesProfile: false,
+        permission: 'admin_only',
       },
       {
         text: 'Cотрудники',

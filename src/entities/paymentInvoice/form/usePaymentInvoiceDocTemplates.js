@@ -40,6 +40,7 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
   async function getTemplates() {
     if (!formState.value.client) return null
     docTemplates.value = await DocTemplateService.getAllowedTemplates({
+      agreement: formState.value.agreement,
       client: formState.value.client,
       type: 'paymentInvoice',
     })
