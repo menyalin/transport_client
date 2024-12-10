@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 export default {
   name: 'TariffListWrapper',
   model: {
@@ -50,15 +50,15 @@ export default {
     },
   },
   setup(props, ctx) {
-    const item = ref(null)
-    const items = ref(props.items)
+    const item = ref({})
+    const items = ref([])
     const dialog = ref(false)
     function addHandler() {
       dialog.value = true
     }
     function cancelHandler() {
       dialog.value = false
-      item.value = null
+      item.value = {}
     }
     function saveHandler(val) {
       if (item.value) {
@@ -81,13 +81,21 @@ export default {
     }
 
     function updateHandler(idx) {
-      item.value = { ...items.value[idx], idx }
-      dialog.value = true
+      item.value = { ...props.items[idx], idx }
+      nextTick(() => {
+        dialog.value = true
+      })
     }
+
     function removeByIdx(idx) {
       items.value.splice(idx, 1)
       ctx.emit('change', items.value)
     }
+
+    watch(
+      () => props.items,
+      (val) => (items.value = val)
+    )
     return {
       addHandler,
       dialog,
