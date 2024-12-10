@@ -39,6 +39,15 @@
         Скопировать данные
       </v-btn>
     </div>
+    <v-alert
+      v-if="crewEmptyError"
+      type="error"
+      dense
+      outlined
+      :style="{ maxWidth: '400px' }"
+    >
+      Экипаж не задан
+    </v-alert>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
       <small>Перевозчик: {{ tkName ? tkName : 'Не указан' }}</small>
       <small>Соглашение: {{ outsourceAgreementName }}</small>
@@ -80,6 +89,7 @@ export default {
       changeTruckHandler,
       copyHandler,
       truckReadOnly,
+      crewEmptyError,
     } = useConfirmedCrew(props, ctx)
     return {
       state,
@@ -96,6 +106,7 @@ export default {
       changeTruckHandler,
       copyHandler,
       truckReadOnly,
+      crewEmptyError,
     }
   },
 }

@@ -12,6 +12,7 @@ export const useConfirmedCrew = (props, ctx) => {
   }
   const state = ref(props.crew ? props.crew : initialState)
   const loading = ref(false)
+  const crewEmptyError = ref(false)
   const outsourceAgreement = ref(null)
   // #region computeds
   const showOutsourceAgreementRow = computed(
@@ -65,12 +66,9 @@ export const useConfirmedCrew = (props, ctx) => {
   function setState(val) {
     ctx.emit('change', val)
   }
-  function getCarrierId(truckId) {
-    const truck = proxy.$store.getters.trucksMap.get(truckId)
-    return truck?.tkName?._id || truck.tkName || null
-  }
 
   function resetState() {
+    crewEmptyError.value = false
     outsourceAgreement.value = null
     setState(initialState)
   }
@@ -79,28 +77,26 @@ export const useConfirmedCrew = (props, ctx) => {
     if (isNeedUpdateCrew.value) {
       try {
         loading.value = true
+        const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
+        const tkNameId = truck?.tkName?._id || truck?.tkName || null
         const crew = await CrewService.getCrewByTruckAndDate({
           truck: state.value.truck,
           date: props.date,
         })
-        if (!crew) {
-          proxy.$store.commit('setError', 'Экипаж не найден')
-          resetState()
-          return
-        }
-        if (isOutsourceTruck.value) {
+        crewEmptyError.value = !crew
+        if (isOutsourceTruck.value && tkNameId) {
           outsourceAgreement.value = await AgreementService.getForOrder({
             company: proxy.$store.getters.directoriesProfile,
             date: props.date,
-            tkNameId: crew.tkName,
+            tkNameId,
           })
         }
 
         setState({
-          truck: crew.transport.truck,
-          trailer: crew.transport.trailer || null,
-          driver: crew.driver,
-          tkName: getCarrierId(state.value.truck),
+          truck: state.value.truck,
+          trailer: crew?.transport?.trailer || null,
+          driver: crew?.driver || null,
+          tkName: tkNameId,
           outsourceAgreement: outsourceAgreement.value?._id || null,
         })
       } finally {
@@ -127,6 +123,13 @@ export const useConfirmedCrew = (props, ctx) => {
       : {}
     putCrewDataToClipboard({ truck, driver, trailer })
   }
+  watch(crewEmptyError, (val) => {
+    if (val) {
+      outsourceAgreement.value = null
+      state.value.outsourceAgreement = null
+      state.value.tkName = null
+    }
+  })
 
   watch(
     () => props.crew,
@@ -155,5 +158,6 @@ export const useConfirmedCrew = (props, ctx) => {
     changeTruckHandler,
     copyHandler,
     truckReadOnly,
+    crewEmptyError,
   }
 }
