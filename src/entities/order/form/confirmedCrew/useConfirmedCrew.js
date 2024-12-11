@@ -83,28 +83,28 @@ export const useConfirmedCrew = (props, ctx) => {
         date: props.date,
         tkNameId,
       })
+    let crew = null
 
     if (isNeedUpdateCrew.value) {
       try {
         loading.value = true
 
-        const crew = await CrewService.getCrewByTruckAndDate({
+        crew = await CrewService.getCrewByTruckAndDate({
           truck: state.value.truck,
           date: props.date,
         })
         crewEmptyError.value = !crew
-
-        setState({
-          truck: state.value.truck,
-          trailer: crew?.transport?.trailer || null,
-          driver: crew?.driver || null,
-          tkName: tkNameId,
-          outsourceAgreement: outsourceAgreement.value?._id || null,
-        })
       } finally {
         loading.value = false
       }
     }
+    setState({
+      truck: state.value.truck,
+      trailer: crew?.transport?.trailer || state.value.trailer,
+      driver: crew?.driver || state.value.driver,
+      tkName: tkNameId,
+      outsourceAgreement: outsourceAgreement.value?._id || null,
+    })
   }
 
   async function changeTruckHandler(val) {
@@ -117,7 +117,6 @@ export const useConfirmedCrew = (props, ctx) => {
 
   function copyHandler() {
     if (!state.value.truck || !state.value.driver) return null
-
     const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
     const driver = proxy.$store.getters.driversMap.get(state.value.driver)
     const trailer = state.value.trailer
@@ -125,6 +124,7 @@ export const useConfirmedCrew = (props, ctx) => {
       : {}
     putCrewDataToClipboard({ truck, driver, trailer })
   }
+
   watch(crewEmptyError, (val) => {
     if (val) {
       outsourceAgreement.value = null
