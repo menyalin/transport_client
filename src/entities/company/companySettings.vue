@@ -67,6 +67,12 @@
             :style="{ 'max-width': '220px' }"
           />
         </div>
+        <v-textarea
+          v-model="settings.commonOrderContractNote"
+          label="Примечание для договора-заявки"
+          rows="15"
+          outlined
+        />
       </v-card-text>
       <v-card-actions>
         <v-btn :disabled="!changed" @click="cancel"> Отмена </v-btn>
@@ -95,6 +101,7 @@ export default {
         defaultLiftCapacity: null,
         loadDirections: [],
         defaultLoadDirection: null,
+        commonOrderContractNote: null,
       },
     }
   },

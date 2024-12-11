@@ -12,7 +12,7 @@
             @save="submit($event, true)"
           >
             <DownloadDocTemplateMenu
-              v-if="docTemplateIsVisible && false"
+              v-if="docTemplateIsVisible"
               :templates="templates"
               :disabledDownloadFiles="downloadDisabled"
               @downloadTemplate="downloadTemplateHandler"

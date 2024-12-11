@@ -155,6 +155,13 @@
         suffix="%"
         :style="{ maxWidth: '400px' }"
       />
+      <v-textarea
+        v-model="state.paymentDescription"
+        rows="2"
+        outlined
+        label="Описание условий оплаты (для заявки)"
+      />
+
       <v-text-field v-model="state.note" label="Примечание" outlined dense />
       <div class="row mb-2">
         <v-checkbox

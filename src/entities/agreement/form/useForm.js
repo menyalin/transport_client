@@ -27,6 +27,7 @@ export const useForm = (props, ctx) => {
     executorName: null,
     executor: null,
     allowedCarriers: [],
+    paymentDescription: null,
   }
   const state = ref(defaultState)
   const rules = computed(() => ({
