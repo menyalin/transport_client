@@ -36,6 +36,20 @@
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'statuses')"
     />
+    <v-select
+      :value="settings.carriers"
+      label="Перевозчики"
+      multiple
+      item-text="name"
+      item-value="_id"
+      dense
+      clearable
+      outlined
+      hide-details
+      :items="outsourceCarriers"
+      :style="{ maxWidth: '400px' }"
+      @change="updateSettings($event, 'carriers')"
+    />
     <v-text-field
       :value="settings.search"
       label="Поиск по номеру"
@@ -53,6 +67,7 @@ import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
 import allHeaders from './allHeaders.js'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { useCarriers } from '@/entities/carrier/useCarriers.js'
 export default {
   name: 'IncomingInvoiceListSettings',
   components: { AppTableColumnSetting, DateRangeInput },
@@ -65,6 +80,7 @@ export default {
     agreementItems: Array,
   },
   setup(props, ctx) {
+    const { outsourceCarriers } = useCarriers()
     const statusItems = computed(() => {
       return incomingInvoiceStatuses
     })
@@ -80,6 +96,7 @@ export default {
       statusItems,
       updateHeadersHandler,
       updateSettings,
+      outsourceCarriers,
       allHeaders,
     }
   },

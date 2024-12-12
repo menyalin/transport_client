@@ -5,7 +5,12 @@ export const useCarriers = () => {
   const ownCarriers = computed(() =>
     proxy.$store.getters.tkNames.filter((i) => !i.outsource)
   )
+
+  const outsourceCarriers = computed(() =>
+    proxy.$store.getters.tkNames.filter((i) => i.outsource)
+  )
   return {
     ownCarriers,
+    outsourceCarriers,
   }
 }

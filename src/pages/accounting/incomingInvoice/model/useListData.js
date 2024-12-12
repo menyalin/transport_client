@@ -16,6 +16,7 @@ export const useListData = () => {
   const initialState = {
     agreements: [],
     statuses: [],
+    carriers: [],
     period: initialPeriod(),
     number: null,
   }
@@ -34,6 +35,7 @@ export const useListData = () => {
   const queryParams = computed(() => ({
     period: settings.value?.period,
     statuses: settings.value?.statuses,
+    carriers: settings.value?.carriers ?? [],
     search: settings.value?.search,
     agreements: settings.value?.agreements,
     company: store.getters.directoriesProfile,
@@ -49,7 +51,6 @@ export const useListData = () => {
       const data = await IncomingInvoiceService.getList(queryParams.value)
       items.value = data.items
       totalCount.value = data.count
-
       loading.value = false
     } catch (e) {
       loading.value = false
@@ -72,19 +73,11 @@ export const useListData = () => {
   }
   watch(
     settings,
-    () => {
-      listOptions.value = { ...listOptions.value, page: 1 }
-    },
+    () => (listOptions.value = { ...listOptions.value, page: 1 }),
     { deep: true }
   )
 
-  watch(
-    listOptions,
-    async () => {
-      await getData()
-    },
-    { deep: true }
-  )
+  watch(listOptions, async () => await getData(), { deep: true })
 
   return {
     refresh,

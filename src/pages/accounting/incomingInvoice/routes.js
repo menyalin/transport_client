@@ -31,7 +31,7 @@ export default [
     },
   },
   {
-    path: BASE_PATH + '/:invoiceId/pickOrders/:agreementId',
+    path: BASE_PATH + '/:invoiceId/pickOrders/:agreementId/:carrierId',
     name: 'PickOrdersForIncomingInvoice',
     component: () => import('./pickOrders.vue'),
     props: true,
