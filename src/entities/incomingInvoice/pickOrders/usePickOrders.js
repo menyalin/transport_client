@@ -31,6 +31,7 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
         ...settings.value,
         company: store.getters.directoriesProfile,
         agreement: props.agreementId,
+        carrier: props.carrierId,
         limit: 100,
         skip: 0,
       })

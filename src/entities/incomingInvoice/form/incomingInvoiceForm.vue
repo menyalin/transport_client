@@ -47,6 +47,19 @@
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
         />
+        <v-autocomplete
+          v-model="state.carrier"
+          label="Перевозчик"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="disabledCarriers"
+          :items="outsourceCarriers"
+          :style="{ maxWidth: '300px' }"
+        />
       </div>
       <div class="fields-row">
         <DateTimeInput
@@ -102,6 +115,7 @@ import {
   DownloadDocTemplateMenu,
   DateTimeInput,
 } from '@/shared/ui'
+import { useCarriers } from '@/entities/carrier/useCarriers.js'
 
 export default {
   name: 'IncomingInvoiceForm',
@@ -118,14 +132,7 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const needSave = computed(() => false) // TODO: fix it
-    const disabledAgreements = computed(() => {
-      return props.item?.orders?.length > 0
-    })
-    function pickOrdersHandler() {
-      ctx.emit('pickOrders')
-    }
-
+    const { outsourceCarriers } = useCarriers()
     const {
       state,
       v$,
@@ -136,6 +143,21 @@ export default {
       invalidForm,
       allowedToChangeOrders,
     } = useForm(props, ctx)
+
+    const needSave = computed(() => false) // TODO: fix it
+
+    const disabledAgreements = computed(() => {
+      return props.item?.orders?.length > 0
+    })
+
+    const disabledCarriers = computed(() => {
+      return props.item?.orders?.length > 0 && !!state.value.carrier
+    })
+
+    function pickOrdersHandler() {
+      ctx.emit('pickOrders')
+    }
+
     return {
       state,
       v$,
@@ -149,6 +171,8 @@ export default {
       pickOrdersHandler,
       allowedToChangeOrders,
       disabledAgreements,
+      outsourceCarriers,
+      disabledCarriers,
     }
   },
 }

@@ -32,6 +32,12 @@ export default [
     default: true,
   },
   {
+    value: 'carrierName',
+    text: 'Перевозчик',
+    sortable: false,
+    default: true,
+  },
+  {
     value: 'ordersCount',
     text: 'Кол-во рейсов',
     sortable: true,
