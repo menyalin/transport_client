@@ -12,7 +12,6 @@
       @submit="submit"
       @save="submit($event, true)"
       @pickOrders="openDialog"
-      @downloadPdf="downloadPdfHandler"
       @downloadXlsx="downloadWordHandler"
     />
     <docs-registry-orders-list
@@ -43,10 +42,9 @@ import router from '@/router'
 import store from '@/store'
 import { DocsRegistryService } from '@/shared/services'
 import { FormWrapper } from '@/shared/ui'
-import { PdfMaker } from '@/shared/utils'
+
 import {
   PickOrders,
-  docsRegistryPdfReport,
   docsRegistryWordReport,
   DocsRegistryReportData,
 } from '@/features/docsRegistry'
@@ -127,12 +125,6 @@ export default {
       () => new DocsRegistryReportData(item.value)
     )
 
-    function downloadPdfHandler() {
-      PdfMaker.download(
-        docsRegistryPdfReport(docsRegistryReportData.value),
-        docsRegistryReportData.value.fileNameStr
-      )
-    }
     function downloadWordHandler() {
       docsRegistryWordReport(docsRegistryReportData.value)
     }
@@ -216,7 +208,6 @@ export default {
       dblRowClickHandler,
       disabledPickOrders,
       disabledMainFields,
-      downloadPdfHandler,
       downloadWordHandler,
     }
   },

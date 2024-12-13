@@ -57,9 +57,8 @@ export const useConfirmedCrew = (props, ctx) => {
   )
 
   const truckReadOnly = computed(
-    () =>
-      props.confirmed &&
-      !proxy.$store.getters.hasPermission('fake permission. only for admin!')
+    () => props.confirmed
+    // &&       !proxy.$store.getters.hasPermission('fake permission. only for admin!')
   )
   // #endregion
 
@@ -85,7 +84,7 @@ export const useConfirmedCrew = (props, ctx) => {
       })
     let crew = null
 
-    if (isNeedUpdateCrew.value) {
+    if (isNeedUpdateCrew.value || !props.crew?.driver) {
       try {
         loading.value = true
 
