@@ -8,7 +8,6 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small @click="downloadPdf" class="mx-2">Скачать PDF</v-btn>
       <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
     </buttons-panel>
     <div id="form">
@@ -167,9 +166,6 @@ export default {
       ctx.emit('save', state.value)
     }
 
-    function downloadPdf() {
-      ctx.emit('downloadPdf')
-    }
     function downloadXlsx() {
       ctx.emit('downloadXlsx')
     }
@@ -218,7 +214,7 @@ export default {
       needSave,
       changeClientHandler,
       showPickOrderDialog,
-      downloadPdf,
+
       downloadXlsx,
       disabledAgreements,
       loadingAgreements,
