@@ -27,11 +27,18 @@ export default {
   data: () => ({
     navButtons: [
       {
-        text: 'Соглашения',
+        text: 'Соглашения c клиентами',
         icon: 'mdi-file-sign',
         link: '/accounting/agreements',
         onlyWithDirectoriesProfile: true,
         permission: 'agreement:readList',
+      },
+      {
+        text: 'Соглашения c ТК',
+        icon: 'mdi-file-sign',
+        link: '/accounting/carrierAgreements',
+        onlyWithDirectoriesProfile: true,
+        permission: 'carrierAgreement:readList',
       },
 
       {

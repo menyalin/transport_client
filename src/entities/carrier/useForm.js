@@ -8,7 +8,8 @@ export const useForm = (props, ctx) => {
     return item !== null
       ? item
       : {
-          name: null,
+          name: '',
+          agreement: null,
           outsource: false,
           contacts: [],
           companyInfo: null,
@@ -23,16 +24,6 @@ export const useForm = (props, ctx) => {
 
   const v$ = useVuelidate(rules, state)
   const isInvalidForm = computed(() => v$.value.$invalid)
-  // const nameErrors = computed(() => {
-  //   const err = []
-  //   const field = v$.value.name
-  //   if (!field.$invalid) return err
-
-  //   field.$dirty &&
-  //     field.required.$invalid &&
-  //     err.push('Название не может быть пустым')
-  //   return err
-  // })
 
   function resetForm() {
     state.value = {}

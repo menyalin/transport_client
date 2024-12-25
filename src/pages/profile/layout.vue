@@ -48,9 +48,9 @@ export default {
       {
         text: 'Перевозчики',
         icon: 'mdi-alien',
-        link: '/profile/tk_names',
+        link: '/profile/carriers',
         onlyWithDirectoriesProfile: true,
-        permission: 'tkName:readList',
+        permission: 'carrier:readList',
       },
       {
         text: 'Адреса',

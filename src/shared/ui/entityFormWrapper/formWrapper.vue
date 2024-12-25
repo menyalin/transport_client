@@ -10,19 +10,21 @@
         >
           {{ errorMessage }}
         </v-alert>
-        <load-spinner v-if="loading" />
         <v-alert
           type="error"
-          v-if="itemIsMissing"
+          v-if="itemIsMissing && !loading"
           transition="scale-transition"
         >
           Запись не найдена
         </v-alert>
-        <slot v-else />
-        <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
-          <v-icon left dark> mdi-delete </v-icon>
-          Удалить
-        </v-btn>
+        <load-spinner v-if="loading" />
+        <div v-else>
+          <slot />
+          <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
+            <v-icon left dark> mdi-delete </v-icon>
+            Удалить
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
   </v-container>
