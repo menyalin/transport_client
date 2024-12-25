@@ -67,7 +67,12 @@ export default {
     list: [],
     headers: [
       { value: 'name', text: 'Название', sortable: false },
-      { value: 'executorName', text: 'Исполнитель', sortable: false },
+      {
+        value: 'executorName',
+        text: 'Наименование исполнителя',
+        sortable: false,
+      },
+
       { value: 'date', text: 'Дата начала действия', sortable: true },
       { value: 'vatRateText', text: 'НДС', sortable: false },
       { value: 'note', text: 'Примечание', sortable: false },

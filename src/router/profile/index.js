@@ -3,7 +3,7 @@ import Layout from '@/pages/profile/layout'
 import crewRoutes from './crews.js'
 import truckRoutes from './trucks.js'
 import driverRoutes from './drivers.js'
-import tkNameRoutes from './tkNames.js'
+import carrierRoutes from './carrier.js'
 import partnerRoutes from './partners.js'
 import addressRoutes from './address.js'
 import downtimeRoutes from './downtime.js'
@@ -29,7 +29,7 @@ export default [
       ...crewRoutes,
       ...truckRoutes,
       ...driverRoutes,
-      ...tkNameRoutes,
+      ...carrierRoutes,
       ...partnerRoutes,
       ...addressRoutes,
       ...downtimeRoutes,

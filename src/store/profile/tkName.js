@@ -1,4 +1,4 @@
-import { TkNameService } from '@/shared/services'
+import { CarrierService } from '@/shared/services'
 
 export default {
   state: {
@@ -28,8 +28,7 @@ export default {
     createTkName({ commit }, payload) {
       return new Promise((resolve, reject) => {
         commit('setLoading', true)
-        TkNameService
-          .create(payload)
+        CarrierService.create(payload)
           .then((data) => {
             commit('addTkName', data)
             commit('setLoading', false)
@@ -51,7 +50,7 @@ export default {
           (getters.routeSheets.length === 0 && getters.directoriesProfile)
         ) {
           commit('setTkNames', [])
-          const data = await TkNameService.getByDirectoriesProfile(
+          const data = await CarrierService.getByDirectoriesProfile(
             getters.directoriesProfile
           )
           commit('setTkNames', data)

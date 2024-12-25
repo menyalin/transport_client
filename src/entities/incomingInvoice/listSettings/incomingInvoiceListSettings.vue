@@ -86,7 +86,7 @@ export default {
     })
 
     function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
+      ctx.emit('change', { ...props.settings, [field]: value })
     }
 
     function updateHeadersHandler(val) {

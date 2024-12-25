@@ -3,7 +3,7 @@
     <buttons-panel
       panel-type="form"
       :disabledSubmit="
-        !$store.getters.hasPermission('tkName:write') ||
+        !$store.getters.hasPermission('carrier:write') ||
         isInvalidForm ||
         loading
       "
@@ -12,6 +12,17 @@
     />
 
     <v-text-field v-model="state.name" outlined label="Название ТК" dense />
+    <v-select
+      v-model="state.agreement"
+      outlined
+      item-text="name"
+      item-value="_id"
+      dense
+      clearable
+      label="Основное соглашение"
+      :style="{ maxWidth: '500px' }"
+      :items="agreementItems"
+    />
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
@@ -47,6 +58,7 @@ export default {
   },
   props: {
     loading: Boolean,
+    agreementItems: Array,
     item: {
       type: Object,
     },
@@ -62,7 +74,6 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      // nameErrors,
     } = useForm(props, ctx)
 
     return {
@@ -71,7 +82,6 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      // nameErrors,
     }
   },
 }
