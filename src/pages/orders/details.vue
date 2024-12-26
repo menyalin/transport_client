@@ -136,16 +136,16 @@ export default {
           })
         }
         this.item = Object.assign(this.item, res)
-        this.loading = false
         this.tmpVal = null
         if (!saveOnly) this.$router.go(-1)
       } catch (e) {
-        this.loading = false
         this.item = this.tmpVal
         if (e.response.status === 400 || e.response.status === 403) {
           this.error.message = e.response.data
           this.error.show = true
         } else this.$store.commit('setError', e)
+      } finally {
+        this.loading = false
       }
     },
     cancel() {

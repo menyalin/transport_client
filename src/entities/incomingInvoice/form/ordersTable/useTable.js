@@ -1,6 +1,7 @@
 import { ref, watch, getCurrentInstance, computed } from 'vue'
 import { allHeaders } from './headers'
 import { IncomingInvoiceService } from '@/shared/services'
+import { moneyFormatter } from '@/shared/utils'
 
 export const useTable = (props, _ctx) => {
   const selected = ref([])
@@ -27,7 +28,13 @@ export const useTable = (props, _ctx) => {
         limit: listOptions.value.itemsPerPage,
         skip: (listOptions.value.page - 1) * listOptions.value.itemsPerPage,
       })
-      items.value = data.items
+      items.value = data.items.map((i) => ({
+        ...i,
+        total: {
+          priceWithVat: moneyFormatter(i.total.priceWithVat, 2),
+          priceWOVat: moneyFormatter(i.total.priceWOVat, 2),
+        },
+      }))
       total.value = {
         count: data.totalCount,
         withVat: data.totalPriceWithVat,

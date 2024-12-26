@@ -20,6 +20,7 @@
       title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
     />
+    <slot />
   </div>
 </template>
 <script>
