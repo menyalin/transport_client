@@ -8,12 +8,14 @@ export const allHeaders = [
     text: 'Тариф без НДС',
     sortable: false,
     default: true,
+    align: 'right',
   },
   {
     value: 'total.priceWithVat',
     text: 'Тариф с НДС',
     sortable: false,
     default: true,
+    align: 'right',
   },
   { value: 'note', text: 'Примечание', sortable: false, default: true },
 ]

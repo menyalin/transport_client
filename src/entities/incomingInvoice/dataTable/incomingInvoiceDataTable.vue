@@ -29,11 +29,11 @@
     </template>
 
     <template #[`item.priceWOVat`]="{ item }">
-      {{ moneyFormatter(item.priceWOVat) }}
+      {{ moneyFormatter(item.priceWOVat, 2) }}
     </template>
 
     <template #[`item.priceWithVat`]="{ item }">
-      {{ moneyFormatter(item.priceWithVat) }}
+      {{ moneyFormatter(item.priceWithVat, 2) }}
     </template>
 
     <template #[`item.note`]="{ item }">

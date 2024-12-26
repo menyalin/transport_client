@@ -73,6 +73,8 @@ export const useConfirmedCrew = (props, ctx) => {
   }
 
   async function getCrew() {
+    if (!state.value.truck) return
+
     const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
     const tkNameId = truck?.tkName?._id || truck?.tkName || null
 

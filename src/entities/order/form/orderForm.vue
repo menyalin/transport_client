@@ -159,7 +159,9 @@
               :outsourceAgreementId="confirmedCrew.outsourceAgreement"
               :analytics="analytics"
               :route="route"
-            />
+            >
+              <IncomingInvoiceLink :invoice="order.incomingInvoice" />
+            </PriceBlock>
 
             <PriceDialog
               v-if="showFinalPriceDialog"
@@ -233,6 +235,7 @@ import {
   OrderDocsListForm,
   OrderPaymentParts,
   PaymentInvoiceLinks,
+  IncomingInvoiceLink,
   ReqTransport,
   CargoParams,
   OrderModel,
@@ -251,6 +254,7 @@ export default {
   components: {
     DownloadDocTemplateMenu,
     PaymentInvoiceLinks,
+    IncomingInvoiceLink,
     ButtonsPanel,
     ReqTransport,
     CargoParams,

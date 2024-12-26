@@ -28,10 +28,9 @@
           class="mb-4"
           :style="{ 'max-width': '300px' }"
         />
-        <v-select
+        <VatRateSelect
           v-model="state.vatRate"
           label="Ставка НДС"
-          :items="vatRates"
           :readonly="!!agreement && !!agreement._id"
           dense
           outlined
@@ -184,7 +183,7 @@
   </div>
 </template>
 <script>
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
 import AppClients from './clients.vue'
 import AppTknames from './tkNames.vue'
 import { useForm } from './useForm'
@@ -196,6 +195,7 @@ export default {
     DateTimeInput,
     AppClients,
     AppTknames,
+    VatRateSelect,
   },
   props: {
     agreement: {
