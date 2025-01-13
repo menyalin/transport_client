@@ -91,7 +91,7 @@
             v-model="client"
             title="Информация о клиенте"
             class="client"
-            :carrier="confirmedCrew.tkName"
+            :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
             :isValidNum="isValidClientNum(agreement, client, state)"
             :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
             :routeDate="routeDate"
