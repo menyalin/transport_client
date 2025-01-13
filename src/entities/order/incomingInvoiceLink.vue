@@ -33,7 +33,7 @@ export default {
       }
     })
     return {
-      url: `/accounting/incomingInvoice/${props.invoice._id}`,
+      url: `/accounting/incomingInvoice/${props?.invoice?._id}`,
       text,
     }
   },

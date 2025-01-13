@@ -7,20 +7,18 @@ class CarrierAgreementService {
   constructor() {
     this.MODEL_NAME = 'carrierAgreement'
     this.allAgreements = []
-    this.allAgreementsExpiresMs = 1000 * 60 * 5 // 5 минут
-
+    this.allAgreementsExpiresMs = 1000 * 60 * 30 // 30 минут
     this.eo = new EventObserver()
+    this.agreementMap = new Map()
   }
 
   async create(body) {
     let { data } = await api.post(BASE_PATH, body)
-    store.commit('addToCache', data)
     return data
   }
 
   async updateOne(id, body) {
     let { data } = await api.put(BASE_PATH + '/' + id, body)
-    store.commit('addToCache', data)
     return data
   }
 
@@ -46,18 +44,6 @@ class CarrierAgreementService {
       }, this.allAgreementsExpiresMs * 10)
       return data.items
     }
-  }
-
-  async getByClient(client) {
-    const { data } = await api.get(BASE_PATH, {
-      params: {
-        client,
-        company: store.getters.directoriesProfile,
-        limit: 100,
-        skip: 0,
-      },
-    })
-    return data?.items || []
   }
 
   async getById(id) {
