@@ -7,11 +7,18 @@
     </template>
     <v-list class="px-3">
       <v-switch
+        v-model="onlyTrucksWithRoutes"
+        label="Только грузовики с рейсами"
+        dense
+        hide-details
+        @change="changeOnlyTrucksWithRoutes"
+      />
+      <v-switch
+        v-model="onlyPlannedDates"
         label="Планируемые даты"
         dense
         hide-details
-        :value="$store.getters.onlyPlannedDates"
-        @change="$store.commit('changeOnlyPlannedDates')"
+        @change="changeOnlyPlannedDates"
       />
       <v-switch
         v-model="tmpSettings.showBufferZone"
@@ -41,6 +48,7 @@
   </v-menu>
 </template>
 <script>
+import { ref, getCurrentInstance, onMounted } from 'vue'
 export default {
   name: 'SettingsCell',
   model: {
@@ -51,6 +59,30 @@ export default {
     settings: {
       type: Object,
     },
+  },
+  setup() {
+    const { proxy } = getCurrentInstance()
+    const onlyTrucksWithRoutes = ref(false)
+    const onlyPlannedDates = ref(false)
+
+    const changeOnlyTrucksWithRoutes = () => {
+      proxy.$store.commit('changeOnlyTrucksWithRoutes')
+    }
+    const changeOnlyPlannedDates = () => {
+      proxy.$store.commit('changeOnlyPlannedDates')
+    }
+
+    onMounted(() => {
+      onlyTrucksWithRoutes.value = proxy.$store.getters.onlyTrucksWithRoutes
+      onlyPlannedDates.value = proxy.$store.getters.onlyPlannedDates
+    })
+
+    return {
+      onlyTrucksWithRoutes,
+      onlyPlannedDates,
+      changeOnlyTrucksWithRoutes,
+      changeOnlyPlannedDates,
+    }
   },
   data() {
     return {

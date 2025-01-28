@@ -44,12 +44,11 @@
   </v-container>
 </template>
 <script>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, getCurrentInstance } from 'vue'
 import { ButtonsPanel } from '@/shared/ui'
 import { AgreementListSettings } from '@/entities/agreement'
 import { AgreementService } from '@/shared/services'
-import usePersistedRef from '@/shared/hooks/usePersistedRef'
-import { getCurrentInstance } from 'vue'
+import { usePersistedRef } from '@/shared/hooks'
 
 export default {
   name: 'AgreementListPage',

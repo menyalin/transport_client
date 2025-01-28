@@ -255,6 +255,10 @@
       </v-row>
       <div class="row-wrapper my-3">
         <v-checkbox
+          v-model="form.alwaysInSchedule"
+          label="Всегда в распределении"
+        />
+        <v-checkbox
           v-model="form.hideInFines"
           label="Не показывать в штрафах"
         />
@@ -338,6 +342,7 @@ export default {
         note: null,
         allowedDrivers: null,
         order: 50,
+        alwaysInSchedule: false,
         hideInFines: false,
       },
     }
@@ -431,6 +436,7 @@ export default {
       note: {},
       allowedDrivers: {},
       order: { numeric },
+      alwaysInSchedule: {},
     },
   },
 
@@ -480,7 +486,7 @@ export default {
 .row-wrapper {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  gap: 15px;
 }
 .first-row {
   display: flex;

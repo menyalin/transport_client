@@ -112,13 +112,16 @@ export default {
         .sort(_trucksSortHandler)
         .map(_prepareTruck),
 
-    loadDirection: ({ allTruckParams }, { companySettings }) => {
-      return allTruckParams.loadDirection.filter((i) =>
+    fixedInScheduleTrucksIds: ({ trucks }) =>
+      trucks.filter((item) => item.alwaysInSchedule).map((i) => i._id),
+
+    loadDirection: ({ allTruckParams }, { companySettings }) =>
+      allTruckParams.loadDirection.filter((i) =>
         companySettings.loadDirections.length
           ? companySettings.loadDirections.includes(i.value)
           : true
-      )
-    },
+      ),
+
     allLoadDirection: ({ allTruckParams }) => allTruckParams.loadDirection,
 
     truckTypes: ({ allTruckParams }) => allTruckParams.truckTypes,
