@@ -67,7 +67,7 @@
         <v-autocomplete
           v-model="state.executor"
           label="Исполнитель"
-          :items="ownCarriers"
+          :items="carrierItems"
           item-value="_id"
           item-text="name"
           outlined
@@ -201,7 +201,7 @@ export default {
     agreement: {
       type: Object,
     },
-    ownCarriers: Array,
+    carrierItems: Array,
     displayDeleteBtn: {
       type: Boolean,
       default: false,
