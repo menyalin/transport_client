@@ -20,7 +20,7 @@
       @deletePrice="deletePrice"
       :basePrePrice="basePrePrice"
       :hidePrePrice="hidePrePrice"
-      :usePriceWithVat="agreement.usePriceWithVAT"
+      :usePriceWithVat="agreement.usePriceWithVAT ?? false"
     />
     <app-dialog-form
       :item="editedItem"

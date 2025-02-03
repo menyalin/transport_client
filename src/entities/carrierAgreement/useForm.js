@@ -1,11 +1,13 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 
 export const useForm = (props, ctx) => {
+  const { proxy } = getCurrentInstance()
   const initialState = {
     name: '',
     vatRate: 0,
     paymentOfDays: 0,
+    usePriceWithVAT: false,
     paymentDescription: '',
     orderContractNote: '',
     note: '',
@@ -18,13 +20,16 @@ export const useForm = (props, ctx) => {
       vatRate: { required: true },
       paymentDescription: {},
       orderContractNote: {},
+      usePriceWithVAT: {},
       note: {},
     }
   })
 
   const v$ = useVuelidate(rules, state)
   const invalidForm = computed(() => v$.value.$invalid)
-
+  const vatRateDisabled = computed(() => {
+    return !!proxy.$route.params.id
+  })
   watch(
     () => props.item,
     (val) => {
@@ -35,6 +40,7 @@ export const useForm = (props, ctx) => {
   )
 
   return {
+    vatRateDisabled,
     state,
     v$,
     invalidForm,

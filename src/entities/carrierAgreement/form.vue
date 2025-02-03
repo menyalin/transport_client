@@ -34,6 +34,7 @@
           :style="{ maxWidth: '200px' }"
         />
       </div>
+
       <div class="fields-row">
         <v-textarea
           v-model="state.paymentDescription"
@@ -48,6 +49,13 @@
           rows="10"
           outlined
           label="Примечание для Договора-заявки"
+        />
+      </div>
+      <div class="fields-row">
+        <v-checkbox
+          v-model="state.usePriceWithVAT"
+          label="Показывать цены с НДС"
+          :disabled="!state.vatRate"
         />
       </div>
       <div class="fields-row">

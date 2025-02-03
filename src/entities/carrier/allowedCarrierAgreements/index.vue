@@ -18,6 +18,8 @@
         :title="formTitle"
         :item="editedItem"
         :agreementItems="agreementItems"
+        :showRemoveBtn="Boolean(editedItem)"
+        @remove="removeHandler"
         @save="saveHandler"
         @cancel="cancelHandler"
       />
@@ -25,7 +27,7 @@
   </div>
 </template>
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, getCurrentInstance } from 'vue'
 import { BorderedBlock } from '@/shared/ui'
 import { HEADERS } from './tableHeaders'
 import AllowedAgreementForm from './allowedAgreementForm.vue'
@@ -45,6 +47,7 @@ export default {
     agreementItems: Array, // все соглашения с перевозчика - для селекта
   },
   setup(props, ctx) {
+    const { proxy } = getCurrentInstance()
     const editedItem = ref(null)
     const dialog = ref(false)
     const agreementItemsMap = computed(() => {
@@ -82,6 +85,15 @@ export default {
       editedItem.value = { ...item }
       dialog.value = true
     }
+    const removeHandler = async () => {
+      const res = await proxy.$confirm('Вы уверены?')
+      if (!res) return
+
+      const tmpRes = [...props.agreements]
+      tmpRes.splice(editedItem.value.idx, 1)
+      ctx.emit('change', [...tmpRes])
+      closeAndResetItem()
+    }
 
     const saveHandler = (val) => {
       const tmpRes = [...props.agreements]
@@ -101,6 +113,7 @@ export default {
       dialog,
       addAgreementHandler,
       dblClickRowHandler,
+      removeHandler,
       saveHandler,
       cancelHandler,
       headers: HEADERS,

@@ -8,8 +8,12 @@ export const useListData = () => {
     { value: 'name', text: 'Название ТК' },
     { value: 'outsource', text: 'Привлеченный', width: 150, align: 'center' },
     { value: 'agreementName', text: 'Основное соглашение' },
+    { value: 'agreements', text: 'Соглашения' },
   ])
-  const settings = usePersistedRef({ search: null }, 'CarrierListSettings')
+  const settings = usePersistedRef(
+    { search: null, type: 'all' },
+    'CarrierListSettings'
+  )
   const items = ref([])
   const loading = ref(false)
   const count = ref(0)
@@ -21,6 +25,7 @@ export const useListData = () => {
   const queryParams = computed(() => ({
     company: proxy.$store.getters.directoriesProfile,
     search: settings.value?.search,
+    type: settings.value?.type,
     limit: listOptions.value?.itemsPerPage || 50,
     skip: listOptions.value?.itemsPerPage * (listOptions.value?.page - 1) || 0,
     sortBy: listOptions.value?.sortBy || [],

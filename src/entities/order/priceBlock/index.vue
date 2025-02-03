@@ -16,7 +16,7 @@
       @change="changeOutsourceCostsHandler"
       class="mt-4"
       :readonly="readonlyCosts"
-      :agreement="outsourceAgreement"
+      :agreement="carrierAgreement"
       title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
     />
@@ -25,7 +25,6 @@
 </template>
 <script>
 import AppPriceWrapper from './priceWrapper.vue'
-import { AgreementService } from '@/shared/services'
 
 export default {
   name: 'PriceBlock',
@@ -42,11 +41,10 @@ export default {
     prices: Array,
     outsourceCosts: Array,
     agreement: Object,
-    outsourceAgreementId: String,
+    carrierAgreement: Object,
   },
   data() {
     return {
-      outsourceAgreement: {},
       tmpCosts: [],
     }
   },
@@ -69,7 +67,7 @@ export default {
     },
     showOutsourceBlock() {
       return (
-        !!this.outsourceAgreementId &&
+        !!this.carrierAgreement?._id &&
         this.$store.getters.allowedPeriodForPermission({
           permission: 'order:daysForReadOutsourceCosts',
           date: this.lastDepartureDate,
@@ -104,14 +102,6 @@ export default {
       deep: true,
       handler: function (val) {
         this.$emit('outsource-costs:update', val)
-      },
-    },
-
-    outsourceAgreementId: {
-      immediate: true,
-      handler: async function (val) {
-        if (val) this.outsourceAgreement = await AgreementService.getById(val)
-        else this.outsourceAgreement = { ...{} }
       },
     },
   },

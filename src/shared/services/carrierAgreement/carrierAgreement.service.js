@@ -65,6 +65,13 @@ class CarrierAgreementService {
     }
   }
 
+  async getByCarrierAndDate(params) {
+    let { data } = await api.get(BASE_PATH + '/get_by_carrier_and_date', {
+      params,
+    })
+    return data
+  }
+
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data

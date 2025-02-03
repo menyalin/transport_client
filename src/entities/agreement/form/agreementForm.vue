@@ -38,6 +38,7 @@
         />
         <v-checkbox
           v-model="state.isOutsourceAgreement"
+          disabled
           label="Соглашение с перевозчиком"
           color="primary"
           :readonly="!!agreement && !!agreement._id"
@@ -155,6 +156,7 @@
         :style="{ maxWidth: '400px' }"
       />
       <v-textarea
+        disabled
         v-model="state.paymentDescription"
         rows="2"
         outlined

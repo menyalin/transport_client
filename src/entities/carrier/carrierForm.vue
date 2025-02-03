@@ -10,7 +10,7 @@
       @cancel="cancelHandler"
       @submit="submitHandler"
     />
-    {{ isInvalidForm }}
+
     <v-text-field
       v-model="state.name"
       outlined

@@ -27,6 +27,7 @@
       <v-text-field v-model="state.note" label="Примечание" hide-details />
     </v-card-text>
     <v-card-actions>
+      <v-btn v-if="showRemoveBtn" @click="remove" color="error">Удалить</v-btn>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
       <v-btn color="primary" @click="save" :disabled="invalidForm">
@@ -50,6 +51,7 @@ export default {
     item: Object || null,
     title: String,
     agreementItems: Array,
+    showRemoveBtn: Boolean,
   },
 
   setup(props, ctx) {
@@ -75,14 +77,18 @@ export default {
 
     const cancel = () => ctx.emit('cancel')
     const save = () => ctx.emit('save', state.value)
+    const remove = () => {
+      if (!props.showRemoveBtn) return
 
+      ctx.emit('remove')
+    }
     watch(
       () => props.item,
       (val) =>
         val ? (state.value = { ...val }) : (state.value = initialState()),
       { deep: true, immediate: true }
     )
-    return { state, save, cancel, invalidForm }
+    return { state, save, cancel, remove, invalidForm }
   },
 }
 </script>
