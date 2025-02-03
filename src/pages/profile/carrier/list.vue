@@ -26,6 +26,12 @@
           <template #[`item.outsource`]="{ item }">
             <v-icon>{{ item.outsource ? 'mdi-check' : 'mdi-minus' }}</v-icon>
           </template>
+          <template #[`item.agreements`]="{ item }">
+            <CarrierListAgreementsCell
+              :items="item.agreements"
+              :agreementsData="item.agreementsData"
+            />
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -34,13 +40,17 @@
 <script>
 import { ButtonsPanel } from '@/shared/ui'
 import { useListData } from './useListData'
-import { CarrierListSettings } from '@/entities/carrier'
+import {
+  CarrierListSettings,
+  CarrierListAgreementsCell,
+} from '@/entities/carrier'
 
 export default {
   name: 'CarrierList',
   components: {
     ButtonsPanel,
     CarrierListSettings,
+    CarrierListAgreementsCell,
   },
   setup() {
     const {

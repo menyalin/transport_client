@@ -50,7 +50,7 @@ export const useListData = () => {
       loading.value = true
       const data = await IncomingInvoiceService.getList(queryParams.value)
       items.value = data.items
-      totalCount.value = data.count
+      totalCount.value = data.totalCount
       loading.value = false
     } catch (e) {
       loading.value = false

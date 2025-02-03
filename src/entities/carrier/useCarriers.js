@@ -47,5 +47,9 @@ export const useCarriers = (settings = {}) => {
     refresh: getItems,
     ownCarriers,
     outsourceCarriers,
+    allCarriers: computed(() => [
+      ...ownCarriers.value,
+      ...outsourceCarriers.value,
+    ]),
   }
 }

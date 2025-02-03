@@ -18,7 +18,7 @@
           :displayDeleteBtn="
             !!id && $store.getters.hasPermission('agreement:delete')
           "
-          :ownCarriers="ownCarriers"
+          :carrierItems="carrierItems"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -42,8 +42,8 @@ export default {
   },
   mixins: [pageDetailsMixin],
   setup() {
-    const { ownCarriers } = useCarriers()
-    return { ownCarriers }
+    const { allCarriers: carrierItems } = useCarriers()
+    return { carrierItems }
   },
   data() {
     return {

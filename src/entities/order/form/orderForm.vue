@@ -156,7 +156,7 @@
               :prePrices="prePrices"
               :outsourceCosts.sync="outsourceCosts"
               :agreement="agreement"
-              :outsourceAgreementId="confirmedCrew.outsourceAgreement"
+              :carrierAgreement="carrierAgreement"
               :analytics="analytics"
               :route="route"
             >
@@ -248,6 +248,7 @@ import {
 } from '@/entities/order'
 
 import AppPaymentToDriver from './paymentToDriver.vue'
+import { CarrierAgreementService } from '@/shared/services/index'
 
 export default {
   name: 'OrderForm',
@@ -317,6 +318,7 @@ export default {
   },
   data() {
     return {
+      carrierAgreement: null,
       processingBeforeSubmit: false,
       agreement: null,
       docs: [],
@@ -541,6 +543,14 @@ export default {
     },
   },
   watch: {
+    'confirmedCrew.outsourceAgreement': {
+      handler: async function (val) {
+        this.carrierAgreement = val
+          ? await CarrierAgreementService.getById(val)
+          : null
+      },
+      immediate: true,
+    },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)
@@ -732,6 +742,7 @@ export default {
         this.form[key] = val[key]
       })
     },
+
     resetForm() {
       const keys = Object.keys(this.form)
       this.route = []

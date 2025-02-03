@@ -1,5 +1,16 @@
 <template>
   <div class="settings-wrapper">
+    <v-select
+      :value="settings.type"
+      label="Тип перевозчика"
+      :items="carrierTypes"
+      dense
+      hide-details
+      clearable
+      outlined
+      :style="{ maxWidth: '300px' }"
+      @change="updateSettings($event, 'type')"
+    />
     <v-text-field
       :value="settings.search"
       label="Поиск"
@@ -24,6 +35,11 @@ export default {
   },
 
   setup(props, ctx) {
+    const carrierTypes = [
+      { text: 'Все', value: 'all' },
+      { text: 'Свой', value: 'own' },
+      { text: 'Привлеченный', value: 'outsource' },
+    ]
     function updateSettings(val, field) {
       ctx.emit(
         'change',
@@ -31,6 +47,7 @@ export default {
       )
     }
     return {
+      carrierTypes,
       updateSettings,
     }
   },

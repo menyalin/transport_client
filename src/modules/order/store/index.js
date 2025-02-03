@@ -45,11 +45,22 @@ export default {
     ],
     orderStatuses: [],
     scheduleDate: dayjs().format('YYYY-MM-DD'),
-    onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') || false,
+    onlyPlannedDates:
+      localStorage.getItem('orders:onlyPlannedDates') === 'true' ?? false,
     orderAnalyticTypes: [],
     orderPriceTypes: [],
+    onlyTrucksWithRoutes:
+      localStorage.getItem('orders:onlyTrucksWithRoutes') === 'true' ?? false,
   },
   mutations: {
+    changeOnlyTrucksWithRoutes(state) {
+      state.onlyTrucksWithRoutes = !state.onlyTrucksWithRoutes
+      localStorage.setItem(
+        'orders:onlyTrucksWithRoutes',
+        state.onlyTrucksWithRoutes
+      )
+    },
+
     changeOnlyPlannedDates(state) {
       state.onlyPlannedDates = !state.onlyPlannedDates
       if (!state.onlyPlannedDates)
@@ -113,6 +124,7 @@ export default {
     },
   },
   getters: {
+    onlyTrucksWithRoutes: ({ onlyTrucksWithRoutes }) => onlyTrucksWithRoutes,
     pointTypes: ({ pointTypes }) => pointTypes,
     ordersForSchedule: (
       { orders, period },

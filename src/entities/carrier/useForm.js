@@ -1,6 +1,5 @@
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-// import { required } from '@vuelidate/validators'
 
 export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
@@ -10,6 +9,7 @@ export const useForm = (props, ctx) => {
       : {
           name: '',
           agreement: null,
+          agreements: [],
           outsource: false,
           contacts: [],
           companyInfo: null,
@@ -20,6 +20,7 @@ export const useForm = (props, ctx) => {
   const rules = computed(() => ({
     name: {},
     outsource: {},
+    agreements: {},
   }))
 
   const v$ = useVuelidate(rules, state)
@@ -60,6 +61,7 @@ export const useForm = (props, ctx) => {
     cancelHandler,
     isInvalidForm,
     // nameErrors,
+    v$,
     deleteHandler,
   }
 }

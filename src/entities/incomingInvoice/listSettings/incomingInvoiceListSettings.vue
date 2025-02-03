@@ -13,7 +13,7 @@
       :value="settings.agreements"
       item-text="name"
       item-value="_id"
-      label="Соглашения"
+      label="Соглашения с ТК"
       :disabled="agreementItems.length === 0"
       dense
       clearable

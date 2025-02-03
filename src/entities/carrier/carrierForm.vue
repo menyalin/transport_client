@@ -11,19 +11,31 @@
       @submit="submitHandler"
     />
 
-    <v-text-field v-model="state.name" outlined label="Название ТК" dense />
+    <v-text-field
+      v-model="state.name"
+      outlined
+      label="Название ТК"
+      dense
+      hide-details
+    />
+    <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
     <v-select
+      v-if="$store.getters.hasPermission('admin:only')"
       v-model="state.agreement"
       outlined
       item-text="name"
       item-value="_id"
       dense
       clearable
-      label="Основное соглашение"
+      label="НЕ ИСПОЛЬЗОВАТЬ! Основное соглашение"
       :style="{ maxWidth: '500px' }"
       :items="agreementItems"
     />
-    <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
+    <AllowedCarrierAgreements
+      v-model="state.agreements"
+      :agreementItems="agreementItems"
+    />
+    <v-divider />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
     <ContactsInfo v-model="state.contacts" />
@@ -40,13 +52,14 @@
   </div>
 </template>
 <script>
-import { useForm } from './useForm'
 import {
   ButtonsPanel,
   BankAccountInfoForm,
   CompanyInfoForm,
   ContactsInfo,
 } from '@/shared/ui'
+import { useForm } from './useForm'
+import AllowedCarrierAgreements from './allowedCarrierAgreements'
 
 export default {
   name: 'CarrierForm',
@@ -55,7 +68,9 @@ export default {
     BankAccountInfoForm,
     CompanyInfoForm,
     ContactsInfo,
+    AllowedCarrierAgreements,
   },
+
   props: {
     loading: Boolean,
     agreementItems: Array,
@@ -74,6 +89,7 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
+      v$,
     } = useForm(props, ctx)
 
     return {
@@ -81,6 +97,7 @@ export default {
       deleteHandler,
       submitHandler,
       cancelHandler,
+      v$,
       isInvalidForm,
     }
   },

@@ -1,6 +1,7 @@
 import { computed, ref, getCurrentInstance, watch } from 'vue'
-import { CrewService, AgreementService } from '@/shared/services'
+import { CrewService, CarrierAgreementService } from '@/shared/services'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
+
 export const useConfirmedCrew = (props, ctx) => {
   const { proxy } = getCurrentInstance()
   const initialState = {
@@ -76,14 +77,16 @@ export const useConfirmedCrew = (props, ctx) => {
     if (!state.value.truck) return
 
     const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
-    const tkNameId = truck?.tkName?._id || truck?.tkName || null
+    const carrierId = truck?.tkName?._id || truck?.tkName || null
 
-    if (isOutsourceTruck.value && tkNameId)
-      outsourceAgreement.value = await AgreementService.getForOrder({
-        company: proxy.$store.getters.directoriesProfile,
-        date: props.date,
-        tkNameId,
-      })
+    if (isOutsourceTruck.value && carrierId)
+      outsourceAgreement.value =
+        await CarrierAgreementService.getByCarrierAndDate({
+          company: proxy.$store.getters.directoriesProfile,
+          date: props.date,
+          carrierId,
+        })
+
     let crew = null
 
     if (isNeedUpdateCrew.value || !props.crew?.driver) {
@@ -103,7 +106,7 @@ export const useConfirmedCrew = (props, ctx) => {
       truck: state.value.truck,
       trailer: crew?.transport?.trailer || state.value.trailer,
       driver: crew?.driver || state.value.driver,
-      tkName: tkNameId,
+      tkName: carrierId,
       outsourceAgreement: outsourceAgreement.value?._id || null,
     })
   }

@@ -4,12 +4,11 @@
       <v-col>
         <buttons-panel
           panel-type="list"
-          :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('agreement:write')"
           @submit="create"
           @refresh="refresh"
         />
-        <div class="filter-wrapper" />
+        <AgreementListSettings v-model="settings" />
 
         <v-data-table
           :headers="headers"
@@ -22,7 +21,7 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
+          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.type`]="{ item }">
@@ -45,26 +44,88 @@
   </v-container>
 </template>
 <script>
+import { ref, watch, computed, getCurrentInstance } from 'vue'
 import { ButtonsPanel } from '@/shared/ui'
-import { mapGetters } from 'vuex'
+import { AgreementListSettings } from '@/entities/agreement'
 import { AgreementService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
 
 export default {
-  name: 'AgreementList',
+  name: 'AgreementListPage',
   components: {
     ButtonsPanel,
+    AgreementListSettings,
+  },
+  setup() {
+    const { proxy } = getCurrentInstance()
+    const loading = ref(false)
+    const list = ref([])
+    const count = ref(0)
+    const listOptions = usePersistedRef(
+      {
+        page: 1,
+      },
+      'agreement_list_options'
+    )
+    const settings = usePersistedRef(
+      { search: null },
+      'agreement_list_settings'
+    )
+    const queryParams = computed(() => ({
+      company: proxy.$store.getters.directoriesProfile,
+      skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
+      search: settings.value.search,
+      limit: listOptions.value.itemsPerPage,
+      sortBy: listOptions.value.sortBy.length
+        ? listOptions.value.sortBy[0]
+        : null,
+      sortDesc: listOptions.value.sortDesc.length
+        ? listOptions.value.sortDesc[0]
+        : null,
+    }))
+
+    async function getData() {
+      try {
+        loading.value = true
+        const data = await AgreementService.getList(queryParams.value)
+        list.value = data.items ?? []
+        count.value = data.count ?? 0
+      } catch (e) {
+        proxy.$store.commit('setError', e.message)
+      } finally {
+        loading.value = false
+      }
+    }
+
+    async function refresh() {
+      await getData()
+    }
+
+    watch(
+      settings,
+      () => {
+        listOptions.value = { ...listOptions.value, page: 1 }
+      },
+      { deep: true }
+    )
+    watch(
+      listOptions,
+      async () => {
+        await getData()
+      },
+      { deep: true }
+    )
+
+    return {
+      loading,
+      listOptions,
+      settings,
+      refresh,
+      list,
+      count,
+    }
   },
   data: () => ({
-    formName: 'agreementList',
-    loading: false,
-    settings: {
-      listOptions: {
-        page: 1,
-        itemsPerPage: 50,
-      },
-    },
-    count: 0,
-    list: [],
     headers: [
       { value: 'name', text: 'Название', sortable: false },
       {
@@ -72,14 +133,12 @@ export default {
         text: 'Наименование исполнителя',
         sortable: false,
       },
-
       { value: 'date', text: 'Дата начала действия', sortable: true },
       { value: 'vatRateText', text: 'НДС', sortable: false },
       { value: 'note', text: 'Примечание', sortable: false },
     ],
   }),
   computed: {
-    ...mapGetters(['directoriesProfile']),
     filteredList() {
       if (!this.list) return []
       return this.list.map((i) => {
@@ -94,71 +153,15 @@ export default {
       })
     },
   },
-  watch: {
-    settings: {
-      deep: true,
-      handler: function () {
-        this.getData()
-      },
-    },
-  },
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
+
   methods: {
     create() {
       this.$router.push({ name: 'AgreementCreate' })
     },
-    refresh() {
-      this.getData()
-    },
+
     dblClickRow(_, { item }) {
       this.$router.push(`agreements/${item._id}`)
-    },
-    async getData() {
-      if (!this.directoriesProfile) {
-        this.$router.push('/profile')
-        return null
-      }
-      try {
-        this.loading = true
-        const data = await AgreementService.getList({
-          company: this.directoriesProfile,
-
-          skip:
-            this.settings.listOptions.itemsPerPage *
-            (this.settings.listOptions.page - 1),
-          limit: this.settings.listOptions.itemsPerPage,
-          sortBy: this.settings.listOptions.sortBy.length
-            ? this.settings.listOptions.sortBy[0]
-            : null,
-          sortDesc: this.settings.listOptions.sortDesc.length
-            ? this.settings.listOptions.sortDesc[0]
-            : null,
-        })
-        this.list = data.items
-        this.count = data.count
-        this.loading = false
-      } catch (e) {
-        this.loading = false
-        this.$store.commit('setError', e.message)
-      }
     },
   },
 }
 </script>
-<style scoped>
-.filter-wrapper {
-  display: grid;
-  grid-template-columns: 300px 280px;
-  align-items: center;
-}
-</style>
