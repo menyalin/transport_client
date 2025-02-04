@@ -56,6 +56,8 @@ export default {
   methods: {
     async changeDirectoriesProfile(val) {
       await this.$store.dispatch('configProfile', { directoriesProfile: val })
+      localStorage.clear()
+      sessionStorage.clear()
       this.$store.commit('clearDirectories')
       if (val) await this.$store.dispatch('getUserData')
     },

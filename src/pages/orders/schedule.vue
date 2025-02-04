@@ -32,6 +32,11 @@ export default {
           .map((i) => i.truckId)
           .filter((i) => !!i)
       )
+
+      this.$store.getters.downtimesForSchedule.forEach((i) =>
+        trucksInOrdersSet.add(i.truck)
+      )
+
       const showTrucksFilter = (truck) => {
         if (truck.type !== 'truck') return false
 
