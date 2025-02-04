@@ -15,14 +15,21 @@
           class="mt-3"
           label="Название"
           outlined
-          dense
           :style="{ 'max-width': '500px' }"
         />
         <DateTimeInput
           v-model="state.date"
           label="Дата начала"
           outlined
-          dense
+          hideTimeInput
+          hidePrependIcon
+          class="mb-4"
+          :style="{ 'max-width': '300px' }"
+        />
+        <DateTimeInput
+          v-model="state.endDate"
+          label="Дата окончания"
+          outlined
           hideTimeInput
           hidePrependIcon
           class="mb-4"
@@ -31,33 +38,12 @@
         <VatRateSelect
           v-model="state.vatRate"
           label="Ставка НДС"
-          :readonly="!!agreement && !!agreement._id"
-          dense
+          :disabled="!!agreement && !!agreement._id"
           outlined
           :style="{ 'max-width': '130px' }"
         />
-        <v-checkbox
-          v-model="state.isOutsourceAgreement"
-          disabled
-          label="Соглашение с перевозчиком"
-          color="primary"
-          :readonly="!!agreement && !!agreement._id"
-        />
       </div>
-      <div v-if="state.isOutsourceAgreement">
-        <v-divider />
-        <app-tknames
-          v-model="state.outsourceCarriers"
-          :style="{ 'max-width': '400px' }"
-        />
-        <v-checkbox
-          v-model="state.cashPayment"
-          label="Оплата наличными"
-          color="primary"
-        />
-      </div>
-      <div v-else class="mb-4">
-        <v-divider />
+      <div class="mb-4">
         <v-text-field
           label="Наименование исполнителя"
           outlined
@@ -144,24 +130,6 @@
           label="Обязательно заполнение номера аукциона"
         />
       </div>
-      <v-text-field
-        v-if="isOutsourceAgreement"
-        v-model.number="state.commsission"
-        type="number"
-        label="Комиссия экспедитора (скидка в акте)"
-        outlined
-        dense
-        class="mt-5"
-        suffix="%"
-        :style="{ maxWidth: '400px' }"
-      />
-      <v-textarea
-        disabled
-        v-model="state.paymentDescription"
-        rows="2"
-        outlined
-        label="Описание условий оплаты (для заявки)"
-      />
 
       <v-text-field v-model="state.note" label="Примечание" outlined dense />
       <div class="row mb-2">
@@ -187,7 +155,6 @@
 <script>
 import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
 import AppClients from './clients.vue'
-import AppTknames from './tkNames.vue'
 import { useForm } from './useForm'
 
 export default {
@@ -196,7 +163,6 @@ export default {
     ButtonsPanel,
     DateTimeInput,
     AppClients,
-    AppTknames,
     VatRateSelect,
   },
   props: {
@@ -221,9 +187,9 @@ export default {
       cancelHandler,
       isInvalidForm,
       vatRates,
-      isOutsourceAgreement,
       carriers,
     } = useForm(props, ctx)
+    
     return {
       state,
       deleteHandler,
@@ -231,7 +197,6 @@ export default {
       cancelHandler,
       isInvalidForm,
       vatRates,
-      isOutsourceAgreement,
       carriers,
     }
   },
