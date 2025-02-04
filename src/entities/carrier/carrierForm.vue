@@ -19,18 +19,7 @@
       hide-details
     />
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
-    <v-select
-      v-if="$store.getters.hasPermission('admin:only')"
-      v-model="state.agreement"
-      outlined
-      item-text="name"
-      item-value="_id"
-      dense
-      clearable
-      label="НЕ ИСПОЛЬЗОВАТЬ! Основное соглашение"
-      :style="{ maxWidth: '500px' }"
-      :items="agreementItems"
-    />
+   
     <AllowedCarrierAgreements
       v-model="state.agreements"
       :agreementItems="agreementItems"

@@ -8,7 +8,6 @@ export const useForm = (props, ctx) => {
       ? item
       : {
           name: '',
-          agreement: null,
           agreements: [],
           outsource: false,
           contacts: [],
@@ -60,7 +59,6 @@ export const useForm = (props, ctx) => {
     submitHandler,
     cancelHandler,
     isInvalidForm,
-    // nameErrors,
     v$,
     deleteHandler,
   }
