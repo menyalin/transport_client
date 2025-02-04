@@ -13,7 +13,7 @@
         :messages="agreementNameSring"
         :error="!agreement"
         dense
-        :style="{ maxWidth: '300px' }"
+        :style="{ maxWidth: '400px' }"
       />
 
       <v-text-field
@@ -22,7 +22,7 @@
         dense
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
-        :style="{ maxWidth: '300px' }"
+        :style="{ maxWidth: '250px' }"
       />
       <v-text-field
         v-model.trim="params.auctionNum"
@@ -30,7 +30,7 @@
         dense
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
-        :style="{ maxWidth: '300px' }"
+        :style="{ maxWidth: '250px' }"
       />
     </div>
     <v-btn
