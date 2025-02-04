@@ -7,7 +7,6 @@ export const useListData = () => {
   const headers = computed(() => [
     { value: 'name', text: 'Название ТК' },
     { value: 'outsource', text: 'Привлеченный', width: 150, align: 'center' },
-    { value: 'agreementName', text: 'Основное соглашение' },
     { value: 'agreements', text: 'Соглашения' },
   ])
   const settings = usePersistedRef(
