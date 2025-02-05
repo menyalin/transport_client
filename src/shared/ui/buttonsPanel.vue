@@ -18,7 +18,7 @@
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col class="slot-wrapper">
         <slot />
       </v-col>
     </v-row>
@@ -37,7 +37,7 @@
           Создать
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col class="slot-wrapper">
         <slot />
       </v-col>
     </v-row>
@@ -60,4 +60,11 @@ export default {
   },
 }
 </script>
-<style></style>
+<style>
+.slot-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 15px;
+}
+</style>

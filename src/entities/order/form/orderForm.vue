@@ -160,7 +160,10 @@
               :analytics="analytics"
               :route="route"
             >
-              <IncomingInvoiceLink :invoice="order.incomingInvoice" />
+              <IncomingInvoiceLink
+                v-if="!!order"
+                :invoice="order.incomingInvoice"
+              />
             </PriceBlock>
 
             <PriceDialog

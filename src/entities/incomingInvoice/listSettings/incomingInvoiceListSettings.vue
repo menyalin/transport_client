@@ -36,11 +36,12 @@
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'statuses')"
     />
-    <v-select
+    <v-autocomplete
       :value="settings.carriers"
       label="Перевозчики"
       multiple
       item-text="name"
+      auto-select-first
       item-value="_id"
       dense
       clearable

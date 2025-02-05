@@ -126,22 +126,19 @@ class OrderService {
   async downloadDoc(
     id,
     body,
-    // filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_order_contract'
-    filename = 'order'
+    filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_order_contract'
   ) {
     try {
-      const { data } = await api({
+      const response = await api({
         url: BASE_PATH + '/' + id + '/download_doc',
         method: 'POST',
         responseType: 'blob',
         data: body,
       })
-      const blob = new Blob([data], {
+      const blob = new Blob([response.data], {
         type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       })
-
       FileSaver.saveAs(blob, filename + '.docx')
-      return data || null
     } catch (e) {
       store.commit('setError', e.message)
       return null
