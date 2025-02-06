@@ -35,19 +35,6 @@
         />
 
         <v-autocomplete
-          v-model="state.agreement"
-          label="Соглашение"
-          dense
-          required
-          item-value="_id"
-          item-text="name"
-          clearable
-          outlined
-          :disabled="disabledAgreements"
-          :items="agreementItems"
-          :style="{ maxWidth: '300px' }"
-        />
-        <v-autocomplete
           v-model="state.carrier"
           label="Перевозчик"
           dense
@@ -58,6 +45,20 @@
           outlined
           :disabled="disabledCarriers"
           :items="outsourceCarriers"
+          :style="{ maxWidth: '300px' }"
+          @change="carrierChangeHandler"
+        />
+        <v-autocomplete
+          v-model="state.agreement"
+          label="Соглашение"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="disabledAgreement || hasOrders"
+          :items="carrierAgreements"
           :style="{ maxWidth: '300px' }"
         />
       </div>
@@ -146,16 +147,51 @@ export default {
 
     const needSave = computed(() => false) // TODO: fix it
 
-    const disabledAgreements = computed(() => {
+    const hasOrders = computed(() => {
       return props.item?.orders?.length > 0
     })
 
     const disabledCarriers = computed(() => {
       return props.item?.orders?.length > 0 && !!state.value.carrier
     })
+    const disabledAgreement = computed(() => {
+      return !state.value.carrier // TODO: add logic
+    })
+
+    const carrierAgreements = computed(() => {
+      if (!state.value.carrier) return []
+      const currentCarier = outsourceCarriers.value.find(
+        (carrier) => carrier._id === state.value.carrier
+      )
+      if (!currentCarier || !currentCarier.agreements) return []
+
+      const carrierAgreementsIds = currentCarier.agreements.map(
+        (i) => i.agreement
+      )
+
+      return props.agreementItems.filter((agreement) =>
+        carrierAgreementsIds.includes(agreement._id)
+      )
+    })
 
     function pickOrdersHandler() {
       ctx.emit('pickOrders')
+    }
+    const carrierChangeHandler = (val) => {
+      const currentCarier = outsourceCarriers.value.find(
+        (carrier) => carrier._id === state.value.carrier
+      )
+
+      const carrierAgreementsIds = currentCarier.agreements.map(
+        (i) => i.agreement
+      )
+      if (!val || carrierAgreements.value.length === 0)
+        state.value.agreement = null
+      else if (carrierAgreements.value.length === 1)
+        state.value.agreement = carrierAgreements.value[0]._id
+
+      if (!carrierAgreementsIds.includes(state.value.agreement))
+        state.value.agreement = null
     }
 
     return {
@@ -170,9 +206,12 @@ export default {
       needSave,
       pickOrdersHandler,
       allowedToChangeOrders,
-      disabledAgreements,
+      disabledAgreement,
+      carrierAgreements,
+      hasOrders,
       outsourceCarriers,
       disabledCarriers,
+      carrierChangeHandler,
     }
   },
 }
