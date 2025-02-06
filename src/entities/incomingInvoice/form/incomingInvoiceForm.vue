@@ -157,20 +157,19 @@ export default {
     const disabledAgreement = computed(() => {
       return !state.value.carrier // TODO: add logic
     })
-
-    const carrierAgreements = computed(() => {
+    const carrierAgreementIds = computed(() => {
       if (!state.value.carrier) return []
       const currentCarier = outsourceCarriers.value.find(
         (carrier) => carrier._id === state.value.carrier
       )
       if (!currentCarier || !currentCarier.agreements) return []
+      return currentCarier.agreements?.map((i) => i.agreement) ?? []
+    })
 
-      const carrierAgreementsIds = currentCarier.agreements.map(
-        (i) => i.agreement
-      )
-
+    const carrierAgreements = computed(() => {
+      if (!state.value.carrier) return []
       return props.agreementItems.filter((agreement) =>
-        carrierAgreementsIds.includes(agreement._id)
+        carrierAgreementIds.value.includes(agreement._id)
       )
     })
 
@@ -178,19 +177,12 @@ export default {
       ctx.emit('pickOrders')
     }
     const carrierChangeHandler = (val) => {
-      const currentCarier = outsourceCarriers.value.find(
-        (carrier) => carrier._id === state.value.carrier
-      )
-
-      const carrierAgreementsIds = currentCarier.agreements.map(
-        (i) => i.agreement
-      )
       if (!val || carrierAgreements.value.length === 0)
         state.value.agreement = null
       else if (carrierAgreements.value.length === 1)
         state.value.agreement = carrierAgreements.value[0]._id
 
-      if (!carrierAgreementsIds.includes(state.value.agreement))
+      if (!carrierAgreementIds.value.includes(state.value.agreement))
         state.value.agreement = null
     }
 
