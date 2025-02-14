@@ -46,7 +46,7 @@ export const useCrewForm = (props, ctx) => {
       return proxy.$store.getters.trucks
         .filter((t) => t.type === 'truck')
         .filter((truck) =>
-          truck.allowedDrivers.some(
+          truck.allowedDrivers?.some(
             ({ driver }) => driver === state.value.driver
           )
         )
