@@ -82,11 +82,12 @@
       :style="{ 'max-width': '250px' }"
       @change="settings.listOptions.page = 1"
     />
-    <v-select
+    <v-autocomplete
       v-model="settings.tkNames"
       multiple
       label="ТК"
       :items="$store.getters.tkNames"
+      auto-select-first
       item-value="_id"
       item-text="name"
       dense

@@ -5,10 +5,10 @@ export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
   const defaultState = {
     name: null,
-    isOutsourceAgreement: false,
     cashPayment: false,
     note: null,
     date: null,
+    endDate: null,
     vatRate: null,
     usePriceWithVAT: false,
     useCustomPrices: true,
@@ -17,13 +17,11 @@ export const useForm = (props, ctx) => {
     noWaitingPaymentForAreLateLoading: false,
     noWaitingPaymentForAreLateUnloading: false,
     clients: [],
-    outsourceCarriers: [],
     closed: null,
     agreement: 0,
     priceRequired: false,
     clientNumRequired: false,
     auctionNumRequired: false,
-    commission: 0,
     executorName: null,
     executor: null,
     allowedCarriers: [],
@@ -39,7 +37,7 @@ export const useForm = (props, ctx) => {
 
   const isInvalidForm = computed(() => v$.value.$invalid)
   const vatRates = computed(() => proxy.$store.getters.vatRates)
-  const isOutsourceAgreement = computed(() => state.value.isOutsourceAgreement)
+
   const carriers = computed(() =>
     proxy.$store.getters.tkNames
       .map((i) => ({
@@ -89,7 +87,6 @@ export const useForm = (props, ctx) => {
     cancelHandler,
     isInvalidForm,
     vatRates,
-    isOutsourceAgreement,
     carriers,
   }
 }

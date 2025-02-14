@@ -20,9 +20,9 @@
 
 <script>
 import { FormWrapper } from '@/shared/ui'
-import { useAgreements } from '@/entities/agreement'
 import { IncomingInvoiceForm } from '@/entities/incomingInvoice'
 import { useItemData } from './model/useItemData.js'
+import { useCarrierAgreements } from '@/entities/carrierAgreement'
 
 export default {
   name: 'PaymentInvoiceDetails',
@@ -34,7 +34,7 @@ export default {
     id: String,
   },
   setup(props) {
-    const { allCarrierAgreements } = useAgreements(props)
+    const { items: allCarrierAgreements } = useCarrierAgreements(props)
     const {
       item,
       disabledPickOrders,

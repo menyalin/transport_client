@@ -28,8 +28,9 @@ import {
   IncomingInvoiceListSettings,
   IncomingInvoiceDataTable,
 } from '@/entities/incomingInvoice'
-import { useAgreements } from '@/entities/agreement'
+
 import { useListData } from './model/useListData.js'
+import { useCarrierAgreements } from '@/entities/carrierAgreement/useCarrierAgreements.js'
 
 export default {
   name: 'PaymentInvoiceList',
@@ -40,7 +41,7 @@ export default {
     IncomingInvoiceDataTable,
   },
   setup() {
-    const { allCarrierAgreements } = useAgreements()
+    const { items: allCarrierAgreements } = useCarrierAgreements()
     const {
       create,
       refresh,

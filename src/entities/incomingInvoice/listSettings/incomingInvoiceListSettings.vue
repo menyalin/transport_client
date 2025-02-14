@@ -13,7 +13,7 @@
       :value="settings.agreements"
       item-text="name"
       item-value="_id"
-      label="Соглашения"
+      label="Соглашения с ТК"
       :disabled="agreementItems.length === 0"
       dense
       clearable
@@ -36,6 +36,21 @@
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'statuses')"
     />
+    <v-autocomplete
+      :value="settings.carriers"
+      label="Перевозчики"
+      multiple
+      item-text="name"
+      auto-select-first
+      item-value="_id"
+      dense
+      clearable
+      outlined
+      hide-details
+      :items="outsourceCarriers"
+      :style="{ maxWidth: '400px' }"
+      @change="updateSettings($event, 'carriers')"
+    />
     <v-text-field
       :value="settings.search"
       label="Поиск по номеру"
@@ -53,6 +68,7 @@ import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
 import allHeaders from './allHeaders.js'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { useCarriers } from '@/entities/carrier/useCarriers.js'
 export default {
   name: 'IncomingInvoiceListSettings',
   components: { AppTableColumnSetting, DateRangeInput },
@@ -65,12 +81,13 @@ export default {
     agreementItems: Array,
   },
   setup(props, ctx) {
+    const { outsourceCarriers } = useCarriers()
     const statusItems = computed(() => {
       return incomingInvoiceStatuses
     })
 
     function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
+      ctx.emit('change', { ...props.settings, [field]: value })
     }
 
     function updateHeadersHandler(val) {
@@ -80,6 +97,7 @@ export default {
       statusItems,
       updateHeadersHandler,
       updateSettings,
+      outsourceCarriers,
       allHeaders,
     }
   },

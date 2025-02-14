@@ -10,14 +10,14 @@
           @refresh="refresh"
         />
         <div class="filters">
-          <v-select
+          <v-autocomplete
             v-model="settings.tkName"
             dense
             outlined
             hide-details
             label="ТК"
             clearable
-            :items="tkNames"
+            :items="carriers"
             item-value="_id"
             item-text="name"
           />
@@ -64,7 +64,7 @@
           @dblclick:row="dblClickRow"
         >
           <template #[`item.tkName`]="{ item }">
-            {{ $store.getters.tkNamesMap.get(item.tkName).name }}
+            {{ getCarrierName(item.tkName) }}
           </template>
           <template #[`item.startDate`]="{ item }">
             {{ new Date(item.startDate).toLocaleString() }}
@@ -93,7 +93,7 @@
 </template>
 <script>
 import { ButtonsPanel } from '@/shared/ui'
-import {CrewService } from '@/shared/services'
+import { CrewService } from '@/shared/services'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -134,14 +134,17 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters(['directoriesProfile', 'tkNames']),
+    ...mapGetters(['directoriesProfile']),
+    carriers() {
+      return this.$store.getters.tkNames
+    },
     drivers() {
       return this.$store.getters
         .driversForSelect(this.settings.tkName)
         .map((d) => ({
           ...d,
           value: d._id,
-          text: d.fullName,
+          text: d?.fullName || 'invalid_full_name',
         }))
     },
     trucks() {
@@ -180,6 +183,10 @@ export default {
     next()
   },
   methods: {
+    getCarrierName(tkNameId) {
+      return this.$store.getters.tkNamesMap.get(tkNameId)?.name || '__error__'
+    },
+
     async getData() {
       try {
         this.loading = true
@@ -202,10 +209,10 @@ export default {
         })
         this.list = data.items
         this.count = data.count
-        this.loading = false
       } catch (e) {
-        this.loading = false
         this.$store.commit('setError', e.message)
+      } finally {
+        this.loading = false
       }
     },
 
@@ -221,11 +228,13 @@ export default {
     getTruckName(crew, field) {
       const lastIdx = crew.transport.length - 1
       const truckId = crew.transport[lastIdx][field]
-      return truckId ? this.$store.getters.trucksMap.get(truckId).regNum : ' - '
+      return truckId
+        ? this.$store.getters.trucksMap.get(truckId)?.regNum || '__error__'
+        : ' - '
     },
     getDriverName(crew) {
       if (!!crew.driver && this.$store.getters.driversMap.has(crew.driver))
-        return this.$store.getters.driversMap.get(crew.driver).fullName
+        return this.$store.getters.driversMap.get(crew.driver)?.fullName || null
       else return ' - '
     },
     isActualCrew(crew) {
@@ -237,11 +246,9 @@ export default {
 </script>
 <style>
 .filters {
-  display: grid;
-  grid-template-columns: 250px 250px 300px 300px;
-  gap: 10px;
-}
-.filters > div {
-  margin: 0px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 15px;
 }
 </style>

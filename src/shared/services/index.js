@@ -20,10 +20,11 @@ import DowntimeService from './downtime/downtime.service.js'
 import FineService from './fine/fine.service.js'
 import RegionService from './region/region.service.js'
 import ScheduleNoteService from './scheduleNote/scheduleNote.service.js'
-import TkNameService from './tkName/tkName.service.js'
+import CarrierService from './carrier/carrier.service.js'
 import ReportService from './report/report.service.js'
 import SalaryTariffService from './salaryTariff/salaryTariff.service.js'
 import TariffContractService from './tariffContract/tariffContract.service.js'
+import CarrierAgreementService from './carrierAgreement/carrierAgreement.service.js'
 
 export {
   AddressService,
@@ -31,6 +32,7 @@ export {
   PartnerService,
   OrderService,
   AgreementService,
+  CarrierAgreementService,
   PermissionService,
   CompanyService,
   PaymentInvoiceService,
@@ -48,7 +50,7 @@ export {
   FineService,
   RegionService,
   ScheduleNoteService,
-  TkNameService,
+  CarrierService,
   ReportService,
   SalaryTariffService,
   TariffContractService,

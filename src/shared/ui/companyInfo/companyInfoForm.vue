@@ -9,8 +9,20 @@
       clearable
     />
     <v-text-field label="Полное наименование" v-model="state.fullName" dense />
-    <v-text-field label="Почтовый адрес" v-model="state.postalAddress" dense />
-    <v-text-field label="Юр. адрес" v-model="state.legalAddress" dense />
+    <v-textarea
+      label="Почтовый адрес"
+      v-model="state.postalAddress"
+      dense
+      outlined
+      rows="4"
+    />
+    <v-textarea
+      label="Юр. адрес"
+      v-model="state.legalAddress"
+      dense
+      outlined
+      rows="4"
+    />
     <v-text-field label="ИНН" v-model="state.inn" dense />
     <v-text-field
       v-if="state.legalForm === 'legalEntity'"

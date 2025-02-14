@@ -1,6 +1,7 @@
 import { computed, ref, getCurrentInstance, watch } from 'vue'
-import { CrewService, AgreementService } from '@/shared/services'
+import { CrewService, CarrierAgreementService } from '@/shared/services'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
+
 export const useConfirmedCrew = (props, ctx) => {
   const { proxy } = getCurrentInstance()
   const initialState = {
@@ -12,17 +13,13 @@ export const useConfirmedCrew = (props, ctx) => {
   }
   const state = ref(props.crew ? props.crew : initialState)
   const loading = ref(false)
+  const crewEmptyError = ref(false)
   const outsourceAgreement = ref(null)
   // #region computeds
-  const showOutsourceAgreementRow = computed(
-    () =>
-      state.value.truck &&
-      proxy.$store.getters.outsourceTruckIds.includes(state.value.truck)
-  )
+  const showOutsourceAgreementRow = computed(() => !!outsourceAgreement.value)
 
   const tkName = computed(
-    () =>
-      proxy.$store.getters.trucksMap.get(state.value.truck)?.tkName?.name || '-'
+    () => proxy.$store.getters.tkNamesMap.get(state.value.tkName)?.name || '-'
   )
 
   const outsourceAgreementName = computed(() => outsourceAgreement.value?.name)
@@ -46,67 +43,61 @@ export const useConfirmedCrew = (props, ctx) => {
   )
 
   const hasTruck = computed(() => Boolean(state.value.truck))
-  const isOutsourceTruck = computed(
-    () =>
-      state.value.truck &&
-      proxy.$store.getters.outsourceTruckIds.includes(state.value.truck)
-  )
+
   const isNeedUpdateCrew = computed(
     () => props.date && state.value.truck && !props.confirmed
   )
 
   const truckReadOnly = computed(
-    () =>
-      props.confirmed &&
-      !proxy.$store.getters.hasPermission('fake permission. only for admin!')
+    () => props.confirmed
+    // &&       !proxy.$store.getters.hasPermission('fake permission. only for admin!')
   )
   // #endregion
 
   function setState(val) {
     ctx.emit('change', val)
   }
-  function getCarrierId(truckId) {
-    const truck = proxy.$store.getters.trucksMap.get(truckId)
-    return truck?.tkName?._id || truck.tkName || null
-  }
 
   function resetState() {
+    crewEmptyError.value = false
     outsourceAgreement.value = null
     setState(initialState)
   }
 
   async function getCrew() {
-    if (isNeedUpdateCrew.value) {
+    if (!state.value.truck) return
+    let crew = null
+
+    if (isNeedUpdateCrew.value || !props.crew?.driver) {
       try {
         loading.value = true
-        const crew = await CrewService.getCrewByTruckAndDate({
+        crew = await CrewService.getCrewByTruckAndDate({
           truck: state.value.truck,
           date: props.date,
         })
-        if (!crew) {
-          proxy.$store.commit('setError', 'Экипаж не найден')
-          resetState()
-          return
-        }
-        if (isOutsourceTruck.value) {
-          outsourceAgreement.value = await AgreementService.getForOrder({
-            company: proxy.$store.getters.directoriesProfile,
-            date: props.date,
-            tkNameId: crew.tkName,
-          })
-        }
 
-        setState({
-          truck: crew.transport.truck,
-          trailer: crew.transport.trailer || null,
-          driver: crew.driver,
-          tkName: getCarrierId(state.value.truck),
-          outsourceAgreement: outsourceAgreement.value?._id || null,
-        })
+        crewEmptyError.value = !crew
       } finally {
         loading.value = false
       }
     }
+    const carrierId = crew?.tkName || state.value.tkName || null
+    if (carrierId) {
+      outsourceAgreement.value =
+        await CarrierAgreementService.getByCarrierAndDate({
+          company: proxy.$store.getters.directoriesProfile,
+          date: props.date,
+          carrierId: carrierId,
+        })
+    }
+
+    setState({
+      truck: state.value.truck,
+      trailer: crew?.transport?.trailer || state.value.trailer,
+      driver: crew?.driver || state.value.driver,
+      tkName: carrierId,
+      outsourceAgreement: outsourceAgreement.value?._id || null,
+    })
   }
 
   async function changeTruckHandler(val) {
@@ -119,7 +110,6 @@ export const useConfirmedCrew = (props, ctx) => {
 
   function copyHandler() {
     if (!state.value.truck || !state.value.driver) return null
-
     const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
     const driver = proxy.$store.getters.driversMap.get(state.value.driver)
     const trailer = state.value.trailer
@@ -127,6 +117,14 @@ export const useConfirmedCrew = (props, ctx) => {
       : {}
     putCrewDataToClipboard({ truck, driver, trailer })
   }
+
+  watch(crewEmptyError, (val) => {
+    if (val) {
+      outsourceAgreement.value = null
+      state.value.outsourceAgreement = null
+      state.value.tkName = null
+    }
+  })
 
   watch(
     () => props.crew,
@@ -151,9 +149,10 @@ export const useConfirmedCrew = (props, ctx) => {
     drivers,
     trailers,
     hasTruck,
-    isOutsourceTruck,
+
     changeTruckHandler,
     copyHandler,
     truckReadOnly,
+    crewEmptyError,
   }
 }

@@ -1,6 +1,5 @@
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-// import { required } from '@vuelidate/validators'
 
 export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
@@ -8,7 +7,8 @@ export const useForm = (props, ctx) => {
     return item !== null
       ? item
       : {
-          name: null,
+          name: '',
+          agreements: [],
           outsource: false,
           contacts: [],
           companyInfo: null,
@@ -19,20 +19,11 @@ export const useForm = (props, ctx) => {
   const rules = computed(() => ({
     name: {},
     outsource: {},
+    agreements: {},
   }))
 
   const v$ = useVuelidate(rules, state)
   const isInvalidForm = computed(() => v$.value.$invalid)
-  // const nameErrors = computed(() => {
-  //   const err = []
-  //   const field = v$.value.name
-  //   if (!field.$invalid) return err
-
-  //   field.$dirty &&
-  //     field.required.$invalid &&
-  //     err.push('Название не может быть пустым')
-  //   return err
-  // })
 
   function resetForm() {
     state.value = {}
@@ -68,7 +59,7 @@ export const useForm = (props, ctx) => {
     submitHandler,
     cancelHandler,
     isInvalidForm,
-    // nameErrors,
+    v$,
     deleteHandler,
   }
 }

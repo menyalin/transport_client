@@ -1,25 +1,8 @@
 import api from '@/api'
-import socket from '@/socket'
 import store from '@/store'
-const BASE_PATH = '/tk_names'
+const BASE_PATH = '/carriers'
 
-class TkNameService {
-  constructor() {
-    socket.on('tkName:created', (data) => {
-      store.commit('addTkName', data)
-      store.commit('addToCache', data)
-    })
-
-    socket.on('tkName:updated', (data) => {
-      store.commit('updateTkName', data)
-      store.commit('addToCache', data)
-    })
-    socket.on('tkName:deleted', (id) => {
-      store.commit('deleteTkName', id)
-      store.commit('deleteFromCache', id)
-    })
-  }
-
+class CarrierService {
   async create(body) {
     let { data } = await api.post(BASE_PATH, body)
     store.commit('addToCache', data)
@@ -39,11 +22,8 @@ class TkNameService {
     return data
   }
 
-  async search(str, profile) {
-    let params = { querySearch: str }
-    if (profile) params.profile = profile
-    const { data } = await api.get(BASE_PATH + '/search', { params })
-    store.commit('addArrayToCache', data)
+  async getList(params) {
+    let { data } = await api.get(BASE_PATH + '/list', { params })
     return data
   }
 
@@ -63,4 +43,4 @@ class TkNameService {
   }
 }
 
-export default new TkNameService()
+export default new CarrierService()

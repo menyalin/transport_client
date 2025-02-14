@@ -13,7 +13,7 @@
         :messages="agreementNameSring"
         :error="!agreement"
         dense
-        :style="{ maxWidth: '300px' }"
+        :style="{ maxWidth: '400px' }"
       />
 
       <v-text-field
@@ -22,7 +22,7 @@
         dense
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
-        :style="{ maxWidth: '300px' }"
+        :style="{ maxWidth: '250px' }"
       />
       <v-text-field
         v-model.trim="params.auctionNum"
@@ -30,7 +30,7 @@
         dense
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
-        :style="{ maxWidth: '300px' }"
+        :style="{ maxWidth: '250px' }"
       />
     </div>
     <v-btn
@@ -164,13 +164,13 @@ export default {
     changeAgreementHandler() {
       if (!Array.isArray(this.agreements) || this.agreements.length < 2) return
       const currentIdx = this.agreements.findIndex(
-        (i) => i._id === this.agreement._id
+        (i) => i?._id === this.agreement?._id
       )
       let nextIdx = 0
       if (currentIdx !== -1 && currentIdx + 1 !== this.agreements.length)
         nextIdx = currentIdx + 1
       this.agreement = this.agreements[nextIdx]
-      this.params.agreement = this.agreement._id
+      this.params.agreement = this.agreement?._id
       this.params.directiveAgreement = true
     },
 
@@ -186,7 +186,7 @@ export default {
     setAgreement() {
       if (this.params.agreement)
         this.agreement = this.agreements.find(
-          (i) => i._id === this.params.agreement
+          (i) => i?._id === this.params.agreement
         )
       else {
         this.agreement = this.findAgreement(this.agreements, this.carrier)

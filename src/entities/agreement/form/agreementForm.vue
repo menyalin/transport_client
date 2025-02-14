@@ -15,49 +15,35 @@
           class="mt-3"
           label="Название"
           outlined
-          dense
           :style="{ 'max-width': '500px' }"
         />
         <DateTimeInput
           v-model="state.date"
           label="Дата начала"
           outlined
-          dense
           hideTimeInput
           hidePrependIcon
           class="mb-4"
           :style="{ 'max-width': '300px' }"
         />
-        <v-select
+        <DateTimeInput
+          v-model="state.endDate"
+          label="Дата окончания"
+          outlined
+          hideTimeInput
+          hidePrependIcon
+          class="mb-4"
+          :style="{ 'max-width': '300px' }"
+        />
+        <VatRateSelect
           v-model="state.vatRate"
           label="Ставка НДС"
-          :items="vatRates"
-          :readonly="!!agreement && !!agreement._id"
-          dense
+          :disabled="!!agreement && !!agreement._id"
           outlined
           :style="{ 'max-width': '130px' }"
         />
-        <v-checkbox
-          v-model="state.isOutsourceAgreement"
-          label="Соглашение с перевозчиком"
-          color="primary"
-          :readonly="!!agreement && !!agreement._id"
-        />
       </div>
-      <div v-if="state.isOutsourceAgreement">
-        <v-divider />
-        <app-tknames
-          v-model="state.outsourceCarriers"
-          :style="{ 'max-width': '400px' }"
-        />
-        <v-checkbox
-          v-model="state.cashPayment"
-          label="Оплата наличными"
-          color="primary"
-        />
-      </div>
-      <div v-else class="mb-4">
-        <v-divider />
+      <div class="mb-4">
         <v-text-field
           label="Наименование исполнителя"
           outlined
@@ -68,7 +54,7 @@
         <v-autocomplete
           v-model="state.executor"
           label="Исполнитель"
-          :items="ownCarriers"
+          :items="carrierItems"
           item-value="_id"
           item-text="name"
           outlined
@@ -144,17 +130,7 @@
           label="Обязательно заполнение номера аукциона"
         />
       </div>
-      <v-text-field
-        v-if="isOutsourceAgreement"
-        v-model.number="state.commsission"
-        type="number"
-        label="Комиссия экспедитора (скидка в акте)"
-        outlined
-        dense
-        class="mt-5"
-        suffix="%"
-        :style="{ maxWidth: '400px' }"
-      />
+
       <v-text-field v-model="state.note" label="Примечание" outlined dense />
       <div class="row mb-2">
         <v-checkbox
@@ -177,9 +153,8 @@
   </div>
 </template>
 <script>
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
 import AppClients from './clients.vue'
-import AppTknames from './tkNames.vue'
 import { useForm } from './useForm'
 
 export default {
@@ -188,13 +163,13 @@ export default {
     ButtonsPanel,
     DateTimeInput,
     AppClients,
-    AppTknames,
+    VatRateSelect,
   },
   props: {
     agreement: {
       type: Object,
     },
-    ownCarriers: Array,
+    carrierItems: Array,
     displayDeleteBtn: {
       type: Boolean,
       default: false,
@@ -212,9 +187,9 @@ export default {
       cancelHandler,
       isInvalidForm,
       vatRates,
-      isOutsourceAgreement,
       carriers,
     } = useForm(props, ctx)
+    
     return {
       state,
       deleteHandler,
@@ -222,7 +197,6 @@ export default {
       cancelHandler,
       isInvalidForm,
       vatRates,
-      isOutsourceAgreement,
       carriers,
     }
   },

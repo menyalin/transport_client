@@ -44,6 +44,7 @@ export default {
   props: {
     invoiceId: String,
     agreementId: String,
+    carrierId: String,
   },
 
   setup(props) {

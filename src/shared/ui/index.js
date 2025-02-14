@@ -18,6 +18,7 @@ import AutoCompleteWithActions from './AutoCompleteWithActions.vue'
 import BankAccountInfoForm from './bankAccountInfo/bankAccountInfoForm.vue'
 import CompanyInfoForm from './companyInfo/companyInfoForm.vue'
 import ContactsInfo from './contactsInfo/contactsInfo.vue'
+import VatRateSelect from './vatRateSelect.vue'
 
 export {
   AppTableColumnSetting,
@@ -40,4 +41,5 @@ export {
   BankAccountInfoForm,
   CompanyInfoForm,
   ContactsInfo,
+  VatRateSelect,
 }

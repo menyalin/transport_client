@@ -1,2 +1,2 @@
-import CrewForm from './crewForm.vue'
+import CrewForm from './form/crewForm.vue'
 export { CrewForm }

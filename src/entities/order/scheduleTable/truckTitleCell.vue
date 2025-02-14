@@ -4,7 +4,7 @@
       <small>{{ idx + 1 }}</small>
     </div>
     <router-link :to="baseUrl + id" draggable="false" class="router-link">
-      {{ title.toLowerCase() }}
+      {{ title.toLowerCase().replace(/\s+/g, '') }}
     </router-link>
   </div>
 </template>
@@ -31,11 +31,11 @@ export default {
 .title-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 3px;
+  gap: 4px;
   overflow: hidden;
   white-space: nowrap;
   user-select: none;
-  align-items: flex-start;
+  justify-content: space-between;
 }
 .router-link {
   text-decoration: none;

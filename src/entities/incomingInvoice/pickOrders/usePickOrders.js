@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import { ref, onMounted, computed, watch } from 'vue'
 import { IncomingInvoiceService } from '@/shared/services'
 import { headers } from './config/headers'
+import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 
 const initPeriod = () => {
   return [
@@ -31,10 +32,17 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
         ...settings.value,
         company: store.getters.directoriesProfile,
         agreement: props.agreementId,
+        carrier: props.carrierId,
         limit: 100,
         skip: 0,
       })
-      items.value = data
+      items.value = data.map((i) => ({
+        ...i,
+        price: {
+          priceWithVat: moneyFormatter(i.price.priceWithVat, 2),
+          priceWOVat: moneyFormatter(i.price.priceWOVat, 2),
+        },
+      }))
     } catch (e) {
       store.commit('setError', e.message)
     } finally {

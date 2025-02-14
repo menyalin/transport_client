@@ -30,7 +30,6 @@
 <script>
 import socket from '@/socket'
 import { OrderService } from '@/shared/services'
-
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
@@ -108,6 +107,7 @@ export default {
     const { beforeSubmitOrderValidation } = useOrderValidations()
     return { beforeSubmitOrderValidation, addressActions }
   },
+
   methods: {
     toggleAlert() {
       this.error = {
@@ -115,6 +115,7 @@ export default {
         message: null,
       }
     },
+
     async submit(val, saveOnly) {
       const [isInvalid, errorMessage] = this.beforeSubmitOrderValidation(val)
       if (isInvalid) {
@@ -136,16 +137,16 @@ export default {
           })
         }
         this.item = Object.assign(this.item, res)
-        this.loading = false
         this.tmpVal = null
         if (!saveOnly) this.$router.go(-1)
       } catch (e) {
-        this.loading = false
         this.item = this.tmpVal
         if (e.response.status === 400 || e.response.status === 403) {
           this.error.message = e.response.data
           this.error.show = true
         } else this.$store.commit('setError', e)
+      } finally {
+        this.loading = false
       }
     },
     cancel() {

@@ -6,7 +6,9 @@
         <CarrierForm
           v-else
           :item="tkName"
-          :displayDeleteBtn="$store.getters.hasPermission('tkName:delete')"
+          :loading="loading || agreementsLoading"
+          :displayDeleteBtn="$store.getters.hasPermission('carrier:delete')"
+          :agreementItems="agreementItems"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -17,7 +19,8 @@
 </template>
 <script>
 import { CarrierForm } from '@/entities/carrier'
-import { TkNameService } from '@/shared/services'
+import { useCarrierAgreements } from '@/entities/carrierAgreement'
+import { CarrierService } from '@/shared/services'
 
 export default {
   name: 'TkNameDetails',
@@ -30,6 +33,12 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const { items: agreementItems, loading: agreementsLoading } =
+      useCarrierAgreements()
+
+    return { agreementsLoading, agreementItems }
+  },
   data() {
     return {
       loading: false,
@@ -38,19 +47,19 @@ export default {
   },
   async created() {
     this.loading = true
-    this.tkName = await TkNameService.getById(this.id)
+    this.tkName = await CarrierService.getById(this.id)
     this.loading = false
   },
 
   methods: {
     async submit(val) {
       this.loading = true
-      this.tkName = await TkNameService.updateOne(this.id, val)
+      this.tkName = await CarrierService.updateOne(this.id, val)
       this.loading = false
       this.$router.go(-1)
     },
     cancel() {
-      this.$router.push({ name: 'TkNameList' })
+      this.$router.push({ name: 'CarrierList' })
     },
     async deleteHandler() {
       const res = await this.$confirm(
@@ -58,7 +67,7 @@ export default {
       )
       if (res) {
         this.loading = true
-        await TkNameService.deleteById(this.id)
+        await CarrierService.deleteById(this.id)
         this.loading = false
         this.$router.go(-1)
       }

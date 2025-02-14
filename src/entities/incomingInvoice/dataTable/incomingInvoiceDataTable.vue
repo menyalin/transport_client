@@ -7,7 +7,7 @@
     :loading="loading"
     height="70vh"
     dense
-    :server-items-length="totalCount"
+    :serverItemsLength="totalCount"
     fixed-header
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
@@ -29,11 +29,11 @@
     </template>
 
     <template #[`item.priceWOVat`]="{ item }">
-      {{ moneyFormatter(item.priceWOVat) }}
+      {{ moneyFormatter(item.priceWOVat, 2) }}
     </template>
 
     <template #[`item.priceWithVat`]="{ item }">
-      {{ moneyFormatter(item.priceWithVat) }}
+      {{ moneyFormatter(item.priceWithVat, 2) }}
     </template>
 
     <template #[`item.note`]="{ item }">

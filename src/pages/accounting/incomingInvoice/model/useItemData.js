@@ -11,10 +11,13 @@ export const useItemData = (props) => {
   let loading = ref(false)
   const showError = ref(false)
   const errorMessage = ref('')
+
   const disabledPickOrders = computed(() => !item.value?._id)
+
   const needUpdateRows = computed(() =>
     item.value.orders.some((i) => i.needUpdate)
   )
+
   const disabledMainFields = computed(() => {
     return item.value.orders?.length > 0
   })
@@ -93,7 +96,11 @@ export const useItemData = (props) => {
   function pickOrdersHandler() {
     proxy.$router.push({
       name: 'PickOrdersForIncomingInvoice',
-      params: { invoiceId: props.id, agreementId: item.value?.agreement },
+      params: {
+        invoiceId: props.id,
+        agreementId: item.value?.agreement,
+        carrierId: item.value?.carrier,
+      },
     })
   }
   function addOrders({ paymentInvoiceId, orders }) {

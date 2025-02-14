@@ -3,7 +3,7 @@
     <buttons-panel
       panel-type="form"
       :disabledSubmit="
-        !$store.getters.hasPermission('tkName:write') ||
+        !$store.getters.hasPermission('carrier:write') ||
         isInvalidForm ||
         loading
       "
@@ -11,8 +11,20 @@
       @submit="submitHandler"
     />
 
-    <v-text-field v-model="state.name" outlined label="Название ТК" dense />
+    <v-text-field
+      v-model="state.name"
+      outlined
+      label="Название ТК"
+      dense
+      hide-details
+    />
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
+   
+    <AllowedCarrierAgreements
+      v-model="state.agreements"
+      :agreementItems="agreementItems"
+    />
+    <v-divider />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
     <ContactsInfo v-model="state.contacts" />
@@ -29,13 +41,14 @@
   </div>
 </template>
 <script>
-import { useForm } from './useForm'
 import {
   ButtonsPanel,
   BankAccountInfoForm,
   CompanyInfoForm,
   ContactsInfo,
 } from '@/shared/ui'
+import { useForm } from './useForm'
+import AllowedCarrierAgreements from './allowedCarrierAgreements'
 
 export default {
   name: 'CarrierForm',
@@ -44,9 +57,12 @@ export default {
     BankAccountInfoForm,
     CompanyInfoForm,
     ContactsInfo,
+    AllowedCarrierAgreements,
   },
+
   props: {
     loading: Boolean,
+    agreementItems: Array,
     item: {
       type: Object,
     },
@@ -62,7 +78,7 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      // nameErrors,
+      v$,
     } = useForm(props, ctx)
 
     return {
@@ -70,8 +86,8 @@ export default {
       deleteHandler,
       submitHandler,
       cancelHandler,
+      v$,
       isInvalidForm,
-      // nameErrors,
     }
   },
 }
