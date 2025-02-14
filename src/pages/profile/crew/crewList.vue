@@ -10,7 +10,7 @@
           @refresh="refresh"
         />
         <div class="filters">
-          <v-select
+          <v-autocomplete
             v-model="settings.tkName"
             dense
             outlined
@@ -246,11 +246,9 @@ export default {
 </script>
 <style>
 .filters {
-  display: grid;
-  grid-template-columns: 250px 250px 300px 300px;
-  gap: 10px;
-}
-.filters > div {
-  margin: 0px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 15px;
 }
 </style>

@@ -98,12 +98,13 @@
               />
             </td>
             <td class="truck-col">
-              <v-select
+              <v-autocomplete
                 v-model="newItem.truck"
                 :disabled="!isValidDate"
                 class="pa-0 ma-0"
-                :items="trucksByDriver"
+                :items="truckItems"
                 hide-details
+                auto-select-first
                 item-value="_id"
                 item-text="regNum"
               />
@@ -113,7 +114,8 @@
                 v-model="newItem.trailer"
                 :disabled="trailerDisabled"
                 class="pa-0 ma-0"
-                :items="trailers"
+                :items="trailerItems"
+                auto-select-first
                 hide-details
                 item-value="_id"
                 item-text="regNum"
@@ -219,6 +221,8 @@ export default {
     crewId: {
       type: String,
     },
+    truckItems: Array,
+    trailerItems: Array,
     tkName: String,
   },
   data: () => ({
@@ -251,19 +255,6 @@ export default {
   computed: {
     ...mapGetters(['trucks', 'allowedToUseTrailersTrucksSet']),
 
-    trucksByDriver() {
-      if (!this.driver) return []
-      return this.trucks
-        .filter((t) => t.type === 'truck')
-        .filter((t) => {
-          return t.allowedDrivers?.some((d) => d.driver === this.driver)
-        })
-    },
-    trailers() {
-      return this.trucks.filter(
-        (truck) => truck.type === 'trailer' && truck.tkName._id === this.tkName
-      )
-    },
     allowUseTrailer() {
       return this.allowedToUseTrailersTrucksSet.has(this.newItem.truck)
     },
