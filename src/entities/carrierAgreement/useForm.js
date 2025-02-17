@@ -1,5 +1,6 @@
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
 export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
@@ -15,9 +16,9 @@ export const useForm = (props, ctx) => {
   const state = ref(props?.item ?? initialState)
   const rules = computed(() => {
     return {
-      name: { required: true },
-      paymentOfDays: { required: true },
-      vatRate: { required: true },
+      name: { required },
+      paymentOfDays: { required },
+      vatRate: { required },
       paymentDescription: {},
       orderContractNote: {},
       usePriceWithVAT: {},

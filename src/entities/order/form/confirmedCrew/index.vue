@@ -85,7 +85,7 @@ export default {
       drivers,
       trailers,
       hasTruck,
-      isOutsourceTruck,
+
       changeTruckHandler,
       copyHandler,
       truckReadOnly,
@@ -102,7 +102,7 @@ export default {
       drivers,
       trailers,
       hasTruck,
-      isOutsourceTruck,
+
       changeTruckHandler,
       copyHandler,
       truckReadOnly,

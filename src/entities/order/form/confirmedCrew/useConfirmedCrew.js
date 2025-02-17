@@ -16,15 +16,10 @@ export const useConfirmedCrew = (props, ctx) => {
   const crewEmptyError = ref(false)
   const outsourceAgreement = ref(null)
   // #region computeds
-  const showOutsourceAgreementRow = computed(
-    () =>
-      state.value.truck &&
-      proxy.$store.getters.outsourceTruckIds.includes(state.value.truck)
-  )
+  const showOutsourceAgreementRow = computed(() => !!outsourceAgreement.value)
 
   const tkName = computed(
-    () =>
-      proxy.$store.getters.trucksMap.get(state.value.truck)?.tkName?.name || '-'
+    () => proxy.$store.getters.tkNamesMap.get(state.value.tkName)?.name || '-'
   )
 
   const outsourceAgreementName = computed(() => outsourceAgreement.value?.name)
@@ -48,11 +43,7 @@ export const useConfirmedCrew = (props, ctx) => {
   )
 
   const hasTruck = computed(() => Boolean(state.value.truck))
-  const isOutsourceTruck = computed(
-    () =>
-      state.value.truck &&
-      proxy.$store.getters.outsourceTruckIds.includes(state.value.truck)
-  )
+
   const isNeedUpdateCrew = computed(
     () => props.date && state.value.truck && !props.confirmed
   )
@@ -75,33 +66,31 @@ export const useConfirmedCrew = (props, ctx) => {
 
   async function getCrew() {
     if (!state.value.truck) return
-
-    const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
-    const carrierId = truck?.tkName?._id || truck?.tkName || null
-
-    if (isOutsourceTruck.value && carrierId)
-      outsourceAgreement.value =
-        await CarrierAgreementService.getByCarrierAndDate({
-          company: proxy.$store.getters.directoriesProfile,
-          date: props.date,
-          carrierId,
-        })
-
     let crew = null
 
     if (isNeedUpdateCrew.value || !props.crew?.driver) {
       try {
         loading.value = true
-
         crew = await CrewService.getCrewByTruckAndDate({
           truck: state.value.truck,
           date: props.date,
         })
+
         crewEmptyError.value = !crew
       } finally {
         loading.value = false
       }
     }
+    const carrierId = crew?.tkName || state.value.tkName || null
+    if (carrierId) {
+      outsourceAgreement.value =
+        await CarrierAgreementService.getByCarrierAndDate({
+          company: proxy.$store.getters.directoriesProfile,
+          date: props.date,
+          carrierId: carrierId,
+        })
+    }
+
     setState({
       truck: state.value.truck,
       trailer: crew?.transport?.trailer || state.value.trailer,
@@ -160,7 +149,7 @@ export const useConfirmedCrew = (props, ctx) => {
     drivers,
     trailers,
     hasTruck,
-    isOutsourceTruck,
+
     changeTruckHandler,
     copyHandler,
     truckReadOnly,
