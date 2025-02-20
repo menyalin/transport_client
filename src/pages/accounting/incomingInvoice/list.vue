@@ -17,6 +17,7 @@
       :items="items"
       :totalCount="totalCount"
       :headers="headers"
+      :analyticsData="analyticsData"
       :listOptions.sync="listOptions"
       :loading="loading"
     />
@@ -54,6 +55,7 @@ export default {
       downloadHandler,
       headers,
       changeHeaders,
+      analyticsData,
     } = useListData()
 
     return {
@@ -68,6 +70,7 @@ export default {
       loading,
       listOptions,
       downloadHandler,
+      analyticsData,
       allCarrierAgreements,
     }
   },
