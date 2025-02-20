@@ -50,10 +50,12 @@
 </template>
 
 <script>
-import store from '@/store'
 import { computed, ref, onMounted } from 'vue'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
+import {
+  PAYMENT_INVOICE_TABLE_HEADERS,
+  paymentInvoiceStatuses,
+} from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
 export default {
@@ -76,7 +78,7 @@ export default {
     )
 
     const statusItems = computed(() => {
-      return store.getters.docsRegistryStatuses
+      return paymentInvoiceStatuses
     })
 
     function updateSettings(value, field) {

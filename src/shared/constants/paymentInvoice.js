@@ -1,4 +1,12 @@
-export default [
+export const paymentInvoiceStatuses = [
+  { text: 'Подготовка', value: 'inProcess' },
+  { text: 'Готов к отправке', value: 'prepared' },
+  { text: 'Отправлен', value: 'sended' },
+  { text: 'Принят', value: 'accepted' },
+  { text: 'Оплачен', value: 'paid' },
+]
+
+export const PAYMENT_INVOICE_TABLE_HEADERS = [
   {
     value: 'number',
     text: 'Номер',
@@ -46,7 +54,7 @@ export default [
     align: 'right',
     width: '10rem',
   },
-  
+
   {
     value: 'total.priceWOVat',
     text: 'Сумма без НДС',
