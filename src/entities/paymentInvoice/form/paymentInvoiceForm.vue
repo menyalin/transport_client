@@ -135,6 +135,7 @@ import dayjs from 'dayjs'
 import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
+import { paymentInvoiceStatuses } from '@/shared/constants'
 import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
@@ -209,7 +210,7 @@ export default {
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
 
-    const statusItems = computed(() => store.getters.docsRegistryStatuses)
+    const statusItems = computed(() => paymentInvoiceStatuses)
 
     const needSave = computed(() => {
       return (
