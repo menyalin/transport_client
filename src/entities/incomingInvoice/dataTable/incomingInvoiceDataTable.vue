@@ -41,16 +41,23 @@
         {{ item.note }}
       </span>
     </template>
-    <template #[`footer.prepend`] />
+
+    <template #[`footer.prepend`]>
+      <IncomingInvoiceListAnalytics :data="analyticsData" />
+    </template>
   </v-data-table>
 </template>
 
 <script>
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
+import IncomingInvoiceListAnalytics from './listAnalytics.vue'
+
 export default {
   name: 'PaymentInvoicesDataTable',
-
+  components: {
+    IncomingInvoiceListAnalytics,
+  },
   model: {
     prop: 'settings',
     event: 'change',
@@ -59,6 +66,7 @@ export default {
     items: Array,
     totalCount: Number,
     listOptions: Object,
+    analyticsData: Object,
     routesCount: {
       type: Number,
       default: 0,

@@ -12,6 +12,12 @@ export const useListData = () => {
     const endDate = dayjs().endOf('month').toISOString()
     return [startDate, endDate]
   }
+  const analyticsData = ref({
+    count: 13,
+    routesCount: 18,
+    totalSumWOVat: 12212145,
+    totalSum: 1212258452,
+  })
 
   const initialState = {
     agreements: [],
@@ -50,7 +56,13 @@ export const useListData = () => {
       loading.value = true
       const data = await IncomingInvoiceService.getList(queryParams.value)
       items.value = data.items
-      totalCount.value = data.totalCount
+      analyticsData.value = {
+        count: data.count ?? 0,
+        routesCount: data?.routesCount ?? 0,
+        totalSumWOVat: data?.totalSumWOVat ?? 0,
+        totalSum: data?.totalSum ?? 0,
+      }
+      totalCount.value = data.count
       loading.value = false
     } catch (e) {
       loading.value = false
@@ -90,5 +102,6 @@ export const useListData = () => {
     totalCount,
     changeHeaders,
     headers,
+    analyticsData,
   }
 }
