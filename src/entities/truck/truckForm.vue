@@ -262,6 +262,7 @@
           v-model="form.hideInFines"
           label="Не показывать в штрафах"
         />
+        <v-checkbox v-model="form.hasScans" label="Есть сканы документов" />
       </div>
       <v-divider />
     </div>
@@ -344,6 +345,7 @@ export default {
         order: 50,
         alwaysInSchedule: false,
         hideInFines: false,
+        hasScans: false,
       },
     }
   },
@@ -437,6 +439,7 @@ export default {
       allowedDrivers: {},
       order: { numeric },
       alwaysInSchedule: {},
+      hasScans: {},
     },
   },
 

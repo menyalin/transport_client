@@ -12,7 +12,7 @@
       >
         Добавить документы
       </v-btn>
-      <slot #default />
+      <slot />
     </div>
     <v-simple-table dense>
       <template #default>
