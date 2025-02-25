@@ -2,8 +2,10 @@
   <v-data-table
     :headers="headers"
     checkbox-color="primary"
+    v-model="selected"
     item-key="_id"
     :items="items"
+    showSelect
     :loading="loading"
     height="70vh"
     dense
@@ -43,16 +45,17 @@
     </template>
 
     <template #[`footer.prepend`]>
-      <IncomingInvoiceListAnalytics :data="analyticsData" />
+      <IncomingInvoiceListAnalytics :data="analytics" />
     </template>
   </v-data-table>
 </template>
 
 <script>
+import { computed, watch } from 'vue'
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
 import IncomingInvoiceListAnalytics from './listAnalytics.vue'
-
+import { usePersistedRef } from '@/shared/hooks'
 export default {
   name: 'PaymentInvoicesDataTable',
   components: {
@@ -77,6 +80,20 @@ export default {
     loading: Boolean,
   },
   setup(props, ctx) {
+    const selected = usePersistedRef([], 'selectedInvoicesInList')
+    const analytics = computed(() => {
+      if (selected.value.length)
+        return selected.value.reduce(
+          (res, item) => ({
+            count: res.count + 1,
+            routesCount: res.routesCount + item.ordersCount,
+            totalSumWOVat: res.totalSumWOVat + item.priceWOVat,
+            totalSum: res.totalSum + item.priceWithVat,
+          }),
+          { count: 0, routesCount: 0, totalSumWOVat: 0, totalSum: 0 }
+        )
+      else return props.analyticsData
+    })
     function dblClickRow(_event, { item }) {
       router.push(`incomingInvoice/${item._id}`)
     }
@@ -84,10 +101,16 @@ export default {
       ctx.emit('update:listOptions', { ...options })
     }
 
+    watch(selected, (val) => {
+      console.log(val)
+    })
+
     return {
+      selected,
       dblClickRow,
       updateListOptionsHandler,
       moneyFormatter,
+      analytics,
     }
   },
 }
