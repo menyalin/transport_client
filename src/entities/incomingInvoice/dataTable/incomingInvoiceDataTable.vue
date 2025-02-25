@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
 import IncomingInvoiceListAnalytics from './listAnalytics.vue'
@@ -100,10 +100,6 @@ export default {
     function updateListOptionsHandler(options) {
       ctx.emit('update:listOptions', { ...options })
     }
-
-    watch(selected, (val) => {
-      console.log(val)
-    })
 
     return {
       selected,
