@@ -11,16 +11,18 @@
       @cancel="cancel"
       @submit="submit"
       @updatePartner="updatePartnerHandler"
-    />
-    <IdleTruckNotificationsWidget
-      :partner="item"
-      @updatePartner="updatePartnerHandler"
-    />
+    >
+      <template #notifications>
+        <IdleTruckNotificationsWidget
+          :partner="item"
+          @updatePartner="updatePartnerHandler"
+        />
+      </template>
+    </PartnerForm>
   </form-wrapper>
 </template>
 <script>
 import { PartnerService as service } from '@/shared/services'
-
 import { FormWrapper } from '@/shared/ui'
 import { PartnerForm } from '@/entities/partner'
 import { IdleTruckNotifications as IdleTruckNotificationsWidget } from '@/widgets/idleTruckNotifications'

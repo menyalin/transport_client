@@ -71,6 +71,7 @@
       :places="partner.placesForTransferDocs"
       @updatePartner="updatePartnerHandler"
     />
+    <slot v-if="form.isClient" name="notifications" />
   </div>
 </template>
 <script>
