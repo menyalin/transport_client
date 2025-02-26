@@ -20,11 +20,11 @@
         <div class="input-fields-row">
           <v-text-field
             label="Кол-во точек, включенных в тариф"
-            v-model.number="v$.includedPoints.$model"
+            v-model.number="form.includedPoints"
           />
           <v-text-field
             label="Тариф за доп.точку"
-            v-model.number="v$.pointPrice.$model"
+            v-model.number="form.pointPrice"
           />
         </div>
         <div class="input-fields-row">
@@ -49,7 +49,7 @@
           />
         </div>
 
-        <v-text-field label="Тариф" v-model.number="v$.price.$model" />
+        <v-text-field label="Тариф" v-model.number="form.price" />
       </v-card-text>
       <CardActionButtons
         :submitDisabled="isInvalidForm"
@@ -108,14 +108,15 @@ export default {
     const form = ref(
       props.initialFormState ? props.initialFormState : defaultFormState()
     )
-    const rules = {
+
+    const rules = computed(() => ({
       ...commonRules,
       loadingZone: { required },
       unloadingZones: { required },
       price: { required, numeric },
       includedPoints: { required, numeric },
       pointPrice: { required, numeric },
-    }
+    }))
     const v$ = useVuelidate(rules, form, { $stopPropagation: true })
 
     watch(
