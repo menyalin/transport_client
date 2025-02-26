@@ -25,7 +25,7 @@ import ReportService from './report/report.service.js'
 import SalaryTariffService from './salaryTariff/salaryTariff.service.js'
 import TariffContractService from './tariffContract/tariffContract.service.js'
 import CarrierAgreementService from './carrierAgreement/carrierAgreement.service.js'
-
+import FileService from './file/file.service.js'
 export {
   AddressService,
   DocsRegistryService,
@@ -54,4 +54,5 @@ export {
   ReportService,
   SalaryTariffService,
   TariffContractService,
+  FileService,
 }
