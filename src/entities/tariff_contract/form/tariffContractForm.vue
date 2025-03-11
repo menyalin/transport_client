@@ -71,8 +71,8 @@
       :tariffFormComponent="returnPercentTariffForm"
     />
     <v-divider />
-    <EntityFiles :itemId="item._id" docType="tariffContract" />
     <v-text-field label="Примечание" v-model="state.note" />
+    <EntityFiles v-if="item._id" :itemId="item._id" docType="tariffContract" />
   </div>
 </template>
 <script>
