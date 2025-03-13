@@ -19,7 +19,7 @@
       hide-details
     />
     <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
-   
+
     <AllowedCarrierAgreements
       v-model="state.agreements"
       :agreementItems="agreementItems"
@@ -28,7 +28,7 @@
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
     <ContactsInfo v-model="state.contacts" />
-
+    <EntityFiles v-if="item._id" :itemId="item._id" docType="carrier" />
     <v-btn
       v-if="displayDeleteBtn"
       color="error"
@@ -46,6 +46,7 @@ import {
   BankAccountInfoForm,
   CompanyInfoForm,
   ContactsInfo,
+  EntityFiles,
 } from '@/shared/ui'
 import { useForm } from './useForm'
 import AllowedCarrierAgreements from './allowedCarrierAgreements'
@@ -53,6 +54,7 @@ import AllowedCarrierAgreements from './allowedCarrierAgreements'
 export default {
   name: 'CarrierForm',
   components: {
+    EntityFiles,
     ButtonsPanel,
     BankAccountInfoForm,
     CompanyInfoForm,

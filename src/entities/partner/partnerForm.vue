@@ -72,13 +72,14 @@
       @updatePartner="updatePartnerHandler"
     />
     <slot v-if="form.isClient" name="notifications" />
+    <EntityFiles v-if="partner._id" :itemId="partner._id" docType="partner" />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, EntityFiles } from '@/shared/ui'
 import PlacesForTransferDocs from './placesForTransferDocs.vue'
 
 export default {
@@ -86,6 +87,7 @@ export default {
   components: {
     ButtonsPanel,
     PlacesForTransferDocs,
+    EntityFiles,
   },
   props: {
     partner: {
