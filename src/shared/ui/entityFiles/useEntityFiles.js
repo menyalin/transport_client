@@ -67,6 +67,7 @@ export const useEntityFiles = (props) => {
     uploadProgress.value = {}
     await getFiles()
   }
+
   const downloadItemHandler = async (item) => {
     const { key, originalName } = item
     if (!key || !originalName) return
@@ -99,6 +100,17 @@ export const useEntityFiles = (props) => {
     }
   }
 
+  const updateNoteHandler = async (item) => {
+    try {
+      loading.value = true
+      await FileService.updateNote(item._id, item.note)
+    } catch (e) {
+      console.log('Ошибка обновления описания файла: ', e)
+    } finally {
+      loading.value = false
+    }
+  }
+
   onMounted(async () => {
     await getFiles()
   })
@@ -115,5 +127,6 @@ export const useEntityFiles = (props) => {
     uploadProgress,
     removeItemHandler,
     downloadItemHandler,
+    updateNoteHandler,
   }
 }

@@ -1,9 +1,10 @@
 import dayjs from 'dayjs'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
 export const useTariffContractForm = (props, ctx) => {
+  const { proxy } = getCurrentInstance()
   const initialState = () => ({
     name: null,
     agreement: null,
@@ -40,7 +41,10 @@ export const useTariffContractForm = (props, ctx) => {
     zonesTariffs: {},
   }
   const disableSubmitBtn = computed(() => {
-    return invalidForm.value
+    return (
+      invalidForm.value ||
+      !proxy.$store.getters.hasPermission('tariffContract:write')
+    )
   })
   const mainFormV$ = useVuelidate(rules, state)
   const invalidForm = computed(() => mainFormV$.value.$invalid)

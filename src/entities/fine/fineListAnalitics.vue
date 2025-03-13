@@ -2,6 +2,9 @@
   <div class="wrapper">
     <div class="left-column">
       <div>
+        Кол-во: <b>{{ data?.count ?? 0 }}</b>
+      </div>
+      <div>
         Общая сумма штрафов: <b>{{ totalSum }}</b>
       </div>
       <div>

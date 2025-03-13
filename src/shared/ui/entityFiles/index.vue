@@ -9,6 +9,7 @@
           :items="items"
           @remove="removeItemHandler"
           @download="downloadItemHandler"
+          @updateNote="updateNoteHandler"
         />
       </v-card-text>
       <v-card-actions>
@@ -81,6 +82,7 @@ export default {
       uploadProgress,
       downloadItemHandler,
       removeItemHandler,
+      updateNoteHandler,
     } = useEntityFiles(props)
 
     return {
@@ -95,6 +97,7 @@ export default {
       uploadProgress,
       downloadItemHandler,
       removeItemHandler,
+      updateNoteHandler,
     }
   },
 }
