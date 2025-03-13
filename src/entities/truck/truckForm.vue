@@ -266,6 +266,8 @@
       </div>
       <v-divider />
     </div>
+    <EntityFiles v-if="truck._id" :itemId="truck._id" docType="truck" />
+
     <div class="delete-btn-row mt-3">
       <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
         <v-icon left dark> mdi-delete </v-icon>
@@ -282,18 +284,20 @@ import {
   ButtonsPanel,
   DateTimeInput,
   AdditionalNotifications,
+  EntityFiles,
 } from '@/shared/ui'
 
 import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'
 import AppPermits from './permits.vue'
-import AppAdditionalDetails from './additionalDetails .vue'
+import AppAdditionalDetails from './additionalDetails.vue'
 
 export default {
   name: 'TruckForm',
   components: {
     ButtonsPanel,
     DateTimeInput,
+    EntityFiles,
     AppAllowedDrivers,
     AppInsurance,
     AppPermits,
