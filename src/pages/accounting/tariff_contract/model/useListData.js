@@ -7,6 +7,7 @@ export const useListData = () => {
   const loading = ref(false)
   const initialState = {
     agreements: [],
+    searchStr: null,
   }
   const settings = usePersistedRef(initialState, 'TariffContractList:settings')
 
@@ -40,6 +41,8 @@ export const useListData = () => {
     limit: listOptions.value.itemsPerPage,
     sortBy: listOptions.value.sortBy,
     sortDesc: listOptions.value.sortDesc,
+    agreements: settings.value.agreements,
+    searchStr: settings.value.searchStr,
   }))
 
   async function refresh() {
