@@ -12,8 +12,15 @@
       }}</v-icon>
     </template>
     <template #[`item.note`]="{ item }">
-      <span v-if="item.note">{{ item.note }}</span>
-      <span v-else class="grey--text">(пусто)</span>
+      <v-edit-dialog
+        :return-value.sync="item.note"
+        @save="updateNoteHandler(item)"
+      >
+        {{ item.note }}
+        <template v-slot:input>
+          <v-text-field v-model="item.note" single-line />
+        </template>
+      </v-edit-dialog>
     </template>
     <template #[`item.size`]="{ item }">
       <span v-if="item.size">{{ formatSize(item.size) }}</span>
@@ -29,7 +36,7 @@
         <v-icon color="primary" small @click="downloadItemHandler(item)">
           {{ 'mdi-download' }}
         </v-icon>
-        <v-icon color="red" small @click="removeItemHandler(item.key)">
+        <v-icon color="red" small @click="removeItemHandler(item)">
           {{ 'mdi-delete' }}
         </v-icon>
       </div>
@@ -61,6 +68,9 @@ export default {
   setup(_props, ctx) {
     const { proxy } = getCurrentInstance()
     const { formatSize, formatDate, mimeTypeToIcon } = useEntityFileHelpers()
+    const updateNoteHandler = (item) => {
+      ctx.emit('updateNote', item)
+    }
     const headers = ref([
       { value: 'icon', width: '2rem', align: 'center' },
       { text: 'Имя файла', value: 'originalName' },
@@ -70,9 +80,12 @@ export default {
       { value: 'actions', align: 'center', sortable: false, width: '75px' },
     ])
 
-    const removeItemHandler = async (key) => {
-      const res = await proxy.$confirm('Уверены?')
-      if (res) ctx.emit('remove', key)
+    const removeItemHandler = async (item) => {
+      console.log(item.origianlName)
+      const res = await proxy.$confirm(
+        `<b>Удалить?</b> <br/> файл: ${item.originalName}`
+      )
+      if (res) ctx.emit('remove', item.key)
     }
 
     const downloadItemHandler = (item) => {
@@ -86,6 +99,7 @@ export default {
       mimeTypeToIcon,
       removeItemHandler,
       downloadItemHandler,
+      updateNoteHandler,
     }
   },
 }

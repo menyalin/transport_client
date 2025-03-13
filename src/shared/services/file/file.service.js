@@ -23,6 +23,10 @@ class FileService {
     }
   }
 
+  async updateNote(fileId, note) {
+    await api.put(BASE_PATH + '/' + fileId, { note })
+  }
+
   async deleteObject(key) {
     await api.delete(BASE_PATH + '/delete_object', { params: { key } })
   }

@@ -102,6 +102,7 @@ export const useFineList = () => {
     return selected.value.reduce(
       (res, item) => {
         return {
+          count: res.count + 1,
           totalSum: res.totalSum + item.totalSum,
           totalSumWithDiscount: res.totalSumWithDiscount + item.discountedSum,
           totalPayed: res.totalPayed + (item.paymentSum || 0),
@@ -115,6 +116,7 @@ export const useFineList = () => {
         totalPayed: 0,
         needWithheld: 0,
         isWithheld: 0,
+        count: 0,
       }
     )
   })
