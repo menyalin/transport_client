@@ -4,20 +4,30 @@
       <v-col>
         <buttons-panel
           panel-type="list"
-          :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('crew:write')"
-          @submit="create"
-          @refresh="refresh"
-        />
+          @submit="createHandler"
+          @refresh="refreshHandler"
+        >
+          <v-btn color="primary" @click="downloadHandler">
+            <v-icon>mdi-download</v-icon>
+            Скачать отчет
+          </v-btn>
+        </buttons-panel>
         <div class="filters">
+          <date-range-input
+            v-model="settings.period"
+            class="mx-3"
+            :style="{ 'max-width': '300px' }"
+          />
           <v-autocomplete
             v-model="settings.tkName"
             dense
             outlined
             hide-details
+            auto-select-first
             label="ТК"
             clearable
-            :items="carriers"
+            :items="carrierItems"
             item-value="_id"
             item-text="name"
           />
@@ -34,7 +44,8 @@
             v-model="settings.driver"
             dense
             clearable
-            :items="drivers"
+            auto-select-first
+            :items="driverItems"
             outlined
             hide-details
             label="Водитель"
@@ -43,7 +54,8 @@
             v-model="settings.truck"
             dense
             clearable
-            :items="trucks"
+            auto-select-first
+            :items="truckItems"
             outlined
             hide-details
             label="Грузовик"
@@ -51,17 +63,17 @@
         </div>
         <v-data-table
           :headers="headers"
-          :items="list"
+          :items="items"
           height="72vh"
           fixed-header
           :loading="loading"
-          :serverItemsLength="count"
+          :serverItemsLength="totalCount"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
+          :options.sync="listOptions"
           dense
-          @dblclick:row="dblClickRow"
+          @dblclick:row="dblClickRowHandler"
         >
           <template #[`item.tkName`]="{ item }">
             {{ getCarrierName(item.tkName) }}
@@ -92,155 +104,58 @@
   </v-container>
 </template>
 <script>
-import { ButtonsPanel } from '@/shared/ui'
-import { CrewService } from '@/shared/services'
-import { mapGetters } from 'vuex'
+import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
+
+import { useListData } from './useListData'
 
 export default {
   name: 'CrewList',
   components: {
     ButtonsPanel,
+    DateRangeInput,
   },
-  data: () => ({
-    formName: 'crewList',
-    loading: false,
-    list: [],
-    count: null,
-    settings: {
-      driver: null,
-      truck: null,
-      tkName: null,
-      crewStatus: 'active',
-      listOptions: {
-        page: 1,
-        itemsPerPage: 50,
-      },
-    },
-    crewStatuses: [
-      { value: 'all', text: 'Все' },
-      { value: 'active', text: 'В работе' },
-      { value: 'inactive', text: 'Завершенные' },
-    ],
-    dateFormat: 'YYYY-MM-DD HH:mm',
+  setup() {
+    const {
+      settings,
+      listOptions,
+      crewStatuses,
+      loading,
+      items,
+      headers,
+      totalCount,
+      createHandler,
+      refreshHandler,
+      getCarrierName,
+      dblClickRowHandler,
+      downloadHandler,
+      carrierItems,
+      driverItems,
+      truckItems,
+      getTruckName,
+      getDriverName,
+      isActualCrew,
+    } = useListData()
 
-    headers: [
-      { value: 'tkName', text: 'ТК' },
-      { value: 'isActual', text: 'В работе', sortable: false },
-      { value: 'truck', text: 'Грузовик', sortable: false },
-      { value: 'trailer', text: 'Прицеп', sortable: false },
-      { value: 'driver', text: 'Водитель' },
-      { value: 'startDate', text: 'Начало смены' },
-      { value: 'endDate', text: 'Завершение смены', sortable: false },
-    ],
-  }),
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-    carriers() {
-      return this.$store.getters.tkNames
-    },
-    drivers() {
-      return this.$store.getters
-        .driversForSelect(this.settings.tkName)
-        .map((d) => ({
-          ...d,
-          value: d._id,
-          text: d?.fullName || 'invalid_full_name',
-        }))
-    },
-    trucks() {
-      return this.$store.getters
-        .trucksForSelect({
-          type: 'truck',
-          tkName: this.settings.tkName,
-        })
-        .map((t) => ({
-          ...t,
-          value: t._id,
-          text: t.regNum,
-        }))
-    },
-  },
-  watch: {
-    settings: {
-      deep: true,
-      handler: function () {
-        this.getData()
-      },
-    },
-  },
-
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-
-    // this.getData()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
-  methods: {
-    getCarrierName(tkNameId) {
-      return this.$store.getters.tkNamesMap.get(tkNameId)?.name || '__error__'
-    },
-
-    async getData() {
-      try {
-        this.loading = true
-        const data = await CrewService.getList({
-          profile: this.directoriesProfile,
-          driver: this.settings.driver,
-          truck: this.settings.truck,
-          skip:
-            (this.settings.listOptions?.page - 1) *
-            this.settings.listOptions?.itemsPerPage,
-          limit: this.settings.listOptions?.itemsPerPage,
-          tkName: this.settings.tkName,
-          state: this.settings.crewStatus,
-          sortBy: this.settings.listOptions.sortBy.length
-            ? this.settings.listOptions.sortBy[0]
-            : null,
-          sortDesc: this.settings.listOptions.sortDesc.length
-            ? this.settings.listOptions.sortDesc[0]
-            : null,
-        })
-        this.list = data.items
-        this.count = data.count
-      } catch (e) {
-        this.$store.commit('setError', e.message)
-      } finally {
-        this.loading = false
-      }
-    },
-
-    create() {
-      this.$router.push({ name: 'CrewCreate' })
-    },
-    refresh() {
-      this.getData()
-    },
-    dblClickRow(_, { item }) {
-      if (item) this.$router.push(`crews/${item._id}`)
-    },
-    getTruckName(crew, field) {
-      const lastIdx = crew.transport.length - 1
-      const truckId = crew.transport[lastIdx][field]
-      return truckId
-        ? this.$store.getters.trucksMap.get(truckId)?.regNum || '__error__'
-        : ' - '
-    },
-    getDriverName(crew) {
-      if (!!crew.driver && this.$store.getters.driversMap.has(crew.driver))
-        return this.$store.getters.driversMap.get(crew.driver)?.fullName || null
-      else return ' - '
-    },
-    isActualCrew(crew) {
-      const lastIdx = crew.transport.length - 1
-      return !crew.transport[lastIdx].endDate
-    },
+    return {
+      settings,
+      listOptions,
+      crewStatuses,
+      loading,
+      items,
+      headers,
+      totalCount,
+      createHandler,
+      refreshHandler,
+      getCarrierName,
+      dblClickRowHandler,
+      downloadHandler,
+      carrierItems,
+      driverItems,
+      truckItems,
+      getTruckName,
+      getDriverName,
+      isActualCrew,
+    }
   },
 }
 </script>
