@@ -8,6 +8,5 @@ export default [
     value: 'nestedFiles',
     text: 'Вложенные файлы',
     align: 'right',
-    sortable: false,
   },
 ]

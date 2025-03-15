@@ -72,7 +72,11 @@
     />
     <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
-    <EntityFiles v-if="item._id" :itemId="item._id" docType="tariffContract" />
+    <EntityFiles
+      v-if="item && item._id"
+      :itemId="item._id"
+      docType="tariffContract"
+    />
   </div>
 </template>
 <script>

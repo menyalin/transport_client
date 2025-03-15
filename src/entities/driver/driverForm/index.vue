@@ -183,7 +183,7 @@
 
       <v-checkbox v-model="form.isCalcSalary" dense label="Расчет ЗП" />
     </div>
-    <EntityFiles v-if="driver._id" :itemId="driver._id" docType="driver" />
+    <EntityFiles v-if="driver && driver._id" :itemId="driver._id" docType="driver" />
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
       <v-btn color="error" @click="$emit('delete')">
         <v-icon left dark> mdi-delete </v-icon>
