@@ -1,6 +1,8 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+import dayjs from 'dayjs'
+import FileSaver from 'file-saver'
 
 const BASE_PATH = '/crews'
 
@@ -50,6 +52,27 @@ class CrewService {
       store.commit('setError', e.message)
     }
   }
+
+  async getCrewListFile(params) {
+    try {
+      const { data } = await api({
+        url: BASE_PATH + '/download_list',
+        method: 'GET',
+        responseType: 'blob',
+        params: params,
+      })
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      })
+      const filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_crews.xlsx'
+      FileSaver.saveAs(blob, filename)
+      return data || null
+    } catch (e) {
+      store.commit('setError', e.message)
+      return null
+    }
+  }
+
   async getActualCrewByTruck(truck) {
     try {
       const params = { truck }
