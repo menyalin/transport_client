@@ -266,7 +266,11 @@
       </div>
       <v-divider />
     </div>
-    <EntityFiles v-if="truck._id" :itemId="truck._id" docType="truck" />
+    <EntityFiles
+      v-if="truck && truck._id"
+      :itemId="truck._id"
+      docType="truck"
+    />
 
     <div class="delete-btn-row mt-3">
       <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">

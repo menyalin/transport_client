@@ -28,7 +28,7 @@
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
     <ContactsInfo v-model="state.contacts" />
-    <EntityFiles v-if="item._id" :itemId="item._id" docType="carrier" />
+    <EntityFiles v-if="item && item._id" :itemId="item._id" docType="carrier" />
     <v-btn
       v-if="displayDeleteBtn"
       color="error"

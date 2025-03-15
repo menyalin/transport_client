@@ -72,7 +72,11 @@
       @updatePartner="updatePartnerHandler"
     />
     <slot v-if="form.isClient" name="notifications" />
-    <EntityFiles v-if="partner._id" :itemId="partner._id" docType="partner" />
+    <EntityFiles
+      v-if="partner && partner._id"
+      :itemId="partner._id"
+      docType="partner"
+    />
   </div>
 </template>
 <script>
