@@ -1,58 +1,56 @@
 <template>
-  <div class="wrapper">
-    <v-card elevation="1" :loading="loading">
-      <v-card-title>
-        <h5>Файлы</h5>
-      </v-card-title>
-      <v-card-text>
-        <FileList
-          :items="items"
-          @remove="removeItemHandler"
-          @download="downloadItemHandler"
-          @updateNote="updateNoteHandler"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn icon @click="getFilesHandler">
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
-        <v-btn small color="primary" @click="openDialogHandler">
-          Добавить файлы
-        </v-btn>
-      </v-card-actions>
-      <v-dialog v-model="dialog" max-width="1200" persistent>
-        <v-card>
-          <v-card-title>Файлы</v-card-title>
-          <v-card-text>
-            <v-file-input
-              v-model="selectedFiles"
-              clearable
-              placeholder="Укажите файлы для загрузки"
-              multiple
-              truncate-length="30"
-            />
-            <SelectedFiles
-              v-model="selectedFiles"
-              :uploadProgress="uploadProgress"
-            />
-          </v-card-text>
-          <v-card-actions>
-            <v-btn @click="cancelDialogHandler" :disabled="loading">
-              Отменить загрузку файлов</v-btn
-            >
-            <v-spacer />
-            <v-btn
-              color="primary"
-              @click="uploadFilesHandler"
-              :disabled="!selectedFiles.length || loading"
-            >
-              Прикрепить файлы
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-card>
-  </div>
+  <v-card elevation="1" :loading="loading">
+    <v-card-title>
+      <h5>Файлы</h5>
+    </v-card-title>
+    <v-card-text>
+      <FileList
+        :items="items"
+        @remove="removeItemHandler"
+        @download="downloadItemHandler"
+        @updateNote="updateNoteHandler"
+      />
+    </v-card-text>
+    <v-card-actions>
+      <v-btn icon @click="getFilesHandler">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+      <v-btn small color="primary" @click="openDialogHandler">
+        Добавить файлы
+      </v-btn>
+    </v-card-actions>
+    <v-dialog v-model="dialog" max-width="1200" persistent>
+      <v-card>
+        <v-card-title>Файлы</v-card-title>
+        <v-card-text>
+          <v-file-input
+            v-model="selectedFiles"
+            clearable
+            placeholder="Укажите файлы для загрузки"
+            multiple
+            truncate-length="30"
+          />
+          <SelectedFiles
+            v-model="selectedFiles"
+            :uploadProgress="uploadProgress"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="cancelDialogHandler" :disabled="loading">
+            Отменить загрузку файлов</v-btn
+          >
+          <v-spacer />
+          <v-btn
+            color="primary"
+            @click="uploadFilesHandler"
+            :disabled="!selectedFiles.length || loading"
+          >
+            Прикрепить файлы
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-card>
 </template>
 <script>
 import { useEntityFiles } from './useEntityFiles'
@@ -103,12 +101,13 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
+.files-wrapper {
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding-top: 20px;
   padding-bottom: 20px;
+  width: 100%;
 }
 .title-row {
   display: flex;
