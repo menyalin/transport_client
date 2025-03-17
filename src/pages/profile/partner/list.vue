@@ -9,7 +9,15 @@
           @submit="create"
           @refresh="refresh"
         />
-        <div id="settings-wrapper">
+        <div class="settings-wrapper">
+          <v-select
+            v-model="settings.partnerType"
+            outlined
+            :items="partnerTypeItems"
+            hide-details
+            dense
+            :style="{ 'max-width': '400px' }"
+          />
           <v-text-field
             v-model="settings.search"
             label="Поиск"
@@ -21,7 +29,7 @@
         </div>
         <v-data-table
           :headers="headers"
-          :items="preparedPartners"
+          :items="filteredPartners"
           :loading="loading"
           fixed-header
           :search="settings.search"
@@ -30,7 +38,7 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
+          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isClient`]="{ item }">
@@ -49,19 +57,55 @@
   </v-container>
 </template>
 <script>
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ButtonsPanel } from '@/shared/ui'
+import { getCurrentInstance, computed } from 'vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'PartnerList',
   components: {
     ButtonsPanel,
   },
+  setup() {
+    const { proxy } = getCurrentInstance()
+    const settings = usePersistedRef(
+      { search: null, partnerType: 'all' },
+      'PartnerList:settings'
+    )
+
+    const listOptions = usePersistedRef(
+      { page: 1, itemsPerPage: 50, sortBy: [], sortDesc: [] },
+      'PartnerList:listOptions'
+    )
+    const partnerTypeItems = [
+      { value: 'all', text: 'Все' },
+      { value: 'client', text: 'Заказчик' },
+      { value: 'service', text: 'Сервис' },
+    ]
+    const partnerTypeCondition = (partner) => {
+      if (settings.value.partnerType === 'client') return partner.isClient
+      if (settings.value.partnerType === 'service') return partner.isService
+      return true
+    }
+
+    const filteredPartners = computed(() => {
+      return proxy.$store.getters.partners
+        .filter(partnerTypeCondition)
+        .map((i) => ({
+          ...i,
+          group: proxy.$store.getters.partnerGroupsMap.get(i.group),
+          created: new Date(i.createdAt),
+          updated: new Date(i.updatedAt),
+        }))
+    })
+    return {
+      listOptions,
+      settings,
+      partnerTypeItems,
+      filteredPartners,
+    }
+  },
   data: () => ({
-    formName: 'PartnerList',
-    settings: {
-      search: null,
-      listOptions: {},
-    },
     headers: [
       { value: 'name', text: 'Наименование' },
       { value: 'group', text: 'Группа' },
@@ -72,28 +116,12 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters(['partners', 'loading', 'directoriesProfile']),
-    preparedPartners() {
-      return this.partners.map((i) => ({
-        ...i,
-        group: this.$store.getters.partnerGroupsMap.get(i.group),
-        created: new Date(i.createdAt),
-        updated: new Date(i.updatedAt),
-      }))
-    },
+    ...mapGetters(['loading', 'directoriesProfile']),
   },
   created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
     this.$store.dispatch('getPartners')
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
+
   methods: {
     create() {
       this.$router.push({ name: 'PartnerCreate' })
@@ -108,9 +136,10 @@ export default {
 }
 </script>
 <style scoped>
-#settings-wrapper {
-  display: grid;
-  grid-template-columns: 400px;
-  gap: 10px;
+.settings-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  padding-bottom: 20px;
 }
 </style>
