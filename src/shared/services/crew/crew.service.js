@@ -64,7 +64,18 @@ class CrewService {
       const blob = new Blob([data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       })
-      const filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_crews.xlsx'
+      let periodStr
+      const dateFormat = 'YYYY-MM-DD'
+      const { period } = params
+
+      if (period && period.length === 2)
+        periodStr =
+          dayjs(period[0]).format(dateFormat) +
+          '_' +
+          dayjs(period[1]).format(dateFormat)
+      else periodStr = dayjs().format('YYYY_MM_DD hh.mm.ss')
+
+      const filename = periodStr + '_crews.xlsx'
       FileSaver.saveAs(blob, filename)
       return data || null
     } catch (e) {

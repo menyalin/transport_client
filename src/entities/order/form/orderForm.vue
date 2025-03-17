@@ -190,7 +190,12 @@
               dense
             />
           </div>
-
+          <EntityFiles
+            id="order-files"
+            v-if="order && order._id"
+            :itemId="order._id"
+            docType="order"
+          />
           <order-docs-list-form
             v-if="isShowDocs"
             id="docs"
@@ -209,6 +214,7 @@
             :routeDate="routeDate"
           />
         </div>
+
         <v-btn
           v-if="displayDeleteBtn"
           color="error"
@@ -224,7 +230,7 @@
 </template>
 <script>
 import { OrderService, OrderTemplateService } from '@/shared/services'
-import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
+import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
@@ -256,6 +262,7 @@ import { CarrierAgreementService } from '@/shared/services/index'
 export default {
   name: 'OrderForm',
   components: {
+    EntityFiles,
     DownloadDocTemplateMenu,
     PaymentInvoiceLinks,
     IncomingInvoiceLink,
@@ -796,7 +803,8 @@ export default {
   align-content: start;
   justify-content: flex-start;
   grid-template-columns: 1fr 4fr;
-  gap: 1px;
+  gap: 15px;
+  align-content: stretch;
 }
 .route-state {
   grid-column: 1/2;
@@ -851,5 +859,10 @@ export default {
 #payment-parts {
   grid-column: 2/4;
   grid-row: 10/10;
+}
+
+#order-files {
+  grid-column: 2/4;
+  grid-row: 11/11;
 }
 </style>
