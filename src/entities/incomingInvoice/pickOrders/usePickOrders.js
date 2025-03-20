@@ -21,7 +21,11 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
     return selected.value.map((i) => i._id)
   })
   const settings = usePersistedRef(
-    { period: initPeriod(), docStatuses: ['accepted'] },
+    {
+      period: initPeriod(),
+      docStatuses: ['accepted'],
+      includedIntoPaymentInvoice: true,
+    },
     'incomingInvoice:pickOrders:settings'
   )
 

@@ -14,6 +14,11 @@
       hide-details
       :style="{ 'max-width': '400px' }"
     />
+    <v-checkbox
+      v-model="settings.includedIntoPaymentInvoice"
+      dense
+      label="Только рейсы, включенные в исходящие акты"
+    />
   </div>
 </template>
 <script>
