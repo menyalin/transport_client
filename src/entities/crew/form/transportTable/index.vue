@@ -20,9 +20,7 @@
               'not-saved-row': !item._id || item.updated,
             }"
           >
-            <td>
-              {{ new Date(item.startDate).toLocaleString() }}
-            </td>
+            <td>{{ new Date(item.startDate).toLocaleString() }}</td>
             <td>
               {{
                 item.endDate ? new Date(item.endDate).toLocaleString() : null
@@ -71,7 +69,7 @@
               </div>
               <DateTimeInput
                 v-else
-                v-model="$v.newItem.startDate.$model"
+                v-model="v$.newItem.startDate.$model"
                 class="my-2"
                 label="Дата начала"
                 hideDetails
@@ -142,7 +140,7 @@
       </template>
     </v-simple-table>
     <div
-      v-if="editMode && !$v.newItem.startDate.isLaterThan"
+      v-if="editMode && !v$.newItem.startDate.isLaterThan"
       class="text-caption error-message"
     >
       Начальная дата должна быть больше
@@ -186,13 +184,13 @@
   </div>
 </template>
 <script>
+import { reactive } from 'vue'
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { CrewService } from '@/shared/services'
-import AppCrewMessage from './crewMessage.vue'
-import { required } from 'vuelidate/lib/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 import { DateTimeInput } from '@/shared/ui'
+import AppCrewMessage from '../crewMessage.vue'
+import { useTransportValidation } from './useTransportValidation'
 
 export default {
   name: 'TransportTable',
@@ -225,6 +223,21 @@ export default {
     trailerItems: Array,
     tkName: String,
   },
+  setup(_props) {
+    const initialState = {
+      startDate: null,
+      endDate: null,
+      truck: null,
+      trailer: null,
+      note: null,
+    }
+
+    const state = reactive(initialState)
+
+    const { v$ } = useTransportValidation(initialState)
+    return { state, v$ }
+  },
+
   data: () => ({
     editMode: false,
     actualTruckCrew: null,
@@ -238,20 +251,6 @@ export default {
     },
   }),
 
-  validations() {
-    return {
-      newItem: {
-        startDate: {
-          required,
-          isLaterThan: isLaterThan(this.minDateValue),
-        },
-        endDate: {
-          isLaterThan: isLaterThan(this.newItem.startDate),
-        },
-      },
-    }
-  },
-
   computed: {
     ...mapGetters(['trucks', 'allowedToUseTrailersTrucksSet']),
 
@@ -260,10 +259,10 @@ export default {
     },
     isValidDate() {
       if (!this.items.length) return true
-      else return !this.$v.newItem.startDate.$invalid
+      else return !this.v$.newItem.startDate.$invalid
     },
     endDateErrors() {
-      if (this.$v.newItem.endDate.$invalid) return ['Значение не корректно']
+      if (this.v$.newItem.endDate.$invalid) return ['Значение не корректно']
       else return null
     },
     isValidNewItem() {
@@ -271,11 +270,11 @@ export default {
         (this.newItem.truck && this.allowUseTrailer && this.newItem.trailer) ||
         (this.newItem.truck && !this.allowUseTrailer && !this.newItem.trailer)
       const startDateValid =
-        (this.items.length && !this.$v.newItem.startDate.$invalid) ||
+        (this.items.length && !this.v$.newItem.startDate.$invalid) ||
         !this.items.length
       const truckAvailable = this.showTruckMessage
       const trailerAvailable = this.showTrailerMessage
-      const validEndDate = !this.$v.newItem.endDate.$invalid
+      const validEndDate = !this.v$.newItem.endDate.$invalid
       return (
         fullCrew &&
         startDateValid &&
@@ -284,20 +283,24 @@ export default {
         validEndDate
       )
     },
+
     minDateValue() {
       if (!this.items.length) return null
       return this.items[this.items.length - 1].endDate
         ? this.items[this.items.length - 1].endDate
         : this.items[this.items.length - 1].startDate
     },
+
     fixedStartDateInRow() {
       const idx = this.items.length - 1
       if (idx < 0) return true
       return !!this.items[idx].endDate
     },
+
     showAddRowBtn() {
       return !this.editMode && !this.isClosedCrew
     },
+
     showTruckMessage() {
       if (!this.actualTruckCrew) return false
       const isClosedCrew = this.actualTruckCrew?.transport?.endDate
@@ -306,6 +309,7 @@ export default {
         : false
       return !isClosedCrew && this.actualTruckCrew._id !== this.crewId
     },
+
     showTrailerMessage() {
       if (!this.actualTrailerCrew || this.actualTrailerCrew._id === this.crewId)
         return false
@@ -318,6 +322,7 @@ export default {
         return false
       return true
     },
+
     trailerDisabled() {
       return (
         !this.allowUseTrailer ||

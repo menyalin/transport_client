@@ -96,8 +96,12 @@ export default {
   watch: {
     value: {
       immediate: true,
+      deep: true,
       handler: function (val) {
-        if (!val) return null
+        if (!val) {
+          this.tmpDate = null
+          return
+        }
         this.tmpDate = dayjs(val).format(this.dateFormat)
       },
     },

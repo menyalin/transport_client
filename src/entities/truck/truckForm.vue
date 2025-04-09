@@ -11,13 +11,14 @@
     <div>
       <div class="row-wrapper first-row">
         <div class="base-info">
-          <v-select
+          <v-autocomplete
             v-model.trim="$v.form.tkName.$model"
             :items="tkNames"
             item-text="name"
             item-value="_id"
             label="ТК"
             dense
+            auto-select-first
             outlined
           />
           <v-select

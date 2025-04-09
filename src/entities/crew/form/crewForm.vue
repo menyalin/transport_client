@@ -12,6 +12,7 @@
         v-model="state.tkName"
         :items="carrierItems"
         item-text="name"
+        auto-select-first
         item-value="_id"
         label="ТК"
         dense
@@ -22,7 +23,7 @@
       <v-checkbox
         v-model="state.onlyCarrierItems"
         label="Только водители ТК"
-        :disabled="!!crewId || state.driver"
+        :disabled="!!crewId || !!state.driver"
         dense
         outlined
         @change="changeOnlyCarrierItemsHandler"
@@ -33,45 +34,56 @@
       v-model="state.driver"
       outlined
       clearable
+      auto-select-first
       label="Водитель"
       class="mb-2"
       :items="driverItems"
       item-value="_id"
       item-text="fullName"
       :disabled="!state.tkName || !!crewId"
-      @change="changeDriverHandler"
       :style="{ maxWidth: '600px' }"
     />
+
     <div class="row-input">
       <DateTimeInput
         v-model="state.startDate"
         label="Дата начала"
         :errorMessages="startDateError"
         :disabled="!state.driver || !!crewId"
-        :minDate="minValueForStartDate"
-        @blur="v$.startDate.$touch()"
         dense
         outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
+        @change="changeStartDateHandler"
       />
       <DateTimeInput
         v-model="state.endDate"
-        :disabled="!state.startDate || (!!state.endDate && !crewEditable)"
+        :disabled="disabledEndDateField"
         label="Дата завершения"
         :errorMessages="endDateError"
-        :minDate="state.startDate"
-        @blur="v$.endDate.$touch()"
         dense
         outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
       />
+      <v-btn
+        v-if="isReturnToWorkAllowed"
+        @click="returnToWorkHandler"
+        class="mx-2"
+        color="primary"
+        text
+      >
+        Вернуть экипаж в работу
+      </v-btn>
     </div>
 
     <app-crew-message
-      v-if="!!actualDriverCrew && !actualDriverCrew.endDate"
-      text="У водителя есть открытая смена от"
+      v-if="!!actualDriverCrew"
+      :text="
+        actualDriverCrew.endDate
+          ? 'Пересечение с существующей сменой от'
+          : 'У водителя есть открытая смена от'
+      "
       :visibleDate="actualDriverCrew.startDate"
       :date="state.startDate"
       :crew="actualDriverCrew"
@@ -80,7 +92,7 @@
       @clearCrew="clearActualCrewHandler"
     />
 
-    <app-transport-table
+    <!-- <app-transport-table
       v-if="showTransportTable"
       :items="state.transport"
       :truckItems="truckItems"
@@ -92,8 +104,17 @@
       :isClosedCrew="!!state.endDate"
       :tkName="state.tkName"
       @addItem="addTransportItemHandler"
-      @editMode="changeEditModeStatusHandler"
       @itemsPop="deleteLastItemInTransportHandler"
+    /> -->
+
+    <TransportTable2
+      v-if="showTransportTable"
+      :items.sync="state.transport"
+      :crewId="crewId"
+      :crewEditable="crewEditable"
+      :trucks="truckItems"
+      :trailers="trailerItems"
+      :crewStartDate="state.startDate"
     />
 
     <v-text-field
@@ -121,7 +142,8 @@
 <script>
 import { useCrewForm } from './useForm'
 import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
-import AppTransportTable from '../form/transportTable.vue'
+import AppTransportTable from '../form/transportTable'
+import TransportTable2 from './transportTable_2'
 import AppCrewMessage from './crewMessage'
 
 export default {
@@ -131,6 +153,7 @@ export default {
     DateTimeInput,
     AppTransportTable,
     AppCrewMessage,
+    TransportTable2,
   },
   props: {
     crew: {
@@ -143,18 +166,18 @@ export default {
   },
   setup(props, ctx) {
     const {
-      v$,
       state,
       crewId,
       crewEditable,
       actualDriverCrew,
       changeDriverHandler,
-      changeEditModeStatusHandler,
+      changeStartDateHandler,
       carrierItems,
       driverItems,
       truckItems,
       trailerItems,
       disabledSubmitForm,
+      disabledEndDateField,
       startDateError,
       allowUseTrailers,
       minValueForStartDate,
@@ -167,20 +190,23 @@ export default {
       endDateError,
       deleteCrewHandler,
       changeOnlyCarrierItemsHandler,
+      returnToWorkHandler,
+      isReturnToWorkAllowed,
+      hasUnsavedChanges,
     } = useCrewForm(props, ctx)
     return {
-      v$,
       state,
       crewId,
       crewEditable,
       actualDriverCrew,
       changeDriverHandler,
-      changeEditModeStatusHandler,
+      changeStartDateHandler,
       carrierItems,
       truckItems,
       trailerItems,
       driverItems,
       disabledSubmitForm,
+      disabledEndDateField,
       startDateError,
       allowUseTrailers,
       minValueForStartDate,
@@ -193,6 +219,9 @@ export default {
       clearActualCrewHandler,
       endDateError,
       deleteCrewHandler,
+      returnToWorkHandler,
+      isReturnToWorkAllowed,
+      hasUnsavedChanges,
     }
   },
 }
