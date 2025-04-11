@@ -3,6 +3,7 @@ import socket from '@/socket'
 import store from '@/store'
 import dayjs from 'dayjs'
 import FileSaver from 'file-saver'
+import z from 'zod'
 
 const BASE_PATH = '/crews'
 
@@ -43,10 +44,17 @@ class CrewService {
     }
   }
 
-  async getActualCrewByDriver(driver) {
+  async getCrewByDriverAndDate(params) {
+    const paramsSchema = z.object({
+      driver: z.string(),
+      date: z.string(),
+    })
+    const parsedData = paramsSchema.parse(params)
+
     try {
-      const params = { driver }
-      const response = await api.get(BASE_PATH + '/by_driver', { params })
+      const response = await api.get(BASE_PATH + '/by_driver', {
+        params: parsedData,
+      })
       return response?.data
     } catch (e) {
       store.commit('setError', e.message)
@@ -132,6 +140,20 @@ class CrewService {
   async diagramReport(params) {
     let { data } = await api.get(BASE_PATH + '/reports/crew_diagram', {
       params,
+    })
+    return data
+  }
+
+  async isValidTransportRow(params) {
+    const paramsSchema = z.object({
+      truck: z.string(),
+      trailer: z.string().optional(),
+      startDate: z.string(),
+      endDate: z.string().optional(),
+    })
+    const parsedData = paramsSchema.parse(params)
+    let { data } = await api.get(BASE_PATH + '/is_valid_transport_row', {
+      params: parsedData,
     })
     return data
   }
