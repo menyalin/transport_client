@@ -1,18 +1,19 @@
 import dayjs from 'dayjs'
 import { getCurrentInstance, ref, computed } from 'vue'
-import { required } from '@vuelidate/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { CrewService } from '@/shared/services/index'
 import { useVuelidate } from '@vuelidate/core'
 import { useCarriers } from '@/entities/carrier/useCarriers'
+import { required, minLength } from '@vuelidate/validators'
 
 export const useCrewForm = (props, ctx) => {
+  const loading = ref(false)
   const { allCarriers } = useCarriers()
   const { proxy } = getCurrentInstance()
   const actualDriverCrew = ref(null)
   const crewId = props.crew?._id ?? null
-  const editTransportTable = ref(false)
-  const crewEditable = props.crew?.editable ?? false
+
+  const crewEditable = ref(props.crew?.editable ?? true)
   const initialState = {
     tkName: null,
     onlyCarrierItems: true,
@@ -20,7 +21,7 @@ export const useCrewForm = (props, ctx) => {
     driver: null,
     startDate: null,
     endDate: null,
-    note: null,
+    note: '',
   }
   const state = ref(
     props.crew
@@ -62,41 +63,47 @@ export const useCrewForm = (props, ctx) => {
           : true
       )
   )
-
+  const lastDateInCrew = computed(() => {
+    const lastEl = state.value.transport[state.value.transport.length - 1]
+    return lastEl?.endDate || lastEl?.startDate || state.value.startDate
+  })
   const rules = computed(() => {
     return {
       tkName: { required },
       driver: { required },
       startDate: {
         required,
-        isLaterThan: isLaterThan(minValueForStartDate.value),
+        isLaterThan: isLaterThan(minValueForStartDate),
       },
-      endDate: { isLaterThan: isLaterThan(state.value.startDate) },
+      endDate: { isLaterThan: isLaterThan(lastDateInCrew.value) },
+      transport: { minLength: minLength(1), required },
       note: {},
       onlyCarrierItems: {},
     }
   })
-  const v$ = useVuelidate(rules, state)
+  const v$ = useVuelidate(rules, state, { $scope: false })
 
-  const changeDriverHandler = async (val) => {
+  const changeStartDateHandler = async (val) => {
     actualDriverCrew.value = null
-    state.value.transport = []
-    if (val)
-      actualDriverCrew.value = await CrewService.getActualCrewByDriver(val)
-  }
+    if (!val || !state.value.driver) return
+    loading.value = true
+    try {
+      const res = await CrewService.getCrewByDriverAndDate({
+        driver: state.value.driver,
+        date: val,
+      })
 
-  const changeEditModeStatusHandler = (val) => {
-    editTransportTable.value = val
+      if (
+        res?.endDate &&
+        +new Date(res.endDate) > +new Date(state.value.startDate)
+      )
+        actualDriverCrew.value = res
+    } catch (e) {
+      console.error(e)
+    } finally {
+      loading.value = false
+    }
   }
-
-  const disabledSubmitForm = computed(() => {
-    return (
-      !proxy.$store.getters.hasPermission('crew:write') ||
-      editTransportTable.value ||
-      !state.value.transport?.length ||
-      !!v$.value.$invalid
-    )
-  })
 
   const showTransportTable = computed(
     () =>
@@ -107,9 +114,11 @@ export const useCrewForm = (props, ctx) => {
 
   const startDateError = computed(() => {
     let errors = []
-    if (v$.value.startDate.$dirty && !v$.value.startDate.required)
+    if (!v$.value.startDate.$dirty) return errors
+
+    if (v$.value.startDate.required.$invalid)
       errors.push('Поле не может быть пустым')
-    if (v$.value.startDate.$dirty && !v$.value.startDate.isLaterThan) {
+    if (v$.value.startDate.isLaterThan.$invalid) {
       const dateStr = dayjs(v$.value.startDate.$params.isLaterThan.eq).format(
         'DD.MM.YYYY HH:mm'
       )
@@ -120,16 +129,20 @@ export const useCrewForm = (props, ctx) => {
 
   const endDateError = computed(() => {
     let errors = []
-    if (!v$.value.endDate.isLaterThan)
-      errors.push('Дата должна быть больше начальной даты')
+    if (v$.value.endDate.isLaterThan.$invalid)
+      errors.push(
+        'Дата должна быть больше: ' +
+          new Date(lastDateInCrew.value).toLocaleString()
+      )
     return errors
   })
+
   const allowUseTrailers = computed(() =>
     proxy.$store.getters.allowedToUseTrailersTrucksSet.has(state.value.truck)
   )
 
   const resetForm = () => {
-    state.value = initialState
+    state.value = { ...initialState }
   }
 
   const driverItems = computed(() => {
@@ -170,6 +183,7 @@ export const useCrewForm = (props, ctx) => {
   const clearActualCrewHandler = () => {
     actualDriverCrew.value = null
   }
+
   const deleteCrewHandler = () => {
     const res = proxy.$confirm('Вы уверены?')
     if (res) {
@@ -181,19 +195,74 @@ export const useCrewForm = (props, ctx) => {
     state.value.driver = null
   }
 
+  const isReturnToWorkAllowed = computed(
+    () =>
+      (props.crew?.editable ?? false) &&
+      state.value.endDate &&
+      state.value.transport[state.value.transport.length - 1].endDate &&
+      !v$.value.$invalid
+  )
+
+  const returnToWorkHandler = () => {
+    state.value.endDate = null
+    const lastItem = state.value.transport[state.value.transport.length - 1]
+    if (lastItem) lastItem.endDate = null
+  }
+
+  const hasUnsavedChanges = computed(() => {
+    if (!props.crew) return true
+    const plainFields = ['onlyCarrierItems', 'startDate', 'endDate', 'note']
+
+    const isPlainFiedsChanched = plainFields.some(
+      (key) =>
+        JSON.stringify(state.value[key] ?? true) !==
+        JSON.stringify(props.crew[key] ?? true)
+    )
+
+    if (isPlainFiedsChanched) return true
+
+    const isDriverChanged = state.value.driver !== props.crew.driver._id
+    const isCarrierChanged = state.value.tkName !== props.crew.tkName._id
+
+    if (isDriverChanged || isCarrierChanged) return true
+
+    const isTransportChanged =
+      state.value.transport.length !== props.crew.transport.length ||
+      state.value.transport.some(
+        (item, idx) =>
+          JSON.stringify(item) !== JSON.stringify(props.crew.transport[idx])
+      )
+    return isTransportChanged
+  })
+
+  const disabledSubmitForm = computed(() => {
+    return (
+      !proxy.$store.getters.hasPermission('crew:write') ||
+      !hasUnsavedChanges.value ||
+      v$.value.$invalid
+    )
+  })
+  const disabledEndDateField = computed(() => {
+    return (
+      state.value.transport.length === 0 ||
+      !state.value.startDate ||
+      !crewEditable.value
+    )
+  })
   return {
     v$,
     state,
+    hasUnsavedChanges,
     crewId,
     crewEditable,
     actualDriverCrew,
-    changeDriverHandler,
-    changeEditModeStatusHandler,
+    changeStartDateHandler,
     carrierItems: allCarriers,
     driverItems,
     truckItems,
     trailerItems,
     disabledSubmitForm,
+    disabledEndDateField,
     startDateError,
     allowUseTrailers,
     minValueForStartDate,
@@ -206,5 +275,7 @@ export const useCrewForm = (props, ctx) => {
     endDateError,
     deleteCrewHandler,
     changeOnlyCarrierItemsHandler,
+    returnToWorkHandler,
+    isReturnToWorkAllowed,
   }
 }

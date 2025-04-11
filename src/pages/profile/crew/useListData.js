@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 export const useListData = () => {
   const { proxy } = getCurrentInstance()
   const { allCarriers: carrierItems } = useCarriers()
-  console.log(carrierItems)
+
   const setInitialPeriod = () => {
     return [
       dayjs().startOf('month').toISOString(),
