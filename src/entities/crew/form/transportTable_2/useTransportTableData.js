@@ -1,4 +1,4 @@
-import { computed, getCurrentInstance, nextTick, ref } from 'vue'
+import { computed, getCurrentInstance, ref } from 'vue'
 
 const dateFormatter = (date) => (date ? new Date(date).toLocaleString() : null)
 
@@ -8,6 +8,7 @@ const truckFormatter = (store, id) =>
 export const useTransportTableData = (props, ctx) => {
   const { proxy } = getCurrentInstance()
   const dialog = ref(false)
+  const startDateFieldDisabled = ref(true)
   const editMode = ref(null)
   const editedItem = ref(null)
   const editableItemMinDate = ref(null)
@@ -25,7 +26,7 @@ export const useTransportTableData = (props, ctx) => {
   })
 
   const readonlyStartDate = computed(() => {
-    return props.items.length <= 1
+    return !props.crewEditable || startDateFieldDisabled.value
   })
   const lastItem = computed(() => props.items[props.items.length - 1])
 
@@ -33,18 +34,20 @@ export const useTransportTableData = (props, ctx) => {
     editMode.value = 'edit'
     if (props.items.length === 1)
       editableItemMinDate.value = props.crewStartDate
-    else
+    else {
+      startDateFieldDisabled.value = false
       editableItemMinDate.value =
         props.items[props.items.length - 2]?.endDate ??
         props.items[props.items.length - 2]?.startDate
+    }
     editedItem.value = { ...lastItem.value }
-    nextTick(() => {
-      dialog.value = true
-    })
+    dialog.value = true
   }
 
   const addItemHandler = () => {
     editMode.value = 'create'
+
+    startDateFieldDisabled.value = props.items.length === 0
 
     editableItemMinDate.value =
       lastItem.value?.endDate ?? lastItem.value?.startDate
@@ -61,25 +64,20 @@ export const useTransportTableData = (props, ctx) => {
   }
 
   const pushItem = async (newItem) => {
-    const updatedItems = [...props.items]
-    // если не закрыта прошлая запись, закрыть
-    if (!lastItem.value.endDate) {
-      const lastItem = updatedItems[updatedItems.length - 1]
-      lastItem.endDate = newItem.startDate
-    }
-    if (editMode.value === 'edit') {
-      updatedItems.pop()
-      updatedItems.push({ ...newItem, tmpId: +Date.now() })
-    } else if (editMode.value === 'create') {
-      updatedItems.push({ ...newItem, tmpId: +Date.now() })
-    }
+    const updatedItems = [...(props.items || [])]
 
+    if (editMode.value === 'create') {
+      const lastEl = updatedItems.pop()
+      if (lastEl && !lastEl.endDate) {
+        lastEl.endDate = newItem.startDate
+        updatedItems.push(lastEl)
+      }
+    } else if (editMode.value === 'edit') updatedItems.pop()
+
+    updatedItems.push(newItem)
     closeDialog()
-
-    // добавить проверку пересечения по строке
-    ctx.emit('update:items', [...updatedItems])
+    ctx.emit('update:items', updatedItems)
   }
-
   const popItem = async () => {
     const res = await proxy.$confirm('Вы уверены?')
     if (!res) return
@@ -93,6 +91,7 @@ export const useTransportTableData = (props, ctx) => {
     dialog.value = false
     editMode.value = null
     editableItemMinDate.value = null
+    startDateFieldDisabled.value = true
   }
 
   return {

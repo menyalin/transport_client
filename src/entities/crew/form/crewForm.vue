@@ -61,6 +61,7 @@
         :disabled="disabledEndDateField"
         label="Дата завершения"
         :errorMessages="endDateError"
+        @blur="v$.endDate.$touch"
         dense
         outlined
         type="datetime-local"
@@ -79,15 +80,8 @@
 
     <app-crew-message
       v-if="!!actualDriverCrew"
-      :text="
-        actualDriverCrew.endDate
-          ? 'Пересечение с существующей сменой от'
-          : 'У водителя есть открытая смена от'
-      "
-      :visibleDate="actualDriverCrew.startDate"
       :date="state.startDate"
       :crew="actualDriverCrew"
-      :invalid="v$.startDate.$invalid"
       type="crew"
       @clearCrew="clearActualCrewHandler"
     />
@@ -111,7 +105,7 @@
       v-if="showTransportTable"
       :items.sync="state.transport"
       :crewId="crewId"
-      :crewEditable="crewEditable"
+      :crewEditable="crewEditable || isNewCrew"
       :trucks="truckItems"
       :trailers="trailerItems"
       :crewStartDate="state.startDate"
@@ -142,7 +136,7 @@
 <script>
 import { useCrewForm } from './useForm'
 import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
-import AppTransportTable from '../form/transportTable'
+
 import TransportTable2 from './transportTable_2'
 import AppCrewMessage from './crewMessage'
 
@@ -151,7 +145,6 @@ export default {
   components: {
     ButtonsPanel,
     DateTimeInput,
-    AppTransportTable,
     AppCrewMessage,
     TransportTable2,
   },
@@ -166,6 +159,7 @@ export default {
   },
   setup(props, ctx) {
     const {
+      v$,
       state,
       crewId,
       crewEditable,
@@ -194,7 +188,11 @@ export default {
       isReturnToWorkAllowed,
       hasUnsavedChanges,
     } = useCrewForm(props, ctx)
+
+    const isNewCrew = !crewId
     return {
+      v$,
+      isNewCrew,
       state,
       crewId,
       crewEditable,

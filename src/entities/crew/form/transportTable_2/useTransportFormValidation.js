@@ -28,21 +28,19 @@ export const useTransportFormValidation = (state, props) => {
   )
 
   const changeTruckHandler = async (id, type) => {
+    if (type === 'truck') state.value.trailer = null
     if (!id) {
       clearExistedCrews()
       return
     }
     loading.value = true
     try {
-      const res = await CrewService.getCrewByTruckAndDate({
-        truck: id,
-        date: state.value.startDate,
-      })
-      if (type === 'truck' && res && res._id !== props.crewId) {
+      const res = await CrewService.getActualCrewByTruck(id)
+      if (!res) return null
+      if (res.endDate <= state.value.startDate) return null
+      if (type === 'truck' && res && res._id !== props.crewId)
         existedTruckCrew.value = res
-      } else {
-        existedTrailerCrew.value = res
-      }
+      else existedTrailerCrew.value = res
     } catch (e) {
       proxy.$store.commit('setError', e?.message || e)
     } finally {
@@ -64,7 +62,7 @@ export const useTransportFormValidation = (state, props) => {
   })
 
   const startDateErrors = computed(() => {
-    if (v$.value.startDate.$dirty) return []
+    if (!v$.value.startDate.$dirty) return []
     const errors = []
     if (v$.value.startDate.required.$invalid)
       errors.push('Поле не может быть пустым')
@@ -77,7 +75,7 @@ export const useTransportFormValidation = (state, props) => {
   })
 
   const endDateErrors = computed(() => {
-    if (v$.value.endDate.$dirty) return []
+    if (!v$.value.endDate.$dirty) return []
     const errors = []
 
     if (v$.value.endDate.isLaterThan.$invalid)
@@ -105,5 +103,6 @@ export const useTransportFormValidation = (state, props) => {
     trailerInputDisabled,
     existedTruckCrew,
     existedTrailerCrew,
+    clearExistedCrews,
   }
 }

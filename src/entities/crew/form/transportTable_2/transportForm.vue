@@ -35,16 +35,11 @@
         />
         <CrewMessage
           v-if="!!existedTruckCrew"
-          :text="
-            existedTruckCrew.endDate
-              ? 'Пересечение с существующей сменой от'
-              : 'Грузовик задействован в другом экипаже от'
-          "
-          :visibleDate="existedTruckCrew.startDate"
           :date="state.startDate"
           :crew="existedTruckCrew"
-          type="transport"
-          class="pb-3"
+          type="truck"
+          class="pb-2"
+          @clearCrew="clearExistedCrews"
         />
         <v-autocomplete
           label="Прицеп"
@@ -58,6 +53,14 @@
           clearable
           :disabled="trailerInputDisabled"
           @change="changeTruckHandler($event, 'trailer')"
+        />
+        <CrewMessage
+          v-if="!!existedTrailerCrew"
+          :date="state.startDate"
+          :crew="existedTrailerCrew"
+          type="trailer"
+          class="pb-2"
+          @clearCrew="clearExistedCrews"
         />
         <v-text-field label="Примечание" v-model="state.note" dense outlined />
       </div>
@@ -110,9 +113,11 @@ export default {
       trailerInputDisabled,
       existedTrailerCrew,
       existedTruckCrew,
+      clearExistedCrews,
     } = useTransportFormValidation(state, props)
 
     const cancelHandler = () => {
+      clearExistedCrews()
       ctx.emit('cancel')
     }
     const saveHandler = () => {
@@ -141,6 +146,7 @@ export default {
       trailerInputDisabled,
       existedTrailerCrew,
       existedTruckCrew,
+      clearExistedCrews,
     }
   },
 }

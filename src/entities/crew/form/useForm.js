@@ -13,7 +13,7 @@ export const useCrewForm = (props, ctx) => {
   const actualDriverCrew = ref(null)
   const crewId = props.crew?._id ?? null
 
-  const crewEditable = ref(props.crew?.editable ?? false)
+  const crewEditable = ref(props.crew?.editable ?? true)
   const initialState = {
     tkName: null,
     onlyCarrierItems: true,
@@ -63,16 +63,19 @@ export const useCrewForm = (props, ctx) => {
           : true
       )
   )
-
+  const lastDateInCrew = computed(() => {
+    const lastEl = state.value.transport[state.value.transport.length - 1]
+    return lastEl?.endDate || lastEl?.startDate || state.value.startDate
+  })
   const rules = computed(() => {
     return {
       tkName: { required },
       driver: { required },
       startDate: {
         required,
-        isLaterThan: isLaterThan(minValueForStartDate.value),
+        isLaterThan: isLaterThan(minValueForStartDate),
       },
-      endDate: { isLaterThan: isLaterThan(state.value.startDate) },
+      endDate: { isLaterThan: isLaterThan(lastDateInCrew.value) },
       transport: { minLength: minLength(1), required },
       note: {},
       onlyCarrierItems: {},
@@ -85,10 +88,16 @@ export const useCrewForm = (props, ctx) => {
     if (!val || !state.value.driver) return
     loading.value = true
     try {
-      actualDriverCrew.value = await CrewService.getCrewByDriverAndDate({
+      const res = await CrewService.getCrewByDriverAndDate({
         driver: state.value.driver,
         date: val,
       })
+
+      if (
+        res?.endDate &&
+        +new Date(res.endDate) > +new Date(state.value.startDate)
+      )
+        actualDriverCrew.value = res
     } catch (e) {
       console.error(e)
     } finally {
@@ -105,9 +114,11 @@ export const useCrewForm = (props, ctx) => {
 
   const startDateError = computed(() => {
     let errors = []
-    if (v$.value.startDate.$dirty && !v$.value.startDate.required)
+    if (!v$.value.startDate.$dirty) return errors
+
+    if (v$.value.startDate.required.$invalid)
       errors.push('Поле не может быть пустым')
-    if (v$.value.startDate.$dirty && !v$.value.startDate.isLaterThan) {
+    if (v$.value.startDate.isLaterThan.$invalid) {
       const dateStr = dayjs(v$.value.startDate.$params.isLaterThan.eq).format(
         'DD.MM.YYYY HH:mm'
       )
@@ -119,7 +130,10 @@ export const useCrewForm = (props, ctx) => {
   const endDateError = computed(() => {
     let errors = []
     if (v$.value.endDate.isLaterThan.$invalid)
-      errors.push('Дата должна быть больше начальной даты')
+      errors.push(
+        'Дата должна быть больше: ' +
+          new Date(lastDateInCrew.value).toLocaleString()
+      )
     return errors
   })
 
@@ -169,6 +183,7 @@ export const useCrewForm = (props, ctx) => {
   const clearActualCrewHandler = () => {
     actualDriverCrew.value = null
   }
+
   const deleteCrewHandler = () => {
     const res = proxy.$confirm('Вы уверены?')
     if (res) {
@@ -211,10 +226,12 @@ export const useCrewForm = (props, ctx) => {
 
     if (isDriverChanged || isCarrierChanged) return true
 
-    const isTransportChanged = state.value.transport.some(
-      (item, idx) =>
-        JSON.stringify(item) !== JSON.stringify(props.crew.transport[idx])
-    )
+    const isTransportChanged =
+      state.value.transport.length !== props.crew.transport.length ||
+      state.value.transport.some(
+        (item, idx) =>
+          JSON.stringify(item) !== JSON.stringify(props.crew.transport[idx])
+      )
     return isTransportChanged
   })
 
@@ -228,11 +245,12 @@ export const useCrewForm = (props, ctx) => {
   const disabledEndDateField = computed(() => {
     return (
       state.value.transport.length === 0 ||
-      !state.startDate ||
-      (!!state.endDate && !crewEditable)
+      !state.value.startDate ||
+      !crewEditable.value
     )
   })
   return {
+    v$,
     state,
     hasUnsavedChanges,
     crewId,
