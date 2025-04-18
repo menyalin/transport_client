@@ -14,8 +14,6 @@ export const usePrintForms = (props) => {
   }
 
   async function downloadTemplateHandler(template) {
-    console.log(props.item)
-
     const invoiceId = props.item?._id
     const invoiceNumber = props.item?.number
     const invoiceDate = dayjs(props.item?.date).format('DD.MM.YYYY')
