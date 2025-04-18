@@ -1,9 +1,11 @@
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useCarriers } from '@/entities/carrier'
 
 export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
+  const { allCarriers: carrierItems } = useCarriers()
   const initialState = {
     name: '',
     vatRate: 0,
@@ -12,6 +14,9 @@ export const useForm = (props, ctx) => {
     paymentDescription: '',
     orderContractNote: '',
     note: '',
+    customer: null,
+    actBasis: '',
+    actDesription: '',
   }
   const state = ref(props?.item ?? initialState)
   const rules = computed(() => {
@@ -23,6 +28,9 @@ export const useForm = (props, ctx) => {
       orderContractNote: {},
       usePriceWithVAT: {},
       note: {},
+      customer: {},
+      actBasis: {},
+      actDesription: {},
     }
   })
 
@@ -41,6 +49,7 @@ export const useForm = (props, ctx) => {
   )
 
   return {
+    carrierItems,
     vatRateDisabled,
     state,
     v$,

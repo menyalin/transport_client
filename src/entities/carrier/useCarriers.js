@@ -37,7 +37,7 @@ export const useCarriers = (settings = {}) => {
   }
 
   onMounted(async () => {
-    if (!settings) await getItems()
+    if (Object.keys(settings).length) await getItems()
   })
 
   return {

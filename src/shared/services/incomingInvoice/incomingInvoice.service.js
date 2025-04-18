@@ -73,10 +73,8 @@ class IncomingInvoiceService {
     return data
   }
 
-  async getAllowedPrintForms(agreement, client) {
-    const { data } = await api.get(BASE_PATH + '/allowed_print_forms', {
-      params: { agreement, client },
-    })
+  async getAllowedPrintForms() {
+    const { data } = await api.get(BASE_PATH + '/allowed_print_forms')
     return data
   }
 

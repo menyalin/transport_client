@@ -7,7 +7,14 @@
       :disabledSubmit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
-    />
+    >
+      <DownloadDocTemplateMenu
+        v-if="docTemplateIsVisible"
+        :templates="templates"
+        :disabledDownloadFiles="downloadDisabled"
+        @downloadTemplate="downloadTemplateHandler"
+      />
+    </buttons-panel>
     <div id="form">
       <div class="fields-row">
         <v-text-field
@@ -117,6 +124,7 @@ import {
   DateTimeInput,
 } from '@/shared/ui'
 import { useCarriers } from '@/entities/carrier/useCarriers.js'
+import { usePrintForms } from './usePrintForms.js'
 
 export default {
   name: 'IncomingInvoiceForm',
@@ -133,6 +141,12 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
+    const {
+      downloadDisabled,
+      docTemplateIsVisible,
+      templates,
+      downloadTemplateHandler,
+    } = usePrintForms(props)
     const { outsourceCarriers } = useCarriers()
     const {
       state,
@@ -204,6 +218,10 @@ export default {
       outsourceCarriers,
       disabledCarriers,
       carrierChangeHandler,
+      downloadDisabled,
+      docTemplateIsVisible,
+      templates,
+      downloadTemplateHandler,
     }
   },
 }
