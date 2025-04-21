@@ -25,6 +25,9 @@ export const useTransportTableData = (props, ctx) => {
     }))
   })
 
+  const allowAddTransportItems = computed(() => {
+    return props.crewEditable
+  })
   const readonlyStartDate = computed(() => {
     return !props.crewEditable || startDateFieldDisabled.value
   })
@@ -105,5 +108,6 @@ export const useTransportTableData = (props, ctx) => {
     readonlyStartDate,
     addItemHandler,
     pushItem,
+    allowAddTransportItems,
   }
 }
