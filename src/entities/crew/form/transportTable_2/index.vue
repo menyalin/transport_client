@@ -48,7 +48,7 @@
         </tbody>
       </template>
     </v-simple-table>
-    <v-btn color="primary" @click="addItemHandler" small text>
+    <v-btn color="primary" @click="addItemHandler" small text :disabled="!allowAddTransportItems">
       Добавить запись
     </v-btn>
     <v-dialog v-model="dialog" max-width="600px" persistent>
@@ -91,6 +91,7 @@ export default {
       pushItem,
       editableItemMinDate,
       readonlyStartDate,
+      allowAddTransportItems,
     } = useTransportTableData(props, ctx)
 
     return {
@@ -105,6 +106,7 @@ export default {
       pushItem,
       editableItemMinDate,
       readonlyStartDate,
+      allowAddTransportItems,
     }
   },
 }
