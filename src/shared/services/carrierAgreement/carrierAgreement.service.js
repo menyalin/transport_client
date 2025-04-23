@@ -1,5 +1,6 @@
 import api from '@/api'
 import { EventObserver } from '@/modules/common/helpers/EventObserver.class'
+import z from 'zod'
 import store from '@/store'
 const BASE_PATH = '/carrier_agreements'
 
@@ -67,6 +68,33 @@ class CarrierAgreementService {
 
   async getByCarrierAndDate(params) {
     let { data } = await api.get(BASE_PATH + '/get_by_carrier_and_date', {
+      params,
+    })
+    return data
+  }
+
+  async getAllowedAgreements(p) {
+    const paramsSchema = z.object({
+      company: z.string(),
+      carrierId: z.string(),
+      date: z.string(),
+      executorInClientAgreement: z
+        .string()
+        .optional()
+        .nullable()
+        .transform((v) => {
+          return v || undefined
+        }),
+      agreementId: z
+        .string()
+        .optional()
+        .nullable()
+        .transform((v) => {
+          return v || undefined
+        }),
+    })
+    const params = paramsSchema.parse(p)
+    let { data } = await api.get(BASE_PATH + '/get_allowed_agreements', {
       params,
     })
     return data

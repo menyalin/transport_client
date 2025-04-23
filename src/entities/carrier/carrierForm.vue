@@ -18,7 +18,13 @@
       dense
       hide-details
     />
-    <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
+    <div class="row-input">
+      <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
+      <v-checkbox
+        v-model="state.allowUseCustomerRole"
+        label="Может выступать заказчиком для привлеченного перевозчика"
+      />
+    </div>
 
     <AllowedCarrierAgreements
       v-model="state.agreements"
@@ -98,5 +104,7 @@ export default {
 .row-input {
   display: flex;
   flex-direction: row;
+  gap: 15px;
+  justify-content: flex-start;
 }
 </style>

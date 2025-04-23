@@ -132,6 +132,8 @@
             v-model="confirmedCrew"
             :date="dateForCrew"
             :confirmed="orderConfirmed"
+            :hasIncomingInvoice="hasIncomingInvoice"
+            :executorIdInClientAgreement="agreement ? agreement.executor : null"
             title="Экипаж"
             class="crew"
           />
@@ -229,9 +231,9 @@
   </v-container>
 </template>
 <script>
+import { computed } from 'vue'
 import { OrderService, OrderTemplateService } from '@/shared/services'
 import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
-
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
@@ -311,7 +313,9 @@ export default {
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
     const { isValidPrices, isValidClientNum, isValidAuctionNum } =
       useOrderValidations()
-
+    const hasIncomingInvoice = computed(() => {
+      return props.order?.incomingInvoice && props.order?.incomingInvoice._id
+    })
     return {
       templates,
       docTemplateIsVisible,
@@ -324,6 +328,7 @@ export default {
       isValidPrices,
       isValidClientNum,
       isValidAuctionNum,
+      hasIncomingInvoice,
     }
   },
   data() {

@@ -25,6 +25,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
+          v-if="false"
           small
           color="primary"
           text
