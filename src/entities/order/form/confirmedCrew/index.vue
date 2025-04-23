@@ -50,7 +50,24 @@
     </v-alert>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
       <small>Перевозчик: {{ tkName ? tkName : 'Не указан' }}</small>
-      <small>Соглашение: {{ outsourceAgreementName }}</small>
+      <small
+        :class="{
+          'deep-orange--text text--darken-4 font-weight-bold ':
+            executorAndCustomerMissmatch,
+        }"
+      >
+        Соглашение: {{ outsourceAgreementName }}
+        {{ state.directiveAgreement ? '(Установлено вручную)' : '' }}
+      </small>
+      <v-btn
+        v-if="allowChangeOutsourceAgreement"
+        small
+        color="primary"
+        @click="changeOutsourceAgreementHandler"
+        text
+      >
+        Изменить соглашение
+      </v-btn>
     </div>
   </div>
 </template>
@@ -70,8 +87,10 @@ export default {
   props: {
     confirmed: Boolean,
     crew: Object,
+    hasIncomingInvoice: Boolean,
     title: String,
     date: String,
+    executorIdInClientAgreement: String,
   },
   setup(props, ctx) {
     const {
@@ -85,11 +104,13 @@ export default {
       drivers,
       trailers,
       hasTruck,
-
+      allowChangeOutsourceAgreement,
+      changeOutsourceAgreementHandler,
       changeTruckHandler,
       copyHandler,
       truckReadOnly,
       crewEmptyError,
+      executorAndCustomerMissmatch,
     } = useConfirmedCrew(props, ctx)
     return {
       state,
@@ -102,11 +123,13 @@ export default {
       drivers,
       trailers,
       hasTruck,
-
+      allowChangeOutsourceAgreement,
+      changeOutsourceAgreementHandler,
       changeTruckHandler,
       copyHandler,
       truckReadOnly,
       crewEmptyError,
+      executorAndCustomerMissmatch,
     }
   },
 }

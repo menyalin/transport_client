@@ -69,7 +69,6 @@
           v-model="state.actBasis"
           outlined
           dense
-          hide-details
         />
       </div>
       <div class="fields-row">
