@@ -84,7 +84,7 @@ export default {
     moneyFormatter() {
       return new Intl.NumberFormat('ru-RU', {
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
+        maximumFractionDigits: 2,
       })
     },
     sortedItems() {
