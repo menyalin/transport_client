@@ -37,10 +37,15 @@ export const useTransportFormValidation = (state, props) => {
     try {
       const res = await CrewService.getActualCrewByTruck(id)
       if (!res) return null
-      if (res.endDate <= state.value.startDate) return null
-      if (type === 'truck' && res && res._id !== props.crewId)
-        existedTruckCrew.value = res
-      else existedTrailerCrew.value = res
+      if (res._id === props.crewId) return null
+
+      if (
+        res.transport?.endDate &&
+        +new Date(res.transport.endDate) <= +new Date(state.value.startDate)
+      )
+        return null
+
+      existedTruckCrew.value = res
     } catch (e) {
       proxy.$store.commit('setError', e?.message || e)
     } finally {

@@ -71,16 +71,16 @@ export const useTransportTableData = (props, ctx) => {
 
     if (editMode.value === 'create') {
       const lastEl = updatedItems.pop()
-      if (lastEl && !lastEl.endDate) {
-        lastEl.endDate = newItem.startDate
-        updatedItems.push(lastEl)
-      }
+      if (lastEl && !lastEl.endDate) lastEl.endDate = newItem.startDate
+
+      updatedItems.push(lastEl)
     } else if (editMode.value === 'edit') updatedItems.pop()
 
     updatedItems.push(newItem)
     closeDialog()
     ctx.emit('update:items', updatedItems)
   }
+
   const popItem = async () => {
     const res = await proxy.$confirm('Вы уверены?')
     if (!res) return
