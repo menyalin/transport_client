@@ -37,6 +37,8 @@
       dense
     />
     <v-text-field label="КПП" v-model="state.kpp" dense />
+    <v-text-field label="Бухгалтер" v-model="state.accountant.name" dense />
+
     <div v-if="directorPosition && !!state.director" class="director-wrapper">
       <v-text-field
         :label="directorPosition"
@@ -106,6 +108,12 @@ export default {
       position: null,
       name: null,
     })
+    const accountantDefaultState = () => ({
+      isMainSignatory: false,
+      position: 'Бухгалтер',
+      name: null,
+    })
+
     const initialState = () => ({
       legalForm: null,
       fullName: null,
@@ -117,11 +125,13 @@ export default {
       kpp: null,
       director: directorDefaultState(),
       signatory: defaultSignatoryState(),
+      accountant: accountantDefaultState(),
     })
     const state = ref(
       {
         director: directorDefaultState(),
         signatory: defaultSignatoryState(),
+        accountant: accountantDefaultState(),
         ...props.value,
       } || initialState()
     )
@@ -139,6 +149,10 @@ export default {
           isMainSignatory: {},
           position: {},
           name: {},
+        },
+        accountant: {
+          name: {},
+          position: {},
         },
         signatory: {
           position: {},

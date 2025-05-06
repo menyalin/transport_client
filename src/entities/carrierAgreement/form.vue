@@ -65,7 +65,7 @@
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Основание для входящего акта об оказании услуг"
+          label="Основание для входящего акта об оказании услуг и счета"
           v-model="state.actBasis"
           outlined
           dense
@@ -77,6 +77,14 @@
           rows="10"
           outlined
           label="Примечание для входящего акта об оказании услуг"
+        />
+      </div>
+      <div class="fields-row">
+        <v-textarea
+          v-model="state.paymentBillDescription"
+          rows="10"
+          outlined
+          label="Примечание для cчета на оплату"
         />
       </div>
       <div class="fields-row">
