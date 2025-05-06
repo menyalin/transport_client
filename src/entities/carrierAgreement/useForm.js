@@ -17,6 +17,7 @@ export const useForm = (props, ctx) => {
     customer: null,
     actBasis: '',
     actDesription: '',
+    paymentBillDescription: '',
   }
   const state = ref(props?.item ?? initialState)
   const rules = computed(() => {
@@ -31,6 +32,7 @@ export const useForm = (props, ctx) => {
       customer: {},
       actBasis: {},
       actDesription: {},
+      paymentBillDescription: {},
     }
   })
   const carrierItems = computed(() =>
