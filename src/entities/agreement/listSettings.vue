@@ -1,6 +1,20 @@
 import { AddressForm } from '@/entities/address';
 <template>
   <div class="wrapper">
+    <v-autocomplete
+      :value="settings.executor"
+      :items="carrierItems"
+      item-text="name"
+      item-value="_id"
+      label="ТК Исполнитель"
+      dense
+      hide-details
+      clearable
+      outlined
+      auto-select-first
+      @change="updateSettings($event, 'executor')"
+      :style="{ maxWidth: '300px' }"
+    />
     <v-text-field
       :value="settings.search"
       label="Поиск"
@@ -13,6 +27,8 @@ import { AddressForm } from '@/entities/address';
   </div>
 </template>
 <script>
+import { useCarriers } from '../carrier/useCarriers'
+
 export default {
   name: 'AgreementListSettings',
   model: {
@@ -23,10 +39,12 @@ export default {
     settings: Object,
   },
   setup(props, ctx) {
+    const { allCarriers: carrierItems } = useCarriers()
     function updateSettings(value, field) {
       ctx.emit('change', { ...props.settings.value, [field]: value })
     }
     return {
+      carrierItems,
       updateSettings,
     }
   },
