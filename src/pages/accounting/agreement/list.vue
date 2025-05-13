@@ -68,12 +68,13 @@ export default {
       'agreement_list_options'
     )
     const settings = usePersistedRef(
-      { search: null },
+      { search: null, executor: null },
       'agreement_list_settings'
     )
     const queryParams = computed(() => ({
       company: proxy.$store.getters.directoriesProfile,
       skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
+      executor: settings.value.executor,
       search: settings.value.search,
       limit: listOptions.value.itemsPerPage,
       sortBy: listOptions.value.sortBy.length
@@ -133,7 +134,9 @@ export default {
         text: 'Наименование исполнителя',
         sortable: false,
       },
+      { value: 'executorCarrierName', text: 'ТК исполнитель', sortable: false },
       { value: 'date', text: 'Дата начала действия', sortable: true },
+      { value: 'endDate', text: 'Дата завершения', sortable: false },
       { value: 'vatRateText', text: 'НДС', sortable: false },
       { value: 'note', text: 'Примечание', sortable: false },
     ],
@@ -148,6 +151,7 @@ export default {
         return {
           ...i,
           date: new Date(i.date).toLocaleDateString(),
+          endDate: i.endDate ? new Date(i.endDate).toLocaleDateString() : null,
           vatRateText,
         }
       })

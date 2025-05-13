@@ -94,7 +94,9 @@
             :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
             :isValidNum="isValidClientNum(agreement, client, state)"
             :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
+            :orderConfirmed="orderConfirmed"
             :routeDate="routeDate"
+            :agreementDisabled="hasPaymentInvoices"
             @updateAgreement="updateAgreementHandler"
           />
           <CargoParams
@@ -384,6 +386,9 @@ export default {
   },
 
   computed: {
+    hasPaymentInvoices() {
+      return !!this.form.paymentInvoices?.length
+    },
     showPaymentToDriver() {
       return (
         this.$store.getters.hasPermission('order:readPaymentToDriver') &&
