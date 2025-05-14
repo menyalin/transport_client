@@ -31,7 +31,7 @@ export const useClientBlock = (props, ctx) => {
       })
       state.value = {
         ...state.value,
-        agreement: currentAgreement.value._id ?? null,
+        agreement: currentAgreement.value?._id ?? null,
         directiveAgreement: false,
       }
     } else {
@@ -44,7 +44,10 @@ export const useClientBlock = (props, ctx) => {
   }
 
   async function getAllowedAgreements() {
-    if (!props.routeDate || !state.value.client) return
+    if (!props.routeDate || !state.value.client) {
+      loading.value = false
+      return
+    }
     try {
       loading.value = true
       allowedAgreements.value = await AgreementService.getForClient({
@@ -88,8 +91,9 @@ export const useClientBlock = (props, ctx) => {
 
   watch(
     () => props.item,
-    async (val) => {
-      state.value = { ...val }
+    async (newVal, oldVal) => {
+      state.value = { ...newVal }
+      if (newVal?.client !== oldVal?.client) await getAllowedAgreements()
     },
     { deep: true, immediate: true }
   )
