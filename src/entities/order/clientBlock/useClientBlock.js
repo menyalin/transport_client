@@ -1,6 +1,6 @@
 import { AgreementService } from '@/shared/services/index'
 import store from '@/store/index'
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { clientAgreementSelector } from './utils/clientAgreementSelector'
 
 export const useClientBlock = (props, ctx) => {
@@ -34,6 +34,7 @@ export const useClientBlock = (props, ctx) => {
         agreement: currentAgreement.value?._id ?? null,
         directiveAgreement: false,
       }
+      ctx.emit('change', state.value)
     } else {
       currentAgreement.value = allowedAgreements.value.find(
         (i) => i._id === state.value.agreement
@@ -55,7 +56,6 @@ export const useClientBlock = (props, ctx) => {
         date: new Date(props.routeDate).toISOString(),
         currentAgreementId: state.value.agreement,
       })
-      setAgreement()
     } catch (e) {
       store.commit('setError', e)
       console.error(e)
@@ -93,7 +93,9 @@ export const useClientBlock = (props, ctx) => {
     () => props.item,
     async (newVal, oldVal) => {
       state.value = { ...newVal }
-      if (newVal?.client !== oldVal?.client) await getAllowedAgreements()
+      if (newVal?.client !== oldVal?.client) {
+        await getAllowedAgreements()
+      }
     },
     { deep: true, immediate: true }
   )
@@ -106,14 +108,13 @@ export const useClientBlock = (props, ctx) => {
     }
   )
 
-  onMounted(async () => {
-    // await getAllowedAgreements()
-  })
   watch(
     () => props.routeDate,
     async () => await getAllowedAgreements(),
     { immediate: true }
   )
+
+  watch(allowedAgreements, setAgreement)
 
   return {
     state,
