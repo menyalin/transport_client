@@ -27,7 +27,7 @@ export default {
         .dispatch('createTkName', tkName)
         .then(() => {
           this.loading = false
-          this.$router.push({ name: 'TkNameList' })
+          this.$router.push({ name: 'CarrierList' })
         })
         .catch((e) => {
           this.loading = false

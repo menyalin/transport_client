@@ -1,8 +1,9 @@
+import { computed } from 'vue'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { PartnerService } from '@/shared/services'
-import { computed } from 'vue'
 import { useAgreements } from '@/entities/agreement'
 import store from '@/store'
+
 export const useListData = (props, { emit }) => {
   const { allAgreementMap } = useAgreements()
   const addressesMap = computed(() => store.getters.addressMap)
@@ -28,17 +29,19 @@ export const useListData = (props, { emit }) => {
   )
 
   const filteredItems = computed(() => {
-    return props.items
-      .map((i) => ({
-        ...i,
-        addresses: i.addresses
-          .map((a) => addressesMap.value.get(a)?.shortName || '__')
-          .join(', '),
-        agreement: i.agreement
-          ? allAgreementMap.value.get(i.agreement)?.name
-          : null,
-      }))
-      .filter(isActiveComparator)
+    return (
+      props.items
+        .map((i) => ({
+          ...i,
+          addresses: i.addresses
+            .map((a) => addressesMap.value.get(a)?.shortName || '__')
+            .join(', '),
+          agreement: i.agreement
+            ? allAgreementMap.value.get(i.agreement)?.name
+            : null,
+        }))
+        ?.filter(isActiveComparator) ?? []
+    )
   })
 
   async function switchStatusHandler(notificationId) {
@@ -52,7 +55,7 @@ export const useListData = (props, { emit }) => {
         isActive: !item.isActive,
       }
     )
-    emit('updatePartner', partner)
+    emit('change', partner.idleTruckNotifications)
   }
 
   async function deleteHandler(id) {
@@ -60,7 +63,7 @@ export const useListData = (props, { emit }) => {
       props.partnerId,
       id
     )
-    emit('updatePartner', partner)
+    emit('change', partner.idleTruckNotifications)
   }
   return {
     editHandler,

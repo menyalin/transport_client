@@ -1,6 +1,5 @@
 <template>
   <div class="block-wrapper">
-    <h5 class="ml-3">Площадки для приема документов</h5>
     <v-alert v-if="!partnerId" type="info">
       Добавление площадок возможно только после сохранения партнера
     </v-alert>
@@ -51,7 +50,7 @@ export default {
     places: Array,
   },
   setup(props, ctx) {
-    const placeForm = ref(null)
+    const placeForm = ref(null) // ref на компонент формы
     const showDialog = ref(false)
     const editableItem = ref({})
 
@@ -75,7 +74,7 @@ export default {
             formState
           )
         }
-        ctx.emit('updatePartner', updatedPartner)
+        ctx.emit('change', updatedPartner.placesForTransferDocs)
         placeForm.value.clear()
         showDialog.value = false
       } catch (e) {
@@ -91,7 +90,6 @@ export default {
     async function editPlaceHandler(placeId) {
       const editablePlace = props.places.find((i) => placeId === i._id)
       if (!editablePlace) return null
-
       editableItem.value = { ...editablePlace }
       showDialog.value = true
     }
@@ -104,7 +102,7 @@ export default {
           props.partnerId,
           placeId
         )
-        ctx.emit('updatePartner', updatedPartner)
+        ctx.emit('change', updatedPartner.placesForTransferDocs)
       } catch (e) {
         store.commit('setError', e)
       }

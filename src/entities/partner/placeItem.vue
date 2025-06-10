@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import store from '@/store'
 
 export default {
@@ -36,6 +36,7 @@ export default {
     value: Object,
   },
   setup(props, ctx) {
+    const { proxy } = getCurrentInstance()
     const address = computed(() =>
       store.getters.addressMap.get(props.value.address)
     )
@@ -45,8 +46,11 @@ export default {
       )
     )
 
-    function deleteHandler() {
-      ctx.emit('delete', props.value._id)
+    async function deleteHandler() {
+      const res = await proxy.$confirm(
+        `Вы действительно хотите удалить площадку <b>${props.value.title}</b>?`
+      )
+      if (res) ctx.emit('delete', props.value._id)
     }
 
     function editHandler() {
