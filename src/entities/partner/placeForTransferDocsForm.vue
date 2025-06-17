@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title>Площадка приема документов</v-card-title>
+    <v-card-title>
+      {{ item._id ? 'Редактировать площадку' : 'Новая площадка' }}
+    </v-card-title>
     <v-card-text>
       <form id="form-wrapper">
         <v-text-field
@@ -18,6 +20,8 @@
           label="Адрес площадки"
           :items="addressItems"
           outlined
+          auto-select-first
+          clearable
           @blur="v$.address.$touch"
           :errorMessages="addressErrorMessages"
         />
@@ -27,6 +31,8 @@
           :items="addressItems"
           outlined
           multiple
+          auto-select-first
+          clearable
           dense
           @blur="v$.allowedLoadingPoints.$touch"
         />
@@ -46,7 +52,10 @@
           @blur="v$.note.$touch"
         />
         <v-checkbox
-          v-model="resctrictAddresses"
+          v-model="state.resctrictAddresses"
+          :disabled="disabledResctrictAddresses"
+          hint="Можно редактировать только при пустых полях с адресами"
+          :persistentHint="disabledResctrictAddresses"
           label="Скрывать адреса других партнеров"
           color="primary"
         />
@@ -75,14 +84,17 @@ export default {
     partnerId: { type: String, required: true },
   },
   setup(props, ctx) {
-    const resctrictAddresses = ref(true)
     const state = ref({})
+    const disabledResctrictAddresses = computed(() =>
+      Boolean(state.value.address || state.value.allowedLoadingPoints?.length)
+    )
     const initialState = {
       title: null,
       address: null,
       allowedLoadingPoints: [],
       contacts: null,
       note: null,
+      resctrictAddresses: true,
     }
 
     function setState(state) {
@@ -94,7 +106,7 @@ export default {
       (value) => {
         state.value = setState(value)
       },
-      { immediate: true }
+      { immediate: true, deep: true }
     )
 
     const rules = {
@@ -134,7 +146,7 @@ export default {
     const addressItems = computed(() => {
       if (!props.partnerId) return []
       return store.getters.addressesForAutocomplete.filter((i) => {
-        if (resctrictAddresses.value) return i.partner === props.partnerId
+        if (state.value.resctrictAddresses) return i.partner === props.partnerId
         else return true
       })
     })
@@ -166,7 +178,7 @@ export default {
       cancel,
       state,
       clear,
-      resctrictAddresses,
+      disabledResctrictAddresses,
       addressItems,
     }
   },

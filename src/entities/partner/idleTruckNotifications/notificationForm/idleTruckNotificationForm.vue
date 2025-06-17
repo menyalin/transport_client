@@ -30,7 +30,6 @@
           v-model="v$.agreement.$model"
           label="Соглашение"
           outlined
-          :errorMessages="addressFieldErrors"
           deletable-chips
           clearable
           auto-select-first

@@ -43,14 +43,14 @@ export const useWidgetModel = (props, { emit }) => {
         formState
       )
 
-    emit('updatePartner', updatedPartner)
+    emit('change', updatedPartner.idleTruckNotifications)
     cancelHandler()
   }
 
   return {
     editableItem,
     dialog,
-    addNotificationHandler, // Добавить новое оповещение
+    addNotificationHandler,
     cancelHandler,
     submitHandler,
     loading,

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="text-h6">Общая информация о компании:</div>
+    <div v-if="showTitle" class="text-h6">Общая информация о компании:</div>
     <v-select
       label="Тип"
       :items="legalFormItems"
@@ -25,24 +25,24 @@
     />
     <v-text-field label="ИНН" v-model="state.inn" dense />
     <v-text-field
-      v-if="state.legalForm === 'legalEntity'"
+      v-if="state.legalForm && state.legalForm === 'legalEntity'"
       label="ОГРН"
       v-model="state.ogrn"
       dense
     />
     <v-text-field
-      v-if="state.legalForm === 'soleProprietor'"
+      v-if="state.legalForm && state.legalForm === 'soleProprietor'"
       label="ОГРНИП"
       v-model="state.ogrnip"
       dense
     />
     <v-text-field label="КПП" v-model="state.kpp" dense />
-    <v-text-field label="Бухгалтер" v-model="state.accountant.name" dense />
+    <v-text-field label="Бухгалтер" v-model="accountantName" dense />
 
     <div v-if="directorPosition && !!state.director" class="director-wrapper">
       <v-text-field
         :label="directorPosition"
-        v-model="state.director.name"
+        v-model="directorName"
         hide-details
         dense
       />
@@ -55,26 +55,11 @@
         @change="isMainSignatoryChangedHandler"
       />
     </div>
-    <div v-if="showSignatory" class="signatory-wrapper">
-      <div class="text-subtitle-2 pb-3">Подписант:</div>
-      <v-text-field
-        label="Должность"
-        v-model="state.signatory.position"
-        dense
-      />
-      <v-text-field label="ФИО" v-model="state.signatory.fullName" dense />
-      <v-text-field
-        label="Номер доверенности"
-        v-model="state.signatory.number"
-        dense
-      />
-      <DateTimeInput
-        type="date"
-        label="Дата доверенности"
-        v-model="state.signatory.date"
-        dense
-      />
-    </div>
+    <SignatoryForm
+      v-if="showSignatory"
+      class="signatory-wrapper"
+      v-model="state.signatory"
+    />
   </div>
 </template>
 <script>
@@ -82,10 +67,11 @@ import { LEGAL_ENTITY_TYPES } from '@/shared/constants/legalEntityTypes'
 import { useVuelidate } from '@vuelidate/core'
 import { computed, ref, watch } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
+import SignatoryForm from './signatoryForm.vue'
 
 export default {
   name: 'CompanyInfoForm',
-  components: { DateTimeInput },
+  components: { DateTimeInput, SignatoryForm },
   model: {
     prop: 'value',
     event: 'change',
@@ -94,24 +80,44 @@ export default {
     value: {
       type: Object,
     },
+    showTitle: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   setup(props, ctx) {
+    const accountantName = computed({
+      get: () => props.value?.accountant?.name || '',
+      set: (val) => {
+        state.value = {
+          ...state.value,
+          accountant: { ...state.value.accountant, name: val },
+        }
+      },
+    })
+
+    const directorName = computed({
+      get: () => props.value.director?.name || '',
+      set: (val) => {
+        state.value.director = { ...state.value.director, name: val }
+      },
+    })
     const defaultSignatoryState = () => ({
-      position: null,
-      fullName: null,
-      number: null,
-      date: null,
+      position: '',
+      fullName: '',
+      number: '',
+      date: '',
     })
     const directorDefaultState = () => ({
       isMainSignatory: true,
-      position: null,
-      name: null,
+      position: '',
+      name: '',
     })
     const accountantDefaultState = () => ({
       isMainSignatory: false,
       position: 'Бухгалтер',
-      name: null,
+      name: '',
     })
 
     const initialState = () => ({
@@ -127,14 +133,8 @@ export default {
       signatory: defaultSignatoryState(),
       accountant: accountantDefaultState(),
     })
-    const state = ref(
-      {
-        director: directorDefaultState(),
-        signatory: defaultSignatoryState(),
-        accountant: accountantDefaultState(),
-        ...props.value,
-      } || initialState()
-    )
+    const state = ref(initialState())
+
     const rules = computed(() => {
       return {
         legalForm: {},
@@ -165,17 +165,18 @@ export default {
     const v$ = useVuelidate(rules, state)
 
     const directorPosition = computed(() => {
-      if (state.value.legalForm === 'legalEntity') return 'Генеральный директор'
-      else if (state.value.legalForm === 'soleProprietor')
+      if (state.value?.legalForm === 'legalEntity')
+        return 'Генеральный директор'
+      else if (state.value?.legalForm === 'soleProprietor')
         return 'Индивидуальный предприниматель'
-      else if (state.value.legalForm === 'privatePerson') return 'Частное лицо'
+      else if (state.value?.legalForm === 'privatePerson') return 'Частное лицо'
       else return null
     })
 
     const showSignatory = computed(() => {
       if (
-        !!state.value.legalForm &&
-        state.value.director.isMainSignatory === false
+        !!state.value?.legalForm &&
+        state.value.director?.isMainSignatory === false
       )
         return true
       else return false
@@ -188,22 +189,25 @@ export default {
 
     watch(
       () => props.value,
-      (val) => (state.value = val),
-      { deep: true }
+      (newVal, oldVal) => {
+        if (!newVal) state.value = initialState()
+        else if (newVal !== oldVal) state.value = newVal
+      },
+      { deep: true, immediate: true }
     )
 
-    watch(state.value, (val) =>
-      ctx.emit('change', {
-        ...val,
-        director: {
-          ...val.director,
-          position: directorPosition.value,
-        },
-      })
+    watch(
+      state,
+      (val) => {
+        ctx.emit('change', val)
+      },
+      { deep: true }
     )
 
     return {
       v$,
+      accountantName,
+      directorName,
       state,
       legalFormItems: LEGAL_ENTITY_TYPES,
       directorPosition,
@@ -219,13 +223,6 @@ export default {
   flex-direction: column;
   gap: 15px;
   padding: 20px;
-  max-width: 700px;
-}
-.signatory-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 30px;
   max-width: 700px;
 }
 </style>

@@ -4,39 +4,50 @@ import { computed, ref, watch } from 'vue'
 import { required, minValue } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
+import { VAT_RATE_ITEMS } from '@/shared/constants/vatRates'
 
 const PaymentPartValidationSchema = z.object({
-  client: z.string(),
-  agreement: z.string(),
+  client: z.string().optional(),
+  agreement: z.string().optional(),
   sum: z.number(),
   vatRate: z.number(),
   sumWithVAT: z.boolean(),
-  type: z.string().optional(),
+  type: z.string().optional().nullable(),
   note: z.string().optional(),
 })
 
 class PaymentPart {
   constructor(data) {
-    PaymentPartValidationSchema.parse(data)
+    try {
+      PaymentPartValidationSchema.safeParse(data)
 
-    if (![0, 20].includes(data.vatRate))
-      throw new Error('PaymentPart : constructor : invalid vatRate param')
+      if (!VAT_RATE_ITEMS.map((i) => i.value).includes(data.vatRate))
+        throw new Error('PaymentPart : constructor : invalid vatRate param')
 
-    this.client = data.client
-    this.agreement = data.agreement
-    this.type = data.type || 'part'
-    this.note = data.note
-    if (data.vatRate === 0) {
-      this.price = data.sum
-      this.priceWOVat = data.sum
-    } else if (data.sumWithVAT) {
-      this.price = data.sum
-      this.priceWOVat = data.sum / (1 + data.vatRate / 100)
-    } else {
-      this.priceWOVat = data.sum
-      this.price = data.sum + data.sum * (data.vatRate / 100)
+      this.client = data.client
+      this.agreement = data.agreement
+      this.type = data.type || 'part'
+      this.note = data.note
+
+      if (data.vatRate === 0) {
+        this.price = data.sum
+        this.priceWOVat = data.sum
+        this.sumVat = 0
+      } else {
+        const vatMultiplier = data.vatRate / 100
+
+        if (data.sumWithVAT) {
+          this.price = data.sum
+          this.priceWOVat = data.sum / (1 + vatMultiplier)
+        } else {
+          this.priceWOVat = data.sum
+          this.price = data.sum * (1 + vatMultiplier)
+        }
+        this.sumVat = this.price - this.priceWOVat
+      }
+    } catch (e) {
+      console.error(e)
     }
-    this.sumVat = this.price - this.priceWOVat
   }
 }
 
@@ -102,12 +113,16 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   const vatRate = computed(() => agreement.value?.vatRate)
 
   function submitHandler() {
-    const submitedData = new PaymentPart({
-      ...state.value,
-      vatRate: agreement.value.vatRate,
-    })
+    try {
+      const submitedData = new PaymentPart({
+        ...state.value,
+        vatRate: agreement.value.vatRate,
+      })
 
-    ctx.emit('submit', submitedData)
+      ctx.emit('submit', submitedData)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   watch(state, (newVal, oldVal) => {

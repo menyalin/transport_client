@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="text-h6">Банковские реквизиты:</div>
+    <div v-if="showTitle" class="text-h6">Банковские реквизиты:</div>
     <v-text-field label="Расчетный счет" v-model="state.accountNumber" dense />
     <v-text-field label="Банк" v-model="state.bankName" dense />
     <v-text-field label="БИК" v-model="state.bankCode" dense />
@@ -25,6 +25,10 @@ export default {
     value: {
       type: Object,
     },
+    showTitle: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props, ctx) {
     const initialState = () => ({
@@ -33,7 +37,7 @@ export default {
       bankCode: '',
       correspondentAccount: '',
     })
-    const state = ref(props.value || initialState())
+    const state = ref(initialState())
     const rules = computed(() => {
       return {
         bankName: {},
@@ -46,10 +50,20 @@ export default {
 
     watch(
       () => props.value,
-      (val) => (state.value = val),
+      (newVal, oldVal) => {
+        if (!newVal) state.value = initialState()
+        else if (newVal !== oldVal) state.value = newVal
+      },
+      { deep: true, immediate: true }
+    )
+    watch(
+      state,
+      (val) => {
+        ctx.emit('change', val)
+      },
       { deep: true }
     )
-    watch(state.value, (val) => ctx.emit('change', val))
+
     return { v$, state }
   },
 }

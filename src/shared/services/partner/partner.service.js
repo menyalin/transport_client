@@ -21,7 +21,10 @@ class PartnerService {
   }
 
   async create(body) {
-    let { data } = await api.post(BASE_PATH, body)
+    let { data } = await api.post(BASE_PATH, {
+      ...body,
+      company: store.getters.directoriesProfile,
+    })
     store.commit('addToCache', data)
     return data
   }
