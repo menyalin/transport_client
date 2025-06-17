@@ -131,6 +131,19 @@
         />
       </div>
 
+      <v-text-field
+        v-model="state.actBasis"
+        label="Основание для счета и акта выполненных работ"
+        outlined
+        dense
+      />
+      <v-textarea
+        rows="4"
+        v-model="state.actDescription"
+        label="Примечание для акта выполненных работ"
+        outlined
+        dense
+      />
       <v-text-field v-model="state.note" label="Примечание" outlined dense />
       <div class="row mb-2">
         <v-checkbox
@@ -189,7 +202,7 @@ export default {
       vatRates,
       carriers,
     } = useForm(props, ctx)
-    
+
     return {
       state,
       deleteHandler,

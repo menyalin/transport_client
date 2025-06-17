@@ -52,7 +52,8 @@ class AgreementService {
 
   async getForClient(params) {
     const paramsSchema = z.object({
-      client: z.string(),
+      client: z.string().optional().nullable(),
+      clients: z.array(z.string()).optional().nullable(),
       date: z.string(),
       currentAgreementId: z.string().optional().nullable(),
     })

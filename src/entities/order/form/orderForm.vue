@@ -215,6 +215,7 @@
             v-if="routeDate"
             id="payment-parts"
             v-model="form.paymentParts"
+            :readonly="readonlyPaymentParts"
             :routeDate="routeDate"
           />
         </div>
@@ -318,6 +319,14 @@ export default {
     const hasIncomingInvoice = computed(() => {
       return props.order?.incomingInvoice && props.order?.incomingInvoice._id
     })
+    const hasPaymentInvoices = computed(() => {
+      return (
+        props.order?.paymentInvoices && props.order?.paymentInvoices.length > 0
+      )
+    })
+    const readonlyPaymentParts = computed(() => {
+      return hasPaymentInvoices.value
+    })
     return {
       templates,
       docTemplateIsVisible,
@@ -331,6 +340,8 @@ export default {
       isValidClientNum,
       isValidAuctionNum,
       hasIncomingInvoice,
+      readonlyPaymentParts,
+      hasPaymentInvoices,
     }
   },
   data() {
@@ -386,9 +397,6 @@ export default {
   },
 
   computed: {
-    hasPaymentInvoices() {
-      return !!this.form.paymentInvoices?.length
-    },
     showPaymentToDriver() {
       return (
         this.$store.getters.hasPermission('order:readPaymentToDriver') &&
