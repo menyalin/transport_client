@@ -4,13 +4,22 @@
       <v-col>
         <buttons-panel
           panel-type="list"
-          :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('fine:write')"
           @submit="create"
           @refresh="refetch"
         />
         <div class="filter-wrapper">
+          <v-select
+            v-model="settings.periodSetting"
+            :items="periodSettingItems"
+            dense
+            hide-details
+            outlined
+            label="Период по"
+            :style="{ maxWidth: '300px' }"
+          />
           <date-range-input v-model="settings.period" />
+
           <v-select
             v-model="settings.status"
             :items="fineStatuses"
@@ -43,14 +52,15 @@
             :style="{ maxWidth: '350px' }"
           />
           <v-select
-            v-model.trim="settings.category"
+            v-model.trim="settings.categories"
             :items="$store.getters.fineCategories"
             label="Категория"
             outlined
             clearable
+            multiple
             hide-details
+            singleLine
             dense
-            :style="{ maxWidth: '450px' }"
           />
           <v-checkbox
             v-model="showOnlySelected"
@@ -99,11 +109,13 @@
           :loading="loading"
           :singleSelect="false"
           dense
+          fixed-header
+          height="71vh"
           :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
+          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isWithheld`]="{ item }">
@@ -120,7 +132,6 @@
 </template>
 <script>
 import { computed } from 'vue'
-import { mapGetters } from 'vuex'
 import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 import { useItemsForAutocomplete } from '@/entities/worker'
 import { FineListAnalitics } from '@/entities/fine'
@@ -141,13 +152,14 @@ export default {
       headers,
       selected,
       showOnlySelected,
-      formName,
+      periodSettingItems,
       loading,
       refetch,
       count,
       analyticData,
       preparedList,
       setInitSettings,
+      listOptions,
     } = useFineList()
 
     const {
@@ -169,10 +181,10 @@ export default {
       handleChange,
       handleSearchInputUpdate,
       searchString,
-      //
       fineStatuses,
-      formName,
+      periodSettingItems,
       settings,
+      listOptions,
       headers,
       loading,
       refetch,
@@ -185,7 +197,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['directoriesProfile']),
     trucks() {
       return this.$store.getters
         .activeTrucksOnDate()
@@ -201,14 +212,6 @@ export default {
         .map((item) => ({ value: item._id, text: item.fullName }))
     },
   },
-  mounted() {
-    if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      const storedSettings = this.$store.getters.formSettingsMap.get(
-        this.formName
-      )
-      this.setInitSettings(storedSettings)
-    }
-  },
 
   methods: {
     create() {
@@ -218,14 +221,6 @@ export default {
     dblClickRow(_, { item }) {
       this.$router.push(`fines/${item._id}`)
     },
-  },
-
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
   },
 }
 </script>
