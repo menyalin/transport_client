@@ -1,15 +1,33 @@
 import dayjs from 'dayjs'
 import store from '@/store'
-import { computed, watch, ref, onMounted } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { FineService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
 
 export const useFineList = () => {
-  const formName = 'fineList'
-
+  const initialSettings = {
+    period: [
+      dayjs().add(-120, 'd').format('YYYY-MM-DD'),
+      dayjs().add(25, 'd').format('YYYY-MM-DD'),
+    ],
+    periodSetting: 'date',
+    fineStatus: 'all',
+    status: 'notPaid',
+    driver: null,
+    truck: null,
+    categories: [],
+    searchStr: null,
+    payingByWorker: null,
+    needToWithheld: false,
+  }
   const list = ref([])
   const count = ref(0)
   const serverAnalyticData = ref({})
-
+  const periodSettingItems = [
+    { text: 'Дата постановления', value: 'date' },
+    { text: 'Дата нарушения', value: 'violationDate' },
+    { text: 'Дата оплаты', value: 'paymentDate' },
+  ]
   const fineStatuses = [
     { text: 'Не оплачен', value: 'notPaid' },
     { text: 'Оплачен', value: 'paid' },
@@ -45,41 +63,28 @@ export const useFineList = () => {
   const selected = ref([])
   const showOnlySelected = ref(false)
 
-  let settings = ref({
-    period: [
-      dayjs().add(-90, 'd').format('YYYY-MM-DD'),
-      dayjs().add(25, 'd').format('YYYY-MM-DD'),
-    ],
-    status: 'notPaid',
-    driver: null,
-    truck: null,
-    category: null,
-    searchStr: null,
-    payingByWorker: null,
-    needToWithheld: false,
-    listOptions: {
-      page: 1,
-      itemsPerPage: 50,
-    },
-  })
+  const settings = usePersistedRef(initialSettings, 'fineList:settings')
+  const listOptions = usePersistedRef(
+    { page: 1, itemsPerPage: 100 },
+    'fineList:listOptions'
+  )
 
   const queryParams = computed(() => ({
     company: store.getters.directoriesProfile,
     startDate: settings.value.period[0],
     endDate: settings.value.period[1],
+    periodSetting: settings.value.periodSetting,
     status: settings.value.status,
     truck: settings.value.truck,
     driver: settings.value.driver,
-    category: settings.value.category,
-    sortBy: settings.value.listOptions?.sortBy,
-    sortDesc: settings.value.listOptions.sortDesc,
+    categories: settings.value.categories,
+    sortBy: listOptions.value.sortBy,
+    sortDesc: listOptions.value.sortDesc,
     searchStr: settings.value.searchStr,
     payingByWorker: settings.value.payingByWorker,
     needToWithheld: settings.value.needToWithheld,
-    skip:
-      settings.value.listOptions.itemsPerPage *
-      (settings.value.listOptions.page - 1),
-    limit: settings.value.listOptions.itemsPerPage,
+    skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
+    limit: listOptions.value.itemsPerPage,
   }))
 
   const getData = async (params) => {
@@ -121,8 +126,8 @@ export const useFineList = () => {
     )
   })
 
-  const refetch = () => {
-    getData(queryParams.value)
+  const refetch = async () => {
+    await getData(queryParams.value)
   }
 
   const preparedList = computed(() => {
@@ -152,15 +157,22 @@ export const useFineList = () => {
       }))
   })
 
-  watch(settings.value, () => getData(queryParams.value))
+  watch(
+    settings,
+    () => {
+      listOptions.value = { ...listOptions.value, page: 1 }
+    },
+    { deep: true }
+  )
 
-  onMounted(() => {
-    getData(queryParams.value)
-  })
+  watch(
+    listOptions,
+    async () => {
+      await getData(queryParams.value)
+    },
+    { deep: true }
+  )
 
-  function setInitSettings(initSettings) {
-    settings.value = Object.assign(settings.value, initSettings)
-  }
   const headersComputed = computed(() => {
     if (store.getters.hasPermission('fine:isWithheldRead'))
       return [
@@ -178,7 +190,8 @@ export const useFineList = () => {
     selected,
     showOnlySelected,
     fineStatuses,
-    formName,
+    periodSettingItems,
+
     settings,
     refetch,
     headers: headersComputed,
@@ -187,6 +200,6 @@ export const useFineList = () => {
     count,
     analyticData,
     preparedList,
-    setInitSettings,
+    listOptions,
   }
 }
