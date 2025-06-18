@@ -18,6 +18,9 @@
           :value="params.issueDate"
           hide-prepend-icon
           hide-time-input
+          outlined
+          hideDetails
+          dense
           @change="change($event, 'issueDate')"
         />
         <div class="date-input-row">
@@ -26,6 +29,9 @@
             :value="params.certifiedBeforeDate"
             hide-prepend-icon
             hide-time-input
+            outlined
+            hideDetails
+            dense
             @change="change($event, 'certifiedBeforeDate')"
           />
           <v-chip
@@ -42,6 +48,9 @@
             :value="params.annualCommisionDate"
             hide-prepend-icon
             hide-time-input
+            hideDetails
+            outlined
+            dense
             @change="change($event, 'annualCommisionDate')"
           />
           <v-chip

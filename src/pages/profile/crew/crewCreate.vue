@@ -4,7 +4,6 @@
       <v-col>
         <CrewForm
           :loading="loading"
-          :crew="crew.tkName ? crew : null"
           :disabledSubmit="!$store.getters.hasPermission('crew:write')"
           @submit="submit"
           @cancel="cancel"
@@ -24,22 +23,9 @@ export default {
   data() {
     return {
       loading: false,
-      crew: {
-        tkName: null,
-        truck: null,
-        trailer: null,
-        driver: null,
-      },
     }
   },
-  created() {
-    if (this.$route.params.tkName) {
-      this.crew.tkName = this.$route.params.tkName
-      this.crew.truck = this.$route.params.truck
-      this.crew.trailer = this.$route.params.trailer
-      this.crew.driver = this.$route.params.driver
-    }
-  },
+
   methods: {
     submit(item) {
       this.loading = true
