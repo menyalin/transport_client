@@ -47,6 +47,8 @@
           label="Дата рождения"
           hide-time-input
           hide-prepend-icon
+          outlined
+          dense
         />
       </div>
 
@@ -66,6 +68,8 @@
               label="Дата выдачи паспорта"
               hide-time-input
               hide-prepend-icon
+              outlined
+              dense
             />
           </div>
           <v-textarea
@@ -96,6 +100,8 @@
             label="Дата выдачи ВУ"
             hide-time-input
             hide-prepend-icon
+            outlined
+            dense
           />
         </div>
         <div class="driver-cards">
@@ -118,6 +124,8 @@
             label="КВ действительна до"
             hide-time-input
             hide-prepend-icon
+            outlined
+            dense
           />
         </div>
       </div>
@@ -158,12 +166,18 @@
           v-model="$v.form.employmentDate.$model"
           label="Дата приема на работу"
           hide-time-input
+          outlined
+          dense
+          hideDetails
         />
 
         <DateTimeInput
           v-model="$v.form.dismissalDate.$model"
           label="Дата увольнения"
           hide-time-input
+          outlined
+          hideDetails
+          dense
         />
         <v-text-field
           v-model.trim="$v.form.recommender.$model"
@@ -183,7 +197,11 @@
 
       <v-checkbox v-model="form.isCalcSalary" dense label="Расчет ЗП" />
     </div>
-    <EntityFiles v-if="driver && driver._id" :itemId="driver._id" docType="driver" />
+    <EntityFiles
+      v-if="driver && driver._id"
+      :itemId="driver._id"
+      docType="driver"
+    />
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
       <v-btn color="error" @click="$emit('delete')">
         <v-icon left dark> mdi-delete </v-icon>

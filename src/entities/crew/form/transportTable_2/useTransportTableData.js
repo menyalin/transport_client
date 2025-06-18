@@ -78,7 +78,7 @@ export const useTransportTableData = (props, ctx) => {
 
     updatedItems.push(newItem)
     closeDialog()
-    ctx.emit('update:items', updatedItems)
+    ctx.emit('update:items', updatedItems.filter(Boolean))
   }
 
   const popItem = async () => {
