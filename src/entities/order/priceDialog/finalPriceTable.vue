@@ -17,8 +17,8 @@
               {{
                 prePricesMap.has(priceType.value)
                   ? Intl.NumberFormat().format(
-                    prePricesMap.get(priceType.value)[priceField]
-                  )
+                      prePricesMap.get(priceType.value)[priceField]
+                    )
                   : '-'
               }}
             </td>
@@ -26,8 +26,8 @@
               {{
                 pricesMap.has(priceType.value)
                   ? Intl.NumberFormat().format(
-                    pricesMap.get(priceType.value)[priceField]
-                  )
+                      pricesMap.get(priceType.value)[priceField]
+                    )
                   : '-'
               }}
             </td>
@@ -57,8 +57,8 @@
                 {{
                   finalPricesMap.has(priceType.value)
                     ? Intl.NumberFormat().format(
-                      finalPricesMap.get(priceType.value)[priceField]
-                    )
+                        finalPricesMap.get(priceType.value)[priceField]
+                      )
                     : '-'
                 }}
               </div>
@@ -71,11 +71,11 @@
               {{
                 Array.isArray(prePrices)
                   ? Intl.NumberFormat().format(
-                    prePrices.reduce(
-                      (sum, item) => (sum += item[priceField]),
-                      0
+                      prePrices.reduce(
+                        (sum, item) => (sum += item[priceField]),
+                        0
+                      )
                     )
-                  )
                   : 0
               }}
             </th>
@@ -83,8 +83,8 @@
               {{
                 Array.isArray(prices)
                   ? Intl.NumberFormat().format(
-                    prices.reduce((sum, item) => (sum += item[priceField]), 0)
-                  )
+                      prices.reduce((sum, item) => (sum += item[priceField]), 0)
+                    )
                   : 0
               }}
             </th>
@@ -92,11 +92,11 @@
               {{
                 Array.isArray(finalPrices)
                   ? Intl.NumberFormat().format(
-                    finalPrices.reduce(
-                      (sum, item) => (sum += item[priceField]),
-                      0
+                      finalPrices.reduce(
+                        (sum, item) => (sum += item[priceField]),
+                        0
+                      )
                     )
-                  )
                   : 0
               }}
             </th>
@@ -113,6 +113,7 @@ export default {
   name: 'FinalPriceTable',
   inject: ['updateFinalPrices'],
   props: {
+    readonly: { type: Boolean, default: false },
     priceWithVat: { type: Boolean, default: true, required: true },
     prePrices: { type: Array },
     prices: { type: Array },
@@ -145,6 +146,7 @@ export default {
   },
   methods: {
     editFinalPrice(type) {
+      if (this.readonly) return
       this.editableRowType = type
       this.$nextTick(() => {
         this.$refs[this.editableRowType][0].focus()
