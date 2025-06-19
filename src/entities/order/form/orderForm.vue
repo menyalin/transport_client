@@ -163,6 +163,8 @@
               :carrierAgreement="carrierAgreement"
               :analytics="analytics"
               :route="route"
+              :hasPaymentInvoice="hasPaymentInvoices"
+              :hasIncomingInvoice="hasIncomingInvoice"
             >
               <IncomingInvoiceLink
                 v-if="!!order"
@@ -173,6 +175,7 @@
             <PriceDialog
               v-if="showFinalPriceDialog"
               :order="order"
+              :readonly="hasPaymentInvoices"
               :agreement="agreement"
               :prePrices.sync="prePrices"
               :finalPrices="finalPrices"

@@ -5,7 +5,7 @@
       :items="prices"
       @change="changePricesHandler"
       :isValid="isValidPrices"
-      :readonly="readonlyPrice"
+      :readonly="readonlyPrice || hasPaymentInvoice"
       :agreement="agreement"
       title="Стоимость рейса"
       :prePrices="prePrices"
@@ -15,7 +15,7 @@
       :items="outsourceCosts"
       @change="changeOutsourceCostsHandler"
       class="mt-4"
-      :readonly="readonlyCosts"
+      :readonly="readonlyCosts || hasIncomingInvoice"
       :agreement="carrierAgreement"
       title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
@@ -32,6 +32,8 @@ export default {
     AppPriceWrapper,
   },
   props: {
+    hasIncomingInvoice: Boolean,
+    hasPaymentInvoice: Boolean,
     prePrices: Array,
     route: Array,
     isValidPrices: {
