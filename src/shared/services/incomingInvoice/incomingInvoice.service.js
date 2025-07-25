@@ -16,6 +16,13 @@ class IncomingInvoiceService {
     return data
   }
 
+  async setPayDate(id, payDate) {
+    let { data } = await api.put(BASE_PATH + '/' + id + '/set_paid', {
+      payDate,
+    })
+    return data
+  }
+
   async getList(params) {
     let { data } = await api.get(BASE_PATH, { params })
     return data

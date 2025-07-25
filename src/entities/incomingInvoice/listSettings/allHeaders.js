@@ -7,7 +7,14 @@ export default [
   },
   {
     value: 'date',
-    text: 'Дата',
+    text: 'Дата документа',
+    sortable: true,
+    default: true,
+    align: 'center',
+  },
+  {
+    value: 'receiptDate',
+    text: 'Дата получения',
     sortable: true,
     default: true,
     align: 'center',
@@ -15,6 +22,13 @@ export default [
   {
     value: 'plannedPayDate',
     text: 'Плановая дата оплаты',
+    sortable: true,
+    default: true,
+    align: 'center',
+  },
+  {
+    value: 'payDate',
+    text: 'Дата оплаты',
     sortable: true,
     default: true,
     align: 'center',

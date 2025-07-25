@@ -25,7 +25,7 @@
           :style="{ maxWidth: '250px' }"
         />
         <DateTimeInput
-          label="Дата"
+          label="Дата документа"
           v-model="state.date"
           dense
           outlined
@@ -38,6 +38,8 @@
           :items="incomingInvoiceStatuses"
           dense
           outlined
+          :disabled="!allowToChangeStatus"
+          @change="statusChangeHandler"
           :style="{ maxWidth: '200px' }"
         />
 
@@ -71,6 +73,14 @@
       </div>
       <div class="fields-row">
         <DateTimeInput
+          label="Дата получения документа"
+          v-model="state.receiptDate"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+        />
+        <DateTimeInput
           label="Плановая дата оплаты"
           v-model="state.plannedPayDate"
           dense
@@ -78,8 +88,37 @@
           type="date"
           :style="{ maxWidth: '250px' }"
         />
+        <DateTimeInput
+          v-if="isVisiblePayDateField"
+          label="Факт оплаты"
+          v-model="state.payDate"
+          dense
+          outlined
+          type="date"
+          disabled
+          :style="{ maxWidth: '250px' }"
+        />
+        <v-btn
+          v-if="isVisiblePayInvoiceBtn"
+          color="primary"
+          @click="payInvoiceHandler"
+        >
+          Счет оплачен
+        </v-btn>
       </div>
-
+      <v-dialog v-model="payDateDialog" persistent max-width="400">
+        <v-card>
+          <v-card-title>Дата оплаты</v-card-title>
+          <v-card-text>
+            <DateTimeInput v-model="payDateFieldData" type="date" outlined />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="payDateDialog = false">Отмена</v-btn>
+            <v-btn color="primary" @click="savePayDateHandler">Сохранить</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
@@ -147,23 +186,32 @@ export default {
       templates,
       downloadTemplateHandler,
     } = usePrintForms(props)
+
     const { outsourceCarriers } = useCarriers()
+
+    const hasOrders = computed(() => {
+      return props.item?.orders?.length > 0
+    })
+
     const {
       state,
       v$,
       submitHandler,
       cancelHandler,
       saveHandler,
-      statusItems,
+      payInvoiceHandler,
       invalidForm,
+      isVisiblePayDateField,
       allowedToChangeOrders,
-    } = useForm(props, ctx)
+      isVisiblePayInvoiceBtn,
+      payDateDialog,
+      savePayDateHandler,
+      payDateFieldData,
+      allowToChangeStatus,
+      statusChangeHandler,
+    } = useForm(props, ctx, hasOrders)
 
     const needSave = computed(() => false) // TODO: fix it
-
-    const hasOrders = computed(() => {
-      return props.item?.orders?.length > 0
-    })
 
     const disabledCarriers = computed(() => {
       return props.item?.orders?.length > 0 && !!state.value.carrier
@@ -206,7 +254,8 @@ export default {
       submitHandler,
       cancelHandler,
       saveHandler,
-      statusItems,
+      payInvoiceHandler,
+      isVisiblePayDateField,
       invalidForm,
       incomingInvoiceStatuses,
       needSave,
@@ -222,6 +271,12 @@ export default {
       docTemplateIsVisible,
       templates,
       downloadTemplateHandler,
+      isVisiblePayInvoiceBtn,
+      payDateDialog,
+      savePayDateHandler,
+      payDateFieldData,
+      allowToChangeStatus,
+      statusChangeHandler,
     }
   },
 }

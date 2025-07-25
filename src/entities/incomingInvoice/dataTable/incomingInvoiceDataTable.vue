@@ -22,6 +22,18 @@
       {{ new Date(item.date).toLocaleDateString() }}
     </template>
 
+    <template #[`item.payDate`]="{ item }">
+      {{ item.payDate ? new Date(item.payDate).toLocaleDateString() : null }}
+    </template>
+
+    <template #[`item.receiptDate`]="{ item }">
+      {{
+        item.receiptDate
+          ? new Date(item.receiptDate).toLocaleDateString()
+          : null
+      }}
+    </template>
+
     <template #[`item.plannedPayDate`]="{ item }">
       {{
         item.plannedPayDate

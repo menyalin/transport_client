@@ -1,13 +1,18 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, getCurrentInstance, nextTick } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import router from '@/router'
 import store from '@/store/index'
 
-export const useForm = (props, ctx) => {
+export const useForm = (props, ctx, hasOrders) => {
+  const { proxy } = getCurrentInstance()
+  const payDateDialog = ref(false)
+  const payDateFieldData = ref(null)
   const initialState = ref({
     number: null,
     date: null,
+    receiptDate: null,
+    payDate: null,
     agreement: null,
     status: 'preparing',
     plannedPayDate: null,
@@ -21,6 +26,8 @@ export const useForm = (props, ctx) => {
     status: { required },
     note: {},
     plannedPayDate: {},
+    receiptDate: {},
+    payDate: {},
   }
 
   const state = ref(props.item?._id ? props.item : initialState.value)
@@ -32,20 +39,54 @@ export const useForm = (props, ctx) => {
     }
   })
 
+  const allowToChangeStatus = computed(() => {
+    if (
+      state.value.status !== 'paid' ||
+      proxy.$store.getters.hasPermission('changeIncomingInvoiceStatus')
+    )
+      return true
+
+    return false
+  })
+
+  const isVisiblePayDateField = computed(() => {
+    return !!state.value.payDate && hasOrders.value
+  })
+
+  const isVisiblePayInvoiceBtn = computed(() => {
+    return (
+      !isVisiblePayDateField.value &&
+      state.value.status === 'toPay' &&
+      hasOrders.value
+    )
+  })
+
+  function savePayDateHandler() {
+    if (payDateFieldData.value) ctx.emit('savePayDate', payDateFieldData.value)
+    payDateDialog.value = false
+  }
+
   const invalidForm = computed(() => v$.value.$invalid)
+
   const allowedToChangeOrders = computed(() => {
     return state.value.status === 'preparing'
   })
+
+  function statusChangeHandler(val) {
+    nextTick(() => {
+      if (val !== 'paid') {
+        state.value = { ...state.value, payDate: null }
+      }
+    })
+  }
+
+  function payInvoiceHandler() {
+    payDateDialog.value = true
+  }
+
   function cancelHandler() {
     router.go(-1)
   }
-  const statusItems = computed(() => {
-    return [
-      { text: 'Активен', value: 'active' },
-      { text: 'Завершен', value: 'completed' },
-      { text: 'Отменен', value: 'cancelled' },
-    ]
-  })
 
   function saveHandler() {
     ctx.emit('save', formState.value)
@@ -59,6 +100,7 @@ export const useForm = (props, ctx) => {
       ...newState,
     }
   }
+
   watch(
     () => props.item,
     (item) => {
@@ -69,12 +111,19 @@ export const useForm = (props, ctx) => {
   )
   return {
     state,
+    payDateFieldData,
     v$,
+    isVisiblePayInvoiceBtn,
     submitHandler,
     cancelHandler,
     saveHandler,
-    statusItems,
+    allowToChangeStatus,
+    isVisiblePayDateField,
     invalidForm,
     allowedToChangeOrders,
+    payInvoiceHandler,
+    payDateDialog,
+    savePayDateHandler,
+    statusChangeHandler,
   }
 }

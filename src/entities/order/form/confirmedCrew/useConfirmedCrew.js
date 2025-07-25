@@ -82,6 +82,7 @@ export const useConfirmedCrew = (props, ctx) => {
     if (isNeedUpdateCrew.value || !props.crew?.driver) {
       try {
         loading.value = true
+
         crew = await CrewService.getCrewByTruckAndDate({
           truck: state.value.truck,
           date: props.date,
@@ -122,6 +123,8 @@ export const useConfirmedCrew = (props, ctx) => {
     if (!val) resetState()
     else {
       state.value.truck = val
+      state.value.trailer = null
+      state.value.driver = null
       await getCrew()
     }
   }
