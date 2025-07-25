@@ -14,6 +14,7 @@
       @submit="submit($event, false)"
       @save="submit($event, true)"
       @pickOrders="pickOrdersHandler"
+      @savePayDate="savePayDateHandler"
     />
   </form-wrapper>
 </template>
@@ -49,6 +50,7 @@ export default {
       dblRowClickHandler,
       updateItemPrice,
       pickOrdersHandler,
+      savePayDateHandler,
     } = useItemData(props)
 
     return {
@@ -66,6 +68,7 @@ export default {
       updateItemPrice,
       allCarrierAgreements,
       pickOrdersHandler,
+      savePayDateHandler,
     }
   },
   methods: {

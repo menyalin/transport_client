@@ -103,6 +103,26 @@ export const useItemData = (props) => {
       },
     })
   }
+
+  async function savePayDateHandler(date) {
+    try {
+      loading.value = true
+      const updatedItem = await IncomingInvoiceService.setPayDate(
+        props.id,
+        date
+      )
+      item.value = { ...item.value, ...updatedItem }
+    } catch (e) {
+      console.log('Ошибка при сохранении даты оплаты: ', e)
+      proxy.$store.commit(
+        'setError',
+        `Ошибка при сохранении даты оплаты: ${e.message}`
+      )
+    } finally {
+      loading.value = false
+    }
+  }
+
   function addOrders({ paymentInvoiceId, orders }) {
     if (paymentInvoiceId !== item.value._id) return null
 
@@ -145,5 +165,6 @@ export const useItemData = (props) => {
     dblRowClickHandler,
     updateItemPrice,
     pickOrdersHandler,
+    savePayDateHandler,
   }
 }
