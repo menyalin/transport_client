@@ -5,20 +5,22 @@ import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
 import store from '@/store/index'
 
-const getInitialState = (editedItem) => ({
-  status: editedItem?.status || 'inProcess',
-  number: editedItem?.number || null,
-  client: editedItem?.client || undefined,
-  agreement: editedItem?.agreementId || undefined,
-  numberByClient: editedItem?.numberByClient || undefined,
-  note: editedItem?.note || null,
-  sendDate: editedItem?.sendDate
-    ? dayjs(editedItem?.sendDate).format('YYYY-MM-DD')
-    : null,
-  dateByClient: editedItem?.dateByClient
-    ? dayjs(editedItem.dateByClient).format('YYYY-MM-DD')
-    : null,
-})
+const getInitialState = (editedItem) => {
+  const prepareDate = (date) => (date ? dayjs(date).format('YYYY-MM-DD') : null)
+  return {
+    status: editedItem?.status || 'inProcess',
+    number: editedItem?.number || null,
+    client: editedItem?.client || undefined,
+    agreement: editedItem?.agreementId || undefined,
+    numberByClient: editedItem?.numberByClient || undefined,
+    note: editedItem?.note || null,
+    date: prepareDate(editedItem?.date),
+    plannedPayDate: prepareDate(editedItem?.plannedPayDate),
+    payDate: prepareDate(editedItem?.payDate),
+    sendDate: prepareDate(editedItem?.sendDate),
+    dateByClient: prepareDate(editedItem?.dateByClient),
+  }
+}
 
 function usePaimentInvoiceForm() {
   let state = ref({})
@@ -37,7 +39,10 @@ function usePaimentInvoiceForm() {
 
   const rules = {
     number: { required },
-    sendDate: { required },
+    date: { required },
+    sendDate: {},
+    plannedPayDate: {},
+    payDate: {},
     numberByClient: {},
     dateByClient: {},
     client: { required },

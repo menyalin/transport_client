@@ -33,61 +33,83 @@
     </buttons-panel>
     <div id="form">
       <div class="fields-row">
-        <v-text-field
-          label="Номер"
-          v-model.trim="state.number"
-          dense
-          outlined
-          :style="{ maxWidth: '200px' }"
-        />
-        <v-text-field
-          label="Дата выставления"
-          v-model="state.sendDate"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-          @paste="pasteDate"
-        />
-        <v-select
-          label="Статус"
-          v-model="state.status"
-          :items="statusItems"
-          dense
-          outlined
-          :style="{ maxWidth: '200px' }"
-        />
-        <v-autocomplete
-          v-model="state.client"
-          label="Клиент"
-          dense
-          required
-          item-value="_id"
-          item-text="name"
-          clearable
-          outlined
-          :disabled="disabledMainFields"
-          :items="clientItems"
-          :style="{ maxWidth: '300px' }"
-          @blur="v$.client.$touch"
-          :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
-        />
-        <v-autocomplete
-          v-model="state.agreement"
-          label="Соглашение"
-          dense
-          required
-          item-value="_id"
-          item-text="name"
-          clearable
-          outlined
-          :disabled="!state.client || disabledMainFields"
-          :items="agreementItems"
-          :style="{ maxWidth: '300px' }"
-          @blur="v$.client.$touch"
-          :error-messages="agreementErrorMessages"
-        />
+        <div class="first-column">
+          <v-select
+            label="Статус"
+            v-model="state.status"
+            :items="statusItems"
+            dense
+            outlined
+          />
+          <v-text-field
+            label="Номер"
+            v-model.trim="state.number"
+            dense
+            outlined
+          />
+          <v-autocomplete
+            v-model="state.client"
+            label="Клиент"
+            dense
+            required
+            item-value="_id"
+            item-text="name"
+            clearable
+            outlined
+            :disabled="disabledMainFields"
+            :items="clientItems"
+            @blur="v$.client.$touch"
+            :error-messages="clientErrorMessages"
+            @change="changeClientHandler"
+          />
+          <v-autocomplete
+            v-model="state.agreement"
+            label="Соглашение"
+            dense
+            required
+            item-value="_id"
+            item-text="name"
+            clearable
+            outlined
+            :disabled="!state.client || disabledMainFields"
+            :items="agreementItems"
+            @blur="v$.client.$touch"
+            :error-messages="agreementErrorMessages"
+          />
+        </div>
+
+        <div class="dates-column">
+          <v-text-field
+            label="Дата акта"
+            v-model="state.date"
+            dense
+            outlined
+            type="date"
+            @paste="pasteDate"
+          />
+          <v-text-field
+            label="Дата отправки"
+            v-model="state.sendDate"
+            dense
+            outlined
+            type="date"
+            @paste="pasteDate"
+          />
+          <DateTimeInput
+            label="Плановая дата оплаты"
+            v-model="state.plannedPayDate"
+            dense
+            outlined
+            type="date"
+          />
+          <DateTimeInput
+            label="Дата оплаты"
+            v-model="state.payDate"
+            dense
+            outlined
+            type="date"
+          />
+        </div>
       </div>
       <div class="fields-row">
         <v-text-field
@@ -136,7 +158,11 @@ import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
 import { paymentInvoiceStatuses } from '@/shared/constants'
-import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
+import {
+  ButtonsPanel,
+  DownloadDocTemplateMenu,
+  DateTimeInput,
+} from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
@@ -146,6 +172,7 @@ export default {
   components: {
     ButtonsPanel,
     DownloadDocTemplateMenu,
+    DateTimeInput,
   },
   props: {
     item: Object,
@@ -286,6 +313,16 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 30px;
+}
+.first-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.dates-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
 }
 </style>

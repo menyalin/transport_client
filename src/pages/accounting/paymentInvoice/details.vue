@@ -195,6 +195,24 @@ export default {
       )
     }
 
+    async function setStatusSendedHandler(sendDate) {
+      if (!sendDate) return
+      const res = await PaymentInvoiceService.setStatusSended(
+        item.value._id,
+        sendDate
+      )
+      item.value = { ...item.value, ...res }
+    }
+
+    async function setStatusPaidHandler(payDate) {
+      if (!payDate) return
+      const res = await PaymentInvoiceService.setStatusPaid(
+        item.value._id,
+        payDate
+      )
+      item.value = { ...item.value, ...res }
+    }
+
     async function updateItemPrice(itemId) {
       // Обновить цены по рейсы в акте
       const res = await PaymentInvoiceService.updatePrices(itemId)
@@ -228,6 +246,8 @@ export default {
       disabledDownloadFiles,
       updateItemPrice,
       downloadHandler,
+      setStatusSendedHandler,
+      setStatusPaidHandler,
     }
   },
   methods: {
