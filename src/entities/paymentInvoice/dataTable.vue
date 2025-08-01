@@ -25,6 +25,9 @@
     <template #[`item.sendDate`]="{ item }">
       {{ item.sendDate ? new Date(item.sendDate).toLocaleDateString() : null }}
     </template>
+    <template #[`item.date`]="{ item }">
+      {{ item.date ? new Date(item.date).toLocaleDateString() : null }}
+    </template>
 
     <template #[`item.total.priceWOVat`]="{ item }">
       {{ moneyFormatter(item.total.priceWOVat) }}

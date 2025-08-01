@@ -76,6 +76,12 @@
             @blur="v$.client.$touch"
             :error-messages="agreementErrorMessages"
           />
+          <v-text-field
+            label="Номер реестра клиента"
+            v-model.trim="state.numberByClient"
+            dense
+            outlined
+          />
         </div>
 
         <div class="dates-column">
@@ -109,26 +115,16 @@
             outlined
             type="date"
           />
+          <DateTimeInput
+            label="Дата реестра клиента"
+            v-model="state.dateByClient"
+            dense
+            outlined
+            type="date"
+          />
         </div>
       </div>
-      <div class="fields-row">
-        <v-text-field
-          label="Номер реестра клиента"
-          v-model.trim="state.numberByClient"
-          dense
-          outlined
-          :style="{ maxWidth: '200px' }"
-        />
-        <v-text-field
-          label="Дата реестра клиента"
-          v-model="state.dateByClient"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-          @paste="pasteDate"
-        />
-      </div>
+
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
