@@ -17,32 +17,6 @@
     </buttons-panel>
     <div id="form">
       <div class="fields-row">
-        <v-text-field
-          label="Номер"
-          v-model.trim="state.number"
-          dense
-          outlined
-          :style="{ maxWidth: '250px' }"
-        />
-        <DateTimeInput
-          label="Дата документа"
-          v-model="state.date"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-        />
-        <v-select
-          label="Статус"
-          v-model="state.status"
-          :items="incomingInvoiceStatuses"
-          dense
-          outlined
-          :disabled="!allowToChangeStatus"
-          @change="statusChangeHandler"
-          :style="{ maxWidth: '200px' }"
-        />
-
         <v-autocomplete
           v-model="state.carrier"
           label="Перевозчик"
@@ -54,7 +28,7 @@
           outlined
           :disabled="disabledCarriers"
           :items="outsourceCarriers"
-          :style="{ maxWidth: '300px' }"
+          :style="{ minWidth: '400px' }"
           @change="carrierChangeHandler"
         />
         <v-autocomplete
@@ -68,12 +42,41 @@
           outlined
           :disabled="disabledAgreement || hasOrders"
           :items="carrierAgreements"
-          :style="{ maxWidth: '300px' }"
+          :style="{ minWidth: '400px' }"
+        />
+        <v-select
+          label="Статус"
+          v-model="state.status"
+          :items="incomingInvoiceStatuses"
+          dense
+          outlined
+          :disabled="!allowToChangeStatus"
+          @change="statusChangeHandler"
+          :style="{ maxWidth: '200px' }"
         />
       </div>
+
+      <div class="fields-row">
+        <v-text-field
+          label="Номер"
+          v-model.trim="state.number"
+          dense
+          outlined
+          :style="{ maxWidth: '250px' }"
+        />
+        <DateTimeInput
+          label="Дата акта"
+          v-model="state.date"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+        />
+      </div>
+
       <div class="fields-row">
         <DateTimeInput
-          label="Дата получения документа"
+          label="Дата получения акта"
           v-model="state.receiptDate"
           dense
           outlined
@@ -292,6 +295,12 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 30px;
+}
+.fields-row > div {
+  flex-grow: 0; /* позволяют растягиваться */
+  flex-shrink: 1; /* позволяют сжиматься */
+  flex-basis: content; /* базовая ширина по содержимому */
+  min-width: 250px;
 }
 </style>

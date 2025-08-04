@@ -33,96 +33,100 @@
     </buttons-panel>
     <div id="form">
       <div class="fields-row">
-        <div class="first-column">
-          <v-select
-            label="Статус"
-            v-model="state.status"
-            :items="statusItems"
-            dense
-            outlined
-          />
-          <v-text-field
-            label="Номер"
-            v-model.trim="state.number"
-            dense
-            outlined
-          />
-          <v-autocomplete
-            v-model="state.client"
-            label="Клиент"
-            dense
-            required
-            item-value="_id"
-            item-text="name"
-            clearable
-            outlined
-            :disabled="disabledMainFields"
-            :items="clientItems"
-            @blur="v$.client.$touch"
-            :error-messages="clientErrorMessages"
-            @change="changeClientHandler"
-          />
-          <v-autocomplete
-            v-model="state.agreement"
-            label="Соглашение"
-            dense
-            required
-            item-value="_id"
-            item-text="name"
-            clearable
-            outlined
-            :disabled="!state.client || disabledMainFields"
-            :items="agreementItems"
-            @blur="v$.client.$touch"
-            :error-messages="agreementErrorMessages"
-          />
-          <v-text-field
-            label="Номер реестра клиента"
-            v-model.trim="state.numberByClient"
-            dense
-            outlined
-          />
-        </div>
+        <v-autocomplete
+          v-model="state.client"
+          label="Клиент"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="disabledMainFields"
+          :items="clientItems"
+          @blur="v$.client.$touch"
+          :error-messages="clientErrorMessages"
+          @change="changeClientHandler"
+          :style="{ minWidth: '400px' }"
+        />
+        <v-autocomplete
+          v-model="state.agreement"
+          label="Соглашение"
+          dense
+          required
+          item-value="_id"
+          item-text="name"
+          clearable
+          outlined
+          :disabled="!state.client || disabledMainFields"
+          :items="agreementItems"
+          @blur="v$.client.$touch"
+          :error-messages="agreementErrorMessages"
+          :style="{ minWidth: '400px' }"
+        />
 
-        <div class="dates-column">
-          <v-text-field
-            label="Дата акта"
-            v-model="state.date"
-            dense
-            outlined
-            type="date"
-            @paste="pasteDate"
-          />
-          <v-text-field
-            label="Дата отправки"
-            v-model="state.sendDate"
-            dense
-            outlined
-            type="date"
-            @paste="pasteDate"
-          />
-          <DateTimeInput
-            label="Плановая дата оплаты"
-            v-model="state.plannedPayDate"
-            dense
-            outlined
-            type="date"
-          />
-          <DateTimeInput
-            label="Дата оплаты"
-            v-model="state.payDate"
-            dense
-            outlined
-            type="date"
-          />
-          <DateTimeInput
-            label="Дата реестра клиента"
-            v-model="state.dateByClient"
-            dense
-            outlined
-            type="date"
-          />
-        </div>
+        <v-select
+          label="Статус"
+          v-model="state.status"
+          :items="statusItems"
+          dense
+          outlined
+        />
+      </div>
+      <div class="fields-row">
+        <v-text-field
+          label="Номер реестра клиента"
+          v-model.trim="state.numberByClient"
+          dense
+          outlined
+        />
+        <DateTimeInput
+          label="Дата реестра клиента"
+          v-model="state.dateByClient"
+          dense
+          outlined
+          type="date"
+        />
+      </div>
+      <div class="fields-row">
+        <v-text-field
+          label="Номер"
+          v-model.trim="state.number"
+          dense
+          outlined
+        />
+        <v-text-field
+          label="Дата акта"
+          v-model="state.date"
+          dense
+          outlined
+          type="date"
+          @paste="pasteDate"
+        />
+      </div>
+
+      <div class="fields-row">
+        <DateTimeInput
+          label="Дата отправки"
+          v-model="state.sendDate"
+          dense
+          outlined
+          type="date"
+        />
+        <DateTimeInput
+          label="Плановая дата оплаты"
+          v-model="state.plannedPayDate"
+          dense
+          outlined
+          type="date"
+        />
+        <DateTimeInput
+          label="Дата оплаты"
+          v-model="state.payDate"
+          dense
+          outlined
+          type="date"
+        />
       </div>
 
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
@@ -311,14 +315,10 @@ export default {
   flex-wrap: wrap;
   gap: 30px;
 }
-.first-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-.dates-column {
-  display: flex;
-  flex-direction: column;
-  min-width: 300px;
+.fields-row > div {
+  flex-grow: 0; /* позволяют растягиваться */
+  flex-shrink: 1; /* позволяют сжиматься */
+  flex-basis: content; /* базовая ширина по содержимому */
+  min-width: 250px;
 }
 </style>
