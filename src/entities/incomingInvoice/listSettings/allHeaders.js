@@ -7,7 +7,7 @@ export default [
   },
   {
     value: 'date',
-    text: 'Дата документа',
+    text: 'Дата акта',
     sortable: true,
     default: true,
     align: 'center',
