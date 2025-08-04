@@ -90,7 +90,7 @@
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Номер"
+          label="Номер акта"
           v-model.trim="state.number"
           dense
           outlined
