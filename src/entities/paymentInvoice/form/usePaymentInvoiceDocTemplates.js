@@ -9,7 +9,7 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
 
   async function newDownloadHandler(template) {
     const invoiceId = props.item?._id
-    const filename = `${template.filenamePattern} №${formState.value.number} ${formState.value.sendDate}`
+    const filename = `${template.filenamePattern} №${formState.value.number} ${formState.value.date}`
     if (!invoiceId) {
       store.commit(
         'setError',

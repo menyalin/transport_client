@@ -292,9 +292,7 @@ export default {
     const formState = computed(() => {
       return {
         ...state.value,
-        sendDate: state.value.sendDate
-          ? dayjs(state.value.sendDate).format()
-          : null,
+        date: state.value.date ? dayjs(state.value.date).format() : null,
       }
     })
     watch(
@@ -342,7 +340,7 @@ export default {
       this.$router.replace({
         path: this.$route.path + '/' + this.loaderPath,
         query: {
-          invoiceDate: this.state.sendDate,
+          invoiceDate: this.state.date,
           client: this.state.client,
           agreement: this.state.agreement,
         },
