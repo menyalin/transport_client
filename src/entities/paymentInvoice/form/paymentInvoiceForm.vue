@@ -72,6 +72,13 @@
           dense
           outlined
         />
+        <v-btn
+          v-if="showSendInvoiceBtn"
+          color="primary"
+          @click="sendInvoiceBtnHandler('sendDate')"
+        >
+          Отправлено клиенту
+        </v-btn>
       </div>
       <div class="fields-row">
         <v-text-field
@@ -132,6 +139,30 @@
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
+      <v-dialog v-model="showDateDialog" persistent max-width="400">
+        <v-card>
+          <v-card-title>{{ dateDialogTitle }}</v-card-title>
+          <v-card-text>
+            <DateTimeInput
+              label="Укажите дату"
+              v-model="dialogFieldData"
+              type="date"
+              outlined
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="cancelDialog">Отмена</v-btn>
+            <v-btn
+              @click="saveDialogDataHandler"
+              color="primary"
+              :disabled="!dialogFieldData"
+            >
+              Сохранить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-btn
         color="primary"
         @click="pickOrdersHandler"
@@ -200,6 +231,13 @@ export default {
       changeClientHandler,
       setFormState,
       loaderPath,
+      showSendInvoiceBtn,
+      sendInvoiceBtnHandler,
+      showDateDialog,
+      dateDialogTitle,
+      cancelDialog,
+      dialogFieldData,
+      saveDialogDataHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const { docTemplates, newDocTemplates, newDownloadHandler } =
@@ -237,7 +275,12 @@ export default {
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
 
-    const statusItems = computed(() => paymentInvoiceStatuses)
+    const statusItems = computed(() =>
+      paymentInvoiceStatuses.map((i) => ({
+        ...i,
+        disabled: ['sended'].includes(i.value),
+      }))
+    )
 
     const needSave = computed(() => {
       return (
@@ -284,6 +327,13 @@ export default {
       newDocTemplates,
       newDownloadHandler,
       showLoaderBtn,
+      showSendInvoiceBtn,
+      sendInvoiceBtnHandler,
+      showDateDialog,
+      dateDialogTitle,
+      cancelDialog,
+      dialogFieldData,
+      saveDialogDataHandler,
     }
   },
   methods: {
@@ -316,9 +366,9 @@ export default {
   gap: 30px;
 }
 .fields-row > div {
-  flex-grow: 0; /* позволяют растягиваться */
-  flex-shrink: 1; /* позволяют сжиматься */
-  flex-basis: content; /* базовая ширина по содержимому */
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: content;
   min-width: 250px;
 }
 </style>

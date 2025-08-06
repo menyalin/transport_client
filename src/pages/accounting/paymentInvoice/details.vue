@@ -12,6 +12,7 @@
       @save="submit($event, true)"
       @pickOrders="openDialog"
       @download="downloadHandler"
+      @setDate="setDateHandler"
       :disabledDownloadFiles="disabledDownloadFiles"
     />
 
@@ -128,6 +129,17 @@ export default {
       } catch (e) {
         loading.value = false
         store.commit('setError', e.message)
+      }
+    }
+    async function setDateHandler(params) {
+      try {
+        loading.value = true
+        const res = await PaymentInvoiceService.setStatus(props.id, params)
+        item.value = { ...item.value, ...res }
+      } catch (e) {
+        store.commit('setError', e.message)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -248,6 +260,7 @@ export default {
       downloadHandler,
       setStatusSendedHandler,
       setStatusPaidHandler,
+      setDateHandler,
     }
   },
   methods: {
