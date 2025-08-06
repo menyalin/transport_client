@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
@@ -22,7 +22,7 @@ const getInitialState = (editedItem) => {
   }
 }
 
-function usePaimentInvoiceForm() {
+function usePaimentInvoiceForm(props, ctx) {
   let state = ref({})
   const agreements = ref([])
   const agreementItems = computed(() => agreements.value || [])
@@ -99,6 +99,49 @@ function usePaimentInvoiceForm() {
     else return store.getters.partnersMap.get(state.value.client)?.invoiceLoader
   })
 
+  const showDateDialog = ref(false)
+  const dialogDateName = ref(null)
+  const dialogFieldData = ref(null)
+
+  const dateDialogTitle = computed(() => {
+    switch (dialogDateName.value) {
+      case 'sendDate':
+        return 'Дата оправки'
+      case 'payDate':
+        return 'Дата оплаты'
+      default:
+        return ''
+    }
+  })
+
+  const showSendInvoiceBtn = computed(
+    () =>
+      ['inProcess', 'prepared'].includes(state.value.status) &&
+      !invalidForm.value &&
+      !!props?._id
+  )
+
+  function cancelDialog() {
+    showDateDialog.value = false
+    nextTick(() => {
+      dialogFieldData.value = null
+      dialogDateName.value = null
+    })
+  }
+
+  function sendInvoiceBtnHandler(dateFieldName = 'sendDate') {
+    dialogDateName.value = dateFieldName
+    showDateDialog.value = true
+  }
+
+  function saveDialogDataHandler() {
+    ctx.emit('setDate', {
+      dateFieldName: dialogDateName.value,
+      value: dialogFieldData.value,
+    })
+    cancelDialog()
+  }
+
   return {
     v$,
     state,
@@ -110,6 +153,13 @@ function usePaimentInvoiceForm() {
     changeClientHandler,
     commission,
     loaderPath,
+    showSendInvoiceBtn,
+    sendInvoiceBtnHandler,
+    showDateDialog,
+    dateDialogTitle,
+    cancelDialog,
+    dialogFieldData,
+    saveDialogDataHandler,
   }
 }
 

@@ -12,6 +12,7 @@
       @save="submit($event, true)"
       @pickOrders="openDialog"
       @download="downloadHandler"
+      @setDate="setDateHandler"
       :disabledDownloadFiles="disabledDownloadFiles"
     />
 
@@ -130,6 +131,17 @@ export default {
         store.commit('setError', e.message)
       }
     }
+    async function setDateHandler(params) {
+      try {
+        loading.value = true
+        const res = await PaymentInvoiceService.setStatus(props.id, params)
+        item.value = { ...item.value, ...res }
+      } catch (e) {
+        store.commit('setError', e.message)
+      } finally {
+        loading.value = false
+      }
+    }
 
     async function submit(formState, saveOnly) {
       let updatedItem
@@ -195,24 +207,6 @@ export default {
       )
     }
 
-    async function setStatusSendedHandler(sendDate) {
-      if (!sendDate) return
-      const res = await PaymentInvoiceService.setStatusSended(
-        item.value._id,
-        sendDate
-      )
-      item.value = { ...item.value, ...res }
-    }
-
-    async function setStatusPaidHandler(payDate) {
-      if (!payDate) return
-      const res = await PaymentInvoiceService.setStatusPaid(
-        item.value._id,
-        payDate
-      )
-      item.value = { ...item.value, ...res }
-    }
-
     async function updateItemPrice(itemId) {
       // Обновить цены по рейсы в акте
       const res = await PaymentInvoiceService.updatePrices(itemId)
@@ -246,8 +240,8 @@ export default {
       disabledDownloadFiles,
       updateItemPrice,
       downloadHandler,
-      setStatusSendedHandler,
-      setStatusPaidHandler,
+
+      setDateHandler,
     }
   },
   methods: {

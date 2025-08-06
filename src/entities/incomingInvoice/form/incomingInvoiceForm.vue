@@ -47,7 +47,7 @@
         <v-select
           label="Статус"
           v-model="state.status"
-          :items="incomingInvoiceStatuses"
+          :items="statusItems"
           dense
           outlined
           :disabled="!allowToChangeStatus"
@@ -192,6 +192,13 @@ export default {
 
     const { outsourceCarriers } = useCarriers()
 
+    const statusItems = computed(() => {
+      return incomingInvoiceStatuses.map((i) => ({
+        ...i,
+        disabled: i.value === 'paid',
+      }))
+    })
+
     const hasOrders = computed(() => {
       return props.item?.orders?.length > 0
     })
@@ -260,7 +267,6 @@ export default {
       payInvoiceHandler,
       isVisiblePayDateField,
       invalidForm,
-      incomingInvoiceStatuses,
       needSave,
       pickOrdersHandler,
       allowedToChangeOrders,
@@ -280,6 +286,7 @@ export default {
       payDateFieldData,
       allowToChangeStatus,
       statusChangeHandler,
+      statusItems,
     }
   },
 }

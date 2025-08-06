@@ -127,6 +127,14 @@ class PaymentInvoiceService {
     const { data } = await api.put(BASE_PATH + '/update_prices/' + orderId)
     return data
   }
+
+  async setStatus(invoiceId, params) {
+    const { data } = await api.put(
+      BASE_PATH + '/' + invoiceId + '/set_status',
+      params
+    )
+    return data
+  }
 }
 
 export default new PaymentInvoiceService()
