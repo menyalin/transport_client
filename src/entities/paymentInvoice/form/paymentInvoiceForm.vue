@@ -71,6 +71,7 @@
           :items="statusItems"
           dense
           outlined
+          @change="changeStatusHandler"
         />
         <v-btn
           v-if="showSendInvoiceBtn"
@@ -136,7 +137,7 @@
         />
       </div>
 
-      <v-alert v-if="disabledPickOrders || needSave" type="info" text>
+      <v-alert v-if="isNeedSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
       <v-dialog v-model="showDateDialog" persistent max-width="400">
@@ -167,7 +168,9 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="disabledPickOrders || needSave || invalidForm"
+        :disabled="
+          disabledPickOrders || isNeedSave || invalidForm || !isInProcess
+        "
       >
         Подобрать рейсы
       </v-btn>
@@ -238,6 +241,7 @@ export default {
       cancelDialog,
       dialogFieldData,
       saveDialogDataHandler,
+      changeStatusHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const { docTemplates, newDocTemplates, newDownloadHandler } =
@@ -250,6 +254,7 @@ export default {
         !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
       )
     })
+    const isInProcess = computed(() => state.value.status === 'inProcess')
 
     function cancelHandler() {
       router.go(-1)
@@ -275,15 +280,19 @@ export default {
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
 
+    const hasOrders = computed(() => props.item?.orders?.length > 0)
     const statusItems = computed(() =>
       paymentInvoiceStatuses.map((i) => ({
         ...i,
-        disabled: ['sended'].includes(i.value),
+        disabled:
+          ['sended'].includes(i.value) ||
+          (i.value === 'prepared' && !hasOrders.value),
       }))
     )
 
-    const needSave = computed(() => {
+    const isNeedSave = computed(() => {
       return (
+        !props.item?._id ||
         state?.value.client !== props.item.client ||
         state?.value.agreement !== props.item.agreementId
       )
@@ -315,7 +324,7 @@ export default {
       saveHandler,
       agreementErrorMessages,
       pickOrdersHandler,
-      needSave,
+      isNeedSave,
       changeClientHandler,
       showPickOrderDialog,
       downloadHandler,
@@ -332,6 +341,8 @@ export default {
       cancelDialog,
       dialogFieldData,
       saveDialogDataHandler,
+      isInProcess,
+      changeStatusHandler,
     }
   },
   methods: {
