@@ -81,6 +81,13 @@
         >
           Отправлено клиенту
         </v-btn>
+        <v-btn
+          v-if="showAcceptedInvoiceBtn"
+          color="primary"
+          @click="acceptInvoiceBtnHandler"
+        >
+          Принято клиентом
+        </v-btn>
       </div>
       <div class="fields-row">
         <v-text-field
@@ -104,13 +111,12 @@
           dense
           outlined
         />
-        <v-text-field
+        <DateTimeInput
           label="Дата акта"
           v-model="state.date"
           dense
           outlined
           type="date"
-          @paste="pasteDate"
         />
       </div>
 
@@ -200,7 +206,6 @@ import {
 } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
   name: 'PaymentInvoiceForm',
@@ -224,7 +229,7 @@ export default {
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
-    const { pasteDate } = usePasteDateInput()
+
     const {
       v$,
       state,
@@ -243,6 +248,8 @@ export default {
       dialogFieldData,
       saveDialogDataHandler,
       changeStatusHandler,
+      showAcceptedInvoiceBtn,
+      acceptInvoiceBtnHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const {
@@ -292,7 +299,7 @@ export default {
       paymentInvoiceStatuses.map((i) => ({
         ...i,
         disabled:
-          ['sended'].includes(i.value) ||
+          ['sended', 'accepted'].includes(i.value) ||
           (i.value === 'prepared' && !hasOrders.value),
       }))
     )
@@ -319,7 +326,6 @@ export default {
       { immediate: true }
     )
     return {
-      pasteDate,
       v$,
       cancelHandler,
       clientItems,
@@ -351,6 +357,8 @@ export default {
       isInProcess,
       changeStatusHandler,
       changeAgreementHandler,
+      showAcceptedInvoiceBtn,
+      acceptInvoiceBtnHandler,
     }
   },
   methods: {
