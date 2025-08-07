@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
@@ -79,7 +79,7 @@ function usePaimentInvoiceForm(props, ctx) {
 
   async function setFormState(item) {
     state.value = getInitialState(item)
-    if (item.client) await setAgreements(item.client)
+    // if (item.client) await setAgreements(item.client)
   }
 
   const changeClientHandler = async (val) => {
@@ -147,6 +147,9 @@ function usePaimentInvoiceForm(props, ctx) {
     if (['inProcess', 'prepared'].includes(newStatus))
       state.value.sendDate = null
   }
+  onMounted(async () => {
+    if (state.value.client) await setAgreements(state.value.client)
+  })
 
   return {
     v$,

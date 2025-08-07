@@ -62,6 +62,7 @@
           :items="agreementItems"
           @blur="v$.client.$touch"
           :error-messages="agreementErrorMessages"
+          @change="changeAgreementHandler"
           :style="{ minWidth: '400px' }"
         />
 
@@ -244,8 +245,12 @@ export default {
       changeStatusHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
-    const { docTemplates, newDocTemplates, newDownloadHandler } =
-      usePaymentInvoiceDocTemplates(state, props)
+    const {
+      docTemplates,
+      newDocTemplates,
+      newDownloadHandler,
+      updatePrintForms,
+    } = usePaymentInvoiceDocTemplates(state, props)
 
     const showLoaderBtn = computed(() => {
       if (Array.isArray(props.item.orders) && props.item.orders.length > 0)
@@ -259,7 +264,9 @@ export default {
     function cancelHandler() {
       router.go(-1)
     }
-
+    function changeAgreementHandler(val) {
+      if (val) updatePrintForms()
+    }
     function pickOrdersHandler() {
       ctx.emit('pickOrders')
     }
@@ -343,6 +350,7 @@ export default {
       saveDialogDataHandler,
       isInProcess,
       changeStatusHandler,
+      changeAgreementHandler,
     }
   },
   methods: {
