@@ -9,17 +9,18 @@
       @submit="submit($event, false)"
       :disabledPickOrders="disabledPickOrders"
       :disabledMainFields="disabledMainFields"
+      :disabledDownloadFiles="disabledDownloadFiles"
       @save="submit($event, true)"
       @pickOrders="openDialog"
       @download="downloadHandler"
       @setDate="setDateHandler"
-      :disabledDownloadFiles="disabledDownloadFiles"
     />
 
     <payment-invoice-result :orders="item.orders" />
 
     <payment-invoice-orders-list
       :orders="item.orders"
+      :disabled="disabledPickOrders"
       @delete="deleteOrderFromPaymentInvoice"
       @dblRowClick="dblRowClickHandler"
       @updateItemPrice="updateItemPrice"
@@ -72,7 +73,9 @@ export default {
     const showPickOrderDialog = ref(
       store.getters.storedValue(storedSettingsName) || false
     )
-    const disabledPickOrders = computed(() => !item.value?._id)
+    const disabledPickOrders = computed(
+      () => !item.value?._id || item.value?.status !== 'inProcess'
+    )
 
     const needUpdateRows = computed(() =>
       item.value.orders.some((i) => i.needUpdate)
@@ -147,6 +150,7 @@ export default {
       let updatedItem
       const itemId = props.id ? props.id : item.value?._id
       try {
+        loading.value = true
         if (itemId) {
           updatedItem = await PaymentInvoiceService.updateOne(itemId, formState)
         } else {
@@ -167,6 +171,8 @@ export default {
         showError.value = true
         errorMessage.value = e.response.data
         store.commit('setError', e.message)
+      } finally {
+        loading.value = false
       }
     }
 

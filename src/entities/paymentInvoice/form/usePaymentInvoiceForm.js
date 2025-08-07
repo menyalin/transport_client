@@ -113,9 +113,10 @@ function usePaimentInvoiceForm(props, ctx) {
         return ''
     }
   })
-
+  const hasOrders = computed(() => !!props?.orders?.length)
   const showSendInvoiceBtn = computed(
     () =>
+      hasOrders.value &&
       ['inProcess', 'prepared'].includes(state.value.status) &&
       !invalidForm.value &&
       !!props?._id
@@ -142,6 +143,11 @@ function usePaimentInvoiceForm(props, ctx) {
     cancelDialog()
   }
 
+  function changeStatusHandler(newStatus) {
+    if (['inProcess', 'prepared'].includes(newStatus))
+      state.value.sendDate = null
+  }
+
   return {
     v$,
     state,
@@ -160,6 +166,7 @@ function usePaimentInvoiceForm(props, ctx) {
     cancelDialog,
     dialogFieldData,
     saveDialogDataHandler,
+    changeStatusHandler,
   }
 }
 
