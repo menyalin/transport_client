@@ -88,6 +88,13 @@
         >
           Принято клиентом
         </v-btn>
+        <v-btn
+          v-if="showPaidInvoiceBtn"
+          color="primary"
+          @click="paidInvoiceBtnHandler"
+        >
+          Оплачено
+        </v-btn>
       </div>
       <div class="fields-row">
         <v-text-field
@@ -122,6 +129,7 @@
 
       <div class="fields-row">
         <DateTimeInput
+          readonly
           label="Дата отправки"
           v-model="state.sendDate"
           dense
@@ -136,6 +144,7 @@
           type="date"
         />
         <DateTimeInput
+          readonly
           label="Дата оплаты"
           v-model="state.payDate"
           dense
@@ -250,6 +259,8 @@ export default {
       changeStatusHandler,
       showAcceptedInvoiceBtn,
       acceptInvoiceBtnHandler,
+      showPaidInvoiceBtn,
+      paidInvoiceBtnHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const {
@@ -299,7 +310,7 @@ export default {
       paymentInvoiceStatuses.map((i) => ({
         ...i,
         disabled:
-          ['sended', 'accepted'].includes(i.value) ||
+          ['sended', 'accepted', 'paid'].includes(i.value) ||
           (i.value === 'prepared' && !hasOrders.value),
       }))
     )
@@ -359,6 +370,8 @@ export default {
       changeAgreementHandler,
       showAcceptedInvoiceBtn,
       acceptInvoiceBtnHandler,
+      showPaidInvoiceBtn,
+      paidInvoiceBtnHandler,
     }
   },
   methods: {

@@ -117,7 +117,13 @@ function usePaimentInvoiceForm(props, ctx) {
 
   const showAcceptedInvoiceBtn = computed(() => state.value.status === 'sended')
   function acceptInvoiceBtnHandler() {
-    ctx.emit('save', {...state.value , status: 'accepted'} )
+    ctx.emit('save', { ...state.value, status: 'accepted' })
+  }
+
+  const showPaidInvoiceBtn = computed(() => state.value.status === 'accepted')
+  function paidInvoiceBtnHandler() {
+    dialogDateName.value = 'payDate'
+    showDateDialog.value = true
   }
 
   const showSendInvoiceBtn = computed(
@@ -150,9 +156,12 @@ function usePaimentInvoiceForm(props, ctx) {
   }
 
   function changeStatusHandler(newStatus) {
-    if (['inProcess', 'prepared'].includes(newStatus))
+    if (['inProcess', 'prepared'].includes(newStatus)) {
       state.value.sendDate = null
+      state.value.payDate = null
+    }
   }
+
   onMounted(async () => {
     if (state.value.client) await setAgreements(state.value.client)
   })
@@ -178,6 +187,8 @@ function usePaimentInvoiceForm(props, ctx) {
     changeStatusHandler,
     showAcceptedInvoiceBtn,
     acceptInvoiceBtnHandler,
+    showPaidInvoiceBtn,
+    paidInvoiceBtnHandler,
   }
 }
 
