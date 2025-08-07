@@ -114,6 +114,12 @@ function usePaimentInvoiceForm(props, ctx) {
     }
   })
   const hasOrders = computed(() => !!props?.orders?.length)
+
+  const showAcceptedInvoiceBtn = computed(() => state.value.status === 'sended')
+  function acceptInvoiceBtnHandler() {
+    ctx.emit('save', {...state.value , status: 'accepted'} )
+  }
+
   const showSendInvoiceBtn = computed(
     () =>
       hasOrders.value &&
@@ -170,6 +176,8 @@ function usePaimentInvoiceForm(props, ctx) {
     dialogFieldData,
     saveDialogDataHandler,
     changeStatusHandler,
+    showAcceptedInvoiceBtn,
+    acceptInvoiceBtnHandler,
   }
 }
 
