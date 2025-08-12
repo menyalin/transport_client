@@ -88,16 +88,16 @@ export const useCrewForm = (props, ctx) => {
     if (!val || !state.value.driver) return
     loading.value = true
     try {
-      const res = await CrewService.getCrewByDriverAndDate({
+      const driverCrew = await CrewService.getCrewByDriverAndDate({
         driver: state.value.driver,
         date: val,
       })
 
       if (
-        res?.endDate &&
-        +new Date(res.endDate) > +new Date(state.value.startDate)
+        !driverCrew?.endDate ||
+        +new Date(driverCrew.endDate) > +new Date(state.value.startDate)
       )
-        actualDriverCrew.value = res
+        actualDriverCrew.value = driverCrew
     } catch (e) {
       console.error(e)
     } finally {
