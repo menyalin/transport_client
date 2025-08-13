@@ -25,12 +25,32 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     text: 'Дата документа',
     sortable: true,
     default: true,
+    width: '170',
+    align: 'center',
   },
   {
     value: 'sendDate',
     text: 'Дата отправки',
     sortable: true,
     default: true,
+    width: '170',
+    align: 'center',
+  },
+  {
+    value: 'plannedPayDate',
+    text: 'Плановая дата оплаты',
+    sortable: true,
+    default: true,
+    width: '190',
+    align: 'center',
+  },
+  {
+    value: 'payDate',
+    text: 'Дата оплаты',
+    sortable: true,
+    default: true,
+    width: '170',
+    align: 'center',
   },
 
   {

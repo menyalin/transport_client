@@ -304,13 +304,14 @@ export default {
     const clientItems = computed(
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
-
+    const isPaid = computed(() => props.item?.status === 'paid')
     const hasOrders = computed(() => props.item?.orders?.length > 0)
     const statusItems = computed(() =>
       paymentInvoiceStatuses.map((i) => ({
         ...i,
         disabled:
-          ['sended', 'accepted', 'paid'].includes(i.value) ||
+          (isPaid.value && !['accepted'].includes(i.value)) ||
+          (['sended', 'accepted', 'paid'].includes(i.value) && !isPaid.value) ||
           (i.value === 'prepared' && !hasOrders.value),
       }))
     )

@@ -5,6 +5,15 @@
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
+    <v-select
+      label="Период по"
+      :value="settings.periodBy"
+      :items="periodByItems"
+      outlined
+      dense
+      :style="{ maxWidth: '300px' }"
+      @change="updateSettings($event, 'periodBy')"
+    />
     <DateRangeInput
       :period="settings.period"
       @change="updateSettings($event, 'period')"
@@ -86,6 +95,13 @@ export default {
       return incomingInvoiceStatuses
     })
 
+    const periodByItems = [
+      { value: 'date', text: 'Дата акта' },
+      { value: 'receiptDate', text: 'Дата получения' },
+      { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
+      { value: 'payDate', text: 'Дата оплаты' },
+    ]
+
     function updateSettings(value, field) {
       ctx.emit('change', { ...props.settings, [field]: value })
     }
@@ -99,6 +115,7 @@ export default {
       updateSettings,
       outsourceCarriers,
       allHeaders,
+      periodByItems,
     }
   },
 }
