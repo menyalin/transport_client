@@ -20,10 +20,11 @@ export const useListData = () => {
   })
 
   const initialState = {
+    periodBy: 'date',
+    period: initialPeriod(),
     agreements: [],
     statuses: [],
     carriers: [],
-    period: initialPeriod(),
     number: null,
   }
 
@@ -39,6 +40,7 @@ export const useListData = () => {
   const loading = ref(false)
 
   const queryParams = computed(() => ({
+    periodBy: settings.value?.periodBy,
     period: settings.value?.period,
     statuses: settings.value?.statuses,
     carriers: settings.value?.carriers ?? [],
