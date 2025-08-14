@@ -12,6 +12,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     text: 'Номер',
     sortable: true,
     default: true,
+    width: '100',
   },
   {
     value: 'numberByClient',
@@ -38,10 +39,10 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
   {
     value: 'plannedPayDate',
-    text: 'Плановая дата оплаты',
+    text: 'План. дата оплаты',
     sortable: true,
     default: true,
-    width: '190',
+    width: '170',
     align: 'center',
   },
   {
@@ -78,7 +79,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     sortable: false,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '7rem',
   },
 
   {
@@ -87,7 +88,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     sortable: true,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '9rem',
   },
   {
     value: 'vatSum',
@@ -95,7 +96,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     sortable: false,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '9rem',
   },
 
   {
@@ -104,13 +105,14 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     sortable: true,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '9rem',
   },
   {
     value: 'createdAt',
     text: 'Дата создания',
     sortable: true,
     default: true,
+    width: '11rem',
   },
   {
     value: 'note',
