@@ -116,13 +116,17 @@ function usePaimentInvoiceForm(props, ctx) {
   const hasOrders = computed(() => !!props?.orders?.length)
 
   const showAcceptedInvoiceBtn = computed(() => state.value.status === 'sended')
+
   function acceptInvoiceBtnHandler() {
     ctx.emit('save', { ...state.value, status: 'accepted' })
   }
 
   const showPaidInvoiceBtn = computed(() => state.value.status === 'accepted')
+
   function paidInvoiceBtnHandler() {
     dialogDateName.value = 'payDate'
+    dialogFieldData.value = dayjs().format('YYYY-MM-DD')
+
     showDateDialog.value = true
   }
 
@@ -144,6 +148,8 @@ function usePaimentInvoiceForm(props, ctx) {
 
   function sendInvoiceBtnHandler(dateFieldName = 'sendDate') {
     dialogDateName.value = dateFieldName
+    dialogFieldData.value = dayjs().format('YYYY-MM-DD')
+
     showDateDialog.value = true
   }
 
@@ -158,6 +164,8 @@ function usePaimentInvoiceForm(props, ctx) {
   function changeStatusHandler(newStatus) {
     if (['inProcess', 'prepared'].includes(newStatus)) {
       state.value.sendDate = null
+      state.value.payDate = null
+    } else if (newStatus === 'accepted') {
       state.value.payDate = null
     }
   }
