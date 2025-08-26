@@ -12,7 +12,7 @@
       <div class="row-wrapper first-row">
         <div class="base-info">
           <v-autocomplete
-            v-model.trim="$v.form.tkName.$model"
+            v-model.trim="v$.form.tkName.$model"
             :items="tkNames"
             item-text="name"
             item-value="_id"
@@ -22,7 +22,7 @@
             outlined
           />
           <v-select
-            v-model="$v.form.type.$model"
+            v-model="v$.form.type.$model"
             outlined
             label="Тип ТС"
             dense
@@ -30,7 +30,7 @@
             :error-messages="typeErrors"
           />
           <v-select
-            v-model="$v.form.liftCapacityType.$model"
+            v-model="v$.form.liftCapacityType.$model"
             outlined
             label="Грузоподъемность, тн"
             dense
@@ -40,7 +40,7 @@
             v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
           >
             <v-select
-              v-model="$v.form.kind.$model"
+              v-model="v$.form.kind.$model"
               outlined
               label="Вид ТС"
               dense
@@ -48,7 +48,7 @@
             />
 
             <v-text-field
-              v-model.number="$v.form.pltCount.$model"
+              v-model.number="v$.form.pltCount.$model"
               outlined
               label="Макс.кол-во плт"
               dense
@@ -58,7 +58,7 @@
         </div>
         <div class="servive-dates">
           <DateTimeInput
-            v-model="$v.form.startServiceDate.$model"
+            v-model="v$.form.startServiceDate.$model"
             label="Дата ввода в эксплуатацию"
             hide-time-input
             hide-prepend-icon
@@ -68,7 +68,7 @@
           />
 
           <DateTimeInput
-            v-model="$v.form.endServiceDate.$model"
+            v-model="v$.form.endServiceDate.$model"
             label="Дата вывода из эксплуатации"
             hide-time-input
             hide-prepend-icon
@@ -80,49 +80,49 @@
       </div>
       <div class="row-wrapper second-row">
         <v-text-field
-          v-model.trim="$v.form.regNum.$model"
+          v-model.trim="v$.form.regNum.$model"
           outlined
           label="Гос.номер"
           dense
           :error-messages="regNumErrors"
         />
         <v-text-field
-          v-model.trim="$v.form.brand.$model"
+          v-model.trim="v$.form.brand.$model"
           outlined
           label="Марка"
           dense
         />
 
         <v-text-field
-          v-model.trim="$v.form.model.$model"
+          v-model.trim="v$.form.model.$model"
           outlined
           label="Модель"
           dense
         />
 
         <v-text-field
-          v-model.trim="$v.form.issueYear.$model"
+          v-model.trim="v$.form.issueYear.$model"
           outlined
           label="Год выпуска"
           dense
         />
 
         <v-text-field
-          v-model.number="$v.form.order.$model"
+          v-model.number="v$.form.order.$model"
           outlined
           label="Индекс в списке"
           dense
           type="number"
         />
         <v-text-field
-          v-model.number="$v.form.volumeFuel.$model"
+          v-model.number="v$.form.volumeFuel.$model"
           outlined
           label="Объем топливного бака"
           dense
           type="number"
         />
         <v-text-field
-          v-model.number="$v.form.volumeRef.$model"
+          v-model.number="v$.form.volumeRef.$model"
           outlined
           label="Объем бака рефа"
           dense
@@ -131,26 +131,26 @@
       </div>
       <div class="row-wrapper third-row">
         <v-text-field
-          v-model.trim="$v.form.win.$model"
+          v-model.trim="v$.form.win.$model"
           outlined
           label="WIN"
           dense
         />
         <v-text-field
-          v-model.trim="$v.form.owner.$model"
+          v-model.trim="v$.form.owner.$model"
           outlined
           label="Собственник"
           dense
         />
 
         <v-text-field
-          v-model.trim="$v.form.sts.$model"
+          v-model.trim="v$.form.sts.$model"
           outlined
           label="СТС"
           dense
         />
         <DateTimeInput
-          v-model="$v.form.stsDate.$model"
+          v-model="v$.form.stsDate.$model"
           label="Дата СТС"
           hide-time-input
           hide-prepend-icon
@@ -159,7 +159,7 @@
           hide-details
         />
         <v-text-field
-          v-model.trim="$v.form.pts.$model"
+          v-model.trim="v$.form.pts.$model"
           outlined
           label="ПТС"
           dense
@@ -238,7 +238,7 @@
       <additional-notifications v-model="additionalNotifications" />
       <div class="row-wrapper my-3">
         <v-textarea
-          v-model.trim="$v.form.note.$model"
+          v-model.trim="v$.form.note.$model"
           outlined
           rows="3"
           label="Примечание"
@@ -248,7 +248,7 @@
 
       <v-row v-if="!!form.tkName && form.type === 'truck'">
         <app-allowed-drivers
-          v-model="$v.form.allowedDrivers.$model"
+          v-model="v$.form.allowedDrivers.$model"
           :tkName="
             typeof form.tkName === 'Object' ? form.tkName._id : form.tkName
           "
@@ -283,7 +283,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required, numeric } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required, numeric } from '@vuelidate/validators'
 
 import {
   ButtonsPanel,
@@ -317,6 +318,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    return {
+      v$: useVuelidate(),
+    }
   },
   data() {
     return {
@@ -376,7 +382,7 @@ export default {
     },
     isInvalidForm() {
       if (!this.directoriesProfile) return true
-      return this.$v.$invalid
+      return this.v$.$invalid
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
@@ -387,8 +393,8 @@ export default {
     nameErrors() {
       const errors = []
       if (
-        this.$v.form.name.$dirty &&
-        this.$v.form.name.$invalid &&
+        this.v$.form.name.$dirty &&
+        this.v$.form.name.$invalid &&
         !this.loading
       )
         errors.push('Имя не может быть пустым')
@@ -397,8 +403,8 @@ export default {
     regNumErrors() {
       const errors = []
       if (
-        this.$v.form.regNum.$dirty &&
-        this.$v.form.regNum.$invalid &&
+        this.v$.form.regNum.$dirty &&
+        this.v$.form.regNum.$invalid &&
         !this.loading
       )
         errors.push('Гос.номер должен быть заполнен')
@@ -407,8 +413,8 @@ export default {
     typeErrors() {
       const errors = []
       if (
-        this.$v.form.type.$dirty &&
-        this.$v.form.type.$invalid &&
+        this.v$.form.type.$dirty &&
+        this.v$.form.type.$invalid &&
         !this.loading
       )
         errors.push('Тип должен быть заполнен')

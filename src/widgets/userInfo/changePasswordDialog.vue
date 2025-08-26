@@ -5,28 +5,28 @@
       <v-card-text>
         <form @submit.prevent>
           <v-text-field
-            v-model="$v.password.$model"
+            v-model="v$.password.$model"
             type="password"
             autocomplete="off"
             label="Действующий пароль"
           />
           <v-text-field
-            v-model="$v.newPassword.$model"
+            v-model="v$.newPassword.$model"
             type="password"
             label="Новый пароль"
             autocomplete="off"
             :error-messages="newPasswordErrors"
-            @input="$v.newPassword.$touch()"
-            @blur="$v.newPassword.$touch()"
+            @input="v$.newPassword.$touch()"
+            @blur="v$.newPassword.$touch()"
           />
           <v-text-field
-            v-model="$v.confirmPassword.$model"
+            v-model="v$.confirmPassword.$model"
             type="password"
             label="Новый пароль"
             autocomplete="off"
             :error-messages="confirmPasswordErrors"
-            @input="$v.confirmPassword.$touch()"
-            @blur="$v.confirmPassword.$touch()"
+            @input="v$.confirmPassword.$touch()"
+            @blur="v$.confirmPassword.$touch()"
           />
         </form>
       </v-card-text>
@@ -35,7 +35,7 @@
         <v-btn text @click="cancel"> Отмена </v-btn>
 
         <v-btn
-          :disabled="$v.$invalid"
+          :disabled="v$.$invalid"
           color="primary"
           text
           @click="saveHandler"
@@ -47,8 +47,9 @@
   </v-dialog>
 </template>
 <script>
-import { UserService} from '@/shared/services'
-import { required, minLength, sameAs } from 'vuelidate/lib/validators'
+import { UserService } from '@/shared/services'
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength, sameAs } from '@vuelidate/validators'
 export default {
   name: 'ChangePasswordDialog',
   props: {
@@ -61,20 +62,23 @@ export default {
       confirmPassword: '',
     }
   },
+  setup() {
+    return { v$: useVuelidate() }
+  },
   computed: {
     newPasswordErrors() {
       const errors = []
-      if (!this.$v.newPassword.$dirty) return errors
-      !this.$v.newPassword.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.newPassword.required && errors.push('Поле не может быть пустым')
+      if (!this.v$.newPassword.$dirty) return errors
+      !this.v$.newPassword.minLength && errors.push('Слишком короткий пароль')
+      !this.v$.newPassword.required && errors.push('Поле не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
-      if (!this.$v.confirmPassword.$dirty) return errors
-      !this.$v.confirmPassword.required &&
+      if (!this.v$.confirmPassword.$dirty) return errors
+      !this.v$.confirmPassword.required &&
         errors.push('Поле не может быть пустым')
-      !this.$v.confirmPassword.sameAs && errors.push('Пароли не совпадают')
+      !this.v$.confirmPassword.sameAs && errors.push('Пароли не совпадают')
       return errors
     },
   },
@@ -100,7 +104,7 @@ export default {
       }
       try {
         await UserService.changePassword(body)
-        this.$v.$reset()
+        this.v$.$reset()
         this.$store.commit('setError', 'Пароль успешно обновлен')
         this.cancel()
       } catch (e) {

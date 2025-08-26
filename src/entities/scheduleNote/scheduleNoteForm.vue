@@ -13,14 +13,14 @@
     </v-alert>
 
     <v-autocomplete
-      v-model="$v.form.truck.$model"
+      v-model="v$.form.truck.$model"
       label="Грузовик"
       :items="trucks"
       outlined
       dense
     />
     <v-text-field
-      v-model.trim="$v.form.text.$model"
+      v-model.trim="v$.form.text.$model"
       outlined
       label="Текст"
       dense
@@ -34,7 +34,7 @@
     />
 
     <DateTimeInput
-      v-model="$v.form.startPositionDate.$model"
+      v-model="v$.form.startPositionDate.$model"
       label="Дата начала"
       dense
       outlined
@@ -54,8 +54,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
-
+import { required } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
 import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 
 export default {
@@ -77,6 +77,11 @@ export default {
       default: false,
     },
   },
+  setup() {
+    return {
+      v$: useVuelidate(),
+    }
+  },
   data() {
     return {
       priorityItems: [
@@ -97,7 +102,7 @@ export default {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
       if (!this.directoriesProfile) return true
-      return this.$v.$invalid
+      return this.v$.$invalid
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null

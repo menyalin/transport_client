@@ -40,7 +40,7 @@
 import { ref } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
 import { computed } from 'vue'
-import { required } from 'vuelidate/lib/validators'
+import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { watch } from 'vue'
 

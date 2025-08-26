@@ -48,30 +48,30 @@
           <v-card-title> Новое напоминание </v-card-title>
           <v-card-text class="notification-form">
             <v-text-field
-              v-model="$v.editableItem.title.$model"
+              v-model="v$.editableItem.title.$model"
               label="Заголовок"
               :errorMessages="titleErrors"
               outlined
               dense
-              @blur="$v.editableItem.title.$touch()"
+              @blur="v$.editableItem.title.$touch()"
             />
             <div class="dates-row">
               <DateTimeInput
-                v-model="$v.editableItem.expDate.$model"
+                v-model="v$.editableItem.expDate.$model"
                 label="Действительно до"
                 hidePrependIcon
                 hideTimeInput
                 :errorMessages="expDateErrors"
-                @blur="$v.editableItem.expDate.$touch()"
+                @blur="v$.editableItem.expDate.$touch()"
               />
               <v-text-field
-                v-model="$v.editableItem.daysBeforeRemind.$model"
+                v-model="v$.editableItem.daysBeforeRemind.$model"
                 label="Дней до напоминания"
                 class="days-count"
                 outlined
                 dense
                 :error-messages="daysBeforeRemindErrors"
-                @blur="$v.editableItem.daysBeforeRemind.$touch()"
+                @blur="v$.editableItem.daysBeforeRemind.$touch()"
               />
               <v-text-field
                 v-model="editableItem.note"
@@ -97,8 +97,10 @@
   </v-simple-table>
 </template>
 <script>
-import { required, numeric } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required, numeric } from '@vuelidate/validators'
 import { DateTimeInput } from '@/shared/ui'
+
 export default {
   name: 'AdditionalNotifications',
   components: {
@@ -110,6 +112,11 @@ export default {
   },
   props: {
     items: Array,
+  },
+  setup() {
+    return {
+      v$: useVuelidate(),
+    }
   },
   data() {
     return {
@@ -133,7 +140,7 @@ export default {
   },
   computed: {
     isInvalidEditableItem() {
-      return this.$v.editableItem.$invalid
+      return this.v$.editableItem.$invalid
     },
     itemFields() {
       return Object.keys(this.editableItem)
@@ -141,8 +148,8 @@ export default {
     titleErrors() {
       let errors = []
       if (
-        this.$v.editableItem.title.$dirty &&
-        !this.$v.editableItem.title.required
+        this.v$.editableItem.title.$dirty &&
+        !this.v$.editableItem.title.required
       )
         errors.push('Заголовок не может быть пустым')
       return errors
@@ -150,8 +157,8 @@ export default {
     expDateErrors() {
       let errors = []
       if (
-        this.$v.editableItem.expDate.$dirty &&
-        !this.$v.editableItem.expDate.required
+        this.v$.editableItem.expDate.$dirty &&
+        !this.v$.editableItem.expDate.required
       )
         errors.push('Укажите дату')
       return errors
@@ -159,13 +166,13 @@ export default {
     daysBeforeRemindErrors() {
       let errors = []
       if (
-        this.$v.editableItem.daysBeforeRemind.$dirty &&
-        !this.$v.editableItem.daysBeforeRemind.required
+        this.v$.editableItem.daysBeforeRemind.$dirty &&
+        !this.v$.editableItem.daysBeforeRemind.required
       )
         errors.push('Не должно быть пустым')
       if (
-        this.$v.editableItem.daysBeforeRemind.$dirty &&
-        !this.$v.editableItem.daysBeforeRemind.numeric
+        this.v$.editableItem.daysBeforeRemind.$dirty &&
+        !this.v$.editableItem.daysBeforeRemind.numeric
       )
         errors.push('Введите число')
       return errors

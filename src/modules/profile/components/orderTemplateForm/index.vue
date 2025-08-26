@@ -10,14 +10,14 @@
     />
     <div class="body-wrapper">
       <v-text-field
-        v-model.trim="$v.form.name.$model"
+        v-model.trim="v$.form.name.$model"
         outlined
         label="Название шаблона"
         dense
       />
       <div id="client-row">
         <v-autocomplete
-          v-model="$v.form.client.$model"
+          v-model="v$.form.client.$model"
           :items="clientItems"
           item-text="name"
           item-value="_id"
@@ -65,7 +65,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
 import { ButtonsPanel } from '@/shared/ui'
 import { OrderRoute } from '@/entities/order'
@@ -96,6 +97,7 @@ export default {
   setup() {
     return {
       clientItems: store.getters.partners.filter((partner) => partner.isClient),
+      v$: useVuelidate(),
     }
   },
   data() {
@@ -118,7 +120,7 @@ export default {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
       if (!this.directoriesProfile) return true
-      return this.$v.$invalid || !this.isValidRoute
+      return this.v$.$invalid || !this.isValidRoute
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null

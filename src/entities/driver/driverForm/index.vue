@@ -10,7 +10,7 @@
     <div>
       <div class="row-wrapper tk-name">
         <v-select
-          v-model.trim="$v.form.tkName.$model"
+          v-model.trim="v$.form.tkName.$model"
           :items="tkNames"
           item-text="name"
           item-value="_id"
@@ -22,28 +22,28 @@
 
       <div class="row-wrapper driver-name">
         <v-text-field
-          v-model.trim="$v.form.surname.$model"
+          v-model.trim="v$.form.surname.$model"
           outlined
           label="Фамилия"
           dense
           :error-messages="surnameErrors"
         />
         <v-text-field
-          v-model.trim="$v.form.name.$model"
+          v-model.trim="v$.form.name.$model"
           outlined
           label="Имя"
           dense
           :error-messages="nameErrors"
         />
         <v-text-field
-          v-model.trim="$v.form.patronymic.$model"
+          v-model.trim="v$.form.patronymic.$model"
           outlined
           label="Отчество"
           dense
           :error-messages="nameErrors"
         />
         <DateTimeInput
-          v-model="$v.form.birthday.$model"
+          v-model="v$.form.birthday.$model"
           label="Дата рождения"
           hide-time-input
           hide-prepend-icon
@@ -56,7 +56,7 @@
         <div class="passport">
           <div>
             <v-text-field
-              v-model.trim="$v.form.passportId.$model"
+              v-model.trim="v$.form.passportId.$model"
               outlined
               hide-details
               label="Номер паспорта"
@@ -64,7 +64,7 @@
               class="pb-3"
             />
             <DateTimeInput
-              v-model="$v.form.passportDate.$model"
+              v-model="v$.form.passportDate.$model"
               label="Дата выдачи паспорта"
               hide-time-input
               hide-prepend-icon
@@ -73,7 +73,7 @@
             />
           </div>
           <v-textarea
-            v-model.trim="$v.form.passportIssued.$model"
+            v-model.trim="v$.form.passportIssued.$model"
             outlined
             label="Паспорт выдан"
             dense
@@ -82,21 +82,21 @@
         </div>
         <div class="driver-license">
           <v-text-field
-            v-model.trim="$v.form.licenseId.$model"
+            v-model.trim="v$.form.licenseId.$model"
             outlined
             hide-details
             label="Номер ВУ"
             dense
           />
           <v-text-field
-            v-model.trim="$v.form.licenseCategory.$model"
+            v-model.trim="v$.form.licenseCategory.$model"
             outlined
             label="Категории ВУ"
             hide-details
             dense
           />
           <DateTimeInput
-            v-model="$v.form.licenseDate.$model"
+            v-model="v$.form.licenseDate.$model"
             label="Дата выдачи ВУ"
             hide-time-input
             hide-prepend-icon
@@ -106,21 +106,21 @@
         </div>
         <div class="driver-cards">
           <v-text-field
-            v-model.trim="$v.form.inn.$model"
+            v-model.trim="v$.form.inn.$model"
             outlined
             hide-details
             label="ИНН"
             dense
           />
           <v-text-field
-            v-model.trim="$v.form.driverCardId.$model"
+            v-model.trim="v$.form.driverCardId.$model"
             outlined
             hide-details
             label="Карта водителя"
             dense
           />
           <DateTimeInput
-            v-model="$v.form.driverCardPeriod.$model"
+            v-model="v$.form.driverCardPeriod.$model"
             label="КВ действительна до"
             hide-time-input
             hide-prepend-icon
@@ -131,14 +131,14 @@
       </div>
       <div class="row-wrapper phones">
         <v-text-field
-          v-model.trim="$v.form.phone.$model"
+          v-model.trim="v$.form.phone.$model"
           outlined
           label="Телефон"
           hide-details
           dense
         />
         <v-text-field
-          v-model.trim="$v.form.phone2.$model"
+          v-model.trim="v$.form.phone2.$model"
           outlined
           label="Телефон 2"
           hide-details
@@ -163,7 +163,7 @@
           />
         </div>
         <DateTimeInput
-          v-model="$v.form.employmentDate.$model"
+          v-model="v$.form.employmentDate.$model"
           label="Дата приема на работу"
           hide-time-input
           outlined
@@ -172,7 +172,7 @@
         />
 
         <DateTimeInput
-          v-model="$v.form.dismissalDate.$model"
+          v-model="v$.form.dismissalDate.$model"
           label="Дата увольнения"
           hide-time-input
           outlined
@@ -180,7 +180,7 @@
           dense
         />
         <v-text-field
-          v-model.trim="$v.form.recommender.$model"
+          v-model.trim="v$.form.recommender.$model"
           outlined
           label="Кто рекомедовал"
           dense
@@ -212,7 +212,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import AppMedBook from './medBook.vue'
 import {
   ButtonsPanel,
@@ -238,6 +239,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    return {
+      v$: useVuelidate(),
+    }
   },
   data() {
     return {
@@ -278,7 +284,7 @@ export default {
     disabledSubmitForm() {
       return (
         !this.$store.getters.hasPermission('driver:write') ||
-        this.$v.$invalid ||
+        this.v$.$invalid ||
         !this.formChanged ||
         this.loading
       )
@@ -286,13 +292,13 @@ export default {
 
     nameErrors() {
       const errors = []
-      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
+      if (this.v$.form.name.$dirty && this.v$.form.name.$invalid)
         errors.push('Имя не может быть пустым')
       return errors
     },
     surnameErrors() {
       const errors = []
-      if (this.$v.form.surname.$dirty && this.$v.form.surname.$invalid)
+      if (this.v$.form.surname.$dirty && this.v$.form.surname.$invalid)
         errors.push('Имя не может быть пустым')
       return errors
     },

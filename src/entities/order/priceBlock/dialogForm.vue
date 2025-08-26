@@ -6,7 +6,7 @@
         <div class="form-wrapper">
           <div class="fields-row">
             <v-select
-              v-model="$v.tmpItem.type.$model"
+              v-model="v$.tmpItem.type.$model"
               label="Тип затрат"
               :items="availablePriceTypes"
               dense
@@ -14,17 +14,17 @@
               clearable
               :style="{ 'max-width': '300px' }"
               :errorMessages="typeErrorMessages"
-              @blur="$v.tmpItem.type.$touch()"
+              @blur="v$.tmpItem.type.$touch()"
             />
             <v-text-field
-              v-model="$v.tmpItem.price.$model"
+              v-model="v$.tmpItem.price.$model"
               label="Сумма"
               outlined
               dense
               type="number"
               :errorMessages="priceErrorMessages"
               :style="{ 'max-width': '200px' }"
-              @blur="$v.tmpItem.price.$touch()"
+              @blur="v$.tmpItem.price.$touch()"
             />
             <v-checkbox
               v-if="allowedVat"
@@ -62,7 +62,8 @@
   </v-dialog>
 </template>
 <script>
-import { required, decimal } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required, decimal } from '@vuelidate/validators'
 export default {
   name: 'DialogForm',
   model: {
@@ -83,6 +84,11 @@ export default {
     availibleTypes: {
       type: Array,
     },
+  },
+  setup() {
+    return {
+      v$: useVuelidate(),
+    }
   },
   data() {
     return {
@@ -108,17 +114,17 @@ export default {
       return false
     },
     isInvalidForm() {
-      return this.$v.$invalid
+      return this.v$.$invalid
     },
     priceErrorMessages() {
       let errors = []
-      if (this.$v.tmpItem.price.$dirty && this.$v.tmpItem.price.$invalid)
+      if (this.v$.tmpItem.price.$dirty && this.v$.tmpItem.price.$invalid)
         errors.push('Сумма обязательна к заполнению')
       return errors
     },
     typeErrorMessages() {
       const errors = []
-      if (this.$v.tmpItem.type.$dirty && this.$v.tmpItem.type.$invalid)
+      if (this.v$.tmpItem.type.$dirty && this.v$.tmpItem.type.$invalid)
         errors.push('Укажите тип тарифа')
       return errors
     },
@@ -138,7 +144,7 @@ export default {
     },
     cancel() {
       this.$emit('update:dialog', false)
-      this.$v.$reset()
+      this.v$.$reset()
     },
   },
 }

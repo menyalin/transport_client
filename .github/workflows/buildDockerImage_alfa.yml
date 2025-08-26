@@ -10,6 +10,9 @@ env:
   VUE_APP_API_URL: https://carrier.logicore.ru/api
   VUE_APP_API_WS_URL: https://carrier.logicore.ru
   VUE_APP_STATIC_URL: https://carrier.logicore.ru
+  VITE_API_URL: https://carrier.logicore.ru/api
+  VITE_API_WS_URL: https://carrier.logicore.ru
+  VITE_STATIC_URL: https://carrier.logicore.ru
 jobs:
   build:
     if: github.event.pull_request.merged == true

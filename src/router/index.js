@@ -53,7 +53,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: import.meta.env.BASE_URL,
   routes,
 })
 
@@ -67,7 +67,7 @@ router.beforeEach(async (to, from, next) => {
     .find((r) => r.meta && r.meta.title)
 
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title
-  else document.title = process.env.VUE_APP_NAME || 's4log'
+  else document.title = import.meta.env.VITE_NAME || 's4log'
 
   const permissions = to.matched
     .map((r) => r.meta.permission)

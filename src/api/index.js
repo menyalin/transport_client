@@ -3,7 +3,7 @@ import store from '@/store/index'
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
   withCredentials: true,
 })
 
@@ -31,7 +31,7 @@ api.interceptors.response.use(
       originalRequest._isRetry = true
       try {
         const response = await axios.post(
-          `${process.env.VUE_APP_API_URL}/auth/refresh`,
+          `${import.meta.env.VITE_API_URL}/auth/refresh`,
           {},
           { withCredentials: true }
         )

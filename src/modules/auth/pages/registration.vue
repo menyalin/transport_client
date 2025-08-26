@@ -15,46 +15,46 @@
                 </v-alert>
               </transition>
               <v-text-field
-                v-model.trim="$v.form.name.$model"
+                v-model.trim="v$.form.name.$model"
                 label="Имя"
                 prepend-icon="mdi-account"
                 type="text"
                 required
                 :error-messages="nameErrors"
-                @input="$v.form.name.$touch()"
-                @blur="$v.form.name.$touch()"
+                @input="v$.form.name.$touch()"
+                @blur="v$.form.name.$touch()"
               />
               <v-text-field
-                v-model.trim="$v.form.email.$model"
+                v-model.trim="v$.form.email.$model"
                 label="Email"
                 prepend-icon="mdi-at"
                 type="email"
                 :error-messages="emailErrors"
                 required
-                @input="$v.form.email.$touch()"
-                @blur="$v.form.email.$touch()"
+                @input="v$.form.email.$touch()"
+                @blur="v$.form.email.$touch()"
               />
               <v-text-field
                 id="password"
-                v-model="$v.form.password.$model"
+                v-model="v$.form.password.$model"
                 label="Пароль"
                 prepend-icon="mdi-lock"
                 type="password"
                 :error-messages="passwordErrors"
                 required
-                @input="$v.form.password.$touch()"
-                @blur="$v.form.password.$touch()"
+                @input="v$.form.password.$touch()"
+                @blur="v$.form.password.$touch()"
               />
               <v-text-field
                 id="password"
-                v-model="$v.form.confirmPassword.$model"
+                v-model="v$.form.confirmPassword.$model"
                 label="Повторите пароль"
                 prepend-icon="mdi-lock"
                 type="password"
                 :error-messages="confirmPasswordErrors"
                 required
-                @input="$v.form.confirmPassword.$touch()"
-                @blur="$v.form.confirmPassword.$touch()"
+                @input="v$.form.confirmPassword.$touch()"
+                @blur="v$.form.confirmPassword.$touch()"
               />
             </v-card-text>
             <v-card-actions>
@@ -66,7 +66,7 @@
                 color="primary"
                 type="submit"
                 :loading="loading"
-                :disabled="$v.form.$invalid"
+                :disabled="v$.form.$invalid"
               >
                 Зарегистрироваться
               </v-btn>
@@ -79,8 +79,15 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-import { required, minLength, sameAs, email } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength, sameAs, email } from '@vuelidate/validators'
+
 export default {
+  setup() {
+    return {
+      v$: useVuelidate(),
+    }
+  },
   data: () => ({
     formTitle: 'Форма регистрации',
     loading: false,
@@ -124,31 +131,31 @@ export default {
     },
     nameErrors() {
       const errors = []
-      if (!this.$v.form.name.$dirty) return errors
-      !this.$v.form.name.required && errors.push('Имя не может быть пустым')
+      if (!this.v$.form.name.$dirty) return errors
+      !this.v$.form.name.required && errors.push('Имя не может быть пустым')
       return errors
     },
     emailErrors() {
       const errors = []
-      if (!this.$v.form.email.$dirty) return errors
-      !this.$v.form.email.email && errors.push('Не корректный email')
-      !this.$v.form.email.required && errors.push('Email не может быть пустым')
+      if (!this.v$.form.email.$dirty) return errors
+      !this.v$.form.email.email && errors.push('Не корректный email')
+      !this.v$.form.email.required && errors.push('Email не может быть пустым')
       return errors
     },
     passwordErrors() {
       const errors = []
-      if (!this.$v.form.password.$dirty) return errors
-      !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required &&
+      if (!this.v$.form.password.$dirty) return errors
+      !this.v$.form.password.minLength && errors.push('Слишком короткий пароль')
+      !this.v$.form.password.required &&
         errors.push('Пароль не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
-      if (!this.$v.form.confirmPassword.$dirty) return errors
-      !this.$v.form.confirmPassword.required &&
+      if (!this.v$.form.confirmPassword.$dirty) return errors
+      !this.v$.form.confirmPassword.required &&
         errors.push('Подтверждение пароля не может быть пустым')
-      !this.$v.form.confirmPassword.sameAs && errors.push('Password mismatch')
+      !this.v$.form.confirmPassword.sameAs && errors.push('Password mismatch')
       return errors
     },
   },
