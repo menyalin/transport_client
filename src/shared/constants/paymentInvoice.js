@@ -1,9 +1,18 @@
-export default [
+export const paymentInvoiceStatuses = [
+  { text: 'Подготовка', value: 'inProcess' },
+  { text: 'Готов к отправке', value: 'prepared' },
+  { text: 'Отправлен', value: 'sended' },
+  { text: 'Принят', value: 'accepted' },
+  { text: 'Оплачен', value: 'paid' },
+]
+
+export const PAYMENT_INVOICE_TABLE_HEADERS = [
   {
     value: 'number',
     text: 'Номер',
     sortable: true,
     default: true,
+    width: '100',
   },
   {
     value: 'numberByClient',
@@ -13,10 +22,36 @@ export default [
     width: '120',
   },
   {
-    value: 'sendDate',
-    text: 'Дата выставления',
+    value: 'date',
+    text: 'Дата документа',
     sortable: true,
     default: true,
+    width: '170',
+    align: 'center',
+  },
+  {
+    value: 'sendDate',
+    text: 'Дата отправки',
+    sortable: true,
+    default: true,
+    width: '170',
+    align: 'center',
+  },
+  {
+    value: 'plannedPayDate',
+    text: 'План. дата оплаты',
+    sortable: true,
+    default: true,
+    width: '170',
+    align: 'center',
+  },
+  {
+    value: 'payDate',
+    text: 'Дата оплаты',
+    sortable: true,
+    default: true,
+    width: '170',
+    align: 'center',
   },
 
   {
@@ -44,16 +79,16 @@ export default [
     sortable: false,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '7rem',
   },
-  
+
   {
     value: 'total.priceWOVat',
     text: 'Сумма без НДС',
     sortable: true,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '9rem',
   },
   {
     value: 'vatSum',
@@ -61,7 +96,7 @@ export default [
     sortable: false,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '9rem',
   },
 
   {
@@ -70,13 +105,14 @@ export default [
     sortable: true,
     default: true,
     align: 'right',
-    width: '10rem',
+    width: '9rem',
   },
   {
     value: 'createdAt',
     text: 'Дата создания',
     sortable: true,
     default: true,
+    width: '11rem',
   },
   {
     value: 'note',

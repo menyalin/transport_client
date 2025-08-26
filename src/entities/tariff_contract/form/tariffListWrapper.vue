@@ -50,7 +50,7 @@ export default {
     },
   },
   setup(props, ctx) {
-    const item = ref({})
+    const item = ref(null)
     const items = ref([])
     const dialog = ref(false)
     function addHandler() {
@@ -58,7 +58,7 @@ export default {
     }
     function cancelHandler() {
       dialog.value = false
-      item.value = {}
+      item.value = null
     }
     function saveHandler(val) {
       if (item.value) {
@@ -76,8 +76,7 @@ export default {
     })
 
     function addTariffHandler(val) {
-      items.value.push({ ...val })
-      ctx.emit('change', items.value)
+      ctx.emit('change', [...props.items, { ...val }])
     }
 
     function updateHandler(idx) {
@@ -94,8 +93,10 @@ export default {
 
     watch(
       () => props.items,
-      (val) => (items.value = val)
+      (val) => (items.value = val),
+      { immediate: true }
     )
+
     return {
       addHandler,
       dialog,

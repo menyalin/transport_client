@@ -92,9 +92,7 @@ const getTtnNums = (order) =>
 export class TemplateDataBuilder {
   constructor(invoice) {
     this.docNumber = invoice.number || 'б/н'
-    this.sendDate = invoice.sendDate
-      ? dayjs(invoice.sendDate).format(DATE_FORMAT)
-      : ''
+    this.date = invoice.date ? dayjs(invoice.date).format(DATE_FORMAT) : ''
     this.startPeriodDate = getPeriodDate(invoice.orders, Math.min)
     this.endPeriodDate = getPeriodDate(invoice.orders, Math.max)
     this.total = getInvoiceTotal(invoice.orders)

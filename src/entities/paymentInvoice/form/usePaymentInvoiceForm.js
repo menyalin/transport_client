@@ -1,26 +1,28 @@
 import dayjs from 'dayjs'
-import { computed, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
 import store from '@/store/index'
 
-const getInitialState = (editedItem) => ({
-  status: editedItem?.status || 'inProcess',
-  number: editedItem?.number || null,
-  client: editedItem?.client || undefined,
-  agreement: editedItem?.agreementId || undefined,
-  numberByClient: editedItem?.numberByClient || undefined,
-  note: editedItem?.note || null,
-  sendDate: editedItem?.sendDate
-    ? dayjs(editedItem?.sendDate).format('YYYY-MM-DD')
-    : null,
-  dateByClient: editedItem?.dateByClient
-    ? dayjs(editedItem.dateByClient).format('YYYY-MM-DD')
-    : null,
-})
+const getInitialState = (editedItem) => {
+  const prepareDate = (date) => (date ? dayjs(date).format('YYYY-MM-DD') : null)
+  return {
+    status: editedItem?.status || 'inProcess',
+    number: editedItem?.number || null,
+    client: editedItem?.client || undefined,
+    agreement: editedItem?.agreementId || undefined,
+    numberByClient: editedItem?.numberByClient || undefined,
+    note: editedItem?.note || null,
+    date: prepareDate(editedItem?.date),
+    plannedPayDate: prepareDate(editedItem?.plannedPayDate),
+    payDate: prepareDate(editedItem?.payDate),
+    sendDate: prepareDate(editedItem?.sendDate),
+    dateByClient: prepareDate(editedItem?.dateByClient),
+  }
+}
 
-function usePaimentInvoiceForm() {
+function usePaimentInvoiceForm(props, ctx) {
   let state = ref({})
   const agreements = ref([])
   const agreementItems = computed(() => agreements.value || [])
@@ -37,7 +39,10 @@ function usePaimentInvoiceForm() {
 
   const rules = {
     number: { required },
-    sendDate: { required },
+    date: { required },
+    sendDate: {},
+    plannedPayDate: {},
+    payDate: {},
     numberByClient: {},
     dateByClient: {},
     client: { required },
@@ -74,7 +79,7 @@ function usePaimentInvoiceForm() {
 
   async function setFormState(item) {
     state.value = getInitialState(item)
-    if (item.client) await setAgreements(item.client)
+    // if (item.client) await setAgreements(item.client)
   }
 
   const changeClientHandler = async (val) => {
@@ -94,6 +99,81 @@ function usePaimentInvoiceForm() {
     else return store.getters.partnersMap.get(state.value.client)?.invoiceLoader
   })
 
+  const showDateDialog = ref(false)
+  const dialogDateName = ref(null)
+  const dialogFieldData = ref(null)
+
+  const dateDialogTitle = computed(() => {
+    switch (dialogDateName.value) {
+      case 'sendDate':
+        return 'Дата оправки'
+      case 'payDate':
+        return 'Дата оплаты'
+      default:
+        return ''
+    }
+  })
+  const hasOrders = computed(() => !!props?.orders?.length)
+
+  const showAcceptedInvoiceBtn = computed(() => state.value.status === 'sended')
+
+  function acceptInvoiceBtnHandler() {
+    ctx.emit('save', { ...state.value, status: 'accepted' })
+  }
+
+  const showPaidInvoiceBtn = computed(() => state.value.status === 'accepted')
+
+  function paidInvoiceBtnHandler() {
+    dialogDateName.value = 'payDate'
+    dialogFieldData.value = dayjs().format('YYYY-MM-DD')
+
+    showDateDialog.value = true
+  }
+
+  const showSendInvoiceBtn = computed(
+    () =>
+      hasOrders.value &&
+      ['inProcess', 'prepared'].includes(state.value.status) &&
+      !invalidForm.value &&
+      !!props?._id
+  )
+
+  function cancelDialog() {
+    showDateDialog.value = false
+    nextTick(() => {
+      dialogFieldData.value = null
+      dialogDateName.value = null
+    })
+  }
+
+  function sendInvoiceBtnHandler(dateFieldName = 'sendDate') {
+    dialogDateName.value = dateFieldName
+    dialogFieldData.value = dayjs().format('YYYY-MM-DD')
+
+    showDateDialog.value = true
+  }
+
+  function saveDialogDataHandler() {
+    ctx.emit('setDate', {
+      dateFieldName: dialogDateName.value,
+      value: dialogFieldData.value,
+    })
+    cancelDialog()
+  }
+
+  function changeStatusHandler(newStatus) {
+    if (['inProcess', 'prepared'].includes(newStatus)) {
+      state.value.sendDate = null
+      state.value.payDate = null
+    } else if (newStatus === 'accepted') {
+      state.value.payDate = null
+    }
+  }
+
+  onMounted(async () => {
+    if (state.value.client) await setAgreements(state.value.client)
+  })
+
   return {
     v$,
     state,
@@ -105,6 +185,18 @@ function usePaimentInvoiceForm() {
     changeClientHandler,
     commission,
     loaderPath,
+    showSendInvoiceBtn,
+    sendInvoiceBtnHandler,
+    showDateDialog,
+    dateDialogTitle,
+    cancelDialog,
+    dialogFieldData,
+    saveDialogDataHandler,
+    changeStatusHandler,
+    showAcceptedInvoiceBtn,
+    acceptInvoiceBtnHandler,
+    showPaidInvoiceBtn,
+    paidInvoiceBtnHandler,
   }
 }
 

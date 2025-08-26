@@ -39,7 +39,12 @@
           </td>
           <td>{{ item.note }}</td>
           <td class="text-right">
-            <v-icon small :disabled="readonly" @click="deleteRow(idx)">
+            <v-icon
+              v-if="!hideDelete"
+              small
+              :disabled="readonly"
+              @click="deleteRow(idx)"
+            >
               mdi-delete
             </v-icon>
           </td>
@@ -54,9 +59,11 @@ export default {
   props: {
     items: Array,
     readonly: Boolean,
+    hideDelete: Boolean,
   },
-  setup(_props, { emit }) {
+  setup(props, { emit }) {
     function deleteRow(idx) {
+      if (props.readonly) return
       emit('deleteRow', idx)
     }
 

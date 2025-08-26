@@ -33,6 +33,18 @@
           label="Отсрочка оплаты, раб.дней"
           :style="{ maxWidth: '200px' }"
         />
+        <v-autocomplete
+          label="Заказчик"
+          v-model="state.customer"
+          auto-select-first
+          dense
+          item-text="name"
+          item-value="_id"
+          outlined
+          clearable
+          :items="carrierItems"
+          :style="{ maxWidth: '300px' }"
+        />
       </div>
 
       <div class="fields-row">
@@ -49,6 +61,30 @@
           rows="10"
           outlined
           label="Примечание для Договора-заявки"
+        />
+      </div>
+      <div class="fields-row">
+        <v-text-field
+          label="Основание для входящего акта об оказании услуг и счета"
+          v-model="state.actBasis"
+          outlined
+          dense
+        />
+      </div>
+      <div class="fields-row">
+        <v-textarea
+          v-model="state.actDescription"
+          rows="10"
+          outlined
+          label="Примечание для входящего акта об оказании услуг"
+        />
+      </div>
+      <div class="fields-row">
+        <v-textarea
+          v-model="state.paymentBillDescription"
+          rows="10"
+          outlined
+          label="Примечание для cчета на оплату"
         />
       </div>
       <div class="fields-row">
@@ -96,9 +132,11 @@ export default {
       saveHandler,
       invalidForm,
       vatRateDisabled,
+      carrierItems,
     } = useForm(props, ctx)
 
     return {
+      carrierItems,
       state,
       v$,
       submitHandler,

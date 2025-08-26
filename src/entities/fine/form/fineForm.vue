@@ -12,7 +12,7 @@
 
     <div class="row-input">
       <v-text-field
-        v-model="$v.form.date.$model"
+        v-model="v$.form.date.$model"
         type="date"
         label="Дата постановления"
         outlined
@@ -22,7 +22,7 @@
       />
 
       <v-text-field
-        v-model.trim="$v.form.number.$model"
+        v-model.trim="v$.form.number.$model"
         label="Номер постановления"
         outlined
         dense
@@ -30,7 +30,7 @@
         @blur="$emit('fineNumberUpdated', $event)"
       />
       <v-select
-        v-model.trim="$v.form.category.$model"
+        v-model.trim="v$.form.category.$model"
         :items="$store.getters.fineCategories"
         label="Категория"
         outlined
@@ -40,7 +40,7 @@
       />
     </div>
     <v-text-field
-      v-model.trim="$v.form.violation.$model"
+      v-model.trim="v$.form.violation.$model"
       label="Нарушение"
       outlined
       dense
@@ -48,7 +48,7 @@
 
     <div class="row-input mt-2">
       <v-text-field
-        v-model.number="$v.form.discountedSum.$model"
+        v-model.number="v$.form.discountedSum.$model"
         type="number"
         label="Сумма штрафа со скидкой"
         outlined
@@ -57,7 +57,7 @@
       />
 
       <v-text-field
-        v-model.number="$v.form.totalSum.$model"
+        v-model.number="v$.form.totalSum.$model"
         type="number"
         label="Общая сумма штрафа"
         outlined
@@ -66,7 +66,7 @@
       />
 
       <v-text-field
-        v-model="$v.form.expiryDateOfDiscount.$model"
+        v-model="v$.form.expiryDateOfDiscount.$model"
         type="date"
         label="Скидка до"
         outlined
@@ -88,7 +88,7 @@
       />
 
       <v-autocomplete
-        v-model="$v.form.truck.$model"
+        v-model="v$.form.truck.$model"
         label="Грузовик / Прицеп"
         :items="trucks"
         auto-select-first
@@ -97,7 +97,7 @@
         :style="{ maxWidth: '250px' }"
       />
       <v-autocomplete
-        v-model="$v.form.driver.$model"
+        v-model="v$.form.driver.$model"
         label="Водитель"
         :items="drivers"
         auto-select-first
@@ -112,20 +112,20 @@
     </div>
 
     <v-text-field
-      v-model="$v.form.address.$model"
+      v-model="v$.form.address.$model"
       label="Место нарушения"
       outlined
       dense
     />
     <div class="row-input">
       <v-checkbox
-        v-model="$v.form.isCulpritDriver.$model"
+        v-model="v$.form.isCulpritDriver.$model"
         dense
         label="Виноват водитель"
       />
       <v-checkbox
         v-if="form.isCulpritDriver"
-        v-model="$v.form.isPaydByDriver.$model"
+        v-model="v$.form.isPaydByDriver.$model"
         :disabled="!!form.payingByWorker"
         dense
         label="Оплачен водителем"
@@ -134,7 +134,7 @@
 
     <div v-if="showPaymentBlock" class="row-input">
       <v-text-field
-        v-model.number="$v.form.paymentSum.$model"
+        v-model.number="v$.form.paymentSum.$model"
         type="number"
         label="Сумма оплаты"
         outlined
@@ -143,7 +143,7 @@
       />
 
       <v-text-field
-        v-model="$v.form.paymentDate.$model"
+        v-model="v$.form.paymentDate.$model"
         type="date"
         outlined
         dense
@@ -161,7 +161,7 @@
       />
       <v-select
         v-if="isNeedWithheldFromDriver"
-        v-model="$v.form.kX.$model"
+        v-model="v$.form.kX.$model"
         :items="[1, 2, 4]"
         label="kX"
         outlined
@@ -170,7 +170,7 @@
       />
       <v-text-field
         v-if="isNeedWithheldFromDriver"
-        v-model.number="$v.form.withheldSum.$model"
+        v-model.number="v$.form.withheldSum.$model"
         type="number"
         outlined
         readonly
@@ -180,14 +180,14 @@
       />
       <v-checkbox
         v-if="isNeedWithheldFromDriver && showIsWithheldField"
-        v-model="$v.form.isWithheld.$model"
+        v-model="v$.form.isWithheld.$model"
         label="Удержано"
         :disabled="isWithheldReadonly"
         dense
       />
     </div>
     <v-text-field
-      v-model="$v.form.note.$model"
+      v-model="v$.form.note.$model"
       label="Примечание"
       outlined
       dense
@@ -202,10 +202,12 @@
 <script>
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
 import { CrewService } from '@/shared/services'
+
 import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
@@ -221,7 +223,7 @@ export default {
   },
   setup() {
     const { pasteDate } = usePasteDateInput()
-    return { pasteDate }
+    return { pasteDate, v$: useVuelidate() }
   },
   data() {
     return {
@@ -266,7 +268,7 @@ export default {
     },
     isInvalidForm() {
       if (!this.directoriesProfile) return true
-      return this.$v.$invalid
+      return this.v$.$invalid
     },
     isNeedWithheldFromDriver() {
       return this.form.isCulpritDriver && !this.form.isPaydByDriver

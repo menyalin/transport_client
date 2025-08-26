@@ -2,6 +2,8 @@ import api from '@/api'
 import { EventObserver } from '@/modules/common/helpers/EventObserver.class'
 import socket from '@/socket'
 import store from '@/store'
+import z from 'zod'
+
 const BASE_PATH = '/agreements'
 
 class AgreementService {
@@ -43,13 +45,22 @@ class AgreementService {
     return data
   }
 
-  async getForOrder(params) {
-    let { data } = await api.get(BASE_PATH + '/get_for_order', { params })
-    return data
-  }
+  // async getForOrder(params) {
+  //   let { data } = await api.get(BASE_PATH + '/get_for_order', { params })
+  //   return data
+  // }
 
   async getForClient(params) {
-    let { data } = await api.get(BASE_PATH + '/get_for_client', { params })
+    const paramsSchema = z.object({
+      client: z.string().optional().nullable(),
+      clients: z.array(z.string()).optional().nullable(),
+      date: z.string(),
+      currentAgreementId: z.string().optional().nullable(),
+    })
+    const parsedParams = paramsSchema.parse(params)
+    let { data } = await api.get(BASE_PATH + '/get_for_client', {
+      params: parsedParams,
+    })
     return data
   }
 

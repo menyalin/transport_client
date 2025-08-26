@@ -29,8 +29,8 @@ export default {
         url: '/accounting/paymentInvoice/' + invoice._id,
         text:
           (invoice.number ? invoice.number : 'б/н') +
-          (invoice.sendDate
-            ? ' от ' + new Date(invoice.sendDate).toLocaleDateString()
+          (invoice.date
+            ? ' от ' + new Date(invoice.date).toLocaleDateString()
             : ''),
       }))
     })

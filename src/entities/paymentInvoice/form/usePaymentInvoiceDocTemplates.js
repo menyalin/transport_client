@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import store from '@/store/index'
 import { DocTemplateService } from '@/shared/services'
 import { PaymentInvoiceService } from '@/shared/services'
@@ -9,7 +9,7 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
 
   async function newDownloadHandler(template) {
     const invoiceId = props.item?._id
-    const filename = `${template.filenamePattern} №${formState.value.number} ${formState.value.sendDate}`
+    const filename = `${template.filenamePattern} №${formState.value.number} ${formState.value.date}`
     if (!invoiceId) {
       store.commit(
         'setError',
@@ -45,17 +45,19 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
       type: 'paymentInvoice',
     })
   }
-  watch(
-    () => formState,
-    async () => {
-      await getTemplates()
-      await getAllowedPrintForms()
-    },
-    { deep: true }
-  )
+  async function updatePrintForms() {
+    await getTemplates()
+    await getAllowedPrintForms()
+  }
+
+  onMounted(async () => {
+    await updatePrintForms()
+  })
+
   return {
     docTemplates,
     newDocTemplates,
     newDownloadHandler,
+    updatePrintForms,
   }
 }

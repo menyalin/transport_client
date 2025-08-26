@@ -11,7 +11,12 @@ export const useListData = () => {
     const endDate = dayjs().endOf('month').toISOString()
     return [startDate, endDate]
   }
-  const initialState = { agreements: [], statuses: [], period: initialPeriod() }
+  const initialState = {
+    agreements: [],
+    statuses: [],
+    period: initialPeriod(),
+    periodBy: 'date',
+  }
   const settings = usePersistedRef(initialState, 'paymentInvoice_list_settings')
   const listOptions = usePersistedRef({}, 'paymentInvoice_list_options')
 
@@ -34,6 +39,7 @@ export const useListData = () => {
   }
 
   const queryParams = computed(() => ({
+    periodBy: settings.value?.periodBy || 'date',
     period: settings.value?.period,
     statuses: settings.value?.statuses,
     search: settings.value?.search,

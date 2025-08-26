@@ -26,9 +26,9 @@ export default {
       default: true,
     },
   },
-  setup(props, ctx) {
+  setup(_, ctx) {
     const { proxy } = getCurrentInstance()
-    console.log('props: ', props)
+
     function changeHandler(val) {
       ctx.emit('change', val)
     }

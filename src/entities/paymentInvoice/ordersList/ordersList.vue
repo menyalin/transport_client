@@ -6,7 +6,7 @@
     multiple
     item-key="_id"
     checkbox-color="primary"
-    show-select
+    :showSelect="!disabled"
     :itemsPerPage="-1"
     :footerProps="{
       itemsPerPageOptions: [-1, 100],
@@ -16,6 +16,7 @@
   >
     <template v-slot:top>
       <v-btn
+        v-if="!disabled"
         :disabled="!selectedOrderIds.length"
         small
         text
@@ -66,6 +67,7 @@ import ALL_HEADERS from './headers.js'
 export default {
   name: 'PaymentInvoiceOrdersList',
   props: {
+    disabled: Boolean,
     orders: {
       type: Array,
     },

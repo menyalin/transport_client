@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed, getCurrentInstance, nextTick } from 'vue'
 import { BorderedBlock } from '@/shared/ui'
 import { HEADERS } from './tableHeaders'
 import AllowedAgreementForm from './allowedAgreementForm.vue'
@@ -69,12 +69,17 @@ export default {
     })
 
     const closeAndResetItem = () => {
-      editedItem.value = null
-      dialog.value = false
+      nextTick(() => {
+        editedItem.value = null
+        dialog.value = false
+      })
     }
 
     const addAgreementHandler = () => {
-      dialog.value = true
+      nextTick(() => {
+        editedItem.value = null
+        dialog.value = true
+      })
     }
 
     const cancelHandler = () => {
@@ -102,7 +107,7 @@ export default {
       } else {
         tmpRes.splice(editedItem.value.idx, 1, { ...val }) // Редактирование существующего соглашения
       }
-      ctx.emit('change', [...tmpRes])
+      ctx.emit('change', tmpRes)
       closeAndResetItem()
     }
 

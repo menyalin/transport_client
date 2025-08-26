@@ -2,8 +2,10 @@
   <v-data-table
     :headers="headers"
     checkbox-color="primary"
+    v-model="selected"
     item-key="_id"
     :items="items"
+    showSelect
     :loading="loading"
     height="70vh"
     dense
@@ -18,6 +20,18 @@
   >
     <template #[`item.date`]="{ item }">
       {{ new Date(item.date).toLocaleDateString() }}
+    </template>
+
+    <template #[`item.payDate`]="{ item }">
+      {{ item.payDate ? new Date(item.payDate).toLocaleDateString() : null }}
+    </template>
+
+    <template #[`item.receiptDate`]="{ item }">
+      {{
+        item.receiptDate
+          ? new Date(item.receiptDate).toLocaleDateString()
+          : null
+      }}
     </template>
 
     <template #[`item.plannedPayDate`]="{ item }">
@@ -41,16 +55,24 @@
         {{ item.note }}
       </span>
     </template>
-    <template #[`footer.prepend`] />
+
+    <template #[`footer.prepend`]>
+      <IncomingInvoiceListAnalytics :data="analytics" />
+    </template>
   </v-data-table>
 </template>
 
 <script>
+import { computed } from 'vue'
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
+import IncomingInvoiceListAnalytics from './listAnalytics.vue'
+import { usePersistedRef } from '@/shared/hooks'
 export default {
   name: 'PaymentInvoicesDataTable',
-
+  components: {
+    IncomingInvoiceListAnalytics,
+  },
   model: {
     prop: 'settings',
     event: 'change',
@@ -59,6 +81,7 @@ export default {
     items: Array,
     totalCount: Number,
     listOptions: Object,
+    analyticsData: Object,
     routesCount: {
       type: Number,
       default: 0,
@@ -69,6 +92,20 @@ export default {
     loading: Boolean,
   },
   setup(props, ctx) {
+    const selected = usePersistedRef([], 'selectedInvoicesInList')
+    const analytics = computed(() => {
+      if (selected.value.length)
+        return selected.value.reduce(
+          (res, item) => ({
+            count: res.count + 1,
+            routesCount: res.routesCount + item.ordersCount,
+            totalSumWOVat: res.totalSumWOVat + item.priceWOVat,
+            totalSum: res.totalSum + item.priceWithVat,
+          }),
+          { count: 0, routesCount: 0, totalSumWOVat: 0, totalSum: 0 }
+        )
+      else return props.analyticsData
+    })
     function dblClickRow(_event, { item }) {
       router.push(`incomingInvoice/${item._id}`)
     }
@@ -77,9 +114,11 @@ export default {
     }
 
     return {
+      selected,
       dblClickRow,
       updateListOptionsHandler,
       moneyFormatter,
+      analytics,
     }
   },
 }

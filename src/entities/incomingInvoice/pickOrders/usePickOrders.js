@@ -21,7 +21,11 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
     return selected.value.map((i) => i._id)
   })
   const settings = usePersistedRef(
-    { period: initPeriod(), docStatuses: ['accepted'] },
+    {
+      period: initPeriod(),
+      docStatuses: ['accepted'],
+      includedIntoPaymentInvoice: true,
+    },
     'incomingInvoice:pickOrders:settings'
   )
 
@@ -62,6 +66,7 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
         orders: selectedIds.value,
         incomingInvoiceId: props.invoiceId,
       })
+      selected.value = []
       await refresh()
     } catch (e) {
       store.commit('setError', e.message)
@@ -77,6 +82,8 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
   watch(settings.value, async () => {
     await getData()
   })
+
+  watch(selected, (items) => console.log(items.map((i) => i.clientNum)))
 
   return {
     loading,

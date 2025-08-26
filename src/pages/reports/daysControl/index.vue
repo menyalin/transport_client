@@ -7,6 +7,19 @@
           <v-btn icon @click.stop="getData">
             <v-icon> mdi-cached </v-icon>
           </v-btn>
+          <v-autocomplete
+            v-model="settings.carriers"
+            label="Перевозчик"
+            :items="carrierItems"
+            hideDetails
+            outlined
+            item-text="name"
+            item-value="_id"
+            dense
+            multiple
+            clearable
+            :style="{ 'max-width': '300px' }"
+          />
           <v-text-field
             v-model.number="settings.dayCount"
             label="Кол-во дней"
@@ -15,7 +28,7 @@
             dense
           />
           <v-text-field
-            v-model.trim="settings.search"
+            v-model.trim="searchString"
             label="Поиск"
             hideDetails
             outlined
@@ -26,12 +39,12 @@
           :headers="headers"
           :items="rows"
           :loading="loading"
-          :search="settings.search"
+          :search="searchString"
           fixed-header
           height="76vh"
           dense
           :footer-props="{
-            'items-per-page-options': [50, 100, 200],
+            'items-per-page-options': [100, 200],
           }"
           @dblclick:row="dblClickRow"
         >
@@ -53,20 +66,35 @@
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
 import { ReportTitle } from '@/shared/ui'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
+import { useCarriers } from '@/entities/carrier/useCarriers'
 
 export default {
   name: 'DaysControl',
   components: {
     ReportTitle,
   },
-  data() {
-    return {
-      formName: 'DaysControlReport',
-      loading: false,
-      settings: {
+  setup() {
+    const { allCarriers: carrierItems } = useCarriers()
+    const searchString = usePersistedRef(null, 'DaysControlReport:search')
+    const settings = usePersistedRef(
+      {
+        carriers: [],
         dayCount: 30,
         search: null,
       },
+      'DaysControlReport:settings'
+    )
+
+    return {
+      searchString,
+      settings,
+      carrierItems,
+    }
+  },
+  data() {
+    return {
+      loading: false,
       rows: [],
       headers: [
         { value: 'tkName', text: 'ТК' },
@@ -90,48 +118,42 @@ export default {
     ...mapGetters(['directoriesProfile']),
   },
   watch: {
-    ['settings.dayCount']: {
+    settings: {
+      immediate: true,
       deep: true,
-      handler: function () {
-        this.getData()
+      handler: async function () {
+        await this.getData()
       },
     },
   },
-  async mounted() {
-    await this.getData()
-  },
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: this.settings,
-    })
-    next()
-  },
+
   methods: {
     dblClickRow(_, { item }) {
       this.$router.push(`/profile/${item.collection}/${item._id}`)
     },
     async getData() {
-      this.loading = true
-      this.rows = await ReportService.daysControl({
-        profile: this.directoriesProfile,
-        days: this.settings.dayCount,
-      })
-      this.loading = false
+      try {
+        this.loading = true
+        this.rows = await ReportService.daysControl({
+          carriers: this.settings.carriers,
+          profile: this.directoriesProfile,
+          days: this.settings.dayCount,
+        })
+      } catch (e) {
+        console.error(e)
+        this.$store.commit('setError', e.message)
+      } finally {
+        this.loading = false
+      }
     },
   },
 }
 </script>
 <style scoped>
 #report-settings {
-  display: grid;
-  grid-template-columns: 50px 150px 300px;
-  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
   margin-top: 15px;
 }
 </style>

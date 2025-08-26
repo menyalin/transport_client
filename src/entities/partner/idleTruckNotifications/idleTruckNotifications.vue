@@ -1,6 +1,5 @@
 <template>
   <div v-if="partner && partner._id" class="idle_truck_notifications_wrapper">
-    <h5 class="ml-3">Настройка оповещений при простое транспорта</h5>
     <v-alert v-if="!partner._id" type="info">
       Добавление площадок возможно только после сохранения партнера
     </v-alert>
@@ -13,14 +12,14 @@
     >
       Добавить оповещение
     </v-btn>
-    <NotificationListFeature
+    <NotificationList
       :partnerId="partner._id"
       :items="partner.idleTruckNotifications"
-      @updatePartner="updatePartnerHandler"
       @editNotify="editNotifyHandler"
+      @change="updateNotificationsHandler"
     />
     <v-dialog :value="dialog" persistent max-width="1200" :loading="loading">
-      <IdleTruckNotifyForm
+      <IdleTruckNotificationForm
         :partnerId="partner._id"
         :loading="loading"
         :initialState="editableItem"
@@ -34,29 +33,34 @@
 
 <script>
 import { computed } from 'vue'
-import { NotificationListFeature } from '@/features/partner'
-import { useWidgetModel } from './model/model.js'
-import { IdleTruckNotifyForm } from '@/entities/partner'
-import { useAgreements } from '@/entities/agreement'
+import { useWidgetModel } from './model.js'
+import IdleTruckNotificationForm from './notificationForm/idleTruckNotificationForm'
+import NotificationList from './notificationList/notificationList'
 
 export default {
-  name: 'IdleTruckNotificationsWidget',
-  components: { NotificationListFeature, IdleTruckNotifyForm },
+  name: 'IdleTruckNotifications',
+  components: { NotificationList, IdleTruckNotificationForm },
+  model: {
+    props: 'items',
+    event: 'change',
+  },
   props: {
     partner: Object,
+    clientAgreements: Array,
   },
   setup(props, ctx) {
-    function updatePartnerHandler(payload) {
-      ctx.emit('updatePartner', payload)
+    const updateNotificationsHandler = (items) => {
+      ctx.emit('change', items)
     }
-    const { allClientAgreements } = useAgreements()
     const agreemenstByClient = computed(() => {
-      return allClientAgreements.value
-        .filter((agreement) => agreement.clients.includes(props.partner?._id))
+      const res = props.clientAgreements
+        ?.filter((agreement) => agreement.clients.includes(props.partner?._id))
         .map((i) => ({
           value: i._id,
           text: i.name,
         }))
+
+      return res || []
     })
 
     const {
@@ -70,7 +74,6 @@ export default {
     } = useWidgetModel(props, ctx)
     return {
       editNotifyHandler,
-      updatePartnerHandler,
       addNotificationHandler,
       cancelHandler,
       submitHandler,
@@ -78,6 +81,7 @@ export default {
       loading,
       editableItem,
       agreemenstByClient,
+      updateNotificationsHandler,
     }
   },
 }

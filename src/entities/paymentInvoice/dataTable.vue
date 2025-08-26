@@ -25,6 +25,19 @@
     <template #[`item.sendDate`]="{ item }">
       {{ item.sendDate ? new Date(item.sendDate).toLocaleDateString() : null }}
     </template>
+    <template #[`item.payDate`]="{ item }">
+      {{ item.payDate ? new Date(item.payDate).toLocaleDateString() : null }}
+    </template>
+    <template #[`item.plannedPayDate`]="{ item }">
+      {{
+        item.plannedPayDate
+          ? new Date(item.plannedPayDate).toLocaleDateString()
+          : null
+      }}
+    </template>
+    <template #[`item.date`]="{ item }">
+      {{ item.date ? new Date(item.date).toLocaleDateString() : null }}
+    </template>
 
     <template #[`item.total.priceWOVat`]="{ item }">
       {{ moneyFormatter(item.total.priceWOVat) }}

@@ -5,6 +5,15 @@
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
+    <v-select
+      label="Период по"
+      :value="settings.periodBy"
+      :items="periodByItems"
+      outlined
+      dense
+      :style="{ maxWidth: '300px' }"
+      @change="updateSettings($event, 'periodBy')"
+    />
     <DateRangeInput
       :period="settings.period"
       @change="updateSettings($event, 'period')"
@@ -50,10 +59,12 @@
 </template>
 
 <script>
-import store from '@/store'
 import { computed, ref, onMounted } from 'vue'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-import { PAYMENT_INVOICE_TABLE_HEADERS } from '@/shared/constants'
+import {
+  PAYMENT_INVOICE_TABLE_HEADERS,
+  paymentInvoiceStatuses,
+} from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
 export default {
@@ -76,8 +87,26 @@ export default {
     )
 
     const statusItems = computed(() => {
-      return store.getters.docsRegistryStatuses
+      return paymentInvoiceStatuses
     })
+    const periodByItems = [
+      {
+        value: 'date',
+        text: 'Дата акта',
+      },
+      {
+        value: 'sendDate',
+        text: 'Дата отправки',
+      },
+      {
+        value: 'plannedPayDate',
+        text: 'Плановая дата оплаты',
+      },
+      {
+        value: 'payDate',
+        text: 'Дата оплаты',
+      },
+    ]
 
     function updateSettings(value, field) {
       ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
@@ -97,6 +126,7 @@ export default {
       updateHeadersHandler,
       updateSettings,
       PAYMENT_INVOICE_TABLE_HEADERS,
+      periodByItems,
     }
   },
 }

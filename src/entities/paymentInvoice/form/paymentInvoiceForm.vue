@@ -33,30 +33,6 @@
     </buttons-panel>
     <div id="form">
       <div class="fields-row">
-        <v-text-field
-          label="Номер"
-          v-model.trim="state.number"
-          dense
-          outlined
-          :style="{ maxWidth: '200px' }"
-        />
-        <v-text-field
-          label="Дата выставления"
-          v-model="state.sendDate"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-          @paste="pasteDate"
-        />
-        <v-select
-          label="Статус"
-          v-model="state.status"
-          :items="statusItems"
-          dense
-          outlined
-          :style="{ maxWidth: '200px' }"
-        />
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
@@ -68,10 +44,10 @@
           outlined
           :disabled="disabledMainFields"
           :items="clientItems"
-          :style="{ maxWidth: '300px' }"
           @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
           @change="changeClientHandler"
+          :style="{ minWidth: '400px' }"
         />
         <v-autocomplete
           v-model="state.agreement"
@@ -84,10 +60,41 @@
           outlined
           :disabled="!state.client || disabledMainFields"
           :items="agreementItems"
-          :style="{ maxWidth: '300px' }"
           @blur="v$.client.$touch"
           :error-messages="agreementErrorMessages"
+          @change="changeAgreementHandler"
+          :style="{ minWidth: '400px' }"
         />
+
+        <v-select
+          label="Статус"
+          v-model="state.status"
+          :items="statusItems"
+          dense
+          outlined
+          @change="changeStatusHandler"
+        />
+        <v-btn
+          v-if="showSendInvoiceBtn"
+          color="primary"
+          @click="sendInvoiceBtnHandler('sendDate')"
+        >
+          Отправлено клиенту
+        </v-btn>
+        <v-btn
+          v-if="showAcceptedInvoiceBtn"
+          color="primary"
+          @click="acceptInvoiceBtnHandler"
+        >
+          Принято клиентом
+        </v-btn>
+        <v-btn
+          v-if="showPaidInvoiceBtn"
+          color="primary"
+          @click="paidInvoiceBtnHandler"
+        >
+          Оплачено
+        </v-btn>
       </div>
       <div class="fields-row">
         <v-text-field
@@ -95,26 +102,91 @@
           v-model.trim="state.numberByClient"
           dense
           outlined
-          :style="{ maxWidth: '200px' }"
         />
-        <v-text-field
+        <DateTimeInput
           label="Дата реестра клиента"
           v-model="state.dateByClient"
           dense
           outlined
           type="date"
-          :style="{ maxWidth: '250px' }"
-          @paste="pasteDate"
         />
       </div>
-      <v-alert v-if="disabledPickOrders || needSave" type="info" text>
+      <div class="fields-row">
+        <v-text-field
+          label="Номер акта"
+          v-model.trim="state.number"
+          dense
+          outlined
+        />
+        <DateTimeInput
+          label="Дата акта"
+          v-model="state.date"
+          dense
+          outlined
+          type="date"
+        />
+      </div>
+
+      <div class="fields-row">
+        <DateTimeInput
+          readonly
+          label="Дата отправки"
+          v-model="state.sendDate"
+          dense
+          outlined
+          type="date"
+        />
+        <DateTimeInput
+          label="Плановая дата оплаты"
+          v-model="state.plannedPayDate"
+          dense
+          outlined
+          type="date"
+        />
+        <DateTimeInput
+          readonly
+          label="Дата оплаты"
+          v-model="state.payDate"
+          dense
+          outlined
+          type="date"
+        />
+      </div>
+
+      <v-alert v-if="isNeedSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
+      <v-dialog v-model="showDateDialog" persistent max-width="400">
+        <v-card>
+          <v-card-title>{{ dateDialogTitle }}</v-card-title>
+          <v-card-text>
+            <DateTimeInput
+              label="Укажите дату"
+              v-model="dialogFieldData"
+              type="date"
+              outlined
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="cancelDialog">Отмена</v-btn>
+            <v-btn
+              @click="saveDialogDataHandler"
+              color="primary"
+              :disabled="!dialogFieldData"
+            >
+              Сохранить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-btn
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="disabledPickOrders || needSave || invalidForm"
+        :disabled="
+          disabledPickOrders || isNeedSave || invalidForm || !isInProcess
+        "
       >
         Подобрать рейсы
       </v-btn>
@@ -135,16 +207,21 @@ import dayjs from 'dayjs'
 import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
-import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
+import { paymentInvoiceStatuses } from '@/shared/constants'
+import {
+  ButtonsPanel,
+  DownloadDocTemplateMenu,
+  DateTimeInput,
+} from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
   name: 'PaymentInvoiceForm',
   components: {
     ButtonsPanel,
     DownloadDocTemplateMenu,
+    DateTimeInput,
   },
   props: {
     item: Object,
@@ -161,7 +238,7 @@ export default {
   },
   setup(props, ctx) {
     const showPickOrderDialog = ref(true)
-    const { pasteDate } = usePasteDateInput()
+
     const {
       v$,
       state,
@@ -172,10 +249,26 @@ export default {
       changeClientHandler,
       setFormState,
       loaderPath,
+      showSendInvoiceBtn,
+      sendInvoiceBtnHandler,
+      showDateDialog,
+      dateDialogTitle,
+      cancelDialog,
+      dialogFieldData,
+      saveDialogDataHandler,
+      changeStatusHandler,
+      showAcceptedInvoiceBtn,
+      acceptInvoiceBtnHandler,
+      showPaidInvoiceBtn,
+      paidInvoiceBtnHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
-    const { docTemplates, newDocTemplates, newDownloadHandler } =
-      usePaymentInvoiceDocTemplates(state, props)
+    const {
+      docTemplates,
+      newDocTemplates,
+      newDownloadHandler,
+      updatePrintForms,
+    } = usePaymentInvoiceDocTemplates(state, props)
 
     const showLoaderBtn = computed(() => {
       if (Array.isArray(props.item.orders) && props.item.orders.length > 0)
@@ -184,11 +277,14 @@ export default {
         !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
       )
     })
+    const isInProcess = computed(() => state.value.status === 'inProcess')
 
     function cancelHandler() {
       router.go(-1)
     }
-
+    function changeAgreementHandler(val) {
+      if (val) updatePrintForms()
+    }
     function pickOrdersHandler() {
       ctx.emit('pickOrders')
     }
@@ -208,11 +304,21 @@ export default {
     const clientItems = computed(
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
+    const isPaid = computed(() => props.item?.status === 'paid')
+    const hasOrders = computed(() => props.item?.orders?.length > 0)
+    const statusItems = computed(() =>
+      paymentInvoiceStatuses.map((i) => ({
+        ...i,
+        disabled:
+          (isPaid.value && !['accepted'].includes(i.value)) ||
+          (['sended', 'accepted', 'paid'].includes(i.value) && !isPaid.value) ||
+          (i.value === 'prepared' && !hasOrders.value),
+      }))
+    )
 
-    const statusItems = computed(() => store.getters.docsRegistryStatuses)
-
-    const needSave = computed(() => {
+    const isNeedSave = computed(() => {
       return (
+        !props.item?._id ||
         state?.value.client !== props.item.client ||
         state?.value.agreement !== props.item.agreementId
       )
@@ -221,9 +327,7 @@ export default {
     const formState = computed(() => {
       return {
         ...state.value,
-        sendDate: state.value.sendDate
-          ? dayjs(state.value.sendDate).format()
-          : null,
+        date: state.value.date ? dayjs(state.value.date).format() : null,
       }
     })
     watch(
@@ -234,7 +338,6 @@ export default {
       { immediate: true }
     )
     return {
-      pasteDate,
       v$,
       cancelHandler,
       clientItems,
@@ -246,7 +349,7 @@ export default {
       saveHandler,
       agreementErrorMessages,
       pickOrdersHandler,
-      needSave,
+      isNeedSave,
       changeClientHandler,
       showPickOrderDialog,
       downloadHandler,
@@ -256,6 +359,20 @@ export default {
       newDocTemplates,
       newDownloadHandler,
       showLoaderBtn,
+      showSendInvoiceBtn,
+      sendInvoiceBtnHandler,
+      showDateDialog,
+      dateDialogTitle,
+      cancelDialog,
+      dialogFieldData,
+      saveDialogDataHandler,
+      isInProcess,
+      changeStatusHandler,
+      changeAgreementHandler,
+      showAcceptedInvoiceBtn,
+      acceptInvoiceBtnHandler,
+      showPaidInvoiceBtn,
+      paidInvoiceBtnHandler,
     }
   },
   methods: {
@@ -264,7 +381,7 @@ export default {
       this.$router.replace({
         path: this.$route.path + '/' + this.loaderPath,
         query: {
-          invoiceDate: this.state.sendDate,
+          invoiceDate: this.state.date,
           client: this.state.client,
           agreement: this.state.agreement,
         },
@@ -285,6 +402,12 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 30px;
+}
+.fields-row > div {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: content;
+  min-width: 250px;
 }
 </style>

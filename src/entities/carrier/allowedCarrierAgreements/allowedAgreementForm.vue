@@ -40,7 +40,7 @@
 import { ref } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
 import { computed } from 'vue'
-import { required } from 'vuelidate/lib/validators'
+import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { watch } from 'vue'
 
@@ -48,21 +48,21 @@ export default {
   name: 'AllowedAgreementForm',
   components: { DateTimeInput },
   props: {
-    item: Object || null,
+    item: Object,
     title: String,
     agreementItems: Array,
     showRemoveBtn: Boolean,
   },
 
   setup(props, ctx) {
-    const initialState = () => ({
+    const initialState = {
       agreement: null,
       startDate: null,
       endDate: null,
       note: null,
-    })
+    }
 
-    const state = ref({})
+    const state = ref(initialState)
 
     const rules = computed(() => ({
       agreement: { required },
@@ -74,18 +74,28 @@ export default {
     const v$ = useVuelidate(rules, state, { $scope: false })
 
     const invalidForm = computed(() => v$.value.$invalid)
+    const resetState = () => {
+      state.value = { ...initialState }
+    }
+    const cancel = () => {
+      resetState()
+      ctx.emit('cancel')
+    }
+    const save = () => {
+      ctx.emit('save', { ...state.value })
+      resetState()
+    }
 
-    const cancel = () => ctx.emit('cancel')
-    const save = () => ctx.emit('save', state.value)
     const remove = () => {
       if (!props.showRemoveBtn) return
-
       ctx.emit('remove')
     }
+
     watch(
       () => props.item,
-      (val) =>
-        val ? (state.value = { ...val }) : (state.value = initialState()),
+      (val) => {
+        state.value = val ? { ...val } : { ...initialState }
+      },
       { deep: true, immediate: true }
     )
     return { state, save, cancel, remove, invalidForm }

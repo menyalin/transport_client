@@ -19,7 +19,7 @@ import BankAccountInfoForm from './bankAccountInfo/bankAccountInfoForm.vue'
 import CompanyInfoForm from './companyInfo/companyInfoForm.vue'
 import ContactsInfo from './contactsInfo/contactsInfo.vue'
 import VatRateSelect from './vatRateSelect.vue'
-
+import EntityFiles from './entityFiles/index.vue'
 export {
   AppTableColumnSetting,
   ButtonsPanel,
@@ -42,4 +42,5 @@ export {
   CompanyInfoForm,
   ContactsInfo,
   VatRateSelect,
+  EntityFiles,
 }

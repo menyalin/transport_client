@@ -21,25 +21,15 @@
           :priceWithVat="priceWithVat"
           :finalPrices="finalPrices"
           :agreementVatRate="agreement.vatRate"
+          :readonly="readonly"
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          small
-          color="primary"
-          text
-          :disabled="setFinalPricesDisabled"
-          @click="setFinalPrices"
-        >
-          Заполнить итоговые цены
-        </v-btn>
         <v-spacer />
-
         <v-btn @click="cancel"> Отмена </v-btn>
-
         <v-btn
           color="primary"
-          :disabled="saveBtnDisabled || !isChangedFinalPrices"
+          :disabled="saveBtnDisabled || !isChangedFinalPrices || readonly"
           :loading="loading"
           @click="save"
         >
@@ -67,6 +57,7 @@ export default {
     finalPrices: Array,
     prePrices: Array,
     agreement: Object,
+    readonly: Boolean,
   },
   data() {
     return {
@@ -77,9 +68,7 @@ export default {
 
   computed: {
     ...mapGetters(['orderPriceTypes']),
-    setFinalPricesDisabled() {
-      return !this.order.prePrices?.length && !this.order.prices?.length
-    },
+
     saveBtnDisabled() {
       return (
         this.loading ||
@@ -118,18 +107,6 @@ export default {
     },
     cancel() {
       this.$emit('update:dialog', false)
-    },
-    setFinalPrices() {
-      const tmpFinalPrices = []
-      this.orderPriceTypes.forEach((item) => {
-        const priceType = item.value
-        const price = this.order.prices.find((i) => i.type === priceType)
-        const prePrice = this.prePrices.find((i) => i.type === priceType)
-
-        if (price) tmpFinalPrices.push(price)
-        else if (prePrice) tmpFinalPrices.push(prePrice)
-      })
-      this.updateFinalPrices(tmpFinalPrices)
     },
 
     async save() {

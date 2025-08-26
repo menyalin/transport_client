@@ -1,16 +1,12 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
     node: true,
+    es2022: true,
   },
 
   extends: ['eslint:recommended', 'plugin:vue/base'],
   plugins: ['prettier'],
-  parserOptions: {
-    sourceType: 'module',
- 
-  },
 
   rules: {
     'no-console': 'off',

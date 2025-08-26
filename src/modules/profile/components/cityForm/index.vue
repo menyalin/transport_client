@@ -11,7 +11,7 @@
       @submit="submit"
     />
     <v-text-field
-      v-model.trim="$v.form.name.$model"
+      v-model.trim="v$.form.name.$model"
       :error-messages="nameErrors"
       outlined
       label="Название"
@@ -26,7 +26,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
 import { ButtonsPanel } from '@/shared/ui'
 
@@ -48,6 +49,9 @@ export default {
       default: false,
     },
   },
+  setup() {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       initialFormState: null,
@@ -61,7 +65,7 @@ export default {
     ...mapGetters(['myCompanies', 'directoriesProfile']),
     isInvalidForm() {
       if (!this.directoriesProfile) return true
-      return this.$v.$invalid
+      return this.v$.$invalid
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
@@ -71,7 +75,7 @@ export default {
     },
     nameErrors() {
       const errors = []
-      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
+      if (this.v$.form.name.$dirty && this.v$.form.name.$invalid)
         errors.push('Название не может быть пустым')
       return errors
     },

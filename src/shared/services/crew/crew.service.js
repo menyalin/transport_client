@@ -1,6 +1,9 @@
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+import dayjs from 'dayjs'
+import FileSaver from 'file-saver'
+import z from 'zod'
 
 const BASE_PATH = '/crews'
 
@@ -41,15 +44,54 @@ class CrewService {
     }
   }
 
-  async getActualCrewByDriver(driver) {
+  async getCrewByDriverAndDate(params) {
+    const paramsSchema = z.object({
+      driver: z.string(),
+      date: z.string(),
+    })
+    const parsedData = paramsSchema.parse(params)
+
     try {
-      const params = { driver }
-      const response = await api.get(BASE_PATH + '/by_driver', { params })
+      const response = await api.get(BASE_PATH + '/by_driver', {
+        params: parsedData,
+      })
       return response?.data
     } catch (e) {
       store.commit('setError', e.message)
     }
   }
+
+  async getCrewListFile(params) {
+    try {
+      const { data } = await api({
+        url: BASE_PATH + '/download_list',
+        method: 'GET',
+        responseType: 'blob',
+        params: params,
+      })
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      })
+      let periodStr
+      const dateFormat = 'YYYY-MM-DD'
+      const { period } = params
+
+      if (period && period.length === 2)
+        periodStr =
+          dayjs(period[0]).format(dateFormat) +
+          '_' +
+          dayjs(period[1]).format(dateFormat)
+      else periodStr = dayjs().format('YYYY_MM_DD hh.mm.ss')
+
+      const filename = periodStr + '_crews.xlsx'
+      FileSaver.saveAs(blob, filename)
+      return data || null
+    } catch (e) {
+      store.commit('setError', e.message)
+      return null
+    }
+  }
+
   async getActualCrewByTruck(truck) {
     try {
       const params = { truck }
@@ -98,6 +140,20 @@ class CrewService {
   async diagramReport(params) {
     let { data } = await api.get(BASE_PATH + '/reports/crew_diagram', {
       params,
+    })
+    return data
+  }
+
+  async isValidTransportRow(params) {
+    const paramsSchema = z.object({
+      truck: z.string(),
+      trailer: z.string().optional(),
+      startDate: z.string(),
+      endDate: z.string().optional(),
+    })
+    const parsedData = paramsSchema.parse(params)
+    let { data } = await api.get(BASE_PATH + '/is_valid_transport_row', {
+      params: parsedData,
     })
     return data
   }

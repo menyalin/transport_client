@@ -16,6 +16,13 @@ class IncomingInvoiceService {
     return data
   }
 
+  async setPayDate(id, payDate) {
+    let { data } = await api.put(BASE_PATH + '/' + id + '/set_paid', {
+      payDate,
+    })
+    return data
+  }
+
   async getList(params) {
     let { data } = await api.get(BASE_PATH, { params })
     return data
@@ -73,10 +80,8 @@ class IncomingInvoiceService {
     return data
   }
 
-  async getAllowedPrintForms(agreement, client) {
-    const { data } = await api.get(BASE_PATH + '/allowed_print_forms', {
-      params: { agreement, client },
-    })
+  async getAllowedPrintForms() {
+    const { data } = await api.get(BASE_PATH + '/allowed_print_forms')
     return data
   }
 

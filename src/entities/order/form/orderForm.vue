@@ -94,7 +94,9 @@
             :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
             :isValidNum="isValidClientNum(agreement, client, state)"
             :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
+            :orderConfirmed="orderConfirmed"
             :routeDate="routeDate"
+            :agreementDisabled="hasPaymentInvoices"
             @updateAgreement="updateAgreementHandler"
           />
           <CargoParams
@@ -132,6 +134,8 @@
             v-model="confirmedCrew"
             :date="dateForCrew"
             :confirmed="orderConfirmed"
+            :hasIncomingInvoice="hasIncomingInvoice"
+            :executorIdInClientAgreement="agreement ? agreement.executor : null"
             title="Экипаж"
             class="crew"
           />
@@ -159,6 +163,8 @@
               :carrierAgreement="carrierAgreement"
               :analytics="analytics"
               :route="route"
+              :hasPaymentInvoice="hasPaymentInvoices"
+              :hasIncomingInvoice="hasIncomingInvoice"
             >
               <IncomingInvoiceLink
                 v-if="!!order"
@@ -169,6 +175,7 @@
             <PriceDialog
               v-if="showFinalPriceDialog"
               :order="order"
+              :readonly="hasPaymentInvoices"
               :agreement="agreement"
               :prePrices.sync="prePrices"
               :finalPrices="finalPrices"
@@ -190,7 +197,12 @@
               dense
             />
           </div>
-
+          <EntityFiles
+            id="order-files"
+            v-if="order && order._id"
+            :itemId="order._id"
+            docType="order"
+          />
           <order-docs-list-form
             v-if="isShowDocs"
             id="docs"
@@ -206,9 +218,11 @@
             v-if="routeDate"
             id="payment-parts"
             v-model="form.paymentParts"
+            :readonly="readonlyPaymentParts"
             :routeDate="routeDate"
           />
         </div>
+
         <v-btn
           v-if="displayDeleteBtn"
           color="error"
@@ -223,9 +237,9 @@
   </v-container>
 </template>
 <script>
+import { computed } from 'vue'
 import { OrderService, OrderTemplateService } from '@/shared/services'
-import { ButtonsPanel, DownloadDocTemplateMenu } from '@/shared/ui'
-
+import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
@@ -256,6 +270,7 @@ import { CarrierAgreementService } from '@/shared/services/index'
 export default {
   name: 'OrderForm',
   components: {
+    EntityFiles,
     DownloadDocTemplateMenu,
     PaymentInvoiceLinks,
     IncomingInvoiceLink,
@@ -304,7 +319,17 @@ export default {
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
     const { isValidPrices, isValidClientNum, isValidAuctionNum } =
       useOrderValidations()
-
+    const hasIncomingInvoice = computed(() => {
+      return props.order?.incomingInvoice && props.order?.incomingInvoice._id
+    })
+    const hasPaymentInvoices = computed(() => {
+      return (
+        props.order?.paymentInvoices && props.order?.paymentInvoices.length > 0
+      )
+    })
+    const readonlyPaymentParts = computed(() => {
+      return hasPaymentInvoices.value
+    })
     return {
       templates,
       docTemplateIsVisible,
@@ -317,6 +342,9 @@ export default {
       isValidPrices,
       isValidClientNum,
       isValidAuctionNum,
+      hasIncomingInvoice,
+      readonlyPaymentParts,
+      hasPaymentInvoices,
     }
   },
   data() {
@@ -796,7 +824,8 @@ export default {
   align-content: start;
   justify-content: flex-start;
   grid-template-columns: 1fr 4fr;
-  gap: 1px;
+  gap: 15px;
+  align-content: stretch;
 }
 .route-state {
   grid-column: 1/2;
@@ -851,5 +880,10 @@ export default {
 #payment-parts {
   grid-column: 2/4;
   grid-row: 10/10;
+}
+
+#order-files {
+  grid-column: 2/4;
+  grid-row: 11/11;
 }
 </style>

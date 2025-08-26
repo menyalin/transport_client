@@ -7,8 +7,9 @@
         small
         color="primary"
         outlined
+        :loading="loading"
         @click="openDialog"
-        :disabled="loading"
+        :disabled="loading || readonly"
       >
         Добавить часть
       </v-btn>
@@ -17,6 +18,7 @@
     <payment-parts-table
       v-else
       :items="preparedItems"
+      :hideDelete="readonly || loading"
       @deleteRow="deleteRowHandler"
     />
     <payment-part-form-dialog
@@ -105,6 +107,7 @@ export default {
   },
   methods: {
     submitHandler(formState) {
+      if (this.readonly) return
       this.parts.push(formState)
       this.closeDialog()
     },
@@ -117,6 +120,7 @@ export default {
     deleteRowHandler(idx) {
       this.parts.splice(idx, 1)
     },
+
     async getAgreements() {
       try {
         this.loading = true
@@ -127,7 +131,7 @@ export default {
         })
         this.agreements = Object.assign([], res)
       } catch (e) {
-        this.$store.commit('setError', e)
+        console.log('Ошибка получения соглашений для частей рейса: ', e)
       } finally {
         this.loading = false
       }

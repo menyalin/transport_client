@@ -2,52 +2,49 @@
   <form-wrapper
     :loading="loading"
     @delete="deleteHandler"
-    :displayDeleteBtn="
-      !!id && $store.getters.hasPermission('docsRegistry:delete')
-    "
+    :displayDeleteBtn="showDeleteBtn"
   >
     <PartnerForm
-      :partner="item"
+      :item="item"
+      :clientAgreements="allClientAgreements"
       @cancel="cancel"
-      @submit="submit"
-      @updatePartner="updatePartnerHandler"
-    />
-    <IdleTruckNotificationsWidget
-      :partner="item"
-      @updatePartner="updatePartnerHandler"
+      @submit="submit($event, false)"
+      @save="submit($event, true)"
+      @changeNotifications="changeNotificationsHandler"
     />
   </form-wrapper>
 </template>
 <script>
+import { computed, getCurrentInstance } from 'vue'
 import { PartnerService as service } from '@/shared/services'
-
 import { FormWrapper } from '@/shared/ui'
 import { PartnerForm } from '@/entities/partner'
-import { IdleTruckNotifications as IdleTruckNotificationsWidget } from '@/widgets/idleTruckNotifications'
-import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'
+import { useAgreements } from '@/entities/agreement/useAgreements'
 
 export default {
   name: 'PartnerDetails',
   components: {
     PartnerForm,
     FormWrapper,
-    IdleTruckNotificationsWidget,
   },
   props: {
     id: String,
   },
-  setup() {
-    const { updatePrevFormValue } = usePersistedFormState()
-    return {
-      updatePrevFormValue,
-    }
+
+  setup(props) {
+    const { allClientAgreements } = useAgreements()
+    const { proxy } = getCurrentInstance()
+    const showDeleteBtn = computed(
+      () => !!props?.id && proxy.$store.getters.hasPermission('partner:delete')
+    )
+    return { allClientAgreements, showDeleteBtn }
   },
   data() {
     return {
       service: service,
       item: null,
       loading: false,
-      tmpVal: null,
+
       error: {
         message: null,
         show: false,
@@ -61,18 +58,16 @@ export default {
         message: null,
       }
     },
-    async submit(val) {
-      this.tmpVal = val
+    async submit(val, saveOnly) {
       try {
         this.loading = true
-        if (this.id) {
-          this.item = await this.service.updateOne(this.id, val)
-        } else this.item = await this.service.create(val)
-        this.tmpVal = null
-        this.updatePrevFormValue(this.$route, this.item._id)
-        this.$router.go(-1)
+        if (this.id) this.item = await this.service.updateOne(this.id, val)
+        else this.item = await this.service.create(val)
+
+        if (saveOnly && !this.id)
+          this.$router.replace(`/profile/partners/${this.item._id}`)
+        else if (!saveOnly) this.$router.go(-1)
       } catch (e) {
-        this.item = this.tmpVal
         if (e.response.status === 400 || e.response.status === 403) {
           this.error.message = e.response.data
           this.error.show = true
@@ -84,8 +79,11 @@ export default {
     cancel() {
       this.$router.go(-1)
     },
-    async updatePartnerHandler(updatedItem) {
-      this.item = Object.assign({}, updatedItem)
+    changeNotificationsHandler(items) {
+      this.item = {
+        ...this.item,
+        idleTruckNotifications: [...items],
+      }
     },
     async deleteHandler() {
       try {

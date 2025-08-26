@@ -72,10 +72,15 @@
     />
     <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
+    <EntityFiles
+      v-if="item && item._id"
+      :itemId="item._id"
+      docType="tariffContract"
+    />
   </div>
 </template>
 <script>
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, EntityFiles } from '@/shared/ui'
 import { useTariffContractForm } from './useTariffContractForm'
 import TariffListWrapper from './tariffListWrapper'
 import ZoneBaseTariffList from './zonesBaseTariffList.vue'
@@ -92,6 +97,7 @@ export default {
   components: {
     ButtonsPanel,
     TariffListWrapper,
+    EntityFiles,
   },
   props: {
     agreements: Array,

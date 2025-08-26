@@ -82,7 +82,7 @@ export class DataTableRow {
       confirmedCrew: z.object({
         tkName: z.string(),
         truck: z.string(),
-        trailer: z.string().nullable(),
+        trailer: z.string().nullable().optional(),
         driver: z.string(),
       }),
       total: z.object({

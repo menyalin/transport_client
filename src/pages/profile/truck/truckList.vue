@@ -71,6 +71,12 @@
               />
             </div>
           </template>
+          <template #[`item.hasScans`]="{ item }">
+            <v-icon v-if="item.hasScans" small color="green">
+              mdi-check
+            </v-icon>
+            <v-icon v-else small color="red"> mdi-minus </v-icon>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -108,6 +114,7 @@ export default {
       'currentDriver',
       'permanentDriverCount',
       'temporaryDriverCount',
+      'hasScans',
     ],
     crews: [],
     settings: {
@@ -195,6 +202,13 @@ export default {
       {
         value: 'brigadier',
         text: 'Бригадир',
+      },
+      {
+        value: 'hasScans',
+        text: 'Есть сканы',
+        sortable: false,
+        width: '5rem',
+        align: 'center',
       },
     ],
   }),

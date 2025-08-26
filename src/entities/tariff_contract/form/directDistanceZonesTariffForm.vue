@@ -229,4 +229,4 @@ export default {
   align-items: center;
 }
 </style>
-import { numeric } from 'vuelidate/lib/validators'
+import { numeric } from '@vuelidate/validators'

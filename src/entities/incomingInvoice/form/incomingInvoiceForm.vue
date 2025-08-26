@@ -7,33 +7,16 @@
       :disabledSubmit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
-    />
+    >
+      <DownloadDocTemplateMenu
+        v-if="docTemplateIsVisible"
+        :templates="templates"
+        :disabledDownloadFiles="downloadDisabled"
+        @downloadTemplate="downloadTemplateHandler"
+      />
+    </buttons-panel>
     <div id="form">
       <div class="fields-row">
-        <v-text-field
-          label="Номер"
-          v-model.trim="state.number"
-          dense
-          outlined
-          :style="{ maxWidth: '250px' }"
-        />
-        <DateTimeInput
-          label="Дата"
-          v-model="state.date"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-        />
-        <v-select
-          label="Статус"
-          v-model="state.status"
-          :items="incomingInvoiceStatuses"
-          dense
-          outlined
-          :style="{ maxWidth: '200px' }"
-        />
-
         <v-autocomplete
           v-model="state.carrier"
           label="Перевозчик"
@@ -45,7 +28,7 @@
           outlined
           :disabled="disabledCarriers"
           :items="outsourceCarriers"
-          :style="{ maxWidth: '300px' }"
+          :style="{ minWidth: '400px' }"
           @change="carrierChangeHandler"
         />
         <v-autocomplete
@@ -59,10 +42,47 @@
           outlined
           :disabled="disabledAgreement || hasOrders"
           :items="carrierAgreements"
-          :style="{ maxWidth: '300px' }"
+          :style="{ minWidth: '400px' }"
+        />
+        <v-select
+          label="Статус"
+          v-model="state.status"
+          :items="statusItems"
+          dense
+          outlined
+          :disabled="!allowToChangeStatus"
+          @change="statusChangeHandler"
+          :style="{ maxWidth: '200px' }"
         />
       </div>
+
       <div class="fields-row">
+        <v-text-field
+          label="Номер"
+          v-model.trim="state.number"
+          dense
+          outlined
+          :style="{ maxWidth: '250px' }"
+        />
+        <DateTimeInput
+          label="Дата акта"
+          v-model="state.date"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+        />
+      </div>
+
+      <div class="fields-row">
+        <DateTimeInput
+          label="Дата получения акта"
+          v-model="state.receiptDate"
+          dense
+          outlined
+          type="date"
+          :style="{ maxWidth: '250px' }"
+        />
         <DateTimeInput
           label="Плановая дата оплаты"
           v-model="state.plannedPayDate"
@@ -71,8 +91,37 @@
           type="date"
           :style="{ maxWidth: '250px' }"
         />
+        <DateTimeInput
+          v-if="isVisiblePayDateField"
+          label="Факт оплаты"
+          v-model="state.payDate"
+          dense
+          outlined
+          type="date"
+          disabled
+          :style="{ maxWidth: '250px' }"
+        />
+        <v-btn
+          v-if="isVisiblePayInvoiceBtn"
+          color="primary"
+          @click="payInvoiceHandler"
+        >
+          Счет оплачен
+        </v-btn>
       </div>
-
+      <v-dialog v-model="payDateDialog" persistent max-width="400">
+        <v-card>
+          <v-card-title>Дата оплаты</v-card-title>
+          <v-card-text>
+            <DateTimeInput v-model="payDateFieldData" type="date" outlined />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="payDateDialog = false">Отмена</v-btn>
+            <v-btn color="primary" @click="savePayDateHandler">Сохранить</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-alert v-if="disabledPickOrders || needSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
@@ -117,6 +166,7 @@ import {
   DateTimeInput,
 } from '@/shared/ui'
 import { useCarriers } from '@/entities/carrier/useCarriers.js'
+import { usePrintForms } from './usePrintForms.js'
 
 export default {
   name: 'IncomingInvoiceForm',
@@ -133,23 +183,45 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
+    const {
+      downloadDisabled,
+      docTemplateIsVisible,
+      templates,
+      downloadTemplateHandler,
+    } = usePrintForms(props)
+
     const { outsourceCarriers } = useCarriers()
+
+    const statusItems = computed(() => {
+      return incomingInvoiceStatuses.map((i) => ({
+        ...i,
+        disabled: i.value === 'paid',
+      }))
+    })
+
+    const hasOrders = computed(() => {
+      return props.item?.orders?.length > 0
+    })
+
     const {
       state,
       v$,
       submitHandler,
       cancelHandler,
       saveHandler,
-      statusItems,
+      payInvoiceHandler,
       invalidForm,
+      isVisiblePayDateField,
       allowedToChangeOrders,
-    } = useForm(props, ctx)
+      isVisiblePayInvoiceBtn,
+      payDateDialog,
+      savePayDateHandler,
+      payDateFieldData,
+      allowToChangeStatus,
+      statusChangeHandler,
+    } = useForm(props, ctx, hasOrders)
 
     const needSave = computed(() => false) // TODO: fix it
-
-    const hasOrders = computed(() => {
-      return props.item?.orders?.length > 0
-    })
 
     const disabledCarriers = computed(() => {
       return props.item?.orders?.length > 0 && !!state.value.carrier
@@ -192,9 +264,9 @@ export default {
       submitHandler,
       cancelHandler,
       saveHandler,
-      statusItems,
+      payInvoiceHandler,
+      isVisiblePayDateField,
       invalidForm,
-      incomingInvoiceStatuses,
       needSave,
       pickOrdersHandler,
       allowedToChangeOrders,
@@ -204,6 +276,17 @@ export default {
       outsourceCarriers,
       disabledCarriers,
       carrierChangeHandler,
+      downloadDisabled,
+      docTemplateIsVisible,
+      templates,
+      downloadTemplateHandler,
+      isVisiblePayInvoiceBtn,
+      payDateDialog,
+      savePayDateHandler,
+      payDateFieldData,
+      allowToChangeStatus,
+      statusChangeHandler,
+      statusItems,
     }
   },
 }
@@ -219,6 +302,12 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 30px;
+}
+.fields-row > div {
+  flex-grow: 0; /* позволяют растягиваться */
+  flex-shrink: 1; /* позволяют сжиматься */
+  flex-basis: content; /* базовая ширина по содержимому */
+  min-width: 250px;
 }
 </style>

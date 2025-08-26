@@ -3,7 +3,10 @@ import ORDERS_TABLE_HEADERS, {
   PickOrdersForDocsRegistryHeaders,
 } from './ordersTableHeaders'
 import DOCS_REGISTRY_TABLE_HEADERS from './docsRegistryTableHeaders'
-import PAYMENT_INVOICE_TABLE_HEADERS from './paymentInvoicesTableHeaders'
+import {
+  paymentInvoiceStatuses,
+  PAYMENT_INVOICE_TABLE_HEADERS,
+} from './paymentInvoice'
 import { ORDER_DOC_STATUSES } from './orderDocStatuses'
 import { VAT_RATE_ITEMS } from './vatRates'
 
@@ -15,6 +18,7 @@ export {
   PickOrdersForDocsRegistryHeaders,
   DOCS_REGISTRY_TABLE_HEADERS,
   PAYMENT_INVOICE_TABLE_HEADERS,
+  paymentInvoiceStatuses,
   ORDER_DOC_STATUSES,
   VAT_RATE_ITEMS,
 }
