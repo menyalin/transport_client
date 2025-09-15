@@ -3,7 +3,7 @@
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="ordersTableHeaders"
-      @change="updateHeadersHandler"
+      @update:model-value="updateHeadersHandler"
     />
     <date-range-input
       v-model="settings.period"
@@ -17,70 +17,70 @@
       multiple
       label="Статус"
       :items="orderStatuses"
-      dense
+      density="compact"
       :disabled="accountingMode"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '250px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-select
       v-if="accountingMode"
       v-model="settings.invoiceStatus"
       label="Включен в акт"
       :items="invoiceStatusItems"
-      dense
+      density="compact"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '220px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
 
     <order-doc-status-selector
       v-model="settings.docStatuses"
       multiple
-      dense
+      density="compact"
       label="Документы"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '220px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
 
     <v-autocomplete
       v-model="settings.clients"
       label="Клиенты"
       multiple
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       clearable
       auto-select-first
       item-value="_id"
-      item-text="name"
+      item-title="name"
       :items="clientItems"
       hide-details
       hide-append-icon
       :style="{ 'max-width': '220px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.agreements"
       multiple
       label="Соглашения"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       clearable
       auto-select-first
       hide-details
       hide-append-icon
       :items="agreementItems"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       :style="{ 'max-width': '250px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.tkNames"
@@ -89,89 +89,89 @@
       :items="$store.getters.tkNames"
       auto-select-first
       item-value="_id"
-      item-text="name"
-      dense
+      item-title="name"
+      density="compact"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.trucks"
       multiple
-      dense
+      density="compact"
       clearable
       auto-select-first
       :items="trucks"
-      outlined
+      variant="outlined"
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '350px', 'min-width': '280px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.trailer"
-      dense
+      density="compact"
       clearable
       :items="trailers"
-      outlined
+      variant="outlined"
       hide-details
       label="Прицеп"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.driver"
-      dense
+      density="compact"
       auto-select-first
       item-value="_id"
-      item-text="fullName"
+      item-title="fullName"
       clearable
       :items="drivers"
-      outlined
+      variant="outlined"
       hide-details
       label="Водитель"
       :style="{ 'max-width': '300px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.loadingZones"
       multiple
       label="Зона погрузки"
-      dense
+      density="compact"
       auto-select-first
       :items="$store.getters.zones"
       clearable
       item-value="_id"
-      item-text="name"
-      outlined
+      item-title="name"
+      variant="outlined"
       hide-details
       :style="{ 'max-width': '210px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
 
     <v-autocomplete
       v-model="settings.address"
       :items="addressItems"
       label="Адрес"
-      dense
+      density="compact"
       clearable
       auto-select-first
-      outlined
+      variant="outlined"
       hide-details
       :style="{ 'min-width': '550px', 'max-width': '900px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-text-field
-      :value="settings.searchNum"
+      :model-value="settings.searchNum"
       label="Поиск по номеру"
-      dense
+      density="compact"
       hideAppendIcon
-      outlined
+      variant="outlined"
       hide-details
       :style="{ 'max-width': '300px' }"
-      @change="updateSettings($event, 'searchNum')"
+      @update:model-value="updateSettings($event, 'searchNum')"
     />
     <v-switch
       v-if="availableAccountantMode"
@@ -181,8 +181,8 @@
     <v-btn
       v-if="$store.getters.hasPermission('order:groupCreate')"
       color="primary"
-      text
-      small
+      variant="text"
+      size="small"
       to="/orders/group"
     >
       Создать группу рейсов
@@ -190,9 +190,8 @@
     <v-btn
       v-if="$store.getters.hasPermission('order:autoFillRouteDates')"
       color="error"
-      text
-      outlined
-      small
+      variant="text outlined"
+      size="small"
       to="/orders/fill_dates"
     >
       Автозаполнение рейсов
@@ -200,8 +199,8 @@
     <v-btn
       v-if="availableAccountantMode && accountingMode"
       color="primary"
-      text
-      small
+      variant="text"
+      size="small"
       @click="putTableToClipboard"
     >
       Поместить в буфер обмена

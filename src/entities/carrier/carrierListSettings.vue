@@ -1,25 +1,25 @@
 <template>
   <div class="settings-wrapper">
     <v-select
-      :value="settings.type"
+      :model-value="settings.type"
       label="Тип перевозчика"
       :items="carrierTypes"
-      dense
+      density="compact"
       hide-details
       clearable
-      outlined
+      variant="outlined"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'type')"
+      @update:model-value="updateSettings($event, 'type')"
     />
     <v-text-field
-      :value="settings.search"
+      :model-value="settings.search"
       label="Поиск"
-      dense
+      density="compact"
       hide-details
       clearable
-      outlined
+      variant="outlined"
       :style="{ maxWidth: '500px' }"
-      @change="updateSettings($event, 'search')"
+      @update:model-value="updateSettings($event, 'search')"
     />
   </div>
 </template>

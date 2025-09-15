@@ -10,30 +10,29 @@
       <v-text-field
         v-model="settings.search"
         label="Поиск"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         hide-details
       />
     </div>
     <v-data-table
+      v-model:options="settings.listOptions"
       :headers="headers"
       :items="items"
       :loading="loading"
       height="73vh"
-      dense
+      density="compact"
       :search="settings.search"
       fixed-header
       :footer-props="{
         'items-per-page-options': [50, 100, -1],
       }"
-      :options.sync="settings.listOptions"
       @dblclick:row="dblClickRow"
     />
   </entity-list-wrapper>
 </template>
 <script>
-import { ButtonsPanel } from '@/shared/ui'
-import { EntityListWrapper } from '@/shared/ui/index'
+import { ButtonsPanel , EntityListWrapper } from '@/shared/ui'
 import { useListData } from './model'
 
 export default {

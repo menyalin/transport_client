@@ -10,20 +10,20 @@
           <DateTimeInput
             v-model="settings.date"
             label="Отчет на дату"
-            outlined
+            variant="outlined"
             hideDetails
-            dense
+            density="compact"
             type="datetime-local"
             :style="{ 'max-width': '200px' }"
           />
           <v-select
             v-model="settings.tkName"
             :items="$store.getters.tkNames"
-            item-text="name"
+            item-title="name"
             item-value="_id"
             label="ТК"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             clearable
             :style="{ 'max-width': '260px' }"
@@ -36,7 +36,7 @@
           :search="settings.search"
           fixed-header
           height="78vh"
-          dense
+          density="compact"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"

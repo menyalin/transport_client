@@ -3,10 +3,9 @@
     <div class="button-panel">
       <BlockTitle>{{ title }}</BlockTitle>
       <v-btn
-        small
-        text
+        size="small"
         :disabled="readonly || !availibleTypes.length"
-        outlined
+        variant="outlined"
         color="primary"
         @click="addNewItem"
       >
@@ -14,17 +13,17 @@
       </v-btn>
     </div>
     <app-costs-table
-      v-model="items"
+      :value-model="items"
       :readonly="readonly"
-      @editPrice="editPrice"
-      @deletePrice="deletePrice"
       :basePrePrice="basePrePrice"
       :hidePrePrice="hidePrePrice"
       :usePriceWithVat="agreement.usePriceWithVAT ?? false"
+      @edit-price="editPrice"
+      @delete-price="deletePrice"
     />
     <app-dialog-form
+      v-model:dialog="dialog"
       :item="editedItem"
-      :dialog.sync="dialog"
       :allowedCashPayment="!!agreement.cashPayment"
       :allowedVat="agreement.vatRate !== 0"
       :availibleTypes="availibleTypes"
@@ -134,7 +133,7 @@ export default {
     async deletePrice(type) {
       const idx = this.items.findIndex((i) => i.type === type)
       if (idx === -1) return null
-      const res = await this.$confirm('Вы уверены?')
+      const res = await this.$dialog.confirm('Вы уверены?')
       if (res) {
         const tmpArr = this.items.slice()
         tmpArr.splice(idx, 1)

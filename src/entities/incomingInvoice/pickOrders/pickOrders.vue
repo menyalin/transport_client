@@ -1,27 +1,28 @@
 <template>
   <div class="wrapper">
     <div class="btn-wrapper">
-      <v-btn @click="goBack" small>Вернуться в акт</v-btn>
+      <v-btn size="small" @click="goBack">Вернуться в акт</v-btn>
       <v-btn
         :disabled="!selected.length || loading"
-        @click="addOrderHandler"
         color="primary"
-        >Добавить в акт</v-btn
+        @click="addOrderHandler"
       >
+        Добавить в акт
+      </v-btn>
     </div>
     <PickOrdersSettings v-model="settings" @refresh="refresh" />
     <v-data-table
+      v-model="selected"
       :items="items"
       :headers="headers"
-      v-model="selected"
-      dense
+      density="compact"
       item-key="_id"
       item-value="id"
       show-select
       checkbox-color="primary"
-      @dblclick:row="dblClickRow"
       :style="{ width: '100%' }"
       :footer-props="{ 'items-per-page-options': [100, 200] }"
+      @dblclick:row="dblClickRow"
     >
       <template #[`item.docsStatus`]="{ item }">
         <DocStatusCell :status="item.docsStatus" />

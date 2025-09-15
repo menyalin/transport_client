@@ -1,8 +1,8 @@
 <template>
   <v-data-table
+    v-model="selected"
     :items="preparedOrders"
     :headers="headers"
-    v-model="selected"
     multiple
     item-key="order._id"
     checkbox-color="primary"
@@ -11,14 +11,14 @@
     :footerProps="{
       itemsPerPageOptions: [-1, 100],
     }"
-    dense
+    density="compact"
     @dblclick:row="dblclickRowHandler"
   >
-    <template v-slot:top>
+    <template #top>
       <v-btn
         :disabled="!selectedOrderIds.length"
-        small
-        text
+        size="small"
+        variant="text"
         color="error"
         @click="deleteHandler"
       >

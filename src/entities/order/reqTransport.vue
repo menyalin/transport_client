@@ -6,40 +6,40 @@
     <div class="req-transport-block">
       <v-select
         v-if="!hideLiftCapacityField"
-        :value="reqTransport.liftCapacity"
+        :model-value="reqTransport.liftCapacity"
         :items="liftCapacityTypes"
         :error-messages="liftCapacityErrors"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Груз-ть"
-        @change="change($event, 'liftCapacity')"
+        @update:model-value="change($event, 'liftCapacity')"
       />
       <v-select
         v-if="!hideTruckKindField"
-        :value="reqTransport.kind"
+        :model-value="reqTransport.kind"
         :items="truckKinds"
         :error-messages="truckKindErrors"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Вид ТС"
-        @change="change($event, 'kind')"
+        @update:model-value="change($event, 'kind')"
       />
 
       <v-select
         v-if="!hideLoadDirectionField"
-        :value="reqTransport.loadDirection"
+        :model-value="reqTransport.loadDirection"
         :items="loadDirection"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         hide-details
         label="Загрузка"
-        @change="change($event, 'loadDirection')"
+        @update:model-value="change($event, 'loadDirection')"
       />
       <v-checkbox
-        dense
+        v-model="reqTransport.tailLift"
+        density="compact"
         hide-details
         label="Гидроборт"
-        v-model="reqTransport.tailLift"
       />
     </div>
   </div>

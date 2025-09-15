@@ -11,8 +11,8 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn small color="secondary" @click="editHandler">Редактировать</v-btn>
-      <v-btn small color="error" @click="removeHandler">Удалить</v-btn>
+      <v-btn size="small" color="secondary" @click="editHandler">Редактировать</v-btn>
+      <v-btn size="small" color="error" @click="removeHandler">Удалить</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -35,7 +35,7 @@ export default {
         ctx.emit('edit')
       },
       removeHandler: async () => {
-        const res = await proxy.$confirm('Удалить контакт?')
+        const res = await proxy.$dialog.confirm('Удалить контакт?')
         if (res) {
           ctx.emit('remove')
         }

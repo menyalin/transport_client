@@ -8,47 +8,47 @@
         <v-text-field
           v-model="state.title"
           label="Название площадки"
-          dense
-          outlined
-          @blur="v$.title.$touch"
+          density="compact"
+          variant="outlined"
           :errorMessages="titleErrorMessages"
           :style="{ maxWidth: '600px' }"
+          @blur="v$.title.$touch"
         />
         <v-autocomplete
           v-model="state.address"
-          dense
+          density="compact"
           label="Адрес площадки"
           :items="addressItems"
-          outlined
+          variant="outlined"
           auto-select-first
           clearable
-          @blur="v$.address.$touch"
           :errorMessages="addressErrorMessages"
+          @blur="v$.address.$touch"
         />
         <v-autocomplete
           v-model="state.allowedLoadingPoints"
           label="Разрешенные пункты погрузки"
           :items="addressItems"
-          outlined
+          variant="outlined"
           multiple
           auto-select-first
           clearable
-          dense
+          density="compact"
           @blur="v$.allowedLoadingPoints.$touch"
         />
         <v-text-field
           v-model="state.contacts"
           label="Контакты"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           @blur="v$.contacts.$touch"
         />
 
         <v-text-field
           v-model="v$.note.$model"
           label="Примечание"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           @blur="v$.note.$touch"
         />
         <v-checkbox
@@ -64,7 +64,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" @click="submit" :disabled="invalidForm">
+      <v-btn color="primary" :disabled="invalidForm" @click="submit">
         Сохранить
       </v-btn>
     </v-card-actions>

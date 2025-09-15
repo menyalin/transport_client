@@ -14,7 +14,7 @@
         </v-btn>
       </v-col>
       <v-col v-if="showSaveBtn" cols="auto">
-        <v-btn icon @click="$emit('save')" :disabled="disabledSubmit">
+        <v-btn icon :disabled="disabledSubmit" @click="$emit('save')">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
@@ -45,6 +45,7 @@
 </template>
 <script>
 export default {
+  name: 'ButtonsPanel',
   props: {
     submitTitle: { type: String },
     disabledSubmit: { type: Boolean, default: false },

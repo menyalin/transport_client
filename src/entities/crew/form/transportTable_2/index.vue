@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense class="mb-3">
+    <v-table density="compact" class="mb-3">
       <template #default>
         <thead>
           <tr>
@@ -47,8 +47,14 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
-    <v-btn color="primary" @click="addItemHandler" small text :disabled="!allowAddTransportItems">
+    </v-table>
+    <v-btn
+      color="primary"
+      size="small"
+      variant="text"
+      :disabled="!allowAddTransportItems"
+      @click="addItemHandler"
+    >
       Добавить запись
     </v-btn>
     <v-dialog v-model="dialog" max-width="600px" persistent>
@@ -65,7 +71,7 @@
   </div>
 </template>
 <script>
-import TransportForm from './transportForm.vue'
+import TransportForm from './transportForm'
 import { useTransportTableData } from './useTransportTableData'
 
 export default {
@@ -101,7 +107,6 @@ export default {
       dialog,
       editedItem,
       closeDialog,
-
       addItemHandler,
       pushItem,
       editableItemMinDate,

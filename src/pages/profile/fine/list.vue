@@ -12,9 +12,9 @@
           <v-select
             v-model="settings.periodSetting"
             :items="periodSettingItems"
-            dense
+            density="compact"
             hide-details
-            outlined
+            variant="outlined"
             label="Период по"
             :style="{ maxWidth: '300px' }"
           />
@@ -23,9 +23,9 @@
           <v-select
             v-model="settings.status"
             :items="fineStatuses"
-            dense
+            density="compact"
             hide-details
-            outlined
+            variant="outlined"
             label="Статус"
             :style="{ maxWidth: '200px' }"
           />
@@ -35,9 +35,9 @@
             :items="trucks"
             clearable
             auto-select-first
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             :style="{ maxWidth: '250px' }"
           />
           <v-autocomplete
@@ -46,41 +46,41 @@
             :items="drivers"
             auto-select-first
             clearable
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             :style="{ maxWidth: '350px' }"
           />
           <v-select
             v-model.trim="settings.categories"
             :items="$store.getters.fineCategories"
             label="Категория"
-            outlined
+            variant="outlined"
             clearable
             multiple
             hide-details
             singleLine
-            dense
+            density="compact"
           />
           <v-checkbox
             v-model="showOnlySelected"
             label="Только отмеченные"
             hide-details
-            dense
+            density="compact"
           />
           <v-checkbox
             v-model="settings.needToWithheld"
             label="Удержать из ЗП водителя"
             hide-details
-            dense
+            density="compact"
           />
           <v-text-field
             v-model.lazy.trim="settings.searchStr"
             label="Поиск"
-            outlined
+            variant="outlined"
             clearable
             hide-details
-            dense
+            density="compact"
             :style="{ minWidth: '450px', maxWidth: '600px' }"
           />
           <v-autocomplete
@@ -89,33 +89,33 @@
             :items="workerItems"
             auto-select-first
             clearable
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             :loading="workerIsLoading"
             :style="{ maxWidth: '350px' }"
-            :filter="() => true"
-            :search-input="searchString"
-            @update:search-input="handleSearchInputUpdate"
-            @change="handleChange"
+            :customFilter="() => true"
+            :search="searchString"
+            @update:search="handleSearchInputUpdate"
+            @update:model-value="handleChange"
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           v-model="selected"
+          v-model:options="listOptions"
           item-key="_id"
           show-select
           :headers="headers"
           :items="preparedList"
           :loading="loading"
           :singleSelect="false"
-          dense
+          density="compact"
           fixed-header
           height="71vh"
           :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isWithheld`]="{ item }">
@@ -125,7 +125,7 @@
           <template #[`footer.prepend`]>
             <FineListAnalitics :data="analyticData" />
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

@@ -3,8 +3,8 @@
     <v-alert
       v-if="
         confirmationEmailSended ||
-        ($route.query.status === 'need_email_confirmation' &&
-          !user.emailConfirmed)
+          ($route.query.status === 'need_email_confirmation' &&
+            !user.emailConfirmed)
       "
       type="info"
     >
@@ -18,39 +18,31 @@
       Электронная почта подтверждена!
     </v-alert>
     <h3>Настройки профиля пользователя</h3>
-    <v-list dense>
+    <v-list density="compact">
+      <v-list-item> Имя: {{ user.name }} </v-list-item>
       <v-list-item>
-        <v-list-item-content> Имя: {{ user.name }} </v-list-item-content>
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-content>
-          <div class="list-row">
-            <div>email: {{ user.email }}</div>
-            <v-icon class="ml-3" :color="user.emailConfirmed ? 'blue' : 'red'">
-              {{
-                user.emailConfirmed
-                  ? 'mdi-check-decagram'
-                  : 'mdi-alert-decagram'
-              }}
-            </v-icon>
-            <v-btn
-              v-if="!user.emailConfirmed"
-              color="primary"
-              text
-              small
-              outlined
-              class="ml-3"
-              @click="retryConfirmationEmail"
-            >
-              Отправить письмо повторно
-            </v-btn>
-          </div>
-        </v-list-item-content>
+        <div class="list-row">
+          <div>email: {{ user.email }}</div>
+          <v-icon class="ml-3" :color="user.emailConfirmed ? 'blue' : 'red'">
+            {{
+              user.emailConfirmed ? 'mdi-check-decagram' : 'mdi-alert-decagram'
+            }}
+          </v-icon>
+          <v-btn
+            v-if="!user.emailConfirmed"
+            color="primary"
+            size="small"
+            variant="outlined text"
+            class="ml-3"
+            @click="retryConfirmationEmail"
+          >
+            Отправить письмо повторно
+          </v-btn>
+        </div>
       </v-list-item>
     </v-list>
     <v-btn
-      text
-      outlined
+      variant="text outlined"
       color="secondary"
       @click="showChangePasswordDialog = true"
     >

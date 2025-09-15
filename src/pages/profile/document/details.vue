@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <app-document-form
           v-else
           :document="item"
@@ -19,7 +19,7 @@
 </template>
 <script>
 import AppDocumentForm from '@/modules/profile/components/documentForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { LoadSpinner } from '@/shared'
 import { DocumentService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
@@ -27,7 +27,7 @@ export default {
   name: 'DocumentDetails',
   components: {
     AppDocumentForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {

@@ -8,7 +8,7 @@
     />
     <CarrierAgreementListSettings
       v-model="settings"
-      @updateHeaders="changeHeaders"
+      @update-headers="changeHeaders"
     />
 
     <CarrierAgreementListDataTable
@@ -16,16 +16,15 @@
       :loading="loading"
       :headers="headers"
       :totalCount="totalCount"
-      :options.sync="listOptions"
+      :v-model:options="listOptions"
       :settings="settings"
-      @dblClickRow="dblClickRow"
+      @dbl-click-row="dblClickRow"
     />
   </EntityListWrapper>
 </template>
 <script>
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel , EntityListWrapper } from '@/shared/ui'
 import { useListData } from './useList'
-import { EntityListWrapper } from '@/shared/ui/index'
 import {
   CarrierAgreementListSettings,
   CarrierAgreementListDataTable,

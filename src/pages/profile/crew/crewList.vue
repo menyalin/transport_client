@@ -21,47 +21,48 @@
           />
           <v-autocomplete
             v-model="settings.tkName"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             auto-select-first
             label="ТК"
             clearable
             :items="carrierItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
 
           <v-select
             v-model="settings.crewStatus"
-            dense
+            density="compact"
             :items="crewStatuses"
-            outlined
+            variant="outlined"
             hide-details
             label="Состояние экипажа"
           />
           <v-autocomplete
             v-model="settings.driver"
-            dense
+            density="compact"
             clearable
             auto-select-first
             :items="driverItems"
-            outlined
+            variant="outlined"
             hide-details
             label="Водитель"
           />
           <v-autocomplete
             v-model="settings.truck"
-            dense
+            density="compact"
             clearable
             auto-select-first
             :items="truckItems"
-            outlined
+            variant="outlined"
             hide-details
             label="Грузовик"
           />
         </div>
-        <v-data-table
+        <v-data-table-server
+          v-model:options="listOptions"
           :headers="headers"
           :items="items"
           height="72vh"
@@ -71,8 +72,7 @@
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
-          dense
+          density="compact"
           @dblclick:row="dblClickRowHandler"
         >
           <template #[`item.tkName`]="{ item }">
@@ -98,7 +98,7 @@
               {{ isActualCrew(item) ? 'mdi-check' : 'mdi-minus' }}
             </v-icon>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

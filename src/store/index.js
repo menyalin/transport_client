@@ -1,13 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import ProfileModule from '@/store/profile/index.js'
 import AuthModule from '@/modules/auth/auth.store'
 import OrderModule from '@/modules/order/store/index.js'
 import AccountingModule from '@/store/accounting/index.js'
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export default createStore({
   state: () => ({
     tmpCacheMap: new Map(),
     loading: false,

@@ -2,8 +2,8 @@ a
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <TariffContractForm
       :item="item"

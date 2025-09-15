@@ -13,24 +13,24 @@
           <v-text-field
             v-model="settings.search"
             label="Поиск"
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             clearable
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="cities"
           :loading="loading"
           fixed-header
           :search="settings.search"
           height="73vh"
-          dense
+          density="compact"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         />
       </v-col>

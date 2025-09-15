@@ -6,44 +6,44 @@
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
-        :value="state.truck"
+        :model-value="state.truck"
         label="Грузовик"
         :loading="loading"
-        dense
+        density="compact"
         :clearable="!confirmed"
         :readonly="truckReadOnly"
         :items="trucks"
-        outlined
+        variant="outlined"
         hide-details
-        @change="changeTruckHandler"
+        @update:model-value="changeTruckHandler"
       />
       <v-autocomplete
         label="Водитель"
-        :value="state.driver"
+        :model-value="state.driver"
         :items="drivers"
         readonly
         hide-details
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
       />
       <v-autocomplete
         label="Прицеп"
-        :value="state.trailer"
+        :model-value="state.trailer"
         :items="trailers"
         readonly
-        dense
+        density="compact"
         hide-details
-        outlined
+        variant="outlined"
       />
-      <v-btn text small color="primary" @click="copyHandler">
+      <v-btn variant="text" size="small" color="primary" @click="copyHandler">
         Скопировать данные
       </v-btn>
     </div>
     <v-alert
       v-if="crewEmptyError"
       type="error"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       :style="{ maxWidth: '400px' }"
     >
       Экипаж не задан
@@ -61,10 +61,10 @@
       </small>
       <v-btn
         v-if="allowChangeOutsourceAgreement"
-        small
+        size="small"
         color="primary"
+        variant="text"
         @click="changeOutsourceAgreementHandler"
-        text
       >
         Изменить соглашение
       </v-btn>

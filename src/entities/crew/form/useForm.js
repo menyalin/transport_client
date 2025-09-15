@@ -1,10 +1,11 @@
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength } from '@vuelidate/validators'
 import dayjs from 'dayjs'
 import { getCurrentInstance, ref, computed } from 'vue'
+
+import { useCarriers } from '@/entities/carrier/useCarriers'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { CrewService } from '@/shared/services/index'
-import { useVuelidate } from '@vuelidate/core'
-import { useCarriers } from '@/entities/carrier/useCarriers'
-import { required, minLength } from '@vuelidate/validators'
 
 export const useCrewForm = (props, ctx) => {
   const loading = ref(false)
@@ -185,7 +186,7 @@ export const useCrewForm = (props, ctx) => {
   }
 
   const deleteCrewHandler = () => {
-    const res = proxy.$confirm('Вы уверены?')
+    const res = proxy.$dialog.confirm('Вы уверены?')
     if (res) {
       ctx.emit('delete')
     }

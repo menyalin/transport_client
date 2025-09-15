@@ -10,15 +10,15 @@
     <IncomingInvoiceListSettings
       v-model="settings"
       :agreementItems="allCarrierAgreements"
-      @updateHeaders="changeHeaders"
+      @update-headers="changeHeaders"
     />
     <IncomingInvoiceDataTable
       v-model="settings"
+      v-model:listOptions="listOptions"
       :items="items"
       :totalCount="totalCount"
       :headers="headers"
       :analyticsData="analyticsData"
-      :listOptions.sync="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>

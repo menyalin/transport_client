@@ -10,14 +10,14 @@
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :search="settings.search"
           :headers="filteredHeaders"
           :items="prepareAddresses"
           :loading="loading"
           fixed-header
-          :options.sync="settings.listOptions"
           height="72vh"
-          dense
+          density="compact"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -85,8 +85,8 @@
               />
               <v-text-field
                 v-model="settings.search"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 hide-details
                 clearable
                 label="Быстрый поиск"

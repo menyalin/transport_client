@@ -6,18 +6,17 @@
         v-model="menu"
         :close-on-content-click="false"
         transition="scale-transition"
-        offset-y
         max-width="290px"
         min-width="auto"
       >
-        <template #activator="{ on, attrs }">
+        <template #activator="{ props }">
           <span class="date-text" v-bind="attrs" v-on="on">
             c:
             {{
               tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-'
             }}
           </span>
-          <span class="date-text" v-bind="attrs" v-on="on">
+          <span class="date-text" v-bind="props">
             по:
             {{
               tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-'
@@ -27,10 +26,9 @@
         <v-date-picker
           v-model="tmpPeriod"
           no-title
-          range
           :first-day-of-week="1"
           color="primary"
-          @change="changeDate"
+          @update:model-value="changeDate"
         />
       </v-menu>
     </div>

@@ -1,16 +1,14 @@
 <template>
-  <div>
-    <v-snackbar :value="localError" vertical :timeout="timeout">
-      <div class="text-body-1">
-        {{ error }}
-      </div>
-      <template #action="{ attrs }">
-        <v-btn color="accent" text v-bind="attrs" @click="close">
-          Закрыть
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </div>
+  <v-snackbar v-model="localError" vertical :timeout="timeout">
+    <div class="text-body-1">
+      {{ error }}
+    </div>
+    <template #actions="props">
+      <v-btn v-bind="props" color="accent" variant="text" @click="close">
+        Закрыть
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 <script>
 import { mapGetters } from 'vuex'

@@ -14,17 +14,22 @@
       label="Грузовик"
       :items="truckItems"
       auto-select-first
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
     <v-select
       v-model="state.type"
       label="Тип простоя"
       :items="downtimeTypes"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
-    <v-text-field v-model.trim="state.title" outlined label="Заголовок" dense />
+    <v-text-field
+      v-model.trim="state.title"
+      variant="outlined"
+      label="Заголовок"
+      density="compact"
+    />
 
     <AutoCompleteWithActions
       v-if="state.type === 'repair'"
@@ -33,17 +38,17 @@
       label="Партнер"
       :hint="partnerContactsHint"
       :persistentHint="!!partnerContactsHint"
-      outlined
+      variant="outlined"
       @create="createPartnerHandler"
       @edit="updatePartnerHandler"
     />
 
     <AutoCompleteWithActions
       v-if="state.type === 'repair'"
-      :items="serviceAdressItems"
       v-model="state.address"
+      :items="serviceAdressItems"
       label="Адрес сервиса"
-      outlined
+      variant="outlined"
       @create="createAddressHandler"
       @edit="updateAddressHandler"
     />
@@ -53,8 +58,8 @@
         v-model="state.startPositionDate"
         label="Дата начала"
         type="datetime-local"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ 'max-width': '200px' }"
       />
       <DateTimeInput
@@ -62,24 +67,24 @@
         label="Дата завешения"
         type="datetime-local"
         :minDate="state.startPositionDate"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ 'max-width': '200px' }"
       />
     </div>
     <v-text-field
       v-model="state.note"
       label="Примечание"
-      outlined
+      variant="outlined"
       hide-details
-      dense
+      density="compact"
     />
     <v-checkbox
       v-model="state.inOrderTime"
       label="Разрешить пересечение с рейсом"
     />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

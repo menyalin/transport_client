@@ -1,15 +1,15 @@
 <template>
   <v-data-table
+    v-model:options="options"
     :items="preparedItems"
     :headers="tableHeaders"
-    dense
+    density="compact"
     fixed-header
-    :options.sync="options"
     height="75vh"
     :loading="loading"
     :items-per-page="-1"
-    @dblclick:row="dblClickRow"
     :style="{ boxSizing: 'border-box' }"
+    @dblclick:row="dblClickRow"
   >
     <template
       v-if="preparedItems.length"

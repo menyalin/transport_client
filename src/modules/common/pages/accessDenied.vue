@@ -36,7 +36,7 @@ export default {
       this.intervalHandler()
     }, 1000)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {

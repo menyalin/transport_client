@@ -1,10 +1,10 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :headers="headers"
     :items="items"
     :loading="loading"
     height="70vh"
-    dense
+    density="compact"
     fixed-header
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
@@ -22,7 +22,7 @@
         {{ item.note }}
       </span>
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script>

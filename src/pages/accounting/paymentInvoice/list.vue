@@ -15,16 +15,16 @@
 
     <payment-invoices-list-settings
       v-model="settings"
-      @updateHeaders="changeHeaders"
+      @update-headers="changeHeaders"
     />
     <payment-invoice-data-table
       v-model="settings"
+      v-model:listOptions="listOptions"
       :items="items"
       :totalCount="totalCount"
       :routesCount="routesCount"
       :total="total"
       :headers="headers"
-      :listOptions.sync="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>

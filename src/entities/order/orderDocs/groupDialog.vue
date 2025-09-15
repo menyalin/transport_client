@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" @input="closeDialog">
+  <v-dialog :model-value="dialog" max-width="800" @update:model-value="closeDialog">
     <v-card>
       <v-card-title class="text-h5"> Добавить группу документов </v-card-title>
 
@@ -13,17 +13,17 @@
             :value="item.value"
             color="primary"
             hide-details
-            dense
-            @change="changeDocTypesHandler"
+            density="compact"
+            @update:model-value="changeDocTypesHandler"
           />
 
           <v-text-field
-            v-model="numberStr"
             ref="numberStrNode"
+            v-model="numberStr"
             label="Номера документов"
             hint="Номера документов через запятую"
             class="mt-5"
-            outlined
+            variant="outlined"
             autofocus
           />
           <v-radio-group v-model="docStatus" label="Статус документов">
@@ -36,8 +36,8 @@
             />
           </v-radio-group>
           <v-checkbox
-            label="Включать документы в опись"
             v-model="addToRegistry"
+            label="Включать документы в опись"
             color="primary"
           />
           <span>Будет создано документов: </span>{{ docCount }}
@@ -45,8 +45,8 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" text :disabled="!docCount" type="submit">
+          <v-btn color="primary" variant="text" @click="closeDialog"> Отмена </v-btn>
+          <v-btn color="primary" variant="text" :disabled="!docCount" type="submit">
             Добавить
           </v-btn>
         </v-card-actions>

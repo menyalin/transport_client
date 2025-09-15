@@ -82,7 +82,7 @@ export const useTransportTableData = (props, ctx) => {
   }
 
   const popItem = async () => {
-    const res = await proxy.$confirm('Вы уверены?')
+    const res = await proxy.$dialog.confirm('Вы уверены?')
     if (!res) return
 
     const updatedItems = [...props.items]

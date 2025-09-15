@@ -5,9 +5,9 @@
       <v-autocomplete
         v-model="state.agreement"
         label="Соглашение"
-        dense
+        density="compact"
         :items="agreementItems"
-        item-text="name"
+        item-title="name"
         item-value="_id"
         no-data-text="Соглашения отсутствуют"
       />
@@ -27,22 +27,20 @@
       <v-text-field v-model="state.note" label="Примечание" hide-details />
     </v-card-text>
     <v-card-actions>
-      <v-btn v-if="showRemoveBtn" @click="remove" color="error">Удалить</v-btn>
+      <v-btn v-if="showRemoveBtn" color="error" @click="remove">Удалить</v-btn>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" @click="save" :disabled="invalidForm">
+      <v-btn color="primary" :disabled="invalidForm" @click="save">
         Сохранить
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
-import { computed } from 'vue'
 import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
-import { watch } from 'vue'
 
 export default {
   name: 'AllowedAgreementForm',

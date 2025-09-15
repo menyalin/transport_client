@@ -1,12 +1,12 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="items"
     :headers="headers"
     item-key="_id"
     :loading="loading"
     :serverItemsLength="totalCount"
     :options="options"
-    dense
+    density="compact"
     height="70vh"
     :footerProps="{
       'items-per-page-options': [50, 100, 200],

@@ -2,8 +2,8 @@
   <v-select
     v-bind="$attrs"
     :items="items"
-    :value="value"
-    @change="$emit('change', $event)"
+    :model-value="value"
+    @update:model-value="$emit('change', $event)"
   />
 </template>
 <script>

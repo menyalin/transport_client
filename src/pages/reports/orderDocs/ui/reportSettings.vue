@@ -3,116 +3,116 @@
     <app-table-column-setting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
-      @change="updateActiveHeaders"
+      @update:model-value="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
+    <refresh-btn @click="$emit('refresh')" />
     <v-text-field
-      :value="settings.date"
+      :model-value="settings.date"
       type="date"
       label="Дата (конец периода)"
-      dense
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'date')"
+      @update:model-value="updateSettings($event, 'date')"
     />
 
     <v-select
-      :value="settings.state"
+      :model-value="settings.state"
       label="Документы"
-      dense
+      density="compact"
       clearable
       multiple
-      outlined
+      variant="outlined"
       :items="stateItems"
       hide-details
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'state')"
+      @update:model-value="updateSettings($event, 'state')"
     />
 
     <v-select
-      :value="settings.tks"
-      item-text="name"
+      :model-value="settings.tks"
+      item-title="name"
       item-value="_id"
       label="ТК"
-      dense
+      density="compact"
       clearable
       multiple
-      outlined
+      variant="outlined"
       :items="tkNameItems"
       hide-details
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'tks')"
+      @update:model-value="updateSettings($event, 'tks')"
     />
 
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
+      :model-value="settings.clients"
+      item-title="name"
       item-value="_id"
       label="Клиенты"
-      dense
+      density="compact"
       clearable
       auto-select-first
       multiple
-      outlined
+      variant="outlined"
       :items="clientItems"
       hide-details
       :style="{ maxWidth: '280px' }"
-      @change="updateSettings($event, 'clients')"
+      @update:model-value="updateSettings($event, 'clients')"
     />
 
     <v-autocomplete
-      :value="settings.driver"
-      item-text="fullName"
+      :model-value="settings.driver"
+      item-title="fullName"
       item-value="_id"
       label="Водитель"
-      dense
+      density="compact"
       clearable
       auto-select-first
-      outlined
+      variant="outlined"
       :items="driverItems"
       hide-details
       :style="{ maxWidth: '320px' }"
-      @change="updateSettings($event, 'driver')"
+      @update:model-value="updateSettings($event, 'driver')"
     />
     <v-autocomplete
-      :value="settings.truck"
-      item-text="regNum"
+      :model-value="settings.truck"
+      item-title="regNum"
       item-value="_id"
       label="Грузовик"
-      dense
+      density="compact"
       auto-select-first
       clearable
-      outlined
+      variant="outlined"
       :items="truckItems"
       hide-details
       :style="{ maxWidth: '320px' }"
-      @change="updateSettings($event, 'truck')"
+      @update:model-value="updateSettings($event, 'truck')"
     />
     <v-select
-      :value="settings.getDocsDays"
+      :model-value="settings.getDocsDays"
       label="Сдача документов, дней"
-      dense
+      density="compact"
       clearable
       multiple
-      outlined
+      variant="outlined"
       :items="daysIntervalItems"
       hide-details
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'getDocsDays')"
+      @update:model-value="updateSettings($event, 'getDocsDays')"
     />
     <v-select
-      :value="settings.reviewDocsDays"
+      :model-value="settings.reviewDocsDays"
       label="Проверка документов, дней"
-      dense
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       multiple
       :items="daysIntervalItems"
       hide-details
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'reviewDocsDays')"
+      @update:model-value="updateSettings($event, 'reviewDocsDays')"
     />
   </div>
 </template>
@@ -120,8 +120,7 @@
 <script>
 import store from '@/store'
 import { watch, ref, computed } from 'vue'
-import { RefreshBtn } from '@/shared/ui'
-import { AppTableColumnSetting } from '@/shared/ui'
+import { RefreshBtn, AppTableColumnSetting } from '@/shared/ui'
 
 export default {
   name: 'ReportSettings',
@@ -142,7 +141,7 @@ export default {
   },
   setup(props, ctx) {
     const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
+
     const activeHeaders = ref([])
 
     function updateSettings(value, field) {
@@ -195,7 +194,6 @@ export default {
       updateActiveHeaders,
       updateSettings,
       listSettingsName,
-      allHeaders,
       activeHeaders,
       tkNameItems,
       clientItems,

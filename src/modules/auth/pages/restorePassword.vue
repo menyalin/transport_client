@@ -21,7 +21,7 @@
                 type="password"
                 autocomplete="off"
                 :error-messages="passwordErrors"
-                @input="v$.form.password.$touch()"
+                @update:model-value="v$.form.password.$touch()"
                 @blur="v$.form.password.$touch()"
               />
               <v-text-field
@@ -32,7 +32,7 @@
                 type="password"
                 autocomplete="off"
                 :error-messages="confirmPasswordErrors"
-                @input="v$.form.confirmPassword.$touch()"
+                @update:model-value="v$.form.confirmPassword.$touch()"
                 @blur="v$.form.confirmPassword.$touch()"
               />
             </v-card-text>

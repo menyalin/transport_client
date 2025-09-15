@@ -4,9 +4,8 @@
       <BlockTitle>Доплата водителю</BlockTitle>
       <v-btn
         v-if="!showDataRow && hasWritePermission"
-        small
-        text
-        outlined
+        size="small"
+        variant="text outlined"
         color="primary"
         @click="add"
       >
@@ -20,10 +19,10 @@
       </div>
       <div>
         <i>Отв:</i>
-        <app-worker-autocomplete labelOnly v-model="value.worker" />
+        <app-worker-autocomplete v-model="value.worker" labelOnly />
       </div>
-      <v-btn v-if="hasWritePermission" icon small @click="deletePayment">
-        <v-icon color="red" small>mdi-delete</v-icon>
+      <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment">
+        <v-icon color="red" size="small">mdi-delete</v-icon>
       </v-btn>
     </div>
     <v-dialog v-model="dialog" max-width="800px">
@@ -31,30 +30,30 @@
         <v-card-title>Доплата водителю </v-card-title>
         <v-card-text>
           <v-text-field
-            type="number"
             v-model.number="tmpVal.sum"
-            outlined
-            dense
+            type="number"
+            variant="outlined"
+            density="compact"
             label="Сумма"
             :style="{ maxWidth: '200px' }"
           />
           <v-text-field
             v-model.trim="tmpVal.note"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             label="Примечание"
           />
           <app-worker-autocomplete
             v-model="tmpVal.worker"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             label="Ответственный"
           />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn @click="closeDialog">Отмена</v-btn>
-          <v-btn @click="setPayment" :disabled="!isValidForm">Добавить</v-btn>
+          <v-btn :disabled="!isValidForm" @click="setPayment">Добавить</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -2,26 +2,17 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          type="error"
-          dismissible
-          v-model="showError"
-          transition="scale-transition"
-        >
+        <v-alert type="error" closable :value-model="showError">
           {{ errorMessage }}
         </v-alert>
-        <v-alert
-          type="error"
-          v-if="itemIsMissing && !loading"
-          transition="scale-transition"
-        >
+        <v-alert v-if="itemIsMissing && !loading" type="error">
           Запись не найдена
         </v-alert>
         <load-spinner v-if="loading" />
         <div v-else>
           <slot />
           <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
-            <v-icon left dark> mdi-delete </v-icon>
+            <v-icon start> mdi-delete </v-icon>
             Удалить
           </v-btn>
         </div>
@@ -56,7 +47,7 @@ export default {
   },
   methods: {
     async deleteHandler() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы действительно хотите удалить запись? '
       )
       if (res) {

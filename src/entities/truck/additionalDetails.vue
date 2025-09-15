@@ -5,98 +5,98 @@
       <div id="platon">
         <v-text-field
           label="Платон №"
-          :value="params.platonNumber"
-          outlined
-          dense
+          :model-value="params.platonNumber"
+          variant="outlined"
+          density="compact"
           hide-details
-          @change="change($event, 'platonNumber')"
+          @update:model-value="change($event, 'platonNumber')"
         />
         <DateTimeInput
           label="Дата замены"
           :value="params.platonDate"
           hide-prepend-icon
           hide-time-input
-          @change="change($event, 'platonDate')"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
+          @update:model-value="change($event, 'platonDate')"
         />
       </div>
       <div id="tachograph">
         <v-text-field
           label="Тахограф №"
-          :value="params.tachographNumber"
-          outlined
-          dense
+          :model-value="params.tachographNumber"
+          variant="outlined"
+          density="compact"
           hide-details
-          @change="change($event, 'tachographNumber')"
+          @update:model-value="change($event, 'tachographNumber')"
         />
         <DateTimeInput
           label="Дата сделующей калибровки"
           :value="params.tachographExpDate"
           hide-prepend-icon
           hide-time-input
-          @change="change($event, 'tachographExpDate')"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
+          @update:model-value="change($event, 'tachographExpDate')"
         />
         <v-text-field
           label="Примечание (тахограф)"
-          :value="params.tachographNote"
-          outlined
-          dense
+          :model-value="params.tachographNote"
+          variant="outlined"
+          density="compact"
           hide-details
-          @change="change($event, 'tachographNote')"
+          @update:model-value="change($event, 'tachographNote')"
         />
       </div>
 
       <div id="transponder">
         <v-text-field
           label="Транспондер, №"
-          :value="params.transponderNumber"
-          outlined
-          dense
+          :model-value="params.transponderNumber"
+          variant="outlined"
+          density="compact"
           hide-details
-          @change="change($event, 'transponderNumber')"
+          @update:model-value="change($event, 'transponderNumber')"
         />
         <DateTimeInput
           label="Дата выдачи"
           :value="params.transponderDate"
           hide-prepend-icon
           hide-time-input
-          @change="change($event, 'transponderDate')"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
+          @update:model-value="change($event, 'transponderDate')"
         />
       </div>
       <div id="fuel-card">
         <v-text-field
           label="Топливная карта"
-          :value="params.fuelCardNumber"
-          outlined
-          dense
+          :model-value="params.fuelCardNumber"
+          variant="outlined"
+          density="compact"
           hide-details
-          @change="change($event, 'fuelCardNumber')"
+          @update:model-value="change($event, 'fuelCardNumber')"
         />
         <DateTimeInput
           label="Дата выдачи карты"
           :value="params.fuelCardDate"
           hide-prepend-icon
           hide-time-input
-          @change="change($event, 'fuelCardDate')"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
+          @update:model-value="change($event, 'fuelCardDate')"
         />
         <v-text-field
           label="Примечание (Топливная карта)"
-          :value="params.fuelCardNote"
-          outlined
-          dense
+          :model-value="params.fuelCardNote"
+          variant="outlined"
+          density="compact"
           hide-details
-          @change="change($event, 'fuelCardNote')"
+          @update:model-value="change($event, 'fuelCardNote')"
         />
       </div>
     </div>

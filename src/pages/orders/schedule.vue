@@ -1,9 +1,9 @@
 <template>
   <ScheduleTable
     :rows="scheduleRows"
-    @startDragOrder="startDragOrder"
-    @endDragOrder="endDragOrder"
-    @updateOrder="updateOrderHandler"
+    @start-drag-order="startDragOrder"
+    @end-drag-order="endDragOrder"
+    @update-order="updateOrderHandler"
   />
 </template>
 <script>
@@ -12,7 +12,7 @@ import { OrderService as service } from '@/shared/services'
 import periodDifferernce from '../../modules/order/utils/periodDifference'
 
 export default {
-  name: 'Schedule',
+  name: 'OrdersSchedule',
   components: {
     ScheduleTable,
   },

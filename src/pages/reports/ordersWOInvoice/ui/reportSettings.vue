@@ -3,47 +3,47 @@
     <app-table-column-setting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
-      @change="updateActiveHeaders"
+      @update:model-value="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
+    <refresh-btn @click="$emit('refresh')" />
     <DateRangeInput
       :period="settings.period"
-      @change="updateSettings($event, 'period')"
+      @update:model-value="updateSettings($event, 'period')"
     />
 
     <v-select
-      :value="settings.tks"
-      item-text="name"
+      :model-value="settings.tks"
+      item-title="name"
       item-value="_id"
       label="ТК"
-      dense
+      density="compact"
       clearable
       chips
-      deletable-chips
+      closable-chips
       multiple
-      outlined
+      variant="outlined"
       :items="tkNameItems"
       hide-details
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'tks')"
+      @update:model-value="updateSettings($event, 'tks')"
     />
 
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
+      :model-value="settings.agreements"
+      item-title="name"
       item-value="_id"
       label="Соглашения"
-      dense
+      density="compact"
       clearable
       auto-select-first
       multiple
-      outlined
+      variant="outlined"
       chips
-      deletable-chips
+      closable-chips
       :items="agreementItems"
       hide-details
       :style="{ maxWidth: '500px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
   </div>
 </template>
@@ -74,7 +74,7 @@ export default {
   },
   setup(props, ctx) {
     const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
+
     const activeHeaders = ref([])
 
     function updateSettings(value, field) {
@@ -96,7 +96,7 @@ export default {
       updateActiveHeaders,
       updateSettings,
       listSettingsName,
-      allHeaders,
+
       activeHeaders,
       tkNameItems,
     }

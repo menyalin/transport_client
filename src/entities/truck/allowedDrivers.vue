@@ -10,7 +10,8 @@
       </div>
       <v-list v-else>
         <v-list-item v-for="item in driverList" :key="item.driver">
-          <v-list-item-avatar
+          <v-list-item
+            avatar
             :style="{ cursor: 'pointer' }"
             @click="changeDriverState(item)"
           >
@@ -18,18 +19,22 @@
               mdi-account-lock-outline
             </v-icon>
             <v-icon v-else color="orange"> mdi-account-clock-outline </v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{
-                driversMap.has(item.driver)
-                  ? driversMap.get(item.driver).fullName
-                  : 'запись удалена'
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item-title>
+            {{
+              driversMap.has(item.driver)
+                ? driversMap.get(item.driver).fullName
+                : 'запись удалена'
+            }}
+          </v-list-item-title>
+
           <v-list-item-action>
-            <v-icon small color="error" @click="deleteDriver(item.driver)">
+            <v-icon
+              size="small"
+              color="error"
+              @click="deleteDriver(item.driver)"
+            >
               mdi-delete
             </v-icon>
           </v-list-item-action>
@@ -38,11 +43,17 @@
       <v-autocomplete
         v-if="!isVisibleBtn"
         :items="driversForSelect"
-        item-text="fullName"
+        item-title="fullName"
         item-value="_id"
-        @change="changeDriver"
+        @update:model-value="changeDriver"
       />
-      <v-btn v-else small text color="primary" @click="addDriver">
+      <v-btn
+        v-else
+        size="small"
+        variant="text"
+        color="primary"
+        @click="addDriver"
+      >
         Добавить водителя
       </v-btn>
     </div>
@@ -95,7 +106,7 @@ export default {
       this.isVisibleBtn = false
     },
     async changeDriverState(driver) {
-      const res = await this.$confirm('Вы уверены? ')
+      const res = await this.$dialog.confirm('Вы уверены? ')
       if (res) driver.isPermanent = !driver.isPermanent
     },
     changeDriver(val) {
@@ -110,7 +121,7 @@ export default {
     },
     async deleteDriver(id) {
       if (!id) return null
-      const res = await this.$confirm('Вы уверены? ')
+      const res = await this.$dialog.confirm('Вы уверены? ')
       if (!res) return null
       this.selectedDrivers = this.selectedDrivers.filter(
         (item) => item.driver !== id

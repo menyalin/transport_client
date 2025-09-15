@@ -1,15 +1,15 @@
 <!-- eslint-disable vue/html-self-closing -->
 <template>
-  <div class="wrapper" v-if="total">
+  <div v-if="total" class="wrapper">
     <div>
       <b>Рейсы: {{ total }}</b>
     </div>
     <div>
-      <b v-if="accepted" class="green--text">
+      <b v-if="accepted" class="text-green">
         Приняты: {{ accepted }} <br />
       </b>
 
-      <b v-if="needFix" class="orange--text">
+      <b v-if="needFix" class="text-orange">
         На исправлении: {{ needFix }}<br />
       </b>
 
@@ -18,7 +18,7 @@
         <br />
       </b>
 
-      <b v-if="missing" class="red--text">
+      <b v-if="missing" class="text-red">
         Не получены: {{ missing }}
         <br />
       </b>

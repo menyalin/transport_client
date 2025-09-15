@@ -1,9 +1,8 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib/framework'
+import 'vuetify/styles'
 import ru from 'vuetify/lib/locale/ru'
-Vue.use(Vuetify)
+import { createVuetify } from 'vuetify'
 
-export default new Vuetify({
+const vuetify = createVuetify({
   lang: {
     locales: { ru },
     current: 'ru',
@@ -26,3 +25,5 @@ export default new Vuetify({
     },
   },
 })
+
+export default vuetify

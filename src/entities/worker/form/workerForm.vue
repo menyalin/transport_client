@@ -4,8 +4,8 @@
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('worker:write') ||
-        isInvalidForm ||
-        !formChanged
+          isInvalidForm ||
+          !formChanged
       "
       class="mb-4"
       @cancel="cancel"
@@ -16,25 +16,25 @@
       <v-text-field
         v-model.trim="v$.form.name.$model"
         :error-messages="nameErrors"
-        outlined
+        variant="outlined"
         label="Сокращенное имя"
-        dense
+        density="compact"
         :style="{ 'max-width': '330px' }"
       />
       <v-text-field
         v-model.trim="v$.form.fullName.$model"
         :error-messages="fullNameErrors"
-        outlined
+        variant="outlined"
         label="Полное имя"
-        dense
+        density="compact"
       />
     </div>
     <div class="input-row">
       <v-text-field
         v-model="form.employmentDate"
         type="date"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         label="Дата приема на работу"
         :style="{ 'max-width': '260px' }"
       />
@@ -42,8 +42,8 @@
       <v-text-field
         v-model="form.dismissalDate"
         type="date"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         label="Дата увольнения"
         :style="{ 'max-width': '260px' }"
       />
@@ -51,18 +51,23 @@
 
     <v-text-field
       v-model.trim="v$.form.position.$model"
-      outlined
+      variant="outlined"
       label="Должность"
-      dense
+      density="compact"
     />
 
-    <v-text-field v-model.trim="form.note" outlined label="Примечание" dense />
+    <v-text-field
+      v-model.trim="form.note"
+      variant="outlined"
+      label="Примечание"
+      density="compact"
+    />
 
     <div v-if="!item._id" class="text-caption mx-3">
       *Для сопоставления сотрудника с пользователем, запись необходимо сохранить
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

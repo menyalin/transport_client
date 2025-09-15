@@ -3,28 +3,28 @@
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="carrierAgreementListSettings"
-      @change="updateHeadersHandler"
+      @update:model-value="updateHeadersHandler"
     />
 
     <v-text-field
-      :value="settings.search"
+      :model-value="settings.search"
       label="Поиск"
-      dense
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'search')"
+      @update:model-value="updateSettings($event, 'search')"
     />
   </div>
 </template>
 <script>
 import allHeaders from './allHeaders.js'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { AppTableColumnSetting } from '@/shared/ui'
 
 export default {
   name: 'IncomingInvoiceListSettings',
-  components: { AppTableColumnSetting, DateRangeInput },
+  components: { AppTableColumnSetting },
   model: {
     prop: 'settings',
     event: 'change',

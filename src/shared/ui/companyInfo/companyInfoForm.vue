@@ -2,63 +2,71 @@
   <div class="wrapper">
     <div v-if="showTitle" class="text-h6">Общая информация о компании:</div>
     <v-select
+      v-model="state.legalForm"
       label="Тип"
       :items="legalFormItems"
-      v-model="state.legalForm"
-      dense
+      density="compact"
       clearable
     />
-    <v-text-field label="Полное наименование" v-model="state.fullName" dense />
+    <v-text-field
+      v-model="state.fullName"
+      label="Полное наименование"
+      density="compact"
+    />
     <v-textarea
-      label="Почтовый адрес"
       v-model="state.postalAddress"
-      dense
-      outlined
+      label="Почтовый адрес"
+      density="compact"
+      variant="outlined"
       rows="4"
     />
     <v-textarea
-      label="Юр. адрес"
       v-model="state.legalAddress"
-      dense
-      outlined
+      label="Юр. адрес"
+      density="compact"
+      variant="outlined"
       rows="4"
     />
-    <v-text-field label="ИНН" v-model="state.inn" dense />
+    <v-text-field v-model="state.inn" label="ИНН" density="compact" />
     <v-text-field
       v-if="state.legalForm && state.legalForm === 'legalEntity'"
-      label="ОГРН"
       v-model="state.ogrn"
-      dense
+      label="ОГРН"
+      density="compact"
     />
     <v-text-field
       v-if="state.legalForm && state.legalForm === 'soleProprietor'"
-      label="ОГРНИП"
       v-model="state.ogrnip"
-      dense
+      label="ОГРНИП"
+      density="compact"
     />
-    <v-text-field label="КПП" v-model="state.kpp" dense />
-    <v-text-field label="Бухгалтер" v-model="accountantName" dense />
+    <v-text-field v-model="state.kpp" label="КПП" density="compact" />
+    <v-text-field
+      v-model="accountantName"
+      label="Бухгалтер"
+      density="compact"
+    />
 
     <div v-if="directorPosition && !!state.director" class="director-wrapper">
       <v-text-field
-        :label="directorPosition"
         v-model="directorName"
+        :label="directorPosition"
         hide-details
-        dense
+        density="compact"
       />
       <v-checkbox
         v-model="state.director.isMainSignatory"
         color="primary"
         label="Основной подписант"
-        dense
+        density="compact"
         hide-details
-        @change="isMainSignatoryChangedHandler"
+        @update:model-value="isMainSignatoryChangedHandler"
       />
     </div>
     <SignatoryForm
       v-if="showSignatory"
-      class="signatory-wrapper"
       v-model="state.signatory"
+      class="signatory-wrapper"
     />
   </div>
 </template>
@@ -66,12 +74,12 @@
 import { LEGAL_ENTITY_TYPES } from '@/shared/constants/legalEntityTypes'
 import { useVuelidate } from '@vuelidate/core'
 import { computed, ref, watch } from 'vue'
-import { DateTimeInput } from '@/shared/ui'
+
 import SignatoryForm from './signatoryForm.vue'
 
 export default {
   name: 'CompanyInfoForm',
-  components: { DateTimeInput, SignatoryForm },
+  components: { SignatoryForm },
   model: {
     prop: 'value',
     event: 'change',

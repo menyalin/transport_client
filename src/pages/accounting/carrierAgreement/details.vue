@@ -2,8 +2,8 @@
   <FormWrapper
     :loading="loading"
     :displayDeleteBtn="showDeleteBtn"
-    @delete="deleteHandler"
     :itemIsMissing="itemIsMissing"
+    @delete="deleteHandler"
   >
     <CarrierAgreementForm
       :item="item"

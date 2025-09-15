@@ -1,8 +1,8 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <PartnerForm
       :item="item"
@@ -10,7 +10,7 @@
       @cancel="cancel"
       @submit="submit($event, false)"
       @save="submit($event, true)"
-      @changeNotifications="changeNotificationsHandler"
+      @update:model-value-notifications="changeNotificationsHandler"
     />
   </form-wrapper>
 </template>

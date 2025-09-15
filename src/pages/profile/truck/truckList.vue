@@ -10,15 +10,15 @@
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :search="settings.search"
           :headers="filteredHeaders"
-          dense
+          density="compact"
           fixed-header
           height="72vh"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           :items="filteredTrucks"
           :loading="loading"
           @dblclick:row="dblClickRow"
@@ -36,27 +36,27 @@
               <v-select
                 v-model="settings.serviceStatus"
                 label="Статус ТС"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 hide-details
                 :items="serviceStatusItems"
               />
               <v-select
                 v-model="settings.tkNameFilter"
-                dense
-                outlined
+                density="compact"
+                variant="outlined"
                 hide-details
                 label="ТК"
                 clearable
                 :items="tkNames"
                 item-value="_id"
-                item-text="name"
+                item-title="name"
               />
               <v-select
                 v-model="settings.truckFilter"
-                dense
+                density="compact"
                 multiple
-                outlined
+                variant="outlined"
                 hide-details
                 label="Тип транспорта"
                 clearable
@@ -64,18 +64,18 @@
               />
               <v-text-field
                 v-model="settings.search"
-                outlined
+                variant="outlined"
                 hide-details
-                dense
+                density="compact"
                 label="Быстрый поиск"
               />
             </div>
           </template>
           <template #[`item.hasScans`]="{ item }">
-            <v-icon v-if="item.hasScans" small color="green">
+            <v-icon v-if="item.hasScans" size="small" color="green">
               mdi-check
             </v-icon>
-            <v-icon v-else small color="red"> mdi-minus </v-icon>
+            <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
           </template>
         </v-data-table>
       </v-col>

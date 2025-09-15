@@ -13,7 +13,7 @@
           type="text"
           label="Сокращенное название"
           :error-messages="nameErrors"
-          @input="v$.form.name.$touch()"
+          @update:model-value="v$.form.name.$touch()"
           @blur="v$.form.name.$touch()"
         />
         <v-text-field
@@ -21,7 +21,7 @@
           type="text"
           label="Полное название"
           :error-messages="fullNameErrors"
-          @input="v$.form.fullName.$touch()"
+          @update:model-value="v$.form.fullName.$touch()"
           @blur="v$.form.fullName.$touch()"
         />
         <v-text-field
@@ -29,14 +29,14 @@
           type="text"
           label="ИНН"
           :error-messages="innErrors"
-          @input="delayTouch(v$.form.inn)"
+          @update:model-value="delayTouch(v$.form.inn)"
           @blur="v$.form.inn.$touch()"
         />
         <v-checkbox
           v-model="form.hasOwnDirectories"
           label="У компании есть свои справочники"
         />
-        <v-alert type="info" outlined>
+        <v-alert type="info" variant="outlined">
           <p>ИНН - Должен быть уникален</p>
           <p>
             Пользователь может работать со справочниками только одной компании.

@@ -1,18 +1,18 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu :close-on-content-click="false">
+    <template #activator="{ props }">
+      <v-btn v-bind="props" color="primary" icon>
+        <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
     <v-list class="px-2">
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
-        :label="field.hiddenTitle || field.text"
         v-model="activeFields"
+        :label="field.hiddenTitle || field.text"
         :value="field.value"
-        dense
+        density="compact"
         hide-details
       />
     </v-list>

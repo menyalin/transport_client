@@ -1,8 +1,8 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :value="selected"
     :headers="headers"
-    dense
+    density="compact"
     color="primary"
     :loading="loading"
     :items="preparedItems"
@@ -29,11 +29,11 @@
     <template #[`item.addItemColumn`]="{ item }">
       <v-icon
         v-if="item.isSelectable"
-        small
+        size="small"
         color="primary"
         :disabled="!item.isSelectable"
-        @click="addItem(item._id)"
         :style="{ cursor: 'pointer' }"
+        @click="addItem(item._id)"
       >
         mdi-arrow-up-left
       </v-icon>
@@ -42,8 +42,8 @@
     <template #[`item.truck`]="{ item }">
       {{
         !!item.confirmedCrew &&
-        !!item.confirmedCrew.truck &&
-        trucksMap.has(item.confirmedCrew.truck)
+          !!item.confirmedCrew.truck &&
+          trucksMap.has(item.confirmedCrew.truck)
           ? trucksMap.get(item.confirmedCrew.truck).regNum
           : '-'
       }}
@@ -51,8 +51,8 @@
     <template #[`item.trailer`]="{ item }">
       {{
         !!item.confirmedCrew &&
-        !!item.confirmedCrew.trailer &&
-        trucksMap.has(item.confirmedCrew.trailer)
+          !!item.confirmedCrew.trailer &&
+          trucksMap.has(item.confirmedCrew.trailer)
           ? trucksMap.get(item.confirmedCrew.trailer).regNum
           : ''
       }}
@@ -67,8 +67,8 @@
     <template #[`item.analytics.type`]="{ item }">
       {{
         !!item.analytics &&
-        !!item.analytics.type &&
-        orderAnalyticTypeMap.has(item.analytics.type)
+          !!item.analytics.type &&
+          orderAnalyticTypeMap.has(item.analytics.type)
           ? orderAnalyticTypeMap.get(item.analytics.type)
           : ''
       }}
@@ -83,14 +83,14 @@
       </b>
     </template>
     <template #[`item.docsGetted`]="{ item }">
-      <v-simple-checkbox
+      <v-checkbox-btn
         :value="item.docsState ? item.docsState.getted : false"
         :disabled="!!item.docs && !!item.docs.length"
         color="primary"
         @input="setDocStateStatus($event, item._id)"
       />
     </template>
-    <template #[`footer.prepend`] v-if="statisticData && statisticData.count">
+    <template v-if="statisticData && statisticData.count" #[`footer.prepend`]>
       <order-list-footer-details
         :total="statisticData.count"
         :accepted="statisticData.acceptedDocs"
@@ -103,11 +103,10 @@
       <v-btn
         color="primary"
         icon
-        small
-        dark
+        size="small"
         @click="$emit('openDocsDialog', item[itemIdField])"
       >
-        <v-icon small> mdi-file-document-multiple </v-icon>
+        <v-icon size="small"> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>
     <template #[`item.total.price`]="{ item }">
@@ -119,7 +118,7 @@
     <template #[`item.total.sumVat`]="{ item }">
       {{ new Intl.NumberFormat().format(item.total.sumVat) }}
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script>
 import store from '@/store'

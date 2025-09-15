@@ -3,8 +3,8 @@
     <buttons-panel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
@@ -12,7 +12,7 @@
         v-if="docTemplateIsVisible"
         :templates="templates"
         :disabledDownloadFiles="downloadDisabled"
-        @downloadTemplate="downloadTemplateHandler"
+        @download-template="downloadTemplateHandler"
       />
     </buttons-panel>
     <div id="form">
@@ -20,55 +20,55 @@
         <v-autocomplete
           v-model="state.carrier"
           label="Перевозчик"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledCarriers"
           :items="outsourceCarriers"
           :style="{ minWidth: '400px' }"
-          @change="carrierChangeHandler"
+          @update:model-value="carrierChangeHandler"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledAgreement || hasOrders"
           :items="carrierAgreements"
           :style="{ minWidth: '400px' }"
         />
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :disabled="!allowToChangeStatus"
-          @change="statusChangeHandler"
           :style="{ maxWidth: '200px' }"
+          @update:model-value="statusChangeHandler"
         />
       </div>
 
       <div class="fields-row">
         <v-text-field
-          label="Номер"
           v-model.trim="state.number"
-          dense
-          outlined
+          label="Номер"
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '250px' }"
         />
         <DateTimeInput
-          label="Дата акта"
           v-model="state.date"
-          dense
-          outlined
+          label="Дата акта"
+          density="compact"
+          variant="outlined"
           type="date"
           :style="{ maxWidth: '250px' }"
         />
@@ -76,27 +76,27 @@
 
       <div class="fields-row">
         <DateTimeInput
-          label="Дата получения акта"
           v-model="state.receiptDate"
-          dense
-          outlined
+          label="Дата получения акта"
+          density="compact"
+          variant="outlined"
           type="date"
           :style="{ maxWidth: '250px' }"
         />
         <DateTimeInput
-          label="Плановая дата оплаты"
           v-model="state.plannedPayDate"
-          dense
-          outlined
+          label="Плановая дата оплаты"
+          density="compact"
+          variant="outlined"
           type="date"
           :style="{ maxWidth: '250px' }"
         />
         <DateTimeInput
           v-if="isVisiblePayDateField"
-          label="Факт оплаты"
           v-model="state.payDate"
-          dense
-          outlined
+          label="Факт оплаты"
+          density="compact"
+          variant="outlined"
           type="date"
           disabled
           :style="{ maxWidth: '250px' }"
@@ -113,7 +113,11 @@
         <v-card>
           <v-card-title>Дата оплаты</v-card-title>
           <v-card-text>
-            <DateTimeInput v-model="payDateFieldData" type="date" outlined />
+            <DateTimeInput
+              v-model="payDateFieldData"
+              type="date"
+              variant="outlined"
+            />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -127,14 +131,14 @@
       </v-alert>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
         :disabled="
           disabledPickOrders ||
-          needSave ||
-          invalidForm ||
-          !allowedToChangeOrders
+            needSave ||
+            invalidForm ||
+            !allowedToChangeOrders
         "
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
@@ -146,10 +150,10 @@
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
-        @blur="v$.note.$touch"
+        density="compact"
+        variant="outlined"
         hide-details
+        @blur="v$.note.$touch"
       />
     </div>
   </div>

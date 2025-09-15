@@ -3,11 +3,11 @@
     <span>Группировка:</span>
     <v-radio-group
       class="mt-0 pt-0"
-      :value="value"
-      dense
+      :model-value="value"
+      density="compact"
       hide-details
-      row
-      @change="change"
+      inline
+      @update:model-value="change"
     >
       <v-radio
         v-for="item in items"

@@ -1,7 +1,6 @@
 import { onMounted, ref } from 'vue'
 import store from '@/store/index'
-import { DocTemplateService } from '@/shared/services'
-import { PaymentInvoiceService } from '@/shared/services'
+import { DocTemplateService, PaymentInvoiceService } from '@/shared/services'
 
 export const usePaymentInvoiceDocTemplates = (formState, props) => {
   const docTemplates = ref([])

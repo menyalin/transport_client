@@ -4,14 +4,13 @@
       <v-col>
         <v-alert
           v-model="error.show"
-          dismissible
+          closable
           type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
+          @update:model-value="toggleAlert"
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <OrderForm
           v-else
           :order="item"
@@ -30,7 +29,7 @@
 <script>
 import socket from '@/socket'
 import { OrderService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { LoadSpinner } from '@/shared/ui'
 import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
 
@@ -38,7 +37,7 @@ export default {
   name: 'DetailsOrder',
   components: {
     OrderForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
 
   props: {
@@ -154,7 +153,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы действительно хотите удалить запись? '
       )
       if (res) {

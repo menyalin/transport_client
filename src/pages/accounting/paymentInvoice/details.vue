@@ -1,19 +1,19 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <payment-invoice-form
       :item="item"
-      @submit="submit($event, false)"
       :disabledPickOrders="disabledPickOrders"
       :disabledMainFields="disabledMainFields"
       :disabledDownloadFiles="disabledDownloadFiles"
+      @submit="submit($event, false)"
       @save="submit($event, true)"
-      @pickOrders="openDialog"
+      @pick-orders="openDialog"
       @download="downloadHandler"
-      @setDate="setDateHandler"
+      @set-date="setDateHandler"
     />
 
     <payment-invoice-result :orders="item.orders" />
@@ -22,8 +22,8 @@
       :orders="item.orders"
       :disabled="disabledPickOrders"
       @delete="deleteOrderFromPaymentInvoice"
-      @dblRowClick="dblRowClickHandler"
-      @updateItemPrice="updateItemPrice"
+      @dbl-row-click="dblRowClickHandler"
+      @update-item-price="updateItemPrice"
     />
 
     <v-dialog
@@ -31,7 +31,7 @@
       v-model="showPickOrderDialog"
       fullscreen
       persistent
-      hide-overlay
+      :scrim="false"
     >
       <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>

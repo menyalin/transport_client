@@ -1,29 +1,29 @@
 <template>
   <div class="wrapper">
     <v-autocomplete
-      :value="settings.agreements"
+      :model-value="settings.agreements"
       label="Соглашения"
       multiple
       auto-select-first
       clearable
       item-value="_id"
-      item-text="name"
-      dense
+      item-title="name"
+      density="compact"
       hide-details
-      outlined
+      variant="outlined"
       :items="agreementItems"
-      @change="changeFieldHandler('agreements', $event)"
       :style="{ maxWidth: '600px' }"
+      @update:model-value="changeFieldHandler('agreements', $event)"
     />
     <v-text-field
-      :value="settings.searchStr"
+      :model-value="settings.searchStr"
       label="Поиск"
-      dense
+      density="compact"
       hide-details
       clearable
-      outlined
-      @change="changeFieldHandler('searchStr', $event)"
+      variant="outlined"
       :style="{ maxWidth: '300px' }"
+      @update:model-value="changeFieldHandler('searchStr', $event)"
     />
   </div>
 </template>

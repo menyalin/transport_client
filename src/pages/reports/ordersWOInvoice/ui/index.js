@@ -1,6 +1,4 @@
-import ReportSettings from './reportSettings'
-import ReportDataTable from './reportDataTable'
-import ReportStatisticData from './reportStatisticData'
-import { DataTableRow } from './DataTableRowItem'
-
-export { ReportSettings, ReportDataTable, DataTableRow, ReportStatisticData }
+export { default as ReportSettings } from './reportSettings'
+export { default as ReportDataTable } from './reportDataTable'
+export { default as ReportStatisticData } from './reportStatisticData'
+export { DataTableRow } from './DataTableRowItem'

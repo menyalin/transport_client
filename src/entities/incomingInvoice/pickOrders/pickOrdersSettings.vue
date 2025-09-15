@@ -1,22 +1,22 @@
 <template>
   <div class="settings-wrapper">
-    <v-btn @click="refreshHandler" icon>
+    <v-btn icon @click="refreshHandler">
       <v-icon>mdi-refresh</v-icon>
     </v-btn>
     <DateRangeInput v-model="settings.period" class="mx-2" />
     <OrderDocStatusSelector
-      outlined
       v-model="settings.docStatuses"
+      variant="outlined"
       multiple
       clearable
-      dense
+      density="compact"
       label="Документы"
       hide-details
       :style="{ 'max-width': '400px' }"
     />
     <v-checkbox
       v-model="settings.includedIntoPaymentInvoice"
-      dense
+      density="compact"
       label="Только рейсы, включенные в исходящие акты"
     />
   </div>

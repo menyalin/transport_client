@@ -4,17 +4,16 @@
       <v-col>
         <v-alert
           v-model="error.show"
-          dismissible
+          closable
           type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
+          @update:model-value="toggleAlert"
         >
           {{ error.message }}
         </v-alert>
         <div class="text-h5 ma-3">
           {{ id ? 'Редактировать группу тарифов' : 'Создать группу тарифов' }}
         </div>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <div v-else class="pt-2">
           <buttons-panel
             panel-type="form"
@@ -28,7 +27,7 @@
           />
           <v-btn
             color="primary"
-            small
+            size="small"
             class="ma-2"
             hint="alt + N"
             :disabled="!allowCreateTariffItem"
@@ -44,7 +43,7 @@
           />
           <app-salary-tariff-group-list
             v-model="items"
-            @removeItem="deleteItem"
+            @remove-item="deleteItem"
           />
         </div>
       </v-col>
@@ -52,18 +51,17 @@
   </v-container>
 </template>
 <script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { LoadSpinner, ButtonsPanel } from '@/shared/ui'
 import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings'
 import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
 import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
-import { ButtonsPanel } from '@/shared/ui'
 import { SalaryTariffService } from '@/shared/services'
 
 export default {
   name: 'CreateTariff',
   components: {
     ButtonsPanel,
-    AppLoadSpinner,
+    LoadSpinner,
     AppSalaryTariffSettings,
     AppSalaryTariffGroupList,
     AppSalaryTariffForm,
@@ -121,7 +119,7 @@ export default {
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('keyup', this.keypressEventHandler)
   },
   methods: {
@@ -176,7 +174,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы действительно хотите удалить запись? '
       )
       if (res) {

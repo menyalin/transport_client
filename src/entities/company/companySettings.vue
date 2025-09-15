@@ -71,7 +71,7 @@
           v-model="settings.commonOrderContractNote"
           label="Примечание для договора-заявки"
           rows="15"
-          outlined
+          variant="outlined"
         />
       </v-card-text>
       <v-card-actions>

@@ -10,27 +10,27 @@
         :items="$store.getters.orderAnalyticTypes"
         clearable
         hide-details
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         :style="{ 'max-width': '150px' }"
       />
       <v-text-field
         v-model.number="params.distanceRoad"
         label="Расстояние по дорогам, км"
         :loading="distanceLoading"
-        dense
+        density="compact"
         hideDetails
-        outlined
+        variant="outlined"
         append-icon="mdi-autorenew"
         @click:append="getRoadDistance"
       />
       <v-text-field
         v-model.number="params.distanceDirect"
         label="Расстояние прямое, км"
-        dense
+        density="compact"
         hideDetails
         append-icon="mdi-autorenew"
-        outlined
+        variant="outlined"
         @click:append="getDirectDistance"
       />
     </div>

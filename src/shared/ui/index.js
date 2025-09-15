@@ -1,46 +1,22 @@
-import LoadSpinner from '../ui/loadSpinner.vue'
-import AppTableColumnSetting from './tableColumnSetting/tableColumnSetting.vue'
-import EntityListWrapper from './entityListWrapper.vue'
-import OrderListFooterDetails from './orderListFooterDetails.vue'
-import FormWrapper from './entityFormWrapper/formWrapper.vue'
-import ButtonsPanel from './buttonsPanel.vue'
-import DateRangeInput from './dateRangeInput.vue'
-import DownloadDocTemplateMenu from './downloadDocTemplateMenu.vue'
-import BorderedBlock from './borderedBlock.vue'
-import XlsxFileInput from './xlsxFileInput'
-import CardActionButtons from './cardActionButtons.vue'
-import DateTimeInput from './dateTimeInput.vue'
-import AdditionalNotifications from './additionalNotifications'
-import ReportTitle from './reportTitle.vue'
-import RefreshBtn from './refreshBtn.vue'
-import OrderDocStatusSelector from './orderDocStatusSelector.vue'
-import AutoCompleteWithActions from './AutoCompleteWithActions.vue'
-import BankAccountInfoForm from './bankAccountInfo/bankAccountInfoForm.vue'
-import CompanyInfoForm from './companyInfo/companyInfoForm.vue'
-import ContactsInfo from './contactsInfo/contactsInfo.vue'
-import VatRateSelect from './vatRateSelect.vue'
-import EntityFiles from './entityFiles/index.vue'
-export {
-  AppTableColumnSetting,
-  ButtonsPanel,
-  OrderListFooterDetails,
-  LoadSpinner,
-  FormWrapper,
-  EntityListWrapper,
-  DateRangeInput,
-  DownloadDocTemplateMenu,
-  BorderedBlock,
-  XlsxFileInput,
-  CardActionButtons,
-  DateTimeInput,
-  AdditionalNotifications,
-  ReportTitle,
-  RefreshBtn,
-  OrderDocStatusSelector,
-  AutoCompleteWithActions,
-  BankAccountInfoForm,
-  CompanyInfoForm,
-  ContactsInfo,
-  VatRateSelect,
-  EntityFiles,
-}
+export { default as DateTimeInput } from './dateTimeInput'
+export { default as EntityFiles } from './entityFiles'
+export { default as ButtonsPanel } from './buttonsPanel'
+export { default as LoadSpinner } from './loadSpinner.vue'
+export { default as AppTableColumnSetting } from './tableColumnSetting/tableColumnSetting.vue'
+export { default as EntityListWrapper } from './entityListWrapper.vue'
+export { default as OrderListFooterDetails } from './orderListFooterDetails.vue'
+export { default as FormWrapper } from './entityFormWrapper/formWrapper.vue'
+export { default as DateRangeInput } from './dateRangeInput.vue'
+export { default as DownloadDocTemplateMenu } from './downloadDocTemplateMenu.vue'
+export { default as BorderedBlock } from './borderedBlock.vue'
+export { default as XlsxFileInput } from './xlsxFileInput.vue'
+export { default as CardActionButtons } from './cardActionButtons.vue'
+export { default as AdditionalNotifications } from './additionalNotifications/index.vue'
+export { default as ReportTitle } from './reportTitle.vue'
+export { default as RefreshBtn } from './refreshBtn.vue'
+export { default as OrderDocStatusSelector } from './orderDocStatusSelector.vue'
+export { default as AutoCompleteWithActions } from './AutoCompleteWithActions.vue'
+export { default as BankAccountInfoForm } from './bankAccountInfo/bankAccountInfoForm.vue'
+export { default as CompanyInfoForm } from './companyInfo/companyInfoForm.vue'
+export { default as ContactsInfo } from './contactsInfo/contactsInfo.vue'
+export { default as VatRateSelect } from './vatRateSelect.vue'

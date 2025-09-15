@@ -6,72 +6,72 @@
       @submit="submitHandler"
       @cancel="cancelHandler"
     />
-    <v-text-field label="Название" v-model="state.name" />
+    <v-text-field v-model="state.name" label="Название" />
     <div class="main-block">
       <v-autocomplete
+        v-model="state.agreement"
         :items="agreements"
-        item-text="name"
+        item-title="name"
         item-value="_id"
         label="Соглашение"
         :readonly="agreementReadonly"
-        v-model="state.agreement"
         :style="{ maxWidth: '300px' }"
       />
       <v-text-field
+        v-model="state.startDate"
         label="Дата начала"
         type="date"
-        v-model="state.startDate"
         :style="{ maxWidth: '150px' }"
       />
       <v-text-field
+        v-model="state.endDate"
         label="Дата окончания"
         type="date"
-        v-model="state.endDate"
         :style="{ maxWidth: '150px' }"
       />
 
       <v-checkbox
-        color="primary"
         v-model="state.withVat"
+        color="primary"
         label="Тарифы указаны с НДС"
       />
     </div>
     <v-divider />
     <TariffListWrapper
+      v-model="state.zonesTariffs"
       title="Базовые тарифы по зонам"
       formTitle="Базовый тариф по зонам"
-      v-model="state.zonesTariffs"
       :tariffListComponent="zoneBaseTariffList"
       :tariffFormComponent="zoneBaseTariffForm"
       class="mb-6"
     />
     <v-divider />
     <TariffListWrapper
+      v-model="state.directDistanceZonesTariffs"
       title="Базовые тарифы по линейке от зоны погрузки"
       formTitle="Базовый тариф по линейке"
-      v-model="state.directDistanceZonesTariffs"
       :tariffListComponent="directDistanceZonesTariffList"
       :tariffFormComponent="directDistanceZonesTariffForm"
     />
     <v-divider />
 
     <TariffListWrapper
+      v-model="state.idleTimeTariffs"
       title="Простой по типу рейса"
       formTitle="Тариф для расчета простоя ТС"
-      v-model="state.idleTimeTariffs"
       :tariffListComponent="idleTimeTariffList"
       :tariffFormComponent="idleTimeTariffForm"
     />
     <v-divider />
     <TariffListWrapper
+      v-model="state.returnPercentTariffs"
       title="Возврат: % от базового тарифа"
       formTitle="Тариф на возврат"
-      v-model="state.returnPercentTariffs"
       :tariffListComponent="returnPercentTariffList"
       :tariffFormComponent="returnPercentTariffForm"
     />
     <v-divider />
-    <v-text-field label="Примечание" v-model="state.note" />
+    <v-text-field v-model="state.note" label="Примечание" />
     <EntityFiles
       v-if="item && item._id"
       :itemId="item._id"

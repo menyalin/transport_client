@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" outlined class="ma-5">
+  <v-card elevation="2" variant="outlined" class="ma-5">
     <v-card-title>
       Подобрать рейсы для акта выполненных работ №
       {{ paymentInvoice.number || 'б/н' }}
@@ -8,12 +8,12 @@
       <b>{{ clientName }} </b>
     </v-card-subtitle>
     <v-card-actions>
-      <v-btn @click="cancelHandler" class="ma-2">Закрыть</v-btn>
+      <v-btn class="ma-2" @click="cancelHandler">Закрыть</v-btn>
       <v-btn
-        @click="addToInvoiceHandler"
         class="ma-2"
         color="primary"
         :disabled="!selectedOrders.length"
+        @click="addToInvoiceHandler"
       >
         Добавить в акт
       </v-btn>
@@ -22,20 +22,20 @@
       <pick-orders-settings
         v-model="settings"
         :allHeaders="allHeaders"
-        @updateHeaders="updateActiveHeaders"
+        @update-headers="updateActiveHeaders"
         @refresh="refreshHandler"
       />
 
       <orders-table
         v-model="selectedOrders"
+        v-model:listOptions="settings.listOptions"
         show-select
         itemIdField="orderId"
         :items="items"
         :headers="headers"
         :loading="loading"
-        :listOptions.sync="settings.listOptions"
-        @addItem="addOrderToInvoice"
-        @openDocsDialog="openDocsDialog"
+        @add-item="addOrderToInvoice"
+        @open-docs-dialog="openDocsDialog"
       />
       <v-dialog v-model="docDialog" max-width="1300" persistent>
         <order-docs-list

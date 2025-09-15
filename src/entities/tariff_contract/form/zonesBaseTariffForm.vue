@@ -5,51 +5,51 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
+            v-model="form.truckKinds"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
-            v-model="form.truckKinds"
           />
           <v-select
+            v-model="form.liftCapacities"
             multiple
             label="Грузоподъемность"
             :items="liftCapacityItems"
-            v-model="form.liftCapacities"
           />
         </div>
         <div class="input-fields-row">
           <v-text-field
-            label="Кол-во точек, включенных в тариф"
             v-model.number="form.includedPoints"
+            label="Кол-во точек, включенных в тариф"
           />
           <v-text-field
-            label="Тариф за доп.точку"
             v-model.number="form.pointPrice"
+            label="Тариф за доп.точку"
           />
         </div>
         <div class="input-fields-row">
           <v-autocomplete
+            v-model="form.loadingZone"
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
-            v-model="form.loadingZone"
           />
           <v-autocomplete
             ref="focusableNodeRef"
+            v-model="form.unloadingZones"
             label="Зоны разгрузки"
             multiple
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
-            v-model="form.unloadingZones"
             hint="Важна последовательность зон"
           />
         </div>
 
-        <v-text-field label="Тариф" v-model.number="form.price" />
+        <v-text-field v-model.number="form.price" label="Тариф" />
       </v-card-text>
       <CardActionButtons
         :submitDisabled="isInvalidForm"

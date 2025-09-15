@@ -10,8 +10,8 @@
             v-model="tmpItem.type"
             label="Тип"
             :items="$store.getters.salaryTariffTypes"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
           />
 
@@ -20,8 +20,8 @@
             label="ТК"
             :items="$store.getters.tkNamesForSelect"
             multiple
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
           />
 
@@ -29,8 +29,8 @@
             v-model="tmpItem.date"
             type="date"
             label="Дата"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             readonly
           />
@@ -39,19 +39,19 @@
             v-model="tmpItem.liftCapacity"
             :items="$store.getters.liftCapacityTypes"
             label="Грузоподъемность ТС"
-            outlined
+            variant="outlined"
             multiple
-            dense
+            density="compact"
             hide-details
           />
           <v-select
+            v-model="tmpItem.consigneeTypes"
             label="Типы грузополучателей"
             :items="$store.getters.partnerGroups"
-            dense
+            density="compact"
             multiple
-            outlined
+            variant="outlined"
             hide-details
-            v-model="tmpItem.consigneeTypes"
           />
           <app-points
             v-if="tmpItem.type === 'points'"
@@ -100,17 +100,17 @@
           <v-text-field
             v-if="!['directDistanceZones'].includes(tmpItem.type)"
             v-model.number="tmpItem.sum"
-            dense
+            density="compact"
             type="number"
             label="Тариф"
-            outlined
+            variant="outlined"
             hide-details
           />
           <v-text-field
             v-model.trim="tmpItem.note"
             label="Примечание"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
           />
         </v-card-text>
@@ -237,7 +237,7 @@ export default {
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('keyup', this.keypressEventHandler)
   },
   methods: {
@@ -261,7 +261,7 @@ export default {
       this.tmpDialog = false
     },
     async deleteItem() {
-      const res = await this.$confirm('Вы уверены? Запись будет удалена')
+      const res = await this.$dialog.confirm('Вы уверены? Запись будет удалена')
       if (!res) return null
       try {
         this.loading = true

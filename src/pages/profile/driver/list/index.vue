@@ -7,17 +7,17 @@
       @refresh="refresh"
     />
     <v-data-table
+      v-model:options="listSettings.listOptions"
       :headers="headers"
       :items="filteredDrivers"
       :search="listSettings.search"
       :loading="loading"
       fixed-header
       height="71vh"
-      dense
+      density="compact"
       :footer-props="{
         'items-per-page-options': [50, 100, 200],
       }"
-      :options.sync="listSettings.listOptions"
       @dblclick:row="dblClickRow"
     >
       <template #top>
@@ -25,51 +25,51 @@
           <AppTableColumnSetting
             :allHeaders="allHeaders"
             listSettingsName="driversTableColumns"
-            @change="updateHeadersHandler"
+            @update:model-value="updateHeadersHandler"
           />
           <v-select
             v-model="listSettings.tkNameFilter"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             hide-details
             label="ТК"
             clearable
             :items="tkNameItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
           <v-select
             v-model="listSettings.workState"
             label="Статус"
             :items="workStateItems"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
           />
           <v-select
             v-model="listSettings.stuffStatus"
             label="Сотрудники"
             :items="stuffStatusItems"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
           />
           <v-text-field
             v-model="listSettings.search"
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             label="Быстрый поиск"
           />
         </div>
       </template>
       <template #[`item.hasScans`]="{ item }">
-        <v-icon v-if="item.hasScans" small color="green"> mdi-check </v-icon>
-        <v-icon v-else small color="red"> mdi-minus </v-icon>
+        <v-icon v-if="item.hasScans" size="small" color="green"> mdi-check </v-icon>
+        <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
       </template>
       <template #[`item.isCalcSalary`]="{ item }">
-        <v-icon v-if="item.isCalcSalary" small color="green">
+        <v-icon v-if="item.isCalcSalary" size="small" color="green">
           mdi-check
         </v-icon>
-        <v-icon v-else small color="red"> mdi-minus </v-icon>
+        <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
       </template>
     </v-data-table>
   </EntityListWrapper>

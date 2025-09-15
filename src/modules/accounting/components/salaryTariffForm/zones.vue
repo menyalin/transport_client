@@ -4,15 +4,15 @@
       ref="loadingEl"
       v-model="tmpPoints.loadingZone"
       label="Зона погрузки"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <app-zone-autocomplete
       v-model="tmpPoints.unloadingZone"
       label="Зона разгрузки"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
   </div>

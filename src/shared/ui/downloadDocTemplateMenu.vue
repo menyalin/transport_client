@@ -1,7 +1,7 @@
 <template>
-  <v-menu offset-y :disabled="disabled">
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn v-bind="attrs" v-on="on" :disabled="disabled">Скачать</v-btn>
+  <v-menu :disabled="disabled">
+    <template #activator="{ props }">
+      <v-btn v-bind="props" :disabled="disabled">Скачать</v-btn>
     </template>
 
     <v-list>
@@ -22,7 +22,7 @@ export default {
   props: {
     templates: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     disabledDownloadFiles: {
       type: Boolean,

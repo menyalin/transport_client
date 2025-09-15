@@ -4,8 +4,8 @@
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('region:write') ||
-        isInvalidForm ||
-        !formChanged
+          isInvalidForm ||
+          !formChanged
       "
       @cancel="cancel"
       @submit="submit"
@@ -13,13 +13,13 @@
     <v-text-field
       v-model.trim="v$.form.name.$model"
       :error-messages="nameErrors"
-      outlined
+      variant="outlined"
       label="Название"
-      dense
+      density="compact"
     />
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

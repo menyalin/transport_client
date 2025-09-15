@@ -5,44 +5,43 @@
     </div>
     <div class="client-block">
       <v-autocomplete
-        :items="clientItems"
         v-model="state.client"
+        :items="clientItems"
         label="Заказчик"
-        outlined
+        variant="outlined"
         :loading="loading"
         :messages="agreementNameSring"
         :error="!loading && !currentAgreement"
-        dense
-        @change="changeClientHandler"
+        density="compact"
         :style="{ maxWidth: '400px' }"
         :disabled="agreementDisabled"
+        @update:model-value="changeClientHandler"
       />
 
       <v-text-field
         v-model.trim="state.num"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
         :style="{ maxWidth: '250px' }"
-        @change="changeFieldHandler($event, 'num')"
+        @update:model-value="changeFieldHandler($event, 'num')"
       />
       <v-text-field
         v-model.trim="state.auctionNum"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
         :style="{ maxWidth: '250px' }"
-        @change="changeFieldHandler($event, 'auctionNum')"
+        @update:model-value="changeFieldHandler($event, 'auctionNum')"
       />
     </div>
     <v-btn
       v-if="showChangeAgreementBtn"
       color="primary"
-      outlined
-      text
-      small
+      variant="outlined text"
+      size="small"
       class="mb-3 ml-5"
       @click="changeAgreementHandler"
     >

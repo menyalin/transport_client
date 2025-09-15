@@ -3,13 +3,12 @@
     <h5>Деление стоимости рейса:</h5>
     <div class="btn-wrapper">
       <v-btn
-        text
-        small
+        variant="text outlined"
+        size="small"
         color="primary"
-        outlined
         :loading="loading"
-        @click="openDialog"
         :disabled="loading || readonly"
+        @click="openDialog"
       >
         Добавить часть
       </v-btn>
@@ -19,7 +18,7 @@
       v-else
       :items="preparedItems"
       :hideDelete="readonly || loading"
-      @deleteRow="deleteRowHandler"
+      @delete-row="deleteRowHandler"
     />
     <payment-part-form-dialog
       :routeDate="routeDate"

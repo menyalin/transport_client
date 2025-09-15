@@ -1,9 +1,9 @@
-import { ref, watch, onMounted, computed } from 'vue'
-import { ReportService } from '@/shared/services'
-import { usePersistedRef } from '@/shared/hooks'
-import { AgreementService } from '@/shared/services/index'
 import dayjs from 'dayjs'
-import store from '@/store/index'
+import { ref, watch, onMounted, computed } from 'vue'
+import { ReportService, AgreementService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
+
+import store from '@/store'
 
 export default function () {
   const setInitialPeriod = () => [

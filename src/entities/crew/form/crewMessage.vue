@@ -13,7 +13,7 @@
     >
       Закрыть
     </span>
-    <div class="caption red--text" v-if="!isValidNewDate">
+    <div v-if="!isValidNewDate" class="text-caption text-red">
       <b>Дата начала должна быть больше {{ crewLastDateStr }}</b>
     </div>
     <div>
@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     async goto() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы уверены? информация на странице будет потеряна'
       )
       if (res)

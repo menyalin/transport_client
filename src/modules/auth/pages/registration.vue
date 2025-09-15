@@ -21,7 +21,7 @@
                 type="text"
                 required
                 :error-messages="nameErrors"
-                @input="v$.form.name.$touch()"
+                @update:model-value="v$.form.name.$touch()"
                 @blur="v$.form.name.$touch()"
               />
               <v-text-field
@@ -31,7 +31,7 @@
                 type="email"
                 :error-messages="emailErrors"
                 required
-                @input="v$.form.email.$touch()"
+                @update:model-value="v$.form.email.$touch()"
                 @blur="v$.form.email.$touch()"
               />
               <v-text-field
@@ -42,7 +42,7 @@
                 type="password"
                 :error-messages="passwordErrors"
                 required
-                @input="v$.form.password.$touch()"
+                @update:model-value="v$.form.password.$touch()"
                 @blur="v$.form.password.$touch()"
               />
               <v-text-field
@@ -53,7 +53,7 @@
                 type="password"
                 :error-messages="confirmPasswordErrors"
                 required
-                @input="v$.form.confirmPassword.$touch()"
+                @update:model-value="v$.form.confirmPassword.$touch()"
                 @blur="v$.form.confirmPassword.$touch()"
               />
             </v-card-text>

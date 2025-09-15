@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table id="table">
+  <v-table id="table">
     <template #default>
       <caption class="text-left font-weight-medium">
         Контроль дополнительных событий
@@ -33,9 +33,9 @@
       </tbody>
       <tfoot>
         <v-btn
-          text
+          variant="text"
           color="primary"
-          small
+          size="small"
           class="ma-2"
           @click="openDialog(null)"
         >
@@ -51,8 +51,8 @@
               v-model="v$.editableItem.title.$model"
               label="Заголовок"
               :errorMessages="titleErrors"
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
               @blur="v$.editableItem.title.$touch()"
             />
             <div class="dates-row">
@@ -68,16 +68,16 @@
                 v-model="v$.editableItem.daysBeforeRemind.$model"
                 label="Дней до напоминания"
                 class="days-count"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
                 :error-messages="daysBeforeRemindErrors"
                 @blur="v$.editableItem.daysBeforeRemind.$touch()"
               />
               <v-text-field
                 v-model="editableItem.note"
                 label="Примечание"
-                outlined
-                dense
+                variant="outlined"
+                density="compact"
               />
             </div>
           </v-card-text>
@@ -94,7 +94,7 @@
         </v-card>
       </v-dialog>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 import { useVuelidate } from '@vuelidate/core'
@@ -206,7 +206,7 @@ export default {
       this.clearEditableItem()
     },
     async deleteItem(idx) {
-      const res = await this.$confirm('Уверены?')
+      const res = await this.$dialog.confirm('Уверены?')
       if (res) {
         let tmpItems = [...this.items]
         tmpItems.splice(idx, 1)

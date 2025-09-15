@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" @input="inputDialog">
+  <v-dialog :model-value="dialog" max-width="800" @update:model-value="inputDialog">
     <v-card>
       <v-card-title>
         <div class="text-h6">Итоговые цены рейса</div>
@@ -8,7 +8,7 @@
           v-model="priceWithVat"
           class="mt-0 pt-0"
           label="Цены с НДС"
-          dense
+          density="compact"
           hide-details
         />
       </v-card-title>

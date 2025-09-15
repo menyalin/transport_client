@@ -1,3 +1,5 @@
+<!-- eslint-disable vuetify/no-deprecated-props -->
+<!-- TODO: убрать блокировку выше! -->
 <template>
   <div>
     <div
@@ -11,90 +13,92 @@
         @dragleave.prevent="disabledZone"
         @dblclick.stop="dblclickHandler"
       >
-        <tr class="head-row" @dragover.prevent="disabledZone">
-          <td
-            ref="rowTitleColumn"
-            class="text-center"
-            :style="{ width: initTitleWidth }"
-          >
-            <app-settings-cell v-model="settings" />
-          </td>
-          <td
-            v-for="column of columns"
-            :key="column.title"
-            :class="{ 'today-header': column.isToday, 'text-center': true }"
-          >
-            <div>
-              <div>{{ column.title }}</div>
-              <div class="title-time-row">
-                <div>00-06</div>
-                <div>06-12</div>
-                <div>12-18</div>
-                <div>18-00</div>
+        <tbody>
+          <tr class="head-row" @dragover.prevent="disabledZone">
+            <td
+              ref="rowTitleColumn"
+              class="text-center"
+              :style="{ width: initTitleWidth }"
+            >
+              <app-settings-cell v-model="settings" />
+            </td>
+            <td
+              v-for="column of columns"
+              :key="column.title"
+              :class="{ 'today-header': column.isToday, 'text-center': true }"
+            >
+              <div>
+                <div>{{ column.title }}</div>
+                <div class="title-time-row">
+                  <div>00-06</div>
+                  <div>06-12</div>
+                  <div>12-18</div>
+                  <div>18-00</div>
+                </div>
               </div>
-            </div>
-          </td>
-        </tr>
-        <tr
-          v-for="(truck, idx) of rows"
-          :key="truck._id"
-          class="truck-row"
-          :class="{ 'drag-over-row': idx === overRowInd }"
-        >
-          <td :style="cellStyles" @dragover.prevent="disabledZone">
-            <app-truck-title-cell
-              :id="truck._id"
-              :idx="idx"
-              :title="truck.regNum"
-            />
-          </td>
-          <td v-for="column of columns" :key="column.title" />
-        </tr>
-        <tr
-          :style="{ 'user-select': 'none', height: '100%' }"
-          @dragover.prevent.stop="disabledZone"
-        >
-          <td class="text-center">Итоги</td>
-          <td v-for="column of columns" :key="column.title">
-            <app-result-cell :date="column.date" />
-          </td>
-        </tr>
-        <app-note
-          v-for="note of filteredNotes"
-          :key="note._id"
-          :note="note"
-          :styles="notesStyle[note._id]"
-          @dragover.prevent
-        />
-
-        <div
-          v-for="item of allItems"
-          :key="item._id"
-          tag="div"
-          class="block"
-          :draggable="
-            item.itemType === 'order' && draggableMode
-              ? isDraggableOrder(item)
-              : false
-          "
-          :style="getStylesForOrder(item)"
-          @dragstart="dragStartHandler($event, item._id)"
-          @dragend="dragEndHandler($event, item._id)"
-          @dragover.prevent.stop="disabledZone"
-        >
-          <app-order-cell
-            v-if="item.itemType === 'order'"
-            :orderId="item._id"
+            </td>
+          </tr>
+          <tr
+            v-for="(truck, idx) of rows"
+            :key="truck._id"
+            class="truck-row"
+            :class="{ 'drag-over-row': idx === overRowInd }"
+          >
+            <td :style="cellStyles" @dragover.prevent="disabledZone">
+              <app-truck-title-cell
+                :id="truck._id"
+                :idx="idx"
+                :title="truck.regNum"
+              />
+            </td>
+            <td v-for="column of columns" :key="column.title" />
+          </tr>
+          <tr
+            :style="{ 'user-select': 'none', height: '100%' }"
+            @dragover.prevent.stop="disabledZone"
+          >
+            <td class="text-center">Итоги</td>
+            <td v-for="column of columns" :key="column.title">
+              <app-result-cell :date="column.date" />
+            </td>
+          </tr>
+          <app-note
+            v-for="note of filteredNotes"
+            :key="note._id"
+            :note="note"
+            :styles="notesStyle[note._id]"
+            @dragover.prevent
           />
-          <app-downtime-cell v-else :itemId="item._id" />
-        </div>
 
-        <app-bg-grid
-          v-if="titleColumnWidth"
-          :leftShift="titleColumnWidth"
-          :tableWidth="tableWidth + titleColumnWidth"
-          :days="columns"
-        />
+          <div
+            v-for="item of allItems"
+            :key="item._id"
+            tag="div"
+            class="block"
+            :draggable="
+              item.itemType === 'order' && draggableMode
+                ? isDraggableOrder(item)
+                : false
+            "
+            :style="getStylesForOrder(item)"
+            @dragstart="dragStartHandler($event, item._id)"
+            @dragend="dragEndHandler($event, item._id)"
+            @dragover.prevent.stop="disabledZone"
+          >
+            <app-order-cell
+              v-if="item.itemType === 'order'"
+              :orderId="item._id"
+            />
+            <app-downtime-cell v-else :itemId="item._id" />
+          </div>
+
+          <app-bg-grid
+            v-if="titleColumnWidth"
+            :leftShift="titleColumnWidth"
+            :tableWidth="tableWidth + titleColumnWidth"
+            :days="columns"
+          />
+        </tbody>
       </table>
       <div>
         <v-menu
@@ -135,37 +139,39 @@
         @drop.prevent="dropOnBufferHandler"
         @dblclick.stop="dblclickHandler($event, true)"
       >
-        <tr :style="{ 'min-height': '100%' }">
-          <td
-            :style="{
-              width: initTitleWidth,
-              height: bufferHeight,
-            }"
-          />
-          <td v-for="column of columns" :key="column.title" />
-        </tr>
-        <template v-if="tableWidth">
-          <div
-            v-for="order of unDistributedOrders"
-            :key="order._id"
-            tag="div"
-            class="block"
-            :draggable="draggableMode && isDraggableOrder(order)"
-            :style="getStylesForOrder(order)"
-            @dragstart="dragStartHandler($event, order._id)"
-            @dragend="dragEndHandler($event, order._id)"
-            @dragover="disabledZone"
-          >
-            <app-order-cell :orderId="order._id" />
-          </div>
+        <tbody>
+          <tr :style="{ 'min-height': '100%' }">
+            <td
+              :style="{
+                width: initTitleWidth,
+                height: bufferHeight,
+              }"
+            />
+            <td v-for="column of columns" :key="column.title" />
+          </tr>
+          <template v-if="tableWidth">
+            <div
+              v-for="order of unDistributedOrders"
+              :key="order._id"
+              tag="div"
+              class="block"
+              :draggable="draggableMode && isDraggableOrder(order)"
+              :style="getStylesForOrder(order)"
+              @dragstart="dragStartHandler($event, order._id)"
+              @dragend="dragEndHandler($event, order._id)"
+              @dragover="disabledZone"
+            >
+              <app-order-cell :orderId="order._id" />
+            </div>
 
-          <app-bg-grid
-            v-if="titleColumnWidth"
-            :leftShift="titleColumnWidth"
-            :tableWidth="tableWidth + titleColumnWidth"
-            :days="columns"
-          />
-        </template>
+            <app-bg-grid
+              v-if="titleColumnWidth"
+              :leftShift="titleColumnWidth"
+              :tableWidth="tableWidth + titleColumnWidth"
+              :days="columns"
+            />
+          </template>
+        </tbody>
       </table>
     </div>
   </div>
@@ -361,7 +367,7 @@ export default {
       },
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.resizeScreen)
   },
   mounted() {

@@ -1,8 +1,8 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="showDeleteBtn"
+    @delete="deleteHandler"
   >
     <docs-registry-form
       :item="item"
@@ -11,20 +11,20 @@
       @cancel="cancel"
       @submit="submit"
       @save="submit($event, true)"
-      @pickOrders="openDialog"
-      @downloadXlsx="downloadWordHandler"
+      @pick-orders="openDialog"
+      @download-xlsx="downloadWordHandler"
     />
     <docs-registry-orders-list
       :orders="item.orders"
       @delete="deleteOrderFromRegistry"
-      @dblRowClick="dblRowClickHandler"
+      @dbl-row-click="dblRowClickHandler"
     />
     <v-dialog
       v-if="item._id"
       v-model="showPickOrderDialog"
       fullscreen
       persistent
-      hide-overlay
+      :scrim="false"
     >
       <pick-orders
         :docsRegistry="item"

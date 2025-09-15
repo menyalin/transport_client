@@ -1,9 +1,9 @@
 <template>
   <v-select
     v-bind="$attrs"
-    :value="value"
+    :model-value="value"
     :items="items"
-    @change="changeHandler"
+    @update:model-value="changeHandler"
   />
 </template>
 <script>

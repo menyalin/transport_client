@@ -9,28 +9,28 @@
           v-model="v$.title.$model"
           label="Название оповещения"
           :errorMessages="titleFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
 
         <v-autocomplete
-          multiple
           v-model="v$.addresses.$model"
+          multiple
           label="Адреса"
-          outlined
+          variant="outlined"
           chips
           :errorMessages="addressFieldErrors"
-          deletable-chips
+          closable-chips
           :items="addressItems"
           clearable
           auto-select-first
         />
         <v-autocomplete
-          :items="agreements"
           v-model="v$.agreement.$model"
+          :items="agreements"
           label="Соглашение"
-          outlined
-          deletable-chips
+          variant="outlined"
+          closable-chips
           clearable
           auto-select-first
         />
@@ -40,32 +40,32 @@
           label="Получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="emailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-text-field
           v-model="v$.ccEmails.$model"
           label="Получатели копии оповещений"
           hint="email адреса через ','"
           :errorMessages="ccEmailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-text-field
           v-model="v$.bccEmails.$model"
           label="Скрытые получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="bccEmailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <div class="row_section">
           <div class="column left_column">
             <v-text-field
-              type="number"
               v-model="state.idleHoursBeforeNotify"
+              type="number"
               label="Часов до отправки уведомления"
-              outlined
+              variant="outlined"
             />
           </div>
           <div class="column">
@@ -79,12 +79,17 @@
           </div>
         </div>
 
-        <v-text-field v-model="state.note" label="Примечание" outlined dense />
+        <v-text-field
+          v-model="state.note"
+          label="Примечание"
+          variant="outlined"
+          density="compact"
+        />
       </div>
     </v-card-text>
     <v-card-actions class="buttons-wrapper">
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn @click="submit" :disabled="invalidForm || loading" color="primary">
+      <v-btn :disabled="invalidForm || loading" color="primary" @click="submit">
         Сохранить
       </v-btn>
     </v-card-actions>

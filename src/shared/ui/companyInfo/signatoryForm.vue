@@ -3,28 +3,28 @@
     <div class="text-subtitle-2 pb-3">Подписант:</div>
     <v-text-field
       label="Должность"
-      :value="value.position"
-      dense
-      @change="changeHandler('position', $event)"
+      :model-value="value.position"
+      density="compact"
+      @update:model-value="changeHandler('position', $event)"
     />
     <v-text-field
+      :model-value="value.fullName"
       label="ФИО"
-      v-model="value.fullName"
-      dense
-      @change="changeHandler('fullName', $event)"
+      density="compact"
+      @update:model-value="changeHandler('fullName', $event)"
     />
     <v-text-field
+      :model-value="value.number"
       label="Номер доверенности"
-      v-model="value.number"
-      dense
-      @change="changeHandler('number', $event)"
+      density="compact"
+      @update:model-value="changeHandler('number', $event)"
     />
     <DateTimeInput
+      :value="value.date"
       type="date"
       label="Дата доверенности"
-      v-model="value.date"
-      dense
-      @change="changeHandler('date', $event)"
+      density="compact"
+      @update:model-value="changeHandler('date', $event)"
     />
   </div>
 </template>

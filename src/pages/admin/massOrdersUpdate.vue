@@ -11,7 +11,7 @@
         :loading="companyListLoading"
         :disabled="companyListLoading"
         item-value="_id"
-        item-text="name"
+        item-title="name"
         :style="{ maxWidth: '250px' }"
       />
     </div>
@@ -26,7 +26,7 @@
         height="35"
         class="my-6"
       >
-        <template v-slot:default="{ value }">
+        <template #default="{ value }">
           <strong>{{ value }}%</strong>
         </template>
       </v-progress-linear>
@@ -35,10 +35,10 @@
 
     <v-btn
       v-else
-      @click="runOrderProcessing"
       color="error"
       :loading="processingState.isOrdersProcessing"
       :disabled="processingState.isOrdersProcessing"
+      @click="runOrderProcessing"
     >
       Обновить
     </v-btn>

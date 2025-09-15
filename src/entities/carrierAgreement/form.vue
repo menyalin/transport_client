@@ -3,44 +3,44 @@
     <buttons-panel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     />
     <div id="form">
       <div class="fields-row">
         <v-text-field
-          label="Название"
           v-model.trim="state.name"
-          dense
-          outlined
+          label="Название"
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '500px' }"
         />
         <VatRateSelect
           v-model="state.vatRate"
           :disabled="vatRateDisabled"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           label="Ставка НДС"
           :style="{ maxWidth: '150px' }"
         />
         <v-text-field
-          type="number"
           v-model.number="state.paymentOfDays"
-          outlined
-          dense
+          type="number"
+          variant="outlined"
+          density="compact"
           label="Отсрочка оплаты, раб.дней"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
-          label="Заказчик"
           v-model="state.customer"
+          label="Заказчик"
           auto-select-first
-          dense
-          item-text="name"
+          density="compact"
+          item-title="name"
           item-value="_id"
-          outlined
+          variant="outlined"
           clearable
           :items="carrierItems"
           :style="{ maxWidth: '300px' }"
@@ -51,7 +51,7 @@
         <v-textarea
           v-model="state.paymentDescription"
           rows="4"
-          outlined
+          variant="outlined"
           label="Описание условий оплаты (для заявки)"
         />
       </div>
@@ -59,23 +59,23 @@
         <v-textarea
           v-model="state.orderContractNote"
           rows="10"
-          outlined
+          variant="outlined"
           label="Примечание для Договора-заявки"
         />
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Основание для входящего акта об оказании услуг и счета"
           v-model="state.actBasis"
-          outlined
-          dense
+          label="Основание для входящего акта об оказании услуг и счета"
+          variant="outlined"
+          density="compact"
         />
       </div>
       <div class="fields-row">
         <v-textarea
           v-model="state.actDescription"
           rows="10"
-          outlined
+          variant="outlined"
           label="Примечание для входящего акта об оказании услуг"
         />
       </div>
@@ -83,7 +83,7 @@
         <v-textarea
           v-model="state.paymentBillDescription"
           rows="10"
-          outlined
+          variant="outlined"
           label="Примечание для cчета на оплату"
         />
       </div>
@@ -98,10 +98,10 @@
         <v-text-field
           v-model="state.note"
           label="Примечание"
-          dense
-          outlined
-          @blur="v$.note.$touch"
+          density="compact"
+          variant="outlined"
           hide-details
+          @blur="v$.note.$touch"
         />
       </div>
     </div>
@@ -110,12 +110,12 @@
 <script>
 import { useForm } from './useForm.js'
 
-import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
+import { ButtonsPanel, VatRateSelect } from '@/shared/ui'
 
 export default {
   name: 'IncomingInvoiceForm',
   components: {
-    DateTimeInput,
+    
     ButtonsPanel,
     VatRateSelect,
   },

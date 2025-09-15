@@ -3,7 +3,7 @@
     <slot />
     <v-spacer />
     <v-btn @click="cancelHandler">Отмена</v-btn>
-    <v-btn @click="saveHandler" color="primary" :disabled="submitDisabled">
+    <v-btn color="primary" :disabled="submitDisabled" @click="saveHandler">
       {{ submitBtnLabel }}
     </v-btn>
   </v-card-actions>

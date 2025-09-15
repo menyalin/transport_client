@@ -10,18 +10,18 @@
         />
         <AgreementListSettings v-model="settings" />
 
-        <v-data-table
+        <v-data-table-server
+          v-model:options="listOptions"
           :headers="headers"
           :items="filteredList"
           :loading="loading"
           height="73vh"
-          dense
+          density="compact"
           fixed-header
           :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.type`]="{ item }">
@@ -38,7 +38,7 @@
           <template #[`item.endPositionDate`]="{ item }">
             <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

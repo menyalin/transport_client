@@ -5,7 +5,7 @@
     accept=".xlsx"
     :label="label"
     prepend-icon="mdi-microsoft-excel"
-    @change="fileInputChanged"
+    @update:model-value="fileInputChanged"
   />
 </template>
 <script>

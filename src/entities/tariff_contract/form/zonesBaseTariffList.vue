@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="preparedItems"
-    dense
+    density="compact"
     :items-per-page="-1"
     hide-default-footer
   >
@@ -19,11 +19,11 @@
       {{ formatLiftCapacities(item.liftCapacities) }}
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn icon small @click="updateHandler(item)">
-        <v-icon small color="orange">mdi-pencil</v-icon>
+      <v-btn icon size="small" @click="updateHandler(item)">
+        <v-icon size="small" color="orange">mdi-pencil</v-icon>
       </v-btn>
-      <v-btn icon small @click="deleteHandler(item)">
-        <v-icon small color="red">mdi-delete</v-icon>
+      <v-btn icon size="small" @click="deleteHandler(item)">
+        <v-icon size="small" color="red">mdi-delete</v-icon>
       </v-btn>
     </template>
   </v-data-table>

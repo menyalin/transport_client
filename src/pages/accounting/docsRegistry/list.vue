@@ -9,15 +9,15 @@
     />
     <docs-registry-list-settings
       v-model="settings"
-      @updateHeaders="changeHeaders"
+      @update-headers="changeHeaders"
     />
     <docs-registry-data-table
       v-model="settings"
+      v-model:listOptions="settings.listOptions"
       :items="items"
       :headers="headers"
       :totalCount="totalCount"
       :statisticData="statisticData"
-      :listOptions.sync="settings.listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>

@@ -12,12 +12,12 @@
           <h4>Выбрать профиль компании:</h4>
           <v-select
             class="ma-4"
-            solo
-            :value="directoriesProfile"
+            variant="solo"
+            :model-value="directoriesProfile"
             :items="companies"
             clearable
             label="Профиль компании"
-            @change="changeDirectoriesProfile"
+            @update:model-value="changeDirectoriesProfile"
           />
         </div>
       </v-col>

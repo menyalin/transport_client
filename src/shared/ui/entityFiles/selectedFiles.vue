@@ -9,10 +9,10 @@
   >
     <template #[`item.note`]="{ item }">
       <v-text-field
-        :value="item.note"
-        dense
+        :model-value="item.note"
+        density="compact"
         hide-details
-        @change="changeNoteHandler(item.name, $event)"
+        @update:model-value="changeNoteHandler(item.name, $event)"
       />
     </template>
     <template #[`item.size`]="{ item }">
@@ -22,10 +22,10 @@
       <span v-if="item.progress > 0">{{ item.progress }} %</span>
       <v-icon
         v-else
-        small
+        size="small"
         class="mr-2"
-        @click="removeFileHandler(item.name)"
         color="red"
+        @click="removeFileHandler(item.name)"
       >
         mdi-delete
       </v-icon>
@@ -33,9 +33,9 @@
   </v-data-table>
 </template>
 <script>
-import { watch } from 'vue'
+import { watch, ref } from 'vue'
 import { useEntityFileHelpers } from './utils/useEntityFileHelpers'
-import { ref } from 'vue'
+
 export default {
   name: 'SelectedFiles',
   model: {

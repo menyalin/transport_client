@@ -3,7 +3,7 @@
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-4">
-          <v-toolbar color="primary" dark flat>
+          <v-toolbar color="primary" flat>
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
             <v-spacer />
           </v-toolbar>

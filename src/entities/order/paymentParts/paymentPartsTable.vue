@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table dense>
+  <v-table density="compact">
     <template #default>
       <thead>
         <tr>
@@ -41,7 +41,7 @@
           <td class="text-right">
             <v-icon
               v-if="!hideDelete"
-              small
+              size="small"
               :disabled="readonly"
               @click="deleteRow(idx)"
             >
@@ -51,7 +51,7 @@
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 export default {

@@ -5,36 +5,36 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
+            v-model="form.truckKinds"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
-            v-model="form.truckKinds"
           />
           <v-select
+            v-model="form.liftCapacities"
             multiple
             label="Грузоподъемность"
             :items="liftCapacityItems"
-            v-model="form.liftCapacities"
           />
         </div>
         <div class="input-fields-row">
           <v-text-field
-            label="Кол-во точек, включенных в тариф"
             v-model.number="v$.includedPoints.$model"
+            label="Кол-во точек, включенных в тариф"
           />
           <v-text-field
-            label="Тариф за доп.точку"
             v-model.number="v$.pointPrice.$model"
+            label="Тариф за доп.точку"
           />
         </div>
         <div class="input-fields-row">
           <v-autocomplete
+            v-model="form.loadingZone"
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
-            v-model="form.loadingZone"
           />
         </div>
         <div v-for="(_zone, idx) of form.zones" :key="idx" class="zone-row">
@@ -42,22 +42,22 @@
             v-model.number="form.zones[idx].distance"
             label="До, км"
             :style="{ 'max-width': '100px' }"
-            dense
+            density="compact"
           />
           <v-text-field
             v-model.number="form.zones[idx].price"
             label="Тариф"
-            dense
+            density="compact"
             :style="{ 'max-width': '160px' }"
           />
           <v-btn
             v-if="showDeleteBtn(idx)"
             icon
-            small
+            size="small"
             color="red"
             @click="deleteRow"
           >
-            <v-icon small> mdi-delete </v-icon>
+            <v-icon size="small"> mdi-delete </v-icon>
           </v-btn>
           <v-btn
             v-if="showAddBtn(idx) && !invalidZones"

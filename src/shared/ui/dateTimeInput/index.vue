@@ -1,30 +1,28 @@
 <template>
   <v-text-field
-    :label="label"
+    v-bind="$attrs"
     :type="type"
     :disabled="disabled"
     :hide-details="!errors.length && hideDetails"
     :prepend-inner-icon="showPrependIcon ? 'mdi-chevron-right' : null"
     :readonly="readonly"
-    :dense="dense"
     contenteditable
     :min="min"
     :max="max"
-    :outlined="outlined"
-    :value="tmpDate"
+    :model-value="tmpDate"
     :error="!!errors.length"
     :error-messages="errors"
     @paste="pasteDate"
-    @change="change"
+    @update:model-value="change"
     @click:prepend-inner="setDate"
   />
 </template>
 <script>
 import dayjs from 'dayjs'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput.js'
+import { usePasteDateInput } from './usePasteDateInput.js'
 
 export default {
-  name: 'DateTimeInput2',
+  name: 'DateTimeInput',
   model: {
     prop: 'value',
     event: 'change',
@@ -62,19 +60,6 @@ export default {
     },
 
     disabled: {
-      type: Boolean,
-      default: false,
-    },
-
-    dense: {
-      type: Boolean,
-      default: false,
-    },
-    readonly: {
-      type: Boolean,
-      default: false,
-    },
-    outlined: {
       type: Boolean,
       default: false,
     },

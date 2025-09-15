@@ -10,29 +10,28 @@
       </div>
       <v-list v-else>
         <v-list-item v-for="item in clientList" :key="item">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{
-                partnersMap.has(item)
-                  ? partnersMap.get(item).name
-                  : 'запись недоступна'
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>
+            {{
+              partnersMap.has(item)
+                ? partnersMap.get(item).name
+                : 'запись недоступна'
+            }}
+          </v-list-item-title>
+          
           <v-list-item-action>
-            <v-icon small color="error" @click="deleteClient(item)">
+            <v-icon size="small" color="error" @click="deleteClient(item)">
               mdi-delete
             </v-icon>
           </v-list-item-action>
         </v-list-item>
       </v-list>
       <v-autocomplete
-        :items="clientItems"
         v-if="!isVisibleBtn"
+        :items="clientItems"
         onlyClients
-        @change="addClient"
+        @update:model-value="addClient"
       />
-      <v-btn v-else small text color="primary" @click="showAutocomplete">
+      <v-btn v-else size="small" variant="text" color="primary" @click="showAutocomplete">
         Добавить клиента
       </v-btn>
     </div>
@@ -95,7 +94,7 @@ export default {
     },
     async deleteClient(id) {
       if (!id) return null
-      const res = await this.$confirm('Вы уверены? ')
+      const res = await this.$dialog.confirm('Вы уверены? ')
       if (!res) return null
       this.selectedClients = this.selectedClients.filter((item) => item !== id)
       this.$emit('change', this.selectedClients)

@@ -3,33 +3,33 @@
     <app-table-column-setting
       :allHeaders="DOCS_REGISTRY_TABLE_HEADERS"
       listSettingsName="docsRegistrySettings"
-      @change="updateHeadersHandler"
+      @update:model-value="updateHeadersHandler"
     />
 
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
+      :model-value="settings.clients"
+      item-title="name"
       item-value="_id"
       label="Клиенты"
-      dense
+      density="compact"
       clearable
       multiple
-      outlined
+      variant="outlined"
       :items="clientItems"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'clients')"
+      @update:model-value="updateSettings($event, 'clients')"
     />
     <v-select
-      :value="settings.status"
+      :model-value="settings.status"
       label="Статус"
-      dense
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'status')"
+      @update:model-value="updateSettings($event, 'status')"
     />
   </div>
 </template>

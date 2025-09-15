@@ -4,9 +4,8 @@
       v-model="showAlert"
       type="info"
       class="my-4"
-      dense
-      transition="fade-transition"
-      dismissible
+      density="compact"
+      closable
     >
       Рейсы успешно созданы
     </v-alert>
@@ -16,7 +15,7 @@
       <div>Будет создано рейсов: {{ totalOrderCount }}</div>
       <v-btn
         :disabled="!totalOrderCount || loading"
-        small
+        size="small"
         class="mx-3"
         @click="crearTable"
       >
@@ -26,14 +25,14 @@
         :disabled="!totalOrderCount || loading"
         :loading="loading"
         color="error"
-        small
+        size="small"
         @click="createOrders"
       >
         Создать рейсы
       </v-btn>
     </div>
     <div v-if="isValidPeriod" class="table-wrapper">
-      <v-simple-table dense>
+      <v-table density="compact">
         <template #default>
           <thead>
             <tr>
@@ -52,7 +51,7 @@
               <td>
                 {{ templatesMap.get(t).name }}
                 <v-icon
-                  small
+                  size="small"
                   color="red"
                   class="ml-3"
                   @click="deleteTemplate(t)"
@@ -66,22 +65,22 @@
                   class="input"
                   align="right"
                   type="text"
-                  @change="setOrder($event, [t, day.date])"
+                  @update:modelValue="setOrder($event, [t, day.date])"
                 />
               </td>
             </tr>
           </tbody>
         </template>
-      </v-simple-table>
+      </v-table>
       <div class="bottom-panel">
         <v-autocomplete
           v-model="templateSearch"
           label="Добавить шаблон"
-          dense
+          density="compact"
           hide-details
           :items="$store.getters.orderTemplatesForSelect"
         />
-        <v-btn small color="primary" @click="addAllTemplates">
+        <v-btn size="small" color="primary" @click="addAllTemplates">
           Добавить все шаблоны
         </v-btn>
       </div>
@@ -159,7 +158,7 @@ export default {
   },
   methods: {
     async createOrders() {
-      const res = await this.$confirm('Вы уверены?')
+      const res = await this.$dialog.confirm('Вы уверены?')
       if (!res) return null
       try {
         this.loading = true

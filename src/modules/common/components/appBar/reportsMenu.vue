@@ -1,10 +1,10 @@
 <template>
-  <v-menu bottom offset-y>
-    <template #activator="{ on, attrs }">
-      <v-btn v-bind="attrs" text v-on="on"> Отчеты </v-btn>
+  <v-menu location="bottom">
+    <template #activator="{ props }">
+      <v-btn v-bind="props" variant="text"> Отчеты </v-btn>
     </template>
 
-    <v-list dense>
+    <v-list density="compact">
       <v-list-item
         v-for="item of filteredReports"
         :key="item.link"

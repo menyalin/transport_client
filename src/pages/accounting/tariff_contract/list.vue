@@ -6,9 +6,9 @@
       :agreementItems="allClientAgreements"
     />
     <TariffContractListDataTable
+      v-model:listOptions="listOptions"
       :items="items"
       :loading="loading"
-      :listOptions.sync="listOptions"
     />
   </EntityListWrapper>
 </template>

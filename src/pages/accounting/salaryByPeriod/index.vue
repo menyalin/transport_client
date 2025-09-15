@@ -6,9 +6,9 @@
         v-model="tks"
         :items="$store.getters.tkNames"
         label="ТК"
-        dense
+        density="compact"
         multiple
-        item-text="name"
+        item-title="name"
         item-value="_id"
         clearable
         hide-details
@@ -16,14 +16,14 @@
       />
 
       <v-autocomplete
-        label="Водитель"
         v-model="driver"
+        label="Водитель"
         :items="drivers"
         item-value="_id"
-        item-text="fullName"
+        item-title="fullName"
         hide-details
         auto-select-first
-        dense
+        density="compact"
         clearable
         :style="{ maxWidth: '300px' }"
       />
@@ -31,7 +31,7 @@
         v-model="clients"
         :items="clientItems"
         label="Клиент"
-        dense
+        density="compact"
         hide-details
         multiple
         :style="{ 'max-width': '250px' }"
@@ -40,7 +40,7 @@
         v-model="consigneeType"
         :items="$store.getters.partnerGroups"
         label="Тип грузополучателя"
-        dense
+        density="compact"
         clearable
         hide-details
         :style="{ 'max-width': '250px' }"
@@ -49,7 +49,7 @@
         v-model="orderType"
         :items="$store.getters.orderAnalyticTypes"
         label="Тип рейса"
-        dense
+        density="compact"
         clearable
         hide-details
         :style="{ 'max-width': '200px' }"
@@ -64,7 +64,7 @@
       :loading="isLoading"
       :driver="driver"
       :setListSettings="setListSettings"
-      @chooseDriver="setDriver"
+      @choose-driver="setDriver"
     />
   </div>
 </template>

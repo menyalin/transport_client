@@ -5,7 +5,7 @@
     </v-alert>
     <v-btn
       v-else
-      small
+      size="small"
       color="primary"
       :style="{ maxWidth: '200px' }"
       @click="addPlaceHandler"

@@ -3,33 +3,33 @@
     <div class="main-column-wrapper">
       <div class="settings_row">
         <v-select
-          :value="state.type"
+          :model-value="state.type"
           :items="pointTypes"
-          dense
+          density="compact"
           :readonly="readonly"
           hide-details
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '150px' }"
-          @change="setField($event, 'type')"
+          @update:model-value="setField($event, 'type')"
         />
         <v-checkbox
           v-if="showMainLoadingPointSelector && state.type === 'loading'"
           v-model="state.isMainLoadingPoint"
           label="Основной пункт погрузки"
           hide-details
-          dense
+          density="compact"
           color="primary"
           class="ml-4"
-          @change="setField($event, 'isMainLoadingPoint')"
+          @update:model-value="setField($event, 'isMainLoadingPoint')"
         />
         <v-checkbox
           v-model="state.useInterval"
           label="Временнное окно"
           hide-details
-          dense
+          density="compact"
           color="primary"
           class="ml-4"
-          @change="setField($event, 'useInterval')"
+          @update:model-value="setField($event, 'useInterval')"
         />
         <v-checkbox
           v-if="state.isReturn || (showReturnBtn && state.type === 'unloading')"
@@ -37,27 +37,27 @@
           label="Возврат"
           :readonly="!showReturnBtn || state.isPltReturn"
           hide-details
-          dense
+          density="compact"
           color="red"
           class="ml-4"
-          @change="setField($event, 'isReturn')"
+          @update:model-value="setField($event, 'isReturn')"
         />
         <v-checkbox
           v-if="state.isReturn || state.isPltReturn"
           v-model="state.isPltReturn"
           label="Возврат паллет"
           hide-details
-          dense
+          density="compact"
           color="primary"
           class="ml-4"
-          @change="setField($event, 'isPltReturn')"
+          @update:model-value="setField($event, 'isPltReturn')"
         />
         <v-checkbox
           v-if="state.isAutofilled"
           v-model="state.isAutofilled"
           label="Автозаполнение"
           hide-details
-          dense
+          density="compact"
           disabled
           color="grey"
           class="ml-4"
@@ -68,10 +68,10 @@
           v-model="state.waitsForWaybills"
           label="Ожидает документы"
           hide-details
-          dense
+          density="compact"
           color="primary"
           class="mx-4"
-          @change="setField($event, 'waitsForWaybills')"
+          @update:model-value="setField($event, 'waitsForWaybills')"
         />
       </div>
       <AutoCompleteWithActions
@@ -83,7 +83,7 @@
         label="Адрес"
         :readonly="readonly"
         :style="{ 'min-width': '550px' }"
-        outlined
+        variant="outlined"
         :hint="addressContactsHint"
         :persistentHint="!!addressContactsHint"
         :hideDetails="!addressContactsHint"
@@ -95,49 +95,49 @@
       <v-spacer />
       <v-text-field
         v-if="state.type === 'unloading'"
-        :value="state.waybills"
+        :model-value="state.waybills"
         label="Накладные"
         hide-details
         :readonly="readonly"
-        outlined
+        variant="outlined"
         :style="{ 'min-width': '550px' }"
-        dense
-        @change="setField($event, 'waybills')"
+        density="compact"
+        @update:model-value="setField($event, 'waybills')"
       />
       <v-text-field
-        :value="state.note"
+        :model-value="state.note"
         label="Примечание"
         hide-details
         :readonly="readonly"
-        outlined
+        variant="outlined"
         :style="{ 'min-width': '550px' }"
-        dense
-        @change="setField($event, 'note')"
+        density="compact"
+        @update:model-value="setField($event, 'note')"
       />
     </div>
     <div v-if="!isTemplate" class="dates-column">
-      <BorderedBlock title="Временное окно" v-if="state.useInterval">
+      <BorderedBlock v-if="state.useInterval" title="Временное окно">
         <DateTimeInput
           :value="state.plannedDate"
           type="datetime-local"
           label="Начало периода"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           class="mt-1"
           hide-details
           :readonly="readonly"
-          @change="setField($event, 'plannedDate')"
+          @update:model-value="setField($event, 'plannedDate')"
         />
         <DateTimeInput
           :value="state.intervalEndDate"
           type="datetime-local"
           label="Конец периода"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           hide-details
           :readonly="readonly"
           class="mt-2"
-          @change="setField($event, 'intervalEndDate')"
+          @update:model-value="setField($event, 'intervalEndDate')"
         />
       </BorderedBlock>
       <DateTimeInput
@@ -145,12 +145,12 @@
         :value="state.plannedDate"
         type="datetime-local"
         label="Плановая дата"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         class="mt-1"
         hide-details
         :readonly="readonly"
-        @change="setField($event, 'plannedDate')"
+        @update:model-value="setField($event, 'plannedDate')"
       />
       <DateTimeInput
         :value="state.arrivalDate"
@@ -158,48 +158,48 @@
         label="Факт прибытия"
         showPrependIcon
         hide-details
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         :disabled="!confirmed || point.arrivalDateDisabled"
-        @change="setField($event, 'arrivalDate')"
+        @update:model-value="setField($event, 'arrivalDate')"
       />
       <DateTimeInput
         :value="state.departureDate"
         type="datetime-local"
         label="Факт убытия"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         showPrependIcon
         hide-details
         :disabled="!confirmed || point.departureDateDisabled"
         :minDate="state.arrivalDate"
         :errorMessages="departureDateErrors"
-        @change="setField($event, 'departureDate')"
+        @update:model-value="setField($event, 'departureDate')"
       />
     </div>
     <div v-if="!isTemplate && isShowDocDates" class="dates-column">
-      <BorderedBlock title="Временное окно (Док)" v-if="state.useInterval">
+      <BorderedBlock v-if="state.useInterval" title="Временное окно (Док)">
         <DateTimeInput
           :value="state.plannedDateDoc"
           type="datetime-local"
           label="Начало периода"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           class="mt-1"
           hide-details
           :readonly="readonly"
-          @change="setField($event, 'plannedDateDoc')"
+          @update:model-value="setField($event, 'plannedDateDoc')"
         />
         <DateTimeInput
           :value="state.intervalEndDateDoc"
           type="datetime-local"
           label="Конец периода"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           hide-details
           :readonly="readonly"
           class="mt-2"
-          @change="setField($event, 'intervalEndDateDoc')"
+          @update:model-value="setField($event, 'intervalEndDateDoc')"
         />
       </BorderedBlock>
       <DateTimeInput
@@ -207,12 +207,12 @@
         :value="state.plannedDateDoc"
         type="datetime-local"
         label="Плановая дата (док)"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         class="mt-1"
         hide-details
         :readonly="readonly"
-        @change="setField($event, 'plannedDateDoc')"
+        @update:model-value="setField($event, 'plannedDateDoc')"
       />
       <DateTimeInput
         :value="state.arrivalDateDoc"
@@ -220,45 +220,45 @@
         label="Факт прибытия (док)"
         :readonly="readonlyDocDates"
         hide-details
-        dense
-        outlined
-        @change="setField($event, 'arrivalDateDoc')"
+        density="compact"
+        variant="outlined"
+        @update:model-value="setField($event, 'arrivalDateDoc')"
       />
       <DateTimeInput
         :value="state.departureDateDoc"
         type="datetime-local"
         label="Факт убытия (док)"
         :readonly="readonlyDocDates"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         hide-details
-        @change="setField($event, 'departureDateDoc')"
+        @update:model-value="setField($event, 'departureDateDoc')"
       />
     </div>
     <div v-if="isTemplate && fixedTimeSlots" id="fixedTimeBlock">
       <div class="time-row">
         <v-text-field
-          :value="state.fixedTime"
+          :model-value="state.fixedTime"
           label="Время"
           tag="div"
           type="time"
-          dense
+          density="compact"
           hide-details
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '100px' }"
-          @change="setField($event, 'fixedTime')"
+          @update:model-value="setField($event, 'fixedTime')"
         />
         <v-text-field
           v-if="state.useInterval"
-          :value="state.hoursInterval"
+          :model-value="state.hoursInterval"
           label="Окно, часов"
           type="number"
-          dense
+          density="compact"
           min="0"
           hide-details
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '130px' }"
-          @change="setField($event, 'hoursInterval')"
+          @update:model-value="setField($event, 'hoursInterval')"
         />
       </div>
 
@@ -271,14 +271,14 @@
         hint="Смещение в днях относительно даты начала рейса"
         type="number"
         tag="div"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         min="0"
-        @change="setField($event, 'offsetDays')"
+        @update:model-value="setField($event, 'offsetDays')"
       />
     </div>
     <div v-if="showDeleteBtn && !readonly" class="remove-btn-wrapper">
-      <v-btn icon dark color="error" @click="$emit('delete', ind)">
+      <v-btn icon color="error" @click="$emit('delete', ind)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>

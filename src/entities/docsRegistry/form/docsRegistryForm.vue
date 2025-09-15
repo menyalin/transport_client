@@ -3,82 +3,84 @@
     <buttons-panel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
+      <v-btn size="small" class="mx-2" @click="downloadXlsx">
+        Скачать DOCX
+      </v-btn>
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
         <v-text-field
           v-if="state.number"
           label="Номер"
-          :value="state.number"
+          :model-value="state.number"
           readonly
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '100px' }"
         />
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
+          @blur="v$.client.$touch"
+          @update:model-value="changeClientHandler"
         />
         <v-select
           v-model="state.agreement"
           label="Соглашение"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledAgreements || disabledMainFields"
           :loading="loadingAgreements"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.agreement.$touch"
           :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
+          @blur="v$.agreement.$touch"
+          @update:model-value="changeAgreementHandler"
         />
 
         <v-select
-          label="Площадка"
           v-model="state.placeForTransferDocs"
-          dense
+          label="Площадка"
+          density="compact"
           required
           clearable
-          item-text="title"
+          item-title="title"
           item-value="address"
-          outlined
+          variant="outlined"
           :disabled="
             !placeItems || placeItems.length === 0 || disabledMainFields
           "
           :items="placeItems"
           :style="{ maxWidth: '300px' }"
-          @blur="v$.placeForTransferDocs.$touch"
           :error-messages="placeErrorMessages"
+          @blur="v$.placeForTransferDocs.$touch"
         />
       </div>
 
@@ -87,11 +89,11 @@
       </v-alert>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
         :disabled="
           !state.placeForTransferDocs || disabledPickOrders || needSave
         "
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
@@ -99,8 +101,8 @@
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         @blur="v$.note.$touch"
       />
     </div>
@@ -108,11 +110,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
 
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { ButtonsPanel } from '@/shared/ui'
 import useDocsRegistryForm from './useDocsRegistryForm.js'
 

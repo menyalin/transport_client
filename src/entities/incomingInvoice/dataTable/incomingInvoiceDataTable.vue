@@ -1,14 +1,14 @@
 <template>
-  <v-data-table
+  <v-data-table-server
+    v-model="selected"
     :headers="headers"
     checkbox-color="primary"
-    v-model="selected"
     item-key="_id"
     :items="items"
     showSelect
     :loading="loading"
     height="70vh"
-    dense
+    density="compact"
     :serverItemsLength="totalCount"
     fixed-header
     :footer-props="{
@@ -59,7 +59,7 @@
     <template #[`footer.prepend`]>
       <IncomingInvoiceListAnalytics :data="analytics" />
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script>

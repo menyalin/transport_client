@@ -4,8 +4,8 @@
       panel-type="form"
       :disabledSubmit="
         !$store.getters.hasPermission('carrier:write') ||
-        isInvalidForm ||
-        loading
+          isInvalidForm ||
+          loading
       "
       @cancel="cancelHandler"
       @submit="submitHandler"
@@ -13,9 +13,9 @@
 
     <v-text-field
       v-model="state.name"
-      outlined
+      variant="outlined"
       label="Название ТК"
-      dense
+      density="compact"
       hide-details
     />
     <div class="row-input">
@@ -38,10 +38,10 @@
     <v-btn
       v-if="displayDeleteBtn"
       color="error"
-      @click="deleteHandler"
       class="mt-5"
+      @click="deleteHandler"
     >
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

@@ -30,7 +30,7 @@ export default {
             ? new Date(props.invoice.date).toLocaleDateString()
             : ''
         } (${statusStr.value})`
-      }
+      } else return ''
     })
     return {
       url: `/accounting/incomingInvoice/${props?.invoice?._id}`,

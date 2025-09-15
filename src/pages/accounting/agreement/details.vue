@@ -4,14 +4,13 @@
       <v-col>
         <v-alert
           v-model="error.show"
-          dismissible
+          closable
           type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
+          @update:model-value="toggleAlert"
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <agreement-form
           v-else
           :agreement="item"
@@ -29,7 +28,7 @@
 </template>
 <script>
 import { AgreementForm } from '@/entities/agreement'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { LoadSpinner } from '@/shared/ui'
 import { useCarriers } from '@/entities/carrier'
 import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
@@ -38,7 +37,7 @@ export default {
   name: 'AgreementDetails',
   components: {
     AgreementForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   setup() {

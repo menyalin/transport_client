@@ -9,15 +9,15 @@
           @refresh="refreshHandler"
         />
         <CarrierListSettings v-model="settings" />
-        <v-data-table
+        <v-data-table-server
+          v-model:options="listOptions"
           :headers="headers"
           :items="items"
           :loading="loading"
-          :options.sync="listOptions"
           :server-items-length="count"
           fixed-header
           height="72vh"
-          dense
+          density="compact"
           :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -32,7 +32,7 @@
               :agreementsData="item.agreementsData"
             />
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

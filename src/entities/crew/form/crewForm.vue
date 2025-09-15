@@ -11,12 +11,12 @@
       <v-autocomplete
         v-model="state.tkName"
         :items="carrierItems"
-        item-text="name"
+        item-title="name"
         auto-select-first
         item-value="_id"
         label="ТК"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         :disabled="!!crewId"
         :style="{ maxWidth: '300px' }"
       />
@@ -24,22 +24,22 @@
         v-model="state.onlyCarrierItems"
         label="Только водители ТК"
         :disabled="!!crewId || !!state.driver"
-        dense
-        outlined
-        @change="changeOnlyCarrierItemsHandler"
+        density="compact"
+        variant="outlined"
+        @update:model-value="changeOnlyCarrierItemsHandler"
       />
     </div>
 
     <v-autocomplete
       v-model="state.driver"
-      outlined
+      variant="outlined"
       clearable
       auto-select-first
       label="Водитель"
       class="mb-2"
       :items="driverItems"
       item-value="_id"
-      item-text="fullName"
+      item-title="fullName"
       :disabled="!state.tkName || !!crewId"
       :style="{ maxWidth: '600px' }"
     />
@@ -50,29 +50,29 @@
         label="Дата начала"
         :errorMessages="startDateError"
         :disabled="!state.driver || !!crewId"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
-        @change="changeStartDateHandler"
+        @update:model-value="changeStartDateHandler"
       />
       <DateTimeInput
         v-model="state.endDate"
         :disabled="disabledEndDateField"
         label="Дата завершения"
         :errorMessages="endDateError"
-        @blur="v$.endDate.$touch"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
+        @blur="v$.endDate.$touch"
       />
       <v-btn
         v-if="isReturnToWorkAllowed"
-        @click="returnToWorkHandler"
         class="mx-2"
         color="primary"
-        text
+        variant="text"
+        @click="returnToWorkHandler"
       >
         Вернуть экипаж в работу
       </v-btn>
@@ -83,7 +83,7 @@
       :date="state.startDate"
       :crew="actualDriverCrew"
       type="crew"
-      @clearCrew="clearActualCrewHandler"
+      @clear-crew="clearActualCrewHandler"
     />
 
     <!-- <app-transport-table
@@ -103,7 +103,7 @@
 
     <TransportTable2
       v-if="showTransportTable"
-      :items.sync="state.transport"
+      :items="state.transport"
       :crewId="crewId"
       :crewEditable="crewEditable || isNewCrew"
       :trucks="truckItems"
@@ -114,8 +114,8 @@
     <v-text-field
       v-model="state.note"
       label="Примечание"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       class="mt-6"
     />
     <div v-if="crew && crew.manager" class="pb-4 text-caption">
@@ -128,16 +128,15 @@
       </span>
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
 <script>
 import { useCrewForm } from './useForm'
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
-
 import TransportTable2 from './transportTable_2'
+import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 import AppCrewMessage from './crewMessage'
 
 export default {

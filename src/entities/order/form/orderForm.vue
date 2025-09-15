@@ -15,7 +15,7 @@
               v-if="docTemplateIsVisible"
               :templates="templates"
               :disabledDownloadFiles="downloadDisabled"
-              @downloadTemplate="downloadTemplateHandler"
+              @download-template="downloadTemplateHandler"
             />
             <PaymentInvoiceLinks :items="form.paymentInvoices" />
           </buttons-panel>
@@ -24,9 +24,9 @@
               v-model="templateSelector"
               label="Заполнить из шаблона"
               clearable
-              outlined
+              variant="outlined"
               :disabled="state.status !== 'needGet'"
-              dense
+              density="compact"
               hide-details
               :items="$store.getters.orderTemplatesForSelect"
               :style="{ width: '350px' }"
@@ -97,7 +97,7 @@
             :orderConfirmed="orderConfirmed"
             :routeDate="routeDate"
             :agreementDisabled="hasPaymentInvoices"
-            @updateAgreement="updateAgreementHandler"
+            @update-agreement="updateAgreementHandler"
           />
           <CargoParams
             v-model="cargoParams"
@@ -155,10 +155,10 @@
             />
 
             <PriceBlock
+              v-model:prices="prices"
+              v-model:outsourceCosts="outsourceCosts"
               :isValidPrices="isValidPrices(agreement, prices, state)"
-              :prices.sync="prices"
               :prePrices="prePrices"
-              :outsourceCosts.sync="outsourceCosts"
               :agreement="agreement"
               :carrierAgreement="carrierAgreement"
               :analytics="analytics"
@@ -174,32 +174,32 @@
 
             <PriceDialog
               v-if="showFinalPriceDialog"
+              v-model:prePrices="prePrices"
+              v-model:dialog="priceDialog"
               :order="order"
               :readonly="hasPaymentInvoices"
               :agreement="agreement"
-              :prePrices.sync="prePrices"
               :finalPrices="finalPrices"
-              :dialog.sync="priceDialog"
             />
           </div>
 
           <div id="note">
             <v-text-field
               v-model="form.note"
-              outlined
+              variant="outlined"
               label="Примечание"
-              dense
+              density="compact"
             />
             <v-text-field
               v-model="form.noteAccountant"
-              outlined
+              variant="outlined"
               label="Примечание для бухгалтера"
-              dense
+              density="compact"
             />
           </div>
           <EntityFiles
-            id="order-files"
             v-if="order && order._id"
+            id="order-files"
             :itemId="order._id"
             docType="order"
           />
@@ -229,7 +229,7 @@
           class="ma-4"
           @click="$emit('delete')"
         >
-          <v-icon left dark> mdi-delete </v-icon>
+          <v-icon start> mdi-delete </v-icon>
           Удалить
         </v-btn>
       </v-col>
@@ -238,7 +238,7 @@
 </template>
 <script>
 import { computed } from 'vue'
-import { OrderService, OrderTemplateService } from '@/shared/services'
+import { OrderService, OrderTemplateService , CarrierAgreementService } from '@/shared/services'
 import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
@@ -265,7 +265,6 @@ import {
 } from '@/entities/order'
 
 import AppPaymentToDriver from './paymentToDriver.vue'
-import { CarrierAgreementService } from '@/shared/services/index'
 
 export default {
   name: 'OrderForm',

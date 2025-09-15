@@ -1,6 +1,7 @@
-import store from '@/store'
 import { computed, ref, watch } from 'vue'
+
 import { WorkerService } from '@/shared/services'
+import store from '@/store'
 
 export const useLinkedUserModel = (props, ctx) => {
   const candidate = ref({})

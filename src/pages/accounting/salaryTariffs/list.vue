@@ -18,8 +18,8 @@
           <v-text-field
             v-model="settings.date"
             type="date"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             hide-details
             label="Тарифы на дату"
             :style="{ 'max-width': '220px' }"
@@ -28,8 +28,8 @@
             v-model="settings.tk"
             label="ТК"
             :items="$store.getters.tkNamesForSelect"
-            dense
-            outlined
+            density="compact"
+            variant="outlined"
             clearable
             hide-details
             :style="{ 'max-width': '220px' }"
@@ -37,9 +37,9 @@
           <v-select
             v-model="settings.type"
             :items="$store.getters.salaryTariffTypes"
-            outlined
+            variant="outlined"
             clearable
-            dense
+            density="compact"
             hide-details
             label="Тип тарифа"
             :style="{ 'max-width': '250px' }"
@@ -47,27 +47,27 @@
           <v-select
             v-model="settings.liftCapacity"
             :items="$store.getters.liftCapacityTypes"
-            outlined
+            variant="outlined"
             clearable
-            dense
+            density="compact"
             hide-details
             label="Грузоподъемность"
             :style="{ 'max-width': '180px' }"
           />
         </div>
 
-        <v-data-table
+        <v-data-table-server
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="filteredList"
           :loading="loading"
           height="73vh"
-          dense
+          density="compact"
           fixed-header
           :serverItemsLength="count"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item._result`]="{ item }">
@@ -85,13 +85,13 @@
               {{ item._result }}
             </div>
           </template>
-        </v-data-table>
+        </v-data-table-server>
         <app-salary-tariff-form
           v-model="editableItem"
           :dialog="dialog"
           @cancel="cancelDialog"
           @update="updateItem"
-          @deletedItem="deletedItem"
+          @deleted-item="deletedItem"
         />
       </v-col>
     </v-row>

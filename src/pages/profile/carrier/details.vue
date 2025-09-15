@@ -62,7 +62,7 @@ export default {
       this.$router.push({ name: 'CarrierList' })
     },
     async deleteHandler() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы действительно хотите удалить запись? '
       )
       if (res) {

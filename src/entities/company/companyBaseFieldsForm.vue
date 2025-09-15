@@ -2,21 +2,21 @@
   <div>
     <buttons-panel
       panelType="form"
+      :disabledSubmit="invalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
-      :disabledSubmit="invalidForm"
     />
     <div class="form-wrapper">
       <v-text-field
         v-model="state.fullName"
         label="Полное названии компании"
-        dense
+        density="compact"
         required
         clearable
-        outlined
-        @blur="v$.fullName.$touch"
+        variant="outlined"
         :error-messages="fullNameErrorMessages"
         :style="{ maxWidth: '400px' }"
+        @blur="v$.fullName.$touch"
       />
     </div>
   </div>

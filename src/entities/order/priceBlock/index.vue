@@ -3,22 +3,22 @@
     <app-price-wrapper
       v-if="showPriceBlock"
       :items="prices"
-      @change="changePricesHandler"
       :isValid="isValidPrices"
       :readonly="readonlyPrice || hasPaymentInvoice"
       :agreement="agreement"
       title="Стоимость рейса"
       :prePrices="prePrices"
+      @update:model-value="changePricesHandler"
     />
     <app-price-wrapper
       v-if="showOutsourceBlock"
       :items="outsourceCosts"
-      @change="changeOutsourceCostsHandler"
       class="mt-4"
       :readonly="readonlyCosts || hasIncomingInvoice"
       :agreement="carrierAgreement"
       title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
+      @update:model-value="changeOutsourceCostsHandler"
     />
     <slot v-if="showOutsourceBlock" />
   </div>

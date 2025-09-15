@@ -1,15 +1,6 @@
-import PaymentInvoiceForm from './form/paymentInvoiceForm.vue'
-import PaymentInvoicesListSettings from './listSettings.vue'
-import PaymentInvoiceDataTable from './dataTable.vue'
-import PickOrdersSettings from './pickOrdersSettings.vue'
-import PaymentInvoiceOrdersList from './ordersList/ordersList.vue'
-import PaymentInvoiceResult from './paymentInvoiceResult.vue'
-
-export {
-  PickOrdersSettings,
-  PaymentInvoiceForm,
-  PaymentInvoicesListSettings,
-  PaymentInvoiceDataTable,
-  PaymentInvoiceOrdersList,
-  PaymentInvoiceResult,
-}
+export { default as PaymentInvoiceForm } from './form/paymentInvoiceForm.vue'
+export { default as PaymentInvoicesListSettings } from './listSettings.vue'
+export { default as PaymentInvoiceDataTable } from './dataTable.vue'
+export { default as PickOrdersSettings } from './pickOrdersSettings.vue'
+export { default as PaymentInvoiceOrdersList } from './ordersList/ordersList.vue'
+export { default as PaymentInvoiceResult } from './paymentInvoiceResult.vue'

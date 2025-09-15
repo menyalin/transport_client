@@ -3,13 +3,13 @@
     <v-row>
       <v-col>
         <v-data-table
-          dense
+          density="compact"
           :headers="headers"
           :items="activeConnection"
           :items-per-page="-1"
         >
           <template #top>
-            <v-subheader>Active connections</v-subheader>
+            <v-list-subheader>Active connections</v-list-subheader>
           </template>
         </v-data-table>
       </v-col>
@@ -37,7 +37,7 @@ export default {
     socket.emit('getActiveUsers')
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     socket.off('activeUsers')
   },
 }

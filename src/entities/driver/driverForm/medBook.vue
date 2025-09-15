@@ -7,21 +7,21 @@
       <div class="first-column">
         <v-text-field
           hide-details
-          outlined
-          :value="params.number"
-          dense
+          variant="outlined"
+          :model-value="params.number"
+          density="compact"
           label="Номер"
-          @change="change($event, 'number')"
+          @update:model-value="change($event, 'number')"
         />
         <DateTimeInput
           label="Дата выдачи"
           :value="params.issueDate"
           hide-prepend-icon
           hide-time-input
-          outlined
+          variant="outlined"
           hideDetails
-          dense
-          @change="change($event, 'issueDate')"
+          density="compact"
+          @update:model-value="change($event, 'issueDate')"
         />
         <div class="date-input-row">
           <DateTimeInput
@@ -29,10 +29,10 @@
             :value="params.certifiedBeforeDate"
             hide-prepend-icon
             hide-time-input
-            outlined
+            variant="outlined"
             hideDetails
-            dense
-            @change="change($event, 'certifiedBeforeDate')"
+            density="compact"
+            @update:model-value="change($event, 'certifiedBeforeDate')"
           />
           <v-chip
             v-if="certificateValidityPeriod !== null"
@@ -49,9 +49,9 @@
             hide-prepend-icon
             hide-time-input
             hideDetails
-            outlined
-            dense
-            @change="change($event, 'annualCommisionDate')"
+            variant="outlined"
+            density="compact"
+            @update:model-value="change($event, 'annualCommisionDate')"
           />
           <v-chip
             v-if="daysBeforeMedExamination !== null"
@@ -64,10 +64,10 @@
       </div>
       <v-textarea
         label="Примечание"
-        :value="params.note"
-        outlined
+        :model-value="params.note"
+        variant="outlined"
         hide-details
-        @change="change($event, 'note')"
+        @update:model-value="change($event, 'note')"
       />
     </div>
   </div>

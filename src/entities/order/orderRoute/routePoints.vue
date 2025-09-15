@@ -14,20 +14,25 @@
         :showMainLoadingPointSelector="showMainLoadingPointSelector"
         :showDeleteBtn="points.length > 2"
         :isTemplate="isTemplate"
-        @changePoint="change($event, ind)"
+        @update:model-value-point="change($event, ind)"
         @delete="deleteHandler"
       />
     </div>
 
     <div v-if="!readonly" class="row py-3">
-      <v-btn text color="primary" small outlined class="ma-2" @click="addPoint">
+      <v-btn
+        variant="text outlined"
+        color="primary"
+        size="small"
+        class="ma-2"
+        @click="addPoint"
+      >
         Добавить адрес
       </v-btn>
       <v-btn
         v-if="!isTemplate && state.status === 'inProgress'"
-        text
-        outlined
-        small
+        variant="text outlined"
+        size="small"
         color="red"
         class="ma-2"
         @click="addReturn"
@@ -36,9 +41,8 @@
       </v-btn>
       <v-btn
         v-if="!isTemplate"
-        text
-        outlined
-        small
+        variant="outlined text"
+        size="small"
         color="primary"
         class="ma-2"
         @click="getDriverRouteHandler"
@@ -138,8 +142,7 @@ export default {
     }
 
     async function getDriverRouteHandler() {
-      
-    await putRouteForDriverToClipboard(
+      await putRouteForDriverToClipboard(
         props.driverId,
         props.points,
         props.cargoParams,

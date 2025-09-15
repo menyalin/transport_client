@@ -5,46 +5,46 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
+            v-model="form.truckKinds"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
-            v-model="form.truckKinds"
           />
           <v-select
+            v-model="form.liftCapacities"
             multiple
             label="Грузоподъемность"
             :items="liftCapacityItems"
-            v-model="form.liftCapacities"
           />
         </div>
         <div class="input-fields-row">
           <v-select
-            multiple
             ref="focusableNodeRef"
+            v-model="form.orderTypes"
+            multiple
             label="Тип рейса"
             :items="orderTypeItems"
-            v-model="form.orderTypes"
             :style="{ width: '130px' }"
           />
           <v-text-field
-            label="Часы простоя, включенные в тариф"
             v-model.number="form.includeHours"
+            label="Часы простоя, включенные в тариф"
           />
           <v-select
+            v-model="form.roundingInterval"
             label="Округлять до"
             :items="roundingIntervalItems"
-            v-model="form.roundingInterval"
             :style="{ width: '150px' }"
           />
           <v-select
+            v-model="form.tariffBy"
             label="Тариф за"
             :items="tariffByItems"
-            v-model="form.tariffBy"
             :style="{ width: '150px' }"
           />
         </div>
         <div class="input-fields-row">
-          <v-text-field label="Тариф" v-model.number="form.price" />
+          <v-text-field v-model.number="form.price" label="Тариф" />
         </div>
       </v-card-text>
       <CardActionButtons

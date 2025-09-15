@@ -5,14 +5,14 @@
       v-model="settings"
       :agreementItems="agreementItems"
       :allHeaders="allHeaders"
-      @changeHeaders="changeHeaders"
+      @update:model-value-headers="changeHeaders"
       @refresh="refresh"
     />
     <ReportDataTable
+      v-model:listOptions="listOptions"
       :items="items"
       :headers="headers"
       :loading="loading"
-      :listOptions.sync="listOptions"
       :statisticData="statisticData"
     />
   </div>

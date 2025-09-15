@@ -7,36 +7,38 @@
     hide-default-footer
   >
     <template #[`item.icon`]="{ item }">
-      <v-icon :title="item.contentType">{{
-        mimeTypeToIcon(item.contentType)
-      }}</v-icon>
+      <v-icon :title="item.contentType">
+        {{
+          mimeTypeToIcon(item.contentType)
+        }}
+      </v-icon>
     </template>
     <template #[`item.note`]="{ item }">
       <v-edit-dialog
-        :return-value.sync="item.note"
+        v-model:return-value="item.note"
         @save="updateNoteHandler(item)"
       >
         {{ item.note }}
-        <template v-slot:input>
+        <template #input>
           <v-text-field v-model="item.note" single-line />
         </template>
       </v-edit-dialog>
     </template>
     <template #[`item.size`]="{ item }">
       <span v-if="item.size">{{ formatSize(item.size) }}</span>
-      <span v-else class="grey--text">~</span>
+      <span v-else class="text-grey">~</span>
     </template>
     <template #[`item.uploadDate`]="{ item }">
       <span v-if="item.uploadDate">{{ formatDate(item.uploadDate) }}</span>
-      <span v-else class="grey--text">~</span>
+      <span v-else class="text-grey">~</span>
     </template>
 
     <template #[`item.actions`]="{ item }">
       <div class="actions-wrapper">
-        <v-icon color="primary" small @click="downloadItemHandler(item)">
+        <v-icon color="primary" size="small" @click="downloadItemHandler(item)">
           {{ 'mdi-download' }}
         </v-icon>
-        <v-icon color="red" small @click="removeItemHandler(item)">
+        <v-icon color="red" size="small" @click="removeItemHandler(item)">
           {{ 'mdi-delete' }}
         </v-icon>
       </div>
@@ -82,7 +84,7 @@ export default {
 
     const removeItemHandler = async (item) => {
       console.log(item.origianlName)
-      const res = await proxy.$confirm(
+      const res = await proxy.$dialog.confirm(
         `<b>Удалить?</b> <br/> файл: ${item.originalName}`
       )
       if (res) ctx.emit('remove', item.key)

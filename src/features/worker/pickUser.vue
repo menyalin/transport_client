@@ -2,14 +2,14 @@
   <div>
     <v-text-field
       v-model="emailStr"
-      dense
+      density="compact"
       label="Поиск пользователя по EMAIL"
-      outlined
+      variant="outlined"
       clearable
       :disabled="loading"
       :loading="loading"
       :errorMessages="errorMessages"
-      @change="changeHandler"
+      @update:model-value="changeHandler"
     />
     <div v-if="candidate.name" class="text-h5 mb-5">
       <small>Имя:</small> {{ candidate.name }}

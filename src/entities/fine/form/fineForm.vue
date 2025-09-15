@@ -15,8 +15,8 @@
         v-model="v$.form.date.$model"
         type="date"
         label="Дата постановления"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
@@ -24,8 +24,8 @@
       <v-text-field
         v-model.trim="v$.form.number.$model"
         label="Номер постановления"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '350px' }"
         @blur="$emit('fineNumberUpdated', $event)"
       />
@@ -33,17 +33,17 @@
         v-model.trim="v$.form.category.$model"
         :items="$store.getters.fineCategories"
         label="Категория"
-        outlined
+        variant="outlined"
         clearable
-        dense
+        density="compact"
         :style="{ maxWidth: '450px' }"
       />
     </div>
     <v-text-field
       v-model.trim="v$.form.violation.$model"
       label="Нарушение"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
 
     <div class="row-input mt-2">
@@ -51,8 +51,8 @@
         v-model.number="v$.form.discountedSum.$model"
         type="number"
         label="Сумма штрафа со скидкой"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '300px' }"
       />
 
@@ -60,8 +60,8 @@
         v-model.number="v$.form.totalSum.$model"
         type="number"
         label="Общая сумма штрафа"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '300px' }"
       />
 
@@ -69,8 +69,8 @@
         v-model="v$.form.expiryDateOfDiscount.$model"
         type="date"
         label="Скидка до"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
@@ -80,8 +80,8 @@
       <v-text-field
         v-model="form.violationDate"
         type="datetime-local"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Дата и время нарушения"
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
@@ -92,8 +92,8 @@
         label="Грузовик / Прицеп"
         :items="trucks"
         auto-select-first
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '250px' }"
       />
       <v-autocomplete
@@ -101,33 +101,33 @@
         label="Водитель"
         :items="drivers"
         auto-select-first
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '350px' }"
-        :append-outer-icon="
+        :append-icon="
           form.truck && form.violationDate ? 'mdi-crosshairs' : null
         "
-        @click:append-outer="getDriver"
+        @click:append="getDriver"
       />
     </div>
 
     <v-text-field
       v-model="v$.form.address.$model"
       label="Место нарушения"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
     <div class="row-input">
       <v-checkbox
         v-model="v$.form.isCulpritDriver.$model"
-        dense
+        density="compact"
         label="Виноват водитель"
       />
       <v-checkbox
         v-if="form.isCulpritDriver"
         v-model="v$.form.isPaydByDriver.$model"
         :disabled="!!form.payingByWorker"
-        dense
+        density="compact"
         label="Оплачен водителем"
       />
     </div>
@@ -137,26 +137,25 @@
         v-model.number="v$.form.paymentSum.$model"
         type="number"
         label="Сумма оплаты"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '300px' }"
       />
 
-      <v-text-field
+      <DateTimeInput
         v-model="v$.form.paymentDate.$model"
         type="date"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         label="Дата оплаты"
         :style="{ maxWidth: '250px' }"
-        @paste="pasteDate"
       />
 
       <app-worker-autocomplete
         v-model="form.payingByWorker"
         label="Кто оплатил"
-        dense
-        outlined
+        density="compact"
+        variant="outlined"
         :style="{ maxWidth: '350px' }"
       />
       <v-select
@@ -164,17 +163,17 @@
         v-model="v$.form.kX.$model"
         :items="[1, 2, 4]"
         label="kX"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         :style="{ maxWidth: '80px' }"
       />
       <v-text-field
         v-if="isNeedWithheldFromDriver"
         v-model.number="v$.form.withheldSum.$model"
         type="number"
-        outlined
+        variant="outlined"
         readonly
-        dense
+        density="compact"
         label="Удержать"
         :style="{ maxWidth: '250px' }"
       />
@@ -183,18 +182,18 @@
         v-model="v$.form.isWithheld.$model"
         label="Удержано"
         :disabled="isWithheldReadonly"
-        dense
+        density="compact"
       />
     </div>
     <v-text-field
       v-model="v$.form.note.$model"
       label="Примечание"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
@@ -204,17 +203,16 @@ import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
 import { CrewService } from '@/shared/services'
-
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
 
 export default {
   name: 'FineForm',
   components: {
     ButtonsPanel,
     AppWorkerAutocomplete,
+    DateTimeInput,
   },
   props: {
     item: { type: Object },
@@ -222,8 +220,7 @@ export default {
     openInModal: { type: Boolean, default: false },
   },
   setup() {
-    const { pasteDate } = usePasteDateInput()
-    return { pasteDate, v$: useVuelidate() }
+    return { v$: useVuelidate() }
   },
   data() {
     return {

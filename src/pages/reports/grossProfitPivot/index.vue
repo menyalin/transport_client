@@ -59,13 +59,13 @@
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
-        @updateSelected="updateSelected"
         :daysCount="daysInRange"
         :agreements="agreements"
         :selectedGroups="selectedGroups"
         :showOutsourceCosts="showOutsourceCosts"
         :priceWithVat="usePriceWithVat"
         :withRound="withRound"
+        @update-selected="updateSelected"
       />
       <v-divider />
       <app-orders-table

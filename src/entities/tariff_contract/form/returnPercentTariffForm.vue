@@ -6,22 +6,22 @@
         <div class="input-fields-row">
           <v-select
             ref="focusableNodeRef"
+            v-model="form.truckKinds"
             label="Тип ТС"
             :items="truckKindItems"
             multiple
-            v-model="form.truckKinds"
           />
           <v-select
+            v-model="form.liftCapacities"
             multiple
             label="Грузоподъемность"
             :items="liftCapacityItems"
-            v-model="form.liftCapacities"
           />
         </div>
         <div class="input-fields-row">
           <v-text-field
-            label="Процент от базовой стоимости рейса"
             v-model.number="form.percent"
+            label="Процент от базовой стоимости рейса"
           />
         </div>
       </v-card-text>

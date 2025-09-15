@@ -68,6 +68,11 @@ export const useTable = (props, _ctx) => {
       loading.value = false
     }
   }
+
+  function listOptionsUpdateHandler(val) {
+    listOptions.value = { ...val }
+  }
+
   watch(
     () => props.invoiceId,
     async (val) => {
@@ -84,5 +89,6 @@ export const useTable = (props, _ctx) => {
     listOptions,
     selected,
     removeOrdersHandler,
+    listOptionsUpdateHandler,
   }
 }

@@ -2,15 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          type="error"
-          dismissible
-          v-model="showError"
-          transition="scale-transition"
-        >
+        <v-alert v-model="showError" type="error" closable>
           {{ errorMessage }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <FineForm
           v-else
           :item="item"
@@ -20,7 +15,7 @@
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
-          @fineNumberUpdated="checkFine"
+          @fine-number-updated="checkFine"
         />
       </v-col>
     </v-row>
@@ -28,7 +23,7 @@
 </template>
 <script>
 import { FineForm } from '@/entities/fine'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { LoadSpinner } from '@/shared/ui'
 import { FineService } from '@/shared/services'
 import router from '@/router'
 import store from '@/store'
@@ -38,7 +33,7 @@ export default {
   name: 'FineDetails',
   components: {
     FineForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   props: {
     id: String,
@@ -99,7 +94,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы действительно хотите удалить запись? '
       )
       if (res) {

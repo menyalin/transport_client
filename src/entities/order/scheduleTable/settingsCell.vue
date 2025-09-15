@@ -1,47 +1,45 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
-      </v-btn>
+  <v-menu>
+    <template #activator="{ props }">
+      <v-icon v-bind="props" size="small"> mdi-cog </v-icon>
     </template>
     <v-list class="px-3">
       <v-switch
         v-model="onlyTrucksWithRoutes"
         label="Только грузовики с рейсами"
-        dense
+        density="compact"
         hide-details
-        @change="changeOnlyTrucksWithRoutes"
+        @update:model-value="changeOnlyTrucksWithRoutes"
       />
       <v-switch
         v-model="onlyPlannedDates"
         label="Планируемые даты"
-        dense
+        density="compact"
         hide-details
-        @change="changeOnlyPlannedDates"
+        @update:model-value="changeOnlyPlannedDates"
       />
       <v-switch
         v-model="tmpSettings.showBufferZone"
         label="Показать буферную зону"
-        dense
+        density="compact"
         hide-details
       />
       <v-switch
         v-model="tmpSettings.controlOnly"
         label="Показывать 'на контроле'"
-        dense
+        density="compact"
         hide-details
       />
       <v-switch
         v-model="tmpSettings.showDowntimes"
         label="Показывать сервисы/выходные"
-        dense
+        density="compact"
         hide-details
       />
       <v-switch
         v-model="tmpSettings.showNotes"
         label="Показать заметки"
-        dense
+        density="compact"
         hide-details
       />
     </v-list>

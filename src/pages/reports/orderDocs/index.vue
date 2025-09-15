@@ -2,10 +2,10 @@
   <div class="page-wrapper">
     <report-title title="Отчет по не сданным документам" />
     <report-settings
-      @refresh="refresh"
       v-model="settings"
       :allHeaders="allHeaders"
-      @changeHeaders="changeHeaders"
+      @refresh="refresh"
+      @update:model-value-headers="changeHeaders"
     />
     <report-data-table
       :items="items"

@@ -3,27 +3,27 @@
     <buttons-panel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
       <download-doc-template-menu
         :templates="docTemplates"
         :disabledDownloadFiles="disabledDownloadFiles"
-        @downloadTemplate="downloadHandler"
+        @download-template="downloadHandler"
       />
       <download-doc-template-menu
         :templates="newDocTemplates"
         :disabledDownloadFiles="disabledDownloadFiles"
-        @downloadTemplate="newDownloadHandler"
         class="mx-3"
+        @download-template="newDownloadHandler"
       />
       <v-btn
         v-if="showLoaderBtn"
         class="mx-3"
-        @click="goToLoader"
         color="primary"
+        @click="goToLoader"
       >
         Загрузить из реестра
       </v-btn>
@@ -36,43 +36,43 @@
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="disabledMainFields"
           :items="clientItems"
-          @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
           :style="{ minWidth: '400px' }"
+          @blur="v$.client.$touch"
+          @update:model-value="changeClientHandler"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
+          density="compact"
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
+          variant="outlined"
           :disabled="!state.client || disabledMainFields"
           :items="agreementItems"
-          @blur="v$.client.$touch"
           :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
           :style="{ minWidth: '400px' }"
+          @blur="v$.client.$touch"
+          @update:model-value="changeAgreementHandler"
         />
 
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
-          dense
-          outlined
-          @change="changeStatusHandler"
+          density="compact"
+          variant="outlined"
+          @update:model-value="changeStatusHandler"
         />
         <v-btn
           v-if="showSendInvoiceBtn"
@@ -98,57 +98,57 @@
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Номер реестра клиента"
           v-model.trim="state.numberByClient"
-          dense
-          outlined
+          label="Номер реестра клиента"
+          density="compact"
+          variant="outlined"
         />
         <DateTimeInput
-          label="Дата реестра клиента"
           v-model="state.dateByClient"
-          dense
-          outlined
+          label="Дата реестра клиента"
+          density="compact"
+          variant="outlined"
           type="date"
         />
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Номер акта"
           v-model.trim="state.number"
-          dense
-          outlined
+          label="Номер акта"
+          density="compact"
+          variant="outlined"
         />
         <DateTimeInput
-          label="Дата акта"
           v-model="state.date"
-          dense
-          outlined
+          label="Дата акта"
+          density="compact"
+          variant="outlined"
           type="date"
         />
       </div>
 
       <div class="fields-row">
         <DateTimeInput
+          v-model="state.sendDate"
           readonly
           label="Дата отправки"
-          v-model="state.sendDate"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           type="date"
         />
         <DateTimeInput
-          label="Плановая дата оплаты"
           v-model="state.plannedPayDate"
-          dense
-          outlined
+          label="Плановая дата оплаты"
+          density="compact"
+          variant="outlined"
           type="date"
         />
         <DateTimeInput
+          v-model="state.payDate"
           readonly
           label="Дата оплаты"
-          v-model="state.payDate"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           type="date"
         />
       </div>
@@ -161,19 +161,19 @@
           <v-card-title>{{ dateDialogTitle }}</v-card-title>
           <v-card-text>
             <DateTimeInput
-              label="Укажите дату"
               v-model="dialogFieldData"
+              label="Укажите дату"
               type="date"
-              outlined
+              variant="outlined"
             />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="cancelDialog">Отмена</v-btn>
             <v-btn
-              @click="saveDialogDataHandler"
               color="primary"
               :disabled="!dialogFieldData"
+              @click="saveDialogDataHandler"
             >
               Сохранить
             </v-btn>
@@ -182,21 +182,21 @@
       </v-dialog>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
         :disabled="
           disabledPickOrders || isNeedSave || invalidForm || !isInProcess
         "
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
-        @blur="v$.note.$touch"
+        density="compact"
+        variant="outlined"
         hide-details
+        @blur="v$.note.$touch"
       />
     </div>
   </div>

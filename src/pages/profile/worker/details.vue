@@ -1,14 +1,14 @@
 <template>
   <form-wrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="!!id && $store.getters.hasPermission('worker:delete')"
+    @delete="deleteHandler"
   >
     <worker-form :item="worker" @cancel="cancel" @submit="submit" />
     <linked-user
       v-if="id"
       :worker="worker"
-      @updateWorker="updateWorkerHandler"
+      @update-worker="updateWorkerHandler"
     />
   </form-wrapper>
 </template>
@@ -70,7 +70,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
+      const res = await this.$dialog.confirm(
         'Вы действительно хотите удалить запись? '
       )
       if (res) {

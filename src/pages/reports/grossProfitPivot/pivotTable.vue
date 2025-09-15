@@ -5,7 +5,7 @@
     :items="items"
     selectable-key="isSelectable"
     checkbox-color="primary"
-    dense
+    density="compact"
     item-key="_id"
     show-select
     hide-default-footer

@@ -11,19 +11,19 @@
     <div class="body-wrapper">
       <v-text-field
         v-model.trim="v$.form.name.$model"
-        outlined
+        variant="outlined"
         label="Название шаблона"
-        dense
+        density="compact"
       />
       <div id="client-row">
         <v-autocomplete
           v-model="v$.form.client.$model"
           :items="clientItems"
-          item-text="name"
+          item-title="name"
           item-value="_id"
           label="Заказчик"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hide-details
           :style="{ 'max-width': '350px' }"
         />
@@ -34,8 +34,8 @@
           :items="$store.getters.orderAnalyticTypes"
           clearable
           hide-details
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
           :style="{ 'max-width': '180px' }"
         />
       </div>
@@ -58,7 +58,7 @@
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
@@ -67,11 +67,10 @@
 import { mapGetters } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-
 import { ButtonsPanel } from '@/shared/ui'
-import { OrderRoute } from '@/entities/order'
-import { ReqTransport, CargoParams } from '@/entities/order'
+import { ReqTransport, CargoParams, OrderRoute } from '@/entities/order'
 import store from '@/store/index'
+
 export default {
   name: 'OrderTemplateForm',
   components: {

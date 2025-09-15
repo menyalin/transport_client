@@ -12,34 +12,34 @@
         <v-select
           v-model.trim="v$.form.tkName.$model"
           :items="tkNames"
-          item-text="name"
+          item-title="name"
           item-value="_id"
           label="ТК"
-          dense
-          outlined
+          density="compact"
+          variant="outlined"
         />
       </div>
 
       <div class="row-wrapper driver-name">
         <v-text-field
           v-model.trim="v$.form.surname.$model"
-          outlined
+          variant="outlined"
           label="Фамилия"
-          dense
+          density="compact"
           :error-messages="surnameErrors"
         />
         <v-text-field
           v-model.trim="v$.form.name.$model"
-          outlined
+          variant="outlined"
           label="Имя"
-          dense
+          density="compact"
           :error-messages="nameErrors"
         />
         <v-text-field
           v-model.trim="v$.form.patronymic.$model"
-          outlined
+          variant="outlined"
           label="Отчество"
-          dense
+          density="compact"
           :error-messages="nameErrors"
         />
         <DateTimeInput
@@ -47,8 +47,8 @@
           label="Дата рождения"
           hide-time-input
           hide-prepend-icon
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
       </div>
 
@@ -57,10 +57,10 @@
           <div>
             <v-text-field
               v-model.trim="v$.form.passportId.$model"
-              outlined
+              variant="outlined"
               hide-details
               label="Номер паспорта"
-              dense
+              density="compact"
               class="pb-3"
             />
             <DateTimeInput
@@ -68,81 +68,81 @@
               label="Дата выдачи паспорта"
               hide-time-input
               hide-prepend-icon
-              outlined
-              dense
+              variant="outlined"
+              density="compact"
             />
           </div>
           <v-textarea
             v-model.trim="v$.form.passportIssued.$model"
-            outlined
+            variant="outlined"
             label="Паспорт выдан"
-            dense
+            density="compact"
             :rows="4"
           />
         </div>
         <div class="driver-license">
           <v-text-field
             v-model.trim="v$.form.licenseId.$model"
-            outlined
+            variant="outlined"
             hide-details
             label="Номер ВУ"
-            dense
+            density="compact"
           />
           <v-text-field
             v-model.trim="v$.form.licenseCategory.$model"
-            outlined
+            variant="outlined"
             label="Категории ВУ"
             hide-details
-            dense
+            density="compact"
           />
           <DateTimeInput
             v-model="v$.form.licenseDate.$model"
             label="Дата выдачи ВУ"
             hide-time-input
             hide-prepend-icon
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
           />
         </div>
         <div class="driver-cards">
           <v-text-field
             v-model.trim="v$.form.inn.$model"
-            outlined
+            variant="outlined"
             hide-details
             label="ИНН"
-            dense
+            density="compact"
           />
           <v-text-field
             v-model.trim="v$.form.driverCardId.$model"
-            outlined
+            variant="outlined"
             hide-details
             label="Карта водителя"
-            dense
+            density="compact"
           />
           <DateTimeInput
             v-model="v$.form.driverCardPeriod.$model"
             label="КВ действительна до"
             hide-time-input
             hide-prepend-icon
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
           />
         </div>
       </div>
       <div class="row-wrapper phones">
         <v-text-field
           v-model.trim="v$.form.phone.$model"
-          outlined
+          variant="outlined"
           label="Телефон"
           hide-details
-          dense
+          density="compact"
         />
         <v-text-field
           v-model.trim="v$.form.phone2.$model"
-          outlined
+          variant="outlined"
           label="Телефон 2"
           hide-details
-          dense
+          density="compact"
         />
       </div>
 
@@ -153,21 +153,21 @@
             v-model="form.isBrigadier"
             label="Бригадир"
             hide-details
-            dense
+            density="compact"
           />
           <v-checkbox
             v-model="form.isMechanic"
             label="Механик"
             hide-details
-            dense
+            density="compact"
           />
         </div>
         <DateTimeInput
           v-model="v$.form.employmentDate.$model"
           label="Дата приема на работу"
           hide-time-input
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
           hideDetails
         />
 
@@ -175,27 +175,35 @@
           v-model="v$.form.dismissalDate.$model"
           label="Дата увольнения"
           hide-time-input
-          outlined
+          variant="outlined"
           hideDetails
-          dense
+          density="compact"
         />
         <v-text-field
           v-model.trim="v$.form.recommender.$model"
-          outlined
+          variant="outlined"
           label="Кто рекомедовал"
-          dense
+          density="compact"
           hide-details
         />
       </div>
       <AdditionalNotifications v-model="additionalNotifications" />
-      <v-checkbox v-model="form.hasScans" label="Есть сканы документов" dense />
+      <v-checkbox
+        v-model="form.hasScans"
+        label="Есть сканы документов"
+        density="compact"
+      />
       <v-checkbox
         v-model="form.hideInFines"
         label="Не показывать в штрафах"
-        dense
+        density="compact"
       />
 
-      <v-checkbox v-model="form.isCalcSalary" dense label="Расчет ЗП" />
+      <v-checkbox
+        v-model="form.isCalcSalary"
+        density="compact"
+        label="Расчет ЗП"
+      />
     </div>
     <EntityFiles
       v-if="driver && driver._id"
@@ -204,7 +212,7 @@
     />
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
       <v-btn color="error" @click="$emit('delete')">
-        <v-icon left dark> mdi-delete </v-icon>
+        <v-icon start> mdi-delete </v-icon>
         Удалить
       </v-btn>
     </div>

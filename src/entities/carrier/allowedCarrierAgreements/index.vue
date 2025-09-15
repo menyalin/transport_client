@@ -1,13 +1,13 @@
 <template>
   <div class="wrapper">
     <div class="text-h6">Доступные соглашения:</div>
-    <v-btn @click="addAgreementHandler" small color="primary">Добавить</v-btn>
+    <v-btn size="small" color="primary" @click="addAgreementHandler">Добавить</v-btn>
     <v-data-table
       :headers="headers"
       :items="preparedAgreements"
       hide-default-footer
       height="300px"
-      dense
+      density="compact"
       fixed-header
       :itemsPerPage="-1"
       selected
@@ -28,14 +28,12 @@
 </template>
 <script>
 import { ref, computed, getCurrentInstance, nextTick } from 'vue'
-import { BorderedBlock } from '@/shared/ui'
 import { HEADERS } from './tableHeaders'
 import AllowedAgreementForm from './allowedAgreementForm.vue'
 
 export default {
   name: 'AllowedCarrierAgreements',
   components: {
-    BorderedBlock,
     AllowedAgreementForm,
   },
   model: {
@@ -91,7 +89,7 @@ export default {
       dialog.value = true
     }
     const removeHandler = async () => {
-      const res = await proxy.$confirm('Вы уверены?')
+      const res = await proxy.$dialog.confirm('Вы уверены?')
       if (!res) return
 
       const tmpRes = [...props.agreements]

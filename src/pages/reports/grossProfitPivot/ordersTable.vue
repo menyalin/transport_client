@@ -11,15 +11,15 @@
       </v-btn>
     </div>
 
-    <v-data-table
+    <v-data-table-server
+      v-model:options="listOptions"
       checkbox-color="primary"
       :headers="filteredHeaders"
       :items="preparedItems"
       :server-items-length="totalCount"
       :loading="loading"
-      :options.sync="listOptions"
       :items-per-page="50"
-      dense
+      density="compact"
       :footer-props="{
         'items-per-page-options': [50, 100, 200],
       }"
@@ -34,7 +34,7 @@
           />
         </div>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </div>
 </template>
 <script>

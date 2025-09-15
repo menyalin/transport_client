@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
 
 import store from '@/store'
 
@@ -25,8 +24,6 @@ const _checkPermissions = async (permissions, next, to, from) => {
   } else next()
 }
 
-Vue.use(VueRouter)
-
 const routes = [
   ...authRoutes,
   ...adminRoutes,
@@ -51,9 +48,8 @@ const routes = [
   },
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: import.meta.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(),
   routes,
 })
 

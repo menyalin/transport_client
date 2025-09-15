@@ -8,14 +8,14 @@
         :items="items"
         @remove="removeItemHandler"
         @download="downloadItemHandler"
-        @updateNote="updateNoteHandler"
+        @update-note="updateNoteHandler"
       />
     </v-card-text>
     <v-card-actions>
       <v-btn icon @click="getFilesHandler">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <v-btn small color="primary" @click="openDialogHandler">
+      <v-btn size="small" color="primary" @click="openDialogHandler">
         Добавить файлы
       </v-btn>
     </v-card-actions>
@@ -36,14 +36,14 @@
           />
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="cancelDialogHandler" :disabled="loading">
-            Отменить загрузку файлов</v-btn
-          >
+          <v-btn :disabled="loading" @click="cancelDialogHandler">
+            Отменить загрузку файлов
+          </v-btn>
           <v-spacer />
           <v-btn
             color="primary"
-            @click="uploadFilesHandler"
             :disabled="!selectedFiles.length || loading"
+            @click="uploadFilesHandler"
           >
             Прикрепить файлы
           </v-btn>

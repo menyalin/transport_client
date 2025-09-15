@@ -9,17 +9,17 @@
     <orders-table-settings
       v-model="settings"
       :minDate="minDate"
-      @putTableToClipboard="putOrdersTableToClipboard(items)"
       :allHeaders="allHeaders"
-      @updateHeaders="updateActiveHeaders"
+      @put-table-to-clipboard="putOrdersTableToClipboard(items)"
+      @update-headers="updateActiveHeaders"
     />
     <orders-table
+      v-model:listOptions="settings.listOptions"
       :items="items"
       :headers="headers"
       :loading="loading"
-      :listOptions.sync="settings.listOptions"
       :statisticData="statisticData"
-      @openDocsDialog="openDocsDialog"
+      @open-docs-dialog="openDocsDialog"
     />
     <v-dialog v-model="docDialog" max-width="1300" persistent>
       <order-docs-list

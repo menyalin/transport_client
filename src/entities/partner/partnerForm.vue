@@ -5,112 +5,117 @@
       :disabledSubmit="
         !$store.getters.hasPermission('partner:write') || isInvalidForm
       "
+      showSaveBtn
+      class="mb-3"
       @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
-      showSaveBtn
-      class="mb-3"
     />
     <div v-if="isAdmin">
       <v-text-field
         v-model.trim="state.invoiceLoader"
         label="invoiceLoader(admin only)"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
     </div>
     <v-text-field
       v-model.trim="state.name"
       :error-messages="nameFieldErrors"
-      outlined
+      variant="outlined"
       label="Название"
-      dense
+      density="compact"
     />
     <!-- <v-text-field
       v-model.trim="state.fullName"
-      outlined
+      variant="outlined"
       label="Полное наименование"
-      dense
+      density="compact"
     />
     <v-text-field
       v-model.trim="state.inn"
-      outlined
+      variant="outlined"
       label="ИНН"
-      dense
+      density="compact"
     /> -->
     <v-select
       v-model="state.group"
       label="Группа"
       :items="$store.getters.partnerGroups"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       clearable
     />
     <v-text-field
       v-model="state.contacts"
-      outlined
+      variant="outlined"
       clearable
       label="Контакты"
-      dense
+      density="compact"
     />
     <v-text-field
       v-if="state.isClient"
       v-model="state.cargoDescription"
-      outlined
+      variant="outlined"
       clearable
       label="Описание груза"
-      dense
+      density="compact"
     />
-    <v-checkbox v-model="state.isClient" label="Заказчик" hide-details dense />
-    <v-checkbox v-model="state.isService" label="Сервис" dense />
+    <v-checkbox
+      v-model="state.isClient"
+      label="Заказчик"
+      hide-details
+      density="compact"
+    />
+    <v-checkbox v-model="state.isService" label="Сервис" density="compact" />
 
-    <v-expansion-panels focusable>
+    <v-expansion-panels>
       <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <b>Общая информация о компании</b>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <CompanyInfoForm
             :value="state.companyInfo"
             :showTitle="false"
-            @change="companyInfoChangedHandler"
+            @update:model-value="companyInfoChangedHandler"
           />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <b>Банковкие реквизиты</b>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <BankAccountInfoForm
             :showTitle="false"
             :value="state.bankAccountInfo"
-            @change="bankAccountInfoChangedHandler"
+            @update:model-value="bankAccountInfoChangedHandler"
           />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel v-if="state.isClient && !!item">
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <b> Площадки для приема документов</b>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <places-for-transfer-docs
             v-model="state.placesForTransferDocs"
             :partnerId="item._id"
           />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel v-if="state.isClient">
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <b> Настройка оповещений при простое транспорта</b>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <IdleTruckNotifications
             :partner="item"
             :clientAgreements="clientAgreements"
-            @change="changeNotificationsHandler"
+            @update:model-value="changeNotificationsHandler"
           />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
 

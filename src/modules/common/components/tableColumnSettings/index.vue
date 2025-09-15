@@ -1,8 +1,8 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu :close-on-content-click="false">
+    <template #activator="{ props }">
+      <v-btn v-bind="props" color="primary" icon>
+        <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
     <v-list class="px-2">
@@ -12,9 +12,9 @@
         v-model="tmpHeaders"
         :label="field.text"
         :value="field.value"
-        dense
+        density="compact"
         hide-details
-        @change="inputHandler(field.value)"
+        @update:model-value="inputHandler(field.value)"
       />
     </v-list>
   </v-menu>

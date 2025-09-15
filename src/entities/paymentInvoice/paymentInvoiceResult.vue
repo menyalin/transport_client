@@ -1,7 +1,6 @@
 <template>
-  <v-alert outlined dense>
-    Сумма: <b>{{ total }}</b
-    ><br />
+  <v-alert variant="outlined" density="compact">
+    Сумма: <b>{{ total }}</b><br />
 
     Сумма без НДС: <b> {{ totalWOVat }}</b> Сумма НДС:
     <b>{{ vatSum }}</b> Кол-во рейсов: <b>{{ ordersCount }}</b>
@@ -16,7 +15,6 @@ export default {
     orders: { type: Array, required: true, default: () => [] },
   },
   setup(props) {
-    
     const total = computed(() => {
       const sum = props.orders.reduce(
         (res, item) => res + item?.savedTotal?.price,

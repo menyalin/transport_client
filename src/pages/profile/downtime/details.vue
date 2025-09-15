@@ -4,14 +4,13 @@
       <v-col>
         <v-alert
           v-model="error.show"
-          dismissible
+          closable
           type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
+          @update:model-value="toggleAlert"
         >
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <DowntimeForm
           v-else
           :downtime="item"
@@ -29,7 +28,7 @@
   </v-container>
 </template>
 <script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { LoadSpinner } from '@/shared/ui/index'
 import { DowntimeService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import { DowntimeForm } from '@/entities/downtime'
@@ -40,7 +39,7 @@ export default {
   name: 'DowntimeDetails',
   components: {
     DowntimeForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
 

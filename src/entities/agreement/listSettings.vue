@@ -2,27 +2,27 @@ import { AddressForm } from '@/entities/address';
 <template>
   <div class="wrapper">
     <v-autocomplete
-      :value="settings.executor"
+      :model-value="settings.executor"
       :items="carrierItems"
-      item-text="name"
+      item-title="name"
       item-value="_id"
       label="ТК Исполнитель"
-      dense
+      density="compact"
       hide-details
       clearable
-      outlined
+      variant="outlined"
       auto-select-first
-      @change="updateSettings($event, 'executor')"
       :style="{ maxWidth: '300px' }"
+      @update:model-value="updateSettings($event, 'executor')"
     />
     <v-text-field
-      :value="settings.search"
+      :model-value="settings.search"
       label="Поиск"
-      dense
+      density="compact"
       hide-details
       clearable
-      outlined
-      @change="updateSettings($event, 'search')"
+      variant="outlined"
+      @update:model-value="updateSettings($event, 'search')"
     />
   </div>
 </template>

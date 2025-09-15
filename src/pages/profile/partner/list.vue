@@ -12,33 +12,33 @@
         <div class="settings-wrapper">
           <v-select
             v-model="settings.partnerType"
-            outlined
+            variant="outlined"
             :items="partnerTypeItems"
             hide-details
-            dense
+            density="compact"
             :style="{ 'max-width': '400px' }"
           />
           <v-text-field
             v-model="settings.search"
             label="Поиск"
-            outlined
+            variant="outlined"
             hide-details
-            dense
+            density="compact"
             clearable
           />
         </div>
         <v-data-table
+          v-model:options="listOptions"
           :headers="headers"
           :items="filteredPartners"
           :loading="loading"
           fixed-header
           :search="settings.search"
           height="73vh"
-          dense
+          density="compact"
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isClient`]="{ item }">

@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table>
+  <v-table>
     <template #default>
       <thead>
         <tr>
@@ -35,7 +35,7 @@
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 import { WorkerService } from '@/shared/services'

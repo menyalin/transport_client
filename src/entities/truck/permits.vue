@@ -6,56 +6,56 @@
     <div class="fields-wrapper">
       <v-text-field
         label="Пропуск ДЕНЬ, №"
-        :value="params.dayPermitNumber"
-        outlined
-        dense
+        :model-value="params.dayPermitNumber"
+        variant="outlined"
+        density="compact"
         hide-details
-        @change="change($event, 'dayPermitNumber')"
+        @update:model-value="change($event, 'dayPermitNumber')"
       />
       <DateTimeInput
         label="Действует до"
         :value="params.dayPermitExpDate"
         hide-prepend-icon
         hide-time-input
-        @change="change($event, 'dayPermitExpDate')"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         hide-details
+        @update:model-value="change($event, 'dayPermitExpDate')"
       />
       <v-text-field
         label="Зона действия"
-        :value="params.dayPermitZone"
-        outlined
-        dense
+        :model-value="params.dayPermitZone"
+        variant="outlined"
+        density="compact"
         hide-details
-        @change="change($event, 'dayPermitZone')"
+        @update:model-value="change($event, 'dayPermitZone')"
       />
 
       <v-text-field
         label="Пропуск НОЧЬ, №"
-        :value="params.nightPermitNumber"
-        outlined
-        dense
+        :model-value="params.nightPermitNumber"
+        variant="outlined"
+        density="compact"
         hide-details
-        @change="change($event, 'nightPermitNumber')"
+        @update:model-value="change($event, 'nightPermitNumber')"
       />
       <DateTimeInput
         label="Действует до"
         :value="params.nightPermitExpDate"
         hide-prepend-icon
         hide-time-input
-        @change="change($event, 'nightPermitExpDate')"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         hide-details
+        @update:model-value="change($event, 'nightPermitExpDate')"
       />
       <v-text-field
         label="Зона действия"
-        :value="params.nightPermitZone"
-        outlined
-        dense
+        :model-value="params.nightPermitZone"
+        variant="outlined"
+        density="compact"
         hide-details
-        @change="change($event, 'nightPermitZone')"
+        @update:model-value="change($event, 'nightPermitZone')"
       />
     </div>
   </div>

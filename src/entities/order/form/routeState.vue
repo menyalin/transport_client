@@ -6,10 +6,10 @@
     <div class="state-block">
       <div>
         <v-radio-group
-          :value="params.status"
+          :model-value="params.status"
           mandatory
           :readonly="readonly"
-          @change="change($event, 'status')"
+          @update:model-value="change($event, 'status')"
         >
           <v-radio
             v-for="status in orderStatuses"
@@ -28,7 +28,7 @@
           class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
           hide-details
-          @change="change($event, 'driverNotified')"
+          @update:model-value="change($event, 'driverNotified')"
         />
         <v-checkbox
           :value="params.clientNotified"
@@ -37,7 +37,7 @@
           class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
           hide-details
-          @change="change($event, 'clientNotified')"
+          @update:model-value="change($event, 'clientNotified')"
         />
         <v-checkbox
           :value="params.warning"
@@ -45,7 +45,7 @@
           :readonly="readonly"
           class="pt-0 mt-3 mb-2"
           hide-details
-          @change="change($event, 'warning')"
+          @update:model-value="change($event, 'warning')"
         />
       </div>
     </div>

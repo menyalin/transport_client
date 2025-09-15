@@ -6,8 +6,8 @@
       :items="loadingAddressItems"
       pointType="loading"
       label="Погрузка"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
     <v-autocomplete
@@ -15,8 +15,8 @@
       :items="unloadingAddressItems"
       label="Разгрузка"
       pointType="unloading"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       hide-details
     />
   </div>

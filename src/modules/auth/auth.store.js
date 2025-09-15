@@ -1,7 +1,5 @@
-import api from '@/api'
-import router from '@/router'
 import socket from '@/socket'
-import  { UserService } from '@/shared/services'
+import { UserService } from '@/shared/services'
 
 export default {
   state: () => ({

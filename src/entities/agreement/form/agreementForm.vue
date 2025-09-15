@@ -14,13 +14,13 @@
           v-model="state.name"
           class="mt-3"
           label="Название"
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '500px' }"
         />
         <DateTimeInput
           v-model="state.date"
           label="Дата начала"
-          outlined
+          variant="outlined"
           hideTimeInput
           hidePrependIcon
           class="mb-4"
@@ -29,7 +29,7 @@
         <DateTimeInput
           v-model="state.endDate"
           label="Дата окончания"
-          outlined
+          variant="outlined"
           hideTimeInput
           hidePrependIcon
           class="mb-4"
@@ -39,15 +39,15 @@
           v-model="state.vatRate"
           label="Ставка НДС"
           :disabled="!!agreement && !!agreement._id"
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '130px' }"
         />
       </div>
       <div class="mb-4">
         <v-text-field
-          label="Наименование исполнителя"
-          outlined
           v-model="state.executorName"
+          label="Наименование исполнителя"
+          variant="outlined"
           class="mt-4"
           :style="{ width: '400px' }"
         />
@@ -56,20 +56,20 @@
           label="Исполнитель"
           :items="carrierItems"
           item-value="_id"
-          item-text="name"
-          outlined
+          item-title="name"
+          variant="outlined"
           auto-select-first
           :style="{ width: '400px' }"
         />
         <v-select
+          v-model="state.allowedCarriers"
           multiple
-          outlined
+          variant="outlined"
           :items="carriers"
           label="Разрешенные ТК"
           :style="{ width: '500px' }"
-          v-model="state.allowedCarriers"
           chips
-          deletable-chips
+          closable-chips
         />
         <app-clients
           v-model="state.clients"
@@ -134,17 +134,22 @@
       <v-text-field
         v-model="state.actBasis"
         label="Основание для счета и акта выполненных работ"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
       <v-textarea
-        rows="4"
         v-model="state.actDescription"
+        rows="4"
         label="Примечание для акта выполненных работ"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
-      <v-text-field v-model="state.note" label="Примечание" outlined dense />
+      <v-text-field
+        v-model="state.note"
+        label="Примечание"
+        variant="outlined"
+        density="compact"
+      />
       <div class="row mb-2">
         <v-checkbox
           v-model="state.useCustomPrices"
@@ -160,7 +165,7 @@
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

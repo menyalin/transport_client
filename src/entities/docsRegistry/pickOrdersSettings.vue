@@ -3,77 +3,77 @@
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="pickOrdersTable"
-      @change="updateHeadersHandler"
+      @update:model-value="updateHeadersHandler"
     />
-    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
+    <v-btn icon @click="refreshHandler"> <v-icon>mdi-refresh</v-icon></v-btn>
     <date-range-input v-model="settings.period" class="mx-2" />
     <v-select
       v-model="settings.docStatus"
       label="Документы"
       :items="docStatuses"
-      dense
+      density="compact"
       hide-details
-      outlined
+      variant="outlined"
       clearable
       :style="{ 'max-width': '220px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.truck"
-      dense
+      density="compact"
       clearable
       auto-select-first
       :items="trucks"
-      outlined
+      variant="outlined"
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.driver"
-      dense
+      density="compact"
       auto-select-first
       item-value="_id"
-      item-text="fullName"
+      item-title="fullName"
       clearable
       :items="drivers"
-      outlined
+      variant="outlined"
       hide-details
       label="Водитель"
       :style="{ 'max-width': '300px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.loadingZone"
-      dense
+      density="compact"
       auto-select-first
       item-value="_id"
-      item-text="name"
+      item-title="name"
       clearable
       :items="loadingZoneItems"
-      outlined
+      variant="outlined"
       hide-details
       label="Зона погрузки"
       :style="{ 'max-width': '250px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="settings.listOptions.page = 1"
     />
     <v-text-field
-      :value="settings.search"
-      dense
+      :model-value="settings.search"
+      density="compact"
       clearable
-      outlined
+      variant="outlined"
       hide-details
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
-      @change="searchInputHandler"
+      @update:model-value="searchInputHandler"
     />
     <v-checkbox
       v-model="settings.onlySelectable"
       label="Только доступные рейсы"
       hide-details
       class="ml-2"
-      dense
+      density="compact"
     />
   </div>
 </template>

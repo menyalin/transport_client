@@ -1,56 +1,56 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" @input="closeDialog" persistent>
+  <v-dialog :model-value="dialog" max-width="800" persistent @update:model-value="closeDialog">
     <v-card>
       <v-card-title class="text-h5">{{ dialogTitle }}</v-card-title>
       <form @submit.prevent="submitHandler">
         <v-card-text class="form-wrapper">
           <v-autocomplete
-            label="Клиент"
-            outlined
-            dense
             v-model="state.client"
+            label="Клиент"
+            variant="outlined"
+            density="compact"
             :items="clientItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
 
           <v-autocomplete
-            label="Соглашение"
-            outlined
-            dense
             v-model="state.agreement"
+            label="Соглашение"
+            variant="outlined"
+            density="compact"
             :items="agreements"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
           <div class="row-sum">
             <v-text-field
-              label="Сумма"
-              outlined
-              dense
-              :disabled="sumFieldIsDisabled"
               v-model.number="state.sum"
+              label="Сумма"
+              variant="outlined"
+              density="compact"
+              :disabled="sumFieldIsDisabled"
               :style="{ maxWidth: '200px' }"
             />
             <v-checkbox
-              label="Сумма с НДС"
-              dense
-              :disabled="vatCheckboxIsDisabled"
               v-model="state.sumWithVAT"
+              label="Сумма с НДС"
+              density="compact"
+              :disabled="vatCheckboxIsDisabled"
             />
           </div>
           <v-text-field
-            label="Примечание"
-            outlined
-            dense
             v-model.trim="state.note"
+            label="Примечание"
+            variant="outlined"
+            density="compact"
           />
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" text type="submit" :disabled="invalidForm">
+          <v-btn color="primary" variant="text" @click="closeDialog"> Отмена </v-btn>
+          <v-btn color="primary" variant="text" type="submit" :disabled="invalidForm">
             Добавить
           </v-btn>
         </v-card-actions>

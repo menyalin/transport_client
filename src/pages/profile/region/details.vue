@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <app-region-form
           v-else
           :region="item"
@@ -19,15 +19,15 @@
 </template>
 <script>
 import AppRegionForm from '@/modules/profile/components/regionForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {RegionService } from '@/shared/services'
+import { LoadSpinner } from '@/shared/ui'
+import { RegionService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {
   name: 'RegionDetails',
   components: {
     AppRegionForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   data() {

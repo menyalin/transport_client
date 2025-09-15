@@ -2,21 +2,17 @@
   <div>
     <v-autocomplete
       ref="input"
-      :value="value"
-      dense
-      :hide-details="hideDetails"
+      :v-bind="$attrs"
+      :model-value="value"
       hide-no-data
       :items="items"
-      :disabled="disabled"
       auto-select-first
       clearable
-      :multiple="multiple"
       persistent-hint
-      :label="label"
-      :outlined="outlined"
+      :multiple="multiple"
       :append-icon="hideAppendIcon || multiple ? null : appendIcon"
       @click:append="appendClick"
-      @change="changeValue"
+      @update:model-value="changeValue"
     />
     <v-dialog v-model="dialog" max-width="700" persistent>
       <v-card>
@@ -25,7 +21,7 @@
           openInModal
           @cancel="cancelDialog"
           @submit="submit"
-          @deleteItem="deleteHandler"
+          @delete-item="deleteHandler"
         />
       </v-card>
     </v-dialog>
@@ -44,13 +40,7 @@ export default {
     event: 'change',
   },
   props: {
-    label: String,
-    hideDetails: { type: Boolean, default: false },
-    outlined: { type: Boolean, default: false },
-    dense: { type: Boolean, default: false },
-    value: [String, Array],
-    disabled: { type: Boolean, default: false },
-    hideAppendIcon: { type: Boolean, default: false },
+    valuehideAppendIcon: { type: Boolean, default: false },
     multiple: { type: Boolean, default: false },
   },
   data() {

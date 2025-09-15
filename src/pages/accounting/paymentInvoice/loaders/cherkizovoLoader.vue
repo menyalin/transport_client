@@ -10,7 +10,10 @@
       <v-btn class="mx-2" @click="refetchHandler">Обновить</v-btn>
       <v-btn class="mx-2" @click="clearUploadedOrders">Очистить</v-btn>
     </ButtonsPanel>
-    <XlsxFileInput label="Выберите файл с реестром" @change="uploadHandler" />
+    <XlsxFileInput
+      label="Выберите файл с реестром"
+      @update:model-value="uploadHandler"
+    />
 
     <UploadedInfo
       :items="uploadedOrders"
@@ -23,8 +26,7 @@
 
 <script>
 import { PaymentInvoiceService } from '@/shared/services'
-import { FormWrapper, ButtonsPanel } from '@/shared/ui'
-import { XlsxFileInput } from '@/shared/ui/index'
+import { FormWrapper, ButtonsPanel , XlsxFileInput } from '@/shared/ui'
 import {
   ParsedOrderDTO,
   usePageData,

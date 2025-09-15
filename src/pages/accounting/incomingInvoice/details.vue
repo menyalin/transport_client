@@ -2,8 +2,8 @@
   <form-wrapper
     :loading="loading"
     :displayDeleteBtn="showDeleteBtn"
-    @delete="deleteHandler"
     :itemIsMissing="item === null"
+    @delete="deleteHandler"
   >
     <IncomingInvoiceForm
       v-if="item"
@@ -13,8 +13,8 @@
       :disabledMainFields="disabledMainFields"
       @submit="submit($event, false)"
       @save="submit($event, true)"
-      @pickOrders="pickOrdersHandler"
-      @savePayDate="savePayDateHandler"
+      @pick-orders="pickOrdersHandler"
+      @save-pay-date="savePayDateHandler"
     />
   </form-wrapper>
 </template>

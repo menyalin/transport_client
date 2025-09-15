@@ -8,7 +8,12 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" outlined class="ma-3 mb-5" type="error">
+    <v-alert
+      v-if="!directoriesProfile"
+      variant="outlined"
+      class="ma-3 mb-5"
+      type="error"
+    >
       Профиль справочников не выбран, сохранение не возможно
     </v-alert>
 
@@ -16,28 +21,28 @@
       v-model="v$.form.truck.$model"
       label="Грузовик"
       :items="trucks"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
     <v-text-field
       v-model.trim="v$.form.text.$model"
-      outlined
+      variant="outlined"
       label="Текст"
-      dense
+      density="compact"
     />
     <v-select
       v-model="form.priority"
       label="Приоритет"
       :items="priorityItems"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
     />
 
     <DateTimeInput
       v-model="v$.form.startPositionDate.$model"
       label="Дата начала"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       type="datetime-local"
       :style="{ maxWidth: '300px' }"
     />
@@ -47,7 +52,7 @@
       color="error"
       @click="$emit('delete')"
     >
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

@@ -12,7 +12,12 @@
         {{ worker.user.email }}
       </div>
     </div>
-    <v-alert v-if="!isAccepted" :type="message.type" outlined class="ml-3">
+    <v-alert
+      v-if="!isAccepted"
+      :type="message.type"
+      variant="outlined"
+      class="ml-3"
+    >
       {{ message.text }}
     </v-alert>
   </div>
@@ -55,6 +60,7 @@ export default {
           type: 'info',
           text: 'Ожидается подтверждение пользователя',
         }
+      return null
     })
     return {
       isBlockedUser,

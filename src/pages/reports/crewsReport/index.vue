@@ -11,31 +11,31 @@
         label="Группировать по"
         :items="groupItems"
         hide-details
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
       <v-select
         v-model="settings.analitic"
         label="Детализация"
         :items="analiticItems"
         hide-details
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
       <v-select
         v-model="settings.tkNameFilter"
         label="Фильтр по ТК"
         :items="tkNames"
         item-value="_id"
-        item-text="name"
+        item-title="name"
         hide-details
-        outlined
+        variant="outlined"
         clearable
-        dense
+        density="compact"
       />
     </div>
     <div v-if="!filteredCrews.length" class="text-center">
-      <app-load-spinner v-if="false" />
+      <load-spinner v-if="false" />
       <h4 v-else>Нет данных для отображния</h4>
     </div>
     <div v-else class="table-wrapper">
@@ -87,8 +87,7 @@
 <script>
 import dayjs from 'dayjs'
 import { CrewService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { DateRangeInput } from '@/shared/ui'
+import { DateRangeInput, LoadSpinner } from '@/shared/ui'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
@@ -99,7 +98,7 @@ export default {
   name: 'CrewsReport',
   components: {
     DateRangeInput,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   data() {
     return {
@@ -161,7 +160,7 @@ export default {
       this.resizeHandler()
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.resizeHandler)
   },
   created() {

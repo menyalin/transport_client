@@ -11,23 +11,23 @@
             v-model.trim="settings.search"
             label="Поиск"
             hideDetails
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             :style="{ 'max-width': '300px' }"
           />
           <v-checkbox
             v-model="settings.selectedOnly"
             label="Только выделенные"
             hideDetails
-            dense
+            density="compact"
             class="py-0 my-0"
           />
           <v-spacer />
           <v-btn
             v-if="showCopyButton"
-            text
+            variant="text"
             color="primary"
-            small
+            size="small"
             @click="copyHandler"
           >
             скопировать в буфер
@@ -43,7 +43,7 @@
           :search="settings.search"
           fixed-header
           height="76vh"
-          dense
+          density="compact"
           show-select
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
