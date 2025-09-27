@@ -1,7 +1,6 @@
 import store from '@/store'
 import api from '@/api'
 import FileSaver from 'file-saver'
-import dayjs from 'dayjs'
 
 const BASE_PATH = '/reports'
 
@@ -49,8 +48,7 @@ class ReportService {
       const blob = new Blob([data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       })
-      const filename =
-        dayjs().format('YYYY_MM_DD hh.mm.ss') + '_driversGrades.xlsx'
+      const filename = 'driversGrades.xlsx'
       FileSaver.saveAs(blob, filename)
       return data || null
     } catch (e) {
