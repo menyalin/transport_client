@@ -13,7 +13,7 @@ export default new Vuex.Store({
     loading: false,
     appLoading: false,
     error: null,
-    // baseUrl: process.env.VUE_APP_API_URL,
+    // baseUrl: import.meta.env.VITE_API_URL,
   }),
   mutations: {
     setAppLoading(state, payload) {

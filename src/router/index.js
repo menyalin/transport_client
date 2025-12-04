@@ -67,7 +67,7 @@ router.beforeEach(async (to, from, next) => {
     .find((r) => r.meta && r.meta.title)
 
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title
-  else document.title = process.env.VUE_APP_NAME || 's4log'
+  else document.title = import.meta.env.VITE_APP_NAME || 's4log'
 
   const permissions = to.matched
     .map((r) => r.meta.permission)
