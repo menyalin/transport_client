@@ -1,11 +1,11 @@
-import DetailsOrder from '@/pages/orders/details'
+import DetailsOrder from '@/pages/orders/details.vue'
 import CreateOrderGroup from '@/pages/orders/orderGroupCreate.vue'
 
 export default [
   {
     path: '/',
     name: 'ListOrder',
-    component: () => import('@/pages/orders/list'),
+    component: () => import('@/pages/orders/list.vue'),
   },
   {
     path: 'create',

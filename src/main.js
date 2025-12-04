@@ -4,6 +4,9 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+
+// Import Vuetify styles for Vite
+import 'vuetify/dist/vuetify.min.css'
 import Vuelidate from 'vuelidate'
 import VuetifyConfirm from 'vuetify-confirm'
 import dayjs from 'dayjs'

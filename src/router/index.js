@@ -11,11 +11,11 @@ import adminRoutes from '@/router/admin.routes.js'
 import orderRoutes from '@/router/orders/index.js'
 import reportsRoutes from '@/router/reports.routes.js'
 
-import serverNotAvailablePage from '@/modules/common/pages/error'
-import HomeLayout from '@/modules/common/pages/layout'
+import serverNotAvailablePage from '@/modules/common/pages/error.vue'
+import HomeLayout from '@/modules/common/pages/layout.vue'
 import PermissionService from '@/shared/services/permission.service'
 
-const _checkPermissions = async (permissions, next, to, from) => {
+const _checkPermissions = async (permissions, next, _to, from) => {
   if (!permissions.length) next()
   else if (!PermissionService.check({ permissions })) {
     next({
