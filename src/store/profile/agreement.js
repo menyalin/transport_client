@@ -1,11 +1,8 @@
+import { VAT_RATE_ITEMS } from '@/shared/constants/vatRates'
 export default {
   state: {
     agreements: [],
-    vatRates: [
-      { text: 'Без НДС', value: 0 },
-      { text: '5%', value: 5 },
-      { text: '20%', value: 20 },
-    ],
+    vatRates: VAT_RATE_ITEMS,
   },
   mutations: {
     clearDirectories(state) {
