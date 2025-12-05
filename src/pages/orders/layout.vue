@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <app-bar title="Рейсы">
+    <AppBar title="Рейсы">
       <ScheduleSettings v-if="$route.fullPath === '/schedule/'" />
-    </app-bar>
+    </AppBar>
     <v-main>
       <router-view />
-      <app-snackbar />
+      <AppSnackbar />
     </v-main>
   </v-app>
 </template>

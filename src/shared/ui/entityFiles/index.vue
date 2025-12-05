@@ -15,11 +15,9 @@
       <v-btn icon @click="getFilesHandler">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <v-btn small color="primary" @click="openDialogHandler">
-        Добавить файлы
-      </v-btn>
+      <v-btn size="small" color="primary" @click="openDialogHandler">Добавить файлы</v-btn>
     </v-card-actions>
-    <v-dialog v-model="dialog" max-width="1200" persistent>
+    <v-dialog :modelValue="dialog" maxWidth="1200" persistent @update:model-value="$emit('update:dialog', $event)">
       <v-card>
         <v-card-title>Файлы</v-card-title>
         <v-card-text>
@@ -28,23 +26,14 @@
             clearable
             placeholder="Укажите файлы для загрузки"
             multiple
-            truncate-length="30"
+            truncateLength="30"
           />
-          <SelectedFiles
-            v-model="selectedFiles"
-            :uploadProgress="uploadProgress"
-          />
+          <SelectedFiles v-model="selectedFiles" :uploadProgress="uploadProgress" />
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="cancelDialogHandler" :disabled="loading">
-            Отменить загрузку файлов</v-btn
-          >
+          <v-btn :disabled="loading" @click="cancelDialogHandler">Отменить загрузку файлов</v-btn>
           <v-spacer />
-          <v-btn
-            color="primary"
-            @click="uploadFilesHandler"
-            :disabled="!selectedFiles.length || loading"
-          >
+          <v-btn color="primary" :disabled="!selectedFiles.length || loading" @click="uploadFilesHandler">
             Прикрепить файлы
           </v-btn>
         </v-card-actions>
@@ -101,17 +90,17 @@ export default {
 }
 </script>
 <style scoped>
-.files-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  width: 100%;
-}
-.title-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
+  .files-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+  }
+  .title-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 </style>

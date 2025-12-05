@@ -2,33 +2,25 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error"
+ @change="toggleAlert">
           {{ error.message }}
         </v-alert>
         <div class="text-h5 ma-3">
           {{ id ? 'Редактировать группу тарифов' : 'Создать группу тарифов' }}
         </div>
-        <app-load-spinner v-if="loading" />
+        <AppLoadSpinner v-if="loading" />
         <div v-else class="pt-2">
-          <buttons-panel
-            panel-type="form"
-            :disabled-submit="!hasWritePermission || disabledSubmit"
+          <ButtonsPanel
+            panelType="form"
+            :disabledSubmit="!hasWritePermission || disabledSubmit"
             @cancel="cancel"
             @submit="submit"
           />
-          <app-salary-tariff-settings
-            v-model="settings"
-            :disabled="disabledSettings"
-          />
+          <AppSalaryTariffSettings v-model="settings" :disabled="disabledSettings" />
           <v-btn
             color="primary"
-            small
+            size="small"
             class="ma-2"
             hint="alt + N"
             :disabled="!allowCreateTariffItem"
@@ -36,14 +28,10 @@
           >
             Добавить тариф alt+N
           </v-btn>
-          <app-salary-tariff-form
-            v-model="editableTariff"
-            :dialog="dialog"
-            @cancel="closeDialog"
-            @push="pushItem"
-          />
-          <app-salary-tariff-group-list
-            v-model="items"
+          <AppSalaryTariffForm v-model="editableTariff" :dialog="dialog" @cancel="closeDialog" @push="pushItem" />
+          <AppSalaryTariffGroupList
+            :modelValue="items"
+            @update:model-value="$emit('update:items', $event)"
             @removeItem="deleteItem"
           />
         </div>
@@ -89,11 +77,7 @@ export default {
   },
   computed: {
     allowCreateTariffItem() {
-      return (
-        this.settings.date &&
-        Array.isArray(this.settings.tks) &&
-        this.settings.tks.length
-      )
+      return this.settings.date && Array.isArray(this.settings.tks) && this.settings.tks.length
     },
     disabledSettings() {
       return this.items.length > 0
@@ -121,7 +105,7 @@ export default {
   created() {
     document.addEventListener('keyup', this.keypressEventHandler)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('keyup', this.keypressEventHandler)
   },
   methods: {
@@ -134,8 +118,7 @@ export default {
     addBtnHandler() {
       if (!this.allowCreateTariffItem) return null
       this.editableTariff = { ...this.settings }
-      if (this.editableTariff.type === 'additionalPoints')
-        this.editableTariff.includedPoints = 2
+      if (this.editableTariff.type === 'additionalPoints') this.editableTariff.includedPoints = 2
       this.dialog = false
       this.$nextTick(() => {
         this.dialog = true
@@ -162,7 +145,7 @@ export default {
       try {
         this.loading = true
         await SalaryTariffService.create(
-          this.items.map((i) => ({
+          this.items.map(i => ({
             ...i,
             company: this.$store.getters.directoriesProfile,
           }))
@@ -176,9 +159,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           this.loading = true

@@ -10,21 +10,21 @@ const BASE_PATH = '/orders'
 
 class OrderService {
   constructor() {
-    socket.on('order:created', (data) => {
+    socket.on('order:created', data => {
       store.commit('addOrder', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('ordersForSchedule', (orders) => {
+    socket.on('ordersForSchedule', orders => {
       store.commit('addOrdersToSchedule', orders)
     })
 
-    socket.on('order:updated', (data) => {
+    socket.on('order:updated', data => {
       store.commit('updateOrder', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('order:deleted', (id) => {
+    socket.on('order:deleted', id => {
       store.commit('deleteOrder', id)
       store.commit('deleteFromCache', id)
     })
@@ -79,8 +79,7 @@ class OrderService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       try {
         const { data } = await api.get(BASE_PATH + '/' + id)
@@ -123,11 +122,7 @@ class OrderService {
     return data
   }
 
-  async downloadDoc(
-    id,
-    body,
-    filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_order_contract'
-  ) {
+  async downloadDoc(id, body, filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_order_contract') {
     try {
       const response = await api({
         url: BASE_PATH + '/' + id + '/download_doc',

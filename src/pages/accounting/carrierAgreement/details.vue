@@ -2,8 +2,8 @@
   <FormWrapper
     :loading="loading"
     :displayDeleteBtn="showDeleteBtn"
-    @delete="deleteHandler"
     :itemIsMissing="itemIsMissing"
+    @delete="deleteHandler"
   >
     <CarrierAgreementForm
       :item="item"
@@ -27,16 +27,8 @@ export default {
   setup(props, ctx) {
     const itemIsMissing = computed(() => props.id && item.value === null)
 
-    const {
-      item,
-      showDeleteBtn,
-      loading,
-      showError,
-      errorMessage,
-      submit,
-      deleteHandler,
-      cancelHandler,
-    } = useItemData(props, ctx)
+    const { item, showDeleteBtn, loading, showError, errorMessage, submit, deleteHandler, cancelHandler } =
+      useItemData(props, ctx)
 
     return {
       item,

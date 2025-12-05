@@ -1,7 +1,7 @@
 import { ref, computed, getCurrentInstance, onMounted } from 'vue'
 import { CarrierAgreementService } from '@/shared/services'
 
-export const useCarrierAgreements = (settings) => {
+export const useCarrierAgreements = settings => {
   const { proxy } = getCurrentInstance()
   const loading = ref(false)
   const items = ref([])
@@ -17,9 +17,7 @@ export const useCarrierAgreements = (settings) => {
   })
 
   const itemsMap = computed(() => {
-    return new Map(
-      items.value.length ? items.value.map((i) => [i._id, i]) : null
-    )
+    return new Map(items.value.length ? items.value.map(i => [i._id, i]) : null)
   })
 
   async function getData() {

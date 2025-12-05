@@ -1,12 +1,13 @@
 <template>
   <v-select
-    :value="roles"
+    :modelValue="roles"
     :items="allRoles"
     multiple
     label="Роли пользователя"
-    outlined
+    variant="outlined"
+       density="compact"
     :disabled="disabled"
-    @change="changeHandler"
+    @update:model-value="changeHandler"
   />
 </template>
 <script>

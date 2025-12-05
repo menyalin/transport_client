@@ -1,21 +1,18 @@
 <template>
   <v-data-table
+    v-model:options="options"
     :items="preparedItems"
     :headers="tableHeaders"
-    dense
-    fixed-header
-    :options.sync="options"
+   
+    fixedHeader
     height="75vh"
     :loading="loading"
-    :items-per-page="-1"
-    @dblclick:row="dblClickRow"
+    :itemsPerPage="-1"
     :style="{ boxSizing: 'border-box' }"
+    @dblclick:row="dblClickRow"
   >
-    <template
-      v-if="preparedItems.length"
-      #[`body.append`]="{ headers, items: tableItems }"
-    >
-      <app-append-pivor-row :headers="headers" :items="tableItems" />
+    <template v-if="preparedItems.length" #[`body.append`]="{ headers, items: tableItems }">
+      <AppAppendPivorRow :headers="headers" :items="tableItems" />
     </template>
 
     <template #[`item.totalSum`]="{ item }">
@@ -38,7 +35,7 @@
       {{ new Intl.NumberFormat().format(item.additionalPointsSum) || 0 }}
     </template>
     <template #[`item._driverName`]="{ item }">
-      <a @click="chooseDriver(item._id)"> {{ item._driverName }} </a>
+      <a @click="chooseDriver(item._id)">{{ item._driverName }}</a>
     </template>
   </v-data-table>
 </template>
@@ -84,17 +81,11 @@ export default {
         // Детализация по Водителю
         return props.items.map((i, idx) => ({
           ...i,
-          _paymentSum: i._paymentSum
-            ? new Intl.NumberFormat().format(i._paymentSum)
-            : 0,
-          _totalSum: i.totalSum
-            ? new Intl.NumberFormat().format(i.totalSum)
-            : 0,
+          _paymentSum: i._paymentSum ? new Intl.NumberFormat().format(i._paymentSum) : 0,
+          _totalSum: i.totalSum ? new Intl.NumberFormat().format(i.totalSum) : 0,
           _additionalPointsSum: i.additionalPointsSum,
           _rowNumber: idx + 1,
-          _orderDate: i.orderDate
-            ? new Date(i.orderDate).toLocaleString()
-            : null,
+          _orderDate: i.orderDate ? new Date(i.orderDate).toLocaleString() : null,
         }))
       // Сводная информация
       else
@@ -106,8 +97,8 @@ export default {
 
           avgGrade: i?.avgGrade
             ? new Intl.NumberFormat('ru', {
-                minimumFractionDigits: 2,
-              }).format(i.avgGrade)
+                  minimumFractionDigits: 2,
+            }).format(i.avgGrade)
             : null,
         }))
     })

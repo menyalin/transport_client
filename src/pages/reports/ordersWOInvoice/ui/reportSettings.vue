@@ -1,114 +1,109 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
-    <DateRangeInput
-      :period="settings.period"
-      @change="updateSettings($event, 'period')"
-    />
+    <RefreshBtn @click="$emit('refresh')" />
+    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
 
     <v-select
-      :value="settings.tks"
-      item-text="name"
-      item-value="_id"
+      :modelValue="settings.tks"
+      itemTitle="name"
+      itemValue="_id"
       label="ТК"
-      dense
       clearable
       chips
-      deletable-chips
+      closableChips
       multiple
-      outlined
+      variant="outlined"
+      density="compact"
       :items="tkNameItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'tks')"
+      @update:model-value="updateSettings($event, 'tks')"
     />
 
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
-      item-value="_id"
+      :modelValue="settings.agreements"
+      itemTitle="name"
+      itemValue="_id"
       label="Соглашения"
-      dense
       clearable
-      auto-select-first
+      autoSelectFirst
       multiple
-      outlined
+      variant="outlined"
+      density="compact"
       chips
-      deletable-chips
+      closableChips
       :items="agreementItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '500px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
   </div>
 </template>
 
 <script>
-import store from '@/store'
-import { watch, ref, computed } from 'vue'
-import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
+  import store from '@/store'
+  import { watch, ref, computed } from 'vue'
+  import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
 
-export default {
-  name: 'ReportSettings',
-  components: {
-    RefreshBtn,
-    AppTableColumnSetting,
-    DateRangeInput,
-  },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    agreementItems: Array,
-    settings: Object,
-    allHeaders: {
-      type: Array,
-      required: true,
+  export default {
+    name: 'ReportSettings',
+    components: {
+      RefreshBtn,
+      AppTableColumnSetting,
+      DateRangeInput,
     },
-  },
-  setup(props, ctx) {
-    const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
-    const activeHeaders = ref([])
+    model: {
+      prop: 'settings',
+      event: 'change',
+    },
+    props: {
+      agreementItems: Array,
+      settings: Object,
+      allHeaders: {
+        type: Array,
+        required: true,
+      },
+    },
+    setup(props, ctx) {
+      const listSettingsName = 'orderDocsReportPage'
+      const activeHeaders = ref([])
 
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+      function updateSettings(value, field) {
+        ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
+      }
 
-    function updateActiveHeaders(value) {
-      ctx.emit('changeHeaders', value)
-    }
+      function updateActiveHeaders(value) {
+        ctx.emit('changeHeaders', value)
+      }
 
-    const tkNameItems = computed(() => {
-      return store.getters.tkNames
-    })
+      const tkNameItems = computed(() => {
+        return store.getters.tkNames
+      })
 
-    watch([activeHeaders], () => {
-      ctx.emit('changeHeaders', activeHeaders.value)
-    })
-    return {
-      updateActiveHeaders,
-      updateSettings,
-      listSettingsName,
-      allHeaders,
-      activeHeaders,
-      tkNameItems,
-    }
-  },
-}
+      watch([activeHeaders], () => {
+        ctx.emit('changeHeaders', activeHeaders.value)
+      })
+      return {
+        updateActiveHeaders,
+        updateSettings,
+        listSettingsName,
+        activeHeaders,
+        tkNameItems,
+      }
+    },
+  }
 </script>
 
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 </style>

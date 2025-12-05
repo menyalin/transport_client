@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-load-spinner v-if="appLoading" />
+    <AppLoadSpinner v-if="appLoading" />
     <router-view v-else />
   </div>
 </template>

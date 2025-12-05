@@ -1,15 +1,15 @@
 <template>
   <div>
-    <v-simple-table dense>
+    <v-table>
       <template #default>
         <thead>
           <tr>
             <th>Тип</th>
-            <th class="text-center" />
+            <th class="text-center"></th>
             <th class="text-center">Грузоподъемность</th>
             <th class="text-right">Тариф</th>
             <th class="text-left">Примечание</th>
-            <th />
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -23,26 +23,16 @@
                 {{ addressMap.get(item.unloading).shortName }}
               </div>
 
-              <app-direct-distance-zones
-                v-if="item.type === 'directDistanceZones'"
-                :item="item"
-              />
-              <app-additional-points-cell
-                v-if="item.type === 'additionalPoints'"
-                :item="item"
-              />
-              <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
-              <app-regions-cell v-if="item.type === 'regions'" :item="item" />
-              <app-zones-cell v-if="item.type === 'zones'" :item="item" />
-              <app-return-cell v-if="item.type === 'return'" :item="item" />
+              <AppDirectDistanceZones v-if="item.type === 'directDistanceZones'" :item="item" />
+              <AppAdditionalPointsCell v-if="item.type === 'additionalPoints'" :item="item" />
+              <AppWaitingCell v-if="item.type === 'waiting'" :item="item" />
+              <AppRegionsCell v-if="item.type === 'regions'" :item="item" />
+              <AppZonesCell v-if="item.type === 'zones'" :item="item" />
+              <AppReturnCell v-if="item.type === 'return'" :item="item" />
             </td>
 
             <td class="text-center">
-              {{
-                Array.isArray(item.liftCapacity)
-                  ? item.liftCapacity.join(', ')
-                  : item.liftCapacity
-              }}
+              {{ Array.isArray(item.liftCapacity) ? item.liftCapacity.join(', ') : item.liftCapacity }}
             </td>
             <td class="text-right">
               {{ Intl.NumberFormat().format(item.sum) }}
@@ -50,14 +40,14 @@
 
             <td>{{ item.note }}</td>
             <td class="text-right">
-              <v-btn small icon @click="removeHandler(ind)">
-                <v-icon small color="red"> mdi-delete </v-icon>
+              <v-btn size="small" icon @click="removeHandler(ind)">
+                <v-icon size="small" color="red">mdi-delete</v-icon>
               </v-btn>
             </td>
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </div>
 </template>
 <script>

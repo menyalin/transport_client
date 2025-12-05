@@ -6,7 +6,7 @@
       <v-card-text>
         <div id="truck-kinds">
           <v-select
-            v-model="settings.truckKinds"
+            :modelValue="settings.truckKinds"
             label="Используемые виды транспорта"
             :items="$store.getters.allTruckKinds"
             clearable
@@ -14,20 +14,16 @@
             :style="{ 'max-width': '400px' }"
           />
           <v-select
-            v-model="settings.defaultTruckKind"
+            :modelValue="settings.defaultTruckKind"
             label="Вид транспорта по умолчанию"
-            :items="
-              $store.getters.allTruckKinds.filter((i) =>
-                settings.truckKinds.includes(i.value)
-              )
-            "
+            :items="$store.getters.allTruckKinds.filter(i => settings.truckKinds.includes(i.value))"
             :style="{ 'max-width': '220px' }"
             clearable
           />
         </div>
         <div id="lift-capacity-types">
           <v-select
-            v-model="settings.liftCapacityTypes"
+            :modelValue="settings.liftCapacityTypes"
             label="Типы грузоподъемности"
             :items="$store.getters.allLiftCapacityTypes"
             multiple
@@ -35,20 +31,16 @@
             :style="{ 'max-width': '400px' }"
           />
           <v-select
-            v-model="settings.defaultLiftCapacity"
+            :modelValue="settings.defaultLiftCapacity"
             label="Грузоподъемность по умолчанию"
-            :items="
-              $store.getters.allLiftCapacityTypes.filter((i) =>
-                settings.liftCapacityTypes.includes(i)
-              )
-            "
+            :items="$store.getters.allLiftCapacityTypes.filter(i => settings.liftCapacityTypes.includes(i))"
             clearable
             :style="{ 'max-width': '220px' }"
           />
         </div>
         <div v-if="showLoadDirectionSettings" id="load-directions">
           <v-select
-            v-model="settings.loadDirections"
+            :modelValue="settings.loadDirections"
             label="Варианты загрузки"
             :items="$store.getters.allLoadDirection"
             multiple
@@ -56,29 +48,24 @@
             :style="{ 'max-width': '400px' }"
           />
           <v-select
-            v-model="settings.defaultLoadDirection"
+            :modelValue="settings.defaultLoadDirection"
             label="Вариант загрузки по умолчанию"
-            :items="
-              $store.getters.allLoadDirection.filter((i) =>
-                settings.loadDirections.includes(i.value)
-              )
-            "
+            :items="$store.getters.allLoadDirection.filter(i => settings.loadDirections.includes(i.value))"
             clearable
             :style="{ 'max-width': '220px' }"
           />
         </div>
         <v-textarea
-          v-model="settings.commonOrderContractNote"
+          :modelValue="settings.commonOrderContractNote"
           label="Примечание для договора-заявки"
           rows="15"
-          outlined
+          variant="outlined"
+       density="compact"
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn :disabled="!changed" @click="cancel"> Отмена </v-btn>
-        <v-btn color="primary" :disabled="!changed" @click="submit">
-          Сохранить
-        </v-btn>
+        <v-btn :disabled="!changed" @click="cancel">Отмена</v-btn>
+        <v-btn color="primary" :disabled="!changed" @click="submit">Сохранить</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -108,8 +95,7 @@ export default {
   computed: {
     disabledSettings() {
       return (
-        !this.$store.getters.hasPermission('fullAccess') ||
-        this.$store.getters.directoriesProfile !== this.companyId
+        !this.$store.getters.hasPermission('fullAccess') || this.$store.getters.directoriesProfile !== this.companyId
       )
     },
     showLoadDirectionSettings() {
@@ -123,11 +109,7 @@ export default {
       if (!this.storedSettings) return null
       const keys = Object.keys(this.settings)
       for (let i = 0; i < keys.length; i++) {
-        if (
-          this.settings[keys[i]]?.toString() !==
-          this.storedSettings[keys[i]]?.toString()
-        )
-          return true
+        if (this.settings[keys[i]]?.toString() !== this.storedSettings[keys[i]]?.toString()) return true
       }
       return false
     },
@@ -144,15 +126,13 @@ export default {
           this.settings.loadDirections = ['rear']
           this.settings.defaultLoadDirection = 'rear'
         }
-        if (!val.includes(this.settings.defaultTruckKind))
-          this.settings.defaultTruckKind = null
+        if (!val.includes(this.settings.defaultTruckKind)) this.settings.defaultTruckKind = null
         if (val.length === 1) this.settings.defaultTruckKind = val[0]
       },
 
       ['settings.liftCapacityTypes']: {
         handler: function (val) {
-          if (!val.includes(this.settings.defaultLiftCapacity))
-            this.settings.defaultLiftCapacity = null
+          if (!val.includes(this.settings.defaultLiftCapacity)) this.settings.defaultLiftCapacity = null
           if (val.length === 1) this.settings.defaultLiftCapacity = val[0]
         },
       },
@@ -173,7 +153,7 @@ export default {
     setSettings() {
       if (this.storedSettings) {
         const keys = Object.keys(this.settings)
-        keys.forEach((key) => {
+        keys.forEach(key => {
           this.settings[key] = this.storedSettings[key]
         })
       }
@@ -182,13 +162,13 @@ export default {
 }
 </script>
 <style scoped>
-#truck-kinds,
-#lift-capacity-types,
-#load-directions {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  justify-content: flex-start;
-  align-items: center;
-}
+  #truck-kinds,
+  #lift-capacity-types,
+  #load-directions {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: flex-start;
+    align-items: center;
+  }
 </style>

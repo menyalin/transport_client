@@ -5,46 +5,34 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
-            label="Тип ТС"
-            :items="truckKindItems"
-            multiple
-            v-model="form.truckKinds"
-          />
+v-model="form.truckKinds"
+label="Тип ТС" :items="truckKindItems" multiple
+/>
           <v-select
-            multiple
-            label="Грузоподъемность"
-            :items="liftCapacityItems"
-            v-model="form.liftCapacities"
-          />
+v-model="form.liftCapacities"
+multiple label="Грузоподъемность" :items="liftCapacityItems"
+/>
         </div>
         <div class="input-fields-row">
           <v-select
+            ref="NodeRef"
+            v-model="form.orderTypes"
             multiple
-            ref="focusableNodeRef"
             label="Тип рейса"
             :items="orderTypeItems"
-            v-model="form.orderTypes"
             :style="{ width: '130px' }"
           />
-          <v-text-field
-            label="Часы простоя, включенные в тариф"
-            v-model.number="form.includeHours"
-          />
+          <v-text-field v-model.number="form.includeHours" label="Часы простоя, включенные в тариф" />
           <v-select
+            v-model="form.roundingInterval"
             label="Округлять до"
             :items="roundingIntervalItems"
-            v-model="form.roundingInterval"
             :style="{ width: '150px' }"
           />
-          <v-select
-            label="Тариф за"
-            :items="tariffByItems"
-            v-model="form.tariffBy"
-            :style="{ width: '150px' }"
-          />
+          <v-select v-model="form.tariffBy" label="Тариф за" :items="tariffByItems" :style="{ width: '150px' }" />
         </div>
         <div class="input-fields-row">
-          <v-text-field label="Тариф" v-model.number="form.price" />
+          <v-text-field v-model.number="form.price" label="Тариф" />
         </div>
       </v-card-text>
       <CardActionButtons
@@ -53,14 +41,8 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
-          Добавить в список
-        </v-btn>
+        <v-btn v-if="!editableMode" type="submit" color="primary"
+:disabled="isInvalidForm">Добавить в список</v-btn>
       </CardActionButtons>
     </v-card>
   </form>
@@ -71,8 +53,6 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, numeric, minLength } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
-
-
 
 export default {
   name: 'AdditionalPointsTariffForm',
@@ -86,7 +66,7 @@ export default {
   },
   setup(props, ctx) {
     const {
-      focusableNodeRef,
+      NodeRef,
       truckKindItems,
       liftCapacityItems,
       orderTypeItems,
@@ -105,9 +85,7 @@ export default {
       price: null,
     })
 
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = {
       ...commonRules,
@@ -121,7 +99,7 @@ export default {
 
     watch(
       () => props.initialFormState,
-      (newState) => {
+      newState => {
         if (newState) {
           form.value = { ...newState }
           v$.value.$reset()
@@ -170,7 +148,7 @@ export default {
       form,
       isInvalidForm,
       v$,
-      focusableNodeRef,
+      NodeRef,
       tariffByItems,
       roundingIntervalItems,
     }
@@ -178,15 +156,15 @@ export default {
 }
 </script>
 <style scoped>
-.input-fields-row {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-.zone-row {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-}
+  .input-fields-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+  .zone-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
 </style>

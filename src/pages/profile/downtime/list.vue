@@ -2,69 +2,69 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+        <ButtonsPanel
+          panelType="list"
+          :disabledRefresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('downtime:write')"
           @submit="create"
           @refresh="refresh"
         />
         <div class="filter-wrapper">
-          <DateRangeInput v-model="settings.period" />
+          <DateRangeInput :modelValue="settings.period" />
           <v-autocomplete
-            v-model="settings.truckFilter"
+            :modelValue="settings.truckFilter"
             label="Грузовик"
             :items="trucks"
-            item-text="regNum"
-            item-value="_id"
-            dense
-            outlined
-            hide-details
+            itemTitle="regNum"
+            itemValue="_id"
+           
+            variant="outlined"
+       density="compact"
+            hideDetails
             clearable
             :style="{ maxWidth: '250px' }"
           />
           <v-autocomplete
-            v-model="settings.partner"
+            :modelValue="settings.partner"
             label="Партнер"
             :items="partners"
-            item-text="name"
-            item-value="_id"
-            auto-select-first
-            dense
-            outlined
-            hide-details
+            itemTitle="name"
+            itemValue="_id"
+            autoSelectFirst
+           
+            variant="outlined"
+       density="compact"
+            hideDetails
             clearable
             :style="{ maxWidth: '350px' }"
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="list"
           :loading="loading"
           height="73vh"
-          dense
-          fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
+         
+          fixedHeader
+          :itemsLength="count"
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.type`]="{ item }">
             <span>{{ downtimeTypesHash[item.type] }}</span>
           </template>
           <template #[`item.partner`]="{ item }">
-            <span>{{
-              $store.getters.partnersMap.has(item.partner)
-                ? $store.getters.partnersMap.get(item.partner).name
-                : null
-            }}</span>
+            <span>
+              {{
+                $store.getters.partnersMap.has(item.partner) ? $store.getters.partnersMap.get(item.partner).name : null
+              }}
+            </span>
           </template>
           <template #[`item.truck`]="{ item }">
-            <span>{{
-              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
-            }}</span>
+            <span>{{ trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-' }}</span>
           </template>
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
@@ -86,10 +86,7 @@ import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(10, 'd').format('YYYY-MM-DD'),
-  ]
+  return [todayM.add(-10, 'd').format('YYYY-MM-DD'), todayM.add(10, 'd').format('YYYY-MM-DD')]
 }
 
 export default {
@@ -131,7 +128,7 @@ export default {
       return this.$store.getters.trucksForSelect({ type: 'truck' })
     },
     partners() {
-      return this.$store.getters.partners.filter((i) => i.isService)
+      return this.$store.getters.partners.filter(i => i.isService)
     },
     trucksHash() {
       return this.$store.getters.trucksHash
@@ -179,16 +176,10 @@ export default {
           endDate: this.settings.period[1],
           truckFilter: this.settings.truckFilter,
           partner: this.settings.partner,
-          skip:
-            this.settings.listOptions.itemsPerPage *
-            (this.settings.listOptions.page - 1),
+          skip: this.settings.listOptions.itemsPerPage * (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
-          sortBy: this.settings.listOptions.sortBy.length
-            ? this.settings.listOptions.sortBy[0]
-            : null,
-          sortDesc: this.settings.listOptions.sortDesc.length
-            ? this.settings.listOptions.sortDesc[0]
-            : null,
+          sortBy: this.settings.listOptions.sortBy.length ? this.settings.listOptions.sortBy[0] : null,
+          sortDesc: this.settings.listOptions.sortDesc.length ? this.settings.listOptions.sortDesc[0] : null,
         })
         this.list = data.items
         this.count = data.count
@@ -202,11 +193,11 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
-}
+  .filter-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
 </style>

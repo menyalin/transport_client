@@ -2,7 +2,7 @@ import { computed, onMounted, ref } from 'vue'
 import store from '@/store'
 import { AgreementService } from '@/shared/services'
 
-export default (settings) => {
+export default settings => {
   const agreements = ref([])
   async function getAgreements() {
     const res = await AgreementService.getActiveAgreements()
@@ -22,9 +22,9 @@ export default (settings) => {
     ]
 
     store.getters.documentStatuses
-      .map((i) => i.value)
-      .forEach((i) => {
-        if (!docStatusesWithCustomNames.map((j) => j.value).includes(i))
+      .map(i => i.value)
+      .forEach(i => {
+        if (!docStatusesWithCustomNames.map(j => j.value).includes(i))
           console.error('useOrderListUtils: unexpected document status value')
       })
     return docStatusesWithCustomNames
@@ -32,8 +32,8 @@ export default (settings) => {
 
   const agreementItems = computed(() => {
     return agreements.value
-      .filter((i) => !i.isOutsourceAgreement)
-      .map((i) => ({ _id: i._id, name: i.name }))
+      .filter(i => !i.isOutsourceAgreement)
+      .map(i => ({ _id: i._id, name: i.name }))
       .sort((a, b) => (a.name > b.name ? 1 : -1))
   })
 
@@ -43,7 +43,7 @@ export default (settings) => {
         type: 'trailer',
         tkName: settings?.tkName,
       })
-      .map((t) => ({
+      .map(t => ({
         ...t,
         value: t._id,
         text: t.regNum,
@@ -56,7 +56,7 @@ export default (settings) => {
         type: 'truck',
         tkName: settings?.tkName,
       })
-      .map((t) => ({
+      .map(t => ({
         ...t,
         value: t._id,
         text: t.regNum,
@@ -64,13 +64,9 @@ export default (settings) => {
   )
 
   const drivers = computed(() =>
-    store.getters.drivers.filter((i) =>
-      settings?.tkName ? i.tkName._id === settings.tkName : true
-    )
+    store.getters.drivers.filter(i => (settings?.tkName ? i.tkName._id === settings.tkName : true))
   )
-  const clientItems = computed(() =>
-    store.getters.partners.filter((i) => i.isClient)
-  )
+  const clientItems = computed(() => store.getters.partners.filter(i => i.isClient))
 
   const addressItems = computed(() => store.getters.addressesForAutocomplete)
 

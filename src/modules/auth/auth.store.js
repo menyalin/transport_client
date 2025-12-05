@@ -1,7 +1,7 @@
 import api from '@/api'
 import router from '@/router'
 import socket from '@/socket'
-import  { UserService } from '@/shared/services'
+import { UserService } from '@/shared/services'
 
 export default {
   state: () => ({
@@ -28,12 +28,12 @@ export default {
       return new Promise((resolve, reject) => {
         api
           .post('/auth/login', payload)
-          .then((res) => {
+          .then(res => {
             localStorage.setItem('token', `Bearer ${res.data.accessToken}`)
             dispatch('getUserData')
             resolve(res)
           })
-          .catch((e) => reject(e))
+          .catch(e => reject(e))
       })
     },
 
@@ -46,7 +46,7 @@ export default {
             dispatch('getUserData')
             resolve(data)
           })
-          .catch((e) => reject(e))
+          .catch(e => reject(e))
       })
     },
     async logOut({ commit }) {
@@ -63,7 +63,7 @@ export default {
         commit('setAppLoading', true)
         api
           .get('/auth')
-          .then((res) => {
+          .then(res => {
             if (res?.data?.user) {
               commit('setUser', res.data.user)
               dispatch('setDirectories', res.data)
@@ -86,15 +86,13 @@ export default {
 
     userRoles: ({ user }, { myCompanies }) => {
       if (!user?.directoriesProfile) return []
-      const currentCompany = myCompanies.find(
-        (c) => c._id === user.directoriesProfile
-      )
+      const currentCompany = myCompanies.find(c => c._id === user.directoriesProfile)
       return currentCompany?.roles || []
     },
 
     hasPermission:
       (_state, { userRoles, permissionsMap }) =>
-      (permission) => {
+      permission => {
         if (userRoles.includes('admin')) return true
         return !!permissionsMap.get(permission)
       },
@@ -106,9 +104,7 @@ export default {
         if (!permissionsMap.has(permission)) return false
         if (!date) return true
         if (permissionsMap.get(permission) === -1) return true
-        const dayCount = Math.floor(
-          (new Date() - new Date(date)) / (1000 * 60 * 60 * 24)
-        )
+        const dayCount = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24))
         if (dayCount > permissionsMap.get(permission)) return false
         return true
       },

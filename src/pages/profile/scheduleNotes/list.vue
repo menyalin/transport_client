@@ -2,44 +2,43 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
+        <ButtonsPanel
+          panelType="list"
           :disabledSubmit="!$store.getters.hasPermission('scheduleNote:write')"
           @submit="create"
           @refresh="refresh"
         />
         <div class="filter-wrapper">
-          <DateRangeInput v-model="settings.period" />
+          <DateRangeInput :modelValue="settings.period" />
           <v-autocomplete
-            v-model="settings.truckFilter"
+            :modelValue="settings.truckFilter"
             label="Грузовик"
             :items="trucks"
-            item-text="regNum"
-            item-value="_id"
-            dense
-            outlined
-            hide-details
+            itemTitle="regNum"
+            itemValue="_id"
+           
+            variant="outlined"
+       density="compact"
+            hideDetails
             clearable
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="list"
           :loading="loading"
           height="73vh"
-          dense
-          fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
+         
+          fixedHeader
+          :itemsLength="count"
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.truck`]="{ item }">
-            <span>{{
-              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
-            }}</span>
+            <span>{{ trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-' }}</span>
           </template>
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
@@ -56,10 +55,7 @@ import { ScheduleNoteService } from '@/shared/services'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(10, 'd').format('YYYY-MM-DD'),
-  ]
+  return [todayM.add(-10, 'd').format('YYYY-MM-DD'), todayM.add(10, 'd').format('YYYY-MM-DD')]
 }
 
 export default {
@@ -68,52 +64,52 @@ export default {
     ButtonsPanel,
     DateRangeInput,
   },
-  data: () => ({
-    formName: 'ScheduleNoteList',
-    loading: false,
-    settings: {
-      truckFilter: null,
-      period: _initPeriod(),
-      listOptions: {
-        page: 1,
-        itemsPerPage: 50,
+    beforeRouteLeave(to, from, next) {
+      this.$store.commit('setFormSettings', {
+        formName: this.formName,
+        settings: { ...this.settings },
+      })
+      next()
+    },
+    data: () => ({
+      formName: 'ScheduleNoteList',
+      loading: false,
+      settings: {
+        truckFilter: null,
+        period: _initPeriod(),
+        listOptions: {
+          page: 1,
+          itemsPerPage: 50,
+        },
+      },
+      count: 0,
+      list: [],
+      headers: [
+        { value: 'text', text: 'Текст', sortable: false },
+        { value: 'truck', text: 'Грузовик', sortable: true },
+        { value: 'startPositionDate', text: 'Дата', sortable: true },
+      ],
+    }),
+    computed: {
+      trucks() {
+        return this.$store.getters.trucksForSelect({ type: 'truck' })
+      },
+      trucksHash() {
+        return this.$store.getters.trucksHash
       },
     },
-    count: 0,
-    list: [],
-    headers: [
-      { value: 'text', text: 'Текст', sortable: false },
-      { value: 'truck', text: 'Грузовик', sortable: true },
-      { value: 'startPositionDate', text: 'Дата', sortable: true },
-    ],
-  }),
-  computed: {
-    trucks() {
-      return this.$store.getters.trucksForSelect({ type: 'truck' })
-    },
-    trucksHash() {
-      return this.$store.getters.trucksHash
-    },
-  },
-  watch: {
-    settings: {
-      deep: true,
-      handler: function () {
-        this.getData()
+    watch: {
+      settings: {
+        deep: true,
+        handler: function () {
+          this.getData()
+        },
       },
     },
-  },
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
+    created() {
+      if (this.$store.getters.formSettingsMap.has(this.formName))
+        this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    },
   methods: {
     create() {
       this.$router.push({ name: 'ScheduleNoteCreate' })
@@ -132,16 +128,10 @@ export default {
           startDate: new Date(this.settings.period[0]).toISOString(),
           endDate: new Date(this.settings.period[1]).toISOString(),
           truckFilter: this.settings.truckFilter,
-          skip:
-            this.settings.listOptions.itemsPerPage *
-            (this.settings.listOptions.page - 1),
+          skip: this.settings.listOptions.itemsPerPage * (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
-          sortBy: this.settings.listOptions.sortBy.length
-            ? this.settings.listOptions.sortBy[0]
-            : null,
-          sortDesc: this.settings.listOptions.sortDesc.length
-            ? this.settings.listOptions.sortDesc[0]
-            : null,
+          sortBy: this.settings.listOptions.sortBy.length ? this.settings.listOptions.sortBy[0] : null,
+          sortDesc: this.settings.listOptions.sortDesc.length ? this.settings.listOptions.sortDesc[0] : null,
         })
         this.list = data.items
         this.count = data.count
@@ -155,9 +145,9 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: grid;
-  grid-template-columns: 300px 280px;
-  align-items: center;
-}
+  .filter-wrapper {
+    display: grid;
+    grid-template-columns: 300px 280px;
+    align-items: center;
+  }
 </style>

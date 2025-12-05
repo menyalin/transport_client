@@ -1,7 +1,7 @@
 <template>
   <div class="field-hint text-caption px-6">
     {{ `${text} ${crewDateStr}` }}
-    <span class="link-text" @click="goto"> Перейти </span>
+    <span class="link-text" @click="goto">Перейти</span>
 
     <span
       v-if="!isClosedCrew"
@@ -13,32 +13,20 @@
     >
       Закрыть
     </span>
-    <div class="caption red--text" v-if="!isValidNewDate">
+    <div v-if="!isValidNewDate" class="text-caption text-red">
       <b>Дата начала должна быть больше {{ crewLastDateStr }}</b>
     </div>
     <div>
       Водитель:
-      {{
-        driversMap.has(crew.driver)
-          ? driversMap.get(crew.driver).fullName
-          : ' - '
-      }}
+      {{ driversMap.has(crew.driver) ? driversMap.get(crew.driver).fullName : ' - ' }}
     </div>
     <div>
       Грузовик:
-      {{
-        trucksMap.has(crew.transport.truck)
-          ? trucksMap.get(crew.transport.truck).regNum
-          : ' - '
-      }}
+      {{ trucksMap.has(crew.transport.truck) ? trucksMap.get(crew.transport.truck).regNum : ' - ' }}
     </div>
     <div>
       Прицеп:
-      {{
-        trucksMap.has(crew.transport.trailer)
-          ? trucksMap.get(crew.transport.trailer).regNum
-          : ' - '
-      }}
+      {{ trucksMap.has(crew.transport.trailer) ? trucksMap.get(crew.transport.trailer).regNum : ' - ' }}
     </div>
   </div>
 </template>
@@ -79,32 +67,27 @@ export default {
       return this.$store.getters.trucksMap
     },
     crewDateStr() {
-      const dateValue =
-        this.type == 'crew'
-          ? this.crew.startDate
-          : this.crew.transport.startDate
+      const dateValue = this.type == 'crew' ? this.crew.startDate : this.crew.transport.startDate
       return new Date(dateValue).toLocaleString()
     },
     text() {
       switch (true) {
-        case this.type === 'crew' && !this.crew.endDate:
-          return 'У водителя есть открытая смена от '
-        case this.type === 'crew' && !!this.crew.endDate:
-          return 'У водителя есть пересечение со сменой от '
-        case this.type === 'truck':
-          return 'Грузовик используется в экипаже от '
-        case this.type === 'trailer':
-          return 'Прицеп используется в экипаже от '
-        default:
-          return 'какой-то другой вариант от '
+      case this.type === 'crew' && !this.crew.endDate:
+            return 'У водителя есть открытая смена от '
+      case this.type === 'crew' && !!this.crew.endDate:
+        return 'У водителя есть пересечение со сменой от '
+          case this.type === 'truck':
+        return 'Грузовик используется в экипаже от '
+          case this.type === 'trailer':
+        return 'Прицеп используется в экипаже от '
+      default:
+        return 'какой-то другой вариант от '
       }
     },
   },
   methods: {
     async goto() {
-      const res = await this.$confirm(
-        'Вы уверены? информация на странице будет потеряна'
-      )
+      const res = await this.$confirm('Вы уверены? информация на странице будет потеряна')
       if (res)
         this.$router.push({
           name: 'CrewDetails',
@@ -122,17 +105,17 @@ export default {
 }
 </script>
 <style>
-.field-hint {
-  margin: 0px auto 10px;
-}
-.link-text {
-  color: red;
-  font-size: 0.8rem;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.disabled-link {
-  color: grey;
-  cursor: not-allowed;
-}
+  .field-hint {
+    margin: 0px auto 10px;
+  }
+  .link-text {
+    color: red;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .disabled-link {
+    color: grey;
+    cursor: not-allowed;
+  }
 </style>

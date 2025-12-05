@@ -7,9 +7,7 @@ export const useOrderPrintForms = ({ order }) => {
   const downloadDisabled = ref(false)
   const { proxy } = getCurrentInstance()
 
-  const docTemplateIsVisible = computed(() =>
-    proxy.$store.getters.hasPermission(permissionName)
-  )
+  const docTemplateIsVisible = computed(() => proxy.$store.getters.hasPermission(permissionName))
 
   async function getTemplates() {
     if (proxy.$store.getters.hasPermission(permissionName)) {

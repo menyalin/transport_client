@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <app-bar title="Отчеты" />
+    <AppBar title="Отчеты" />
     <v-main>
       <router-view />
-      <app-snackbar />
+      <AppSnackbar />
     </v-main>
   </v-app>
 </template>

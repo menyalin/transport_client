@@ -1,18 +1,18 @@
 <template>
   <v-app>
-    <app-admin-bar title="Admin panel" />
+    <AppAdminBar title="Admin panel" />
     <v-main>
       <v-container fluid>
         <v-row>
           <v-col cols="auto">
-            <app-left-nav :items="navButtons" />
+            <AppLeftNav :items="navButtons" />
           </v-col>
           <v-col>
             <router-view />
           </v-col>
         </v-row>
       </v-container>
-      <app-snackbar />
+      <AppSnackbar />
     </v-main>
   </v-app>
 </template>

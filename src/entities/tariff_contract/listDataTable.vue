@@ -1,17 +1,17 @@
 <template>
   <v-data-table
     :items="items"
-    dense
+   
     :headers="headers"
     :loading="loading"
-    :serverItemsLength="count"
+    :itemsLength="count"
     height="72vh"
-    fixed-header
+    fixedHeader
     :listOptions="listOptions"
-    @update:options="updateListOptions"
-    :footer-props="{
+    :footerProps="{
       'items-per-page-options': [50, 100, 300],
     }"
+    @update:options="updateListOptions"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.createdAt`]="{ item }">
@@ -48,7 +48,7 @@ export default {
     return {
       updateListOptions,
       dblClickRow,
-      headers: tableHeaders,
+      tableHeaders,
     }
   },
 }

@@ -1,10 +1,10 @@
 <template>
   <div class="user-info-wrapper ml-5 my-3">
     <div>
-      <v-icon v-if="isBlockedUser" color="red"> mdi-account-cancel </v-icon>
-      <v-icon v-else-if="isPending" color="blue"> mdi-account-clock </v-icon>
-      <v-icon v-else-if="isAccepted" color="green"> mdi-account-check </v-icon>
-      <v-icon v-else-if="isCanceled" color="grey"> mdi-account-cancel </v-icon>
+      <v-icon v-if="isBlockedUser" color="red">mdi-account-cancel</v-icon>
+      <v-icon v-else-if="isPending" color="blue">mdi-account-clock</v-icon>
+      <v-icon v-else-if="isAccepted" color="green">mdi-account-check</v-icon>
+      <v-icon v-else-if="isCanceled" color="grey">mdi-account-cancel</v-icon>
     </div>
     <div class="text-h6">
       {{ worker.user.name }}
@@ -12,7 +12,8 @@
         {{ worker.user.email }}
       </div>
     </div>
-    <v-alert v-if="!isAccepted" :type="message.type" outlined class="ml-3">
+    <v-alert v-if="!isAccepted" :type="message.type" variant="outlined"
+class="ml-3">
       {{ message.text }}
     </v-alert>
   </div>
@@ -28,15 +29,9 @@ export default {
   },
   setup(props) {
     const isBlockedUser = computed(() => props.worker.disabled)
-    const isPending = computed(
-      () => props.worker.pending && props.worker.accepted
-    )
-    const isAccepted = computed(
-      () => !props.worker.pending && props.worker.accepted
-    )
-    const isCanceled = computed(
-      () => !props.worker.pending && !props.worker.accepted
-    )
+    const isPending = computed(() => props.worker.pending && props.worker.accepted)
+    const isAccepted = computed(() => !props.worker.pending && props.worker.accepted)
+    const isCanceled = computed(() => !props.worker.pending && !props.worker.accepted)
     const message = computed(() => {
       if (isBlockedUser.value)
         return {
@@ -55,6 +50,8 @@ export default {
           type: 'info',
           text: 'Ожидается подтверждение пользователя',
         }
+
+      return null
     })
     return {
       isBlockedUser,
@@ -68,10 +65,10 @@ export default {
 </script>
 
 <style scoped>
-.user-info-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-}
+  .user-info-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
 </style>

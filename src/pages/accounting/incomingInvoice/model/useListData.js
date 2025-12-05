@@ -28,10 +28,7 @@ export const useListData = () => {
     number: null,
   }
 
-  const settings = usePersistedRef(
-    initialState,
-    'incomingInvoice_list_settings'
-  )
+  const settings = usePersistedRef(initialState, 'incomingInvoice_list_settings')
   const listOptions = usePersistedRef({}, 'incomingInvoice_list_options')
 
   const items = ref([])
@@ -79,17 +76,13 @@ export const useListData = () => {
     router.push('/accounting/incomingInvoice/create')
   }
   function onDeleteHandler(itemId) {
-    items.value = items.value.filter((i) => i._id !== itemId)
+    items.value = items.value.filter(i => i._id !== itemId)
   }
 
   function changeHeaders(val) {
     headers.value = val
   }
-  watch(
-    settings,
-    () => (listOptions.value = { ...listOptions.value, page: 1 }),
-    { deep: true }
-  )
+  watch(settings, () => (listOptions.value = { ...listOptions.value, page: 1 }), { deep: true })
 
   watch(listOptions, async () => await getData(), { deep: true })
 

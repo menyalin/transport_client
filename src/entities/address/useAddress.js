@@ -6,8 +6,7 @@ export const useAddress = () => {
   return {
     actions: {
       create: ({ query }) => $router.push({ name: 'AddressCreate', query }),
-      update: ({ id, query }) =>
-        $router.push({ name: 'AddressDetails', params: { id }, query }),
+      update: ({ id, query }) => $router.push({ name: 'AddressDetails', params: { id }, query }),
     },
   }
 }

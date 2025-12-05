@@ -21,7 +21,7 @@ class PaymentPart {
     try {
       PaymentPartValidationSchema.safeParse(data)
 
-      if (!VAT_RATE_ITEMS.map((i) => i.value).includes(data.vatRate))
+      if (!VAT_RATE_ITEMS.map(i => i.value).includes(data.vatRate))
         throw new Error('PaymentPart : constructor : invalid vatRate param')
 
       this.client = data.client
@@ -74,9 +74,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   const invalidForm = computed(() => v$.value.$invalid)
   const v$ = useVuelidate(rules, state)
 
-  const clientItems = computed(() =>
-    store.getters.partners.filter((i) => i.isClient)
-  )
+  const clientItems = computed(() => store.getters.partners.filter(i => i.isClient))
 
   async function setAgreement({ client, routeDate }) {
     const res = await AgreementService.getForClient({
@@ -90,19 +88,16 @@ export function usePaymentPartForm({ routeDate }, ctx) {
 
     if (firstAgreement) state.value.sumWithVAT = firstAgreement.usePriceWithVAT
 
-    if (firstAgreement && !state.value.agreement)
-      state.value.agreement = firstAgreement._id
+    if (firstAgreement && !state.value.agreement) state.value.agreement = firstAgreement._id
   }
 
   const agreement = computed(() => {
     if (agreements.value.length === 0) return {}
     if (!state.value.agreement) return {}
-    else return agreements.value.find((i) => i._id === state.value.agreement)
+    else return agreements.value.find(i => i._id === state.value.agreement)
   })
 
-  const agreementItems = computed(
-    () => agreements.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || []
-  )
+  const agreementItems = computed(() => agreements.value.sort((a, b) => (a.name > b.name ? 1 : -1)) || [])
 
   const vatCheckboxIsDisabled = computed(() => {
     return !agreement.value?.vatRate
@@ -126,18 +121,14 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   }
 
   watch(state, (newVal, oldVal) => {
-    if (newVal.agreement !== oldVal.agreement)
-      console.log('agreement changed: ', newVal)
+    if (newVal.agreement !== oldVal.agreement) console.log('agreement changed: ', newVal)
   })
 
-  watch(
-    [() => routeDate, () => state.value.client],
-    async ([routeDate, client]) => {
-      await setAgreement({ client, routeDate })
-    }
-  )
+  watch([() => routeDate, () => state.value.client], async ([routeDate, client]) => {
+    await setAgreement({ client, routeDate })
+  })
 
-  watch(vatRate, (val) => {
+  watch(vatRate, val => {
     if (val === 0) state.value.sumWithVAT = false
   })
 

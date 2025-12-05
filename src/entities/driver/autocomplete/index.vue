@@ -1,30 +1,31 @@
 <template>
   <v-autocomplete
+    v-model:searchInput="search"
     clearable
-    outlined
-    dense
-    auto-select-first
-    return-object
-    :value="model"
+    variant="outlined"
+       density="compact"
+   
+    autoSelectFirst
+    returnObject
+    :modelValue="model"
     :items="[...items, ...tmpItems]"
-    hide-no-data
+    hideNoData
     :loading="isLoading"
-    :search-input.sync="search"
-    :filter="() => true"
+    :customFilter="() => true"
     :label="label"
     placeholder="Введите текст для поиска"
     no-data-text="Данные не найдены"
     :disabled="disabled"
-    item-value="_id"
-    item-text="text"
-    @change="change"
+    itemValue="_id"
+    itemTitle="text"
+    @update:model-value="change"
     @click:clear="clear"
   />
 </template>
 <script>
 import { DriverService } from '@/shared/services'
 
-const _getDriverNameString = (driver) => {
+const _getDriverNameString = driver => {
   return driver?.surname + ' ' + driver?.name
 }
 
@@ -85,11 +86,8 @@ export default {
   },
   methods: {
     async getItems(str) {
-      const res = await DriverService.search(
-        str,
-        this.$store.getters.directoriesProfile
-      )
-      return res.map((item) => ({
+      const res = await DriverService.search(str, this.$store.getters.directoriesProfile)
+      return res.map(item => ({
         ...item,
         text: _getDriverNameString(item),
       }))

@@ -1,29 +1,18 @@
 <template>
-  <v-card max-width="800px" class="ma-3" :loading="loading" :disabled="loading">
+  <v-card
+maxWidth="800px"
+class="ma-3" :loading="loading" :disabled="loading"
+>
     <v-card-title>Пользователь:</v-card-title>
     <v-card-text>
-      <pick-user v-if="showPickUser" v-model="candidate" />
-      <linked-user-info v-if="showUserInfo" :worker="worker" />
-      <staff-roles-select
-        v-if="showRolesSelect"
-        v-model="roles"
-        :disabled="disableRolesSelect"
-      />
+      <PickUser v-if="showPickUser" v-model="candidate" />
+      <LinkedUserInfo v-if="showUserInfo" :worker="worker" />
+      <StaffRolesSelect v-if="showRolesSelect" v-model="roles" :disabled="disableRolesSelect" />
     </v-card-text>
     <v-card-actions class="pa-4">
-      <v-btn
-        v-if="showUpdateRolesBtn"
-        :disabled="isRolesNotChanged"
-        @click="updateRoles"
-      >
-        Обновить роли
-      </v-btn>
-      <v-btn v-if="showSendInviteBtn" @click="sendInviteHandler">
-        Пригласить
-      </v-btn>
-      <v-btn v-if="showResendInviteBtn" @click="resendInviteHandler">
-        Пригласить повторно
-      </v-btn>
+      <v-btn v-if="showUpdateRolesBtn" :disabled="isRolesNotChanged" @click="updateRoles">Обновить роли</v-btn>
+      <v-btn v-if="showSendInviteBtn" @click="sendInviteHandler">Пригласить</v-btn>
+      <v-btn v-if="showResendInviteBtn" @click="resendInviteHandler">Пригласить повторно</v-btn>
       <v-btn v-if="showUserInfo" @click="toggleDisableStatus">
         {{ worker.disabled ? 'Разблокировать' : 'Заблокировать' }}
       </v-btn>

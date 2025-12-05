@@ -2,24 +2,30 @@
   <div class="wrapper">
     <div class="left-column">
       <div>
-        Кол-во: <b>{{ data?.count ?? 0 }}</b>
+        Кол-во:
+        <b>{{ data?.count ?? 0 }}</b>
       </div>
       <div>
-        Общая сумма штрафов: <b>{{ totalSum }}</b>
+        Общая сумма штрафов:
+        <b>{{ totalSum }}</b>
       </div>
       <div>
-        Сумма со скидкой: <b>{{ totalSumWithDiscount }}</b>
+        Сумма со скидкой:
+        <b>{{ totalSumWithDiscount }}</b>
       </div>
     </div>
     <div class="right-column">
       <div>
-        Оплачено: <b>{{ totalPayed }}</b>
+        Оплачено:
+        <b>{{ totalPayed }}</b>
       </div>
       <div>
-        К удержанию: <b>{{ needWithheld }}</b>
+        К удержанию:
+        <b>{{ needWithheld }}</b>
       </div>
       <div v-if="showIsWithheld">
-        Удержано: <b>{{ isWithheld }}</b>
+        Удержано:
+        <b>{{ isWithheld }}</b>
       </div>
     </div>
   </div>
@@ -70,28 +76,28 @@ export default {
     }
   },
 }
-// Итого штраф, итого штраф со скидкой, итого удержать
+  // Итого штраф, итого штраф со скидкой, итого удержать
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: stretch;
-}
-.wrapper > div {
-  margin: 10px;
-}
-.left-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-end;
-}
-.right-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-end;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: stretch;
+  }
+  .wrapper > div {
+    margin: 10px;
+  }
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-end;
+  }
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-end;
+  }
 </style>

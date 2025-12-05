@@ -6,54 +6,52 @@
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
-        :value="state.truck"
+        :modelValue="state.truck"
         label="Грузовик"
         :loading="loading"
-        dense
+       
         :clearable="!confirmed"
         :readonly="truckReadOnly"
         :items="trucks"
-        outlined
-        hide-details
-        @change="changeTruckHandler"
+        variant="outlined"
+       density="compact"
+        hideDetails
+        @update:model-value="changeTruckHandler"
       />
       <v-autocomplete
         label="Водитель"
-        :value="state.driver"
+        :modelValue="state.driver"
         :items="drivers"
         readonly
-        hide-details
-        dense
-        outlined
+        hideDetails
+       
+        variant="outlined"
+       density="compact"
       />
       <v-autocomplete
         label="Прицеп"
-        :value="state.trailer"
+        :modelValue="state.trailer"
         :items="trailers"
         readonly
-        dense
-        hide-details
-        outlined
+       
+        hideDetails
+        variant="outlined"
+       density="compact"
       />
-      <v-btn text small color="primary" @click="copyHandler">
-        Скопировать данные
-      </v-btn>
+      <v-btn
+variant="text"
+size="small" color="primary" @click="copyHandler"
+>Скопировать данные</v-btn>
     </div>
-    <v-alert
-      v-if="crewEmptyError"
-      type="error"
-      dense
-      outlined
-      :style="{ maxWidth: '400px' }"
-    >
+    <v-alert v-if="crewEmptyError" type="error" variant="outlined" :style="{ maxWidth: '400px' }">
+       density="compact"
       Экипаж не задан
     </v-alert>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
       <small>Перевозчик: {{ tkName ? tkName : 'Не указан' }}</small>
       <small
         :class="{
-          'deep-orange--text text--darken-4 font-weight-bold ':
-            executorAndCustomerMissmatch,
+          'deep-orange--text text--darken-4 font-weight-bold ': executorAndCustomerMissmatch,
         }"
       >
         Соглашение: {{ outsourceAgreementName }}
@@ -61,10 +59,10 @@
       </small>
       <v-btn
         v-if="allowChangeOutsourceAgreement"
-        small
+        size="small"
         color="primary"
+        variant="text"
         @click="changeOutsourceAgreementHandler"
-        text
       >
         Изменить соглашение
       </v-btn>
@@ -135,18 +133,18 @@ export default {
 }
 </script>
 <style scoped>
-.confirmed-crew-block {
-  display: grid;
-  grid-template-columns: 300px 300px 300px 250px;
-  margin: 10px;
-  gap: 15px;
-  align-items: center;
-}
-.outsource-agreement-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 20px;
-}
+  .confirmed-crew-block {
+    display: grid;
+    grid-template-columns: 300px 300px 300px 250px;
+    margin: 10px;
+    gap: 15px;
+    align-items: center;
+  }
+  .outsource-agreement-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+  }
 </style>

@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: 'TruckTitleCell',
+  name: 'AppTruckTitleCell',
   props: {
     idx: Number,
     title: {
@@ -28,19 +28,19 @@ export default {
 }
 </script>
 <style scoped>
-.title-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  overflow: hidden;
-  white-space: nowrap;
-  user-select: none;
-  justify-content: space-between;
-}
-.router-link {
-  text-decoration: none;
-}
-.row-number {
-  width: 1rem;
-}
+  .title-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+    justify-content: space-between;
+  }
+  .router-link {
+    text-decoration: none;
+  }
+  .row-number {
+    width: 1rem;
+  }
 </style>

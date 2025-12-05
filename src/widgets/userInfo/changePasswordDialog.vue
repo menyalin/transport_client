@@ -1,112 +1,125 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600" persistent>
+  <v-dialog
+:modelValue="dialog"
+maxWidth="600" persistent @update:model-value="$emit('update:dialog', $event)"
+>
     <v-card>
-      <v-card-title class="text-h5"> Изменение пароля </v-card-title>
+      <v-card-title class="text-h5">Изменение пароля</v-card-title>
       <v-card-text>
         <form @submit.prevent>
+          <v-text-field v-model="password" type="password" autocomplete="off"
+label="Действующий пароль" />
           <v-text-field
-            v-model="$v.password.$model"
-            type="password"
-            autocomplete="off"
-            label="Действующий пароль"
-          />
-          <v-text-field
-            v-model="$v.newPassword.$model"
+            v-model="newPassword"
             type="password"
             label="Новый пароль"
             autocomplete="off"
-            :error-messages="newPasswordErrors"
-            @input="$v.newPassword.$touch()"
-            @blur="$v.newPassword.$touch()"
+            :errorMessages="getNewPasswordErrors()"
+            @update:model-value="v$.newPassword.$touch()"
+            @blur="v$.newPassword.$touch()"
           />
           <v-text-field
-            v-model="$v.confirmPassword.$model"
+            v-model="confirmPassword"
             type="password"
-            label="Новый пароль"
+            label="Подтвердите новый пароль"
             autocomplete="off"
-            :error-messages="confirmPasswordErrors"
-            @input="$v.confirmPassword.$touch()"
-            @blur="$v.confirmPassword.$touch()"
+            :errorMessages="getConfirmPasswordErrors()"
+            @update:model-value="v$.confirmPassword.$touch()"
+            @blur="v$.confirmPassword.$touch()"
           />
         </form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="cancel"> Отмена </v-btn>
+        <v-btn variant="text" @click="cancel">Отмена</v-btn>
 
-        <v-btn
-          :disabled="$v.$invalid"
-          color="primary"
-          text
-          @click="saveHandler"
-        >
-          Agree
-        </v-btn>
+        <v-btn :disabled="v$.$invalid" color="primary" variant="text" @click="saveHandler">Agree</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script>
-import { UserService} from '@/shared/services'
-import { required, minLength, sameAs } from 'vuelidate/lib/validators'
+import { ref } from 'vue'
+import { useStore } from 'vuex'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, sameAs } from '@vuelidate/validators'
+import { UserService } from '@/shared/services'
+
 export default {
   name: 'ChangePasswordDialog',
   props: {
     dialog: Boolean,
   },
-  data() {
-    return {
-      password: '',
-      newPassword: '',
-      confirmPassword: '',
+  setup(props, { emit }) {
+    const store = useStore()
+
+    // Form state
+    const password = ref('')
+    const newPassword = ref('')
+    const confirmPassword = ref('')
+
+    // Vuelidate rules
+    const rules = {
+      password: { required },
+      newPassword: { required, minLength: minLength(6) },
+      confirmPassword: {
+        required,
+        sameAs: sameAs(() => newPassword.value),
+      },
     }
-  },
-  computed: {
-    newPasswordErrors() {
+
+    const v$ = useVuelidate(rules, { password, newPassword, confirmPassword })
+
+    // Methods
+    const getNewPasswordErrors = () => {
       const errors = []
-      if (!this.$v.newPassword.$dirty) return errors
-      !this.$v.newPassword.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.newPassword.required && errors.push('Поле не может быть пустым')
+      if (!v$.value.newPassword.$dirty) return errors
+      !v$.value.newPassword.minLength && errors.push('Слишком короткий пароль')
+      !v$.value.newPassword.required && errors.push('Поле не может быть пустым')
       return errors
-    },
-    confirmPasswordErrors() {
+    }
+
+    const getConfirmPasswordErrors = () => {
       const errors = []
-      if (!this.$v.confirmPassword.$dirty) return errors
-      !this.$v.confirmPassword.required &&
-        errors.push('Поле не может быть пустым')
-      !this.$v.confirmPassword.sameAs && errors.push('Пароли не совпадают')
+      if (!v$.value.confirmPassword.$dirty) return errors
+      !v$.value.confirmPassword.required && errors.push('Поле не может быть пустым')
+      !v$.value.confirmPassword.sameAs && errors.push('Пароли не совпадают')
       return errors
-    },
-  },
-  validations: {
-    password: { required },
-    newPassword: { required, minLength: minLength(6) },
-    confirmPassword: {
-      required,
-      sameAs: sameAs('newPassword'),
-    },
-  },
-  methods: {
-    cancel() {
-      this.password = ''
-      this.newPassword = ''
-      this.confirmPassword = ''
-      this.$emit('cancel')
-    },
-    async saveHandler() {
+    }
+
+    const cancel = () => {
+      password.value = ''
+      newPassword.value = ''
+      confirmPassword.value = ''
+      v$.value.$reset()
+      emit('cancel')
+    }
+
+    const saveHandler = async () => {
       const body = {
-        oldPassword: this.password,
-        newPassword: this.newPassword,
+        oldPassword: password.value,
+        newPassword: newPassword.value,
       }
       try {
         await UserService.changePassword(body)
-        this.$v.$reset()
-        this.$store.commit('setError', 'Пароль успешно обновлен')
-        this.cancel()
+        v$.value.$reset()
+        store.commit('setError', 'Пароль успешно обновлен')
+        cancel()
       } catch (e) {
-        this.$store.commit('setError', e)
+        store.commit('setError', e)
       }
-    },
+    }
+
+    return {
+      password,
+      newPassword,
+      confirmPassword,
+      v$,
+      getNewPasswordErrors,
+      getConfirmPasswordErrors,
+      cancel,
+      saveHandler,
+    }
   },
 }
 </script>

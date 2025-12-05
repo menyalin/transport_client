@@ -5,8 +5,8 @@ import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
 import store from '@/store/index'
 
-const getInitialState = (editedItem) => {
-  const prepareDate = (date) => (date ? dayjs(date).format('YYYY-MM-DD') : null)
+const getInitialState = editedItem => {
+  const prepareDate = date => (date ? dayjs(date).format('YYYY-MM-DD') : null)
   return {
     status: editedItem?.status || 'inProcess',
     number: editedItem?.number || null,
@@ -33,8 +33,7 @@ function usePaimentInvoiceForm(props, ctx) {
       return
     }
     agreements.value = await AgreementService.getByClient(client)
-    if (agreements.value.length === 1)
-      state.value = { ...state.value, agreement: agreements.value[0]._id }
+    if (agreements.value.length === 1) state.value = { ...state.value, agreement: agreements.value[0]._id }
   }
 
   const rules = {
@@ -58,9 +57,7 @@ function usePaimentInvoiceForm(props, ctx) {
     const clientField = v$.value.client
     if (!clientField.$invalid) return errors
 
-    clientField.$dirty &&
-      clientField.required.$invalid &&
-      errors.push('Реквизит не может быть пустым')
+    clientField.$dirty && clientField.required.$invalid && errors.push('Реквизит не может быть пустым')
     return errors
   })
 
@@ -69,9 +66,7 @@ function usePaimentInvoiceForm(props, ctx) {
     const field = v$.value.agreement
     if (!field?.$invalid) return errors
 
-    field.$dirty &&
-      field.required.$invalid &&
-      errors.push('Соглашение не может быть пустым')
+    field.$dirty && field.required.$invalid && errors.push('Соглашение не может быть пустым')
     return errors
   })
 
@@ -82,15 +77,13 @@ function usePaimentInvoiceForm(props, ctx) {
     // if (item.client) await setAgreements(item.client)
   }
 
-  const changeClientHandler = async (val) => {
+  const changeClientHandler = async val => {
     await setAgreements(val)
   }
 
   const commission = computed(() => {
     if (!state.value.agreement || agreements.value.length === 0) return 0
-    const { commission } = agreements.value.find(
-      (i) => i._id === state.value.agreement
-    )
+    const { commission } = agreements.value.find(i => i._id === state.value.agreement)
     return commission || 0
   })
 
@@ -132,10 +125,7 @@ function usePaimentInvoiceForm(props, ctx) {
 
   const showSendInvoiceBtn = computed(
     () =>
-      hasOrders.value &&
-      ['inProcess', 'prepared'].includes(state.value.status) &&
-      !invalidForm.value &&
-      !!props?._id
+      hasOrders.value && ['inProcess', 'prepared'].includes(state.value.status) && !invalidForm.value && !!props?._id
   )
 
   function cancelDialog() {

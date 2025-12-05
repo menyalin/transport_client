@@ -9,13 +9,13 @@ const BASE_PATH = '/crews'
 
 class CrewService {
   constructor() {
-    socket.on('crew:created', (data) => {
+    socket.on('crew:created', data => {
       store.commit('addCrew', data)
     })
-    socket.on('crew:updated', (data) => {
+    socket.on('crew:updated', data => {
       store.commit('updateCrew', data)
     })
-    socket.on('crew:deleted', (id) => {
+    socket.on('crew:deleted', id => {
       store.commit('deleteCrew', id)
     })
   }
@@ -77,10 +77,7 @@ class CrewService {
       const { period } = params
 
       if (period && period.length === 2)
-        periodStr =
-          dayjs(period[0]).format(dateFormat) +
-          '_' +
-          dayjs(period[1]).format(dateFormat)
+        periodStr = dayjs(period[0]).format(dateFormat) + '_' + dayjs(period[1]).format(dateFormat)
       else periodStr = dayjs().format('YYYY_MM_DD hh.mm.ss')
 
       const filename = periodStr + '_crews.xlsx'

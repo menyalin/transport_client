@@ -1,9 +1,12 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="6" lg="4">
+      <v-col
+cols="12"
+sm="8" md="6" lg="4"
+>
         <v-card class="elevation-4">
-          <v-toolbar color="primary" dark flat>
+          <v-toolbar color="primary" flat>
             <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
@@ -14,18 +17,14 @@
                   {{ message }}
                 </v-alert>
               </transition>
-              <v-text-field
-                v-model="email"
-                label="Email"
-                prepend-icon="mdi-at"
-                type="email"
-              />
+              <v-text-field v-model="email" label="Email" prependIcon="mdi-at"
+type="email" />
               <v-text-field
                 id="password"
                 v-model="password"
                 label="Пароль"
                 name="password"
-                prepend-icon="mdi-lock"
+                prependIcon="mdi-lock"
                 type="password"
               />
             </v-card-text>
@@ -37,14 +36,8 @@
                 <small>Забыли пароль?</small>
               </router-link>
               <v-spacer />
-              <v-btn
-                color="primary"
-                type="submit"
-                :loading="loading"
-                :disabled="!isFormValid && loading"
-              >
-                Войти
-              </v-btn>
+              <v-btn color="primary" type="submit" :loading="loading"
+:disabled="!isFormValid && loading">Войти</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -55,22 +48,22 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
-  data: () => ({
-    formTitle: 'Войти в систему',
-    loading: false,
-    email: '',
-    password: '',
-    message: null,
-    messageType: null,
-    errorTimeoutMs: 5000,
-  }),
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (vm.$store.getters.isLoggedIn) {
-        vm.$router.push('/')
-      }
-    })
-  },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        if (vm.$store.getters.isLoggedIn) {
+          vm.$router.push('/')
+        }
+      })
+    },
+    data: () => ({
+      formTitle: 'Войти в систему',
+      loading: false,
+      email: '',
+      password: '',
+      message: null,
+      messageType: null,
+      errorTimeoutMs: 5000,
+    }),
   computed: {
     isFormValid() {
       return !!this.email && this.password
@@ -94,7 +87,7 @@ export default {
         .then(() => {
           this.$router.push(this.$route.query.redirect || '/')
         })
-        .catch((e) => {
+        .catch(e => {
           if (e.response.status === 404) {
             this.showMessage('User not found', 'error')
           } else {
@@ -108,12 +101,12 @@ export default {
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 1s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>

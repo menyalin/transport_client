@@ -1,7 +1,7 @@
 <template>
-  <form-wrapper>
+  <FormWrapper>
     <AutoFillRouteDates />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script>

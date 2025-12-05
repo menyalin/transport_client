@@ -2,16 +2,16 @@
   <v-data-table
     v-model="selected"
     :headers="headers"
-    checkbox-color="primary"
-    item-key="_id"
-    show-select
+    checkboxColor="primary"
+    itemKey="_id"
+    showSelect
     :items="items"
     :loading="loading"
     height="70vh"
-    dense
-    :server-items-length="totalCount"
-    fixed-header
-    :footer-props="{
+   
+    :itemsLength="totalCount"
+    fixedHeader
+    :footerProps="{
       'items-per-page-options': [50, 100, 200],
     }"
     :options="listOptions"
@@ -29,11 +29,7 @@
       {{ item.payDate ? new Date(item.payDate).toLocaleDateString() : null }}
     </template>
     <template #[`item.plannedPayDate`]="{ item }">
-      {{
-        item.plannedPayDate
-          ? new Date(item.plannedPayDate).toLocaleDateString()
-          : null
-      }}
+      {{ item.plannedPayDate ? new Date(item.plannedPayDate).toLocaleDateString() : null }}
     </template>
     <template #[`item.date`]="{ item }">
       {{ item.date ? new Date(item.date).toLocaleDateString() : null }}
@@ -98,17 +94,17 @@ export default {
       ctx.emit('update:listOptions', { ...options })
     }
     const selectedIds = computed(() => {
-      return selected.value.map((i) => i._id)
+      return selected.value.map(i => i._id)
     })
 
     const existedIds = computed(() => {
       if (!Array.isArray(props.items)) return []
-      return props.items.map((i) => i._id)
+      return props.items.map(i => i._id)
     })
 
     const selectedStatictics = computed(() => {
       const selectedData = props.items
-        .filter((i) => selectedIds.value.includes(i._id))
+        .filter(i => selectedIds.value.includes(i._id))
         .reduce(
           (res, item) => ({
             routesCount: res.routesCount + item.count || 0,
@@ -138,13 +134,10 @@ export default {
 
     watch(
       () => props.items,
-      (val) => {
+      val => {
         if (!val || !val.length) selected.value = []
         else if (!selected.value.length) return
-        else
-          selected.value = selected.value.filter((i) =>
-            existedIds.value.includes(i._id)
-          )
+        else selected.value = selected.value.filter(i => existedIds.value.includes(i._id))
       }
     )
     return {

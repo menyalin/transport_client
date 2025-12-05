@@ -5,16 +5,16 @@ const BASE_PATH = '/order_templates'
 
 class OrderTemplateService {
   constructor() {
-    socket.on('orderTemplate:created', (data) => {
+    socket.on('orderTemplate:created', data => {
       store.commit('addOrderTemplate', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('orderTemplate:updated', (data) => {
+    socket.on('orderTemplate:updated', data => {
       store.commit('updateOrderTemplate', data)
       store.commit('addToCache', data)
     })
-    socket.on('orderTemplate:deleted', (id) => {
+    socket.on('orderTemplate:deleted', id => {
       store.commit('deleteOrderTemplate', id)
       store.commit('deleteFromCache', id)
     })
@@ -38,8 +38,7 @@ class OrderTemplateService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

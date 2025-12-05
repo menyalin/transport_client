@@ -8,16 +8,10 @@ export const useForm = (props, ctx) => {
   const formScope = 'root'
   const { formId, saveForm, savedForm } = usePersistedFormState()
 
-  const validCoordinates = (val) => {
+  const validCoordinates = val => {
     if (!val) return true
     const arr = val.split(',')
-    return (
-      arr.length === 2 &&
-      +arr[0] >= -90 &&
-      +arr[0] <= 90 &&
-      +arr[1] >= -180 &&
-      +arr[1] <= 180
-    )
+    return arr.length === 2 && +arr[0] >= -90 && +arr[0] <= 90 && +arr[1] >= -180 && +arr[1] <= 180
   }
   const initialState = {
     name: null,
@@ -89,7 +83,7 @@ export const useForm = (props, ctx) => {
     resetForm()
   }
 
-  const getParsedAddress = (val) => {
+  const getParsedAddress = val => {
     if (!val) return
     else {
       state.value.name = val.value
@@ -108,7 +102,7 @@ export const useForm = (props, ctx) => {
     })
   }
 
-  const updatePartnerHandler = (partner) => {
+  const updatePartnerHandler = partner => {
     saveForm(formId.value, formScope, JSON.stringify(state.value))
     props.partnerActions.update({
       id: partner._id,

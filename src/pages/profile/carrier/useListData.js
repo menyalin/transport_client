@@ -9,17 +9,11 @@ export const useListData = () => {
     { value: 'outsource', text: 'Привлеченный', width: 150, align: 'center' },
     { value: 'agreements', text: 'Соглашения' },
   ])
-  const settings = usePersistedRef(
-    { search: null, type: 'all' },
-    'CarrierListSettings'
-  )
+  const settings = usePersistedRef({ search: null, type: 'all' }, 'CarrierListSettings')
   const items = ref([])
   const loading = ref(false)
   const count = ref(0)
-  const listOptions = usePersistedRef(
-    { itemsPerPage: 50, page: 1 },
-    'CarrierList:listOptions'
-  )
+  const listOptions = usePersistedRef({ itemsPerPage: 50, page: 1 }, 'CarrierList:listOptions')
 
   const queryParams = computed(() => ({
     company: proxy.$store.getters.directoriesProfile,

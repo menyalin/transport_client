@@ -2,11 +2,11 @@
   <v-card>
     <v-card-title>Новый контакт</v-card-title>
     <v-card-text class="form-wrapper">
-      <v-text-field label="ФИО" v-model="state.name" />
-      <v-text-field label="Должность" v-model="state.position" />
-      <v-text-field label="Телефон" v-model="state.phone" />
-      <v-text-field label="email" v-model="state.email" />
-      <v-textarea label="Примечание" auto-grow v-model="state.note" />
+      <v-text-field v-model="state.name" label="ФИО" />
+      <v-text-field v-model="state.position" label="Должность" />
+      <v-text-field v-model="state.phone" label="Телефон" />
+      <v-text-field v-model="state.email" label="email" />
+      <v-textarea v-model="state.note" label="Примечание" autoGrow />
     </v-card-text>
     <v-card-actions>
       <v-spacer />
@@ -23,10 +23,7 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const { state, invalidForm, cancelHandler, submitHandler } = useForm(
-      props,
-      ctx
-    )
+    const { state, invalidForm, cancelHandler, submitHandler } = useForm(props, ctx)
     return {
       state,
       invalidForm,

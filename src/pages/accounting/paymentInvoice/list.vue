@@ -1,8 +1,8 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
-      panel-type="list"
-      :disabled-refresh="!$store.getters.directoriesProfile"
+  <EntityListWrapper>
+    <ButtonsPanel
+      panelType="list"
+      :disabledRefresh="!$store.getters.directoriesProfile"
       :disabledSubmit="!$store.getters.hasPermission('paymentInvoice:write')"
       @submit="create"
       @refresh="refresh"
@@ -11,32 +11,26 @@
         <v-icon>mdi-download</v-icon>
         Скачать отчет
       </v-btn>
-    </buttons-panel>
+    </ButtonsPanel>
 
-    <payment-invoices-list-settings
+    <PaymentInvoicesListSettings v-model="settings" @updateHeaders="changeHeaders" />
+    <PaymentInvoiceDataTable
       v-model="settings"
-      @updateHeaders="changeHeaders"
-    />
-    <payment-invoice-data-table
-      v-model="settings"
+      v-model:listOptions="listOptions"
       :items="items"
       :totalCount="totalCount"
       :routesCount="routesCount"
       :total="total"
       :headers="headers"
-      :listOptions.sync="listOptions"
       :loading="loading"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script>
 import { ref } from 'vue'
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import {
-  PaymentInvoicesListSettings,
-  PaymentInvoiceDataTable,
-} from '@/entities/paymentInvoice'
+import { PaymentInvoicesListSettings, PaymentInvoiceDataTable } from '@/entities/paymentInvoice'
 
 export default {
   name: 'PaymentInvoiceList',

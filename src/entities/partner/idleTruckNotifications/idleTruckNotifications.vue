@@ -1,15 +1,8 @@
 <template>
   <div v-if="partner && partner._id" class="idle_truck_notifications_wrapper">
-    <v-alert v-if="!partner._id" type="info">
-      Добавление площадок возможно только после сохранения партнера
-    </v-alert>
-    <v-btn
-      v-else
-      small
-      color="primary"
-      :style="{ maxWidth: '200px' }"
-      @click="addNotificationHandler"
-    >
+    <v-alert v-if="!partner._id" type="info">Добавление площадок возможно только после сохранения партнера</v-alert>
+    <v-btn v-else size="small" color="primary"
+:style="{ maxWidth: '200px' }" @click="addNotificationHandler">
       Добавить оповещение
     </v-btn>
     <NotificationList
@@ -18,14 +11,17 @@
       @editNotify="editNotifyHandler"
       @change="updateNotificationsHandler"
     />
-    <v-dialog :value="dialog" persistent max-width="1200" :loading="loading">
+    <v-dialog
+:modelValue="dialog"
+persistent maxWidth="1200" :loading="loading"
+>
       <IdleTruckNotificationForm
         :partnerId="partner._id"
         :loading="loading"
         :initialState="editableItem"
+        :agreements="agreemenstByClient"
         @submit="submitHandler"
         @cancel="cancelHandler"
-        :agreements="agreemenstByClient"
       />
     </v-dialog>
   </div>
@@ -49,13 +45,13 @@ export default {
     clientAgreements: Array,
   },
   setup(props, ctx) {
-    const updateNotificationsHandler = (items) => {
+    const updateNotificationsHandler = items => {
       ctx.emit('change', items)
     }
     const agreemenstByClient = computed(() => {
       const res = props.clientAgreements
-        ?.filter((agreement) => agreement.clients.includes(props.partner?._id))
-        .map((i) => ({
+        ?.filter(agreement => agreement.clients.includes(props.partner?._id))
+        .map(i => ({
           value: i._id,
           text: i.name,
         }))
@@ -63,15 +59,8 @@ export default {
       return res || []
     })
 
-    const {
-      editNotifyHandler,
-      addNotificationHandler,
-      cancelHandler,
-      submitHandler,
-      dialog,
-      loading,
-      editableItem,
-    } = useWidgetModel(props, ctx)
+    const { editNotifyHandler, addNotificationHandler, cancelHandler, submitHandler, dialog, loading, editableItem } =
+      useWidgetModel(props, ctx)
     return {
       editNotifyHandler,
       addNotificationHandler,
@@ -88,10 +77,10 @@ export default {
 </script>
 
 <style scoped>
-.idle_truck_notifications_wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-}
+  .idle_truck_notifications_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+  }
 </style>

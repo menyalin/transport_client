@@ -1,14 +1,14 @@
 <template>
   <v-data-table
     :items="preparedItems"
-    dense
+   
     :headers="headers"
     :loading="loading"
-    :items-per-page="-1"
+    :itemsPerPage="-1"
     height="72vh"
-    show-group-by
-    fixed-header
-    :footer-props="{
+    showGroupBy
+    fixedHeader
+    :footerProps="{
       'items-per-page-options': [-1, 10],
     }"
     @dblclick:row="dblClickRow"
@@ -17,24 +17,16 @@
       {{ new Date(item.orderDate).toLocaleString() }}
     </template>
     <template #[`item.docsState.date`]="{ item }">
-      {{
-        item.docsState.date
-          ? new Date(item.docsState.date).toLocaleString()
-          : null
-      }}
+      {{ item.docsState.date ? new Date(item.docsState.date).toLocaleString() : null }}
     </template>
     <template #[`item.reviewDate`]="{ item }">
-      {{
-        item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null
-      }}
+      {{ item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null }}
     </template>
     <template #[`item._docsStatusObj.text`]="{ item }">
-      <b :style="{ color: item._docsStatusObj.color }">{{
-        item._docsStatusObj.text
-      }}</b>
+      <b :style="{ color: item._docsStatusObj.color }">{{ item._docsStatusObj.text }}</b>
     </template>
     <template #[`footer.prepend`]>
-      <order-list-footer-details
+      <OrderListFooterDetails
         :total="statisticData.totalCount"
         :needFix="statisticData.correctionCount"
         :onCheck="statisticData.reviewCount"
@@ -61,7 +53,7 @@ export default {
     statisticData: Object,
   },
   setup(props) {
-    const preparedItems = computed(() => props.items.map((i) => ({ ...i })))
+    const preparedItems = computed(() => props.items.map(i => ({ ...i })))
     function dblClickRow(_, { item }) {
       if (item) router.push(`/orders/${item._id}`)
     }
@@ -74,7 +66,7 @@ export default {
 </script>
 
 <style scoped>
-.v-data-table {
-  white-space: nowrap;
-}
+  .v-data-table {
+    white-space: nowrap;
+  }
 </style>

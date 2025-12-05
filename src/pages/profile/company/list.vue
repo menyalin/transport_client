@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
+        <ButtonsPanel
+          panelType="list"
           :disabledRefresh="!user || !user.emailConfirmed"
           :disabledSubmit="!user || !user.emailConfirmed"
           @refresh="refresh"
@@ -14,19 +14,19 @@
     <v-row>
       <v-col>
         <v-list>
-          <v-subheader>Мои компании</v-subheader>
+          <v-toolbar flat>
+  <v-toolbar-title>Мои компании</v-toolbar-title>
+</v-toolbar>
           <v-list-item
             v-for="(item, ind) in myCompanies"
             :key="ind"
-            two-line
+            lines="two"
             :to="{ name: 'companyDetails', params: { id: item._id } }"
           >
-            <v-list-item-content>
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
-              <v-list-item-subtitle>
-                <small>ИНН: {{ item.inn }}</small>
-              </v-list-item-subtitle>
-            </v-list-item-content>
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+            <v-list-item-subtitle>
+              <small>ИНН: {{ item.inn }}</small>
+            </v-list-item-subtitle>
           </v-list-item>
         </v-list>
       </v-col>
@@ -62,7 +62,7 @@ export default {
 }
 </script>
 <style scoped>
-.current {
-  background-color: rgb(222, 245, 253);
-}
+  .current {
+    background-color: rgb(222, 245, 253);
+  }
 </style>

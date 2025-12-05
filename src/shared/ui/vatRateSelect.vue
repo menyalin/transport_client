@@ -1,10 +1,6 @@
 <template>
-  <v-select
-    v-bind="$attrs"
-    :items="items"
-    :value="value"
-    @change="$emit('change', $event)"
-  />
+  <v-select v-bind="$attrs" :items="items" :modelValue="value"
+@update:model-value="$emit('change', $event)" />
 </template>
 <script>
 import { VAT_RATE_ITEMS } from '@/shared/constants'

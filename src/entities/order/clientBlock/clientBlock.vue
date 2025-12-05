@@ -5,23 +5,25 @@
     </div>
     <div class="client-block">
       <v-autocomplete
-        :items="clientItems"
         v-model="state.client"
+        :items="clientItems"
         label="Заказчик"
-        outlined
+        variant="outlined"
+       density="compact"
         :loading="loading"
         :messages="agreementNameSring"
         :error="!loading && !currentAgreement"
-        dense
-        @change="changeClientHandler"
+       
         :style="{ maxWidth: '400px' }"
         :disabled="agreementDisabled"
+        @update:model-value="changeClientHandler"
       />
 
       <v-text-field
         v-model.trim="state.num"
-        outlined
-        dense
+        variant="outlined"
+       density="compact"
+       
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
         :style="{ maxWidth: '250px' }"
@@ -29,8 +31,9 @@
       />
       <v-text-field
         v-model.trim="state.auctionNum"
-        outlined
-        dense
+        variant="outlined"
+       density="compact"
+       
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
         :style="{ maxWidth: '250px' }"
@@ -40,9 +43,8 @@
     <v-btn
       v-if="showChangeAgreementBtn"
       color="primary"
-      outlined
-      text
-      small
+      variant="text"
+      size="small"
       class="mb-3 ml-5"
       @click="changeAgreementHandler"
     >
@@ -100,25 +102,21 @@ export default {
 
   computed: {
     numErrorMessages() {
-      return this.isValidNum
-        ? []
-        : ['Номер заказа клиента не может быть пустым']
+      return this.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
     },
     auctionNumErrorMessages() {
-      return this.isValidAuctionNum
-        ? []
-        : ['Номер аукциона не может быть пустым']
+      return this.isValidAuctionNum ? [] : ['Номер аукциона не может быть пустым']
     },
   },
 }
 </script>
 <style scoped>
-.client-block {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: baseline;
-  margin: 10px;
-  gap: 10px;
-}
+  .client-block {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin: 10px;
+    gap: 10px;
+  }
 </style>

@@ -3,27 +3,27 @@
     <div class="text-subtitle-2 pb-3">Подписант:</div>
     <v-text-field
       label="Должность"
-      :value="value.position"
-      dense
+      :modelValue="value.position"
+     
       @change="changeHandler('position', $event)"
     />
     <v-text-field
+      :modelValue="value.fullName"
       label="ФИО"
-      v-model="value.fullName"
-      dense
+     
       @change="changeHandler('fullName', $event)"
     />
     <v-text-field
+      :modelValue="value.number"
       label="Номер доверенности"
-      v-model="value.number"
-      dense
+     
       @change="changeHandler('number', $event)"
     />
     <DateTimeInput
+      :modelValue="value.date"
       type="date"
       label="Дата доверенности"
-      v-model="value.date"
-      dense
+     
       @change="changeHandler('date', $event)"
     />
   </div>
@@ -49,11 +49,11 @@ export default {
 }
 </script>
 <style scoped>
-.signatory-form-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 30px;
-  max-width: 700px;
-}
+  .signatory-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px;
+    max-width: 700px;
+  }
 </style>

@@ -5,16 +5,16 @@ const BASE_PATH = '/zones'
 
 class ZoneService {
   constructor() {
-    socket.on('zone:created', (data) => {
+    socket.on('zone:created', data => {
       store.commit('addZone', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('zone:updated', (data) => {
+    socket.on('zone:updated', data => {
       store.commit('updateZone', data)
       store.commit('addToCache', data)
     })
-    socket.on('zone:deleted', (id) => {
+    socket.on('zone:deleted', id => {
       store.commit('deleteZone', id)
       store.commit('deleteFromCache', id)
     })
@@ -34,14 +34,12 @@ class ZoneService {
 
   async getByDirectoriesProfile(profile) {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
+    if (!Array.isArray(data)) throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

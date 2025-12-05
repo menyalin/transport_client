@@ -2,22 +2,15 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error"
+ @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <AppLoadSpinner v-if="loading" />
         <ScheduleNoteForm
           v-else
           :scheduleNote="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('scheduleNote:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('scheduleNote:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

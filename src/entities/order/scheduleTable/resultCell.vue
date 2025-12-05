@@ -16,7 +16,7 @@
 import dayjs from 'dayjs'
 
 export default {
-  name: 'ResultCell',
+  name: 'AppResultCell',
   props: {
     date: {
       type: String,
@@ -34,20 +34,20 @@ export default {
 }
 </script>
 <style scoped>
-.first-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-  margin: 0 1px;
-}
-.first-row > div {
-  width: 25%;
-  text-align: center;
-  font-size: 10px;
-}
-.second-row {
-  background-color: white;
-  margin: 0 1px;
-}
+  .first-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    margin: 0 1px;
+  }
+  .first-row > div {
+    width: 25%;
+    text-align: center;
+    font-size: 10px;
+  }
+  .second-row {
+    background-color: white;
+    margin: 0 1px;
+  }
 </style>

@@ -42,7 +42,7 @@ export const useForm = (props, ctx) => {
 
   const carriers = computed(() =>
     proxy.$store.getters.tkNames
-      .map((i) => ({
+      .map(i => ({
         value: i._id,
         text: i.name,
       }))
@@ -69,14 +69,13 @@ export const useForm = (props, ctx) => {
 
   watch(
     () => props.agreement,
-    (agreement) => (state.value = { ...defaultState, ...agreement }),
+    agreement => (state.value = { ...defaultState, ...agreement }),
     { immediate: true }
   )
   watch(
     state,
-    (val) => {
-      if (val.vatRate === 0 && val.usePriceWithVAT)
-        state.value.usePriceWithVAT = false
+    val => {
+      if (val.vatRate === 0 && val.usePriceWithVAT) state.value.usePriceWithVAT = false
     },
     { deep: true }
   )

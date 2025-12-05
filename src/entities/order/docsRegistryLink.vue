@@ -14,18 +14,11 @@ export default {
   setup({ docsRegistry }) {
     const url = computed(() => '/accounting/docsRegistry/' + docsRegistry._id)
 
-    const dateStr = computed(() =>
-      new Date(docsRegistry.createdAt).toLocaleDateString()
-    )
+    const dateStr = computed(() => new Date(docsRegistry.createdAt).toLocaleDateString())
 
-    const statusStr = computed(() =>
-      store.getters.docsRegistryStatusesMap.get(docsRegistry.status)
-    )
+    const statusStr = computed(() => store.getters.docsRegistryStatusesMap.get(docsRegistry.status))
 
-    const linkText = computed(
-      () =>
-        `Опись №${docsRegistry.number} от ${dateStr.value} (${statusStr.value})`
-    )
+    const linkText = computed(() => `Опись №${docsRegistry.number} от ${dateStr.value} (${statusStr.value})`)
 
     return {
       linkText,

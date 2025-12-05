@@ -4,34 +4,21 @@
     <div class="inputs-row">
       <v-menu
         v-model="menu"
-        :close-on-content-click="false"
-        transition="scale-transition"
-        offset-y
-        max-width="290px"
-        min-width="auto"
+        :closeOnContentClick="false"
+        maxWidth="290px"
+        minWidth="auto"
       >
-        <template #activator="{ on, attrs }">
-          <span class="date-text" v-bind="attrs" v-on="on">
+        <template v-slot:activator="{ props }">
+          <span class="date-text" v-bind="props">
             c:
-            {{
-              tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-'
-            }}
+            {{ tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-' }}
           </span>
-          <span class="date-text" v-bind="attrs" v-on="on">
+          <span class="date-text" v-bind="props">
             по:
-            {{
-              tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-'
-            }}
+            {{ tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-' }}
           </span>
         </template>
-        <v-date-picker
-          v-model="tmpPeriod"
-          no-title
-          range
-          :first-day-of-week="1"
-          color="primary"
-          @change="changeDate"
-        />
+        <v-date-picker v-model="tmpPeriod" :firstDayOfWeek="1" color="primary" @update:model-value="changeDate" />
       </v-menu>
     </div>
   </div>
@@ -40,19 +27,16 @@
 import dayjs from 'dayjs'
 
 export default {
-  name: 'DateRange',
-  model: {
-    prop: 'period',
-    event: 'change',
-  },
+  name: 'DateRangeInput',
   props: {
-    period: {
+    modelValue: {
       type: Array,
     },
     min: {
       type: String,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       tmpPeriod: [null, null],
@@ -61,14 +45,14 @@ export default {
   },
   computed: {
     startDate() {
-      return this.period && this.period[0] ? this.period[0] : null
+      return this.modelValue && this.modelValue[0] ? this.modelValue[0] : null
     },
     endDate() {
-      return this.period && this.period[1] ? this.period[1] : null
+      return this.modelValue && this.modelValue[1] ? this.modelValue[1] : null
     },
   },
   watch: {
-    period: {
+    modelValue: {
       immediate: true,
       deep: true,
       handler: function (val) {
@@ -83,7 +67,7 @@ export default {
 
       if (dayjs(val[1]).isBefore(val[0], 'day')) tmpVal.reverse()
 
-      this.$emit('change', [
+      this.$emit('update:modelValue', [
         dayjs(tmpVal[0]).startOf('day').toISOString(),
         dayjs(tmpVal[1]).endOf('day').toISOString(),
       ])
@@ -92,17 +76,17 @@ export default {
 }
 </script>
 <style>
-.date-range-wrapper {
-  width: 280px;
-}
-.inputs-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  flex-wrap: nowrap;
-}
-.date-text {
-  text-decoration: underline;
-  text-decoration-color: blue;
-}
+  .date-range-wrapper {
+    width: 280px;
+  }
+  .inputs-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+  }
+  .date-text {
+    text-decoration: underline;
+    text-decoration-color: blue;
+  }
 </style>

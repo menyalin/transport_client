@@ -1,15 +1,16 @@
 <template>
   <v-select
-    outlined
-    dense
-    :hide-details="hideDetails"
-    :value="value"
+    variant="outlined"
+       density="compact"
+   
+    :hideDetails="hideDetails"
+    :modelValue="value"
     :label="label"
     :items="trucksForSelect"
-    item-text="regNum"
-    item-value="_id"
+    itemTitle="regNum"
+    itemValue="_id"
     :disabled="disabled"
-    @change="change"
+    @update:model-value="change"
   />
 </template>
 <script>

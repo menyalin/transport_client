@@ -1,11 +1,5 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="preparedItems"
-    dense
-    :items-per-page="-1"
-    hide-default-footer
-  >
+  <v-data-table :headers="headers" :items="preparedItems" :itemsPerPage="-1" hideDefaultFooter>
     <template #[`item.price`]="{ item }">
       {{ formatPrice(item.price) }}
     </template>
@@ -19,11 +13,11 @@
       {{ formatLiftCapacities(item.liftCapacities) }}
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn icon small @click="updateHandler(item)">
-        <v-icon small color="orange">mdi-pencil</v-icon>
+      <v-btn icon size="small" @click="updateHandler(item)">
+        <v-icon size="small" color="orange">mdi-pencil</v-icon>
       </v-btn>
-      <v-btn icon small @click="deleteHandler(item)">
-        <v-icon small color="red">mdi-delete</v-icon>
+      <v-btn icon size="small" @click="deleteHandler(item)">
+        <v-icon size="small" color="red">mdi-delete</v-icon>
       </v-btn>
     </template>
   </v-data-table>
@@ -64,7 +58,7 @@ export default {
       return moneyFormatter(price)
     }
     function formatTruckKinds(kinds) {
-      return kinds.map((i) => store.getters.truckKindsMap.get(i)).join('; ')
+      return kinds.map(i => store.getters.truckKindsMap.get(i)).join('; ')
     }
     function formatLiftCapacities(items) {
       return items.join('; ')
@@ -79,12 +73,10 @@ export default {
       ctx.emit('updateByIdx', item.idx)
     }
     const preparedItems = computed(() => {
-      return props.items.map((i) => ({
+      return props.items.map(i => ({
         ...i,
         loadingZone: formatZone(i.loadingZone),
-        unloadingZones: i.unloadingZones
-          .map((zone) => formatZone(zone))
-          .join('; '),
+        unloadingZones: i.unloadingZones.map(zone => formatZone(zone)).join('; '),
       }))
     })
     return {

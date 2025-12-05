@@ -185,7 +185,7 @@ export const ADDITIONAL_FILTER_LIST = {
   },
 }
 
-const allHeaderValues = ALL_ORDER_TABLE_HEADERS.map((item) => item.value)
-DEFAULT_HEADERS.forEach((item) => {
+const allHeaderValues = ALL_ORDER_TABLE_HEADERS.map(item => item.value)
+DEFAULT_HEADERS.forEach(item => {
   if (!allHeaderValues.includes(item)) console.error('Bad default header')
 })

@@ -12,17 +12,17 @@ const _trucksSortHandler = (a, b) => {
   if (a.regNum < b.regNum) return -1
 }
 
-const _getPermanentDriversFromTruck = (truck) => {
+const _getPermanentDriversFromTruck = truck => {
   if (!truck.allowedDrivers) return 0
-  return truck.allowedDrivers.filter((driver) => driver.isPermanent).length
+  return truck.allowedDrivers.filter(driver => driver.isPermanent).length
 }
 
-const _getTemporaryDriverFromTruck = (truck) => {
+const _getTemporaryDriverFromTruck = truck => {
   if (!truck.allowedDrivers) return 0
-  return truck.allowedDrivers.filter((driver) => !driver.isPermanent).length
+  return truck.allowedDrivers.filter(driver => !driver.isPermanent).length
 }
 
-const _prepareTruck = (truck) => {
+const _prepareTruck = truck => {
   return {
     ...truck,
     order: truck.order ? +truck.order : 50,
@@ -53,18 +53,18 @@ export default {
     },
 
     addTruck({ trucks }, payload) {
-      if (trucks.findIndex((item) => item._id === payload._id) === -1) {
+      if (trucks.findIndex(item => item._id === payload._id) === -1) {
         trucks.push(payload)
       }
     },
 
     updateTruck({ trucks }, payload) {
-      const ind = trucks.findIndex((item) => item._id === payload._id)
+      const ind = trucks.findIndex(item => item._id === payload._id)
       if (ind !== -1) trucks.splice(ind, 1, payload)
     },
 
     deleteTruck(state, id) {
-      state.trucks = state.trucks.filter((item) => item._id !== id)
+      state.trucks = state.trucks.filter(item => item._id !== id)
     },
   },
   actions: {
@@ -72,12 +72,12 @@ export default {
       return new Promise((resolve, reject) => {
         commit('setLoading', true)
         TruckService.create(payload)
-          .then((data) => {
+          .then(data => {
             commit('addTruck', data)
             commit('setLoading', false)
             resolve(data)
           })
-          .catch((e) => {
+          .catch(e => {
             commit('setLoading', false)
             commit('setError', e)
             reject(e)
@@ -88,14 +88,9 @@ export default {
     async getTrucks({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.trucks.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.trucks.length === 0 && getters.directoriesProfile)) {
           commit('setTrucks', [])
-          const data = await TruckService.getByDirectoriesProfile(
-            getters.directoriesProfile
-          )
+          const data = await TruckService.getByDirectoriesProfile(getters.directoriesProfile)
           commit('setTrucks', data)
         }
         commit('setLoading', false)
@@ -108,18 +103,15 @@ export default {
   getters: {
     trucks: ({ trucks }, { directoriesProfile }) =>
       trucks
-        .filter((item) => item.company === directoriesProfile)
+        .filter(item => item.company === directoriesProfile)
         .sort(_trucksSortHandler)
         .map(_prepareTruck),
 
-    fixedInScheduleTrucksIds: ({ trucks }) =>
-      trucks.filter((item) => item.alwaysInSchedule).map((i) => i._id),
+    fixedInScheduleTrucksIds: ({ trucks }) => trucks.filter(item => item.alwaysInSchedule).map(i => i._id),
 
     loadDirection: ({ allTruckParams }, { companySettings }) =>
-      allTruckParams.loadDirection.filter((i) =>
-        companySettings.loadDirections.length
-          ? companySettings.loadDirections.includes(i.value)
-          : true
+      allTruckParams.loadDirection.filter(i =>
+        companySettings.loadDirections.length ? companySettings.loadDirections.includes(i.value) : true
       ),
 
     allLoadDirection: ({ allTruckParams }) => allTruckParams.loadDirection,
@@ -127,28 +119,22 @@ export default {
     truckTypes: ({ allTruckParams }) => allTruckParams.truckTypes,
 
     truckKinds: ({ allTruckParams }, { companySettings }) => {
-      return allTruckParams.truckKinds.filter((i) =>
-        companySettings.truckKinds.length
-          ? companySettings.truckKinds.includes(i.value)
-          : true
+      return allTruckParams.truckKinds.filter(i =>
+        companySettings.truckKinds.length ? companySettings.truckKinds.includes(i.value) : true
       )
     },
 
     allTruckKinds: ({ allTruckParams }) => allTruckParams.truckKinds,
 
-    truckKindsMap: ({ allTruckParams }) =>
-      new Map(allTruckParams.truckKinds.map((i) => [i.value, i.text])),
+    truckKindsMap: ({ allTruckParams }) => new Map(allTruckParams.truckKinds.map(i => [i.value, i.text])),
 
     liftCapacityTypes: ({ allTruckParams }, { companySettings }) => {
-      return allTruckParams.liftCapacityTypes.filter((i) =>
-        companySettings.liftCapacityTypes.length
-          ? companySettings.liftCapacityTypes.includes(i)
-          : true
+      return allTruckParams.liftCapacityTypes.filter(i =>
+        companySettings.liftCapacityTypes.length ? companySettings.liftCapacityTypes.includes(i) : true
       )
     },
 
-    allLiftCapacityTypes: ({ allTruckParams }) =>
-      allTruckParams.liftCapacityTypes,
+    allLiftCapacityTypes: ({ allTruckParams }) => allTruckParams.liftCapacityTypes,
 
     truckTypesHash: ({ allTruckParams }) =>
       allTruckParams.truckTypes.reduce((hash, item) => {
@@ -163,11 +149,9 @@ export default {
       }, {}),
 
     allowedToUseTrailersTrucksSet: ({ trucks }) => {
-      const filtered = trucks.filter(
-        (item) => item.type === 'truck' && item.liftCapacityType === 20
-      )
+      const filtered = trucks.filter(item => item.type === 'truck' && item.liftCapacityType === 20)
       let res = new Set()
-      filtered.forEach((item) => {
+      filtered.forEach(item => {
         res.add(item._id)
       })
       return res
@@ -177,16 +161,15 @@ export default {
       ({ trucks }) =>
       ({ type, tkName }) => {
         return trucks
-          .filter((item) => (tkName ? item.tkName._id === tkName : true))
-          .filter((item) => (type ? item.type === type : true))
+          .filter(item => (tkName ? item.tkName._id === tkName : true))
+          .filter(item => (type ? item.type === type : true))
       },
 
-    outsourceTruckIds: ({ trucks }) =>
-      trucks.filter((t) => t.tkName.outsource).map((t) => t._id),
+    outsourceTruckIds: ({ trucks }) => trucks.filter(t => t.tkName.outsource).map(t => t._id),
 
     trucksMap: ({ trucks }) => {
       let map = new Map()
-      trucks.forEach((item) => {
+      trucks.forEach(item => {
         map.set(item._id, item)
       })
       return map
@@ -194,26 +177,22 @@ export default {
 
     activeTrucksOnDate:
       ({ trucks }) =>
-      (date) => {
+      date => {
         if (!date || !dayjs(date).isValid) return trucks
-        return trucks.filter((item) => {
-          const startPeriodCond =
-            !item.startServiceDate ||
-            new Date(item.startServiceDate) <= new Date(date)
-          const endPeriodCond =
-            !item.endServiceDate ||
-            new Date(item.endServiceDate) > new Date(date)
+        return trucks.filter(item => {
+          const startPeriodCond = !item.startServiceDate || new Date(item.startServiceDate) <= new Date(date)
+          const endPeriodCond = !item.endServiceDate || new Date(item.endServiceDate) > new Date(date)
           return startPeriodCond && endPeriodCond
         })
       },
 
     hiddenTruckIds: ({ trucks }) => {
-      return trucks.filter((t) => t.endServiceDate).map((t) => t._id)
+      return trucks.filter(t => t.endServiceDate).map(t => t._id)
     },
 
     truckById:
       ({ trucks }) =>
-      (id) =>
-        trucks.find((truck) => truck._id === id),
+      id =>
+        trucks.find(truck => truck._id === id),
   },
 }

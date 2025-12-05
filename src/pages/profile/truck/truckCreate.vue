@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <truck-form @submit="submit" @cancel="cancel" />
+        <TruckForm @submit="submit" @cancel="cancel" />
       </v-col>
     </v-row>
   </v-container>
@@ -28,7 +28,7 @@ export default {
           this.loading = false
           this.$router.push({ name: 'TruckList' })
         })
-        .catch((e) => {
+        .catch(e => {
           this.loading = false
           this.$store.commit('setError', e)
         })

@@ -8,47 +8,52 @@
         <v-text-field
           v-model="state.title"
           label="Название площадки"
-          dense
-          outlined
-          @blur="v$.title.$touch"
+         
+          variant="outlined"
+       density="compact"
           :errorMessages="titleErrorMessages"
           :style="{ maxWidth: '600px' }"
+          @blur="v$.title.$touch"
         />
         <v-autocomplete
           v-model="state.address"
-          dense
+         
           label="Адрес площадки"
           :items="addressItems"
-          outlined
-          auto-select-first
+          variant="outlined"
+       density="compact"
+          autoSelectFirst
           clearable
-          @blur="v$.address.$touch"
           :errorMessages="addressErrorMessages"
+          @blur="v$.address.$touch"
         />
         <v-autocomplete
           v-model="state.allowedLoadingPoints"
           label="Разрешенные пункты погрузки"
           :items="addressItems"
-          outlined
+          variant="outlined"
+       density="compact"
           multiple
-          auto-select-first
+          autoSelectFirst
           clearable
-          dense
+         
           @blur="v$.allowedLoadingPoints.$touch"
         />
         <v-text-field
           v-model="state.contacts"
           label="Контакты"
-          dense
-          outlined
+         
+          variant="outlined"
+       density="compact"
           @blur="v$.contacts.$touch"
         />
 
         <v-text-field
           v-model="v$.note.$model"
           label="Примечание"
-          dense
-          outlined
+         
+          variant="outlined"
+       density="compact"
           @blur="v$.note.$touch"
         />
         <v-checkbox
@@ -64,9 +69,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" @click="submit" :disabled="invalidForm">
-        Сохранить
-      </v-btn>
+      <v-btn color="primary" :disabled="invalidForm" @click="submit">Сохранить</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -103,7 +106,7 @@ export default {
 
     watch(
       () => props.item,
-      (value) => {
+      value => {
         state.value = setState(value)
       },
       { immediate: true, deep: true }
@@ -124,9 +127,7 @@ export default {
       const titleField = v$.value.title
       if (!titleField.$invalid) return err
 
-      titleField.$dirty &&
-        titleField.required.$invalid &&
-        err.push('Название не может быть пустым')
+      titleField.$dirty && titleField.required.$invalid && err.push('Название не может быть пустым')
       return err
     })
 
@@ -135,9 +136,7 @@ export default {
       const field = v$.value.address
       if (!field.$invalid) return err
 
-      field.$dirty &&
-        field.required.$invalid &&
-        err.push('Адрес площадки не может быть пустым')
+      field.$dirty && field.required.$invalid && err.push('Адрес площадки не может быть пустым')
       return err
     })
 
@@ -145,7 +144,7 @@ export default {
 
     const addressItems = computed(() => {
       if (!props.partnerId) return []
-      return store.getters.addressesForAutocomplete.filter((i) => {
+      return store.getters.addressesForAutocomplete.filter(i => {
         if (state.value.resctrictAddresses) return i.partner === props.partnerId
         else return true
       })
@@ -186,9 +185,9 @@ export default {
 </script>
 
 <style scoped>
-#form-wrapper {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
+  #form-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
 </style>

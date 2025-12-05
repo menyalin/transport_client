@@ -12,18 +12,12 @@ export default ({ truck, trailer, driver }) => {
     phone: driver?.phone,
     phone2: driver?.phone2,
   }
-  let resStr = `${d.truckMark ? d.truckMark + '\t' : ''}${d.truckRegNum}  ${
-    d.trailerRegNum || ''
-  }\n`
+  let resStr = `${d.truckMark ? d.truckMark + '\t' : ''}${d.truckRegNum}  ${d.trailerRegNum || ''}\n`
   resStr += `${d.driver}\n`
-  resStr += `Паспорт ${d.passportId || '-'}, Выдан ${
-    d.passportIssued || '-'
-  }, от ${
+  resStr += `Паспорт ${d.passportId || '-'}, Выдан ${d.passportIssued || '-'}, от ${
     d.passportDate ? new Date(d.passportDate).toLocaleDateString() : '-'
   }\n`
-  resStr += `ВУ ${d.licenseId || '-'}, от ${
-    d.licenseDate ? new Date(d.licenseDate).toLocaleDateString() : '-'
-  }\n`
+  resStr += `ВУ ${d.licenseId || '-'}, от ${d.licenseDate ? new Date(d.licenseDate).toLocaleDateString() : '-'}\n`
   resStr += `тел: ${d.phone || ''}  ${d.phone2 || ''}`
   navigator.clipboard.writeText(resStr).then()
 }

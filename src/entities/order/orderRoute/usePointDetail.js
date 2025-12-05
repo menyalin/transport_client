@@ -54,13 +54,10 @@ export const usePointDetail = (props, ctx, addressActions) => {
     return contacts ? `Контакты: ${contacts}` : null
   })
   const pointTypes = computed(() => store.getters.pointTypes)
-  const addressItems = computed(() =>
-    store.getters.addressesForAutocomplete.filter(addressFilter)
-  )
+  const addressItems = computed(() => store.getters.addressesForAutocomplete.filter(addressFilter))
   const departureDateErrors = computed(() => {
     let errors = []
-    if (v$.value.departureDate.isLaterThan.$invalid)
-      errors.push('Дата не корректна')
+    if (v$.value.departureDate.isLaterThan.$invalid) errors.push('Дата не корректна')
     return errors
   })
   const isShowDocDates = computed(() => {
@@ -73,20 +70,14 @@ export const usePointDetail = (props, ctx, addressActions) => {
 
   watch(
     () => props.point,
-    (val) => (state.value = val),
+    val => (state.value = val),
     { deep: true }
   )
   function setField(val, field) {
-    const DATE_FIELDS = [
-      'plannedDate',
-      'arrivalDate',
-      'departureDate',
-      'intervalEndDate',
-    ]
+    const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate', 'intervalEndDate']
     state.value[field] = val
     if (DATE_FIELDS.includes(field)) state.value[field + 'Doc'] = val
-    if (['arrivalDate', 'departureDate'].includes(field))
-      state.value.isAutofilled = false
+    if (['arrivalDate', 'departureDate'].includes(field)) state.value.isAutofilled = false
 
     ctx.emit('changePoint', { ...state.value })
   }

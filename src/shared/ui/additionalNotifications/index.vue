@@ -1,9 +1,7 @@
 <template>
-  <v-simple-table id="table">
+  <v-table id="table">
     <template #default>
-      <caption class="text-left font-weight-medium">
-        Контроль дополнительных событий
-      </caption>
+      <caption class="text-left font-weight-medium">Контроль дополнительных событий</caption>
       <thead>
         <tr>
           <th>Заголовок</th>
@@ -24,35 +22,28 @@
           </td>
           <td>{{ row.note }}</td>
           <td>
-            <v-icon color="orange" class="mr-3" @click="openDialog(ind)">
-              mdi-pencil
-            </v-icon>
-            <v-icon color="red" @click="deleteItem(ind)"> mdi-delete </v-icon>
+            <v-icon color="orange" class="mr-3" @click="openDialog(ind)">mdi-pencil</v-icon>
+            <v-icon color="red" @click="deleteItem(ind)">mdi-delete</v-icon>
           </td>
         </tr>
       </tbody>
       <tfoot>
-        <v-btn
-          text
-          color="primary"
-          small
-          class="ma-2"
-          @click="openDialog(null)"
-        >
+        <v-btn variant="text" color="primary" size="small" class="ma-2" @click="openDialog(null)">
           Добавить напоминание
         </v-btn>
       </tfoot>
 
-      <v-dialog v-model="dialog" max-width="1000" persistent>
+      <v-dialog :modelValue="dialog" maxWidth="1000" persistent @update:model-value="$emit('update:dialog', $event)">
         <v-card>
-          <v-card-title> Новое напоминание </v-card-title>
+          <v-card-title>Новое напоминание</v-card-title>
           <v-card-text class="notification-form">
             <v-text-field
               v-model="$v.editableItem.title.$model"
               label="Заголовок"
               :errorMessages="titleErrors"
-              outlined
-              dense
+              variant="outlined"
+       density="compact"
+             
               @blur="$v.editableItem.title.$touch()"
             />
             <div class="dates-row">
@@ -68,36 +59,27 @@
                 v-model="$v.editableItem.daysBeforeRemind.$model"
                 label="Дней до напоминания"
                 class="days-count"
-                outlined
-                dense
-                :error-messages="daysBeforeRemindErrors"
+                variant="outlined"
+       density="compact"
+               
+                :errorMessages="daysBeforeRemindErrors"
                 @blur="$v.editableItem.daysBeforeRemind.$touch()"
               />
-              <v-text-field
-                v-model="editableItem.note"
-                label="Примечание"
-                outlined
-                dense
-              />
+              <v-text-field v-model="editableItem.note" label="Примечание" variant="outlined" />
+       density="compact"
             </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn class="mr-3" @click="cancelHandler"> Отмена </v-btn>
-            <v-btn
-              color="primary"
-              :disabled="isInvalidEditableItem"
-              @click="addItem"
-            >
-              Сохранить
-            </v-btn>
+            <v-btn class="mr-3" @click="cancelHandler">Отмена</v-btn>
+            <v-btn color="primary" :disabled="isInvalidEditableItem" @click="addItem">Сохранить</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
-import { required, numeric } from 'vuelidate/lib/validators'
+import { required, numeric } from '@vuelidate/validators'
 import { DateTimeInput } from '@/shared/ui'
 export default {
   name: 'AdditionalNotifications',
@@ -140,33 +122,20 @@ export default {
     },
     titleErrors() {
       let errors = []
-      if (
-        this.$v.editableItem.title.$dirty &&
-        !this.$v.editableItem.title.required
-      )
+      if (this.$v.editableItem.title.$dirty && !this.$v.editableItem.title.required)
         errors.push('Заголовок не может быть пустым')
       return errors
     },
     expDateErrors() {
       let errors = []
-      if (
-        this.$v.editableItem.expDate.$dirty &&
-        !this.$v.editableItem.expDate.required
-      )
-        errors.push('Укажите дату')
+      if (this.$v.editableItem.expDate.$dirty && !this.$v.editableItem.expDate.required) errors.push('Укажите дату')
       return errors
     },
     daysBeforeRemindErrors() {
       let errors = []
-      if (
-        this.$v.editableItem.daysBeforeRemind.$dirty &&
-        !this.$v.editableItem.daysBeforeRemind.required
-      )
+      if (this.$v.editableItem.daysBeforeRemind.$dirty && !this.$v.editableItem.daysBeforeRemind.required)
         errors.push('Не должно быть пустым')
-      if (
-        this.$v.editableItem.daysBeforeRemind.$dirty &&
-        !this.$v.editableItem.daysBeforeRemind.numeric
-      )
+      if (this.$v.editableItem.daysBeforeRemind.$dirty && !this.$v.editableItem.daysBeforeRemind.numeric)
         errors.push('Введите число')
       return errors
     },
@@ -183,12 +152,11 @@ export default {
     },
     clearEditableItem() {
       this.currentIdx = null
-      this.itemFields.forEach((f) => (this.editableItem[f] = null))
+      this.itemFields.forEach(f => (this.editableItem[f] = null))
     },
     addItem() {
       let tmpItems = [...this.items]
-      if (this.currentIdx !== null)
-        tmpItems.splice(this.currentIdx, 1, { ...this.editableItem })
+      if (this.currentIdx !== null) tmpItems.splice(this.currentIdx, 1, { ...this.editableItem })
       else tmpItems.push({ ...this.editableItem })
       this.$emit('change', tmpItems)
       this.dialog = false
@@ -210,16 +178,16 @@ export default {
 }
 </script>
 <style scoped>
-#table {
-  margin-bottom: 30px;
-}
-thead {
-  font-size: 0.8rem;
-}
-.dates-row {
-  display: grid;
-  grid-template-columns: 200px 150px auto;
-  flex-direction: row;
-  gap: 10px;
-}
+  #table {
+    margin-bottom: 30px;
+  }
+  thead {
+    font-size: 0.8rem;
+  }
+  .dates-row {
+    display: grid;
+    grid-template-columns: 200px 150px auto;
+    flex-direction: row;
+    gap: 10px;
+  }
 </style>

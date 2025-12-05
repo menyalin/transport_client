@@ -2,16 +2,11 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error"
+ @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <AppLoadSpinner v-if="loading" />
         <OrderForm
           v-else
           :order="item"
@@ -46,17 +41,27 @@ export default {
     truckId: String,
     startDate: String,
   },
-  data() {
-    return {
-      service: OrderService,
-      item: null,
-      loading: false,
-      tmpVal: null,
-      error: {
-        message: null,
-        show: false,
-      },
-    }
+    setup() {
+      const { actions: addressActions } = useAddress()
+      const { beforeSubmitOrderValidation } = useOrderValidations()
+      return { beforeSubmitOrderValidation, addressActions }
+    },
+    data() {
+      return {
+        service: OrderService,
+        item: null,
+        loading: false,
+        tmpVal: null,
+        error: {
+          message: null,
+          show: false,
+        },
+      }
+    },
+  computed: {
+    showDeleteBtn() {
+      return !!this.id && this.$store.getters.hasPermission('order:delete') && this.item?.state?.status === 'needGet'
+    },
   },
   watch: {
     id: {
@@ -64,49 +69,42 @@ export default {
       handler: async function (newVal, oldVal) {
         if (newVal && newVal !== oldVal) {
           this.loading = true
-          this.item = await this.service.getById(newVal)
-          this.loading = false
+          try {
+            this.item = (await this.service.getById(newVal)) || {}
+          } catch (e) {
+            this.error.message = 'Не удалось загрузить данные заказа'
+            this.error.show = true
+            this.item = {}
+          } finally {
+            this.loading = false
+          }
         }
       },
     },
   },
-  computed: {
-    showDeleteBtn() {
-      return (
-        !!this.id &&
-        this.$store.getters.hasPermission('order:delete') &&
-        this.item?.state?.status === 'needGet'
-      )
-    },
-  },
 
   created() {
-    if (this.id) {
-      socket.on(`order:${this.id}:finalPriceUpdated`, ({ finalPrices }) => {
-        this.item = Object.assign({}, this.item, { finalPrices })
-      })
-    }
-    if (this.startDate) {
-      this.item = {
-        startPositionDate: this.startDate,
-        confirmedCrew: {
-          truck: this.truckId,
-        },
-        route: [
-          {
-            type: 'loading',
-            plannedDate: new Date(this.startDate).toISOString(),
-          },
-          { type: 'unloading' },
-        ],
+      if (this.id) {
+        socket.on(`order:${this.id}:finalPriceUpdated`, ({ finalPrices }) => {
+          this.item = Object.assign({}, this.item || {}, { finalPrices })
+        })
       }
-    }
-  },
-  setup() {
-    const { actions: addressActions } = useAddress()
-    const { beforeSubmitOrderValidation } = useOrderValidations()
-    return { beforeSubmitOrderValidation, addressActions }
-  },
+      if (this.startDate) {
+        this.item = {
+          startPositionDate: this.startDate,
+          confirmedCrew: {
+            truck: this.truckId,
+          },
+          route: [
+            {
+              type: 'loading',
+              plannedDate: new Date(this.startDate).toISOString(),
+            },
+            { type: 'unloading' },
+          ],
+        }
+      }
+    },
 
   methods: {
     toggleAlert() {
@@ -136,7 +134,7 @@ export default {
             params: { id: res._id },
           })
         }
-        this.item = Object.assign(this.item, res)
+        this.item = Object.assign(this.item || {}, res)
         this.tmpVal = null
         if (!saveOnly) this.$router.go(-1)
       } catch (e) {
@@ -154,9 +152,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           this.loading = true

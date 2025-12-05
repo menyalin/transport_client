@@ -5,10 +5,7 @@ import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
 
 const initPeriod = () => {
-  return [
-    dayjs().add(-1, 'month').startOf('month').toISOString(),
-    new Date().toISOString(),
-  ]
+  return [dayjs().add(-1, 'month').startOf('month').toISOString(), new Date().toISOString()]
 }
 
 export const useListData = ({ client, _id }) => {
@@ -65,13 +62,13 @@ export const useListData = ({ client, _id }) => {
     }
   }
 
-  addEventListener('popstate', (e) => {
+  addEventListener('popstate', e => {
     settings.value = e.state.settings
   })
 
   function updateItems(data) {
     if (!items.value) return null
-    let order = items.value.find((item) => item._id === data._id)
+    let order = items.value.find(item => item._id === data._id)
     if (!order) return null
     order = Object.assign(order, data)
   }

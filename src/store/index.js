@@ -1,13 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import ProfileModule from '@/store/profile/index.js'
 import AuthModule from '@/modules/auth/auth.store'
 import OrderModule from '@/modules/order/store/index.js'
 import AccountingModule from '@/store/accounting/index.js'
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export default createStore({
   state: () => ({
     tmpCacheMap: new Map(),
     loading: false,
@@ -23,8 +20,7 @@ export default new Vuex.Store({
       state.loading = payload
     },
     setError(state, payload) {
-      if (payload?.response?.data?.message)
-        state.error = payload.response.data.message
+      if (payload?.response?.data?.message) state.error = payload.response.data.message
       else state.error = payload
     },
     clearError(state) {
@@ -46,7 +42,7 @@ export default new Vuex.Store({
     loading: ({ loading }) => loading,
     storedValue:
       ({ tmpCacheMap }) =>
-      (name) =>
+      name =>
         tmpCacheMap.get(name),
   },
   modules: {

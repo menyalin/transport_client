@@ -5,20 +5,20 @@ const BASE_PATH = '/schedule_notes'
 
 class ScheduleNoteService {
   constructor() {
-    socket.on('scheduleNote:created', (data) => {
+    socket.on('scheduleNote:created', data => {
       store.commit('addScheduleNote', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('notesForSchedule', (data) => {
+    socket.on('notesForSchedule', data => {
       store.commit('setScheduleNotes', data)
     })
 
-    socket.on('scheduleNote:updated', (data) => {
+    socket.on('scheduleNote:updated', data => {
       store.commit('updateScheduleNote', data)
       store.commit('addToCache', data)
     })
-    socket.on('scheduleNote:deleted', (id) => {
+    socket.on('scheduleNote:deleted', id => {
       store.commit('deleteScheduleNote', id)
       store.commit('deleteFromCache', id)
     })
@@ -46,8 +46,7 @@ class ScheduleNoteService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

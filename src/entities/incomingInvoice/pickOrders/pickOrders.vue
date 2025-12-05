@@ -1,27 +1,22 @@
 <template>
   <div class="wrapper">
     <div class="btn-wrapper">
-      <v-btn @click="goBack" small>Вернуться в акт</v-btn>
-      <v-btn
-        :disabled="!selected.length || loading"
-        @click="addOrderHandler"
-        color="primary"
-        >Добавить в акт</v-btn
-      >
+      <v-btn size="small" @click="goBack">Вернуться в акт</v-btn>
+      <v-btn :disabled="!selected.length || loading" color="primary" @click="addOrderHandler">Добавить в акт</v-btn>
     </div>
     <PickOrdersSettings v-model="settings" @refresh="refresh" />
     <v-data-table
+      v-model="selected"
       :items="items"
       :headers="headers"
-      v-model="selected"
-      dense
-      item-key="_id"
-      item-value="id"
-      show-select
-      checkbox-color="primary"
-      @dblclick:row="dblClickRow"
+     
+      itemKey="_id"
+      itemValue="id"
+      showSelect
+      checkboxColor="primary"
       :style="{ width: '100%' }"
-      :footer-props="{ 'items-per-page-options': [100, 200] }"
+      :footerProps="{ 'items-per-page-options': [100, 200] }"
+      @dblclick:row="dblClickRow"
     >
       <template #[`item.docsStatus`]="{ item }">
         <DocStatusCell :status="item.docsStatus" />
@@ -50,16 +45,8 @@ export default {
   setup(props) {
     const { proxy } = getCurrentInstance()
 
-    const {
-      items,
-      loading,
-      refresh,
-      headers,
-      selected,
-      selectedIds,
-      settings,
-      addOrderHandler,
-    } = usePickOrdersForIncomingInvoice(props)
+    const { items, loading, refresh, headers, selected, selectedIds, settings, addOrderHandler } =
+      usePickOrdersForIncomingInvoice(props)
     function dblClickRow(_event, { item }) {
       proxy.$router.push({
         name: 'DetailsOrder',
@@ -89,16 +76,16 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  padding: 20px;
-}
-.btn-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+  }
+  .btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
 </style>

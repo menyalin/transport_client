@@ -53,11 +53,7 @@ class PaymentInvoiceService {
     return data
   }
 
-  async downloadDoc(
-    id,
-    body,
-    filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_tmp_doc'
-  ) {
+  async downloadDoc(id, body, filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_tmp_doc') {
     try {
       const { data } = await api({
         url: BASE_PATH + '/' + id + '/download_docs',
@@ -79,37 +75,23 @@ class PaymentInvoiceService {
 
   async addOrdersToPaymentInvoice(params) {
     if (!params.orders || params.orders.length === 0)
-      throw new Error(
-        'PaymentInvoiceService:addOrdersToPaymentInvoice: orders is missing!'
-      )
+      throw new Error('PaymentInvoiceService:addOrdersToPaymentInvoice: orders is missing!')
 
     if (!params.paymentInvoiceId)
-      throw new Error(
-        'PaymentInvoiceService:addOrdersToPaymentInvoice: paymentInvoiceId is missing!'
-      )
+      throw new Error('PaymentInvoiceService:addOrdersToPaymentInvoice: paymentInvoiceId is missing!')
 
-    const { data } = await api.post(
-      BASE_PATH + '/add_orders_to_invoice',
-      params
-    )
+    const { data } = await api.post(BASE_PATH + '/add_orders_to_invoice', params)
     return data
   }
 
   async deleteOrdersFromPaymentInvoice(params) {
     if (!params.rowIds || params.rowIds.length === 0)
-      throw new Error(
-        'PaymentInvoiceService:deleteOrdersFromPaymentInvoice: _id is missing!'
-      )
+      throw new Error('PaymentInvoiceService:deleteOrdersFromPaymentInvoice: _id is missing!')
 
     if (!params.paymentInvoiceId)
-      throw new Error(
-        'PaymentInvoiceService:deleteOrdersFromPaymentInvoice: paymentInvoiceId is missing!'
-      )
+      throw new Error('PaymentInvoiceService:deleteOrdersFromPaymentInvoice: paymentInvoiceId is missing!')
 
-    const { data } = await api.post(
-      BASE_PATH + '/remove_orders_from_invoice',
-      params
-    )
+    const { data } = await api.post(BASE_PATH + '/remove_orders_from_invoice', params)
     return data
   }
 
@@ -129,10 +111,7 @@ class PaymentInvoiceService {
   }
 
   async setStatus(invoiceId, params) {
-    const { data } = await api.put(
-      BASE_PATH + '/' + invoiceId + '/set_status',
-      params
-    )
+    const { data } = await api.put(BASE_PATH + '/' + invoiceId + '/set_status', params)
     return data
   }
 }

@@ -7,15 +7,13 @@ import { headers } from './headers'
 export const useDriverList = () => {
   function stateFilterHandler(driver) {
     if (listSettings.value.workState === 'all') return true
-    if (listSettings.value.workState === 'holiday')
-      return !crewsMapByDriver.value.has(driver._id)
+    if (listSettings.value.workState === 'holiday') return !crewsMapByDriver.value.has(driver._id)
     else return crewsMapByDriver.value.has(driver._id)
   }
 
   function stuffStatusFilterHandler(driver) {
     if (listSettings.value.stuffStatus === 'all') return true
-    if (listSettings.value.stuffStatus === 'employee')
-      return !driver.dismissalDate
+    if (listSettings.value.stuffStatus === 'employee') return !driver.dismissalDate
     if (listSettings.value.stuffStatus === 'fired') return driver.dismissalDate
   }
 
@@ -77,7 +75,7 @@ export const useDriverList = () => {
 
   const crewsMapByDriver = computed(() => {
     let tmpMap = new Map()
-    crews.value.forEach((cr) => {
+    crews.value.forEach(cr => {
       tmpMap.set(cr.driver, { ...cr })
     })
     return tmpMap
@@ -85,14 +83,10 @@ export const useDriverList = () => {
 
   const filteredDrivers = computed(() =>
     store.getters.drivers
-      .filter((item) =>
-        listSettings.value.tkNameFilter
-          ? item.tkName?._id === listSettings.value.tkNameFilter
-          : true
-      )
+      .filter(item => (listSettings.value.tkNameFilter ? item.tkName?._id === listSettings.value.tkNameFilter : true))
       .filter(stateFilterHandler)
       .filter(stuffStatusFilterHandler)
-      .map((d) => ({
+      .map(d => ({
         ...d,
         state: crewsMapByDriver.value.has(d._id) ? 'В работе' : 'Выходной',
         daysInWork: getDaysInWork(d._id),

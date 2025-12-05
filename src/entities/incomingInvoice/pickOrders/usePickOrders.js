@@ -7,10 +7,7 @@ import { headers } from './config/headers'
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 
 const initPeriod = () => {
-  return [
-    dayjs().add(-2, 'month').startOf('month').format('YYYY-MM-DD'),
-    dayjs().endOf('month').format('YYYY-MM-DD'),
-  ]
+  return [dayjs().add(-2, 'month').startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format('YYYY-MM-DD')]
 }
 
 export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
@@ -18,7 +15,7 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
   const items = ref([])
   const selected = ref([])
   const selectedIds = computed(() => {
-    return selected.value.map((i) => i._id)
+    return selected.value.map(i => i._id)
   })
   const settings = usePersistedRef(
     {
@@ -40,7 +37,7 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
         limit: 100,
         skip: 0,
       })
-      items.value = data.map((i) => ({
+      items.value = data.map(i => ({
         ...i,
         price: {
           priceWithVat: moneyFormatter(i.price.priceWithVat, 2),
@@ -83,7 +80,7 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
     await getData()
   })
 
-  watch(selected, (items) => console.log(items.map((i) => i.clientNum)))
+  watch(selected, items => console.log(items.map(i => i.clientNum)))
 
   return {
     loading,

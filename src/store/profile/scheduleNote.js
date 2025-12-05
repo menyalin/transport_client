@@ -13,15 +13,14 @@ export default {
       state.notes = payload
     },
     addScheduleNote(state, payload) {
-      if (state.notes.findIndex((item) => item._id === payload._id) === -1)
-        state.notes.push(payload)
+      if (state.notes.findIndex(item => item._id === payload._id) === -1) state.notes.push(payload)
     },
     updateScheduleNote(state, payload) {
-      const ind = state.notes.findIndex((item) => item._id === payload._id)
+      const ind = state.notes.findIndex(item => item._id === payload._id)
       if (ind !== -1) state.notes.splice(ind, 1, payload)
     },
     deleteScheduleNote(state, id) {
-      state.notes = state.notes.filter((item) => item._id !== id)
+      state.notes = state.notes.filter(item => item._id !== id)
     },
   },
   actions: {
@@ -39,20 +38,16 @@ export default {
     },
   },
   getters: {
-    scheduleNotesMap: ({ notes }) =>
-      new Map(notes.map((item) => [item._id, item])),
+    scheduleNotesMap: ({ notes }) => new Map(notes.map(item => [item._id, item])),
 
     scheduleNotes: ({ notes }) => notes,
 
     notesForSchedule: ({ notes }, { schedulePeriod }) => {
       if (!schedulePeriod) return []
-      return notes.filter((n) => {
+      return notes.filter(n => {
         const sP = dayjs(schedulePeriod[0])
         const eP = dayjs(schedulePeriod[1])
-        return (
-          eP.isAfter(n.startPositionDate) &&
-          sP.isSameOrBefore(n.startPositionDate)
-        )
+        return eP.isAfter(n.startPositionDate) && sP.isSameOrBefore(n.startPositionDate)
       })
     },
   },

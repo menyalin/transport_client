@@ -1,10 +1,8 @@
 <template>
   <div>
-    <buttons-panel
-      panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('downtime:write') || isInvalidForm
-      "
+    <ButtonsPanel
+      panelType="form"
+      :disabledSubmit="!$store.getters.hasPermission('downtime:write') || isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
@@ -13,18 +11,19 @@
       v-model="state.truck"
       label="Грузовик"
       :items="truckItems"
-      auto-select-first
-      outlined
-      dense
+      autoSelectFirst
+      variant="outlined"
+       density="compact"
+     
     />
-    <v-select
-      v-model="state.type"
-      label="Тип простоя"
-      :items="downtimeTypes"
-      outlined
-      dense
-    />
-    <v-text-field v-model.trim="state.title" outlined label="Заголовок" dense />
+    <v-select v-model="state.type" label="Тип простоя" :items="downtimeTypes"
+variant="outlined" />
+       density="compact"
+    <v-text-field
+v-model.trim="state.title"
+variant="outlined" label="Заголовок"
+       density="compact"
+/>
 
     <AutoCompleteWithActions
       v-if="state.type === 'repair'"
@@ -40,8 +39,8 @@
 
     <AutoCompleteWithActions
       v-if="state.type === 'repair'"
-      :items="serviceAdressItems"
       v-model="state.address"
+      :items="serviceAdressItems"
       label="Адрес сервиса"
       outlined
       @create="createAddressHandler"
@@ -67,29 +66,17 @@
         :style="{ 'max-width': '200px' }"
       />
     </div>
-    <v-text-field
-      v-model="state.note"
-      label="Примечание"
-      outlined
-      hide-details
-      dense
-    />
-    <v-checkbox
-      v-model="state.inOrderTime"
-      label="Разрешить пересечение с рейсом"
-    />
+    <v-text-field v-model="state.note" label="Примечание" variant="outlined" hideDetails />
+       density="compact"
+    <v-checkbox v-model="state.inOrderTime" label="Разрешить пересечение с рейсом" />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start>mdi-delete</v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
 <script>
-import {
-  ButtonsPanel,
-  DateTimeInput,
-  AutoCompleteWithActions,
-} from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, AutoCompleteWithActions } from '@/shared/ui'
 
 import { useForm } from './useForm'
 
@@ -149,10 +136,10 @@ export default {
 }
 </script>
 <style>
-.row-input {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  justify-content: flex-start;
-}
+  .row-input {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: flex-start;
+  }
 </style>

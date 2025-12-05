@@ -1,52 +1,55 @@
 <template>
   <div>
-    <app-block-title>{{ title }}</app-block-title>
+    <AppBlockTitle>{{ title }}</AppBlockTitle>
     <div class="fields-wrapper">
       <div id="platon">
         <v-text-field
           label="Платон №"
-          :value="params.platonNumber"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.platonNumber"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'platonNumber')"
         />
         <DateTimeInput
           label="Дата замены"
           :value="params.platonDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'platonDate')"
+          hidePrependIcon
+          hideTimeInput
           outlined
           dense
-          hide-details
+          hideDetails
+          @change="change($event, 'platonDate')"
         />
       </div>
       <div id="tachograph">
         <v-text-field
           label="Тахограф №"
-          :value="params.tachographNumber"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.tachographNumber"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'tachographNumber')"
         />
         <DateTimeInput
           label="Дата сделующей калибровки"
           :value="params.tachographExpDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'tachographExpDate')"
+          hidePrependIcon
+          hideTimeInput
           outlined
           dense
-          hide-details
+          hideDetails
+          @change="change($event, 'tachographExpDate')"
         />
         <v-text-field
           label="Примечание (тахограф)"
-          :value="params.tachographNote"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.tachographNote"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'tachographNote')"
         />
       </div>
@@ -54,48 +57,51 @@
       <div id="transponder">
         <v-text-field
           label="Транспондер, №"
-          :value="params.transponderNumber"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.transponderNumber"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'transponderNumber')"
         />
         <DateTimeInput
           label="Дата выдачи"
           :value="params.transponderDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'transponderDate')"
+          hidePrependIcon
+          hideTimeInput
           outlined
           dense
-          hide-details
+          hideDetails
+          @change="change($event, 'transponderDate')"
         />
       </div>
       <div id="fuel-card">
         <v-text-field
           label="Топливная карта"
-          :value="params.fuelCardNumber"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.fuelCardNumber"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'fuelCardNumber')"
         />
         <DateTimeInput
           label="Дата выдачи карты"
           :value="params.fuelCardDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'fuelCardDate')"
+          hidePrependIcon
+          hideTimeInput
           outlined
           dense
-          hide-details
+          hideDetails
+          @change="change($event, 'fuelCardDate')"
         />
         <v-text-field
           label="Примечание (Топливная карта)"
-          :value="params.fuelCardNote"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.fuelCardNote"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'fuelCardNote')"
         />
       </div>
@@ -149,7 +155,7 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) {
-          this.fields.forEach((f) => {
+          this.fields.forEach(f => {
             this.params[f] = val[f]
           })
         }
@@ -165,40 +171,40 @@ export default {
 }
 </script>
 <style scoped>
-.fields-wrapper {
-  display: flex;
-  flex-direction: row;
+  .fields-wrapper {
+    display: flex;
+    flex-direction: row;
 
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.fields-wrapper > * {
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-#platon {
-  display: grid;
-  grid-template-columns: 220px 190px;
-  gap: 10px;
-}
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .fields-wrapper > * {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  #platon {
+    display: grid;
+    grid-template-columns: 220px 190px;
+    gap: 10px;
+  }
 
-#tachograph {
-  display: grid;
-  grid-template-columns: 190px 190px 350px;
-  gap: 10px;
-}
+  #tachograph {
+    display: grid;
+    grid-template-columns: 190px 190px 350px;
+    gap: 10px;
+  }
 
-#transponder {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-#transponder > * {
-  margin-right: 5px;
-}
-#fuel-card {
-  display: grid;
-  grid-template-columns: 190px 190px 350px;
-  gap: 10px;
-}
+  #transponder {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  #transponder > * {
+    margin-right: 5px;
+  }
+  #fuel-card {
+    display: grid;
+    grid-template-columns: 190px 190px 350px;
+    gap: 10px;
+  }
 </style>

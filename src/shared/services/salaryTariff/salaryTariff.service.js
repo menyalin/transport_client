@@ -10,14 +10,14 @@ class SalaryTariffService {
   constructor() {
     this.MODEL_NAME = 'salaryTariff'
 
-    socket.on(this.MODEL_NAME + ':created', (data) => {
+    socket.on(this.MODEL_NAME + ':created', data => {
       store.commit('addToCache', data)
     })
 
-    socket.on(this.MODEL_NAME + ':updated', (data) => {
+    socket.on(this.MODEL_NAME + ':updated', data => {
       store.commit('addToCache', data)
     })
-    socket.on(this.MODEL_NAME + ':deleted', (id) => {
+    socket.on(this.MODEL_NAME + ':deleted', id => {
       store.commit('deleteFromCache', id)
     })
   }
@@ -38,8 +38,7 @@ class SalaryTariffService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)
@@ -57,8 +56,7 @@ class SalaryTariffService {
 
   async getDriverSalaryByPeriodReport(params) {
     function getFileName(params) {
-      if (!params.period[0])
-        throw new Error('getDriverSalaryByPeriodReport : Не указан период')
+      if (!params.period[0]) throw new Error('getDriverSalaryByPeriodReport : Не указан период')
       const startDate = dayjs(params.period[0])
       return `${startDate.format('YYYY_MM')}_ЗП_Водителей.xlsx`
     }

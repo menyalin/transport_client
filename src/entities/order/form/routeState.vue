@@ -6,10 +6,10 @@
     <div class="state-block">
       <div>
         <v-radio-group
-          :value="params.status"
+          :modelValue="params.status"
           mandatory
           :readonly="readonly"
-          @change="change($event, 'status')"
+          @update:model-value="change($event, 'status')"
         >
           <v-radio
             v-for="status in orderStatuses"
@@ -27,8 +27,8 @@
           label="Водитель оповещен"
           class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
-          hide-details
-          @change="change($event, 'driverNotified')"
+          hideDetails
+          @update:model-value="change($event, 'driverNotified')"
         />
         <v-checkbox
           :value="params.clientNotified"
@@ -36,16 +36,16 @@
           :readonly="readonly"
           class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
-          hide-details
-          @change="change($event, 'clientNotified')"
+          hideDetails
+          @update:model-value="change($event, 'clientNotified')"
         />
         <v-checkbox
           :value="params.warning"
           label="На контроле"
           :readonly="readonly"
           class="pt-0 mt-3 mb-2"
-          hide-details
-          @change="change($event, 'warning')"
+          hideDetails
+          @update:model-value="change($event, 'warning')"
         />
       </div>
     </div>
@@ -114,23 +114,15 @@ export default {
     },
     disabledStatus(status) {
       if (this.params.status === 'needGet' && this.enableRefuse)
-        return ![
-          'needGet',
-          'getted',
-          'notСonfirmedByClient',
-          'weRefused',
-        ].includes(status.value)
-      if (this.params.status === 'needGet' && !this.enableRefuse)
-        return !['needGet', 'getted'].includes(status.value)
+        return !['needGet', 'getted', 'notСonfirmedByClient', 'weRefused'].includes(status.value)
+      if (this.params.status === 'needGet' && !this.enableRefuse) return !['needGet', 'getted'].includes(status.value)
       if (
         this.params.status === 'getted' &&
         !this.params.driverNotified &&
         !this.params.clientNotified &&
         this.enableRefuse
       )
-        return !['needGet', 'getted', 'weRefused', 'clientRefused'].includes(
-          status.value
-        )
+        return !['needGet', 'getted', 'weRefused', 'clientRefused'].includes(status.value)
       if (
         this.params.status === 'getted' &&
         !this.params.driverNotified &&
@@ -139,62 +131,37 @@ export default {
       )
         return !['needGet', 'getted'].includes(status.value)
 
-      if (
-        this.params.status === 'getted' &&
-        this.params.driverNotified &&
-        this.params.clientNotified
-      )
+      if (this.params.status === 'getted' && this.params.driverNotified && this.params.clientNotified)
         return !['getted', 'inProgress'].includes(status.value)
 
-      if (
-        this.params.status === 'inProgress' &&
-        !this.routeCompleted &&
-        !this.isExistFirstArrivalDate
-      )
+      if (this.params.status === 'inProgress' && !this.routeCompleted && !this.isExistFirstArrivalDate)
         return !['inProgress', 'getted'].includes(status.value)
 
-      if (
-        this.params.status === 'inProgress' &&
-        !this.routeCompleted &&
-        this.isExistFirstArrivalDate
-      )
+      if (this.params.status === 'inProgress' && !this.routeCompleted && this.isExistFirstArrivalDate)
         return !['inProgress'].includes(status.value)
 
-      if (
-        this.params.status === 'inProgress' &&
-        this.routeCompleted &&
-        !this.isValidGrade
-      )
+      if (this.params.status === 'inProgress' && this.routeCompleted && !this.isValidGrade)
         return !['inProgress'].includes(status.value)
 
-      if (
-        this.params.status === 'inProgress' &&
-        this.routeCompleted &&
-        this.isValidGrade
-      )
+      if (this.params.status === 'inProgress' && this.routeCompleted && this.isValidGrade)
         return !['completed', 'inProgress'].includes(status.value)
 
-      if (this.params.status === 'completed')
-        return !['completed', 'inProgress'].includes(status.value)
+      if (this.params.status === 'completed') return !['completed', 'inProgress'].includes(status.value)
 
-      if (this.params.status === 'weRefused')
-        return !['getted', 'weRefused'].includes(status.value)
+      if (this.params.status === 'weRefused') return !['getted', 'weRefused'].includes(status.value)
 
-      if (this.params.status === 'clientRefused')
-        return !['getted', 'clientRefused'].includes(status.value)
+      if (this.params.status === 'clientRefused') return !['getted', 'clientRefused'].includes(status.value)
 
       if (this.params.status === 'notСonfirmedByClient')
-        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(
-          status.value
-        )
+        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(status.value)
       return true
     },
   },
 }
 </script>
 <style scoped>
-.state-block {
-  display: grid;
-  grid-template-columns: 300px;
-}
+  .state-block {
+    display: grid;
+    grid-template-columns: 300px;
+  }
 </style>

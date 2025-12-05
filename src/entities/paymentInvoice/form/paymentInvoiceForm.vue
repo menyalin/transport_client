@@ -1,202 +1,140 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <download-doc-template-menu
+      <DownloadDocTemplateMenu
         :templates="docTemplates"
         :disabledDownloadFiles="disabledDownloadFiles"
         @downloadTemplate="downloadHandler"
       />
-      <download-doc-template-menu
+      <DownloadDocTemplateMenu
         :templates="newDocTemplates"
         :disabledDownloadFiles="disabledDownloadFiles"
-        @downloadTemplate="newDownloadHandler"
         class="mx-3"
+        @downloadTemplate="newDownloadHandler"
       />
       <v-btn
-        v-if="showLoaderBtn"
-        class="mx-3"
-        @click="goToLoader"
-        color="primary"
-      >
-        Загрузить из реестра
-      </v-btn>
+v-if="showLoaderBtn"
+class="mx-3" color="primary" @click="goToLoader"
+>Загрузить из реестра</v-btn>
       <span v-else-if="loaderPath" class="text-caption mx-3">
         Для использования загрузчика необходимо очистить список рейсов.
       </span>
-    </buttons-panel>
+    </ButtonsPanel>
     <div id="form">
       <div class="fields-row">
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
+         
           required
-          item-value="_id"
-          item-text="name"
+          itemValue="_id"
+          itemTitle="name"
           clearable
-          outlined
+          variant="outlined"
+       density="compact"
           :disabled="disabledMainFields"
           :items="clientItems"
-          @blur="v$.client.$touch"
-          :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
+          :errorMessages="clientErrorMessages"
           :style="{ minWidth: '400px' }"
+          @blur="v$.client.$touch"
+          @update:model-value="changeClientHandler"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
+         
           required
-          item-value="_id"
-          item-text="name"
+          itemValue="_id"
+          itemTitle="name"
           clearable
-          outlined
+          variant="outlined"
+       density="compact"
           :disabled="!state.client || disabledMainFields"
           :items="agreementItems"
-          @blur="v$.client.$touch"
-          :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
+          :errorMessages="agreementErrorMessages"
           :style="{ minWidth: '400px' }"
+          @blur="v$.client.$touch"
+          @update:model-value="changeAgreementHandler"
         />
 
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
-          dense
-          outlined
-          @change="changeStatusHandler"
+         
+          variant="outlined"
+       density="compact"
+          @update:model-value="changeStatusHandler"
         />
-        <v-btn
-          v-if="showSendInvoiceBtn"
-          color="primary"
-          @click="sendInvoiceBtnHandler('sendDate')"
-        >
+        <v-btn v-if="showSendInvoiceBtn" color="primary" @click="sendInvoiceBtnHandler('sendDate')">
           Отправлено клиенту
         </v-btn>
-        <v-btn
-          v-if="showAcceptedInvoiceBtn"
-          color="primary"
-          @click="acceptInvoiceBtnHandler"
-        >
-          Принято клиентом
-        </v-btn>
-        <v-btn
-          v-if="showPaidInvoiceBtn"
-          color="primary"
-          @click="paidInvoiceBtnHandler"
-        >
-          Оплачено
-        </v-btn>
+        <v-btn v-if="showAcceptedInvoiceBtn" color="primary" @click="acceptInvoiceBtnHandler">Принято клиентом</v-btn>
+        <v-btn v-if="showPaidInvoiceBtn" color="primary" @click="paidInvoiceBtnHandler">Оплачено</v-btn>
       </div>
       <div class="fields-row">
         <v-text-field
-          label="Номер реестра клиента"
           v-model.trim="state.numberByClient"
-          dense
-          outlined
+          label="Номер реестра клиента"
+         
+          variant="outlined"
+       density="compact"
         />
-        <DateTimeInput
-          label="Дата реестра клиента"
-          v-model="state.dateByClient"
-          dense
-          outlined
-          type="date"
-        />
+        <DateTimeInput v-model="state.dateByClient" label="Дата реестра клиента" dense
+outlined type="date" />
       </div>
       <div class="fields-row">
-        <v-text-field
-          label="Номер акта"
-          v-model.trim="state.number"
-          dense
-          outlined
-        />
-        <DateTimeInput
-          label="Дата акта"
-          v-model="state.date"
-          dense
-          outlined
-          type="date"
-        />
+        <v-text-field v-model.trim="state.number" label="Номер акта" variant="outlined" />
+       density="compact"
+        <DateTimeInput v-model="state.date" label="Дата акта" dense
+outlined type="date" />
       </div>
 
       <div class="fields-row">
-        <DateTimeInput
-          readonly
-          label="Дата отправки"
-          v-model="state.sendDate"
-          dense
-          outlined
-          type="date"
-        />
-        <DateTimeInput
-          label="Плановая дата оплаты"
-          v-model="state.plannedPayDate"
-          dense
-          outlined
-          type="date"
-        />
-        <DateTimeInput
-          readonly
-          label="Дата оплаты"
-          v-model="state.payDate"
-          dense
-          outlined
-          type="date"
-        />
+        <DateTimeInput v-model="state.sendDate" readonly label="Дата отправки" dense outlined type="date" />
+        <DateTimeInput v-model="state.plannedPayDate" label="Плановая дата оплаты" dense
+outlined type="date" />
+        <DateTimeInput v-model="state.payDate" readonly label="Дата оплаты" dense outlined type="date" />
       </div>
 
-      <v-alert v-if="isNeedSave" type="info" text>
-        Для подбора рейсов требуется сохранение документа
-      </v-alert>
-      <v-dialog v-model="showDateDialog" persistent max-width="400">
+      <v-alert v-if="isNeedSave" type="info" text>Для подбора рейсов требуется сохранение документа</v-alert>
+      <v-dialog v-model="showDateDialog" persistent maxWidth="400">
         <v-card>
           <v-card-title>{{ dateDialogTitle }}</v-card-title>
           <v-card-text>
-            <DateTimeInput
-              label="Укажите дату"
-              v-model="dialogFieldData"
-              type="date"
-              outlined
-            />
+            <DateTimeInput v-model="dialogFieldData" label="Укажите дату" type="date"
+outlined />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="cancelDialog">Отмена</v-btn>
-            <v-btn
-              @click="saveDialogDataHandler"
-              color="primary"
-              :disabled="!dialogFieldData"
-            >
-              Сохранить
-            </v-btn>
+            <v-btn color="primary" :disabled="!dialogFieldData" @click="saveDialogDataHandler">Сохранить</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          disabledPickOrders || isNeedSave || invalidForm || !isInProcess
-        "
+        :disabled="disabledPickOrders || isNeedSave || invalidForm || !isInProcess"
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
+       
+        variant="outlined"
+       density="compact"
+        hideDetails
         @blur="v$.note.$touch"
-        hide-details
       />
     </div>
   </div>
@@ -208,11 +146,7 @@ import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
 import { paymentInvoiceStatuses } from '@/shared/constants'
-import {
-  ButtonsPanel,
-  DownloadDocTemplateMenu,
-  DateTimeInput,
-} from '@/shared/ui'
+import { ButtonsPanel, DownloadDocTemplateMenu, DateTimeInput } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
 
@@ -263,19 +197,14 @@ export default {
       paidInvoiceBtnHandler,
     } = usePaymentInvoiceForm(props.item, ctx)
 
-    const {
-      docTemplates,
-      newDocTemplates,
-      newDownloadHandler,
-      updatePrintForms,
-    } = usePaymentInvoiceDocTemplates(state, props)
+    const { docTemplates, newDocTemplates, newDownloadHandler, updatePrintForms } = usePaymentInvoiceDocTemplates(
+      state,
+      props
+    )
 
     const showLoaderBtn = computed(() => {
-      if (Array.isArray(props.item.orders) && props.item.orders.length > 0)
-        return false
-      return (
-        !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
-      )
+      if (Array.isArray(props.item.orders) && props.item.orders.length > 0) return false
+      return !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
     })
     const isInProcess = computed(() => state.value.status === 'inProcess')
 
@@ -301,13 +230,11 @@ export default {
       ctx.emit('download', filename)
     }
 
-    const clientItems = computed(
-      () => store.getters?.partners.filter((i) => i.isClient) || []
-    )
+    const clientItems = computed(() => store.getters?.partners.filter(i => i.isClient) || [])
     const isPaid = computed(() => props.item?.status === 'paid')
     const hasOrders = computed(() => props.item?.orders?.length > 0)
     const statusItems = computed(() =>
-      paymentInvoiceStatuses.map((i) => ({
+      paymentInvoiceStatuses.map(i => ({
         ...i,
         disabled:
           (isPaid.value && !['accepted'].includes(i.value)) ||
@@ -392,22 +319,22 @@ export default {
 </script>
 
 <style scoped>
-#form {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 20px;
-}
-.fields-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-.fields-row > div {
-  flex-grow: 0;
-  flex-shrink: 1;
-  flex-basis: content;
-  min-width: 250px;
-}
+  #form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+  }
+  .fields-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  .fields-row > div {
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: content;
+    min-width: 250px;
+  }
 </style>

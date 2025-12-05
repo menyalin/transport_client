@@ -5,51 +5,51 @@
     </div>
     <v-text-field
       v-model="state.description"
-      outlined
-      dense
-      hide-details
+      variant="outlined"
+       density="compact"
+     
+      hideDetails
       label="Груз"
       :style="{ 'max-width': '600px' }"
     />
     <div class="cargo-params-block py-2">
       <v-text-field
         v-model.number="state.weight"
-        outlined
-        dense
+        variant="outlined"
+       density="compact"
+       
         type="Number"
-        hide-details
+        hideDetails
         label="Вес, тонн"
       />
       <v-text-field
         v-model.number="state.plt"
-        outlined
-        dense
+        variant="outlined"
+       density="compact"
+       
         type="Number"
-        hide-details
+        hideDetails
         label="Плт, шт"
       />
       <v-text-field
         v-model.number="state.volume"
-        outlined
-        dense
+        variant="outlined"
+       density="compact"
+       
         type="Number"
-        hide-details
+        hideDetails
         label="Объем, м3"
       />
-      <v-text-field
-        v-model="state.tRegime"
-        outlined
-        dense
-        hide-details
-        label="t-режим"
-      />
+      <v-text-field v-model="state.tRegime" variant="outlined" hideDetails label="t-режим" />
+       density="compact"
     </div>
     <div>
       <v-text-field
         v-model="state.note"
-        outlined
-        dense
-        hide-details
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         label="Примечание"
         :style="{ 'max-width': '600px' }"
       />
@@ -83,21 +83,31 @@ export default {
     })
     watch(
       () => props.cargoParams,
-      (val) => {
-        state.value = val
+      val => {
+        state.value = val || {
+          description: null,
+          volume: null,
+          weight: null,
+          plt: null,
+          tRegime: null,
+          note: null,
+        }
       },
       { immediate: true }
     )
-    watch(state.value, (val) => ctx.emit('change', { ...val }))
+    watch(
+      () => state.value,
+      val => ctx.emit('change', { ...val })
+    )
 
     return { state }
   },
 }
 </script>
 <style scoped>
-.cargo-params-block {
-  display: grid;
-  grid-template-columns: 120px 120px 120px 120px auto;
-  gap: 15px;
-}
+  .cargo-params-block {
+    display: grid;
+    grid-template-columns: 120px 120px 120px 120px auto;
+    gap: 15px;
+  }
 </style>

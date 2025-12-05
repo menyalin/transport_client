@@ -1,9 +1,9 @@
 <template>
-  <form-wrapper
+  <FormWrapper
     :loading="loading"
     :displayDeleteBtn="showDeleteBtn"
-    @delete="deleteHandler"
     :itemIsMissing="item === null"
+    @delete="deleteHandler"
   >
     <IncomingInvoiceForm
       v-if="item"
@@ -16,7 +16,7 @@
       @pickOrders="pickOrdersHandler"
       @savePayDate="savePayDateHandler"
     />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script>

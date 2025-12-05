@@ -9,30 +9,32 @@
           v-model="v$.title.$model"
           label="Название оповещения"
           :errorMessages="titleFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
 
         <v-autocomplete
-          multiple
           v-model="v$.addresses.$model"
+          multiple
           label="Адреса"
-          outlined
+          variant="outlined"
+          density="compact"
           chips
           :errorMessages="addressFieldErrors"
-          deletable-chips
+          closableChips
           :items="addressItems"
           clearable
-          auto-select-first
+          autoSelectFirst
         />
         <v-autocomplete
-          :items="agreements"
           v-model="v$.agreement.$model"
+          :items="agreements"
           label="Соглашение"
-          outlined
-          deletable-chips
+          variant="outlined"
+          density="compact"
+          closableChips
           clearable
-          auto-select-first
+          autoSelectFirst
         />
 
         <v-text-field
@@ -40,119 +42,118 @@
           label="Получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="emailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-text-field
           v-model="v$.ccEmails.$model"
           label="Получатели копии оповещений"
           hint="email адреса через ','"
           :errorMessages="ccEmailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <v-text-field
           v-model="v$.bccEmails.$model"
           label="Скрытые получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="bccEmailFieldErrors"
-          outlined
-          dense
+          variant="outlined"
+          density="compact"
         />
         <div class="row_section">
           <div class="column left_column">
             <v-text-field
-              type="number"
               v-model="state.idleHoursBeforeNotify"
+              type="number"
               label="Часов до отправки уведомления"
-              outlined
+              variant="outlined"
+              density="compact"
             />
           </div>
           <div class="column">
             <v-checkbox
               v-model="state.usePlannedDate"
               hint="По умолчанию используется фактическое время прибытия"
-              persistent-hint
+              persistentHint
               color="primary"
               label="Использовать плановую дату погрузки/разгрузки"
             />
           </div>
         </div>
 
-        <v-text-field v-model="state.note" label="Примечание" outlined dense />
+        <v-text-field v-model="state.note" label="Примечание" variant="outlined" density="compact" />
       </div>
     </v-card-text>
     <v-card-actions class="buttons-wrapper">
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn @click="submit" :disabled="invalidForm || loading" color="primary">
-        Сохранить
-      </v-btn>
+      <v-btn :disabled="invalidForm || loading" color="primary" @click="submit">Сохранить</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script>
-import { useFormState } from './model/useFormState.js'
-export default {
-  name: 'IdleTruckNotifyForm',
-  props: {
-    partnerId: String,
-    loading: Boolean,
-    initialState: Object,
-    agreements: Array,
-  },
-  setup(props, ctx) {
-    const {
-      state,
-      submit,
-      cancel,
-      addressItems,
-      invalidForm,
-      v$,
-      titleFieldErrors,
-      addressFieldErrors,
-      emailFieldErrors,
-      ccEmailFieldErrors,
-      bccEmailFieldErrors,
-    } = useFormState(props, ctx)
-    return {
-      v$,
-      state,
-      submit,
-      cancel,
-      addressItems,
-      invalidForm,
-      titleFieldErrors,
-      addressFieldErrors,
-      emailFieldErrors,
-      ccEmailFieldErrors,
-      bccEmailFieldErrors,
-    }
-  },
-}
+  import { useFormState } from './model/useFormState.js'
+  export default {
+    name: 'IdleTruckNotifyForm',
+    props: {
+      partnerId: String,
+      loading: Boolean,
+      initialState: Object,
+      agreements: Array,
+    },
+    setup(props, ctx) {
+      const {
+        state,
+        submit,
+        cancel,
+        addressItems,
+        invalidForm,
+        v$,
+        titleFieldErrors,
+        addressFieldErrors,
+        emailFieldErrors,
+        ccEmailFieldErrors,
+        bccEmailFieldErrors,
+      } = useFormState(props, ctx)
+      return {
+        v$,
+        state,
+        submit,
+        cancel,
+        addressItems,
+        invalidForm,
+        titleFieldErrors,
+        addressFieldErrors,
+        emailFieldErrors,
+        ccEmailFieldErrors,
+        bccEmailFieldErrors,
+      }
+    },
+  }
 </script>
 <style scoped>
-.form_wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.row_section {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.left_column {
-  min-width: 500px;
-}
-.buttons-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  gap: 15px;
-}
+  .form_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .row_section {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .left_column {
+    min-width: 500px;
+  }
+  .buttons-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 15px;
+  }
 </style>

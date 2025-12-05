@@ -2,31 +2,25 @@
   <div>
     <v-autocomplete
       ref="input"
-      :value="value"
-      dense
-      :hide-details="hideDetails"
-      hide-no-data
+      :modelValue="value"
+     
+      :hideDetails="hideDetails"
+      hideNoData
       :items="items"
       :disabled="disabled"
-      auto-select-first
+      autoSelectFirst
       clearable
       :multiple="multiple"
-      persistent-hint
+      persistentHint
       :label="label"
       :outlined="outlined"
-      :append-icon="hideAppendIcon || multiple ? null : appendIcon"
+      :appendIcon="hideAppendIcon || multiple ? null :endIcon"
       @click:append="appendClick"
-      @change="changeValue"
+      @update:model-value="changeValue"
     />
-    <v-dialog v-model="dialog" max-width="700" persistent>
+    <v-dialog :modelValue="dialog" maxWidth="700" persistent @update:model-value="$emit('update:dialog', $event)">
       <v-card>
-        <app-details-zone
-          :id="value"
-          openInModal
-          @cancel="cancelDialog"
-          @submit="submit"
-          @deleteItem="deleteHandler"
-        />
+        <AppDetailsZone :id="value" openInModal @cancel="cancelDialog" @submit="submit" @deleteItem="deleteHandler" />
       </v-card>
     </v-dialog>
   </div>
@@ -59,7 +53,7 @@ export default {
     }
   },
   computed: {
-    appendIcon() {
+   endIcon() {
       return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
     },
     items() {
@@ -70,7 +64,7 @@ export default {
     focus() {
       this.$refs.input.focus()
     },
-    appendClick() {
+   endClick() {
       this.dialog = true
     },
     cancelDialog() {

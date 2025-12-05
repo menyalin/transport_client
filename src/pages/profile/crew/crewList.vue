@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
+        <ButtonsPanel
+          panelType="list"
           :disabledSubmit="!$store.getters.hasPermission('crew:write')"
           @submit="createHandler"
           @refresh="refreshHandler"
@@ -12,67 +12,67 @@
             <v-icon>mdi-download</v-icon>
             Скачать отчет
           </v-btn>
-        </buttons-panel>
+        </ButtonsPanel>
         <div class="filters">
-          <date-range-input
-            v-model="settings.period"
-            class="mx-3"
-            :style="{ 'max-width': '300px' }"
-          />
+          <DateRangeInput :modelValue="settings.period" class="mx-3" :style="{ 'max-width': '300px' }" />
           <v-autocomplete
-            v-model="settings.tkName"
-            dense
-            outlined
-            hide-details
-            auto-select-first
+            :modelValue="settings.tkName"
+           
+            variant="outlined"
+       density="compact"
+            hideDetails
+            autoSelectFirst
             label="ТК"
             clearable
             :items="carrierItems"
-            item-value="_id"
-            item-text="name"
+            itemValue="_id"
+            itemTitle="name"
           />
 
           <v-select
-            v-model="settings.crewStatus"
-            dense
+            :modelValue="settings.crewStatus"
+           
             :items="crewStatuses"
-            outlined
-            hide-details
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="Состояние экипажа"
           />
           <v-autocomplete
-            v-model="settings.driver"
-            dense
+            :modelValue="settings.driver"
+           
             clearable
-            auto-select-first
+            autoSelectFirst
             :items="driverItems"
-            outlined
-            hide-details
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="Водитель"
           />
           <v-autocomplete
-            v-model="settings.truck"
-            dense
+            :modelValue="settings.truck"
+           
             clearable
-            auto-select-first
+            autoSelectFirst
             :items="truckItems"
-            outlined
-            hide-details
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="Грузовик"
           />
         </div>
         <v-data-table
+          v-model:options="listOptions"
           :headers="headers"
           :items="items"
           height="72vh"
-          fixed-header
+          fixedHeader
           :loading="loading"
-          :serverItemsLength="totalCount"
-          :footer-props="{
+          :itemsLength="totalCount"
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
-          dense
+         
           @dblclick:row="dblClickRowHandler"
         >
           <template #[`item.tkName`]="{ item }">
@@ -160,10 +160,10 @@ export default {
 }
 </script>
 <style>
-.filters {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 15px;
-}
+  .filters {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 15px;
+  }
 </style>

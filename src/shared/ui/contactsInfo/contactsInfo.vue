@@ -1,21 +1,14 @@
 <template>
   <div class="wrapper">
     <div class="text-h6">Контакты:</div>
-    <v-btn color="primary" small @click="addItem"> Добавить контакт </v-btn>
+    <v-btn color="primary" size="small" @click="addItem">Добавить контакт</v-btn>
     <div v-if="emptyContacts" class="text-subtitle-2">Контакты отсутствуют</div>
-    <ItemCard
-      v-for="(item, idx) of items"
-      :item="item"
-      :key="idx"
-      @edit="editHandler(idx)"
-      @remove="removeItem(idx)"
-    />
-    <v-dialog max-width="800" persistent v-model="dialog">
-      <ContactForm
-        :item="editedItem"
-        @cancel="cancelHandler"
-        @submit="submitHandler"
-      />
+    <ItemCard v-for="(item, idx) of items" :key="idx" :item="item" @edit="editHandler(idx)" @remove="removeItem(idx)" />
+    <v-dialog
+maxWidth="800"
+persistent :modelValue="dialog" @update:model-value="$emit('update:dialog', $event)"
+>
+      <ContactForm :item="editedItem" @cancel="cancelHandler" @submit="submitHandler" />
     </v-dialog>
   </div>
 </template>
@@ -40,9 +33,7 @@ export default {
   setup(props, ctx) {
     const dialog = ref(false)
     const editedItem = ref(null)
-    const emptyContacts = computed(
-      () => !props.items || props.items?.length === 0
-    )
+    const emptyContacts = computed(() => !props.items || props.items?.length === 0)
     function addItem() {
       dialog.value = true
     }
@@ -63,7 +54,7 @@ export default {
       dialog.value = false
       editedItem.value = null
     }
-    
+
     function submitHandler(formState) {
       const tmpItems = [...(props.items || [])]
       if (editedItem.value) tmpItems.splice(editedItem.value.idx, 1, formState)
@@ -87,14 +78,14 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 20px;
-  max-width: 700px;
-}
-.note {
-  font-style: italic;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    max-width: 700px;
+  }
+  .note {
+    font-style: italic;
+  }
 </style>

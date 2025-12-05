@@ -67,7 +67,7 @@ export const useListData = () => {
   }
 
   function onDeleteHandler(itemId) {
-    items.value = items.value.filter((i) => i._id !== itemId)
+    items.value = items.value.filter(i => i._id !== itemId)
   }
 
   async function downloadHandler() {

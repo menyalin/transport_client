@@ -2,43 +2,31 @@
   <v-container fluid class="mb-2">
     <v-row v-if="panelType === 'form'">
       <v-col cols="auto">
-        <v-btn @click="$emit('cancel')"> Отмена </v-btn>
+        <v-btn @click="$emit('cancel')">Отмена</v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn
-          :disabled="disabledSubmit"
-          color="secondary"
-          @click="$emit('submit')"
-        >
+        <v-btn :disabled="disabledSubmit" color="secondary" @click="$emit('submit')">
           {{ submitTitle ? submitTitle : 'Сохранить и закрыть' }}
         </v-btn>
       </v-col>
       <v-col v-if="showSaveBtn" cols="auto">
-        <v-btn icon @click="$emit('save')" :disabled="disabledSubmit">
+        <v-btn icon :disabled="disabledSubmit" @click="$emit('save')">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </v-col>
       <v-col class="slot-wrapper">
-        <slot />
+        <slot></slot>
       </v-col>
     </v-row>
     <v-row v-else-if="panelType === 'list'">
       <v-col cols="auto">
-        <v-btn :disabled="disabledRefresh" @click="$emit('refresh')">
-          Обновить
-        </v-btn>
+        <v-btn :disabled="disabledRefresh" @click="$emit('refresh')">Обновить</v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn
-          :disabled="disabledSubmit"
-          color="secondary"
-          @click="$emit('submit')"
-        >
-          Создать
-        </v-btn>
+        <v-btn :disabled="disabledSubmit" color="secondary" @click="$emit('submit')">Создать</v-btn>
       </v-col>
       <v-col class="slot-wrapper">
-        <slot />
+        <slot></slot>
       </v-col>
     </v-row>
   </v-container>
@@ -61,10 +49,10 @@ export default {
 }
 </script>
 <style>
-.slot-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 15px;
-}
+  .slot-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 15px;
+  }
 </style>

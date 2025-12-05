@@ -1,29 +1,29 @@
 <template>
   <div class="page-wrapper">
     <div class="filters-wrapper">
-      <app-drivers-salary-period v-model="period" />
+      <AppDriversSalaryPeriod v-model="period" />
       <v-select
         v-model="tks"
         :items="$store.getters.tkNames"
         label="ТК"
-        dense
+       
         multiple
-        item-text="name"
-        item-value="_id"
+        itemTitle="name"
+        itemValue="_id"
         clearable
-        hide-details
+        hideDetails
         :style="{ 'max-width': '250px' }"
       />
 
       <v-autocomplete
-        label="Водитель"
         v-model="driver"
+        label="Водитель"
         :items="drivers"
-        item-value="_id"
-        item-text="fullName"
-        hide-details
-        auto-select-first
-        dense
+        itemValue="_id"
+        itemTitle="fullName"
+        hideDetails
+        autoSelectFirst
+       
         clearable
         :style="{ maxWidth: '300px' }"
       />
@@ -31,8 +31,8 @@
         v-model="clients"
         :items="clientItems"
         label="Клиент"
-        dense
-        hide-details
+       
+        hideDetails
         multiple
         :style="{ 'max-width': '250px' }"
       />
@@ -40,23 +40,21 @@
         v-model="consigneeType"
         :items="$store.getters.partnerGroups"
         label="Тип грузополучателя"
-        dense
+       
         clearable
-        hide-details
+        hideDetails
         :style="{ 'max-width': '250px' }"
       />
       <v-select
         v-model="orderType"
         :items="$store.getters.orderAnalyticTypes"
         label="Тип рейса"
-        dense
+       
         clearable
-        hide-details
+        hideDetails
         :style="{ 'max-width': '200px' }"
       />
-      <v-btn color="primary" @click="downloadReportHandler">
-        Скачать в excel
-      </v-btn>
+      <v-btn color="primary" @click="downloadReportHandler">Скачать в excel</v-btn>
     </div>
 
     <DriverSalaryTable
@@ -78,7 +76,7 @@ import { useDebouncedRef } from '@/modules/common/helpers/utils'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
 
-const getInitialPeriod = (historyState) => {
+const getInitialPeriod = historyState => {
   if (historyState.period) return historyState.period
   else return new Date().toISOString()
 }
@@ -98,32 +96,29 @@ export default {
     const orderType = ref(historyState.orderType)
     const period = useDebouncedRef(getInitialPeriod(historyState), 500)
 
-    const { items, isLoading, setListSettings, downloadReportHandler } =
-      useDriversSalaryData({
-        period,
-        driver,
-        clients,
-        orderType,
-        consigneeType,
-        tks,
-      })
+    const { items, isLoading, setListSettings, downloadReportHandler } = useDriversSalaryData({
+      period,
+      driver,
+      clients,
+      orderType,
+      consigneeType,
+      tks,
+    })
 
     const drivers = computed(() => {
       const startPeriod = dayjs(period.value).startOf('month')
       const endPeriod = dayjs(period.value).endOf('month')
       return store.getters.drivers
-        .filter((i) => !!i?.isCalcSalary)
+        .filter(i => !!i?.isCalcSalary)
         .filter(
-          (i) =>
+          i =>
             (!i.dismissalDate || startPeriod.isBefore(i.dismissalDate)) &&
             (!i.employmentDate || endPeriod.isAfter(i.employmentDate))
         )
     })
 
     const clientItems = computed(() => {
-      return store.getters.partners
-        .filter((i) => i.isClient)
-        .map((i) => ({ value: i._id, text: i.name }))
+      return store.getters.partners.filter(i => i.isClient).map(i => ({ value: i._id, text: i.name }))
     })
 
     watch([period, driver, clients, consigneeType, orderType, tks], () => {
@@ -140,7 +135,7 @@ export default {
       )
     })
 
-    addEventListener('popstate', (e) => {
+    addEventListener('popstate', e => {
       period.value = e.state.period
       driver.value = e.state.driver
       clients.value = e.state.clients
@@ -172,25 +167,25 @@ export default {
 }
 </script>
 <style scoped>
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  width: 100%;
-}
-.driver-mode {
-  width: 100%;
-}
-.pivot-mode {
-  min-width: 80%;
-}
-.filters-wrapper {
-  padding-top: 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 30px;
-}
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+  }
+  .driver-mode {
+    width: 100%;
+  }
+  .pivot-mode {
+    min-width: 80%;
+  }
+  .filters-wrapper {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+  }
 </style>

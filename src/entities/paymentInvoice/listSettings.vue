@@ -1,57 +1,58 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="PAYMENT_INVOICE_TABLE_HEADERS"
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
     <v-select
       label="Период по"
-      :value="settings.periodBy"
+      :modelValue="settings.periodBy"
       :items="periodByItems"
-      outlined
-      dense
+      variant="outlined"
+       density="compact"
+     
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'periodBy')"
+      @update:model-value="updateSettings($event, 'periodBy')"
     />
-    <DateRangeInput
-      :period="settings.period"
-      @change="updateSettings($event, 'period')"
-    />
+    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
-      item-value="_id"
+      :modelValue="settings.agreements"
+      itemTitle="name"
+      itemValue="_id"
       label="Соглашения"
       :disabled="agreementItems.length === 0"
-      dense
+     
       clearable
       multiple
-      outlined
+      variant="outlined"
+       density="compact"
       :items="agreementItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
     <v-select
-      :value="settings.statuses"
+      :modelValue="settings.statuses"
       label="Статус"
       multiple
-      dense
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'statuses')"
+      @update:model-value="updateSettings($event, 'statuses')"
     />
     <v-text-field
-      :value="settings.search"
+      :modelValue="settings.search"
       label="Поиск по номеру"
-      dense
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :style="{ maxWidth: '200px' }"
       @change="updateSettings($event, 'search')"
     />
@@ -61,10 +62,7 @@
 <script>
 import { computed, ref, onMounted } from 'vue'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-import {
-  PAYMENT_INVOICE_TABLE_HEADERS,
-  paymentInvoiceStatuses,
-} from '@/shared/constants'
+import { PAYMENT_INVOICE_TABLE_HEADERS, paymentInvoiceStatuses } from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
 export default {
@@ -81,9 +79,7 @@ export default {
   setup(props, ctx) {
     const agreements = ref([])
     const agreementItems = computed(() =>
-      agreements.value
-        .filter((i) => i.isOutsourceAgreement !== true)
-        .sort((a, b) => (a.name < b.name ? -1 : 1))
+      agreements.value.filter(i => i.isOutsourceAgreement !== true).sort((a, b) => (a.name < b.name ? -1 : 1))
     )
 
     const statusItems = computed(() => {
@@ -132,10 +128,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  gap: 15px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 15px;
+  }
 </style>

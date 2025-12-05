@@ -17,31 +17,18 @@ export const useWidgetModel = (props, { emit }) => {
     dialog.value = false
   }
   function editNotifyHandler(id) {
-    const item = props.partner.idleTruckNotifications.find(
-      (notify) => notify._id === id
-    )
+    const item = props.partner.idleTruckNotifications.find(notify => notify._id === id)
     editableItem.value = Object.assign({}, item)
     dialog.value = true
   }
 
   async function submitHandler(formState) {
-    if (!props.partner._id)
-      throw new Error(
-        'IdleTruckNotifyWidget : submitHandler : partnerId is missing'
-      )
+    if (!props.partner._id) throw new Error('IdleTruckNotifyWidget : submitHandler : partnerId is missing')
     loading.value = true
     let updatedPartner
     if (formState._id)
-      updatedPartner = await PartnerService.updateIdleTruckNotify(
-        props.partner._id,
-        formState._id,
-        formState
-      )
-    else
-      updatedPartner = await PartnerService.addIdleTruckNotify(
-        props.partner._id,
-        formState
-      )
+      updatedPartner = await PartnerService.updateIdleTruckNotify(props.partner._id, formState._id, formState)
+    else updatedPartner = await PartnerService.addIdleTruckNotify(props.partner._id, formState)
 
     emit('change', updatedPartner.idleTruckNotifications)
     cancelHandler()

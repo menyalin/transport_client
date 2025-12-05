@@ -1,35 +1,37 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="DOCS_REGISTRY_TABLE_HEADERS"
       listSettingsName="docsRegistrySettings"
       @change="updateHeadersHandler"
     />
 
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
-      item-value="_id"
+      :modelValue="settings.clients"
+      itemTitle="name"
+      itemValue="_id"
       label="Клиенты"
-      dense
+     
       clearable
       multiple
-      outlined
+      variant="outlined"
+       density="compact"
       :items="clientItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'clients')"
+      @update:model-value="updateSettings($event, 'clients')"
     />
     <v-select
-      :value="settings.status"
+      :modelValue="settings.status"
       label="Статус"
-      dense
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'status')"
+      @update:model-value="updateSettings($event, 'status')"
     />
   </div>
 </template>
@@ -53,7 +55,7 @@ export default {
 
   setup(props, ctx) {
     const clientItems = computed(() => {
-      return store.getters.partners.filter((i) => i.isClient)
+      return store.getters.partners.filter(i => i.isClient)
     })
 
     const statusItems = computed(() => {
@@ -78,10 +80,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  gap: 15px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 15px;
+  }
 </style>

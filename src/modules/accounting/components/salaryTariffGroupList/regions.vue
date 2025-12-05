@@ -1,8 +1,8 @@
 <template>
   <span>
-    <b>{{ regionsMap.get(item.loadingRegion).name }} </b>
+    <b>{{ regionsMap.get(item.loadingRegion).name }}</b>
     >>>
-    <b>{{ regionsMap.get(item.unloadingRegion).name }} </b>
+    <b>{{ regionsMap.get(item.unloadingRegion).name }}</b>
   </span>
 </template>
 <script>

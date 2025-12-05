@@ -4,7 +4,7 @@ import router from '@/router'
 import socket from '@/socket'
 import { IncomingInvoiceService } from '@/shared/services'
 
-export const useItemData = (props) => {
+export const useItemData = props => {
   const { proxy } = getCurrentInstance()
 
   const item = ref({})
@@ -14,9 +14,7 @@ export const useItemData = (props) => {
 
   const disabledPickOrders = computed(() => !item.value?._id)
 
-  const needUpdateRows = computed(() =>
-    item.value.orders.some((i) => i.needUpdate)
-  )
+  const needUpdateRows = computed(() => item.value.orders.some(i => i.needUpdate))
 
   const disabledMainFields = computed(() => {
     return item.value.orders?.length > 0
@@ -107,17 +105,11 @@ export const useItemData = (props) => {
   async function savePayDateHandler(date) {
     try {
       loading.value = true
-      const updatedItem = await IncomingInvoiceService.setPayDate(
-        props.id,
-        date
-      )
+      const updatedItem = await IncomingInvoiceService.setPayDate(props.id, date)
       item.value = { ...item.value, ...updatedItem }
     } catch (e) {
       console.log('Ошибка при сохранении даты оплаты: ', e)
-      proxy.$store.commit(
-        'setError',
-        `Ошибка при сохранении даты оплаты: ${e.message}`
-      )
+      proxy.$store.commit('setError', `Ошибка при сохранении даты оплаты: ${e.message}`)
     } finally {
       loading.value = false
     }
@@ -133,15 +125,13 @@ export const useItemData = (props) => {
   function removeOrders({ paymentInvoiceId, rowIds }) {
     if (paymentInvoiceId !== item.value._id) return null
 
-    item.value.orders = item.value.orders.filter(
-      (i) => !rowIds.includes(i.rowId)
-    )
+    item.value.orders = item.value.orders.filter(i => !rowIds.includes(i.rowId))
   }
 
   async function updateItemPrice(itemId) {
     // Обновить цены по рейсы в акте
     const res = await IncomingInvoiceService.updatePrices(itemId)
-    const orderIdx = item.value.orders.findIndex((i) => itemId === i._id)
+    const orderIdx = item.value.orders.findIndex(i => itemId === i._id)
     item.value.orders.splice(orderIdx, 1, res)
   }
   watch(() => props.id, getItem, { immediate: true, deep: true })

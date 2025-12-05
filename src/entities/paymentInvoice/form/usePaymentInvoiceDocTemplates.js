@@ -11,30 +11,18 @@ export const usePaymentInvoiceDocTemplates = (formState, props) => {
     const invoiceId = props.item?._id
     const filename = `${template.filenamePattern} №${formState.value.number} ${formState.value.date}`
     if (!invoiceId) {
-      store.commit(
-        'setError',
-        'PaymentInvoice : download PF handler : invoice id is missing'
-      )
-      throw new Error(
-        'PaymentInvoice : download PF handler : invoice id is missing'
-      )
+      store.commit('setError', 'PaymentInvoice : download PF handler : invoice id is missing')
+      throw new Error('PaymentInvoice : download PF handler : invoice id is missing')
     }
 
-    await PaymentInvoiceService.downloadDoc(
-      props.item._id,
-      { templateName: template.templateName },
-      filename
-    )
+    await PaymentInvoiceService.downloadDoc(props.item._id, { templateName: template.templateName }, filename)
   }
 
   async function getAllowedPrintForms() {
     if (!formState.value.client || !formState.value.agreement) return
     const agreement = formState.value.agreement
     const client = formState.value.client
-    newDocTemplates.value = await PaymentInvoiceService.getAllowedPrintForms(
-      agreement,
-      client
-    )
+    newDocTemplates.value = await PaymentInvoiceService.getAllowedPrintForms(agreement, client)
   }
 
   async function getTemplates() {

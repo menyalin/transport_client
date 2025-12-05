@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
+        <ButtonsPanel
+          panelType="list"
           :disabledSubmit="!$store.getters.hasPermission('agreement:write')"
           @submit="create"
           @refresh="refresh"
@@ -11,26 +11,24 @@
         <AgreementListSettings v-model="settings" />
 
         <v-data-table
+          v-model:options="listOptions"
           :headers="headers"
           :items="filteredList"
           :loading="loading"
           height="73vh"
-          dense
-          fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
+         
+          fixedHeader
+          :itemsLength="count"
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.type`]="{ item }">
             <span>{{ downtimeTypesHash[item.type] }}</span>
           </template>
           <template #[`item.truck`]="{ item }">
-            <span>{{
-              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
-            }}</span>
+            <span>{{ trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-' }}</span>
           </template>
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
@@ -67,22 +65,15 @@ export default {
       },
       'agreement_list_options'
     )
-    const settings = usePersistedRef(
-      { search: null, executor: null },
-      'agreement_list_settings'
-    )
+    const settings = usePersistedRef({ search: null, executor: null }, 'agreement_list_settings')
     const queryParams = computed(() => ({
       company: proxy.$store.getters.directoriesProfile,
       skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
       executor: settings.value.executor,
       search: settings.value.search,
       limit: listOptions.value.itemsPerPage,
-      sortBy: listOptions.value.sortBy.length
-        ? listOptions.value.sortBy[0]
-        : null,
-      sortDesc: listOptions.value.sortDesc.length
-        ? listOptions.value.sortDesc[0]
-        : null,
+      sortBy: listOptions.value.sortBy.length ? listOptions.value.sortBy[0] : null,
+      sortDesc: listOptions.value.sortDesc.length ? listOptions.value.sortDesc[0] : null,
     }))
 
     async function getData() {
@@ -144,10 +135,8 @@ export default {
   computed: {
     filteredList() {
       if (!this.list) return []
-      return this.list.map((i) => {
-        const vatRateText = this.$store.getters.vatRates.filter(
-          (vR) => vR.value === i.vatRate
-        )[0]?.text
+      return this.list.map(i => {
+        const vatRateText = this.$store.getters.vatRates.filter(vR => vR.value === i.vatRate)[0]?.text
         return {
           ...i,
           date: new Date(i.date).toLocaleDateString(),

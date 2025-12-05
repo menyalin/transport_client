@@ -40,11 +40,7 @@ export const useForm = (props, ctx, hasOrders) => {
   })
 
   const allowToChangeStatus = computed(() => {
-    if (
-      state.value.status !== 'paid' ||
-      proxy.$store.getters.hasPermission('changeIncomingInvoiceStatus')
-    )
-      return true
+    if (state.value.status !== 'paid' || proxy.$store.getters.hasPermission('changeIncomingInvoiceStatus')) return true
 
     return false
   })
@@ -54,11 +50,7 @@ export const useForm = (props, ctx, hasOrders) => {
   })
 
   const isVisiblePayInvoiceBtn = computed(() => {
-    return (
-      !isVisiblePayDateField.value &&
-      state.value.status === 'toPay' &&
-      hasOrders.value
-    )
+    return !isVisiblePayDateField.value && state.value.status === 'toPay' && hasOrders.value
   })
 
   function savePayDateHandler() {
@@ -103,7 +95,7 @@ export const useForm = (props, ctx, hasOrders) => {
 
   watch(
     () => props.item,
-    (item) => {
+    item => {
       if (!item) return
       setFormState(item)
     },

@@ -1,10 +1,8 @@
 <template>
   <div>
-    <buttons-panel
-      panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('agreement:write') || isInvalidForm
-      "
+    <ButtonsPanel
+      panelType="form"
+      :disabledSubmit="!$store.getters.hasPermission('agreement:write') || isInvalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
     />
@@ -14,9 +12,10 @@
           v-model="state.name"
           class="mt-3"
           label="Название"
-          outlined
+          variant="outlined"
           :style="{ 'max-width': '500px' }"
         />
+        density="compact"
         <DateTimeInput
           v-model="state.date"
           label="Дата начала"
@@ -45,9 +44,10 @@
       </div>
       <div class="mb-4">
         <v-text-field
-          label="Наименование исполнителя"
-          outlined
           v-model="state.executorName"
+          label="Наименование исполнителя"
+          variant="outlined"
+          density="compact"
           class="mt-4"
           :style="{ width: '400px' }"
         />
@@ -55,26 +55,25 @@
           v-model="state.executor"
           label="Исполнитель"
           :items="carrierItems"
-          item-value="_id"
-          item-text="name"
-          outlined
-          auto-select-first
+          itemValue="_id"
+          itemTitle="name"
+          variant="outlined"
+          density="compact"
+          autoSelectFirst
           :style="{ width: '400px' }"
         />
         <v-select
+          v-model="state.allowedCarriers"
           multiple
-          outlined
+          variant="outlined"
+          density="compact"
           :items="carriers"
           label="Разрешенные ТК"
           :style="{ width: '500px' }"
-          v-model="state.allowedCarriers"
           chips
-          deletable-chips
+          closableChips
         />
-        <app-clients
-          v-model="state.clients"
-          :style="{ 'max-width': '400px' }"
-        />
+        <AppClients v-model="state.clients" :style="{ 'max-width': '400px' }" />
 
         <v-checkbox
           v-model="state.usePriceWithVAT"
@@ -86,47 +85,47 @@
           v-model="state.calcWaitingByArrivalDateLoading"
           color="primary"
           label="Расчет простоя по фактическому времени прибытия на погрузку"
-          hide-details
+          hideDetails
         />
         <v-checkbox
           v-model="state.calcWaitingByArrivalDateUnloading"
           color="primary"
           label="Расчет простоя по фактическому времени прибытия на выгрузку"
-          hide-details
+          hideDetails
         />
 
         <v-checkbox
           v-model="state.noWaitingPaymentForAreLateLoading"
           color="primary"
           label="Запрет оплаты простоя при опоздании на погрузку"
-          hide-details
+          hideDetails
         />
 
         <v-checkbox
           v-model="state.noWaitingPaymentForAreLateUnloading"
           color="primary"
           label="Запрет оплаты простоя при опоздании на выгрузку"
-          hide-details
+          hideDetails
         />
         <v-divider class="mt-5" />
         <v-checkbox
           v-model="state.priceRequired"
           color="primary"
           label="Обязательно заполнение аукционной цены"
-          hide-details
+          hideDetails
         />
 
         <v-checkbox
           v-model="state.clientNumRequired"
           color="primary"
-          hide-details
+          hideDetails
           label="Обязательно заполнение номера заказа клиента"
         />
 
         <v-checkbox
           v-model="state.auctionNumRequired"
           color="primary"
-          hide-details
+          hideDetails
           label="Обязательно заполнение номера аукциона"
         />
       </div>
@@ -134,101 +133,88 @@
       <v-text-field
         v-model="state.actBasis"
         label="Основание для счета и акта выполненных работ"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
       <v-textarea
-        rows="4"
         v-model="state.actDescription"
+        rows="4"
         label="Примечание для акта выполненных работ"
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
       />
-      <v-text-field v-model="state.note" label="Примечание" outlined dense />
+      <v-text-field v-model="state.note" label="Примечание" variant="outlined" density="compact" />
       <div class="row mb-2">
-        <v-checkbox
-          v-model="state.useCustomPrices"
-          class="pl-2"
-          label="Разрешены индивидуальные тарифы"
-        />
-        <v-checkbox
-          v-model="state.closed"
-          class="pl-6"
-          label="Соглашение закрыто"
-        />
+        <v-checkbox v-model="state.useCustomPrices" class="pl-2" label="Разрешены индивидуальные тарифы" />
+        <v-checkbox v-model="state.closed" class="pl-6" label="Соглашение закрыто" />
       </div>
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start>mdi-delete</v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
 <script>
-import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
-import AppClients from './clients.vue'
-import { useForm } from './useForm'
+  import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
+  import AppClients from './clients.vue'
+  import { useForm } from './useForm'
 
-export default {
-  name: 'AgreementForm',
-  components: {
-    ButtonsPanel,
-    DateTimeInput,
-    AppClients,
-    VatRateSelect,
-  },
-  props: {
-    agreement: {
-      type: Object,
+  export default {
+    name: 'AgreementForm',
+    components: {
+      ButtonsPanel,
+      DateTimeInput,
+      AppClients,
+      VatRateSelect,
     },
-    carrierItems: Array,
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
+    props: {
+      agreement: {
+        type: Object,
+      },
+      carrierItems: Array,
+      displayDeleteBtn: {
+        type: Boolean,
+        default: false,
+      },
+      openInModal: {
+        type: Boolean,
+        default: false,
+      },
     },
-    openInModal: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props, ctx) {
-    const {
-      state,
-      deleteHandler,
-      submitHandler,
-      cancelHandler,
-      isInvalidForm,
-      vatRates,
-      carriers,
-    } = useForm(props, ctx)
+    setup(props, ctx) {
+      const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm, vatRates, carriers } = useForm(
+        props,
+        ctx
+      )
 
-    return {
-      state,
-      deleteHandler,
-      submitHandler,
-      cancelHandler,
-      isInvalidForm,
-      vatRates,
-      carriers,
-    }
-  },
-}
+      return {
+        state,
+        deleteHandler,
+        submitHandler,
+        cancelHandler,
+        isInvalidForm,
+        vatRates,
+        carriers,
+      }
+    },
+  }
 </script>
 <style>
-.row-input {
-  display: flex;
-  flex-direction: row;
-}
-.list-move {
-  transition: transform 1s;
-}
+  .row-input {
+    display: flex;
+    flex-direction: row;
+  }
+  .list-move {
+    transition: transform 1s;
+  }
 
-#title-row {
-  display: flex;
-  flex-direction: row;
-}
-#title-row > * {
-  margin: 10px;
-}
+  #title-row {
+    display: flex;
+    flex-direction: row;
+  }
+  #title-row > * {
+    margin: 10px;
+  }
 </style>

@@ -36,6 +36,4 @@ export const ALL_LIST_HEADERS = [
   { value: 'note', text: 'Примечание', sortable: false, default: true },
 ]
 
-export const DEFAULT_HEADERS = ALL_LIST_HEADERS.filter((i) => i.default).map(
-  (i) => i.value
-)
+export const DEFAULT_HEADERS = ALL_LIST_HEADERS.filter(i => i.default).map(i => i.value)

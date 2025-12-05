@@ -3,10 +3,7 @@
     Входящий акт:
     <router-link :to="url">{{ text }}</router-link>
   </div>
-  <div
-    v-else
-    :style="{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }"
-  >
+  <div v-else :style="{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }">
     <small>Входящий акт не создан</small>
   </div>
 </template>
@@ -20,32 +17,30 @@ export default {
     invoice: Object,
   },
   setup(props) {
-    const statusStr = computed(() =>
-      incomingInvoiceStatusMap.get(props.invoice.status)
-    )
+    const statusStr = computed(() => incomingInvoiceStatusMap.get(props.invoice.status))
+    const url = computed(() => `/accounting/incomingInvoice/${props.invoice?._id}`)
     const text = computed(() => {
       if (props.invoice) {
         return `  ${props.invoice.number} от ${
-          props.invoice.date
-            ? new Date(props.invoice.date).toLocaleDateString()
-            : ''
+          props.invoice.date ? new Date(props.invoice.date).toLocaleDateString() : ''
         } (${statusStr.value})`
       }
+      return ''
     })
     return {
-      url: `/accounting/incomingInvoice/${props?.invoice?._id}`,
+      url,
       text,
     }
   },
 }
 </script>
 <style scoped>
-.block-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  font-weight: bold;
-  gap: 10px;
-}
+  .block-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    font-weight: bold;
+    gap: 10px;
+  }
 </style>

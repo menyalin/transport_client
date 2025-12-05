@@ -1,27 +1,15 @@
 a
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
-    <TariffContractForm
-      :item="item"
-      :agreements="agreementItems"
-      @cancel="cancelHandler"
-      @submit="submitHandler"
-    />
-  </form-wrapper>
+  <FormWrapper :loading="loading" :displayDeleteBtn="showDeleteBtn" @delete="deleteHandler">
+    <TariffContractForm :item="item" :agreements="agreementItems" @cancel="cancelHandler" @submit="submitHandler" />
+  </FormWrapper>
 </template>
 <script>
 import { computed, watch, ref } from 'vue'
 import store from '@/store'
 import router from '@/router'
 import { FormWrapper } from '@/shared/ui'
-import {
-  TariffContractForm,
-  useTariffContract,
-} from '@/entities/tariff_contract'
+import { TariffContractForm, useTariffContract } from '@/entities/tariff_contract'
 import { useAgreements } from '@/entities/agreement'
 export default {
   name: 'TariffContractDetail',
@@ -67,7 +55,7 @@ export default {
     }
     watch(
       () => props.id,
-      async (id) => {
+      async id => {
         if (id) {
           try {
             loading.value = true

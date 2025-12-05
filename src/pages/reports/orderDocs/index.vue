@@ -1,18 +1,11 @@
 <template>
   <div class="page-wrapper">
-    <report-title title="Отчет по не сданным документам" />
-    <report-settings
-      @refresh="refresh"
-      v-model="settings"
-      :allHeaders="allHeaders"
-      @changeHeaders="changeHeaders"
-    />
-    <report-data-table
-      :items="items"
-      :headers="headers"
-      :loading="loading"
-      :statisticData="statisticData"
-    />
+    <ReportTitle title="Отчет по не сданным документам" />
+    <ReportSettings
+v-model="settings"
+:allHeaders="allHeaders" @refresh="refresh" @changeHeaders="changeHeaders"
+/>
+    <ReportDataTable :items="items" :headers="headers" :loading="loading" :statisticData="statisticData" />
   </div>
 </template>
 
@@ -54,10 +47,10 @@ export default {
 </script>
 
 <style scoped>
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 30px;
-}
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+  }
 </style>

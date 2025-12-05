@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { onMounted, ref, computed } from 'vue'
 import { IncomingInvoiceService } from '@/shared/services'
 
-export const usePrintForms = (props) => {
+export const usePrintForms = props => {
   const templates = ref([])
   const downloadDisabled = ref(false)
 
@@ -20,11 +20,7 @@ export const usePrintForms = (props) => {
     if (!invoiceId) return
     const filename = `${template.filenamePattern} №${invoiceNumber} от ${invoiceDate}`
 
-    await IncomingInvoiceService.downloadDoc(
-      invoiceId,
-      { templateName: template.templateName },
-      filename
-    )
+    await IncomingInvoiceService.downloadDoc(invoiceId, { templateName: template.templateName }, filename)
   }
 
   onMounted(async () => {

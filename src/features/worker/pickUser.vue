@@ -2,9 +2,10 @@
   <div>
     <v-text-field
       v-model="emailStr"
-      dense
+     
       label="Поиск пользователя по EMAIL"
-      outlined
+      variant="outlined"
+       density="compact"
       clearable
       :disabled="loading"
       :loading="loading"
@@ -12,7 +13,8 @@
       @change="changeHandler"
     />
     <div v-if="candidate.name" class="text-h5 mb-5">
-      <small>Имя:</small> {{ candidate.name }}
+      <small>Имя:</small>
+      {{ candidate.name }}
     </div>
   </div>
 </template>

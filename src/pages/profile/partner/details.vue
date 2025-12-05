@@ -1,9 +1,5 @@
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
+  <FormWrapper :loading="loading" :displayDeleteBtn="showDeleteBtn" @delete="deleteHandler">
     <PartnerForm
       :item="item"
       :clientAgreements="allClientAgreements"
@@ -12,7 +8,7 @@
       @save="submit($event, true)"
       @changeNotifications="changeNotificationsHandler"
     />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 <script>
 import { computed, getCurrentInstance } from 'vue'
@@ -34,9 +30,7 @@ export default {
   setup(props) {
     const { allClientAgreements } = useAgreements()
     const { proxy } = getCurrentInstance()
-    const showDeleteBtn = computed(
-      () => !!props?.id && proxy.$store.getters.hasPermission('partner:delete')
-    )
+    const showDeleteBtn = computed(() => !!props?.id && proxy.$store.getters.hasPermission('partner:delete'))
     return { allClientAgreements, showDeleteBtn }
   },
   data() {
@@ -51,64 +45,63 @@ export default {
       },
     }
   },
-  methods: {
-    toggleAlert() {
-      this.error = {
-        show: false,
-        message: null,
-      }
+    watch: {
+      id: {
+        immediate: true,
+        handler: async function (newVal, oldVal) {
+          if (newVal && newVal !== oldVal) {
+            this.loading = true
+            this.item = await this.service.getById(newVal)
+            this.loading = false
+          }
+        },
+      },
     },
-    async submit(val, saveOnly) {
-      try {
-        this.loading = true
-        if (this.id) this.item = await this.service.updateOne(this.id, val)
-        else this.item = await this.service.create(val)
-
-        if (saveOnly && !this.id)
-          this.$router.replace(`/profile/partners/${this.item._id}`)
-        else if (!saveOnly) this.$router.go(-1)
-      } catch (e) {
-        if (e.response.status === 400 || e.response.status === 403) {
-          this.error.message = e.response.data
-          this.error.show = true
+    methods: {
+      toggleAlert() {
+        this.error = {
+          show: false,
+          message: null,
         }
-      } finally {
-        this.loading = false
-      }
-    },
-    cancel() {
-      this.$router.go(-1)
-    },
-    changeNotificationsHandler(items) {
-      this.item = {
-        ...this.item,
-        idleTruckNotifications: [...items],
-      }
-    },
-    async deleteHandler() {
-      try {
-        this.loading = true
-        await this.service.deleteById(this.id)
-        this.loading = false
-        this.$router.push('/profile/partners')
-      } catch (e) {
-        this.loading = false
-        this.$store.commit('setError', e.message)
-      }
-    },
-  },
-  watch: {
-    id: {
-      immediate: true,
-      handler: async function (newVal, oldVal) {
-        if (newVal && newVal !== oldVal) {
+      },
+      async submit(val, saveOnly) {
+        try {
           this.loading = true
-          this.item = await this.service.getById(newVal)
+          if (this.id) this.item = await this.service.updateOne(this.id, val)
+          else this.item = await this.service.create(val)
+
+          if (saveOnly && !this.id) this.$router.replace(`/profile/partners/${this.item._id}`)
+          else if (!saveOnly) this.$router.go(-1)
+        } catch (e) {
+          if (e.response.status === 400 || e.response.status === 403) {
+            this.error.message = e.response.data
+            this.error.show = true
+          }
+        } finally {
           this.loading = false
         }
       },
+      cancel() {
+        this.$router.go(-1)
+      },
+      changeNotificationsHandler(items) {
+        this.item = {
+          ...this.item,
+          idleTruckNotifications: [...items],
+        }
+      },
+      async deleteHandler() {
+        try {
+          this.loading = true
+          await this.service.deleteById(this.id)
+          this.loading = false
+          this.$router.push('/profile/partners')
+        } catch (e) {
+          this.loading = false
+          this.$store.commit('setError', e.message)
+        }
+      },
     },
-  },
 }
 </script>
 <style></style>

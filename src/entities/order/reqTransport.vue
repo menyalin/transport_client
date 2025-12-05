@@ -6,40 +6,44 @@
     <div class="req-transport-block">
       <v-select
         v-if="!hideLiftCapacityField"
-        :value="reqTransport.liftCapacity"
+        :modelValue="reqTransport?.liftCapacity"
         :items="liftCapacityTypes"
-        :error-messages="liftCapacityErrors"
-        outlined
-        dense
+        :errorMessages="liftCapacityErrors"
+        variant="outlined"
+       density="compact"
+       
         label="Груз-ть"
-        @change="change($event, 'liftCapacity')"
+        @update:model-value="change($event, 'liftCapacity')"
       />
       <v-select
         v-if="!hideTruckKindField"
-        :value="reqTransport.kind"
+        :modelValue="reqTransport?.kind"
         :items="truckKinds"
-        :error-messages="truckKindErrors"
-        outlined
-        dense
+        :errorMessages="truckKindErrors"
+        variant="outlined"
+       density="compact"
+       
         label="Вид ТС"
-        @change="change($event, 'kind')"
+        @update:model-value="change($event, 'kind')"
       />
 
       <v-select
         v-if="!hideLoadDirectionField"
-        :value="reqTransport.loadDirection"
+        :modelValue="reqTransport?.loadDirection"
         :items="loadDirection"
-        outlined
-        dense
-        hide-details
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         label="Загрузка"
-        @change="change($event, 'loadDirection')"
+        @update:model-value="change($event, 'loadDirection')"
       />
       <v-checkbox
         dense
-        hide-details
+        hideDetails
         label="Гидроборт"
-        v-model="reqTransport.tailLift"
+        :modelValue="reqTransport?.tailLift"
+        @update:model-value="change($event, 'tailLift')"
       />
     </div>
   </div>
@@ -58,7 +62,15 @@ export default {
     event: 'change',
   },
   props: {
-    reqTransport: Object,
+    reqTransport: {
+      type: Object,
+      default: () => ({
+        kind: null,
+        liftCapacity: null,
+        loadDirection: null,
+        tailLift: false,
+      }),
+    },
     title: String,
   },
   data() {
@@ -80,37 +92,27 @@ export default {
     },
     liftCapacityErrors() {
       const errors = []
-      if (!this.reqTransport?.liftCapacity)
-        errors.push('Поле не может быть пустым')
+      if (!this.reqTransport?.liftCapacity) errors.push('Поле не может быть пустым')
       return errors
     },
     companySettings() {
       return this.$store.getters.companySettings
     },
     hideLoadDirectionField() {
-      return (
-        this.companySettings.loadDirections.length === 1 &&
-        !!this.companySettings.defaultLoadDirection
-      )
+      return this.companySettings.loadDirections.length === 1 && !!this.companySettings.defaultLoadDirection
     },
     hideLiftCapacityField() {
-      return (
-        this.companySettings.liftCapacityTypes.length === 1 &&
-        !!this.companySettings.defaultLiftCapacity
-      )
+      return this.companySettings.liftCapacityTypes.length === 1 && !!this.companySettings.defaultLiftCapacity
     },
     hideTruckKindField() {
-      return (
-        this.companySettings.truckKinds.length === 1 &&
-        !!this.companySettings.defaultTruckKind
-      )
+      return this.companySettings.truckKinds.length === 1 && !!this.companySettings.defaultTruckKind
     },
   },
   watch: {
     reqTransport: {
       immediate: true,
       handler: function (val) {
-        if (val.kind || val.liftCapacity) {
+        if (val?.kind || val?.liftCapacity) {
           this.params.kind = val.kind
           this.params.liftCapacity = val.liftCapacity
           this.params.loadDirection = val.loadDirection || 'rear'
@@ -133,11 +135,11 @@ export default {
 }
 </script>
 <style scoped>
-.req-transport-block {
-  display: grid;
-  grid-template-columns: 200px 200px 160px;
-  margin: 10px 0 0 10px;
+  .req-transport-block {
+    display: grid;
+    grid-template-columns: 200px 200px 160px;
+    margin: 10px 0 0 10px;
 
-  gap: 15px;
-}
+    gap: 15px;
+  }
 </style>

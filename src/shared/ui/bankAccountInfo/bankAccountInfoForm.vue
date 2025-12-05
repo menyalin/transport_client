@@ -1,14 +1,10 @@
 <template>
   <div class="wrapper">
     <div v-if="showTitle" class="text-h6">Банковские реквизиты:</div>
-    <v-text-field label="Расчетный счет" v-model="state.accountNumber" dense />
-    <v-text-field label="Банк" v-model="state.bankName" dense />
-    <v-text-field label="БИК" v-model="state.bankCode" dense />
-    <v-text-field
-      label="Корр.счет"
-      v-model="state.correspondentAccount"
-      dense
-    />
+    <v-text-field v-model="state.accountNumber" label="Расчетный счет" />
+    <v-text-field v-model="state.bankName" label="Банк" />
+    <v-text-field v-model="state.bankCode" label="БИК" />
+    <v-text-field v-model="state.correspondentAccount" label="Корр.счет" />
   </div>
 </template>
 <script>
@@ -58,7 +54,7 @@ export default {
     )
     watch(
       state,
-      (val) => {
+      val => {
         ctx.emit('change', val)
       },
       { deep: true }
@@ -69,11 +65,11 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 20px;
-  max-width: 700px;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    max-width: 700px;
+  }
 </style>

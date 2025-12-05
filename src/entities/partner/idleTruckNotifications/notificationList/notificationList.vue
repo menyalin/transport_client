@@ -1,23 +1,15 @@
 <template>
-  <v-data-table
-    :items="filteredItems"
-    :headers="headers"
-    :itemsPerPage="-1"
-    :search="listSettings.searchStr"
-  >
+  <v-data-table :items="filteredItems" :headers="headers" :itemsPerPage="-1"
+:search="listSettings.searchStr">
     <template #top>
       <div class="list-settings">
         <v-select
+          v-model="listSettings.isActive"
           label="Состояние"
           :items="isActiveComparatorItems"
-          v-model="listSettings.isActive"
           :style="{ 'max-width': '250px' }"
         />
-        <v-text-field
-          v-model="listSettings.searchStr"
-          label="Поиск"
-          :style="{ 'max-width': '350px' }"
-        />
+        <v-text-field v-model="listSettings.searchStr" label="Поиск" :style="{ 'max-width': '350px' }" />
       </div>
     </template>
 
@@ -26,22 +18,15 @@
       <v-icon v-else color="black">mdi-minus</v-icon>
     </template>
     <template #[`item.isActive`]="{ item }">
-      <div
-        @click="switchStatus(item._id, item.isActive)"
-        :style="{ cursor: 'pointer' }"
-      >
+      <div :style="{ cursor: 'pointer' }" @click="switchStatus(item._id, item.isActive)">
         <v-icon v-if="item.isActive" color="green">mdi-check</v-icon>
         <v-icon v-else color="black">mdi-minus</v-icon>
       </div>
     </template>
     <template #[`item.active`]="{ item }">
       <div :style="{ display: 'flex', alignItems: 'center', gap: '15px' }">
-        <v-icon small color="green" @click="editHandler(item._id)">
-          mdi-pencil
-        </v-icon>
-        <v-icon small color="red" @click="removeItem(item._id)">
-          mdi-delete
-        </v-icon>
+        <v-icon size="small" color="green" @click="editHandler(item._id)">mdi-pencil</v-icon>
+        <v-icon size="small" color="red" @click="removeItem(item._id)">mdi-delete</v-icon>
       </div>
     </template>
   </v-data-table>
@@ -60,14 +45,8 @@ export default {
     },
   },
   setup(props, ctx) {
-    const {
-      deleteHandler,
-      editHandler,
-      switchStatusHandler,
-      filteredItems,
-      isActiveComparatorItems,
-      listSettings,
-    } = useListData(props, ctx)
+    const { deleteHandler, editHandler, switchStatusHandler, filteredItems, isActiveComparatorItems, listSettings } =
+      useListData(props, ctx)
     return {
       headers,
       deleteHandler,
@@ -82,9 +61,7 @@ export default {
     async switchStatus(id, currentStatus) {
       if (!currentStatus) this.switchStatusHandler(id)
       else {
-        const res = await this.$confirm(
-          'Уверены? Выключение уведомления отменит созданные задачи'
-        )
+        const res = await this.$confirm('Уверены? Выключение уведомления отменит созданные задачи')
         if (!res) return
         this.switchStatusHandler(id)
       }
@@ -97,19 +74,19 @@ export default {
 }
 </script>
 <style scoped>
-.notification_list_wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: flex-start;
-}
-.list-settings {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 15px;
-}
+  .notification_list_wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .list-settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+  }
 </style>

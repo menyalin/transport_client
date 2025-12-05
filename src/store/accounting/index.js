@@ -28,25 +28,20 @@ export default {
   actions: {},
   getters: {
     documentTypes: ({ documentTypes }) => documentTypes,
-    documentTypesMap: ({ documentTypes }) =>
-      new Map(documentTypes.map((i) => [i.value, i.text])),
+    documentTypesMap: ({ documentTypes }) => new Map(documentTypes.map(i => [i.value, i.text])),
 
     documentStatuses: ({ documentStatuses }) => documentStatuses,
-    documentStatusesMap: ({ documentStatuses }) =>
-      new Map(documentStatuses.map((i) => [i.value, i.text])),
+    documentStatusesMap: ({ documentStatuses }) => new Map(documentStatuses.map(i => [i.value, i.text])),
 
     salaryTariffTypes: ({ salaryTariffTypes }) => salaryTariffTypes,
-    salaryTariffTypesMap: ({ salaryTariffTypes }) =>
-      new Map(salaryTariffTypes.map((i) => [i.value, i.text])),
+    salaryTariffTypesMap: ({ salaryTariffTypes }) => new Map(salaryTariffTypes.map(i => [i.value, i.text])),
 
     docsRegistryStatuses: ({ docsRegistryStatuses }) => docsRegistryStatuses,
-    docsRegistryStatusesMap: ({ docsRegistryStatuses }) =>
-      new Map(docsRegistryStatuses.map((i) => [i.value, i.text])),
+    docsRegistryStatusesMap: ({ docsRegistryStatuses }) => new Map(docsRegistryStatuses.map(i => [i.value, i.text])),
 
-    paymentInvoiceStatuses: ({ paymentInvoiceStatuses }) =>
-      paymentInvoiceStatuses,
+    paymentInvoiceStatuses: ({ paymentInvoiceStatuses }) => paymentInvoiceStatuses,
     paymentInvoiceStatusesMap: ({ paymentInvoiceStatuses }) =>
-      new Map(paymentInvoiceStatuses.map((i) => [i.value, i.text])),
+      new Map(paymentInvoiceStatuses.map(i => [i.value, i.text])),
   },
   modules: { TariffContractStore },
 }

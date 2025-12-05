@@ -2,7 +2,7 @@ import { ref, watch, computed, getCurrentInstance } from 'vue'
 
 import { CarrierAgreementService } from '@/shared/services'
 
-export const useItemData = (props) => {
+export const useItemData = props => {
   const { proxy } = getCurrentInstance()
   const item = ref(null)
   let loading = ref(false)
@@ -10,10 +10,7 @@ export const useItemData = (props) => {
   const errorMessage = ref('')
 
   const showDeleteBtn = computed(() => {
-    return (
-      !!props?.id &&
-      proxy.$store.getters.hasPermission('carrierAgreement:delete')
-    )
+    return !!props?.id && proxy.$store.getters.hasPermission('carrierAgreement:delete')
   })
 
   async function getItem() {
@@ -42,10 +39,7 @@ export const useItemData = (props) => {
     const itemId = props.id ? props.id : item.value?._id
     try {
       if (itemId) {
-        updatedItem = await CarrierAgreementService.updateOne(
-          itemId,
-          updateState
-        )
+        updatedItem = await CarrierAgreementService.updateOne(itemId, updateState)
       } else {
         updatedItem = await CarrierAgreementService.create(updateState)
         if (saveOnly)

@@ -27,7 +27,7 @@ export default {
           this.loading = false
           this.$router.push({ name: 'DriverList' })
         })
-        .catch((e) => {
+        .catch(e => {
           this.loading = false
           this.$store.commit('setError', e)
         })

@@ -1,16 +1,12 @@
 <template>
-  <form-wrapper
+  <FormWrapper
     :loading="loading"
-    @delete="deleteHandler"
     :displayDeleteBtn="!!id && $store.getters.hasPermission('worker:delete')"
+    @delete="deleteHandler"
   >
-    <worker-form :item="worker" @cancel="cancel" @submit="submit" />
-    <linked-user
-      v-if="id"
-      :worker="worker"
-      @updateWorker="updateWorkerHandler"
-    />
-  </form-wrapper>
+    <WorkerForm :item="worker" @cancel="cancel" @submit="submit" />
+    <LinkedUser v-if="id" :worker="worker" @updateWorker="updateWorkerHandler" />
+  </FormWrapper>
 </template>
 <script>
 import { ref } from 'vue'
@@ -51,7 +47,7 @@ export default {
       worker.value = updatedWorker
     }
 
-    const submit = async (val) => {
+    const submit = async val => {
       try {
         if (props.id) await WorkerService.updateOne(props.id, val)
         else await WorkerService.create(val)
@@ -70,9 +66,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           await WorkerService.deleteById(this.id)

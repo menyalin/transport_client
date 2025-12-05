@@ -6,16 +6,16 @@ const WS_ITEM_NAME = 'region'
 
 class RegionService {
   constructor() {
-    socket.on(WS_ITEM_NAME + ':created', (data) => {
+    socket.on(WS_ITEM_NAME + ':created', data => {
       store.commit('addRegion', data)
       store.commit('addToCache', data)
     })
 
-    socket.on(WS_ITEM_NAME + ':updated', (data) => {
+    socket.on(WS_ITEM_NAME + ':updated', data => {
       store.commit('updateRegion', data)
       store.commit('addToCache', data)
     })
-    socket.on(WS_ITEM_NAME + ':deleted', (id) => {
+    socket.on(WS_ITEM_NAME + ':deleted', id => {
       store.commit('deleteRegion', id)
       store.commit('deleteFromCache', id)
     })
@@ -35,14 +35,12 @@ class RegionService {
 
   async getByDirectoriesProfile(profile) {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
+    if (!Array.isArray(data)) throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

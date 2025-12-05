@@ -52,9 +52,7 @@ export default {
       this.$router.go(-1)
     },
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         this.loading = true
         await DriverService.deleteById(this.id)

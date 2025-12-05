@@ -18,20 +18,14 @@ export default {
   },
   setup(props) {
     const showBlock = computed(() => {
-      return (
-        props.items &&
-        props.items.length > 0 &&
-        store.getters.hasPermission('paymentInvoice:readItem')
-      )
+      return props.items && props.items.length > 0 && store.getters.hasPermission('paymentInvoice:readItem')
     })
     const links = computed(() => {
-      return props.items?.map((invoice) => ({
+      return props.items?.map(invoice => ({
         url: '/accounting/paymentInvoice/' + invoice._id,
         text:
           (invoice.number ? invoice.number : 'б/н') +
-          (invoice.date
-            ? ' от ' + new Date(invoice.date).toLocaleDateString()
-            : ''),
+          (invoice.date ? ' от ' + new Date(invoice.date).toLocaleDateString() : ''),
       }))
     })
     return {
@@ -42,11 +36,11 @@ export default {
 }
 </script>
 <style scoped>
-.block-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  font-weight: bold;
-}
+  .block-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    font-weight: bold;
+  }
 </style>

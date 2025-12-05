@@ -13,7 +13,7 @@
 import dayjs from 'dayjs'
 
 export default {
-  name: 'DowntimeCell',
+  name: 'AppDowntimeCell',
   props: {
     itemId: String,
   },
@@ -43,31 +43,31 @@ export default {
 }
 </script>
 <style scoped>
-.downtime-wrapper {
-  height: 100%;
-  width: 100%;
-  border: 1px dotted rgb(80, 80, 80);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  user-select: none;
-}
-.row-text {
-  padding-left: 3px;
-  overflow: hidden;
-  user-select: none;
-  white-space: nowrap;
-  overflow: hidden;
-  font-size: 11px;
-  line-height: 11px;
-  letter-spacing: -0.023em;
-  white-space: nowrap;
-  font-weight: 300;
-}
-.holiday {
-  background-color: sandybrown;
-}
-.repair {
-  background-color: rgb(185, 184, 184);
-}
+  .downtime-wrapper {
+    height: 100%;
+    width: 100%;
+    border: 1px dotted rgb(80, 80, 80);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    user-select: none;
+  }
+  .row-text {
+    padding-left: 3px;
+    overflow: hidden;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 11px;
+    letter-spacing: -0.023em;
+    white-space: nowrap;
+    font-weight: 300;
+  }
+  .holiday {
+    background-color: sandybrown;
+  }
+  .repair {
+    background-color: rgb(185, 184, 184);
+  }
 </style>

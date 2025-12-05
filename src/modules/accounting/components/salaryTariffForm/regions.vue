@@ -5,21 +5,23 @@
       v-model="tmpPoints.loadingRegion"
       label="Регион погрузки"
       :items="$store.getters.regions"
-      item-value="_id"
-      item-text="name"
-      dense
-      outlined
-      hide-details
+      itemValue="_id"
+      itemTitle="name"
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-autocomplete
       v-model="tmpPoints.unloadingRegion"
       label="Регион разгрузки"
-      dense
-      item-value="_id"
-      item-text="name"
-      outlined
+     
+      itemValue="_id"
+      itemTitle="name"
+      variant="outlined"
+       density="compact"
       :items="$store.getters.regions"
-      hide-details
+      hideDetails
     />
   </div>
 </template>
@@ -66,9 +68,9 @@ export default {
 }
 </script>
 <style scoped>
-#zones-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #zones-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 </style>

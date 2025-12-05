@@ -15,13 +15,9 @@ export const useCarriers = (settings = {}) => {
     }
   })
 
-  const ownCarriers = computed(() =>
-    proxy.$store.getters.tkNames.filter((i) => !i.outsource)
-  )
+  const ownCarriers = computed(() => proxy.$store.getters.tkNames.filter(i => !i.outsource))
 
-  const outsourceCarriers = computed(() =>
-    proxy.$store.getters.tkNames.filter((i) => i.outsource)
-  )
+  const outsourceCarriers = computed(() => proxy.$store.getters.tkNames.filter(i => i.outsource))
 
   async function getItems(params) {
     try {
@@ -47,9 +43,6 @@ export const useCarriers = (settings = {}) => {
     refresh: getItems,
     ownCarriers,
     outsourceCarriers,
-    allCarriers: computed(() => [
-      ...ownCarriers.value,
-      ...outsourceCarriers.value,
-    ]),
+    allCarriers: computed(() => [...ownCarriers.value, ...outsourceCarriers.value]),
   }
 }

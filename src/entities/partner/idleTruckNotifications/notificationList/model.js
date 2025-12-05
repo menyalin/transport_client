@@ -31,38 +31,27 @@ export const useListData = (props, { emit }) => {
   const filteredItems = computed(() => {
     return (
       props.items
-        .map((i) => ({
+        .map(i => ({
           ...i,
-          addresses: i.addresses
-            .map((a) => addressesMap.value.get(a)?.shortName || '__')
-            .join(', '),
-          agreement: i.agreement
-            ? allAgreementMap.value.get(i.agreement)?.name
-            : null,
+          addresses: i.addresses.map(a => addressesMap.value.get(a)?.shortName || '__').join(', '),
+          agreement: i.agreement ? allAgreementMap.value.get(i.agreement)?.name : null,
         }))
         ?.filter(isActiveComparator) ?? []
     )
   })
 
   async function switchStatusHandler(notificationId) {
-    const item = props.items.find((i) => i._id === notificationId)
+    const item = props.items.find(i => i._id === notificationId)
     if (!item) return
-    const partner = await PartnerService.updateIdleTruckNotify(
-      props.partnerId,
-      notificationId,
-      {
-        ...item,
-        isActive: !item.isActive,
-      }
-    )
+    const partner = await PartnerService.updateIdleTruckNotify(props.partnerId, notificationId, {
+      ...item,
+      isActive: !item.isActive,
+    })
     emit('change', partner.idleTruckNotifications)
   }
 
   async function deleteHandler(id) {
-    const partner = await PartnerService.deleteIdleTruckNotify(
-      props.partnerId,
-      id
-    )
+    const partner = await PartnerService.deleteIdleTruckNotify(props.partnerId, id)
     emit('change', partner.idleTruckNotifications)
   }
   return {

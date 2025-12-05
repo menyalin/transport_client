@@ -36,10 +36,7 @@ export const useMassOrderUpdate = () => {
 
   function runOrderProcessing() {
     if (!isFilledParams.value && ordersCount.value <= 0) return
-    socket.emit(
-      'mass_update_orders:run_orders_processing',
-      ordersSettings.value
-    )
+    socket.emit('mass_update_orders:run_orders_processing', ordersSettings.value)
   }
 
   function setOrdersCount({ count, key }) {
@@ -71,20 +68,14 @@ export const useMassOrderUpdate = () => {
   onMounted(() => {
     socket.on('mass_update_orders:orders_count', setOrdersCount)
     socket.on('mass_update_orders:order_processing_state', setProcessingState)
-    socket.on(
-      'mass_update_orders:processing_finished',
-      processingFinishedHandler
-    )
+    socket.on('mass_update_orders:processing_finished', processingFinishedHandler)
     socket.on('mass_update_orders:processing_error', errorHandler)
   })
 
   onUnmounted(() => {
     socket.off('mass_update_orders:orders_count', setOrdersCount)
     socket.off('mass_update_orders:order_processing_state', setProcessingState)
-    socket.on(
-      'mass_update_orders:processing_finished',
-      processingFinishedHandler
-    )
+    socket.on('mass_update_orders:processing_finished', processingFinishedHandler)
     socket.off('mass_update_orders:processing_error', errorHandler)
     clearInterval(updatingInterval)
   })

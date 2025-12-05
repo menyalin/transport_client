@@ -1,8 +1,8 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu offsetY :closeOnContentClick="false">
+    <template #activator="{ props }">
+      <v-btn color="primary" v-bind="props" icon>
+        <v-icon size="small">mdi-cog</v-icon>
       </v-btn>
     </template>
     <v-list class="px-2">
@@ -12,9 +12,9 @@
         v-model="tmpHeaders"
         :label="field.text"
         :value="field.value"
-        dense
-        hide-details
-        @change="inputHandler(field.value)"
+       
+        hideDetails
+        @update:model-value="inputHandler(field.value)"
       />
     </v-list>
   </v-menu>
@@ -56,9 +56,7 @@ export default {
   },
   mounted() {
     if (!this.activeHeaders) {
-      const savedHeaders = JSON.parse(
-        localStorage.getItem(this.listSettingsName)
-      )
+      const savedHeaders = JSON.parse(localStorage.getItem(this.listSettingsName))
       if (savedHeaders) this.tmpHeaders = savedHeaders
       else this.tmpHeaders = this.tmpHeaders = this.defaultHeaders
       this.emitActiveHeaders()
@@ -71,11 +69,8 @@ export default {
 
     inputHandler(field) {
       if (this.tmpHeaders.includes(field)) this.tmpHeaders.push(field)
-      else this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
-      localStorage.setItem(
-        this.listSettingsName,
-        JSON.stringify(this.tmpHeaders)
-      )
+      else this.tmpHeaders = this.tmpHeaders.filter(i => i !== field)
+      localStorage.setItem(this.listSettingsName, JSON.stringify(this.tmpHeaders))
       this.$emit('change', this.tmpHeaders)
     },
   },

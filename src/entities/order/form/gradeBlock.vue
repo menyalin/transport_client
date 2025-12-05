@@ -5,25 +5,25 @@
     </div>
     <div class="grade-block">
       <v-rating
-        :value="params.grade"
+        :modelValue="params.grade"
         :readonly="disabled"
         :length="3"
-        large
+        size="large"
         color="red"
-        background-color="grey lighten-1"
-        @input="change($event, 'grade')"
+        @update:model-value="change($event, 'grade')"
       />
 
       <v-text-field
-        hide-details
-        outlined
-        :value="params.note"
+        hideDetails
+        variant="outlined"
+       density="compact"
+        :modelValue="params.note"
         :disabled="disabled"
-        dense
+       
         class="px-3"
         :style="{ width: '100%' }"
         label="Примечание"
-        @input="change($event, 'note')"
+        @update:model-value="change($event, 'note')"
       />
     </div>
   </div>
@@ -76,9 +76,9 @@ export default {
 }
 </script>
 <style scoped>
-.grade-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .grade-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 </style>

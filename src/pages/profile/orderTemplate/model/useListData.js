@@ -6,13 +6,11 @@ function templatesSorting(a, b) {
 
 export const useListData = () => {
   const items = computed(() => {
-    return store.getters.orderTemplates.sort(templatesSorting).map((item) => ({
+    return store.getters.orderTemplates.sort(templatesSorting).map(item => ({
       ...item,
-      clientName:
-        store.getters.partnersMap.get(item.client)?.name || '(__не найден__)',
+      clientName: store.getters.partnersMap.get(item.client)?.name || '(__не найден__)',
       routeType: store.getters.orderAnalyticTypesMap.get(item?.analytics?.type),
-      truckKind:
-        store.getters.truckKindsMap.get(item?.reqTransport.kind) || ' - ',
+      truckKind: store.getters.truckKindsMap.get(item?.reqTransport.kind) || ' - ',
     }))
   })
   const headers = [

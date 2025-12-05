@@ -1,9 +1,7 @@
 <template>
-  <v-simple-table dense>
-    <template>
-      <caption class="text-left text-subtitle-2">
-        Похожие адреса
-      </caption>
+  <v-table>
+    <template #top>
+      <caption class="text-left text-subtitle-2">Похожие адреса</caption>
       <thead>
         <tr>
           <th class="text-left">Название</th>
@@ -25,28 +23,22 @@
           <td>{{ item.label }}</td>
           <td>{{ item.note }}</td>
           <td>
-            <v-icon v-if="item.isShipmentPlace" color="green">
-              mdi-check
-            </v-icon>
-            <v-icon v-else> mdi-minus </v-icon>
+            <v-icon v-if="item.isShipmentPlace" color="green">mdi-check</v-icon>
+            <v-icon v-else>mdi-minus</v-icon>
           </td>
 
           <td>
-            <v-icon v-if="item.isDeliveryPlace" color="green">
-              mdi-check
-            </v-icon>
-            <v-icon v-else> mdi-minus </v-icon>
+            <v-icon v-if="item.isDeliveryPlace" color="green">mdi-check</v-icon>
+            <v-icon v-else>mdi-minus</v-icon>
           </td>
           <td>
-            <router-link :to="'/profile/address/' + item._id">
-              Перейти
-            </router-link>
+            <router-link :to="'/profile/address/' + item._id">Перейти</router-link>
           </td>
           <td>{{ Math.round(item.score * 100) / 100 }}</td>
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 export default {
@@ -58,7 +50,7 @@ export default {
   },
   computed: {
     preparedAddresses() {
-      return this.addresses.map((a) => ({
+      return this.addresses.map(a => ({
         ...a,
         partnerName: this.$store.getters.partnersMap.get(a.partner)?.name,
       }))

@@ -11,28 +11,28 @@ export default {
   setup(props) {
     const res = computed(() => {
       switch (props.status) {
-        case 'accepted':
-          return {
-            text: 'Приняты',
-            color: 'green',
-          }
-        case 'needFix':
-          return {
-            text: 'На исправлении',
-            color: 'orange',
-          }
-        case 'onCheck':
-          return {
-            text: 'На проверке',
-            color: 'blue',
-          }
-        case 'missing':
-          return {
-            text: 'Не получены',
-            color: 'red',
-          }
-        default:
-          return ''
+          case 'accepted':
+        return {
+          text: 'Приняты',
+          color: 'green',
+            }
+      case 'needFix':
+        return {
+          text: 'На исправлении',
+          color: 'orange',
+            }
+      case 'onCheck':
+        return {
+          text: 'На проверке',
+              color: 'blue',
+        }
+      case 'missing':
+        return {
+              text: 'Не получены',
+              color: 'red',
+        }
+      default:
+        return ''
       }
     })
     return { res }
@@ -40,9 +40,9 @@ export default {
 }
 </script>
 <style scoped>
-.statusWrapper {
-  font-weight: bold;
-  text-align: center;
-  color: red;
-}
+  .statusWrapper {
+    font-weight: bold;
+    text-align: center;
+    color: red;
+  }
 </style>

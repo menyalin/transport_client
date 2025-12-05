@@ -2,22 +2,15 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error"
+ @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <AppLoadSpinner v-if="loading" />
         <DowntimeForm
           v-else
           :downtime="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('downtime:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('downtime:delete')"
           :addressActions="addressActions"
           :partnerActions="partnerActions"
           @cancel="cancel"

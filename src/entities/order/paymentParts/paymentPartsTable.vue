@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table dense>
+  <v-table>
     <template #default>
       <thead>
         <tr>
@@ -9,20 +9,14 @@
           <th class="text-right">Сумма НДС</th>
           <th class="text-right">Сумма с НДС</th>
           <th class="text-left">Примечание</th>
-          <th />
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(item, idx) of items"
-          :key="idx"
-          :class="{ 'not-accepted': item.status !== 'accepted' }"
-        >
+        <tr v-for="(item, idx) of items" :key="idx" :class="{ 'not-accepted': item.status !== 'accepted' }">
           <td>
             {{
-              $store.getters.partnersMap.has(item.client)
-                ? $store.getters.partnersMap.get(item.client).name
-                : '????'
+              $store.getters.partnersMap.has(item.client) ? $store.getters.partnersMap.get(item.client).name : '????'
             }}
           </td>
           <td>
@@ -39,19 +33,13 @@
           </td>
           <td>{{ item.note }}</td>
           <td class="text-right">
-            <v-icon
-              v-if="!hideDelete"
-              small
-              :disabled="readonly"
-              @click="deleteRow(idx)"
-            >
-              mdi-delete
-            </v-icon>
+            <v-icon v-if="!hideDelete" size="small" :disabled="readonly"
+@click="deleteRow(idx)">mdi-delete</v-icon>
           </td>
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 export default {

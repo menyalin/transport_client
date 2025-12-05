@@ -1,6 +1,9 @@
 <template>
   <span>
-    Рейс: <b>{{ orderTypeStr }}</b> , тариф за: <b>{{ waitingTariffBy }}</b>
+    Рейс:
+    <b>{{ orderTypeStr }}</b>
+    , тариф за:
+    <b>{{ waitingTariffBy }}</b>
   </span>
 </template>
 <script>

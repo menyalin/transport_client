@@ -1,6 +1,6 @@
 import api from '@/api'
 
-export const xlsxToJson = async (file) => {
+export const xlsxToJson = async file => {
   let formData = new FormData()
   formData.append('file', file)
 

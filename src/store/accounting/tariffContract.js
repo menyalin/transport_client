@@ -22,20 +22,16 @@ export default {
   actions: {},
   getters: {
     tariffTypes: ({ tariffTypes }) => tariffTypes,
-    tariffTypesMap: ({ tariffTypes }) =>
-      new Map(tariffTypes.map((i) => [i.value, i.text])),
+    tariffTypesMap: ({ tariffTypes }) => new Map(tariffTypes.map(i => [i.value, i.text])),
 
-    roundingWaitingByHours: ({ roundingWaitingByHours }) =>
-      roundingWaitingByHours,
+    roundingWaitingByHours: ({ roundingWaitingByHours }) => roundingWaitingByHours,
     roundingWaitingByHoursMap: ({ roundingWaitingByHours }) =>
-      new Map(roundingWaitingByHours.map((i) => [i.value, i.text])),
+      new Map(roundingWaitingByHours.map(i => [i.value, i.text])),
 
     idleTimeRoundingIntervals: ({ roundingIntervals }) => roundingIntervals,
-    idleTimeRoundingIntervalsMap: ({ roundingIntervals }) =>
-      new Map(roundingIntervals.map((i) => [i.value, i.text])),
+    idleTimeRoundingIntervalsMap: ({ roundingIntervals }) => new Map(roundingIntervals.map(i => [i.value, i.text])),
 
     waitingTariffByItems: ({ tariffByItems }) => tariffByItems,
-    waitingTariffByItemsMap: ({ tariffByItems }) =>
-      new Map(tariffByItems.map((i) => [i.value, i.text])),
+    waitingTariffByItemsMap: ({ tariffByItems }) => new Map(tariffByItems.map(i => [i.value, i.text])),
   },
 }

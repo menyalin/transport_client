@@ -1,18 +1,14 @@
 <template>
   <div class="date-settings">
-    <v-btn icon small :disabled="isMinDate" @click="incDate(-1)">
+    <v-btn
+icon
+size="small" :disabled="isMinDate" @click="incDate(-1)"
+>
       <v-icon>mdi-arrow-left-bold</v-icon>
     </v-btn>
-    <DateTimeInput
-      :value="date"
-      hideDetails
-      dense
-      :minDate="minDate"
-      hideTimeInput
-      hidePrependIcon
-      @change="setDate"
-    />
-    <v-btn icon small @click="incDate(1)">
+    <DateTimeInput :value="date" hideDetails dense
+:minDate="minDate" hideTimeInput hidePrependIcon @change="setDate" />
+    <v-btn icon size="small" @click="incDate(1)">
       <v-icon>mdi-arrow-right-bold</v-icon>
     </v-btn>
   </div>
@@ -53,11 +49,11 @@ export default {
 }
 </script>
 <style scoped>
-.date-settings {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 20px;
-  gap: 12px;
-}
+  .date-settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 20px;
+    gap: 12px;
+  }
 </style>

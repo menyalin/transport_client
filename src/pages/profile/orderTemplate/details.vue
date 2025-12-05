@@ -2,22 +2,15 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error"
+ @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
-        <app-order-template-form
+        <AppLoadSpinner v-if="loading" />
+        <AppOrderTemplateForm
           v-else
           :orderTemplate="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('orderTemplate:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('orderTemplate:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

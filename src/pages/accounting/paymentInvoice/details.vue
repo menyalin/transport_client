@@ -1,24 +1,20 @@
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
-    <payment-invoice-form
+  <FormWrapper :loading="loading" :displayDeleteBtn="showDeleteBtn" @delete="deleteHandler">
+    <PaymentInvoiceForm
       :item="item"
-      @submit="submit($event, false)"
       :disabledPickOrders="disabledPickOrders"
       :disabledMainFields="disabledMainFields"
       :disabledDownloadFiles="disabledDownloadFiles"
+      @submit="submit($event, false)"
       @save="submit($event, true)"
       @pickOrders="openDialog"
       @download="downloadHandler"
       @setDate="setDateHandler"
     />
 
-    <payment-invoice-result :orders="item.orders" />
+    <PaymentInvoiceResult :orders="item.orders" />
 
-    <payment-invoice-orders-list
+    <PaymentInvoiceOrdersList
       :orders="item.orders"
       :disabled="disabledPickOrders"
       @delete="deleteOrderFromPaymentInvoice"
@@ -26,16 +22,10 @@
       @updateItemPrice="updateItemPrice"
     />
 
-    <v-dialog
-      v-if="item._id"
-      v-model="showPickOrderDialog"
-      fullscreen
-      persistent
-      hide-overlay
-    >
-      <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
+    <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent :scrim="false">
+      <PickOrders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script>
@@ -44,11 +34,7 @@ import socket from '@/socket'
 import router from '@/router'
 import store from '@/store'
 import { FormWrapper } from '@/shared/ui'
-import {
-  PaymentInvoiceForm,
-  PaymentInvoiceOrdersList,
-  PaymentInvoiceResult,
-} from '@/entities/paymentInvoice'
+import { PaymentInvoiceForm, PaymentInvoiceOrdersList, PaymentInvoiceResult } from '@/entities/paymentInvoice'
 import { PickOrders } from '@/features/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
 import { useDownloadTemplate } from './model/useDownloadTemplate'
@@ -70,22 +56,13 @@ export default {
     const { downloadHandler } = useDownloadTemplate(item)
 
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
-    const showPickOrderDialog = ref(
-      store.getters.storedValue(storedSettingsName) || false
-    )
-    const disabledPickOrders = computed(
-      () => !item.value?._id || item.value?.status !== 'inProcess'
-    )
+    const showPickOrderDialog = ref(store.getters.storedValue(storedSettingsName) || false)
+    const disabledPickOrders = computed(() => !item.value?._id || item.value?.status !== 'inProcess')
 
-    const needUpdateRows = computed(() =>
-      item.value.orders.some((i) => i.needUpdate)
-    )
+    const needUpdateRows = computed(() => item.value.orders.some(i => i.needUpdate))
 
     const disabledDownloadFiles = computed(
-      () =>
-        !item.value.orders ||
-        item.value.orders.length === 0 ||
-        needUpdateRows.value
+      () => !item.value.orders || item.value.orders.length === 0 || needUpdateRows.value
     )
     const disabledMainFields = computed(() => {
       return item.value.orders?.length > 0
@@ -208,15 +185,13 @@ export default {
     function removeOrders({ paymentInvoiceId, rowIds }) {
       if (paymentInvoiceId !== item.value._id) return null
 
-      item.value.orders = item.value.orders.filter(
-        (i) => !rowIds.includes(i.rowId)
-      )
+      item.value.orders = item.value.orders.filter(i => !rowIds.includes(i.rowId))
     }
 
     async function updateItemPrice(itemId) {
       // Обновить цены по рейсы в акте
       const res = await PaymentInvoiceService.updatePrices(itemId)
-      const orderIdx = item.value.orders.findIndex((i) => itemId === i._id)
+      const orderIdx = item.value.orders.findIndex(i => itemId === i._id)
       item.value.orders.splice(orderIdx, 1, res)
     }
 

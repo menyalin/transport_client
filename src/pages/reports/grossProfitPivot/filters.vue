@@ -1,23 +1,20 @@
 <template>
   <div class="main-filter-wrapper">
-    <v-expansion-panels v-if="Object.keys(tmpFilters).length > 0" focusable>
+    <v-expansion-panels v-if="Object.keys(tmpFilters).length > 0">
       <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <h5>{{ title }}</h5>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <div
-            v-for="(filter, idx) of filterItems"
-            :key="idx"
-            class="filter-row mt-3"
-          >
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <div v-for="(filter, idx) of filterItems" :key="idx" class="filter-row mt-3">
             <v-select
               v-model="tmpFilters[filter.value].cond"
               label="Сравнение"
               :items="condItems"
-              dense
-              outlined
-              hide-details
+             
+              variant="outlined"
+       density="compact"
+              hideDetails
               :style="{ 'max-width': '180px' }"
             />
             <v-autocomplete
@@ -25,15 +22,16 @@
               :label="filter.title"
               :items="filter.items()"
               multiple
-              auto-select-first
+              autoSelectFirst
               clearable
-              dense
-              outlined
-              hide-details
+             
+              variant="outlined"
+       density="compact"
+              hideDetails
               :style="{ 'max-width': '400px' }"
             />
           </div>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
@@ -95,26 +93,26 @@ export default {
   computed: {
     clients() {
       return this.$store.getters.partners
-        .filter((i) => i.isClient)
+        .filter(i => i.isClient)
         .sort((a, b) => a.name - b.name)
-        .map((i) => ({ value: i._id, text: i.name }))
+        .map(i => ({ value: i._id, text: i.name }))
     },
     tkNames() {
-      return this.$store.getters.tkNames.map((i) => ({
+      return this.$store.getters.tkNames.map(i => ({
         value: i._id,
         text: i.name,
       }))
     },
     trucks() {
       return this.$store.getters.trucks
-        .filter((i) => i.type === 'truck')
-        .map((i) => ({
+        .filter(i => i.type === 'truck')
+        .map(i => ({
           value: i._id,
           text: i.regNum,
         }))
     },
     drivers() {
-      return this.$store.getters.drivers.map((i) => ({
+      return this.$store.getters.drivers.map(i => ({
         value: i._id,
         text: i.fullName,
       }))
@@ -123,13 +121,13 @@ export default {
       return this.$store.getters.orderAnalyticTypes
     },
     regions() {
-      return this.$store.getters.regions.map((i) => ({
+      return this.$store.getters.regions.map(i => ({
         value: i._id,
         text: i.name,
       }))
     },
     zones() {
-      return this.$store.getters.zones.map((i) => ({
+      return this.$store.getters.zones.map(i => ({
         value: i._id,
         text: i.name,
       }))
@@ -155,9 +153,9 @@ export default {
 }
 </script>
 <style scoped>
-.filter-row {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-}
+  .filter-row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
 </style>

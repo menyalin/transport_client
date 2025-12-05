@@ -2,13 +2,11 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
-        <app-region-form
+        <AppLoadSpinner v-if="loading" />
+        <AppRegionForm
           v-else
           :region="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('region:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('region:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -20,7 +18,7 @@
 <script>
 import AppRegionForm from '@/modules/profile/components/regionForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {RegionService } from '@/shared/services'
+import { RegionService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {

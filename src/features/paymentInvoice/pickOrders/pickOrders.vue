@@ -1,44 +1,42 @@
 <template>
-  <v-card elevation="2" outlined class="ma-5">
+  <v-card elevation="2" border class="ma-5">
     <v-card-title>
       Подобрать рейсы для акта выполненных работ №
       {{ paymentInvoice.number || 'б/н' }}
     </v-card-title>
     <v-card-subtitle>
-      <b>{{ clientName }} </b>
+      <b>{{ clientName }}</b>
     </v-card-subtitle>
     <v-card-actions>
-      <v-btn @click="cancelHandler" class="ma-2">Закрыть</v-btn>
+      <v-btn class="ma-2" @click="cancelHandler">Закрыть</v-btn>
       <v-btn
-        @click="addToInvoiceHandler"
-        class="ma-2"
-        color="primary"
-        :disabled="!selectedOrders.length"
-      >
+class="ma-2"
+color="primary" :disabled="!selectedOrders.length" @click="addToInvoiceHandler"
+>
         Добавить в акт
       </v-btn>
     </v-card-actions>
     <v-card-text>
-      <pick-orders-settings
+      <PickOrdersSettings
         v-model="settings"
         :allHeaders="allHeaders"
         @updateHeaders="updateActiveHeaders"
         @refresh="refreshHandler"
       />
 
-      <orders-table
+      <OrdersTable
         v-model="selectedOrders"
-        show-select
+        v-model:listOptions="settings.listOptions"
+        showSelect
         itemIdField="orderId"
         :items="items"
         :headers="headers"
         :loading="loading"
-        :listOptions.sync="settings.listOptions"
         @addItem="addOrderToInvoice"
         @openDocsDialog="openDocsDialog"
       />
-      <v-dialog v-model="docDialog" max-width="1300" persistent>
-        <order-docs-list
+      <v-dialog v-model="docDialog" maxWidth="1300" persistent>
+        <OrderDocsList
           :orderId="editableOrderId"
           :docs="editableDocs"
           @save="saveDocDialog"
@@ -71,26 +69,16 @@ export default {
     const selectedOrders = ref([])
     const { loading, settings, items, refresh } = useListData(paymentInvoice)
 
-    const {
-      editableOrderId,
-      openDocsDialog,
-      docDialog,
-      editableDocs,
-      saveDocDialog,
-      cancelDocDialog,
-    } = useOrderDocs()
+    const { editableOrderId, openDocsDialog, docDialog, editableDocs, saveDocDialog, cancelDocDialog } =
+      useOrderDocs()
 
-    const client = computed(() =>
-      store.getters.partnersMap.get(paymentInvoice.clientId)
-    )
+    const client = computed(() => store.getters.partnersMap.get(paymentInvoice.clientId))
 
     const clientName = computed(() => {
       return client.value.name || '-'
     })
 
-    const selectedOrdersIds = computed(() =>
-      selectedOrders.value.map((i) => i._id)
-    )
+    const selectedOrdersIds = computed(() => selectedOrders.value.map(i => i._id))
 
     function updateActiveHeaders(val) {
       headers.value = val
@@ -112,9 +100,7 @@ export default {
         paymentInvoiceId: paymentInvoice._id,
       })
 
-      selectedOrders.value = selectedOrders.value.filter(
-        (i) => i._id !== orderId
-      )
+      selectedOrders.value = selectedOrders.value.filter(i => i._id !== orderId)
       refresh()
     }
 

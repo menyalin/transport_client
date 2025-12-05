@@ -34,8 +34,7 @@ export default {
     },
   },
   setup() {
-    const { items: agreementItems, loading: agreementsLoading } =
-      useCarrierAgreements()
+    const { items: agreementItems, loading: agreementsLoading } = useCarrierAgreements()
 
     return { agreementsLoading, agreementItems }
   },
@@ -62,9 +61,7 @@ export default {
       this.$router.push({ name: 'CarrierList' })
     },
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         this.loading = true
         await CarrierService.deleteById(this.id)

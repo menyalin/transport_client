@@ -19,9 +19,9 @@ export const useOrderListUtils = () => {
     ]
 
     store.getters.documentStatuses
-      .map((i) => i.value)
-      .forEach((i) => {
-        if (!docStatusesWithCustomNames.map((j) => j.value).includes(i))
+      .map(i => i.value)
+      .forEach(i => {
+        if (!docStatusesWithCustomNames.map(j => j.value).includes(i))
           console.error('useOrderListUtils: unexpected document status value')
       })
     return docStatusesWithCustomNames

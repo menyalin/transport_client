@@ -1,52 +1,51 @@
 <template>
   <div>
-    <buttons-panel
-      panel-type="form"
-      :disabled-submit="disabledSubmitForm"
-      @cancel="cancel"
-      @submit="submit"
-    />
+    <ButtonsPanel panelType="form" :disabledSubmit="disabledSubmitForm" @cancel="cancel" @submit="submit" />
 
     <div>
       <div class="row-wrapper tk-name">
         <v-select
           v-model.trim="$v.form.tkName.$model"
           :items="tkNames"
-          item-text="name"
-          item-value="_id"
+          itemTitle="name"
+          itemValue="_id"
           label="ТК"
-          dense
-          outlined
+         
+          variant="outlined"
+       density="compact"
         />
       </div>
 
       <div class="row-wrapper driver-name">
         <v-text-field
           v-model.trim="$v.form.surname.$model"
-          outlined
+          variant="outlined"
+       density="compact"
           label="Фамилия"
-          dense
-          :error-messages="surnameErrors"
+         
+          :errorMessages="surnameErrors"
         />
         <v-text-field
           v-model.trim="$v.form.name.$model"
-          outlined
+          variant="outlined"
+       density="compact"
           label="Имя"
-          dense
-          :error-messages="nameErrors"
+         
+          :errorMessages="nameErrors"
         />
         <v-text-field
           v-model.trim="$v.form.patronymic.$model"
-          outlined
+          variant="outlined"
+       density="compact"
           label="Отчество"
-          dense
-          :error-messages="nameErrors"
+         
+          :errorMessages="nameErrors"
         />
         <DateTimeInput
           v-model="$v.form.birthday.$model"
           label="Дата рождения"
-          hide-time-input
-          hide-prepend-icon
+          hideTimeInput
+          hidePrependIcon
           outlined
           dense
         />
@@ -57,49 +56,53 @@
           <div>
             <v-text-field
               v-model.trim="$v.form.passportId.$model"
-              outlined
-              hide-details
+              variant="outlined"
+       density="compact"
+              hideDetails
               label="Номер паспорта"
-              dense
+             
               class="pb-3"
             />
             <DateTimeInput
               v-model="$v.form.passportDate.$model"
               label="Дата выдачи паспорта"
-              hide-time-input
-              hide-prepend-icon
+              hideTimeInput
+              hidePrependIcon
               outlined
               dense
             />
           </div>
           <v-textarea
             v-model.trim="$v.form.passportIssued.$model"
-            outlined
+            variant="outlined"
+       density="compact"
             label="Паспорт выдан"
-            dense
+           
             :rows="4"
           />
         </div>
         <div class="driver-license">
           <v-text-field
             v-model.trim="$v.form.licenseId.$model"
-            outlined
-            hide-details
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="Номер ВУ"
-            dense
+           
           />
           <v-text-field
             v-model.trim="$v.form.licenseCategory.$model"
-            outlined
+            variant="outlined"
+       density="compact"
             label="Категории ВУ"
-            hide-details
-            dense
+            hideDetails
+           
           />
           <DateTimeInput
             v-model="$v.form.licenseDate.$model"
             label="Дата выдачи ВУ"
-            hide-time-input
-            hide-prepend-icon
+            hideTimeInput
+            hidePrependIcon
             outlined
             dense
           />
@@ -107,23 +110,25 @@
         <div class="driver-cards">
           <v-text-field
             v-model.trim="$v.form.inn.$model"
-            outlined
-            hide-details
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="ИНН"
-            dense
+           
           />
           <v-text-field
             v-model.trim="$v.form.driverCardId.$model"
-            outlined
-            hide-details
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="Карта водителя"
-            dense
+           
           />
           <DateTimeInput
             v-model="$v.form.driverCardPeriod.$model"
             label="КВ действительна до"
-            hide-time-input
-            hide-prepend-icon
+            hideTimeInput
+            hidePrependIcon
             outlined
             dense
           />
@@ -132,40 +137,32 @@
       <div class="row-wrapper phones">
         <v-text-field
           v-model.trim="$v.form.phone.$model"
-          outlined
+          variant="outlined"
+       density="compact"
           label="Телефон"
-          hide-details
-          dense
+          hideDetails
+         
         />
         <v-text-field
           v-model.trim="$v.form.phone2.$model"
-          outlined
+          variant="outlined"
+       density="compact"
           label="Телефон 2"
-          hide-details
-          dense
+          hideDetails
+         
         />
       </div>
 
-      <app-med-book v-model="medBook" title="Мед.книжка" class="mb-5" />
+      <AppMedBook v-model="medBook" title="Мед.книжка" class="mb-5" />
       <div class="work-status">
         <div>
-          <v-checkbox
-            v-model="form.isBrigadier"
-            label="Бригадир"
-            hide-details
-            dense
-          />
-          <v-checkbox
-            v-model="form.isMechanic"
-            label="Механик"
-            hide-details
-            dense
-          />
+          <v-checkbox v-model="form.isBrigadier" label="Бригадир" hideDetails dense />
+          <v-checkbox v-model="form.isMechanic" label="Механик" hideDetails dense />
         </div>
         <DateTimeInput
           v-model="$v.form.employmentDate.$model"
           label="Дата приема на работу"
-          hide-time-input
+          hideTimeInput
           outlined
           dense
           hideDetails
@@ -174,37 +171,30 @@
         <DateTimeInput
           v-model="$v.form.dismissalDate.$model"
           label="Дата увольнения"
-          hide-time-input
+          hideTimeInput
           outlined
           hideDetails
           dense
         />
         <v-text-field
           v-model.trim="$v.form.recommender.$model"
-          outlined
+          variant="outlined"
+       density="compact"
           label="Кто рекомедовал"
-          dense
-          hide-details
+         
+          hideDetails
         />
       </div>
       <AdditionalNotifications v-model="additionalNotifications" />
       <v-checkbox v-model="form.hasScans" label="Есть сканы документов" dense />
-      <v-checkbox
-        v-model="form.hideInFines"
-        label="Не показывать в штрафах"
-        dense
-      />
+      <v-checkbox v-model="form.hideInFines" label="Не показывать в штрафах" dense />
 
       <v-checkbox v-model="form.isCalcSalary" dense label="Расчет ЗП" />
     </div>
-    <EntityFiles
-      v-if="driver && driver._id"
-      :itemId="driver._id"
-      docType="driver"
-    />
+    <EntityFiles v-if="driver && driver._id" :itemId="driver._id" docType="driver" />
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
       <v-btn color="error" @click="$emit('delete')">
-        <v-icon left dark> mdi-delete </v-icon>
+        <v-icon start>mdi-delete</v-icon>
         Удалить
       </v-btn>
     </div>
@@ -212,14 +202,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { required } from '@vuelidate/validators'
 import AppMedBook from './medBook.vue'
-import {
-  ButtonsPanel,
-  DateTimeInput,
-  AdditionalNotifications,
-  EntityFiles,
-} from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, AdditionalNotifications, EntityFiles } from '@/shared/ui'
 
 export default {
   name: 'DriverForm',
@@ -277,23 +262,18 @@ export default {
     ...mapGetters(['tkNames']),
     disabledSubmitForm() {
       return (
-        !this.$store.getters.hasPermission('driver:write') ||
-        this.$v.$invalid ||
-        !this.formChanged ||
-        this.loading
+        !this.$store.getters.hasPermission('driver:write') || this.$v.$invalid || !this.formChanged || this.loading
       )
     },
 
     nameErrors() {
       const errors = []
-      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
-        errors.push('Имя не может быть пустым')
+      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid) errors.push('Имя не может быть пустым')
       return errors
     },
     surnameErrors() {
       const errors = []
-      if (this.$v.form.surname.$dirty && this.$v.form.surname.$invalid)
-        errors.push('Имя не может быть пустым')
+      if (this.$v.form.surname.$dirty && this.$v.form.surname.$invalid) errors.push('Имя не может быть пустым')
       return errors
     },
     formChanged() {
@@ -355,9 +335,8 @@ export default {
     setFormFields(val) {
       const keys = Object.keys(this.form)
       this.medBook = val.medBook
-      if (val.additionalNotifications)
-        this.additionalNotifications = val.additionalNotifications
-      keys.forEach((key) => {
+      if (val.additionalNotifications) this.additionalNotifications = val.additionalNotifications
+      keys.forEach(key => {
         this.form[key] = val[key]
         if (val.tkName?._id) this.form.tkName = val.tkName._id
       })
@@ -366,7 +345,7 @@ export default {
       const keys = Object.keys(this.form)
       this.medBook = { ...{} }
       this.additionalNotifications = []
-      keys.forEach((key) => {
+      keys.forEach(key => {
         this.form[key] = null
       })
     },
@@ -374,58 +353,58 @@ export default {
 }
 </script>
 <style scoped>
-.row-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-.row-wrapper > * {
-  padding: 2px 10px;
-  width: 100%;
-}
-.tk-name > * {
-  max-width: 15rem;
-}
-.driver-name {
-  display: grid;
-  grid-template-columns: 2fr 2fr 2fr 1fr;
-}
-.passport {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-.passport > * {
-  /* padding: 2px 10px; */
-  margin-right: 10px;
-}
-.driver-license {
-  max-width: 230px;
-}
-.driver-license > * {
-  margin-bottom: 8px;
-}
-.phones > * {
-  margin-bottom: 8px;
-  max-width: 300px;
-}
+  .row-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .row-wrapper > * {
+    padding: 2px 10px;
+    width: 100%;
+  }
+  .tk-name > * {
+    max-width: 15rem;
+  }
+  .driver-name {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr;
+  }
+  .passport {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .passport > * {
+    /* padding: 2px 10px; */
+    margin-right: 10px;
+  }
+  .driver-license {
+    max-width: 230px;
+  }
+  .driver-license > * {
+    margin-bottom: 8px;
+  }
+  .phones > * {
+    margin-bottom: 8px;
+    max-width: 300px;
+  }
 
-.driver-cards {
-  max-width: 230px;
-}
-.driver-cards > * {
-  margin-bottom: 8px;
-}
-.work-status {
-  display: grid;
-  grid-template-columns: 150px 200px 200px auto;
-  gap: 15px;
-  align-items: center;
-  margin-bottom: 30px;
-}
-.delete-btn-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
+  .driver-cards {
+    max-width: 230px;
+  }
+  .driver-cards > * {
+    margin-bottom: 8px;
+  }
+  .work-status {
+    display: grid;
+    grid-template-columns: 150px 200px 200px auto;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  .delete-btn-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 </style>

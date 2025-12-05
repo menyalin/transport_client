@@ -1,8 +1,8 @@
 <template>
   <span>
-    <b>{{ zonesMap.get(item.loadingZone).name }} </b>
+    <b>{{ zonesMap.get(item.loadingZone).name }}</b>
     >>>
-    <b>{{ zonesMap.get(item.unloadingZone).name }} </b>
+    <b>{{ zonesMap.get(item.unloadingZone).name }}</b>
   </span>
 </template>
 <script>

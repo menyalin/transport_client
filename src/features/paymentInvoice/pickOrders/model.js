@@ -6,10 +6,7 @@ import { PaymentInvoiceService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
 
 const initPeriod = () => {
-  return [
-    dayjs().add(-1, 'month').startOf('month').toISOString(),
-    new Date().toISOString(),
-  ]
+  return [dayjs().add(-1, 'month').startOf('month').toISOString(), new Date().toISOString()]
 }
 
 export const useListData = ({ client, _id, agreementId }) => {
@@ -22,10 +19,7 @@ export const useListData = ({ client, _id, agreementId }) => {
     docStatuses: ['accepted'],
     loadingZones: [],
   }
-  const settings = usePersistedRef(
-    initialState,
-    'paymentInvoice:pickOrders:settings'
-  )
+  const settings = usePersistedRef(initialState, 'paymentInvoice:pickOrders:settings')
   const items = ref([])
   const loading = ref(false)
 
@@ -71,7 +65,7 @@ export const useListData = ({ client, _id, agreementId }) => {
 
   function updateItems(data) {
     if (!items.value) return null
-    let order = items.value.find((item) => item._id === data._id)
+    let order = items.value.find(item => item._id === data._id)
     if (!order) return null
     order = Object.assign(order, data)
   }

@@ -6,7 +6,7 @@ import { moneyFormatter } from '@/shared/utils'
 export const useTable = (props, _ctx) => {
   const selected = ref([])
   const selectedIds = computed(() => {
-    return selected.value.map((i) => i.orderId)
+    return selected.value.map(i => i.orderId)
   })
   const { proxy } = getCurrentInstance()
   const listOptions = ref({})
@@ -28,7 +28,7 @@ export const useTable = (props, _ctx) => {
         limit: listOptions.value.itemsPerPage,
         skip: (listOptions.value.page - 1) * listOptions.value.itemsPerPage,
       })
-      items.value = data.items.map((i) => ({
+      items.value = data.items.map(i => ({
         ...i,
         total: {
           priceWithVat: moneyFormatter(i.total.priceWithVat, 2),
@@ -57,10 +57,7 @@ export const useTable = (props, _ctx) => {
   async function removeOrdersHandler() {
     try {
       loading.value = true
-      await IncomingInvoiceService.removeOrders(
-        props.invoiceId,
-        selectedIds.value
-      )
+      await IncomingInvoiceService.removeOrders(props.invoiceId, selectedIds.value)
       await getData(props.invoiceId)
     } catch (e) {
       proxy.$store.commit('setError', e.response.data || e.message)
@@ -70,7 +67,7 @@ export const useTable = (props, _ctx) => {
   }
   watch(
     () => props.invoiceId,
-    async (val) => {
+    async val => {
       await getData(val)
     }
   )

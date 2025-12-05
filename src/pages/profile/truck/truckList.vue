@@ -2,23 +2,23 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+        <ButtonsPanel
+          panelType="list"
+          :disabledRefresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('truck:write')"
           @submit="create"
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :search="settings.search"
           :headers="filteredHeaders"
-          dense
-          fixed-header
+         
+          fixedHeader
           height="72vh"
-          :footer-props="{
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           :items="filteredTrucks"
           :loading="loading"
           @dblclick:row="dblClickRow"
@@ -28,54 +28,56 @@
           </template>
           <template #top>
             <div class="filter-wrapper">
-              <app-table-column-settings
+              <AppTableColumnSettings
                 v-model="activeHeaders"
                 :allHeaders="allHeaders"
                 :listSettingsName="listSettingsName"
               />
               <v-select
-                v-model="settings.serviceStatus"
+                :modelValue="settings.serviceStatus"
                 label="Статус ТС"
-                outlined
-                dense
-                hide-details
+                variant="outlined"
+       density="compact"
+               
+                hideDetails
                 :items="serviceStatusItems"
               />
               <v-select
-                v-model="settings.tkNameFilter"
-                dense
-                outlined
-                hide-details
+                :modelValue="settings.tkNameFilter"
+               
+                variant="outlined"
+       density="compact"
+                hideDetails
                 label="ТК"
                 clearable
                 :items="tkNames"
-                item-value="_id"
-                item-text="name"
+                itemValue="_id"
+                itemTitle="name"
               />
               <v-select
-                v-model="settings.truckFilter"
-                dense
+                :modelValue="settings.truckFilter"
+               
                 multiple
-                outlined
-                hide-details
+                variant="outlined"
+       density="compact"
+                hideDetails
                 label="Тип транспорта"
                 clearable
                 :items="truckFilterOptions"
               />
               <v-text-field
-                v-model="settings.search"
-                outlined
-                hide-details
-                dense
+                :modelValue="settings.search"
+                variant="outlined"
+       density="compact"
+                hideDetails
+               
                 label="Быстрый поиск"
               />
             </div>
           </template>
           <template #[`item.hasScans`]="{ item }">
-            <v-icon v-if="item.hasScans" small color="green">
-              mdi-check
-            </v-icon>
-            <v-icon v-else small color="red"> mdi-minus </v-icon>
+            <v-icon v-if="item.hasScans" size="small" color="green">mdi-check</v-icon>
+            <v-icon v-else size="small" color="red">mdi-minus</v-icon>
           </template>
         </v-data-table>
       </v-col>
@@ -213,46 +215,37 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters([
-      'trucks',
-      'directoriesProfile',
-      'truckTypesHash',
-      'tkNames',
-    ]),
+    ...mapGetters(['trucks', 'directoriesProfile', 'truckTypesHash', 'tkNames']),
     filteredHeaders() {
-      return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
+      return this.allHeaders.filter(i => this.activeHeaders.includes(i.value))
     },
     filteredTrucks() {
       return this.trucks
-        .filter((item) =>
-          this.settings.tkNameFilter
-            ? item.tkName._id === this.settings.tkNameFilter
-            : true
-        )
-        .filter((item) => {
+        .filter(item => (this.settings.tkNameFilter ? item.tkName._id === this.settings.tkNameFilter : true))
+        .filter(item => {
           if (this.settings.truckFilter.length === 0) return true
-          return this.settings.truckFilter.some((tFilter) => {
+          return this.settings.truckFilter.some(tFilter => {
             switch (tFilter) {
-              case '20tn':
-                return item.type === 'truck' && item.liftCapacityType === 20
-              case '10tn':
-                return item.type === 'truck' && item.liftCapacityType === 10
-              case 'trailers':
-                return item.type === 'trailer'
+                case '20tn':
+              return item.type === 'truck' && item.liftCapacityType === 20
+            case '10tn':
+              return item.type === 'truck' && item.liftCapacityType === 10
+                case 'trailers':
+              return item.type === 'trailer'
             }
           })
         })
-        .filter((item) => {
+        .filter(item => {
           switch (this.settings.serviceStatus) {
-            case 'all':
-              return true
-            case 'active':
-              return !item.endServiceDate
-            case 'inactive':
-              return item.endServiceDate
+          case 'all':
+                return true
+          case 'active':
+            return !item.endServiceDate
+              case 'inactive':
+            return item.endServiceDate
           }
         })
-        .map((t) => ({
+        .map(t => ({
           ...t,
           currentDriver: this.getDriverName(t._id),
           brigadier: this.$store.getters.driversMap.get(t.brigadier)?.surname,
@@ -260,7 +253,7 @@ export default {
     },
     crewsMapByTruck() {
       let tmpMap = new Map()
-      this.crews.forEach((cr) => {
+      this.crews.forEach(cr => {
         tmpMap.set(cr.transport.truck, { ...cr })
       })
       return tmpMap
@@ -311,11 +304,11 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: grid;
-  grid-template-columns: 30px 200px 300px 300px auto;
-  align-items: center;
-  gap: 10px;
-  padding: 5px;
-}
+  .filter-wrapper {
+    display: grid;
+    grid-template-columns: 30px 200px 300px 300px auto;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+  }
 </style>

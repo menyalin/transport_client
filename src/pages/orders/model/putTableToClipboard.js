@@ -1,7 +1,7 @@
 import store from '@/store/index.js'
 
-const getOrderNotes = (item) => {
-  const pointNotes = item.route.map((i) => i.note).filter((i) => !!i)
+const getOrderNotes = item => {
+  const pointNotes = item.route.map(i => i.note).filter(i => !!i)
 
   return {
     'cargoParams.note': item.cargoParams.note || ' ',
@@ -12,11 +12,11 @@ const getOrderNotes = (item) => {
 
 const getPriceFields = () => {
   const prices = ['prePrices', 'prices', 'finalPrices']
-  const fields = [...store.getters.orderPriceTypes.map((i) => i.value), 'note']
+  const fields = [...store.getters.orderPriceTypes.map(i => i.value), 'note']
   return prices.reduce(
     (res, current) => [
       ...res,
-      ...fields.map((f) => ({
+      ...fields.map(f => ({
         title: current + '.' + f,
         group: current,
         type: f,
@@ -26,59 +26,49 @@ const getPriceFields = () => {
   )
 }
 
-const getDeliveryPlannedDate = (order) => {
-  const points = order.route.filter(
-    (i) => i.type === 'unloading' && i.plannedDate
-  )
+const getDeliveryPlannedDate = order => {
+  const points = order.route.filter(i => i.type === 'unloading' && i.plannedDate)
   if (points.length === 0) return ''
   else return new Date(points[0].plannedDate).toLocaleString()
 }
 
-const getPrices = (item) => {
+const getPrices = item => {
   const { agreement } = item
   const fields = getPriceFields()
   const res = {}
   let price
-  fields.forEach((i) => {
+  fields.forEach(i => {
     price = null
     if (i.type !== 'note') {
-      price = item[i.group].find((p) => p.type === i.type)
+      price = item[i.group].find(p => p.type === i.type)
       if (!price) res[i.title] = 0
-      else
-        res[i.title] = agreement.usePriceWithVAT
-          ? price.price
-          : price.priceWOVat
-    } else
-      res[i.title] = item[i.group].find((p) => p.type === 'other')?.note || ''
+      else res[i.title] = agreement.usePriceWithVAT ? price.price : price.priceWOVat
+    } else res[i.title] = item[i.group].find(p => p.type === 'other')?.note || ''
   })
   return res
 }
 
-const _getTruckKind = (req) => {
+const _getTruckKind = req => {
   if (!req?.kind) return '-'
-  return (
-    store.getters.truckKindsMap.get(req?.kind) +
-    (req?.liftCapacity ? ` ${req.liftCapacity}т` : '')
-  )
+  return store.getters.truckKindsMap.get(req?.kind) + (req?.liftCapacity ? ` ${req.liftCapacity}т` : '')
 }
 
-const _getDriverName = (driverId) => {
+const _getDriverName = driverId => {
   if (!driverId || !store.getters.driversMap.has(driverId)) return '-'
   return store.getters.driversMap.get(driverId)?.fullName
 }
 
-const _getPoints = ({ route, type }) =>
-  route.filter((p) => p.type === type && !p.isReturn)
+const _getPoints = ({ route, type }) => route.filter(p => p.type === type && !p.isReturn)
 
 const _getPartnersName = ({ route, type }) =>
   _getPoints({ route, type })
-    .map((p) => store.getters.addressMap.get(p.address)?.partner)
-    .map((p) => store.getters.partnersMap.get(p)?.name)
+    .map(p => store.getters.addressMap.get(p.address)?.partner)
+    .map(p => store.getters.partnersMap.get(p)?.name)
     .join(';')
 
 const _getAddressesName = ({ route, type }) =>
   _getPoints({ route, type })
-    .map((p) => store.getters.addressMap.get(p.address).name)
+    .map(p => store.getters.addressMap.get(p.address).name)
     .join(';')
 
 const _getBasePrice = (prices, agreement) => {
@@ -87,7 +77,7 @@ const _getBasePrice = (prices, agreement) => {
     withVat: 0,
   }
   if (!prices || prices.length === 0) return 0
-  const basePrice = prices.find((p) => p.type === 'base')
+  const basePrice = prices.find(p => p.type === 'base')
   if (basePrice) {
     res.woVat = basePrice.priceWOVat || 0
     res.withVat = basePrice.price || 0
@@ -120,28 +110,23 @@ const headers = [
   { val: 'unloadArrivalTime', text: 'Время начала разгрузки' },
   { val: 'unloadDepartureDate', text: 'Дата окончания разгрузки' },
   { val: 'unloadDepartureTime', text: 'Время окончания разгрузки' },
-  ...getPriceFields().map((i) => ({ val: i.title, text: i.title })),
+  ...getPriceFields().map(i => ({ val: i.title, text: i.title })),
   { val: 'cargoParams.note', text: 'Комментарий к грузу' },
   { val: 'orderNote', text: 'Комментарий к рейсу' },
   { val: 'pointNotes', text: 'Комментарии к адресам' },
 ]
 
-export default (items) => {
+export default items => {
   if (!items.length) return null
-  const res = items.slice().map((row) => {
+  const res = items.slice().map(row => {
     const loadPoints = _getPoints({ route: row.route, type: 'loading' })
     const unloadPoints = _getPoints({ route: row.route, type: 'unloading' })
-    const loadArrivalDate = loadPoints[0].arrivalDate
-      ? new Date(loadPoints[0].arrivalDate)
-      : null
+    const loadArrivalDate = loadPoints[0].arrivalDate ? new Date(loadPoints[0].arrivalDate) : null
     const loadDepartureDate = loadPoints[loadPoints.length - 1].departureDate
       ? new Date(loadPoints[loadPoints.length - 1].departureDate)
       : null
-    const unloadArrivalDate = unloadPoints[0].arrivalDate
-      ? new Date(unloadPoints[0].arrivalDate)
-      : null
-    const unloadDepartureDate = unloadPoints[unloadPoints.length - 1]
-      .departureDate
+    const unloadArrivalDate = unloadPoints[0].arrivalDate ? new Date(unloadPoints[0].arrivalDate) : null
+    const unloadDepartureDate = unloadPoints[unloadPoints.length - 1].departureDate
       ? new Date(unloadPoints[unloadPoints.length - 1].departureDate)
       : null
     return {
@@ -176,30 +161,14 @@ export default (items) => {
         useGrouping: false,
       }).format(_getBasePrice(row.prices, row.agreement)),
 
-      loadArrivalDate: loadArrivalDate
-        ? loadArrivalDate.toLocaleDateString()
-        : '-',
-      loadArrivalTime: loadArrivalDate
-        ? loadArrivalDate.toLocaleTimeString()
-        : '-',
-      loadDepartureDate: loadDepartureDate
-        ? loadDepartureDate.toLocaleDateString()
-        : '-',
-      loadDepartureTime: loadDepartureDate
-        ? loadDepartureDate.toLocaleTimeString()
-        : '-',
-      unloadArrivalDate: unloadArrivalDate
-        ? unloadArrivalDate.toLocaleDateString()
-        : '-',
-      unloadArrivalTime: unloadArrivalDate
-        ? unloadArrivalDate.toLocaleTimeString()
-        : '-',
-      unloadDepartureDate: unloadDepartureDate
-        ? unloadDepartureDate.toLocaleDateString()
-        : '-',
-      unloadDepartureTime: unloadDepartureDate
-        ? unloadDepartureDate.toLocaleTimeString()
-        : '-',
+      loadArrivalDate: loadArrivalDate ? loadArrivalDate.toLocaleDateString() : '-',
+      loadArrivalTime: loadArrivalDate ? loadArrivalDate.toLocaleTimeString() : '-',
+      loadDepartureDate: loadDepartureDate ? loadDepartureDate.toLocaleDateString() : '-',
+      loadDepartureTime: loadDepartureDate ? loadDepartureDate.toLocaleTimeString() : '-',
+      unloadArrivalDate: unloadArrivalDate ? unloadArrivalDate.toLocaleDateString() : '-',
+      unloadArrivalTime: unloadArrivalDate ? unloadArrivalDate.toLocaleTimeString() : '-',
+      unloadDepartureDate: unloadDepartureDate ? unloadDepartureDate.toLocaleDateString() : '-',
+      unloadDepartureTime: unloadDepartureDate ? unloadDepartureDate.toLocaleTimeString() : '-',
       ...getPrices(row),
       ...getOrderNotes(row),
     }
@@ -207,11 +176,9 @@ export default (items) => {
 
   let table = '<table>'
   // table += `<tr>${headers.map((h) => '<td>' + h.text + '</td>').join('')}</tr>`
-  res.forEach((item) => {
+  res.forEach(item => {
     table += `<tr>
-    ${headers
-      .map((h) => (h.val ? '<td>' + item[h.val] + '</td>' : '<td />'))
-      .join('')}
+    ${headers.map(h => (h.val ? '<td>' + item[h.val] + '</td>' : '<td />')).join('')}
       <td /></tr>`
   })
   table += '</table>'

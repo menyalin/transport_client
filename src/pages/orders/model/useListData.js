@@ -8,10 +8,7 @@ import usePersistedRef from '@/shared/hooks/usePersistedRef'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-10, 'd').startOf('day').format(),
-    todayM.add(3, 'd').endOf('day').format(),
-  ]
+  return [todayM.add(-10, 'd').startOf('day').format(), todayM.add(3, 'd').endOf('day').format()]
 }
 
 export const useListData = () => {
@@ -43,10 +40,7 @@ export const useListData = () => {
   }
 
   const loading = ref(false)
-  const settings = usePersistedRef(
-    historyState?.settings || initialState,
-    'ordersListSettings'
-  )
+  const settings = usePersistedRef(historyState?.settings || initialState, 'ordersListSettings')
   const items = ref([])
   const statisticData = ref({
     count: 0,
@@ -79,9 +73,7 @@ export const useListData = () => {
     startDate: settings.value.period[0],
     endDate: settings.value.period[1],
     accountingMode: settings.value.accountingMode || null,
-    skip:
-      settings.value.listOptions.itemsPerPage *
-      (settings.value.listOptions.page - 1),
+    skip: settings.value.listOptions.itemsPerPage * (settings.value.listOptions.page - 1),
     limit: settings.value.listOptions.itemsPerPage,
     sortBy: settings.value.listOptions.sortBy,
     sortDesc: settings.value.listOptions.sortDesc,
@@ -101,7 +93,7 @@ export const useListData = () => {
   }
   function updateItems(data) {
     if (!items.value) return null
-    let order = items.value.find((item) => item._id === data._id)
+    let order = items.value.find(item => item._id === data._id)
     if (!order) return null
     order = Object.assign(order, data)
   }

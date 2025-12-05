@@ -1,85 +1,83 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       listSettingsName="pickOrdersForPaymentInvoiceTable"
       @change="updateHeadersHandler"
     />
-    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
-    <date-range-input v-model="settings.period" class="mx-2" />
+    <v-btn icon @click="refreshHandler"><v-icon>mdi-refresh</v-icon></v-btn>
+    <DateRangeInput :modelValue="settings.period" class="mx-2" />
 
     <v-autocomplete
-      v-model="settings.truck"
-      dense
+      :modelValue="settings.truck"
+     
       clearable
-      auto-select-first
+      autoSelectFirst
       :items="trucks"
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="updateSettingsPage"
     />
 
     <v-text-field
-      :value="settings.search"
-      dense
+      :modelValue="settings.search"
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
       @change="searchInputHandler"
     />
-    <order-doc-status-selector
-      v-model="settings.docStatuses"
+    <OrderDocStatusSelector
+      :modelValue="settings.docStatuses"
       multiple
       label="Документы"
       dense
-      hide-details
+      hideDetails
       outlined
       clearable
       :style="{ 'max-width': '400px' }"
-      @change="settings.listOptions.page = 1"
+      @change="updateSettingsPage"
     />
     <v-autocomplete
+      :modelValue="settings.loadingZones"
       label="Зоны погрузки"
-      v-model="settings.loadingZones"
       :items="loadingZoneItems"
-      item-value="_id"
-      item-text="name"
+      itemValue="_id"
+      itemTitle="name"
       multiple
-      auto-select-first
-      dense
-      hide-details
-      outlined
+      autoSelectFirst
+     
+      hideDetails
+      variant="outlined"
+       density="compact"
       clearable
       :style="{ 'max-width': '500px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="updateSettingsPage"
     />
   </div>
 </template>
 <script>
-import {
-  AppTableColumnSetting,
-  DateRangeInput,
-  OrderDocStatusSelector,
-} from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 export default {
   name: 'PickOrdersForPaymentInvoiceSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
+    components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
+    model: {
+      prop: 'settings',
+      event: 'change',
+    },
   props: {
     settings: Object,
     allHeaders: Array,
   },
   setup(props, { emit }) {
-    const { orderStatuses, trailers, trucks, drivers, loadingZoneItems } =
-      useOrderListSettingsData()
+    const { orderStatuses, trailers, trucks, drivers, loadingZoneItems } = useOrderListSettingsData()
     const refreshHandler = () => {
       emit('refresh')
     }
@@ -88,9 +86,13 @@ export default {
       emit('updateHeaders', val)
     }
 
-    // function updateSettings(value, field) {
-    //   emit('change', Object.assign({}, props.settings, { [field]: value }))
-    // }
+    function updateSettings(value, field) {
+      emit('change', Object.assign({}, props.settings, { [field]: value }))
+    }
+
+    function updateSettingsPage() {
+      emit('change', Object.assign({}, props.settings, { listOptions: { ...props.settings.listOptions, page: 1 } }))
+    }
 
     function searchInputHandler(val) {
       emit('change', Object.assign({}, props.settings, { search: val }))
@@ -100,7 +102,8 @@ export default {
       refreshHandler,
       updateHeadersHandler,
       searchInputHandler,
-      // updateSettings,
+      updateSettings,
+      updateSettingsPage,
       orderStatuses,
       trailers,
       trucks,
@@ -111,10 +114,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 </style>

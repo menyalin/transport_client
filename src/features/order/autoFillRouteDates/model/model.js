@@ -7,22 +7,19 @@ import { OrderService } from '@/shared/services'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-3, 'd').startOf('day').format(),
-    todayM.add(-1, 'd').endOf('day').format(),
-  ]
+  return [todayM.add(-3, 'd').startOf('day').format(), todayM.add(-1, 'd').endOf('day').format()]
 }
 
 export function useFeatureModel() {
   const truckItems = computed(() => {
     return store.getters.trucks
-      .filter((t) => t.type === 'truck')
-      .map((t) => ({ value: t._id, text: t.regNum }))
+      .filter(t => t.type === 'truck')
+      .map(t => ({ value: t._id, text: t.regNum }))
       .sort((a, b) => a.text - b.text)
   })
 
   function selectAllTrucks() {
-    settings.value.truckIds = truckItems.value.map((i) => i.value)
+    settings.value.truckIds = truckItems.value.map(i => i.value)
   }
 
   const operationToken = uuidv4()
@@ -54,12 +51,9 @@ export function useFeatureModel() {
 
   const disabledSubmit = computed(() => {
     const trucks = !settings.value.truckIds.length
-    const tripDurationInMinutes =
-      !!settings.value.tripDurationInMinutes &&
-      settings.value.tripDurationInMinutes >= 10
+    const tripDurationInMinutes = !!settings.value.tripDurationInMinutes && settings.value.tripDurationInMinutes >= 10
     const unloadingDurationInMinutes =
-      !!settings.value.unloadingDurationInMinutes &&
-      settings.value.unloadingDurationInMinutes >= 10
+      !!settings.value.unloadingDurationInMinutes && settings.value.unloadingDurationInMinutes >= 10
     return trucks || !tripDurationInMinutes || !unloadingDurationInMinutes
   })
   watch(

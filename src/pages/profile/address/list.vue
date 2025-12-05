@@ -2,70 +2,56 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+        <ButtonsPanel
+          panelType="list"
+          :disabledRefresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('address:write')"
           @submit="createAddress"
           @refresh="refresh"
         />
         <v-data-table
+          v-model:options="settings.listOptions"
           :search="settings.search"
           :headers="filteredHeaders"
           :items="prepareAddresses"
           :loading="loading"
-          fixed-header
-          :options.sync="settings.listOptions"
+          fixedHeader
           height="72vh"
-          dense
-          :footer-props="{
+         
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isShipmentPlace`]="{ item }">
-            <v-icon v-if="item.isShipmentPlace" color="green">
-              mdi-check
-            </v-icon>
-            <v-icon v-else> mdi-minus </v-icon>
+            <v-icon v-if="item.isShipmentPlace" color="green">mdi-check</v-icon>
+            <v-icon v-else>mdi-minus</v-icon>
           </template>
           <template #[`item.isDeliveryPlace`]="{ item }">
-            <v-icon v-if="item.isDeliveryPlace" color="green">
-              mdi-check
-            </v-icon>
-            <v-icon v-else> mdi-minus </v-icon>
+            <v-icon v-if="item.isDeliveryPlace" color="green">mdi-check</v-icon>
+            <v-icon v-else>mdi-minus</v-icon>
           </template>
           <template #[`item.region`]="{ item }">
-            {{
-              $store.getters.regionsMap.has(item.region)
-                ? $store.getters.regionsMap.get(item.region).name
-                : null
-            }}
+            {{ $store.getters.regionsMap.has(item.region) ? $store.getters.regionsMap.get(item.region).name : null }}
           </template>
           <template #[`item.city`]="{ item }">
-            {{
-              $store.getters.citiesMap.has(item.city)
-                ? $store.getters.citiesMap.get(item.city).name
-                : null
-            }}
+            {{ $store.getters.citiesMap.has(item.city) ? $store.getters.citiesMap.get(item.city).name : null }}
           </template>
 
           <template #[`item.zones`]="{ item }">
-            <span v-if="Array.isArray(item.zones)">{{
-              item.zones
-                .map((i) =>
-                  $store.getters.zonesMap.has(i)
-                    ? $store.getters.zonesMap.get(i).name
-                    : null
-                )
-                .filter((i) => !!i)
-                .join(', ')
-            }}</span>
+            <span v-if="Array.isArray(item.zones)">
+              {{
+                item.zones
+                  .map(i => ($store.getters.zonesMap.has(i) ? $store.getters.zonesMap.get(i).name : null))
+                  .filter(i => !!i)
+                  .join(', ')
+              }}
+            </span>
           </template>
 
           <template #[`item.isService`]="{ item }">
-            <v-icon v-if="item.isService" color="green"> mdi-check </v-icon>
-            <v-icon v-else> mdi-minus </v-icon>
+            <v-icon v-if="item.isService" color="green">mdi-check</v-icon>
+            <v-icon v-else>mdi-minus</v-icon>
           </template>
 
           <template #[`item.created`]="{ item }">
@@ -78,16 +64,17 @@
 
           <template #top>
             <div class="settings-wrapper">
-              <app-table-column-settings
+              <AppTableColumnSettings
                 v-model="activeHeaders"
                 :allHeaders="allHeaders"
                 :listSettingsName="listSettingsName"
               />
               <v-text-field
-                v-model="settings.search"
-                outlined
-                dense
-                hide-details
+                :modelValue="settings.search"
+                variant="outlined"
+       density="compact"
+               
+                hideDetails
                 clearable
                 label="Быстрый поиск"
                 :style="{ 'max-width': '500px' }"
@@ -160,14 +147,14 @@ export default {
   computed: {
     ...mapGetters(['addresses', 'loading', 'directoriesProfile']),
     prepareAddresses() {
-      return this.addresses.map((i) => ({
+      return this.addresses.map(i => ({
         ...i,
         created: new Date(i.createdAt),
         updated: new Date(i.updatedAt),
       }))
     },
     filteredHeaders() {
-      return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
+      return this.allHeaders.filter(i => this.activeHeaders.includes(i.value))
     },
   },
 
@@ -201,12 +188,12 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 15px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 15px;
+  }
 </style>

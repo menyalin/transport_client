@@ -2,14 +2,12 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-data-table
-          dense
-          :headers="headers"
-          :items="activeConnection"
-          :items-per-page="-1"
-        >
+        <v-data-table :headers="headers" :items="activeConnection"
+:items-per-page="-1">
           <template #top>
-            <v-subheader>Active connections</v-subheader>
+            <v-toolbar flat>
+              <v-toolbar-title>Active connections</v-toolbar-title>
+            </v-toolbar>
           </template>
         </v-data-table>
       </v-col>
@@ -31,13 +29,13 @@ export default {
     }
   },
   created() {
-    socket.on('activeUsers', (data) => {
+    socket.on('activeUsers', data => {
       this.activeConnection = data
     })
     socket.emit('getActiveUsers')
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     socket.off('activeUsers')
   },
 }

@@ -1,60 +1,64 @@
 <template>
   <div>
-    <app-block-title>
+    <AppBlockTitle>
       {{ title }}
-    </app-block-title>
+    </AppBlockTitle>
     <div class="fields-wrapper">
       <v-text-field
         label="Пропуск ДЕНЬ, №"
-        :value="params.dayPermitNumber"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.dayPermitNumber"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'dayPermitNumber')"
       />
       <DateTimeInput
         label="Действует до"
         :value="params.dayPermitExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'dayPermitExpDate')"
+        hidePrependIcon
+        hideTimeInput
         outlined
         dense
-        hide-details
+        hideDetails
+        @change="change($event, 'dayPermitExpDate')"
       />
       <v-text-field
         label="Зона действия"
-        :value="params.dayPermitZone"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.dayPermitZone"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'dayPermitZone')"
       />
 
       <v-text-field
         label="Пропуск НОЧЬ, №"
-        :value="params.nightPermitNumber"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.nightPermitNumber"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'nightPermitNumber')"
       />
       <DateTimeInput
         label="Действует до"
         :value="params.nightPermitExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'nightPermitExpDate')"
+        hidePrependIcon
+        hideTimeInput
         outlined
         dense
-        hide-details
+        hideDetails
+        @change="change($event, 'nightPermitExpDate')"
       />
       <v-text-field
         label="Зона действия"
-        :value="params.nightPermitZone"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.nightPermitZone"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'nightPermitZone')"
       />
     </div>
@@ -101,7 +105,7 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) {
-          this.fields.forEach((f) => {
+          this.fields.forEach(f => {
             this.params[f] = val[f]
           })
         }
@@ -122,10 +126,10 @@ export default {
 }
 </script>
 <style scoped>
-.fields-wrapper {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 220px 200px 220px 220px 200px 220px;
-  margin-bottom: 20px;
-}
+  .fields-wrapper {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 220px 200px 220px 220px 200px 220px;
+    margin-bottom: 20px;
+  }
 </style>

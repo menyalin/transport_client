@@ -1,19 +1,19 @@
 <template>
   <div class="wrapper">
     <div class="text-h6">Доступные соглашения:</div>
-    <v-btn @click="addAgreementHandler" small color="primary">Добавить</v-btn>
+    <v-btn size="small" color="primary" @click="addAgreementHandler">Добавить</v-btn>
     <v-data-table
       :headers="headers"
       :items="preparedAgreements"
-      hide-default-footer
+      hideDefaultFooter
       height="300px"
-      dense
-      fixed-header
+     
+      fixedHeader
       :itemsPerPage="-1"
       selected
       @dblclick:row="dblClickRowHandler"
     />
-    <v-dialog v-model="dialog" max-width="800">
+    <v-dialog :modelValue="dialog" maxWidth="800" @update:model-value="$emit('update:dialog', $event)">
       <AllowedAgreementForm
         :title="formTitle"
         :item="editedItem"
@@ -51,12 +51,10 @@ export default {
     const editedItem = ref(null)
     const dialog = ref(false)
     const agreementItemsMap = computed(() => {
-      return new Map(props.agreementItems.map((i) => [i._id, i]))
+      return new Map(props.agreementItems.map(i => [i._id, i]))
     })
     const formTitle = computed(() => {
-      return editedItem.value === null
-        ? 'Новое соглашение'
-        : 'Редактирование соглашения'
+      return editedItem.value === null ? 'Новое соглашение' : 'Редактирование соглашения'
     })
     const preparedAgreements = computed(() => {
       return props.agreements.map((i, idx) => ({
@@ -100,7 +98,7 @@ export default {
       closeAndResetItem()
     }
 
-    const saveHandler = (val) => {
+    const saveHandler = val => {
       const tmpRes = [...props.agreements]
       if (editedItem.value === null) {
         tmpRes.push(val) // Добавление нового соглашения
@@ -127,11 +125,11 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 15px;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 15px;
+  }
 </style>

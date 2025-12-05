@@ -27,33 +27,21 @@ export default {
     },
 
     scheduleRows() {
-      const trucksInOrdersSet = new Set(
-        this.$store.getters.ordersForSchedule
-          .map((i) => i.truckId)
-          .filter((i) => !!i)
-      )
+      const trucksInOrdersSet = new Set(this.$store.getters.ordersForSchedule.map(i => i.truckId).filter(i => !!i))
 
-      this.$store.getters.downtimesForSchedule.forEach((i) =>
-        trucksInOrdersSet.add(i.truck)
-      )
+      this.$store.getters.downtimesForSchedule.forEach(i => trucksInOrdersSet.add(i.truck))
 
-      const showTrucksFilter = (truck) => {
+      const showTrucksFilter = truck => {
         if (truck.type !== 'truck') return false
 
-        if (
-          trucksInOrdersSet.has(truck._id) ||
-          this.$store.getters.fixedInScheduleTrucksIds.includes(truck._id)
-        )
+        if (trucksInOrdersSet.has(truck._id) || this.$store.getters.fixedInScheduleTrucksIds.includes(truck._id))
           return true
 
-        if (this.$store.getters.onlyTrucksWithRoutes || truck.endServiceDate)
-          return false
+        if (this.$store.getters.onlyTrucksWithRoutes || truck.endServiceDate) return false
         return true
       }
 
-      return this.$store.getters.trucks
-        .filter(showTrucksFilter)
-        .sort((a, b) => a.order - b.order)
+      return this.$store.getters.trucks.filter(showTrucksFilter).sort((a, b) => a.order - b.order)
     },
   },
 

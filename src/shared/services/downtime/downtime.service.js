@@ -5,20 +5,20 @@ const BASE_PATH = '/downtimes'
 
 class DowntimeService {
   constructor() {
-    socket.on('downtime:created', (data) => {
+    socket.on('downtime:created', data => {
       store.commit('addDowntime', data)
       store.commit('addToCache', data)
     })
 
-    socket.on('downtimesForSchedule', (data) => {
+    socket.on('downtimesForSchedule', data => {
       store.commit('setDowntimes', data)
     })
 
-    socket.on('downtime:updated', (data) => {
+    socket.on('downtime:updated', data => {
       store.commit('updateDowntime', data)
       store.commit('addToCache', data)
     })
-    socket.on('downtime:deleted', (id) => {
+    socket.on('downtime:deleted', id => {
       store.commit('deleteDowntime', id)
       store.commit('deleteFromCache', id)
     })
@@ -51,8 +51,7 @@ class DowntimeService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

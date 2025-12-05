@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
-import { helpers } from 'vuelidate/lib/validators'
+import { helpers } from '@vuelidate/validators'
 
-export const isLaterThan = (startDate) =>
+export const isLaterThan = startDate =>
   helpers.withParams({ type: 'isLaterThan', eq: startDate }, function (val) {
     if (startDate && val && dayjs(val).isValid() && dayjs(startDate).isValid())
       return dayjs(startDate).isSameOrBefore(val)

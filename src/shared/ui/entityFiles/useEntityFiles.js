@@ -1,18 +1,16 @@
 import { onMounted, ref } from 'vue'
 import { FileService } from '@/shared/services'
 
-export const useEntityFiles = (props) => {
+export const useEntityFiles = props => {
   const items = ref([])
   const selectedFiles = ref([])
   const dialog = ref(false)
   const loading = ref(false)
   const uploadProgress = ref({})
 
-  const uploadProgressHandler = (filename) => (progressEvent) => {
+  const uploadProgressHandler = filename => progressEvent => {
     if (progressEvent.lengthComputable) {
-      const progress = Math.round(
-        (progressEvent.loaded / progressEvent.total) * 100
-      )
+      const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
       uploadProgress.value = { ...uploadProgress.value, [filename]: progress }
     }
   }
@@ -20,21 +18,16 @@ export const useEntityFiles = (props) => {
   const uploadFilesHandler = async () => {
     if (!selectedFiles.value?.length || !props.itemId || !props.docType) return
     loading.value = true
-    const uploadPromises = Array.from(selectedFiles.value).map(async (file) => {
+    const uploadPromises = Array.from(selectedFiles.value).map(async file => {
       const { url: uploadUrl, key } = await getFileUploadUrl(file)
-      await FileService.uploadFile(
-        uploadUrl,
-        file,
-        key,
-        uploadProgressHandler(file.name)
-      )
+      await FileService.uploadFile(uploadUrl, file, key, uploadProgressHandler(file.name))
     })
 
     await Promise.all(uploadPromises)
     cancelDialogHandler()
   }
 
-  const getFileUploadUrl = async (file) => {
+  const getFileUploadUrl = async file => {
     return await FileService.getUploadUrl({
       docType: props.docType,
       docId: props.itemId,
@@ -68,7 +61,7 @@ export const useEntityFiles = (props) => {
     await getFiles()
   }
 
-  const downloadItemHandler = async (item) => {
+  const downloadItemHandler = async item => {
     const { key, originalName } = item
     if (!key || !originalName) return
     try {
@@ -88,11 +81,11 @@ export const useEntityFiles = (props) => {
     }
   }
 
-  const removeItemHandler = async (key) => {
+  const removeItemHandler = async key => {
     try {
       loading.value = true
       await FileService.deleteObject(key)
-      items.value = items.value.filter((i) => i.key !== key)
+      items.value = items.value.filter(i => i.key !== key)
     } catch (e) {
       console.log('Ошибка удаления файла: ', e)
     } finally {
@@ -100,7 +93,7 @@ export const useEntityFiles = (props) => {
     }
   }
 
-  const updateNoteHandler = async (item) => {
+  const updateNoteHandler = async item => {
     try {
       loading.value = true
       await FileService.updateNote(item._id, item.note)

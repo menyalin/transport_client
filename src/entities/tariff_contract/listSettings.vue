@@ -1,59 +1,68 @@
 <template>
   <div class="wrapper">
     <v-autocomplete
-      :value="settings.agreements"
+      v-model="agreementsModel"
       label="Соглашения"
       multiple
-      auto-select-first
+      autoSelectFirst
       clearable
-      item-value="_id"
-      item-text="name"
-      dense
-      hide-details
-      outlined
+      itemValue="_id"
+      itemTitle="name"
+
+      hideDetails
+      variant="outlined"
+       density="compact"
       :items="agreementItems"
-      @change="changeFieldHandler('agreements', $event)"
       :style="{ maxWidth: '600px' }"
     />
     <v-text-field
-      :value="settings.searchStr"
+      v-model="searchStrModel"
       label="Поиск"
-      dense
-      hide-details
+
+      hideDetails
       clearable
-      outlined
-      @change="changeFieldHandler('searchStr', $event)"
+      variant="outlined"
+       density="compact"
       :style="{ maxWidth: '300px' }"
     />
   </div>
 </template>
 <script>
+import { computed } from 'vue'
+
 export default {
   name: 'TariffContractListSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
   props: {
-    settings: Object,
+    modelValue: {
+      type: Object,
+      required: true,
+    },
     agreementItems: Array,
   },
-  setup(props, ctx) {
-    const changeFieldHandler = (field, value) => {
-      ctx.emit('change', { ...props.settings, [field]: value })
-    }
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    const agreementsModel = computed({
+      get: () => props.modelValue.agreements,
+      set: (value) => emit('update:modelValue', { ...props.modelValue, agreements: value })
+    })
+
+    const searchStrModel = computed({
+      get: () => props.modelValue.searchStr,
+      set: (value) => emit('update:modelValue', { ...props.modelValue, searchStr: value })
+    })
 
     return {
-      changeFieldHandler,
+      agreementsModel,
+      searchStrModel,
     }
   },
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  padding: 10px;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 10px;
+  }
 </style>

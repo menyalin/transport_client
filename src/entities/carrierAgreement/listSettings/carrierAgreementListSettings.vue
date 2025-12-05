@@ -1,18 +1,19 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       listSettingsName="carrierAgreementListSettings"
       @change="updateHeadersHandler"
     />
 
     <v-text-field
-      :value="settings.search"
+      :modelValue="settings?.search"
       label="Поиск"
-      dense
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :style="{ maxWidth: '400px' }"
       @change="updateSettings($event, 'search')"
     />
@@ -34,7 +35,8 @@ export default {
   },
   setup(props, ctx) {
     function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
+      const currentSettings = props.settings || {}
+      ctx.emit('change', Object.assign({}, currentSettings, { [field]: value }))
     }
 
     function updateHeadersHandler(val) {
@@ -49,10 +51,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  gap: 15px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 15px;
+  }
 </style>

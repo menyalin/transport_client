@@ -1,18 +1,20 @@
 <template>
-  <v-alert v-if="errors.length > 0" type="error" outlined>
-    Ошибка загрузки реестра: <br />
+  <v-alert v-if="errors.length > 0" type="error" variant="outlined">
+    Ошибка загрузки реестра:
+    <br />
     <ul>
       <li v-for="error in errors" :key="error.message">{{ error }}</li>
     </ul>
   </v-alert>
-  <v-alert v-else :type="hasTotalSumDiff ? 'error' : 'info'" outlined>
+  <v-alert v-else :type="hasTotalSumDiff ? 'error' : 'info'" variant="outlined">
     Кол-во рейсов в реестре:
     <b>{{ items.length }}</b>
     , Общая сумма реестра:
     <b>{{ formattedSum }}</b>
     <br />
     <div v-if="totalPickedSum">
-      Итог по выбранным рейсам: <b>{{ formattedPickedSum }}</b>
+      Итог по выбранным рейсам:
+      <b>{{ formattedPickedSum }}</b>
     </div>
   </v-alert>
 </template>

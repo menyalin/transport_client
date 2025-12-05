@@ -1,8 +1,8 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
-      panel-type="list"
-      :disabled-refresh="!$store.getters.directoriesProfile"
+  <EntityListWrapper>
+    <ButtonsPanel
+      panelType="list"
+      :disabledRefresh="!$store.getters.directoriesProfile"
       :disabledSubmit="!$store.getters.hasPermission('incomingInvoice:write')"
       @submit="create"
       @refresh="refresh"
@@ -14,21 +14,18 @@
     />
     <IncomingInvoiceDataTable
       v-model="settings"
+      v-model:listOptions="listOptions"
       :items="items"
       :totalCount="totalCount"
       :headers="headers"
       :analyticsData="analyticsData"
-      :listOptions.sync="listOptions"
       :loading="loading"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script>
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import {
-  IncomingInvoiceListSettings,
-  IncomingInvoiceDataTable,
-} from '@/entities/incomingInvoice'
+import { IncomingInvoiceListSettings, IncomingInvoiceDataTable } from '@/entities/incomingInvoice'
 
 import { useListData } from './model/useListData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement/useCarrierAgreements.js'

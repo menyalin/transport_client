@@ -54,13 +54,13 @@ export default class TableData {
   }
 
   get fileNameStr() {
-    return `Опись №${this.docsRegistry.number} от ${dayjs(
-      this.docsRegistry.date
-    ).format('YYYY-MM-DD')} : ${this.$placeName}`
+    return `Опись №${this.docsRegistry.number} от ${dayjs(this.docsRegistry.date).format(
+      'YYYY-MM-DD'
+    )} : ${this.$placeName}`
   }
 
   tableRows() {
-    return this.items.map((row) => {
+    return this.items.map(row => {
       return this.headers.map((col, idx) => {
         return {
           text: row[col.value] || ' ',
@@ -74,26 +74,21 @@ export default class TableData {
   getCompanyName() {
     return (
       this.docsRegistry.executorName ||
-      store.getters.myCompanies.find((i) => i._id === this.docsRegistry.company)
-        .fullName
+      store.getters.myCompanies.find(i => i._id === this.docsRegistry.company).fullName
     )
   }
   placeName() {
     const client = store.getters.partnersMap.get(this.docsRegistry.client)
     if (!client || !client.placesForTransferDocs) return ''
-    const place = client.placesForTransferDocs.find(
-      (place) => place.address === this.docsRegistry.placeForTransferDocs
-    )
+    const place = client.placesForTransferDocs.find(place => place.address === this.docsRegistry.placeForTransferDocs)
     return place?.title || '???'
   }
 
   getClientName() {
-    return (
-      store.getters.partnersMap.get(this.docsRegistry.client)?.fullName || '???'
-    )
+    return store.getters.partnersMap.get(this.docsRegistry.client)?.fullName || '???'
   }
   getPlaces() {
-    const placesSet = new Set(this.docsRegistry.orders.map((i) => i.placeName))
+    const placesSet = new Set(this.docsRegistry.orders.map(i => i.placeName))
     return Array.from(placesSet)
       .sort((a, b) => (a > b ? 1 : -1))
       .join(', ')

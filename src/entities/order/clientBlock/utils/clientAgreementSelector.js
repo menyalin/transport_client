@@ -12,8 +12,8 @@ export const clientAgreementSelector = ({ allowedAgreements, carrierId }) => {
       return +new Date(b.createdAt) - +new Date(a.createdAt)
     })
   return (
-    agreements.find((i) => i.executor === carrierId) ||
-    agreements.find((i) => i.allowedCarriers.includes(carrierId)) ||
+    agreements.find(i => i.executor === carrierId) ||
+    agreements.find(i => i.allowedCarriers.includes(carrierId)) ||
     agreements[0] ||
     null
   )

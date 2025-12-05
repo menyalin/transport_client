@@ -9,10 +9,7 @@ export const useListData = () => {
   const { allCarriers: carrierItems } = useCarriers()
 
   const setInitialPeriod = () => {
-    return [
-      dayjs().startOf('month').toISOString(),
-      dayjs().endOf('month').toISOString(),
-    ]
+    return [dayjs().startOf('month').toISOString(), dayjs().endOf('month').toISOString()]
   }
   const headers = [
     { value: 'tkName', text: 'ТК' },
@@ -52,13 +49,11 @@ export const useListData = () => {
     'crewList:listOptions'
   )
   const driverItems = computed(() => {
-    return proxy.$store.getters
-      .driversForSelect(settings.value.tkName)
-      .map((d) => ({
-        ...d,
-        value: d._id,
-        text: d?.fullName || 'invalid_full_name',
-      }))
+    return proxy.$store.getters.driversForSelect(settings.value.tkName).map(d => ({
+      ...d,
+      value: d._id,
+      text: d?.fullName || 'invalid_full_name',
+    }))
   })
 
   const truckItems = computed(() => {
@@ -67,7 +62,7 @@ export const useListData = () => {
         type: 'truck',
         tkName: settings.value?.tkName,
       })
-      .map((t) => ({
+      .map(t => ({
         ...t,
         value: t._id,
         text: t.regNum,
@@ -116,9 +111,7 @@ export const useListData = () => {
   function getTruckName(crew, field) {
     const lastIdx = crew.transport.length - 1
     const truckId = crew.transport[lastIdx][field]
-    return truckId
-      ? proxy.$store.getters.trucksMap.get(truckId)?.regNum || '__error__'
-      : ' - '
+    return truckId ? proxy.$store.getters.trucksMap.get(truckId)?.regNum || '__error__' : ' - '
   }
   function getDriverName(crew) {
     if (!!crew.driver && proxy.$store.getters.driversMap.has(crew.driver))

@@ -2,43 +2,45 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+        <ButtonsPanel
+          panelType="list"
+          :disabledRefresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('partner:write')"
           @submit="create"
           @refresh="refresh"
         />
         <div class="settings-wrapper">
           <v-select
-            v-model="settings.partnerType"
-            outlined
+            :modelValue="settings.partnerType"
+            variant="outlined"
+       density="compact"
             :items="partnerTypeItems"
-            hide-details
-            dense
+            hideDetails
+           
             :style="{ 'max-width': '400px' }"
           />
           <v-text-field
-            v-model="settings.search"
+            :modelValue="settings.search"
             label="Поиск"
-            outlined
-            hide-details
-            dense
+            variant="outlined"
+       density="compact"
+            hideDetails
+           
             clearable
           />
         </div>
         <v-data-table
+          v-model:options="listOptions"
           :headers="headers"
           :items="filteredPartners"
           :loading="loading"
-          fixed-header
+          fixedHeader
           :search="settings.search"
           height="73vh"
-          dense
-          :footer-props="{
+         
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isClient`]="{ item }">
@@ -68,10 +70,7 @@ export default {
   },
   setup() {
     const { proxy } = getCurrentInstance()
-    const settings = usePersistedRef(
-      { search: null, partnerType: 'all' },
-      'PartnerList:settings'
-    )
+    const settings = usePersistedRef({ search: null, partnerType: 'all' }, 'PartnerList:settings')
 
     const listOptions = usePersistedRef(
       { page: 1, itemsPerPage: 50, sortBy: [], sortDesc: [] },
@@ -82,21 +81,19 @@ export default {
       { value: 'client', text: 'Заказчик' },
       { value: 'service', text: 'Сервис' },
     ]
-    const partnerTypeCondition = (partner) => {
+    const partnerTypeCondition = partner => {
       if (settings.value.partnerType === 'client') return partner.isClient
       if (settings.value.partnerType === 'service') return partner.isService
       return true
     }
 
     const filteredPartners = computed(() => {
-      return proxy.$store.getters.partners
-        .filter(partnerTypeCondition)
-        .map((i) => ({
-          ...i,
-          group: proxy.$store.getters.partnerGroupsMap.get(i.group),
-          created: new Date(i.createdAt),
-          updated: new Date(i.updatedAt),
-        }))
+      return proxy.$store.getters.partners.filter(partnerTypeCondition).map(i => ({
+        ...i,
+        group: proxy.$store.getters.partnerGroupsMap.get(i.group),
+        created: new Date(i.createdAt),
+        updated: new Date(i.updatedAt),
+      }))
     })
     return {
       listOptions,
@@ -136,10 +133,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  padding-bottom: 20px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding-bottom: 20px;
+  }
 </style>

@@ -2,26 +2,28 @@ import { AddressForm } from '@/entities/address';
 <template>
   <div class="wrapper">
     <v-autocomplete
-      :value="settings.executor"
+      :modelValue="settings.executor"
       :items="carrierItems"
-      item-text="name"
-      item-value="_id"
+      itemTitle="name"
+      itemValue="_id"
       label="ТК Исполнитель"
-      dense
-      hide-details
+     
+      hideDetails
       clearable
-      outlined
-      auto-select-first
-      @change="updateSettings($event, 'executor')"
+      variant="outlined"
+       density="compact"
+      autoSelectFirst
       :style="{ maxWidth: '300px' }"
+      @update:model-value="updateSettings($event, 'executor')"
     />
     <v-text-field
-      :value="settings.search"
+      :modelValue="settings.search"
       label="Поиск"
-      dense
-      hide-details
+     
+      hideDetails
       clearable
-      outlined
+      variant="outlined"
+       density="compact"
       @change="updateSettings($event, 'search')"
     />
   </div>
@@ -51,10 +53,10 @@ export default {
 }
 </script>
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  padding: 10px;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 10px;
+  }
 </style>

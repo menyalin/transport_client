@@ -1,25 +1,25 @@
 <template>
   <v-data-table
+    v-model="selected"
     :items="preparedOrders"
     :headers="headers"
-    v-model="selected"
     multiple
-    item-key="_id"
-    checkbox-color="primary"
+    itemKey="_id"
+    checkboxColor="primary"
     :showSelect="!disabled"
     :itemsPerPage="-1"
     :footerProps="{
       itemsPerPageOptions: [-1, 100],
     }"
-    dense
+   
     @dblclick:row="dblclickRowHandler"
   >
-    <template v-slot:top>
+    <template #top>
       <v-btn
         v-if="!disabled"
         :disabled="!selectedOrderIds.length"
-        small
-        text
+        size="small"
+        variant="text"
         color="error"
         @click="deleteHandler"
       >
@@ -48,12 +48,8 @@
     </template>
 
     <template #[`item.needUpdate`]="{ item }">
-      <v-icon
-        v-if="item.needUpdate"
-        color="orange"
-        :style="{ cursor: 'pointer' }"
-        @click="updateItemPrice(item._id)"
-      >
+      <v-icon v-if="item.needUpdate" color="orange" :style="{ cursor: 'pointer' }"
+@click="updateItemPrice(item._id)">
         mdi-alert
       </v-icon>
     </template>
@@ -74,7 +70,7 @@ export default {
   },
   setup(props, { emit }) {
     const selected = ref([])
-    const selectedOrderIds = computed(() => selected.value.map((i) => i.rowId))
+    const selectedOrderIds = computed(() => selected.value.map(i => i.rowId))
     const expanded = ref([])
     const preparedOrders = computed(() => {
       if (!props.orders) return []
@@ -82,15 +78,9 @@ export default {
         idx: idx + 1,
         ...item,
         plannedDate: new Date(item.plannedDate).toLocaleDateString(),
-        savedTotal: item.savedTotal
-          ? item.savedTotal
-          : { price: 0, priceWOVat: 0 },
-        hasDiffPrice:
-          item.loaderData?.price &&
-          item.loaderData?.price !== item.savedTotal?.price,
-        hasDiffPriceWOVat:
-          item.loaderData?.priceWOVat &&
-          item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
+        savedTotal: item.savedTotal ? item.savedTotal : { price: 0, priceWOVat: 0 },
+        hasDiffPrice: item.loaderData?.price && item.loaderData?.price !== item.savedTotal?.price,
+        hasDiffPriceWOVat: item.loaderData?.priceWOVat && item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
         loadedPrice: item.loaderData?.price || 0,
         loadedPriceWOVat: item.loaderData?.priceWOVat || 0,
       }))
@@ -103,10 +93,7 @@ export default {
 
     function dblclickRowHandler(_event, { item }) {
       if (!item.orderId) {
-        store.commit(
-          'setError',
-          'Ссылка отсутствует! Необходимо удалить рейс из акта!'
-        )
+        store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
         return
       }
       emit('dblRowClick', item.orderId)
@@ -114,10 +101,7 @@ export default {
 
     function updateItemPrice(itemId) {
       if (!itemId) {
-        store.commit(
-          'setError',
-          'Ссылка отсутствует! Необходимо удалить рейс из акта!'
-        )
+        store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
         return
       }
       emit('updateItemPrice', itemId)
@@ -139,11 +123,11 @@ export default {
 }
 </script>
 <style scoped>
-.diff-cell {
-  border: 1px solid rgb(255, 97, 97);
-  background-color: rgba(255, 97, 97, 0.2);
-  border-radius: 5px;
-  margin: 1px 2px;
-  padding: 0px 2px;
-}
+  .diff-cell {
+    border: 1px solid rgb(255, 97, 97);
+    background-color: rgba(255, 97, 97, 0.2);
+    border-radius: 5px;
+    margin: 1px 2px;
+    padding: 0px 2px;
+  }
 </style>

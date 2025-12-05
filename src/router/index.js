@@ -1,6 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
+import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
 
 import profileRoutes from './profile/index.js'
@@ -24,8 +22,6 @@ const _checkPermissions = async (permissions, next, _to, from) => {
     })
   } else next()
 }
-
-Vue.use(VueRouter)
 
 const routes = [
   ...authRoutes,
@@ -51,39 +47,30 @@ const routes = [
   },
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
 router.beforeEach(async (to, from, next) => {
-  if (!!localStorage.getItem('token') && !store.getters.isLoggedIn)
-    await store.dispatch('getUserData')
+  if (!!localStorage.getItem('token') && !store.getters.isLoggedIn) await store.dispatch('getUserData')
 
   const nearestWithTitle = to.matched
     .slice()
     .reverse()
-    .find((r) => r.meta && r.meta.title)
+    .find(r => r.meta && r.meta.title)
 
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title
   else document.title = import.meta.env.VITE_APP_NAME || 's4log'
 
-  const permissions = to.matched
-    .map((r) => r.meta.permission)
-    .filter((p) => !!p)
+  const permissions = to.matched.map(r => r.meta.permission).filter(p => !!p)
 
-  if (
-    to.matched.some(
-      (record) => record.meta.authRequired && !store.getters.isLoggedIn
-    )
-  )
+  if (to.matched.some(record => record.meta.authRequired && !store.getters.isLoggedIn))
     next({
       path: '/auth/login',
       query: { redirect: to.fullPath },
     })
-  else if (store.getters.user && permissions.length)
-    _checkPermissions(permissions, next, to, from)
+  else if (store.getters.user && permissions.length) _checkPermissions(permissions, next, to, from)
   else next()
 })
 

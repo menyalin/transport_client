@@ -1,6 +1,6 @@
 <template>
-  <v-simple-table>
-    <template v-slot:default>
+  <v-table>
+    <template #default>
       <thead>
         <tr>
           <th class="text-left">#</th>
@@ -13,15 +13,11 @@
         </tr>
       </thead>
       <tbody>
-        <CompareItemsTableRow
-          v-for="(item, idx) in items"
-          :key="item.clientNum"
-          :item="item"
-          :idx="idx"
-        />
+        <CompareItemsTableRow v-for="(item, idx) in items" :key="item.clientNum" :item="item"
+:idx="idx" />
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 import CompareItemsTableRow from './compareItemsTableRow.vue'

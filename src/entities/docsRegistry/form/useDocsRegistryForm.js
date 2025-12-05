@@ -4,7 +4,7 @@ import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
 
-const getInitialState = (editedItem) => ({
+const getInitialState = editedItem => ({
   number: editedItem?.number || null,
   client: editedItem?.client || null,
   agreement: editedItem?.agreement || null,
@@ -36,9 +36,7 @@ function useDocsRegistryForm() {
     const clientField = v$.value.client
     if (!clientField.$invalid) return err
 
-    clientField.$dirty &&
-      clientField.required.$invalid &&
-      err.push('Реквизит не может быть пустым')
+    clientField.$dirty && clientField.required.$invalid && err.push('Реквизит не может быть пустым')
     return err
   })
 
@@ -47,9 +45,7 @@ function useDocsRegistryForm() {
     const field = v$.value.placeForTransferDocs
     if (!field.$invalid) return err
 
-    field.$dirty &&
-      field.required.$invalid &&
-      err.push('Площадка не может быть пустой')
+    field.$dirty && field.required.$invalid && err.push('Площадка не может быть пустой')
     return err
   })
 
@@ -58,9 +54,7 @@ function useDocsRegistryForm() {
     const field = v$.value.agreement
     if (!field.$invalid) return err
 
-    field.$dirty &&
-      field.required.$invalid &&
-      err.push('Соглашение не может быть пустым')
+    field.$dirty && field.required.$invalid && err.push('Соглашение не может быть пустым')
     return err
   })
 
@@ -72,9 +66,7 @@ function useDocsRegistryForm() {
   })
 
   const agreementItems = computed(() => {
-    return allAgreements.value
-      .filter((i) => i.clients.includes(state.value.client))
-      .map((i) => ({ ...i, value: i._id }))
+    return allAgreements.value.filter(i => i.clients.includes(state.value.client)).map(i => ({ ...i, value: i._id }))
   })
 
   function changeAgreementHandler(value) {

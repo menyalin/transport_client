@@ -2,24 +2,17 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error"
+ @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <AppLoadSpinner v-if="loading" />
         <AddressForm
           v-else
           :address="item"
           :partnerItems="partnerApi.allPartners"
           :partnerActions="partnerApi.actions"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('address:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('address:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

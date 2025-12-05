@@ -3,7 +3,7 @@ import { useVuelidate } from '@vuelidate/core'
 
 export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
-  const getState = (item) => {
+  const getState = item => {
     return item !== null
       ? item
       : {
@@ -48,7 +48,7 @@ export const useForm = (props, ctx) => {
 
   watch(
     () => props.item,
-    (value) => {
+    value => {
       if (!value) return
       state.value = getState(value)
     },

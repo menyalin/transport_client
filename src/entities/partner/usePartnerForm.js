@@ -28,6 +28,7 @@ export const usePartnerForm = (props, ctx) => {
     if (v$.value.name.$invalid && v$.value.name.$dirty) {
       return 'Поле обязательно для заполнения'
     }
+    return ''
   })
   function companyInfoChangedHandler(val) {
     state.value = { ...state.value, companyInfo: val }
@@ -50,7 +51,7 @@ export const usePartnerForm = (props, ctx) => {
 
   watch(
     () => props.item,
-    (val) => {
+    val => {
       state.value = { ...initialState(), ...val }
     },
     { immediate: true, deep: true }

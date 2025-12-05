@@ -1,34 +1,28 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
-      panel-type="list"
-      :disabled-refresh="!$store.getters.directoriesProfile"
+  <EntityListWrapper>
+    <ButtonsPanel
+      panelType="list"
+      :disabledRefresh="!$store.getters.directoriesProfile"
       :disabledSubmit="!$store.getters.hasPermission('docsRegistry:write')"
       @submit="create"
       @refresh="refresh"
     />
-    <docs-registry-list-settings
+    <DocsRegistryListSettings v-model="settings" @updateHeaders="changeHeaders" />
+    <DocsRegistryDataTable
       v-model="settings"
-      @updateHeaders="changeHeaders"
-    />
-    <docs-registry-data-table
-      v-model="settings"
+      v-model:listOptions="settings.listOptions"
       :items="items"
       :headers="headers"
       :totalCount="totalCount"
       :statisticData="statisticData"
-      :listOptions.sync="settings.listOptions"
       :loading="loading"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script>
 import { ref, onBeforeUnmount } from 'vue'
 import socket from '@/socket'
-import {
-  DocsRegistryListSettings,
-  DocsRegistryDataTable,
-} from '@/widgets/docsRegistry'
+import { DocsRegistryListSettings, DocsRegistryDataTable } from '@/widgets/docsRegistry'
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 
@@ -45,16 +39,7 @@ export default {
     function changeHeaders(val) {
       headers.value = val
     }
-    const {
-      create,
-      refresh,
-      settings,
-      items,
-      totalCount,
-      loading,
-      statisticData,
-      onDeleteHandler,
-    } = useListData()
+    const { create, refresh, settings, items, totalCount, loading, statisticData, onDeleteHandler } = useListData()
 
     socket.on('docsRegistry:deleted', onDeleteHandler)
     onBeforeUnmount(() => {

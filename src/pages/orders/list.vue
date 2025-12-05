@@ -1,45 +1,38 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
-      panel-type="list"
+  <EntityListWrapper>
+    <ButtonsPanel
+      panelType="list"
       :disabledSubmit="!$store.getters.hasPermission('order:create')"
       @submit="create"
       @refresh="refresh"
     />
-    <orders-table-settings
+    <OrdersTableSettings
       v-model="settings"
       :minDate="minDate"
-      @putTableToClipboard="putOrdersTableToClipboard(items)"
       :allHeaders="allHeaders"
+      @putTableToClipboard="putOrdersTableToClipboard(items)"
       @updateHeaders="updateActiveHeaders"
     />
-    <orders-table
+    <OrdersTable
+      v-model:listOptions="settings.listOptions"
       :items="items"
       :headers="headers"
       :loading="loading"
-      :listOptions.sync="settings.listOptions"
       :statisticData="statisticData"
       @openDocsDialog="openDocsDialog"
     />
-    <v-dialog v-model="docDialog" max-width="1300" persistent>
-      <order-docs-list
-        :orderId="editableOrderId"
-        :docs="editableDocs"
-        @save="saveDocDialog"
-        @cancel="cancelDocDialog"
-      />
+    <v-dialog v-model="docDialog" maxWidth="1300" persistent>
+      <OrderDocsList
+:orderId="editableOrderId"
+:docs="editableDocs" @save="saveDocDialog" @cancel="cancelDocDialog"
+/>
     </v-dialog>
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script>
 import { ref } from 'vue'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import {
-  OrdersTable,
-  OrderDocsList,
-  useOrderDocs,
-  OrdersTableSettings,
-} from '@/entities/order'
+import { OrdersTable, OrderDocsList, useOrderDocs, OrdersTableSettings } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 
@@ -56,28 +49,14 @@ export default {
     const allHeaders = ORDERS_TABLE_HEADERS
     const headers = ref([])
 
-    const {
-      editableOrderId,
-      openDocsDialog,
-      docDialog,
-      editableDocs,
-      saveDocDialog,
-      cancelDocDialog,
-    } = useOrderDocs()
+    const { editableOrderId, openDocsDialog, docDialog, editableDocs, saveDocDialog, cancelDocDialog } =
+      useOrderDocs()
 
     function updateActiveHeaders(val) {
       headers.value = val
     }
 
-    const {
-      refresh,
-      create,
-      settings,
-      items,
-      loading,
-      minDate,
-      statisticData,
-    } = useListData()
+    const { refresh, create, settings, items, loading, minDate, statisticData } = useListData()
 
     return {
       putOrdersTableToClipboard,

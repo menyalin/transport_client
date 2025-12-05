@@ -2,13 +2,11 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <app-load-spinner v-if="loading" />
-        <app-document-form
+        <AppLoadSpinner v-if="loading" />
+        <AppDocumentForm
           v-else
           :document="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('document:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('document:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

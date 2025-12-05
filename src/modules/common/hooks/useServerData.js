@@ -12,9 +12,9 @@ export const useServerData = ({ ctx, service, propValue }) => {
       loading.value = true
       service
         .getForAutocomplete({ id: propValue })
-        .then((val) => {
+        .then(val => {
           if (val?.length)
-            items.value = val.map((i) => ({
+            items.value = val.map(i => ({
               value: i._id,
               text: i.fullName || i.name,
             }))
@@ -26,19 +26,20 @@ export const useServerData = ({ ctx, service, propValue }) => {
     }
   })
 
-  const handleChange = (val) => {
+  const handleChange = val => {
     itemSelected = true
     ctx.emit('change', val)
   }
-  const handleSearchInputUpdate = async (val) => {
+  const handleSearchInputUpdate = async val => {
     searchString.value = val
     loading.value = true
     if (itemSelected) {
       itemSelected = false
     } else {
-      items.value = (
-        (await service.getForAutocomplete({ searchStr: val })) || []
-      ).map((i) => ({ value: i._id, text: i.fullName || i.name }))
+      items.value = ((await service.getForAutocomplete({ searchStr: val })) || []).map(i => ({
+        value: i._id,
+        text: i.fullName || i.name,
+      }))
     }
     loading.value = false
   }

@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <app-bar />
+    <AppBar />
     <v-main>
       <div class="layout">
-        <app-left-nav :items="navButtons" />
+        <AppLeftNav :items="navButtons" />
         <router-view />
       </div>
-      <app-snackbar />
+      <AppSnackbar />
     </v-main>
   </v-app>
 </template>

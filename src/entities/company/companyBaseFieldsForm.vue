@@ -1,22 +1,21 @@
 <template>
   <div>
-    <buttons-panel
-      panelType="form"
-      @cancel="cancelHandler"
-      @submit="submitHandler"
-      :disabledSubmit="invalidForm"
-    />
+    <ButtonsPanel
+panelType="form"
+:disabledSubmit="invalidForm" @cancel="cancelHandler" @submit="submitHandler"
+/>
     <div class="form-wrapper">
       <v-text-field
         v-model="state.fullName"
         label="Полное названии компании"
-        dense
+       
         required
         clearable
-        outlined
-        @blur="v$.fullName.$touch"
-        :error-messages="fullNameErrorMessages"
+        variant="outlined"
+       density="compact"
+        :errorMessages="fullNameErrorMessages"
         :style="{ maxWidth: '400px' }"
+        @blur="v$.fullName.$touch"
       />
     </div>
   </div>
@@ -33,8 +32,7 @@ export default {
     item: { type: Object, required: true },
   },
   setup(props, ctx) {
-    const { v$, state, invalidForm, fullNameErrorMessages, setFormState } =
-      useBaseFieldsForm(props.item)
+    const { v$, state, invalidForm, fullNameErrorMessages, setFormState } = useBaseFieldsForm(props.item)
 
     function cancelHandler() {
       router.go(-1)
@@ -68,10 +66,10 @@ export default {
 }
 </script>
 <style scoped>
-.form-wrapper {
-  display: flex;
-  margin: 20px;
-  flex-direction: column;
-  gap: 10px;
-}
+  .form-wrapper {
+    display: flex;
+    margin: 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
 </style>

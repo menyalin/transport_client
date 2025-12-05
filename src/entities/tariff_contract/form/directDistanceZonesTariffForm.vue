@@ -5,36 +5,26 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
-            label="Тип ТС"
-            :items="truckKindItems"
-            multiple
-            v-model="form.truckKinds"
-          />
+v-model="form.truckKinds"
+label="Тип ТС" :items="truckKindItems" multiple
+/>
           <v-select
-            multiple
-            label="Грузоподъемность"
-            :items="liftCapacityItems"
-            v-model="form.liftCapacities"
-          />
+v-model="form.liftCapacities"
+multiple label="Грузоподъемность" :items="liftCapacityItems"
+/>
         </div>
         <div class="input-fields-row">
-          <v-text-field
-            label="Кол-во точек, включенных в тариф"
-            v-model.number="v$.includedPoints.$model"
-          />
-          <v-text-field
-            label="Тариф за доп.точку"
-            v-model.number="v$.pointPrice.$model"
-          />
+          <v-text-field v-model.number="v$.includedPoints.$model" label="Кол-во точек, включенных в тариф" />
+          <v-text-field v-model.number="v$.pointPrice.$model" label="Тариф за доп.точку" />
         </div>
         <div class="input-fields-row">
           <v-autocomplete
+            v-model="form.loadingZone"
             label="Зона погрузки"
             :items="zoneItems"
-            item-value="_id"
-            item-text="name"
-            auto-select-first
-            v-model="form.loadingZone"
+            itemValue="_id"
+            itemTitle="name"
+            autoSelectFirst
           />
         </div>
         <div v-for="(_zone, idx) of form.zones" :key="idx" class="zone-row">
@@ -42,30 +32,20 @@
             v-model.number="form.zones[idx].distance"
             label="До, км"
             :style="{ 'max-width': '100px' }"
-            dense
+           
           />
           <v-text-field
             v-model.number="form.zones[idx].price"
             label="Тариф"
-            dense
+           
             :style="{ 'max-width': '160px' }"
           />
-          <v-btn
-            v-if="showDeleteBtn(idx)"
-            icon
-            small
-            color="red"
-            @click="deleteRow"
-          >
-            <v-icon small> mdi-delete </v-icon>
+          <v-btn v-if="showDeleteBtn(idx)" icon size="small" color="red" @click="deleteRow">
+            <v-icon size="small">mdi-delete</v-icon>
           </v-btn>
-          <v-btn
-            v-if="showAddBtn(idx) && !invalidZones"
-            icon
-            color="primary"
-            @click="addRow"
-          >
-            <v-icon> mdi-plus-circle </v-icon>
+          <v-btn v-if="showAddBtn(idx) && !invalidZones" icon color="primary"
+@click="addRow">
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
       </v-card-text>
@@ -75,14 +55,8 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
-          Добавить в список
-        </v-btn>
+        <v-btn v-if="!editableMode" type="submit" color="primary"
+:disabled="isInvalidForm">Добавить в список</v-btn>
       </CardActionButtons>
     </v-card>
   </form>
@@ -114,16 +88,8 @@ export default {
     initialFormState: Object,
   },
   setup(props, ctx) {
-    const {
-      focusableNodeRef,
-      truckKindItems,
-      liftCapacityItems,
-      zoneItems,
-      commonRules,
-    } = useFormHelpers()
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const { NodeRef, truckKindItems, liftCapacityItems, zoneItems, commonRules } = useFormHelpers()
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = {
       ...commonRules,
@@ -136,11 +102,11 @@ export default {
 
     watch(
       () => props.initialFormState,
-      (newState) => {
+      newState => {
         if (newState) {
           form.value = {
             ...newState,
-            zones: [...newState.zones.map((zone) => Object.assign({}, zone))],
+            zones: [...newState.zones.map(zone => Object.assign({}, zone))],
           }
           v$.value.$reset()
         }
@@ -174,7 +140,7 @@ export default {
 
     const invalidZones = computed(() => {
       if (!form.value.zones || form.value.zones.length === 0) return true
-      return form.value.zones.some((i) => !i.distance || !i.price)
+      return form.value.zones.some(i => !i.distance || !i.price)
     })
 
     function showDeleteBtn(idx) {
@@ -205,7 +171,7 @@ export default {
       cancelHandler,
       form,
       isInvalidForm,
-      focusableNodeRef,
+      NodeRef,
       v$,
       showDeleteBtn,
       showAddBtn,
@@ -217,16 +183,16 @@ export default {
 }
 </script>
 <style scoped>
-.input-fields-row {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-.zone-row {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-}
+  .input-fields-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+  .zone-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
 </style>
-import { numeric } from 'vuelidate/lib/validators'
+import { numeric } from '@vuelidate/validators'

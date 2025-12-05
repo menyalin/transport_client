@@ -48,11 +48,10 @@ class CarrierAgreementService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else if (this.eo.pending(id)) {
-      const promise = new Promise((resolve) => {
-        this.eo.subscribe(id, (data) => {
+      const promise = new Promise(resolve => {
+        this.eo.subscribe(id, data => {
           resolve(data)
         })
       })
@@ -82,14 +81,14 @@ class CarrierAgreementService {
         .string()
         .optional()
         .nullable()
-        .transform((v) => {
+        .transform(v => {
           return v || undefined
         }),
       agreementId: z
         .string()
         .optional()
         .nullable()
-        .transform((v) => {
+        .transform(v => {
           return v || undefined
         }),
     })

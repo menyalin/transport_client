@@ -3,18 +3,18 @@
     :value="selected"
     :headers="headers"
     :items="items"
-    selectable-key="isSelectable"
-    checkbox-color="primary"
-    dense
-    item-key="_id"
-    show-select
-    hide-default-footer
+    selectableKey="isSelectable"
+    checkboxColor="primary"
+   
+    itemKey="_id"
+    showSelect
+    hideDefaultFooter
     :itemsPerPage="-1"
     @input="selectHandler"
   >
     <template #[`body.append`]="{}">
       <tr v-if="pivotData.items">
-        <th />
+        <th></th>
         <th>Итого:</th>
         <th class="text-right">
           {{ pivotData.totalCount }}
@@ -28,33 +28,13 @@
 
         <template v-if="showOutsourceCosts">
           <th class="text-right">
-            {{
-              prepareSum(
-                pivotData[
-                  priceWithVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat'
-                ]
-              )
-            }}
+            {{ prepareSum(pivotData[priceWithVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat']) }}
           </th>
           <th class="text-right">
-            {{
-              prepareSum(
-                pivotData[
-                  priceWithVat ? 'totalProfitWithVat' : 'totalProfitWOVat'
-                ]
-              )
-            }}
+            {{ prepareSum(pivotData[priceWithVat ? 'totalProfitWithVat' : 'totalProfitWOVat']) }}
           </th>
           <th class="text-right">
-            {{
-              prepareSum(
-                pivotData[
-                  priceWithVat
-                    ? 'avgOutsourceCostsWithVat'
-                    : 'avgOutsourceCostsWOVat'
-                ]
-              )
-            }}
+            {{ prepareSum(pivotData[priceWithVat ? 'avgOutsourceCostsWithVat' : 'avgOutsourceCostsWOVat']) }}
           </th>
           <th class="text-right">
             {{ prepareSum(pivotData.avgProfitWOVat) }}
@@ -65,19 +45,15 @@
         </template>
       </tr>
       <tr v-if="pivotData.items && daysCount">
-        <th />
+        <th></th>
         <th>Среднее по дням:</th>
         <th class="text-right">
-          {{
-            Intl.NumberFormat().format(
-              Math.round(pivotData.totalCount / daysCount)
-            )
-          }}
+          {{ Intl.NumberFormat().format(Math.round(pivotData.totalCount / daysCount)) }}
         </th>
         <th class="text-right">
           {{ totalAvgByDay }}
         </th>
-        <th />
+        <th></th>
       </tr>
     </template>
   </v-data-table>
@@ -101,14 +77,7 @@ export default {
   },
   setup(props) {
     const selected = usePersistedRef([], 'selected_items')
-    const {
-      headers,
-      totalAvgByDay,
-      items,
-      totalSum,
-      totalAvg,
-      totalAvgOutsourceCost,
-    } = usePivotTable(props)
+    const { headers, totalAvgByDay, items, totalSum, totalAvg, totalAvgOutsourceCost } = usePivotTable(props)
     return {
       selected,
       headers,
@@ -129,7 +98,7 @@ export default {
     selectHandler(val) {
       this.$emit(
         'updateSelected',
-        val.filter((i) => !!i._id).map((i) => i._id)
+        val.filter(i => !!i._id).map(i => i._id)
       )
     },
   },

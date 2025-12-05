@@ -7,8 +7,7 @@ import store from '@/store'
 
 export const useForm = (props, ctx) => {
   const formScope = 'root'
-  const { formId, getState, clearStoredForm, saveForm } =
-    usePersistedFormState()
+  const { formId, getState, clearStoredForm, saveForm } = usePersistedFormState()
   const initialState = {
     title: null,
     truck: null,
@@ -41,9 +40,7 @@ export const useForm = (props, ctx) => {
   const isInvalidForm = computed(() => v$.value.$invalid)
 
   const truckItems = computed(() =>
-    store.getters.trucks
-      .filter((item) => item.type === 'truck')
-      .map((item) => ({ value: item._id, text: item.regNum }))
+    store.getters.trucks.filter(item => item.type === 'truck').map(item => ({ value: item._id, text: item.regNum }))
   )
   const partnerContactsHint = computed(() => {
     if (!state.value.partner) return null
@@ -53,14 +50,10 @@ export const useForm = (props, ctx) => {
   })
   const downtimeTypes = computed(() => store.getters.downtimeTypes)
 
-  const serviceAdressItems = computed(() =>
-    store.getters.addressesForAutocomplete.filter((i) => i.service)
-  )
+  const serviceAdressItems = computed(() => store.getters.addressesForAutocomplete.filter(i => i.service))
 
   const serviceItems = computed(() =>
-    store.getters.partners
-      .filter((i) => i.isService)
-      .map((i) => ({ value: i._id, text: i.name }))
+    store.getters.partners.filter(i => i.isService).map(i => ({ value: i._id, text: i.name }))
   )
   //#endregion
 
@@ -89,7 +82,7 @@ export const useForm = (props, ctx) => {
     })
   }
 
-  const updateAddressHandler = (address) => {
+  const updateAddressHandler = address => {
     saveForm(formId.value, formScope, JSON.stringify(state.value))
     props.addressActions.update({
       id: address.value,
@@ -104,7 +97,7 @@ export const useForm = (props, ctx) => {
     })
   }
 
-  const updatePartnerHandler = (item) => {
+  const updatePartnerHandler = item => {
     saveForm(formId.value, formScope, JSON.stringify(state.value))
     props.partnerActions.update({
       id: item.value,

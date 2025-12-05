@@ -2,22 +2,22 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
+        <ButtonsPanel
+          panelType="list"
           :disabledSubmit="!$store.getters.hasPermission('carrier:write')"
           @submit="create"
           @refresh="refreshHandler"
         />
         <CarrierListSettings v-model="settings" />
         <v-data-table
+          v-model:options="listOptions"
           :headers="headers"
           :items="items"
           :loading="loading"
-          :options.sync="listOptions"
-          :server-items-length="count"
-          fixed-header
+          :itemsLength="count"
+          fixedHeader
           height="72vh"
-          dense
+         
           :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -27,10 +27,7 @@
             <v-icon>{{ item.outsource ? 'mdi-check' : 'mdi-minus' }}</v-icon>
           </template>
           <template #[`item.agreements`]="{ item }">
-            <CarrierListAgreementsCell
-              :items="item.agreements"
-              :agreementsData="item.agreementsData"
-            />
+            <CarrierListAgreementsCell :items="item.agreements" :agreementsData="item.agreementsData" />
           </template>
         </v-data-table>
       </v-col>
@@ -40,10 +37,7 @@
 <script>
 import { ButtonsPanel } from '@/shared/ui'
 import { useListData } from './useListData'
-import {
-  CarrierListSettings,
-  CarrierListAgreementsCell,
-} from '@/entities/carrier'
+import { CarrierListSettings, CarrierListAgreementsCell } from '@/entities/carrier'
 
 export default {
   name: 'CarrierList',
@@ -53,15 +47,7 @@ export default {
     CarrierListAgreementsCell,
   },
   setup() {
-    const {
-      items,
-      loading,
-      refreshHandler,
-      count,
-      settings,
-      listOptions,
-      headers,
-    } = useListData()
+    const { items, loading, refreshHandler, count, settings, listOptions, headers } = useListData()
     return {
       items,
       loading,

@@ -12,23 +12,15 @@ class PermissionService {
     if (!store.getters.permissionsMap.size) return false
     let accessAllowed = true
 
-    permissions.forEach((p) => {
-      if (
-        !store.getters.permissionsMap.has(p) ||
-        !store.getters.permissionsMap.get(p)
-      )
-        accessAllowed = false
+    permissions.forEach(p => {
+      if (!store.getters.permissionsMap.has(p) || !store.getters.permissionsMap.get(p)) accessAllowed = false
     })
     return accessAllowed
   }
   minAllowedDate({ operation }) {
-    if (
-      store.getters.permissionsMap.has('fullAccess') ||
-      store.getters.permissionsMap.get(operation) === -1
-    )
+    if (store.getters.permissionsMap.has('fullAccess') || store.getters.permissionsMap.get(operation) === -1)
       return null
-    if (!store.getters.permissionsMap.has(operation))
-      return new Date().toISOString()
+    if (!store.getters.permissionsMap.has(operation)) return new Date().toISOString()
     const dayCount = store.getters.permissionsMap.get(operation)
     return new Date(new Date() - dayCount * 24 * 60 * 60 * 1000).toISOString()
   }

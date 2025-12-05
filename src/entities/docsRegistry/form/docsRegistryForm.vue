@@ -1,84 +1,87 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
-    </buttons-panel>
+      <v-btn size="small" class="mx-2" @click="downloadXlsx">Скачать DOCX</v-btn>
+    </ButtonsPanel>
     <div id="form">
       <div id="fields-row">
         <v-text-field
           v-if="state.number"
           label="Номер"
-          :value="state.number"
+          :modelValue="state.number"
           readonly
-          dense
-          outlined
+         
+          variant="outlined"
+       density="compact"
           :style="{ maxWidth: '100px' }"
         />
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
-          dense
-          outlined
+         
+          variant="outlined"
+       density="compact"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
+         
           required
-          item-value="_id"
-          item-text="name"
+          itemValue="_id"
+          itemTitle="name"
           clearable
-          outlined
+          variant="outlined"
+       density="compact"
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
+          :errorMessages="clientErrorMessages"
           @blur="v$.client.$touch"
-          :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
+          @update:model-value="changeClientHandler"
         />
         <v-select
           v-model="state.agreement"
           label="Соглашение"
-          dense
+         
           required
-          item-value="_id"
-          item-text="name"
+          itemValue="_id"
+          itemTitle="name"
           clearable
-          outlined
+          variant="outlined"
+       density="compact"
           :disabled="disabledAgreements || disabledMainFields"
           :loading="loadingAgreements"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
+          :errorMessages="agreementErrorMessages"
           @blur="v$.agreement.$touch"
-          :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
+          @update:model-value="changeAgreementHandler"
         />
 
         <v-select
-          label="Площадка"
           v-model="state.placeForTransferDocs"
-          dense
+          label="Площадка"
+         
           required
           clearable
-          item-text="title"
-          item-value="address"
-          outlined
-          :disabled="
-            !placeItems || placeItems.length === 0 || disabledMainFields
-          "
+          itemTitle="title"
+          itemValue="address"
+          variant="outlined"
+       density="compact"
+          :disabled="!placeItems || placeItems.length === 0 || disabledMainFields"
           :items="placeItems"
           :style="{ maxWidth: '300px' }"
+          :errorMessages="placeErrorMessages"
           @blur="v$.placeForTransferDocs.$touch"
-          :error-messages="placeErrorMessages"
         />
       </div>
 
@@ -87,11 +90,9 @@
       </v-alert>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          !state.placeForTransferDocs || disabledPickOrders || needSave
-        "
+        :disabled="!state.placeForTransferDocs || disabledPickOrders || needSave"
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
@@ -99,8 +100,9 @@
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
+       
+        variant="outlined"
+       density="compact"
         @blur="v$.note.$touch"
       />
     </div>
@@ -170,17 +172,13 @@ export default {
       ctx.emit('downloadXlsx')
     }
 
-    const clientItems = computed(
-      () => store.getters?.partners.filter((i) => i.isClient) || []
-    )
+    const clientItems = computed(() => store.getters?.partners.filter(i => i.isClient) || [])
 
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
 
     const placeItems = computed(() => {
       if (!state.value?.client) return []
-      const client = store.getters.partners.find(
-        (i) => i._id === state.value.client
-      )
+      const client = store.getters.partners.find(i => i._id === state.value.client)
       if (!client) return []
       return client.placesForTransferDocs
     })
@@ -227,16 +225,16 @@ export default {
 </script>
 
 <style scoped>
-#form {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 20px;
-}
-#fields-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 5px;
-}
+  #form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+  }
+  #fields-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
 </style>

@@ -2,30 +2,28 @@
   <div id="wrapper">
     <v-autocomplete
       ref="first_field"
-      label="Клиенты"
-      dense
-      :items="clients"
-      item-value="_id"
-      item-text="name"
-      multiple
-      outlined
-      hide-details
       v-model="tmpItem.clients"
+      label="Клиенты"
+     
+      :items="clients"
+      itemValue="_id"
+      itemTitle="name"
+      multiple
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
-    
+
     <v-select
       v-model="tmpItem.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
-    <v-checkbox
-      label="Возврат паллет"
-      v-model="tmpItem.isPltReturn"
-      color="primary"
-    />
+    <v-checkbox v-model="tmpItem.isPltReturn" label="Возврат паллет" color="primary" />
   </div>
 </template>
 <script>
@@ -50,7 +48,7 @@ export default {
   },
   computed: {
     clients() {
-      return this.$store.getters.partners.filter((i) => i.isClient)
+      return this.$store.getters.partners.filter(i => i.isClient)
     },
   },
   watch: {
@@ -76,9 +74,9 @@ export default {
 }
 </script>
 <style scoped>
-#wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 </style>

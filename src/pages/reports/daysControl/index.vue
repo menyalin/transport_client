@@ -5,45 +5,38 @@
         <ReportTitle title="Контроль сроков" />
         <div id="report-settings">
           <v-btn icon @click.stop="getData">
-            <v-icon> mdi-cached </v-icon>
+            <v-icon>mdi-cached</v-icon>
           </v-btn>
           <v-autocomplete
-            v-model="settings.carriers"
+            :modelValue="settings.carriers"
             label="Перевозчик"
             :items="carrierItems"
             hideDetails
-            outlined
-            item-text="name"
-            item-value="_id"
-            dense
+            variant="outlined"
+       density="compact"
+            itemTitle="name"
+            itemValue="_id"
+           
             multiple
             clearable
             :style="{ 'max-width': '300px' }"
           />
-          <v-text-field
-            v-model.number="settings.dayCount"
-            label="Кол-во дней"
-            hideDetails
-            outlined
-            dense
-          />
-          <v-text-field
-            v-model.trim="searchString"
-            label="Поиск"
-            hideDetails
-            outlined
-            dense
-          />
+          <v-text-field v-model.number="settings.dayCount" label="Кол-во дней" hideDetails
+variant="outlined" />
+       density="compact"
+          <v-text-field v-model.trim="searchString" label="Поиск" hideDetails
+variant="outlined" />
+       density="compact"
         </div>
         <v-data-table
           :headers="headers"
           :items="rows"
           :loading="loading"
           :search="searchString"
-          fixed-header
+          fixedHeader
           height="76vh"
-          dense
-          :footer-props="{
+         
+          :footerProps="{
             'items-per-page-options': [100, 200],
           }"
           @dblclick:row="dblClickRow"
@@ -150,10 +143,10 @@ export default {
 }
 </script>
 <style scoped>
-#report-settings {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  margin-top: 15px;
-}
+  #report-settings {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-top: 15px;
+  }
 </style>

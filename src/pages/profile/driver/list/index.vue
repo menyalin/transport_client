@@ -1,23 +1,23 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
-      panel-type="list"
+    <ButtonsPanel
+      panelType="list"
       :disabledSubmit="!$store.getters.hasPermission('driver:write')"
       @submit="createDriver"
       @refresh="refresh"
     />
     <v-data-table
+      v-model:options="listSettings.listOptions"
       :headers="headers"
       :items="filteredDrivers"
       :search="listSettings.search"
       :loading="loading"
-      fixed-header
+      fixedHeader
       height="71vh"
-      dense
-      :footer-props="{
+     
+      :footerProps="{
         'items-per-page-options': [50, 100, 200],
       }"
-      :options.sync="listSettings.listOptions"
       @dblclick:row="dblClickRow"
     >
       <template #top>
@@ -29,47 +29,49 @@
           />
           <v-select
             v-model="listSettings.tkNameFilter"
-            dense
-            outlined
-            hide-details
+           
+            variant="outlined"
+       density="compact"
+            hideDetails
             label="ТК"
             clearable
             :items="tkNameItems"
-            item-value="_id"
-            item-text="name"
+            itemValue="_id"
+            itemTitle="name"
           />
           <v-select
             v-model="listSettings.workState"
             label="Статус"
             :items="workStateItems"
-            outlined
-            dense
+            variant="outlined"
+       density="compact"
+           
           />
           <v-select
             v-model="listSettings.stuffStatus"
             label="Сотрудники"
             :items="stuffStatusItems"
-            outlined
-            dense
+            variant="outlined"
+       density="compact"
+           
           />
           <v-text-field
             v-model="listSettings.search"
-            outlined
-            hide-details
-            dense
+            variant="outlined"
+       density="compact"
+            hideDetails
+           
             label="Быстрый поиск"
           />
         </div>
       </template>
       <template #[`item.hasScans`]="{ item }">
-        <v-icon v-if="item.hasScans" small color="green"> mdi-check </v-icon>
-        <v-icon v-else small color="red"> mdi-minus </v-icon>
+        <v-icon v-if="item.hasScans" size="small" color="green">mdi-check</v-icon>
+        <v-icon v-else size="small" color="red">mdi-minus</v-icon>
       </template>
       <template #[`item.isCalcSalary`]="{ item }">
-        <v-icon v-if="item.isCalcSalary" small color="green">
-          mdi-check
-        </v-icon>
-        <v-icon v-else small color="red"> mdi-minus </v-icon>
+        <v-icon v-if="item.isCalcSalary" size="small" color="green">mdi-check</v-icon>
+        <v-icon v-else size="small" color="red">mdi-minus</v-icon>
       </template>
     </v-data-table>
   </EntityListWrapper>
@@ -77,11 +79,7 @@
 <script>
 import { ref } from 'vue'
 import { useDriverList } from './useDriverList'
-import {
-  ButtonsPanel,
-  EntityListWrapper,
-  AppTableColumnSetting,
-} from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, AppTableColumnSetting } from '@/shared/ui'
 
 export default {
   name: 'DriverList',
@@ -135,9 +133,9 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-}
+  .filter-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+  }
 </style>

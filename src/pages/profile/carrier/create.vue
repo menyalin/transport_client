@@ -29,7 +29,7 @@ export default {
           this.loading = false
           this.$router.push({ name: 'CarrierList' })
         })
-        .catch((e) => {
+        .catch(e => {
           this.loading = false
           this.$store.commit('setError', e)
         })

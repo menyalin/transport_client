@@ -1,18 +1,18 @@
 <template>
   <v-data-table
     :items="preparedItems"
-    dense
+   
     :headers="headers"
     :loading="loading"
-    :serverItemsLength="statisticData.count"
+    :itemsLength="statisticData.count"
     height="72vh"
-    show-group-by
-    fixed-header
+    showGroupBy
+    fixedHeader
     :listOptions="listOptions"
-    @update:options="updateListOptions"
-    :footer-props="{
+    :footerProps="{
       'items-per-page-options': [50, 100, 300],
     }"
+    @update:options="updateListOptions"
     @dblclick:row="dblClickRow"
   >
     <template #[`footer.prepend`]>
@@ -40,9 +40,7 @@ export default {
     listOptions: Object,
   },
   setup(props, ctx) {
-    const preparedItems = computed(() =>
-      props.items.map((i) => new DataTableRow(i))
-    )
+    const preparedItems = computed(() => props.items.map(i => new DataTableRow(i)))
     function dblClickRow(_, { item }) {
       if (item) router.push(`/orders/${item.orderId}`)
     }
@@ -59,7 +57,7 @@ export default {
 </script>
 
 <style scoped>
-.v-data-table {
-  white-space: nowrap;
-}
+  .v-data-table {
+    white-space: nowrap;
+  }
 </style>

@@ -1,23 +1,24 @@
 <template>
   <div>
     <div>
-      <app-block-title>{{ title }}</app-block-title>
+      <AppBlockTitle>{{ title }}</AppBlockTitle>
     </div>
     <div class="med-book-wrapper">
       <div class="first-column">
         <v-text-field
-          hide-details
-          outlined
-          :value="params.number"
-          dense
+          hideDetails
+          variant="outlined"
+       density="compact"
+          :modelValue="params.number"
+         
           label="Номер"
           @change="change($event, 'number')"
         />
         <DateTimeInput
           label="Дата выдачи"
           :value="params.issueDate"
-          hide-prepend-icon
-          hide-time-input
+          hidePrependIcon
+          hideTimeInput
           outlined
           hideDetails
           dense
@@ -27,8 +28,8 @@
           <DateTimeInput
             label="Аттестация до"
             :value="params.certifiedBeforeDate"
-            hide-prepend-icon
-            hide-time-input
+            hidePrependIcon
+            hideTimeInput
             outlined
             hideDetails
             dense
@@ -46,8 +47,8 @@
           <DateTimeInput
             label="Ежегодная комиссия от"
             :value="params.annualCommisionDate"
-            hide-prepend-icon
-            hide-time-input
+            hidePrependIcon
+            hideTimeInput
             hideDetails
             outlined
             dense
@@ -64,9 +65,10 @@
       </div>
       <v-textarea
         label="Примечание"
-        :value="params.note"
-        outlined
-        hide-details
+        :modelValue="params.note"
+        variant="outlined"
+       density="compact"
+        hideDetails
         @change="change($event, 'note')"
       />
     </div>
@@ -116,9 +118,7 @@ export default {
     },
     daysBeforeMedExamination() {
       if (!this.params.annualCommisionDate) return null
-      const lastDate = dayjs(this.params.annualCommisionDate)
-        .add(1, 'year')
-        .unix()
+      const lastDate = dayjs(this.params.annualCommisionDate).add(1, 'year').unix()
       const todaySec = dayjs().unix()
       return Math.floor((lastDate - todaySec) / (60 * 60 * 24))
     },
@@ -128,7 +128,7 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) {
-          this.fields.forEach((f) => {
+          this.fields.forEach(f => {
             this.params[f] = val[f]
           })
         }
@@ -149,20 +149,20 @@ export default {
 }
 </script>
 <style scoped>
-.med-book-wrapper {
-  display: grid;
-  grid-template-columns: 300px auto;
-  margin: 10px;
-  grid-gap: 15px;
-}
-.first-column {
-  display: grid;
-  grid-gap: 10px;
-}
-.date-input-row {
-  display: grid;
-  grid-template-columns: 3fr auto;
-  justify-content: space-between;
-  align-items: center;
-}
+  .med-book-wrapper {
+    display: grid;
+    grid-template-columns: 300px auto;
+    margin: 10px;
+    grid-gap: 15px;
+  }
+  .first-column {
+    display: grid;
+    grid-gap: 10px;
+  }
+  .date-input-row {
+    display: grid;
+    grid-template-columns: 3fr auto;
+    justify-content: space-between;
+    align-items: center;
+  }
 </style>

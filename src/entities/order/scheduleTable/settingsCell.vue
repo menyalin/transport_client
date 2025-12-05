@@ -1,48 +1,52 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu offsetY :closeOnContentClick="false">
+    <template #activator="{ props }">
+      <v-btn color="primary" v-bind="props" icon>
+        <v-icon size="small">mdi-cog</v-icon>
       </v-btn>
     </template>
     <v-list class="px-3">
       <v-switch
         v-model="onlyTrucksWithRoutes"
         label="Только грузовики с рейсами"
-        dense
-        hide-details
-        @change="changeOnlyTrucksWithRoutes"
+       
+        hideDetails
+        @update:model-value="changeOnlyTrucksWithRoutes"
       />
       <v-switch
         v-model="onlyPlannedDates"
         label="Планируемые даты"
-        dense
-        hide-details
-        @change="changeOnlyPlannedDates"
+       
+        hideDetails
+        @update:model-value="changeOnlyPlannedDates"
       />
       <v-switch
         v-model="tmpSettings.showBufferZone"
         label="Показать буферную зону"
-        dense
-        hide-details
+       
+        hideDetails
+        :modelValue="currentSettings.showBufferZone"
       />
       <v-switch
         v-model="tmpSettings.controlOnly"
         label="Показывать 'на контроле'"
-        dense
-        hide-details
+       
+        hideDetails
+        :modelValue="currentSettings.controlOnly"
       />
       <v-switch
         v-model="tmpSettings.showDowntimes"
         label="Показывать сервисы/выходные"
-        dense
-        hide-details
+       
+        hideDetails
+        :modelValue="currentSettings.showDowntimes"
       />
       <v-switch
         v-model="tmpSettings.showNotes"
         label="Показать заметки"
-        dense
-        hide-details
+       
+        hideDetails
+        :modelValue="currentSettings.showNotes"
       />
     </v-list>
   </v-menu>
@@ -51,15 +55,17 @@
 import { ref, getCurrentInstance, onMounted } from 'vue'
 export default {
   name: 'SettingsCell',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
   props: {
+    modelValue: {
+      type: Object,
+      default: () => ({}),
+    },
     settings: {
       type: Object,
+      default: () => ({}),
     },
   },
+  emits: ['update:modelValue', 'change'],
   setup() {
     const { proxy } = getCurrentInstance()
     const onlyTrucksWithRoutes = ref(false)
@@ -95,12 +101,19 @@ export default {
       },
     }
   },
+  computed: {
+    currentSettings() {
+      // Используем modelValue если доступно, иначе settings
+      return this.modelValue || this.settings
+    },
+  },
   watch: {
     tmpSettings: {
       deep: true,
       handler: function (val) {
         localStorage.setItem(this.settingsName, JSON.stringify(val))
         this.$emit('change', val)
+        this.$emit('update:modelValue', val)
       },
     },
   },
@@ -108,13 +121,18 @@ export default {
     const settings = JSON.parse(localStorage.getItem(this.settingsName))
     if (settings) {
       this.tmpSettings = settings
-    } else
+    } else {
       this.tmpSettings = {
         controlOnly: false,
         showNotes: true,
         showBufferZone: false,
         showDowntimes: true,
       }
+    }
+    // Синхронизируем с текущими настройками
+    if (this.currentSettings && Object.keys(this.currentSettings).length > 0) {
+      this.tmpSettings = { ...this.tmpSettings, ...this.currentSettings }
+    }
   },
 }
 </script>

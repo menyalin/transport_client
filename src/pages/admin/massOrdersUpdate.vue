@@ -10,23 +10,17 @@
         :items="allCompanyItems"
         :loading="companyListLoading"
         :disabled="companyListLoading"
-        item-value="_id"
-        item-text="name"
+        itemValue="_id"
+        itemTitle="name"
         :style="{ maxWidth: '250px' }"
       />
     </div>
-    <v-btn :disabled="!isFilledParams" @click="getOrdersCountBtnHandler">
-      Кол-во рейсов
-    </v-btn>
+    <v-btn :disabled="!isFilledParams" @click="getOrdersCountBtnHandler">Кол-во рейсов</v-btn>
     <p>Рейсов: {{ ordersCount }}</p>
     <div v-if="processingState.isOrdersProcessing" class="loader-row">
-      <v-progress-linear
-        v-model="processingState.percent"
-        color="green"
-        height="35"
-        class="my-6"
-      >
-        <template v-slot:default="{ value }">
+      <v-progress-linear v-model="processingState.percent" color="green" height="35"
+class="my-6">
+        <template #default="{ value }">
           <strong>{{ value }}%</strong>
         </template>
       </v-progress-linear>
@@ -35,10 +29,10 @@
 
     <v-btn
       v-else
-      @click="runOrderProcessing"
       color="error"
       :loading="processingState.isOrdersProcessing"
       :disabled="processingState.isOrdersProcessing"
+      @click="runOrderProcessing"
     >
       Обновить
     </v-btn>
@@ -83,15 +77,15 @@ export default {
 }
 </script>
 <style scoped>
-.page-wrapper {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-}
-.settings-wrapper {
-  padding: 20px 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
+  .page-wrapper {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  .settings-wrapper {
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
 </style>

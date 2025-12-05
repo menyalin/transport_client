@@ -1,19 +1,19 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu :closeOnContentClick="false">
+    <template #activator="{ props }">
+      <v-btn color="primary" v-bind="props" icon>
+        <v-icon size="small">mdi-cog</v-icon>
       </v-btn>
     </template>
     <v-list class="px-2">
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
-        :label="field.hiddenTitle || field.text"
         v-model="activeFields"
+        :label="field.hiddenTitle || field.text"
         :value="field.value"
-        dense
-        hide-details
+       
+        hideDetails
       />
     </v-list>
   </v-menu>
@@ -40,17 +40,13 @@ export default {
     const savedFields = JSON.parse(localStorage.getItem(props.listSettingsName))
 
     function getHeaders() {
-      if (activeFields.value.length === 0)
-        return props.allHeaders.filter((i) => i.default)
-      else
-        return props.allHeaders.filter((i) =>
-          activeFields.value.includes(i.value)
-        )
+      if (activeFields.value.length === 0) return props.allHeaders.filter(i => i.default)
+      else return props.allHeaders.filter(i => activeFields.value.includes(i.value))
     }
 
     function inputHandler(field) {
       if (!activeFields.value.includes(field)) activeFields.value.push(field)
-      else activeFields.value = activeFields.value.filter((i) => i !== field)
+      else activeFields.value = activeFields.value.filter(i => i !== field)
     }
 
     function emitHeaders() {
@@ -58,18 +54,12 @@ export default {
     }
 
     if (savedFields && savedFields.length) activeFields.value = savedFields
-    else
-      activeFields.value = props.allHeaders
-        .filter((i) => i.default)
-        .map((i) => i.value)
+    else activeFields.value = props.allHeaders.filter(i => i.default).map(i => i.value)
 
     watch(
       activeFields,
       () => {
-        localStorage.setItem(
-          props.listSettingsName,
-          JSON.stringify(activeFields.value)
-        )
+        localStorage.setItem(props.listSettingsName, JSON.stringify(activeFields.value))
         emitHeaders()
       },
       { deep: true, immediate: true }

@@ -2,120 +2,117 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
+        <ButtonsPanel
+          panelType="list"
           :disabledSubmit="!$store.getters.hasPermission('fine:write')"
           @submit="create"
           @refresh="refetch"
         />
         <div class="filter-wrapper">
           <v-select
-            v-model="settings.periodSetting"
+            :modelValue="settings.periodSetting"
             :items="periodSettingItems"
-            dense
-            hide-details
-            outlined
+           
+            hideDetails
+            variant="outlined"
+       density="compact"
             label="Период по"
             :style="{ maxWidth: '300px' }"
           />
-          <date-range-input v-model="settings.period" />
+          <DateRangeInput :modelValue="settings.period" />
 
           <v-select
-            v-model="settings.status"
+            :modelValue="settings.status"
             :items="fineStatuses"
-            dense
-            hide-details
-            outlined
+           
+            hideDetails
+            variant="outlined"
+       density="compact"
             label="Статус"
             :style="{ maxWidth: '200px' }"
           />
           <v-autocomplete
-            v-model="settings.truck"
+            :modelValue="settings.truck"
             label="Грузовик / Прицеп"
             :items="trucks"
             clearable
-            auto-select-first
-            outlined
-            hide-details
-            dense
+            autoSelectFirst
+            variant="outlined"
+       density="compact"
+            hideDetails
+           
             :style="{ maxWidth: '250px' }"
           />
           <v-autocomplete
-            v-model="settings.driver"
+            :modelValue="settings.driver"
             label="Водитель"
             :items="drivers"
-            auto-select-first
+            autoSelectFirst
             clearable
-            outlined
-            hide-details
-            dense
+            variant="outlined"
+       density="compact"
+            hideDetails
+           
             :style="{ maxWidth: '350px' }"
           />
           <v-select
             v-model.trim="settings.categories"
             :items="$store.getters.fineCategories"
             label="Категория"
-            outlined
+            variant="outlined"
+       density="compact"
             clearable
             multiple
-            hide-details
+            hideDetails
             singleLine
-            dense
+           
           />
-          <v-checkbox
-            v-model="showOnlySelected"
-            label="Только отмеченные"
-            hide-details
-            dense
-          />
-          <v-checkbox
-            v-model="settings.needToWithheld"
-            label="Удержать из ЗП водителя"
-            hide-details
-            dense
-          />
+          <v-checkbox v-model="showOnlySelected" label="Только отмеченные" hideDetails dense />
+          <v-checkbox :modelValue="settings.needToWithheld" label="Удержать из ЗП водителя" hideDetails dense />
           <v-text-field
             v-model.lazy.trim="settings.searchStr"
             label="Поиск"
-            outlined
+            variant="outlined"
+       density="compact"
             clearable
-            hide-details
-            dense
+            hideDetails
+           
             :style="{ minWidth: '450px', maxWidth: '600px' }"
           />
           <v-autocomplete
-            v-model="settings.payingByWorker"
+            :modelValue="settings.payingByWorker"
             label="Оплатил"
             :items="workerItems"
-            auto-select-first
+            autoSelectFirst
             clearable
-            outlined
-            hide-details
-            dense
+            variant="outlined"
+       density="compact"
+            hideDetails
+           
             :loading="workerIsLoading"
             :style="{ maxWidth: '350px' }"
-            :filter="() => true"
-            :search-input="searchString"
-            @update:search-input="handleSearchInputUpdate"
-            @change="handleChange"
+            :customFilter="() => true"
+            :search="searchString"
+            @update:search="handleSearchInputUpdate"
+            @update:model-value="handleChange"
           />
         </div>
         <v-data-table
           v-model="selected"
-          item-key="_id"
-          show-select
+          v-model:options="listOptions"
+          itemKey="_id"
+          showSelect
           :headers="headers"
           :items="preparedList"
           :loading="loading"
           :singleSelect="false"
-          dense
-          fixed-header
+         
+          fixedHeader
           height="71vh"
-          :serverItemsLength="count"
-          :footer-props="{
+          :itemsLength="count"
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isWithheld`]="{ item }">
@@ -200,16 +197,16 @@ export default {
     trucks() {
       return this.$store.getters
         .activeTrucksOnDate()
-        .filter((item) => ['truck', 'trailer'].includes(item.type))
-        .filter((item) => !item.hideInFines)
-        .map((item) => ({ value: item._id, text: item.regNum }))
+        .filter(item => ['truck', 'trailer'].includes(item.type))
+        .filter(item => !item.hideInFines)
+        .map(item => ({ value: item._id, text: item.regNum }))
     },
 
     drivers() {
       return this.$store.getters
         .activeDriversOnDate()
-        .filter((item) => !item.hideInFines)
-        .map((item) => ({ value: item._id, text: item.fullName }))
+        .filter(item => !item.hideInFines)
+        .map(item => ({ value: item._id, text: item.fullName }))
     },
   },
 
@@ -225,12 +222,12 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 15px;
-}
+  .filter-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+  }
 </style>

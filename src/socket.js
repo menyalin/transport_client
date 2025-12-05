@@ -7,10 +7,10 @@ socket.onAny((_event, _args) => {
   //  console.log(event, args)
 })
 
-socket.on('error', (err) => {
+socket.on('error', err => {
   console.log(err)
 })
-socket.on('connect_error', (err) => {
+socket.on('connect_error', err => {
   if (err.message === 'invalid user') {
     console.log('Ошибка: хреновый UserID')
   }

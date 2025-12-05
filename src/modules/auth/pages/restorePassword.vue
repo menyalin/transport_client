@@ -1,9 +1,12 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4" lg="4">
+      <v-col
+cols="12"
+sm="8" md="4" lg="4"
+>
         <v-card class="elevation-4">
-          <v-toolbar color="primary" dark flat>
+          <v-toolbar color="primary" flat>
             <v-toolbar-title>Введите новый пароль</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
@@ -17,22 +20,22 @@
               <v-text-field
                 v-model="$v.form.password.$model"
                 label="Пароль"
-                prepend-icon="mdi-lock"
+                prependIcon="mdi-lock"
                 type="password"
                 autocomplete="off"
-                :error-messages="passwordErrors"
-                @input="$v.form.password.$touch()"
+                :errorMessages="passwordErrors"
+                @update:model-value="$v.form.password.$touch()"
                 @blur="$v.form.password.$touch()"
               />
               <v-text-field
                 id="password"
                 v-model="$v.form.confirmPassword.$model"
                 label="Повторите пароль"
-                prepend-icon="mdi-lock"
+                prependIcon="mdi-lock"
                 type="password"
                 autocomplete="off"
-                :error-messages="confirmPasswordErrors"
-                @input="$v.form.confirmPassword.$touch()"
+                :errorMessages="confirmPasswordErrors"
+                @update:model-value="$v.form.confirmPassword.$touch()"
                 @blur="$v.form.confirmPassword.$touch()"
               />
             </v-card-text>
@@ -41,12 +44,8 @@
                 <small>Войти в систему</small>
               </router-link>
               <v-spacer />
-              <v-btn
-                color="primary"
-                type="submit"
-                :loading="loading"
-                :disabled="$v.$invalid || loading"
-              >
+              <v-btn color="primary" type="submit" :loading="loading"
+:disabled="$v.$invalid || loading">
                 Установить пароль
               </v-btn>
             </v-card-actions>
@@ -57,7 +56,7 @@
   </v-container>
 </template>
 <script>
-import { required, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, minLength, sameAs } from '@vuelidate/validators'
 import { UserService } from '@/shared/services'
 
 export default {
@@ -85,15 +84,13 @@ export default {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
       !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required &&
-        errors.push('Поле не может быть пустым')
+      !this.$v.form.password.required && errors.push('Поле не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.form.confirmPassword.$dirty) return errors
-      !this.$v.form.confirmPassword.required &&
-        errors.push('Поле не может быть пустым')
+      !this.$v.form.confirmPassword.required && errors.push('Поле не может быть пустым')
       !this.$v.form.confirmPassword.sameAs && errors.push('Пароли не совпадают')
       return errors
     },
@@ -111,7 +108,7 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
+    next(vm => {
       if (vm.$store.getters.isLoggedIn) {
         vm.$router.push('/')
       }
@@ -140,10 +137,8 @@ export default {
         this.$store.dispatch('getUserData')
         this.$router.push('/')
       } catch (e) {
-        if (e?.response?.status === 404)
-          this.showMessage('Email не найден', 'error')
-        else if (e?.response?.data === 'jwt expired')
-          this.showMessage('Время жизни ссылки истекло', 'error')
+        if (e?.response?.status === 404) this.showMessage('Email не найден', 'error')
+        else if (e?.response?.data === 'jwt expired') this.showMessage('Время жизни ссылки истекло', 'error')
         else if (e?.response?.data) this.showMessage(e.response.data, 'error')
         else this.showMessage(e.message, 'error')
         this.loading = false

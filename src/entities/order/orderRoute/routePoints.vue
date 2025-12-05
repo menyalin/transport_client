@@ -3,7 +3,7 @@
     <BlockTitle>{{ title }}</BlockTitle>
 
     <div v-for="(point, ind) of points" :key="ind" class="point-wrapper-outer">
-      <app-point-detail
+      <AppPointDetail
         :point="point"
         :ind="ind"
         :readonly="readonly"
@@ -20,14 +20,11 @@
     </div>
 
     <div v-if="!readonly" class="row py-3">
-      <v-btn text color="primary" small outlined class="ma-2" @click="addPoint">
-        Добавить адрес
-      </v-btn>
+      <v-btn color="primary" size="small" variant="outlined" class="ma-2" @click="addPoint">Добавить адрес</v-btn>
       <v-btn
         v-if="!isTemplate && state.status === 'inProgress'"
-        text
-        outlined
-        small
+        variant="outlined"
+        size="small"
         color="red"
         class="ma-2"
         @click="addReturn"
@@ -36,9 +33,8 @@
       </v-btn>
       <v-btn
         v-if="!isTemplate"
-        text
-        outlined
-        small
+        variant="outlined"
+        size="small"
         color="primary"
         class="ma-2"
         @click="getDriverRouteHandler"
@@ -49,152 +45,134 @@
   </div>
 </template>
 <script>
-import store from '@/store'
-import { computed } from 'vue'
-import AppPointDetail from './pointDetail'
-import { BlockTitle } from '@/entities/order'
-import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
+  import store from '@/store'
+  import { computed } from 'vue'
+  import AppPointDetail from './pointDetail'
+  import { BlockTitle } from '@/entities/order'
+  import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
 
-export default {
-  name: 'RoutePoints',
-  components: {
-    AppPointDetail,
-    BlockTitle,
-  },
-  model: {
-    prop: 'points',
-    event: 'changePoints',
-  },
-
-  props: {
-    driverId: String,
-    points: Array,
-    title: String,
-    cargoParams: Object,
-    agreement: Object,
-    confirmed: Boolean,
-    isValid: Boolean,
-    state: Object,
-    fixedTimeSlots: { type: Boolean, default: false },
-    isTemplate: {
-      type: Boolean,
-      default: false,
+  export default {
+    name: 'RoutePoints',
+    components: {
+      AppPointDetail,
+      BlockTitle,
     },
-  },
-  setup(props, ctx) {
-    //#region computed
-    const activePointInd = computed(() => {
-      return props.points.findIndex((p) => !p.departureDate)
-    })
-    const readonly = computed(() => {
-      if (props.isTemplate) return false
-      return props.state.status === 'completed'
-    })
+    model: {
+      prop: 'points',
+      event: 'changePoints',
+    },
 
-    const showMainLoadingPointSelector = computed(() => {
-      return (
-        props.points.filter(
-          (p) => p.type === 'loading' && (p.plannedDate || p.plannedDateDoc)
-        ).length > 1
-      )
-    })
+    props: {
+      driverId: String,
+      points: Array,
+      title: String,
+      cargoParams: Object,
+      agreement: Object,
+      confirmed: Boolean,
+      isValid: Boolean,
+      state: Object,
+      fixedTimeSlots: { type: Boolean, default: false },
+      isTemplate: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    setup(props, ctx) {
+      //#region computed
+      const activePointInd = computed(() => {
+        return props.points.findIndex(p => !p.departureDate)
+      })
+      const readonly = computed(() => {
+        if (props.isTemplate) return false
+        return props.state.status === 'completed'
+      })
 
-    const hasMainLoadingPoint = computed(() => {
-      return props.points.some(
-        (i) => i.isMainLoadingPoint && i.type === 'loading'
-      )
-    })
+      const showMainLoadingPointSelector = computed(() => {
+        return props.points.filter(p => p.type === 'loading' && (p.plannedDate || p.plannedDateDoc)).length > 1
+      })
 
-    const showReturnBtn = computed(() => {
-      if (props.isTemplate || props.points.length <= 2) return false
-      return store.getters.hasPermission('order:showReturnCheckbox')
-    })
-    //#endregion
+      const hasMainLoadingPoint = computed(() => {
+        return props.points.some(i => i.isMainLoadingPoint && i.type === 'loading')
+      })
 
-    function setDefaultMainLoadingPoint() {
-      const tmpPoints = [...props.points]
-      tmpPoints[0].isMainLoadingPoint = true
-      ctx.emit('changePoints', tmpPoints)
-    }
+      const showReturnBtn = computed(() => {
+        if (props.isTemplate || props.points.length <= 2) return false
+        return store.getters.hasPermission('order:showReturnCheckbox')
+      })
+      //#endregion
 
-    function clearedMainLoadingPointRoute(route) {
-      return route.map((p) => ({
-        ...p,
-        isMainLoadingPoint: false,
-      }))
-    }
-    function change(val, ind) {
-      let tmpPoints
+      function setDefaultMainLoadingPoint() {
+        const tmpPoints = [...props.points]
+        tmpPoints[0].isMainLoadingPoint = true
+        ctx.emit('changePoints', tmpPoints)
+      }
 
-      if (hasMainLoadingPoint.value && val.isMainLoadingPoint)
-        tmpPoints = clearedMainLoadingPointRoute([...props.points])
-      else tmpPoints = [...props.points]
+      function clearedMainLoadingPointRoute(route) {
+        return route.map(p => ({
+          ...p,
+          isMainLoadingPoint: false,
+        }))
+      }
+      function change(val, ind) {
+        let tmpPoints
 
-      tmpPoints.splice(ind, 1, val)
+        if (hasMainLoadingPoint.value && val.isMainLoadingPoint)
+          tmpPoints = clearedMainLoadingPointRoute([...props.points])
+        else tmpPoints = [...props.points]
 
-      if (!hasMainLoadingPoint.value) setDefaultMainLoadingPoint()
+        tmpPoints.splice(ind, 1, val)
 
-      ctx.emit('changePoints', tmpPoints)
-    }
+        if (!hasMainLoadingPoint.value) setDefaultMainLoadingPoint()
 
-    async function getDriverRouteHandler() {
-      
-    await putRouteForDriverToClipboard(
-        props.driverId,
-        props.points,
-        props.cargoParams,
-        props.agreement
-      )
-    }
+        ctx.emit('changePoints', tmpPoints)
+      }
 
-    function addPoint() {
-      ctx.emit('changePoints', [...props.points, { type: 'unloading' }])
-    }
+      async function getDriverRouteHandler() {
+        await putRouteForDriverToClipboard(props.driverId, props.points, props.cargoParams, props.agreement)
+      }
 
-    function addReturn() {
-      ctx.emit('changePoints', [
-        ...props.points,
-        { type: 'unloading', isReturn: true },
-      ])
-    }
+      function addPoint() {
+        ctx.emit('changePoints', [...props.points, { type: 'unloading' }])
+      }
 
-    function deleteHandler(ind) {
-      ctx.emit('changePoints', [
-        ...props.points.slice(0, ind),
-        ...props.points.slice(ind + 1),
-      ])
-    }
+      function addReturn() {
+        ctx.emit('changePoints', [...props.points, { type: 'unloading', isReturn: true }])
+      }
 
-    return {
-      activePointInd,
-      readonly,
-      showMainLoadingPointSelector,
-      hasMainLoadingPoint,
-      showReturnBtn,
-      change,
-      getDriverRouteHandler,
-      addPoint,
-      addReturn,
-      deleteHandler,
-    }
-  },
-}
+      function deleteHandler(ind) {
+        ctx.emit('changePoints', [...props.points.slice(0, ind), ...props.points.slice(ind + 1)])
+      }
+
+      return {
+        activePointInd,
+        readonly,
+        showMainLoadingPointSelector,
+        hasMainLoadingPoint,
+        showReturnBtn,
+        change,
+        getDriverRouteHandler,
+        addPoint,
+        addReturn,
+        deleteHandler,
+      }
+    },
+  }
 </script>
 <style scoped>
-.route-wrapper {
-  padding: 15px;
-  border-radius: 5px;
-}
-.invalid {
-  border: tomato 2px solid;
-  border-radius: 5px;
-}
-.point-wrapper-outer {
-  border: 2px dotted gray;
-  border-radius: 5px;
-  margin: 2px;
-}
-.route-move {
-  transition: transform 0.5s;
-}
+  .route-wrapper {
+    padding: 15px;
+    border-radius: 5px;
+  }
+  .invalid {
+    border: tomato 2px solid;
+    border-radius: 5px;
+  }
+  .point-wrapper-outer {
+    border: 2px dotted gray;
+    border-radius: 5px;
+    margin: 2px;
+  }
+  .route-move {
+    transition: transform 0.5s;
+  }
 </style>

@@ -1,72 +1,74 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"
     />
     <v-select
       label="Период по"
-      :value="settings.periodBy"
+      :modelValue="modelValue.periodBy"
       :items="periodByItems"
-      outlined
-      dense
+      variant="outlined"
+       density="compact"
+     
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'periodBy')"
+      @update:model-value="updateSettings($event, 'periodBy')"
     />
-    <DateRangeInput
-      :period="settings.period"
-      @change="updateSettings($event, 'period')"
-    />
+    <DateRangeInput :period="modelValue.period" @change="updateSettings($event, 'period')" />
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
-      item-value="_id"
+      :modelValue="modelValue.agreements"
+      itemTitle="name"
+      itemValue="_id"
       label="Соглашения с ТК"
       :disabled="agreementItems.length === 0"
-      dense
+     
       clearable
       multiple
-      outlined
+      variant="outlined"
+       density="compact"
       :items="agreementItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
     <v-select
-      :value="settings.statuses"
+      :modelValue="modelValue.statuses"
       label="Статус"
       multiple
-      dense
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'statuses')"
+      @update:model-value="updateSettings($event, 'statuses')"
     />
     <v-autocomplete
-      :value="settings.carriers"
+      :modelValue="modelValue.carriers"
       label="Перевозчики"
       multiple
-      item-text="name"
-      auto-select-first
-      item-value="_id"
-      dense
+      itemTitle="name"
+      autoSelectFirst
+      itemValue="_id"
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :items="outsourceCarriers"
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'carriers')"
+      @update:model-value="updateSettings($event, 'carriers')"
     />
     <v-text-field
-      :value="settings.search"
+      :modelValue="modelValue.search"
       label="Поиск по номеру"
-      dense
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :style="{ maxWidth: '200px' }"
       @change="updateSettings($event, 'search')"
     />
@@ -81,15 +83,15 @@ import { useCarriers } from '@/entities/carrier/useCarriers.js'
 export default {
   name: 'IncomingInvoiceListSettings',
   components: { AppTableColumnSetting, DateRangeInput },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
   props: {
-    settings: Object,
+    modelValue: {
+      type: Object,
+      required: true,
+    },
     agreementItems: Array,
   },
-  setup(props, ctx) {
+  emits: ['update:modelValue', 'updateHeaders'],
+  setup(props, { emit }) {
     const { outsourceCarriers } = useCarriers()
     const statusItems = computed(() => {
       return incomingInvoiceStatuses
@@ -103,11 +105,11 @@ export default {
     ]
 
     function updateSettings(value, field) {
-      ctx.emit('change', { ...props.settings, [field]: value })
+      emit('update:modelValue', { ...props.modelValue, [field]: value })
     }
 
     function updateHeadersHandler(val) {
-      ctx.emit('updateHeaders', val)
+      emit('updateHeaders', val)
     }
     return {
       statusItems,
@@ -121,10 +123,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  gap: 15px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 15px;
+  }
 </style>

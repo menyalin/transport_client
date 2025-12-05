@@ -2,39 +2,25 @@
   <div class="my-2">
     <div class="text-h6">
       Клиенты:
-      <div
-        v-if="!clientList || !clientList.length"
-        class="text-caption pl-6 my-2"
-      >
-        нет данных
-      </div>
+      <div v-if="!clientList || !clientList.length" class="text-caption pl-6 my-2">нет данных</div>
       <v-list v-else>
         <v-list-item v-for="item in clientList" :key="item">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{
-                partnersMap.has(item)
-                  ? partnersMap.get(item).name
-                  : 'запись недоступна'
-              }}
-            </v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>
+            {{ partnersMap.has(item) ? partnersMap.get(item).name : 'запись недоступна' }}
+          </v-list-item-title>
+
           <v-list-item-action>
-            <v-icon small color="error" @click="deleteClient(item)">
-              mdi-delete
-            </v-icon>
+            <v-icon size="small" color="error" @click="deleteClient(item)">mdi-delete</v-icon>
           </v-list-item-action>
         </v-list-item>
       </v-list>
-      <v-autocomplete
-        :items="clientItems"
-        v-if="!isVisibleBtn"
-        onlyClients
-        @change="addClient"
-      />
-      <v-btn v-else small text color="primary" @click="showAutocomplete">
-        Добавить клиента
-      </v-btn>
+      <v-autocomplete v-if="!isVisibleBtn" :items="clientItems" onlyClients
+@update:model-value="addClient" />
+      <v-btn
+v-else
+size="small" variant="text" color="primary"
+@click="showAutocomplete"
+>Добавить клиента</v-btn>
     </div>
   </div>
 </template>
@@ -56,9 +42,7 @@ export default {
   },
   setup() {
     const clientItems = computed(() => {
-      return store.getters.partners
-        .filter((i) => i.isClient)
-        .map((i) => ({ value: i._id, text: i.name }))
+      return store.getters.partners.filter(i => i.isClient).map(i => ({ value: i._id, text: i.name }))
     })
     return { clientItems }
   },
@@ -97,7 +81,7 @@ export default {
       if (!id) return null
       const res = await this.$confirm('Вы уверены? ')
       if (!res) return null
-      this.selectedClients = this.selectedClients.filter((item) => item !== id)
+      this.selectedClients = this.selectedClients.filter(item => item !== id)
       this.$emit('change', this.selectedClients)
     },
   },

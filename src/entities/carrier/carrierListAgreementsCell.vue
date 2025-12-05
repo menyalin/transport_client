@@ -21,10 +21,10 @@ export default {
   },
   setup(props) {
     const agreementMap = computed(() => {
-      return new Map(props.agreementsData.map((i) => [i._id, i.name]))
+      return new Map(props.agreementsData.map(i => [i._id, i.name]))
     })
     const agreementItems = computed(() => {
-      return props.items.map((i) => ({
+      return props.items.map(i => ({
         ...i,
         agreementName: agreementMap.value.get(i.agreement) ?? '',
       }))

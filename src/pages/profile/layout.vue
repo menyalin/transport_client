@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <app-admin-bar title="User profile" />
+    <AppAdminBar title="User profile" />
     <v-main>
       <div class="layout">
-        <app-left-nav :items="navButtonsWithBadges" />
+        <AppLeftNav :items="navButtonsWithBadges" />
         <router-view />
       </div>
-      <app-snackbar />
+      <AppSnackbar />
     </v-main>
   </v-app>
 </template>
@@ -140,9 +140,8 @@ export default {
   }),
   computed: {
     navButtonsWithBadges() {
-      return this.navButtons.map((i) => {
-        if (i.link === '/profile/settings')
-          return { ...i, badge: this.$store.getters.companyInvites.length }
+      return this.navButtons.map(i => {
+        if (i.link === '/profile/settings') return { ...i, badge: this.$store.getters.companyInvites.length }
         else return i
       })
     },
@@ -150,10 +149,10 @@ export default {
 }
 </script>
 <style scoped>
-.layout {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-}
+  .layout {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
 </style>

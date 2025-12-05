@@ -4,28 +4,23 @@ import store from '@/store'
 const DATE_FORMAT = 'DD.MM.YYYY'
 
 const getPeriodDate = (orders, condFxName) => {
-  const dates = orders.map((i) => dayjs(i.plannedDate))
+  const dates = orders.map(i => dayjs(i.plannedDate))
   const targetDate = condFxName(...dates)
   return dayjs(targetDate).format(DATE_FORMAT)
 }
 
-const getInvoiceTotal = (orders) => {
+const getInvoiceTotal = orders => {
   const result = orders.reduce(
     (res, item) => {
       const discountKoef = (item.agreement.commission || 0) / 100
       const vatRateKoef = (item.agreement.vatRate || 0) / 100
       const discountSumWOVat = item.savedTotal.priceWOVat * discountKoef
-      const itemPriceWOVat =
-        (item.savedTotal.priceWOVat || 0) - discountSumWOVat
+      const itemPriceWOVat = (item.savedTotal.priceWOVat || 0) - discountSumWOVat
 
       return {
-        priceWOdiscountWOVat:
-          res.priceWOdiscountWOVat + item.savedTotal.priceWOVat,
+        priceWOdiscountWOVat: res.priceWOdiscountWOVat + item.savedTotal.priceWOVat,
 
-        priceWOdiscount:
-          res.priceWOdiscount +
-          item.savedTotal.priceWOVat +
-          item.savedTotal.priceWOVat * vatRateKoef,
+        priceWOdiscount: res.priceWOdiscount + item.savedTotal.priceWOVat + item.savedTotal.priceWOVat * vatRateKoef,
 
         priceWOVat: res.priceWOVat + itemPriceWOVat,
 
@@ -33,8 +28,7 @@ const getInvoiceTotal = (orders) => {
 
         discountSumWOVat: res.discountSumWOVat + discountSumWOVat,
 
-        discountSum:
-          res.discountSum + (discountSumWOVat + discountSumWOVat * vatRateKoef),
+        discountSum: res.discountSum + (discountSumWOVat + discountSumWOVat * vatRateKoef),
       }
     },
     {
@@ -53,9 +47,7 @@ const getInvoiceTotal = (orders) => {
     priceWOVat: moneyFormatter(result.priceWOVat),
     price: moneyFormatter(result.price),
     vat: moneyFormatter(result.price - result.priceWOVat),
-    vatWOdiscount: moneyFormatter(
-      result.priceWOdiscount - result.priceWOdiscountWOVat
-    ),
+    vatWOdiscount: moneyFormatter(result.priceWOdiscount - result.priceWOdiscountWOVat),
     discountSum: moneyFormatter(result.discountSum),
     discountSumWOVat: moneyFormatter(result.discountSumWOVat),
     rawDiscountSum: result.discountSum,
@@ -64,28 +56,25 @@ const getInvoiceTotal = (orders) => {
 
 const getAddressesByType = (route, pointType) => {
   const points = route
-    .filter((i) => i.type === pointType)
-    .reduce(
-      (res, i) => (res.includes(i.address) ? res : res.concat([i.address])),
-      []
-    )
-    .map((i) => store.getters.addressMap.get(i))
-    .map((address) => ({
+    .filter(i => i.type === pointType)
+    .reduce((res, i) => (res.includes(i.address) ? res : res.concat([i.address])), [])
+    .map(i => store.getters.addressMap.get(i))
+    .map(address => ({
       ...address,
       _partner: store.getters.partnersMap.get(address.partner),
     }))
   return points
 }
 
-const getTruckType = (order) => {
+const getTruckType = order => {
   const tKind = store.getters.truckKindsMap.get(order.reqTransport.kind)
   return `${order.reqTransport.liftCapacity}т ${tKind}`
 }
 
-const getTtnNums = (order) =>
+const getTtnNums = order =>
   order.docs
-    .filter((d) => ['trn', 'ttn', 'torg'].includes(d.type) && !!d.number)
-    .map((d) => d.number?.trim())
+    .filter(d => ['trn', 'ttn', 'torg'].includes(d.type) && !!d.number)
+    .map(d => d.number?.trim())
     .reduce((res, i) => (res.includes(i) ? res : res.concat([i])), [])
     .join('\n')
 
@@ -102,23 +91,22 @@ export class TemplateDataBuilder {
       idx: idx + 1,
       auctionNum: order.client.auctionNum?.trim() || '',
       num: order.client.num?.trim() || '',
-      truckNum:
-        store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
+      truckNum: store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
       ttnNums: getTtnNums(order),
       driverName: order.driverName.split(' ').join('\n'),
       orderDate: dayjs(order.plannedDate).format(DATE_FORMAT),
       orderTime: dayjs(order.plannedDate).format('HH:mm'),
       shippers: getAddressesByType(order.route, 'loading')
-        .map((i) => i._partner.name)
+        .map(i => i._partner.name)
         .join(', '),
       consignee: getAddressesByType(order.route, 'unloading')
-        .map((i) => i._partner.name)
+        .map(i => i._partner.name)
         .join(', '),
       loadPlaces: getAddressesByType(order.route, 'loading')
-        .map((i) => i.name)
+        .map(i => i.name)
         .join(', '),
       unloadPlaces: getAddressesByType(order.route, 'unloading')
-        .map((i) => i.name)
+        .map(i => i.name)
         .join(', '),
       truckType: getTruckType(order),
       total: {
@@ -132,16 +120,12 @@ export class TemplateDataBuilder {
       // Простой на погрузке
       loadingD: {
         price: moneyFormatter(order.savedTotalByTypes.loadingDowntime.price),
-        priceWOVat: moneyFormatter(
-          order.savedTotalByTypes.loadingDowntime.priceWOVat
-        ),
+        priceWOVat: moneyFormatter(order.savedTotalByTypes.loadingDowntime.priceWOVat),
       },
       // Простой на разгрузке
       unloadingD: {
         price: moneyFormatter(order.savedTotalByTypes.unloadingDowntime.price),
-        priceWOVat: moneyFormatter(
-          order.savedTotalByTypes.unloadingDowntime.priceWOVat
-        ),
+        priceWOVat: moneyFormatter(order.savedTotalByTypes.unloadingDowntime.priceWOVat),
       },
       returnP: {
         price: moneyFormatter(order.savedTotalByTypes.return.price),
@@ -149,9 +133,7 @@ export class TemplateDataBuilder {
       },
       additP: {
         price: moneyFormatter(order.savedTotalByTypes.additionalPoints.price),
-        priceWOVat: moneyFormatter(
-          order.savedTotalByTypes.additionalPoints.priceWOVat
-        ),
+        priceWOVat: moneyFormatter(order.savedTotalByTypes.additionalPoints.priceWOVat),
       },
       otherP: {
         price: moneyFormatter(order.savedTotalByTypes.other.price),

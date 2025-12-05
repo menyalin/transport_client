@@ -1,12 +1,12 @@
 <template>
   <v-btn>
-    <v-icon> mdi-cached </v-icon>
+    <v-icon>mdi-cached</v-icon>
   </v-btn>
 </template>
 
 <script>
 export default {
-  name: 'refreshBtn',
+  name: 'RefreshBtn',
 }
 </script>
 

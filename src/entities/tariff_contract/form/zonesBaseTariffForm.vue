@@ -5,51 +5,41 @@
       <v-card-text>
         <div class="input-fields-row">
           <v-select
-            label="Тип ТС"
-            :items="truckKindItems"
-            multiple
-            v-model="form.truckKinds"
-          />
+v-model="form.truckKinds"
+label="Тип ТС" :items="truckKindItems" multiple
+/>
           <v-select
-            multiple
-            label="Грузоподъемность"
-            :items="liftCapacityItems"
-            v-model="form.liftCapacities"
-          />
+v-model="form.liftCapacities"
+multiple label="Грузоподъемность" :items="liftCapacityItems"
+/>
         </div>
         <div class="input-fields-row">
-          <v-text-field
-            label="Кол-во точек, включенных в тариф"
-            v-model.number="form.includedPoints"
-          />
-          <v-text-field
-            label="Тариф за доп.точку"
-            v-model.number="form.pointPrice"
-          />
+          <v-text-field v-model.number="form.includedPoints" label="Кол-во точек, включенных в тариф" />
+          <v-text-field v-model.number="form.pointPrice" label="Тариф за доп.точку" />
         </div>
         <div class="input-fields-row">
           <v-autocomplete
+            v-model="form.loadingZone"
             label="Зона погрузки"
             :items="zoneItems"
-            item-value="_id"
-            item-text="name"
-            auto-select-first
-            v-model="form.loadingZone"
+            itemValue="_id"
+            itemTitle="name"
+            autoSelectFirst
           />
           <v-autocomplete
-            ref="focusableNodeRef"
+            ref="NodeRef"
+            v-model="form.unloadingZones"
             label="Зоны разгрузки"
             multiple
             :items="zoneItems"
-            item-value="_id"
-            item-text="name"
-            auto-select-first
-            v-model="form.unloadingZones"
+            itemValue="_id"
+            itemTitle="name"
+            autoSelectFirst
             hint="Важна последовательность зон"
           />
         </div>
 
-        <v-text-field label="Тариф" v-model.number="form.price" />
+        <v-text-field v-model.number="form.price" label="Тариф" />
       </v-card-text>
       <CardActionButtons
         :submitDisabled="isInvalidForm"
@@ -57,14 +47,8 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
-          Добавить в список
-        </v-btn>
+        <v-btn v-if="!editableMode" type="submit" color="primary"
+:disabled="isInvalidForm">Добавить в список</v-btn>
       </CardActionButtons>
     </v-card>
   </form>
@@ -97,17 +81,9 @@ export default {
     initialFormState: Object,
   },
   setup(props, ctx) {
-    const {
-      focusableNodeRef,
-      truckKindItems,
-      liftCapacityItems,
-      zoneItems,
-      commonRules,
-    } = useFormHelpers()
+    const { NodeRef, truckKindItems, liftCapacityItems, zoneItems, commonRules } = useFormHelpers()
 
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = computed(() => ({
       ...commonRules,
@@ -121,7 +97,7 @@ export default {
 
     watch(
       () => props.initialFormState,
-      (newState) => {
+      newState => {
         if (newState) {
           form.value = { ...newState }
           v$.value.$reset()
@@ -143,7 +119,7 @@ export default {
       ctx.emit('add', { ...form.value })
       form.value.price = null
       form.value.unloadingZone = null
-      focusableNodeRef.value.focus()
+      NodeRef.value.focus()
     }
 
     function cancelHandler() {
@@ -166,15 +142,15 @@ export default {
       form,
       isInvalidForm,
       v$,
-      focusableNodeRef,
+      NodeRef,
     }
   },
 }
 </script>
 <style scoped>
-.input-fields-row {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
+  .input-fields-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
 </style>

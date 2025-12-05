@@ -38,16 +38,13 @@ class IncomingInvoiceService {
       })
       const parsedBody = payloadSchema.parse(params)
 
-      const { data } = await api.get(
-        BASE_PATH + '/orders/' + parsedBody.incomingInvoiceId,
-        {
-          params: {
-            limit: parsedBody.limit,
-            skip: parsedBody.skip,
-            company: parsedBody.company,
-          },
-        }
-      )
+      const { data } = await api.get(BASE_PATH + '/orders/' + parsedBody.incomingInvoiceId, {
+        params: {
+          limit: parsedBody.limit,
+          skip: parsedBody.skip,
+          company: parsedBody.company,
+        },
+      })
       return data
     } catch (e) {
       store.commit('setError', e.message)
@@ -85,11 +82,7 @@ class IncomingInvoiceService {
     return data
   }
 
-  async downloadDoc(
-    id,
-    body,
-    filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_tmp_doc'
-  ) {
+  async downloadDoc(id, body, filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_tmp_doc') {
     try {
       const { data } = await api({
         url: BASE_PATH + '/' + id + '/download_docs',
@@ -118,10 +111,7 @@ class IncomingInvoiceService {
       })
       const parsedBody = payloadSchema.parse(body)
 
-      const { data } = await api.post(
-        BASE_PATH + '/orders/' + parsedBody.incomingInvoiceId,
-        parsedBody
-      )
+      const { data } = await api.post(BASE_PATH + '/orders/' + parsedBody.incomingInvoiceId, parsedBody)
       return data
     } catch (e) {
       store.commit('setError', e.message)

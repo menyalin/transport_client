@@ -15,7 +15,7 @@ export class EventObserver {
   }
 
   broadcast(id, data) {
-    this.observers.get(id)?.forEach((fn) => fn(data))
+    this.observers.get(id)?.forEach(fn => fn(data))
     this.observers.delete(id)
   }
 }

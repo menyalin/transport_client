@@ -2,21 +2,14 @@ import { ref, computed, watch, onMounted } from 'vue'
 import store from '@/store'
 import { AgreementService, ReportService } from '@/shared/services'
 
-import {
-  ADDITIONAL_FILTER_LIST,
-  MAIN_FILTER_LIST,
-  GROUP_BY_ITEMS,
-} from './constants.js'
+import { ADDITIONAL_FILTER_LIST, MAIN_FILTER_LIST, GROUP_BY_ITEMS } from './constants.js'
 import initDateRange from './initDateRange.js'
 import usePersistedRef from '@/shared/hooks/usePersistedRef.js'
 
 export const useReportSettings = () => {
   const mainFilters = usePersistedRef(MAIN_FILTER_LIST, 'main_filters')
   const selectedGroups = usePersistedRef([], 'selected_groups')
-  const additionalFilters = usePersistedRef(
-    ADDITIONAL_FILTER_LIST,
-    'grossProfitPivot:additional_filters'
-  )
+  const additionalFilters = usePersistedRef(ADDITIONAL_FILTER_LIST, 'grossProfitPivot:additional_filters')
   const usePriceWithVat = usePersistedRef(false, 'usePriceWithVat')
   const withRound = usePersistedRef(true, 'grossProfitPivot:withRound')
   const loading = ref(false)
@@ -48,7 +41,7 @@ export const useReportSettings = () => {
     agreements.value = Object.assign(
       [],
       items
-        .map((i) => ({
+        .map(i => ({
           value: i._id,
           text: i.name,
         }))
@@ -59,9 +52,7 @@ export const useReportSettings = () => {
   function updateSelected(val) {
     selectedGroups.value = val
     console.log('update selected: ', val)
-    const groupItem = GROUP_BY_ITEMS.find(
-      (i) => i.value === settings.value.groupBy
-    )
+    const groupItem = GROUP_BY_ITEMS.find(i => i.value === settings.value.groupBy)
     additionalFilters.value[groupItem.filterName] = {
       values: val,
       cond: 'in',

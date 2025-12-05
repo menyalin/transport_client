@@ -1,9 +1,5 @@
 <template>
-  <PickOrders
-    :invoiceId="invoiceId"
-    :agreementId="agreementId"
-    :carrierId="carrierId"
-  />
+  <PickOrders :invoiceId="invoiceId" :agreementId="agreementId" :carrierId="carrierId" />
 </template>
 <script>
 import PickOrders from '@/entities/incomingInvoice/pickOrders/pickOrders.vue'

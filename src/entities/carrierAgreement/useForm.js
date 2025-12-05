@@ -35,9 +35,7 @@ export const useForm = (props, ctx) => {
       paymentBillDescription: {},
     }
   })
-  const carrierItems = computed(() =>
-    allCarriers.value.filter((i) => i.allowUseCustomerRole)
-  )
+  const carrierItems = computed(() => allCarriers.value.filter(i => i.allowUseCustomerRole))
   const v$ = useVuelidate(rules, state)
   const invalidForm = computed(() => v$.value.$invalid)
   const vatRateDisabled = computed(() => {
@@ -45,7 +43,7 @@ export const useForm = (props, ctx) => {
   })
   watch(
     () => props.item,
-    (val) => {
+    val => {
       if (!val) return null
       state.value = val
     },

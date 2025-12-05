@@ -4,13 +4,13 @@
     :items="items"
     :loading="loading"
     height="70vh"
-    dense
-    fixed-header
-    :footer-props="{
+   
+    fixedHeader
+    :footerProps="{
       'items-per-page-options': [50, 100, 200],
     }"
     :options="settings.listOptions"
-    :server-items-length="totalCount"
+    :itemsLength="totalCount"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
   >

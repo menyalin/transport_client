@@ -1,42 +1,31 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="items"
-    :items-per-page="-1"
-    no-data-text="Файлы отсутствуют"
-    hide-default-footer
-  >
+  <v-data-table :headers="headers" :items="items" :itemsPerPage="-1" no-data-text="Файлы отсутствуют" hideDefaultFooter>
     <template #[`item.icon`]="{ item }">
-      <v-icon :title="item.contentType">{{
-        mimeTypeToIcon(item.contentType)
-      }}</v-icon>
+      <v-icon :title="item.contentType">{{ mimeTypeToIcon(item.contentType) }}</v-icon>
     </template>
     <template #[`item.note`]="{ item }">
-      <v-edit-dialog
-        :return-value.sync="item.note"
-        @save="updateNoteHandler(item)"
-      >
+      <v-edit-dialog v-model:returnValue="item.note" @save="updateNoteHandler(item)">
         {{ item.note }}
-        <template v-slot:input>
-          <v-text-field v-model="item.note" single-line />
+        <template #input>
+          <v-text-field v-model="item.note" singleLine />
         </template>
       </v-edit-dialog>
     </template>
     <template #[`item.size`]="{ item }">
       <span v-if="item.size">{{ formatSize(item.size) }}</span>
-      <span v-else class="grey--text">~</span>
+      <span v-else class="text-grey">~</span>
     </template>
     <template #[`item.uploadDate`]="{ item }">
       <span v-if="item.uploadDate">{{ formatDate(item.uploadDate) }}</span>
-      <span v-else class="grey--text">~</span>
+      <span v-else class="text-grey">~</span>
     </template>
 
     <template #[`item.actions`]="{ item }">
       <div class="actions-wrapper">
-        <v-icon color="primary" small @click="downloadItemHandler(item)">
+        <v-icon color="primary" size="small" @click="downloadItemHandler(item)">
           {{ 'mdi-download' }}
         </v-icon>
-        <v-icon color="red" small @click="removeItemHandler(item)">
+        <v-icon color="red" size="small" @click="removeItemHandler(item)">
           {{ 'mdi-delete' }}
         </v-icon>
       </div>
@@ -55,12 +44,7 @@ export default {
       required: true,
       validator: function (value) {
         return value.every(
-          (file) =>
-            '_id' in file &&
-            'docId' in file &&
-            'key' in file &&
-            'originalName' in file &&
-            'status' in file
+          file => '_id' in file && 'docId' in file && 'key' in file && 'originalName' in file && 'status' in file
         )
       },
     },
@@ -68,7 +52,7 @@ export default {
   setup(_props, ctx) {
     const { proxy } = getCurrentInstance()
     const { formatSize, formatDate, mimeTypeToIcon } = useEntityFileHelpers()
-    const updateNoteHandler = (item) => {
+    const updateNoteHandler = item => {
       ctx.emit('updateNote', item)
     }
     const headers = ref([
@@ -80,15 +64,13 @@ export default {
       { value: 'actions', align: 'center', sortable: false, width: '75px' },
     ])
 
-    const removeItemHandler = async (item) => {
+    const removeItemHandler = async item => {
       console.log(item.origianlName)
-      const res = await proxy.$confirm(
-        `<b>Удалить?</b> <br/> файл: ${item.originalName}`
-      )
+      const res = await proxy.$confirm(`<b>Удалить?</b> <br/> файл: ${item.originalName}`)
       if (res) ctx.emit('remove', item.key)
     }
 
-    const downloadItemHandler = (item) => {
+    const downloadItemHandler = item => {
       ctx.emit('download', item)
     }
 
@@ -105,10 +87,10 @@ export default {
 }
 </script>
 <style scoped>
-.actions-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 20px;
-}
+  .actions-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 20px;
+  }
 </style>

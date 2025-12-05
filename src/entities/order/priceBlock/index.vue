@@ -1,26 +1,26 @@
 <template>
   <div>
-    <app-price-wrapper
+    <AppPriceWrapper
       v-if="showPriceBlock"
       :items="prices"
-      @change="changePricesHandler"
       :isValid="isValidPrices"
       :readonly="readonlyPrice || hasPaymentInvoice"
       :agreement="agreement"
       title="Стоимость рейса"
       :prePrices="prePrices"
+      @change="changePricesHandler"
     />
-    <app-price-wrapper
+    <AppPriceWrapper
       v-if="showOutsourceBlock"
       :items="outsourceCosts"
-      @change="changeOutsourceCostsHandler"
       class="mt-4"
       :readonly="readonlyCosts || hasIncomingInvoice"
       :agreement="carrierAgreement"
       title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
+      @change="changeOutsourceCostsHandler"
     />
-    <slot v-if="showOutsourceBlock" />
+    <slot v-if="showOutsourceBlock"></slot>
   </div>
 </template>
 <script>
@@ -57,10 +57,7 @@ export default {
     showPriceBlock() {
       const lastDepartureDate = this.route[this.route.length - 1].departureDate
       if (!lastDepartureDate)
-        return (
-          this.agreement?.useCustomPrices &&
-          this.$store.getters.hasPermission('order:daysForReadPrice')
-        )
+        return this.agreement?.useCustomPrices && this.$store.getters.hasPermission('order:daysForReadPrice')
       const hasReadPermission = this.$store.getters.allowedPeriodForPermission({
         date: lastDepartureDate,
         permission: 'order:daysForReadPrice',
@@ -78,8 +75,7 @@ export default {
     },
     readonlyPrice() {
       const lastDepartureDate = this.route[this.route.length - 1].departureDate
-      if (!lastDepartureDate)
-        return !this.$store.getters.hasPermission('order:daysForWritePrice')
+      if (!lastDepartureDate) return !this.$store.getters.hasPermission('order:daysForWritePrice')
       else
         return !this.$store.getters.allowedPeriodForPermission({
           permission: 'order:daysForWritePrice',

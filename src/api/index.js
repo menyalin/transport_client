@@ -21,20 +21,12 @@ api.interceptors.response.use(
   function (config) {
     return config
   },
-  async (error) => {
+  async error => {
     const originalRequest = error.config
-    if (
-      error?.response?.status == 401 &&
-      error.config &&
-      !error.config._isRetry
-    ) {
+    if (error?.response?.status == 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/auth/refresh`,
-          {},
-          { withCredentials: true }
-        )
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/refresh`, {}, { withCredentials: true })
         localStorage.setItem('token', `Bearer ${response?.data?.accessToken}`)
         return api.request(originalRequest)
       } catch (e) {

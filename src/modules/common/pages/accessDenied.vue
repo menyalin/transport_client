@@ -4,15 +4,9 @@
       <v-container fluid>
         <v-row align="center" justify="center">
           <v-col cols="12" md="6">
-            <v-alert type="error">
-              Доступ к запрашиваемой странице запрещен
-            </v-alert>
+            <v-alert type="error">Доступ к запрашиваемой странице запрещен</v-alert>
             <router-link :to="$route.query.redirect">
-              {{
-                $route.query.redirect !== '/'
-                  ? 'Вернуться назад'
-                  : 'Перейти на главную страницу'
-              }}
+              {{ $route.query.redirect !== '/' ? 'Вернуться назад' : 'Перейти на главную страницу' }}
             </router-link>
             <br />
             <small>До автоматического перехода осталось {{ secBefore }}сек</small>
@@ -36,7 +30,7 @@ export default {
       this.intervalHandler()
     }, 1000)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   methods: {

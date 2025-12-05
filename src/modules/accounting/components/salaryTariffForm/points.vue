@@ -6,18 +6,20 @@
       :items="loadingAddressItems"
       pointType="loading"
       label="Погрузка"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-autocomplete
       v-model="state.unloading"
       :items="unloadingAddressItems"
       label="Разгрузка"
       pointType="unloading"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
   </div>
 </template>
@@ -40,14 +42,14 @@ export default {
     const state = ref(props.points ? { ...props.points } : initialState)
 
     const loadingAddressItems = computed(() => {
-      return store.getters.addressesForAutocomplete.filter((i) => i.loading)
+      return store.getters.addressesForAutocomplete.filter(i => i.loading)
     })
     const unloadingAddressItems = computed(() => {
-      return store.getters.addressesForAutocomplete.filter((i) => i.unloading)
+      return store.getters.addressesForAutocomplete.filter(i => i.unloading)
     })
     watch(
       () => props.points,
-      (val) => {
+      val => {
         state.value = { ...val }
       },
       { deep: true }
@@ -71,9 +73,9 @@ export default {
 }
 </script>
 <style scoped>
-#points-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #points-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 </style>

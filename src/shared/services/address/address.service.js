@@ -15,14 +15,14 @@ class AddressService {
   }
 
   constructor() {
-    socket.on('address:created', (data) => {
+    socket.on('address:created', data => {
       store.commit('addAddress', this._prepareData(data))
     })
 
-    socket.on('address:updated', (data) => {
+    socket.on('address:updated', data => {
       store.commit('updateAddress', this._prepareData(data))
     })
-    socket.on('address:deleted', (id) => {
+    socket.on('address:deleted', id => {
       store.commit('deleteAddress', id)
     })
   }
@@ -53,9 +53,8 @@ class AddressService {
 
   async getByDirectoriesProfile(profile) {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
-    return data.map((i) => this._prepareData(i))
+    if (!Array.isArray(data)) throw new Error('Нужен массив!! пришло что-то другое!')
+    return data.map(i => this._prepareData(i))
   }
 
   async getById(id) {

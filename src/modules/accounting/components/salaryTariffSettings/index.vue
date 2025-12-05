@@ -3,11 +3,12 @@
     <v-text-field
       v-model="tmpSettings.date"
       label="Дата"
-      outlined
+      variant="outlined"
+       density="compact"
       :disabled="disabled"
       type="date"
-      hide-details
-      dense
+      hideDetails
+     
       :style="{ 'max-width': '200px' }"
     />
 
@@ -16,9 +17,10 @@
       label="ТК"
       :items="$store.getters.tkNamesForSelect"
       multiple
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
       :style="{ 'max-width': '220px' }"
     />
 
@@ -26,30 +28,33 @@
       v-model="tmpSettings.type"
       label="Тип тарифа"
       :items="$store.getters.salaryTariffTypes"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
       :style="{ 'max-width': '220px' }"
     />
     <v-select
       v-model="tmpSettings.consigneeTypes"
       label="Типы грузополучателей"
       :items="$store.getters.partnerGroups"
-      dense
+     
       multiple
-      outlined
+      variant="outlined"
+       density="compact"
       clearable
-      hide-details
+      hideDetails
       :style="{ 'max-width': '300px' }"
     />
     <v-select
       v-model="tmpSettings.liftCapacity"
       label="Грузоподъемность"
       :items="$store.getters.liftCapacityTypes"
-      dense
+     
       multiple
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       :style="{ 'max-width': '220px' }"
     />
   </div>
@@ -100,11 +105,8 @@ export default {
     if (this.settings?.group) this.tmpSettings = { ...this.settings }
     else {
       // default values
-      this.tmpSettings.truckKind =
-        this.$store.getters.companySettings?.defaultTruckKind || null
-      this.tmpSettings.liftCapacity.push(
-        this.$store.getters.companySettings?.defaultLiftCapacity || null
-      )
+      this.tmpSettings.truckKind = this.$store.getters.companySettings?.defaultTruckKind || null
+      this.tmpSettings.liftCapacity.push(this.$store.getters.companySettings?.defaultLiftCapacity || null)
 
       this.tmpSettings.date = dayjs().format('YYYY-MM-DD')
     }
@@ -112,12 +114,12 @@ export default {
 }
 </script>
 <style scoped>
-#settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 15px;
-  margin: 10px;
-}
+  #settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    margin: 10px;
+  }
 </style>

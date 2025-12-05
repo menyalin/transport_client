@@ -45,12 +45,12 @@ export default {
 }
 </script>
 <style scoped>
-tr .row-title {
-  text-align: right;
-}
-tr .row-value {
-  text-align: right;
-  font-weight: bold;
-  padding-left: 10px;
-}
+  tr .row-title {
+    text-align: right;
+  }
+  tr .row-value {
+    text-align: right;
+    font-weight: bold;
+    padding-left: 10px;
+  }
 </style>

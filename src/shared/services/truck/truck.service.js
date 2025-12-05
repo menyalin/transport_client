@@ -5,15 +5,15 @@ const BASE_PATH = '/trucks'
 
 class TruckService {
   constructor() {
-    socket.on('truck:created', (data) => {
+    socket.on('truck:created', data => {
       store.commit('addTruck', data)
       store.commit('addToCache', data)
     })
-    socket.on('truck:updated', (data) => {
+    socket.on('truck:updated', data => {
       store.commit('updateTruck', data)
       store.commit('addToCache', data)
     })
-    socket.on('truck:deleted', (id) => {
+    socket.on('truck:deleted', id => {
       store.commit('deleteTruck', id)
       store.commit('deleteFromCache', id)
     })
@@ -38,8 +38,7 @@ class TruckService {
 
   async getByDirectoriesProfile(profile) {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
+    if (!Array.isArray(data)) throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
@@ -52,8 +51,7 @@ class TruckService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       const { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

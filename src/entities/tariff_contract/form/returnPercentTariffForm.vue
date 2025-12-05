@@ -4,25 +4,15 @@
       <v-card-title>{{ formTitle }}</v-card-title>
       <v-card-text>
         <div class="input-fields-row">
+          <v-select ref="NodeRef" v-model="form.truckKinds" label="Тип ТС"
+:items="truckKindItems" multiple />
           <v-select
-            ref="focusableNodeRef"
-            label="Тип ТС"
-            :items="truckKindItems"
-            multiple
-            v-model="form.truckKinds"
-          />
-          <v-select
-            multiple
-            label="Грузоподъемность"
-            :items="liftCapacityItems"
-            v-model="form.liftCapacities"
-          />
+v-model="form.liftCapacities"
+multiple label="Грузоподъемность" :items="liftCapacityItems"
+/>
         </div>
         <div class="input-fields-row">
-          <v-text-field
-            label="Процент от базовой стоимости рейса"
-            v-model.number="form.percent"
-          />
+          <v-text-field v-model.number="form.percent" label="Процент от базовой стоимости рейса" />
         </div>
       </v-card-text>
       <CardActionButtons
@@ -31,14 +21,8 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
-          Добавить в список
-        </v-btn>
+        <v-btn v-if="!editableMode" type="submit" color="primary"
+:disabled="isInvalidForm">Добавить в список</v-btn>
       </CardActionButtons>
     </v-card>
   </form>
@@ -74,17 +58,9 @@ export default {
       percent: null,
     })
 
-    const {
-      truckKindItems,
-      liftCapacityItems,
-      orderTypeItems,
-      commonRules,
-      focusableNodeRef,
-    } = useFormHelpers()
+    const { truckKindItems, liftCapacityItems, orderTypeItems, commonRules, NodeRef } = useFormHelpers()
 
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = {
       ...commonRules,
@@ -94,7 +70,7 @@ export default {
 
     watch(
       () => props.initialFormState,
-      (newState) => {
+      newState => {
         if (newState) {
           form.value = { ...newState }
           v$.value.$reset()
@@ -115,7 +91,7 @@ export default {
     function submitFormHandler() {
       ctx.emit('add', form.value)
       clearForm()
-      focusableNodeRef.value.focus()
+      NodeRef.value.focus()
     }
 
     function cancelHandler() {
@@ -138,21 +114,21 @@ export default {
       form,
       isInvalidForm,
       v$,
-      focusableNodeRef,
+      NodeRef,
     }
   },
 }
 </script>
 <style scoped>
-.input-fields-row {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-.zone-row {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-}
+  .input-fields-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+  .zone-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
 </style>

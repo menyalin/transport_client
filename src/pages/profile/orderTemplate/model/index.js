@@ -1,5 +1,3 @@
-import {useListData} from './useListData'
+import { useListData } from './useListData'
 
-export {
-    useListData
-}
+export { useListData }

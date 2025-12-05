@@ -10,7 +10,7 @@ export default ({ listSettingsName, defaultHeaders, allHeaders }) => {
   })
 
   const headers = computed(() => {
-    return allHeaders.filter((i) => activeHeaders.value.includes(i.value))
+    return allHeaders.filter(i => activeHeaders.value.includes(i.value))
   })
 
   return {

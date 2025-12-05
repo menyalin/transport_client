@@ -1,27 +1,24 @@
 <template>
-  <v-data-table
-    :value="selected"
+  <v-data-table-server
+    :modelValue="currentSelected"
     :headers="headers"
-    dense
     color="primary"
     :loading="loading"
     :items="preparedItems"
     :showSelect="showSelect"
-    item-key="_id"
-    fixed-header
-    checkbox-color="primary"
+    itemKey="_id"
+    fixedHeader
+    checkboxColor="primary"
     height="65vh"
-    multi-sort
-    :serverItemsLength="
-      statisticData && !!statisticData.count ? statisticData.count : undefined
-    "
-    :footer-props="{
+    multiSort
+    :itemsLength="statisticData && !!statisticData.count ? statisticData.count : undefined"
+    :footerProps="{
       'items-per-page-options': [50, 100, 200],
     }"
     :options="listOptions"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
-    @input="selectHandler"
+    @update:model-value="selectHandler"
   >
     <template #[`item.state.status`]="{ item }">
       {{ getStatusText(item.state.status) }}
@@ -29,11 +26,11 @@
     <template #[`item.addItemColumn`]="{ item }">
       <v-icon
         v-if="item.isSelectable"
-        small
+        size="small"
         color="primary"
         :disabled="!item.isSelectable"
-        @click="addItem(item._id)"
         :style="{ cursor: 'pointer' }"
+        @click="addItem(item._id)"
       >
         mdi-arrow-up-left
       </v-icon>
@@ -41,34 +38,24 @@
 
     <template #[`item.truck`]="{ item }">
       {{
-        !!item.confirmedCrew &&
-        !!item.confirmedCrew.truck &&
-        trucksMap.has(item.confirmedCrew.truck)
+        !!item.confirmedCrew && !!item.confirmedCrew.truck && trucksMap.has(item.confirmedCrew.truck)
           ? trucksMap.get(item.confirmedCrew.truck).regNum
           : '-'
       }}
     </template>
     <template #[`item.trailer`]="{ item }">
       {{
-        !!item.confirmedCrew &&
-        !!item.confirmedCrew.trailer &&
-        trucksMap.has(item.confirmedCrew.trailer)
+        !!item.confirmedCrew && !!item.confirmedCrew.trailer && trucksMap.has(item.confirmedCrew.trailer)
           ? trucksMap.get(item.confirmedCrew.trailer).regNum
           : ''
       }}
     </template>
     <template #[`item.client.client`]="{ item }">
-      {{
-        !!item.client && partnersMap.has(item.client.client)
-          ? partnersMap.get(item.client.client).name
-          : '-'
-      }}
+      {{ !!item.client && partnersMap.has(item.client.client) ? partnersMap.get(item.client.client).name : '-' }}
     </template>
     <template #[`item.analytics.type`]="{ item }">
       {{
-        !!item.analytics &&
-        !!item.analytics.type &&
-        orderAnalyticTypeMap.has(item.analytics.type)
+        !!item.analytics && !!item.analytics.type && orderAnalyticTypeMap.has(item.analytics.type)
           ? orderAnalyticTypeMap.get(item.analytics.type)
           : ''
       }}
@@ -83,15 +70,16 @@
       </b>
     </template>
     <template #[`item.docsGetted`]="{ item }">
-      <v-simple-checkbox
-        :value="item.docsState ? item.docsState.getted : false"
+      <v-checkbox
+        :modelValue="item.docsState ? item.docsState.getted : false"
         :disabled="!!item.docs && !!item.docs.length"
         color="primary"
-        @input="setDocStateStatus($event, item._id)"
+        hideDetails
+        @update:model-value="setDocStateStatus($event, item._id)"
       />
     </template>
-    <template #[`footer.prepend`] v-if="statisticData && statisticData.count">
-      <order-list-footer-details
+    <template v-if="statisticData && statisticData.count" #[`footer.prepend`]>
+      <OrderListFooterDetails
         :total="statisticData.count"
         :accepted="statisticData.acceptedDocs"
         :needFix="statisticData.needFixDocs"
@@ -100,14 +88,8 @@
       />
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn
-        color="primary"
-        icon
-        small
-        dark
-        @click="$emit('openDocsDialog', item[itemIdField])"
-      >
-        <v-icon small> mdi-file-document-multiple </v-icon>
+      <v-btn color="primary" icon size="small" @click="$emit('openDocsDialog', item[itemIdField])">
+        <v-icon size="small">mdi-file-document-multiple</v-icon>
       </v-btn>
     </template>
     <template #[`item.total.price`]="{ item }">
@@ -119,130 +101,123 @@
     <template #[`item.total.sumVat`]="{ item }">
       {{ new Intl.NumberFormat().format(item.total.sumVat) }}
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script>
-import store from '@/store'
-import router from '@/router'
-import { computed } from 'vue'
-import { OrderService } from '@/shared/services'
-import { OrderListFooterDetails } from '@/shared/ui'
+  import store from '@/store'
+  import router from '@/router'
+  import { computed } from 'vue'
+  import { OrderService } from '@/shared/services'
+  import { OrderListFooterDetails } from '@/shared/ui'
 
-export default {
-  name: 'OrdersTable',
-  components: {
-    OrderListFooterDetails,
-  },
-  model: {
-    prop: 'selected',
-    event: 'change',
-  },
-  props: {
-    selected: Array,
-    showSelect: {
-      type: Boolean,
-      default: false,
+  export default {
+    name: 'OrdersTable',
+    components: {
+      OrderListFooterDetails,
     },
-    headers: { type: Array, required: true },
-    loading: { type: Boolean, required: true },
-    items: Array,
-    count: Number,
-    statisticData: Object,
-    listOptions: Object,
-    itemIdField: {
-      type: String,
-      default: '_id',
+    props: {
+      modelValue: {
+        type: Array,
+        default: () => [],
+      },
+      selected: Array,
+      showSelect: {
+        type: Boolean,
+        default: false,
+      },
+      headers: { type: Array, required: true },
+      loading: { type: Boolean, required: true },
+      items: Array,
+      count: Number,
+      statisticData: Object,
+      listOptions: Object,
+      itemIdField: {
+        type: String,
+        default: '_id',
+      },
     },
-  },
-  setup(props, ctx) {
-    const orderAnalyticTypeMap = computed(
-      () => store.getters.orderAnalyticTypesMap
-    )
+    emits: ['update:modelValue', 'change', 'update:listOptions', 'openDocsDialog'],
+    setup(props, ctx) {
+      const orderAnalyticTypeMap = computed(() => store.getters.orderAnalyticTypesMap)
 
-    const partnersMap = computed(() => store.getters.partnersMap)
+      const partnersMap = computed(() => store.getters.partnersMap)
 
-    const trucksMap = computed(() => store.getters.trucksMap)
+      const trucksMap = computed(() => store.getters.trucksMap)
 
-    function getStatusText(status) {
-      return store.getters.orderStatusesMap.get(status) || ' --- '
-    }
+      // Используем modelValue если доступно, иначе selected
+      const currentSelected = computed(() => props.modelValue || props.selected || [])
 
-    function dblClickRow(_, { item }) {
-      if (item) router.push(`/orders/${item[props.itemIdField]}`)
-    }
+      function getStatusText(status) {
+        return store.getters.orderStatusesMap.get(status) || ' --- '
+      }
 
-    function updateListOptionsHandler(options) {
-      ctx.emit('update:listOptions', { ...options })
-    }
+      function dblClickRow(_, { item }) {
+        if (item) router.push(`/orders/${item[props.itemIdField]}`)
+      }
 
-    async function setDocStateStatus(val, id) {
-      await OrderService.setDocState(id, val)
-    }
+      function updateListOptionsHandler(options) {
+        ctx.emit('update:listOptions', { ...options })
+      }
 
-    function isNotAccepted(doc) {
-      return doc.status !== 'accepted'
-    }
-    function selectHandler(selectedItems) {
-      ctx.emit('change', selectedItems)
-    }
-    function getOrderDocStatus(docs, isGetted) {
-      if (!isGetted && (!docs || !docs.length))
-        return { text: 'Не получены', fontColor: 'red' }
-      else if (isGetted && (!docs || !docs.length))
-        return { text: 'На проверке', fontColor: 'blue' }
-      else if (isGetted && docs.some(isNotAccepted))
-        return { text: 'На исправлении', fontColor: 'orange' }
-      else return { text: 'Приняты', fontColor: 'green' }
-    }
+      async function setDocStateStatus(val, id) {
+        await OrderService.setDocState(id, val)
+      }
 
-    function addItem(itemId) {
-      ctx.emit('addItem', itemId)
-    }
+      function isNotAccepted(doc) {
+        return doc.status !== 'accepted'
+      }
+      function selectHandler(selectedItems) {
+        ctx.emit('change', selectedItems)
+        ctx.emit('update:modelValue', selectedItems)
+      }
+      function getOrderDocStatus(docs, isGetted) {
+        if (!isGetted && (!docs || !docs.length)) return { text: 'Не получены', fontColor: 'red' }
+        else if (isGetted && (!docs || !docs.length)) return { text: 'На проверке', fontColor: 'blue' }
+        else if (isGetted && docs.some(isNotAccepted)) return { text: 'На исправлении', fontColor: 'orange' }
+        else return { text: 'Приняты', fontColor: 'green' }
+      }
 
-    const preparedItems = computed(() => {
-      if (!props.items || props.items.length === 0) return []
+      function addItem(itemId) {
+        ctx.emit('addItem', itemId)
+      }
 
-      return props.items.map((order) => ({
-        ...order,
-        driver:
-          store.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName ||
-          null,
-        tk:
-          order.confirmedCrew?.tkName &&
-          store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
-            ? store.getters.tkNamesMap.get(order.confirmedCrew.tkName).name
-            : '-',
-        docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
-        plannedDate: order?.route[0]
-          ? new Date(order.route[0]?.plannedDate).toLocaleString()
-          : null,
-        loadingZones:
-          order._loadingZones?.map((i) => i.name).join(', ') || null,
-        loadingPoints:
-          order.route
-            .filter((p) => p.type === 'loading')
-            .map((p) => store.getters.addressMap.get(p.address)?.shortName) ||
-          null,
-        unloadingPoints:
-          order.route
-            .filter((p) => p.type === 'unloading')
-            .map((p) => store.getters.addressMap.get(p.address)?.shortName) ||
-          null,
-      }))
-    })
+      const preparedItems = computed(() => {
+        if (!props.items || props.items.length === 0) return []
 
-    return {
-      orderAnalyticTypeMap,
-      dblClickRow,
-      partnersMap,
-      trucksMap,
-      updateListOptionsHandler,
-      getStatusText,
-      setDocStateStatus,
-      preparedItems,
-      selectHandler,
-      addItem,
-    }
-  },
-}
+        return props.items.map(order => ({
+          ...order,
+          driver: store.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName || null,
+          tk:
+            order.confirmedCrew?.tkName && store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
+              ? store.getters.tkNamesMap.get(order.confirmedCrew.tkName).name
+              : '-',
+          docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
+          plannedDate: order?.route[0] ? new Date(order.route[0]?.plannedDate).toLocaleString() : null,
+          loadingZones: order._loadingZones?.map(i => i.name).join(', ') || null,
+          loadingPoints:
+            order.route
+              .filter(p => p.type === 'loading')
+              .map(p => store.getters.addressMap.get(p.address)?.shortName) || null,
+          unloadingPoints:
+            order.route
+              .filter(p => p.type === 'unloading')
+              .map(p => store.getters.addressMap.get(p.address)?.shortName) || null,
+        }))
+      })
+
+      return {
+        orderAnalyticTypeMap,
+        dblClickRow,
+        partnersMap,
+        trucksMap,
+        currentSelected,
+        updateListOptionsHandler,
+        getStatusText,
+        setDocStateStatus,
+        preparedItems,
+        selectHandler,
+        addItem,
+      }
+    },
+  }
 </script>

@@ -36,9 +36,7 @@ export const useClientBlock = (props, ctx) => {
       }
       ctx.emit('change', state.value)
     } else {
-      currentAgreement.value = allowedAgreements.value.find(
-        (i) => i._id === state.value.agreement
-      )
+      currentAgreement.value = allowedAgreements.value.find(i => i._id === state.value.agreement)
     }
 
     ctx.emit('updateAgreement', currentAgreement.value)
@@ -70,12 +68,8 @@ export const useClientBlock = (props, ctx) => {
   }
 
   function changeAgreementHandler() {
-    const idx =
-      allowedAgreements.value.findIndex(
-        (i) => i._id === state.value.agreement
-      ) || 0
-    currentAgreement.value =
-      allowedAgreements.value[(idx + 1) % allowedAgreements.value.length]
+    const idx = allowedAgreements.value.findIndex(i => i._id === state.value.agreement) || 0
+    currentAgreement.value = allowedAgreements.value[(idx + 1) % allowedAgreements.value.length]
 
     state.value = {
       ...state.value,
@@ -124,21 +118,13 @@ export const useClientBlock = (props, ctx) => {
     changeFieldHandler,
     changeAgreementHandler,
     clientItems: computed(() =>
-      store.getters.partners
-        .filter((p) => p.isClient)
-        .map((i) => ({ value: i._id, text: i.name }))
+      store.getters.partners.filter(p => p.isClient).map(i => ({ value: i._id, text: i.name }))
     ),
-    showChangeAgreementBtn: computed(
-      () => allowedAgreements.value?.length > 1 && !props.agreementDisabled
-    ),
+    showChangeAgreementBtn: computed(() => allowedAgreements.value?.length > 1 && !props.agreementDisabled),
 
     agreementNameSring: computed(() => {
-      const suffix = state.value.directiveAgreement
-        ? ' (Установлено вручную)'
-        : ''
-      return currentAgreement.value
-        ? [currentAgreement.value.name + suffix]
-        : ['Соглашение отсутствует']
+      const suffix = state.value.directiveAgreement ? ' (Установлено вручную)' : ''
+      return currentAgreement.value ? [currentAgreement.value.name + suffix] : ['Соглашение отсутствует']
     }),
   }
 }

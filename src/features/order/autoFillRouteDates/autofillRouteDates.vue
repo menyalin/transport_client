@@ -1,59 +1,55 @@
 <template>
   <div>
-    <TopButtonsPanel
-      :disabled="disabledSubmit"
-      @submit="autoFillDatesHandler"
-    />
+    <TopButtonsPanel :disabled="disabledSubmit" @submit="autoFillDatesHandler" />
 
-    <v-alert type="info" text dismissible>
+    <v-alert type="info" text closable>
       {{ infoText }}
     </v-alert>
 
-    <DateRangeInput v-model="settings.period" />
+    <DateRangeInput :modelValue="settings.period" />
     <v-text-field
-      dense
+      v-model.number="settings.tripDurationInMinutes"
+     
       type="number"
       min="10"
-      outlined
+      variant="outlined"
+       density="compact"
       label="Время в пути, в минутах"
-      v-model.number="settings.tripDurationInMinutes"
       class="mt-3"
       :style="{ maxWidth: '300px' }"
     />
     <v-text-field
-      dense
+      v-model.number="settings.unloadingDurationInMinutes"
+     
       min="10"
-      outlined
+      variant="outlined"
+       density="compact"
       type="number"
       label="Время погрузки/разгрузки, в минутах"
-      v-model.number="settings.unloadingDurationInMinutes"
       :style="{ maxWidth: '300px' }"
     />
     <v-autocomplete
-      outlined
+      :modelValue="settings.truckIds"
+      variant="outlined"
+       density="compact"
       multiple
-      multi-line
+      multiLine
       chips
-      auto-select-first
-      deletable-chips
+      autoSelectFirst
+      closableChips
       color="primary"
       clearable
       label="Грузовики"
       :items="truckItems"
-      v-model="settings.truckIds"
       :style="{ maxWidth: '600px' }"
-      hide-details
+      hideDetails
     />
-    <v-btn small class="ma-2" color="primary" @click="selectAllTrucks">
-      Выбрать все
-    </v-btn>
-    <v-alert
-      v-for="(message, idx) in messages"
-      :key="idx"
-      :type="message.type"
-      dismissible
-      dense
-    >
+    <v-btn
+size="small"
+class="ma-2" color="primary" @click="selectAllTrucks"
+>Выбрать все</v-btn>
+    <v-alert v-for="(message, idx) in messages" :key="idx" :type="message.type"
+closable>
       {{ message.content }}
     </v-alert>
   </div>
@@ -95,9 +91,9 @@ export default {
 }
 </script>
 <style scoped>
-#settings {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+  #settings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 </style>

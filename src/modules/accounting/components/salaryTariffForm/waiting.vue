@@ -2,47 +2,52 @@
   <div id="wrapper">
     <v-autocomplete
       ref="first_field"
-      label="Клиенты"
-      dense
-      :items="clients"
-      item-value="_id"
-      item-text="name"
-      multiple
-      outlined
-      hide-details
       v-model="tmpItem.clients"
+      label="Клиенты"
+     
+      :items="clients"
+      itemValue="_id"
+      itemTitle="name"
+      multiple
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-select
       v-model="tmpItem.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-text-field
       v-model.number="tmpItem.includeHours"
       type="number"
       label="Кол-во часов включенных в тариф"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-select
       v-model="tmpItem.roundByHours"
       label="Округление времени"
       :items="$store.getters.roundingWaitingByHours"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-select
       v-model="tmpItem.tariffBy"
       label="Тариф за"
       :items="$store.getters.waitingTariffByItems"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
   </div>
 </template>
@@ -69,7 +74,7 @@ export default {
   },
   computed: {
     clients() {
-      return this.$store.getters.partners.filter((i) => i.isClient)
+      return this.$store.getters.partners.filter(i => i.isClient)
     },
   },
   watch: {
@@ -95,9 +100,9 @@ export default {
 }
 </script>
 <style scoped>
-#wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 </style>

@@ -4,20 +4,20 @@ const BASE_PATH = '/docs_registry'
 
 class DocsRegistryService {
   constructor() {
-    socket.on('docsRegistry:created', (_data) => {
+    socket.on('docsRegistry:created', _data => {
       // queryClient.setQueryData([FINES, data._id], data)
       // const fines = queryClient.getQueryData([FINES]) || []
       // queryClient.setQueryData([FINES], [...fines, data])
     })
 
-    socket.on('docsRegistry:updated', (_data) => {
+    socket.on('docsRegistry:updated', _data => {
       // queryClient.setQueryData([FINES, data._id], data)
       // const fines = queryClient.getQueryData([FINES])
       // if (fines) queryClient.setQueryData([FINES], [...fines.filter(i => i._id !== data._id), data])
       // else  queryClient.setQueryData([FINES], [data])
     })
 
-    socket.on('docsRegistry:deleted', (_id) => {})
+    socket.on('docsRegistry:deleted', _id => {})
   }
 
   async create(body) {
@@ -42,37 +42,22 @@ class DocsRegistryService {
 
   async addOrdersToRegistry(params) {
     if (!params.orders || params.orders.length === 0)
-      throw new Error(
-        'DocsRegistryService:addOrdersToRegistry: orders is missing!'
-      )
+      throw new Error('DocsRegistryService:addOrdersToRegistry: orders is missing!')
 
-    if (!params.docsRegistryId)
-      throw new Error(
-        'DocsRegistryService:addOrdersToRegistry: docsRegistryId is missing!'
-      )
+    if (!params.docsRegistryId) throw new Error('DocsRegistryService:addOrdersToRegistry: docsRegistryId is missing!')
 
-    const { data } = await api.post(
-      BASE_PATH + '/add_orders_to_registry',
-      params
-    )
+    const { data } = await api.post(BASE_PATH + '/add_orders_to_registry', params)
     return data
   }
-  
+
   async removeOrdersFromRegistry(params) {
     if (!params.orders || params.orders.length === 0)
-      throw new Error(
-        'DocsRegistryService:removeOrdersFromRegistry: orders is missing!'
-      )
+      throw new Error('DocsRegistryService:removeOrdersFromRegistry: orders is missing!')
 
     if (!params.docsRegistryId)
-      throw new Error(
-        'DocsRegistryService:removeOrdersFromRegistry: docsRegistryId is missing!'
-      )
+      throw new Error('DocsRegistryService:removeOrdersFromRegistry: docsRegistryId is missing!')
 
-    const { data } = await api.post(
-      BASE_PATH + '/remove_orders_from_registry',
-      params
-    )
+    const { data } = await api.post(BASE_PATH + '/remove_orders_from_registry', params)
     return data
   }
 

@@ -38,7 +38,7 @@ export default {
     },
 
     deleteInvite(state, id) {
-      state.companyInvites = state.companyInvites.filter((i) => i._id !== id)
+      state.companyInvites = state.companyInvites.filter(i => i._id !== id)
     },
 
     setFormSettings({ formSettings }, { formName, settings }) {
@@ -46,7 +46,7 @@ export default {
     },
 
     addArrayToCache(state, items) {
-      items.forEach((item) => {
+      items.forEach(item => {
         state.cacheDirectories.set(item._id, item)
       })
     },
@@ -57,7 +57,7 @@ export default {
 
     setPermissionsMap(state, payload) {
       state.permissionsMap.clear()
-      Object.entries(payload).forEach((i) => {
+      Object.entries(payload).forEach(i => {
         state.permissionsMap.set(i[0], i[1])
       })
     },
@@ -79,19 +79,17 @@ export default {
       state.myCompanies.push(company)
     },
     deleteCompany(state, companyId) {
-      state.myCompanies = state.myCompanies.filter((i) => i._id !== companyId)
+      state.myCompanies = state.myCompanies.filter(i => i._id !== companyId)
     },
 
     updateCompany(state, company) {
-      const idx = state.myCompanies.findIndex(
-        (item) => item._id === company._id
-      )
+      const idx = state.myCompanies.findIndex(item => item._id === company._id)
       if (idx === -1) return null
 
       state.myCompanies.splice(idx, 1, company)
     },
     updateCompanySettings(state, { settings, companyId }) {
-      const company = state.myCompanies.find((i) => i._id === companyId)
+      const company = state.myCompanies.find(i => i._id === companyId)
       if (!company) return
       company.settings = Object.assign(company.settings, settings)
     },
@@ -151,33 +149,26 @@ export default {
       if (partners?.length) commit('setPartners', partners)
       if (orderStatuses?.length) commit('setOrderStatuses', orderStatuses)
       if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
-      if (orderAnalyticTypes?.length)
-        commit('setOrderAnalyticTypes', orderAnalyticTypes)
+      if (orderAnalyticTypes?.length) commit('setOrderAnalyticTypes', orderAnalyticTypes)
       if (orderPriceTypes?.length) commit('setOrderPriceTypes', orderPriceTypes)
       if (documentTypes?.length) commit('setDocumentTypes', documentTypes)
-      if (documentStatuses?.length)
-        commit('setDocumentStatuses', documentStatuses)
+      if (documentStatuses?.length) commit('setDocumentStatuses', documentStatuses)
       if (staffRoles?.length) commit('setStaffRoles', staffRoles)
       if (permissions) commit('setPermissionsMap', permissions)
       if (allTruckParams) commit('setAllTruckParams', allTruckParams)
       if (tariffTypes) commit('setTariffTypes', tariffTypes)
-      if (roundingWaitingByHours)
-        commit('setRoundingWaitingByHours', roundingWaitingByHours)
-      if (idleTimeRoundingIntervals)
-        commit('setIdleTimeRoundingIntervals', idleTimeRoundingIntervals)
+      if (roundingWaitingByHours) commit('setRoundingWaitingByHours', roundingWaitingByHours)
+      if (idleTimeRoundingIntervals) commit('setIdleTimeRoundingIntervals', idleTimeRoundingIntervals)
       if (documents?.length) commit('setDocuments', documents)
       if (zones?.length) commit('setZones', zones)
       if (regions?.length) commit('setRegions', regions)
       if (cities?.length) commit('setCities', cities)
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
       if (fineCategories?.length) commit('setFineCategories', fineCategories)
-      if (salaryTariffTypes.length)
-        commit('setSalaryTariffTypes', salaryTariffTypes)
+      if (salaryTariffTypes.length) commit('setSalaryTariffTypes', salaryTariffTypes)
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
-      if (docsRegistryStatuses?.length)
-        commit('setDocsRegistryStatuses', docsRegistryStatuses)
-      if (paymentInvoiceStatuses?.length)
-        commit('setPaymentInvoiceStatuses', paymentInvoiceStatuses)
+      if (docsRegistryStatuses?.length) commit('setDocsRegistryStatuses', docsRegistryStatuses)
+      if (paymentInvoiceStatuses?.length) commit('setPaymentInvoiceStatuses', paymentInvoiceStatuses)
     },
 
     async createCompany({ commit }, payload) {
@@ -220,18 +211,16 @@ export default {
 
     companyInvites: ({ companyInvites }) => companyInvites,
 
-    myCompanies: (state) => state.myCompanies,
+    myCompanies: state => state.myCompanies,
     companySettings: ({ myCompanies }, { directoriesProfile }) =>
-      myCompanies.find((i) => i._id === directoriesProfile)?.settings,
+      myCompanies.find(i => i._id === directoriesProfile)?.settings,
     staffRoles: ({ staffRoles }) => staffRoles,
-    staffRolesMap: ({ staffRoles }) =>
-      new Map(staffRoles.map((s) => [s.value, s.text])),
+    staffRolesMap: ({ staffRoles }) => new Map(staffRoles.map(s => [s.value, s.text])),
 
     formSettingsMap: ({ formSettings }) => formSettings,
     permissionsMap: ({ permissionsMap }) => permissionsMap,
     fineCategories: ({ fineCategories }) => fineCategories,
-    fineCategoriesMap: ({ fineCategories }) =>
-      new Map(fineCategories.map((i) => [i.value, i.text])),
+    fineCategoriesMap: ({ fineCategories }) => new Map(fineCategories.map(i => [i.value, i.text])),
   },
 
   modules: {

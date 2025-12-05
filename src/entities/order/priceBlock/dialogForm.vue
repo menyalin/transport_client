@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="800" persistent>
+  <v-dialog :modelValue="dialog" maxWidth="800" persistent @update:model-value="$emit('update:dialog', $event)">
     <v-card>
       <v-card-title>Редактировать сумму</v-card-title>
       <v-card-text>
@@ -9,8 +9,9 @@
               v-model="$v.tmpItem.type.$model"
               label="Тип затрат"
               :items="availablePriceTypes"
-              dense
-              outlined
+             
+              variant="outlined"
+       density="compact"
               clearable
               :style="{ 'max-width': '300px' }"
               :errorMessages="typeErrorMessages"
@@ -19,8 +20,9 @@
             <v-text-field
               v-model="$v.tmpItem.price.$model"
               label="Сумма"
-              outlined
-              dense
+              variant="outlined"
+       density="compact"
+             
               type="number"
               :errorMessages="priceErrorMessages"
               :style="{ 'max-width': '200px' }"
@@ -37,7 +39,7 @@
               v-if="allowedCashPayment"
               v-model="tmpItem.cashPayment"
               label="Оплата наличными"
-              hide-details
+              hideDetails
               dense
             />
           </div>
@@ -45,24 +47,23 @@
             <v-text-field
               v-model.lazy="tmpItem.note"
               label="Комментарий"
-              outlined
-              dense
-              hide-details
+              variant="outlined"
+       density="compact"
+             
+              hideDetails
             />
           </div>
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="cancel"> Отмена </v-btn>
-        <v-btn color="primary" :disabled="isInvalidForm" @click="submit">
-          Сохранить
-        </v-btn>
+        <v-btn @click="cancel">Отмена</v-btn>
+        <v-btn color="primary" :disabled="isInvalidForm" @click="submit">Сохранить</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script>
-import { required, decimal } from 'vuelidate/lib/validators'
+import { required, decimal } from '@vuelidate/validators'
 export default {
   name: 'DialogForm',
   model: {
@@ -100,9 +101,7 @@ export default {
   },
   computed: {
     availablePriceTypes() {
-      return this.$store.getters.orderPriceTypes
-        .slice()
-        .filter((t) => this.availibleTypes.includes(t.value))
+      return this.$store.getters.orderPriceTypes.slice().filter(t => this.availibleTypes.includes(t.value))
     },
     disabledVatRateCheckbox() {
       return false
@@ -118,8 +117,7 @@ export default {
     },
     typeErrorMessages() {
       const errors = []
-      if (this.$v.tmpItem.type.$dirty && this.$v.tmpItem.type.$invalid)
-        errors.push('Укажите тип тарифа')
+      if (this.$v.tmpItem.type.$dirty && this.$v.tmpItem.type.$invalid) errors.push('Укажите тип тарифа')
       return errors
     },
   },
@@ -145,11 +143,11 @@ export default {
 </script>
 
 <style scoped>
-.fields-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 20px;
-}
+  .fields-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+  }
 </style>

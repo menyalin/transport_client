@@ -2,11 +2,11 @@
   <v-data-table
     :items="items"
     :headers="headers"
-    item-key="_id"
+    itemKey="_id"
     :loading="loading"
-    :serverItemsLength="totalCount"
+    :itemsLength="totalCount"
     :options="options"
-    dense
+   
     height="70vh"
     :footerProps="{
       'items-per-page-options': [50, 100, 200],

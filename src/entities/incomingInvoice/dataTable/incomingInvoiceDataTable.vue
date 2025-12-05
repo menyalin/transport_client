@@ -1,17 +1,17 @@
 <template>
   <v-data-table
-    :headers="headers"
-    checkbox-color="primary"
     v-model="selected"
-    item-key="_id"
+    :headers="headers"
+    checkboxColor="primary"
+    itemKey="_id"
     :items="items"
     showSelect
     :loading="loading"
     height="70vh"
-    dense
-    :serverItemsLength="totalCount"
-    fixed-header
-    :footer-props="{
+   
+    :itemsLength="totalCount"
+    fixedHeader
+    :footerProps="{
       'items-per-page-options': [50, 100, 200],
     }"
     :options="listOptions"
@@ -27,19 +27,11 @@
     </template>
 
     <template #[`item.receiptDate`]="{ item }">
-      {{
-        item.receiptDate
-          ? new Date(item.receiptDate).toLocaleDateString()
-          : null
-      }}
+      {{ item.receiptDate ? new Date(item.receiptDate).toLocaleDateString() : null }}
     </template>
 
     <template #[`item.plannedPayDate`]="{ item }">
-      {{
-        item.plannedPayDate
-          ? new Date(item.plannedPayDate).toLocaleDateString()
-          : null
-      }}
+      {{ item.plannedPayDate ? new Date(item.plannedPayDate).toLocaleDateString() : null }}
     </template>
 
     <template #[`item.priceWOVat`]="{ item }">

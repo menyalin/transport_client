@@ -34,9 +34,7 @@ export const useListData = () => {
     clients: settings.value?.clients,
     company: store.getters.directoriesProfile,
     limit: settings.value?.listOptions?.itemsPerPage || 50,
-    skip:
-      settings.value.listOptions.itemsPerPage *
-      (settings.value.listOptions.page - 1),
+    skip: settings.value.listOptions.itemsPerPage * (settings.value.listOptions.page - 1),
   }))
 
   async function getData() {
@@ -52,12 +50,12 @@ export const useListData = () => {
     }
   }
 
-  addEventListener('popstate', (e) => {
+  addEventListener('popstate', e => {
     settings.value = e.state.settings
   })
 
   function onDeleteHandler(itemId) {
-    items.value = items.value.filter((i) => i._id !== itemId)
+    items.value = items.value.filter(i => i._id !== itemId)
   }
 
   return {

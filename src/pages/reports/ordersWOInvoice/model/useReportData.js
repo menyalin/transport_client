@@ -6,20 +6,14 @@ import dayjs from 'dayjs'
 import store from '@/store/index'
 
 export default function () {
-  const setInitialPeriod = () => [
-    new dayjs().startOf('month').toISOString(),
-    new dayjs().toISOString(),
-  ]
+  const setInitialPeriod = () => [new dayjs().startOf('month').toISOString(), new dayjs().toISOString()]
 
   const initialState = {
     period: setInitialPeriod(),
     tks: [],
     agreements: [],
   }
-  const settings = usePersistedRef(
-    initialState,
-    'OrderWOInvoiceReport:settings'
-  )
+  const settings = usePersistedRef(initialState, 'OrderWOInvoiceReport:settings')
 
   function resetListOptions() {
     listOptions.value = { ...listOptions.value, page: 1 }
@@ -36,9 +30,7 @@ export default function () {
 
   const agreements = ref([])
   const agreementItems = computed(() =>
-    agreements.value
-      .filter((i) => i.isOutsourceAgreement !== true)
-      .sort((a, b) => (a.name < b.name ? -1 : 1))
+    agreements.value.filter(i => i.isOutsourceAgreement !== true).sort((a, b) => (a.name < b.name ? -1 : 1))
   )
   const items = ref([])
   const statisticData = ref({

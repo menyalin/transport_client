@@ -1,19 +1,19 @@
 <template>
   <v-autocomplete
+    v-model:searchInput="search"
     clearable
-    auto-select-first
-    solo
-    :value="model"
+    autoSelectFirst
+    variant="solo"
+    :modelValue="model"
     :items="items"
     :loading="isLoading"
-    :search-input.sync="search"
-    hide-no-data
-    :filter="() => true"
-    item-text="value"
+    hideNoData
+    :customFilter="() => true"
+    itemTitle="value"
     placeholder="Начните вводить адрес для поиска"
-    prepend-icon="mdi-database-search"
-    return-object
-    @change="change"
+    prependIcon="mdi-database-search"
+    returnObject
+    @update:model-value="change"
   />
 </template>
 <script>

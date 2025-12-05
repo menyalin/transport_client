@@ -6,7 +6,7 @@ export const useOrderValidations = () => {
     if (!agreement) return false
     if (!agreement.priceRequired) return true
     if (!STATUSES_WITH_PRICES.includes(status)) return true
-    return !!prices.filter((i) => i.type === 'base' && i.price > 0).length
+    return !!prices.filter(i => i.type === 'base' && i.price > 0).length
   }
 
   function isValidClientNum(agreement, { num }, { status }) {
@@ -28,10 +28,7 @@ export const useOrderValidations = () => {
   function beforeSubmitOrderValidation(order) {
     let baseResult = [false, null]
 
-    const res = plannedDateInRetailPartnersControl(
-      order.state.status,
-      order.route
-    )
+    const res = plannedDateInRetailPartnersControl(order.state.status, order.route)
 
     if (res[0]) return res
 

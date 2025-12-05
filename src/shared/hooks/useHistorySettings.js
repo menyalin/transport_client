@@ -1,9 +1,6 @@
 import { ref, watch } from 'vue'
 
-export default function useHistorySettings(
-  initialState,
-  stateName = 'default'
-) {
+export default function useHistorySettings(initialState, stateName = 'default') {
   const state = ref(
     history.state[stateName]
       ? typeof initialState === 'object'
@@ -14,16 +11,13 @@ export default function useHistorySettings(
 
   watch(
     state,
-    (newState) => {
-      history.pushState(
-        Object.assign({}, history.state, { [stateName]: newState }),
-        ''
-      )
+    newState => {
+      history.pushState(Object.assign({}, history.state, { [stateName]: newState }), '')
     },
     { deep: true }
   )
 
-  window.addEventListener('popstate', (event) => {
+  window.addEventListener('popstate', event => {
     if (event.state && event.state[stateName]) {
       state.value = event.state[stateName]
     }

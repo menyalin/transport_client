@@ -4,19 +4,15 @@
       <h4>Оценки водителей</h4>
     </div>
     <div id="settings">
-      <date-range-input v-model="dateRange" />
-      <v-btn small color="primary" @click="getReportHandler">
-        <v-icon left> mdi-download </v-icon> Скачать отчет
+      <DateRangeInput v-model="dateRange" />
+      <v-btn size="small" color="primary" @click="getReportHandler">
+        <v-icon start>mdi-download</v-icon>
+        Скачать отчет
       </v-btn>
     </div>
     <div id="report-body">
-      <v-progress-linear
-        v-if="loading"
-        indeterminate
-        color="primary"
-        striped
-        rounded
-      />
+      <v-progress-linear v-if="loading" indeterminate color="primary"
+striped rounded />
     </div>
   </div>
 </template>
@@ -56,26 +52,26 @@ export default {
 }
 </script>
 <style scoped>
-#wrapper {
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #wrapper {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-#settings {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 30px;
-  gap: 10px;
-}
-#report-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-}
+  #settings {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 30px;
+    gap: 10px;
+  }
+  #report-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+  }
 </style>

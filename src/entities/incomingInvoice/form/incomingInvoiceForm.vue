@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
-    <buttons-panel
+    <ButtonsPanel
       panelType="form"
       showSaveBtn
-      @cancel="cancelHandler"
       :disabledSubmit="invalidForm"
+      @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
     >
@@ -14,59 +14,63 @@
         :disabledDownloadFiles="downloadDisabled"
         @downloadTemplate="downloadTemplateHandler"
       />
-    </buttons-panel>
+    </ButtonsPanel>
     <div id="form">
       <div class="fields-row">
         <v-autocomplete
           v-model="state.carrier"
           label="Перевозчик"
-          dense
+         
           required
-          item-value="_id"
-          item-text="name"
+          itemValue="_id"
+          itemTitle="name"
           clearable
-          outlined
+          variant="outlined"
+       density="compact"
           :disabled="disabledCarriers"
           :items="outsourceCarriers"
           :style="{ minWidth: '400px' }"
-          @change="carrierChangeHandler"
+          @update:model-value="carrierChangeHandler"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
+         
           required
-          item-value="_id"
-          item-text="name"
+          itemValue="_id"
+          itemTitle="name"
           clearable
-          outlined
+          variant="outlined"
+       density="compact"
           :disabled="disabledAgreement || hasOrders"
           :items="carrierAgreements"
           :style="{ minWidth: '400px' }"
         />
         <v-select
-          label="Статус"
           v-model="state.status"
+          label="Статус"
           :items="statusItems"
-          dense
-          outlined
+         
+          variant="outlined"
+       density="compact"
           :disabled="!allowToChangeStatus"
-          @change="statusChangeHandler"
           :style="{ maxWidth: '200px' }"
+          @update:model-value="statusChangeHandler"
         />
       </div>
 
       <div class="fields-row">
         <v-text-field
-          label="Номер"
           v-model.trim="state.number"
-          dense
-          outlined
+          label="Номер"
+         
+          variant="outlined"
+       density="compact"
           :style="{ maxWidth: '250px' }"
         />
         <DateTimeInput
-          label="Дата акта"
           v-model="state.date"
+          label="Дата акта"
           dense
           outlined
           type="date"
@@ -76,16 +80,16 @@
 
       <div class="fields-row">
         <DateTimeInput
-          label="Дата получения акта"
           v-model="state.receiptDate"
+          label="Дата получения акта"
           dense
           outlined
           type="date"
           :style="{ maxWidth: '250px' }"
         />
         <DateTimeInput
-          label="Плановая дата оплаты"
           v-model="state.plannedPayDate"
+          label="Плановая дата оплаты"
           dense
           outlined
           type="date"
@@ -93,23 +97,17 @@
         />
         <DateTimeInput
           v-if="isVisiblePayDateField"
-          label="Факт оплаты"
           v-model="state.payDate"
+          label="Факт оплаты"
           dense
           outlined
           type="date"
           disabled
           :style="{ maxWidth: '250px' }"
         />
-        <v-btn
-          v-if="isVisiblePayInvoiceBtn"
-          color="primary"
-          @click="payInvoiceHandler"
-        >
-          Счет оплачен
-        </v-btn>
+        <v-btn v-if="isVisiblePayInvoiceBtn" color="primary" @click="payInvoiceHandler">Счет оплачен</v-btn>
       </div>
-      <v-dialog v-model="payDateDialog" persistent max-width="400">
+      <v-dialog v-model="payDateDialog" persistent maxWidth="400">
         <v-card>
           <v-card-title>Дата оплаты</v-card-title>
           <v-card-text>
@@ -127,29 +125,21 @@
       </v-alert>
       <v-btn
         color="primary"
-        @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          disabledPickOrders ||
-          needSave ||
-          invalidForm ||
-          !allowedToChangeOrders
-        "
+        :disabled="disabledPickOrders || needSave || invalidForm || !allowedToChangeOrders"
+        @click="pickOrdersHandler"
       >
         Подобрать рейсы
       </v-btn>
-      <OrdersTable
-        :invoiceId="item._id"
-        :allowDeleteOrders="allowedToChangeOrders"
-        class="ma-3"
-      />
+      <OrdersTable :invoiceId="item._id" :allowDeleteOrders="allowedToChangeOrders" class="ma-3" />
       <v-text-field
         v-model="state.note"
         label="Примечание"
-        dense
-        outlined
+       
+        variant="outlined"
+       density="compact"
+        hideDetails
         @blur="v$.note.$touch"
-        hide-details
       />
     </div>
   </div>
@@ -160,11 +150,7 @@ import { incomingInvoiceStatuses } from '../config.js'
 import OrdersTable from './ordersTable/ordersTable.vue'
 import { useForm } from './useForm.js'
 
-import {
-  ButtonsPanel,
-  DownloadDocTemplateMenu,
-  DateTimeInput,
-} from '@/shared/ui'
+import { ButtonsPanel, DownloadDocTemplateMenu, DateTimeInput } from '@/shared/ui'
 import { useCarriers } from '@/entities/carrier/useCarriers.js'
 import { usePrintForms } from './usePrintForms.js'
 
@@ -183,17 +169,12 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const {
-      downloadDisabled,
-      docTemplateIsVisible,
-      templates,
-      downloadTemplateHandler,
-    } = usePrintForms(props)
+    const { downloadDisabled, docTemplateIsVisible, templates, downloadTemplateHandler } = usePrintForms(props)
 
     const { outsourceCarriers } = useCarriers()
 
     const statusItems = computed(() => {
-      return incomingInvoiceStatuses.map((i) => ({
+      return incomingInvoiceStatuses.map(i => ({
         ...i,
         disabled: i.value === 'paid',
       }))
@@ -231,31 +212,24 @@ export default {
     })
     const carrierAgreementIds = computed(() => {
       if (!state.value.carrier) return []
-      const currentCarier = outsourceCarriers.value.find(
-        (carrier) => carrier._id === state.value.carrier
-      )
+      const currentCarier = outsourceCarriers.value.find(carrier => carrier._id === state.value.carrier)
       if (!currentCarier || !currentCarier.agreements) return []
-      return currentCarier.agreements?.map((i) => i.agreement) ?? []
+      return currentCarier.agreements?.map(i => i.agreement) ?? []
     })
 
     const carrierAgreements = computed(() => {
       if (!state.value.carrier) return []
-      return props.agreementItems.filter((agreement) =>
-        carrierAgreementIds.value.includes(agreement._id)
-      )
+      return props.agreementItems.filter(agreement => carrierAgreementIds.value.includes(agreement._id))
     })
 
     function pickOrdersHandler() {
       ctx.emit('pickOrders')
     }
-    const carrierChangeHandler = (val) => {
-      if (!val || carrierAgreements.value.length === 0)
-        state.value.agreement = null
-      else if (carrierAgreements.value.length === 1)
-        state.value.agreement = carrierAgreements.value[0]._id
+    const carrierChangeHandler = val => {
+      if (!val || carrierAgreements.value.length === 0) state.value.agreement = null
+      else if (carrierAgreements.value.length === 1) state.value.agreement = carrierAgreements.value[0]._id
 
-      if (!carrierAgreementIds.value.includes(state.value.agreement))
-        state.value.agreement = null
+      if (!carrierAgreementIds.value.includes(state.value.agreement)) state.value.agreement = null
     }
 
     return {
@@ -292,22 +266,22 @@ export default {
 }
 </script>
 <style scoped>
-#form {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 20px;
-}
-.fields-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-.fields-row > div {
-  flex-grow: 0; /* позволяют растягиваться */
-  flex-shrink: 1; /* позволяют сжиматься */
-  flex-basis: content; /* базовая ширина по содержимому */
-  min-width: 250px;
-}
+  #form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+  }
+  .fields-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  .fields-row > div {
+    flex-grow: 0; /* позволяют растягиваться */
+    flex-shrink: 1; /* позволяют сжиматься */
+    flex-basis: content; /* базовая ширина по содержимому */
+    min-width: 250px;
+  }
 </style>

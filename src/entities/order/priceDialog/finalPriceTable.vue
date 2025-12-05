@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense>
+    <v-table>
       <template #default>
         <thead>
           <tr>
@@ -16,18 +16,14 @@
             <td class="text-right price-column">
               {{
                 prePricesMap.has(priceType.value)
-                  ? Intl.NumberFormat().format(
-                      prePricesMap.get(priceType.value)[priceField]
-                    )
+                  ? Intl.NumberFormat().format(prePricesMap.get(priceType.value)[priceField])
                   : '-'
               }}
             </td>
             <td class="text-right price-column">
               {{
                 pricesMap.has(priceType.value)
-                  ? Intl.NumberFormat().format(
-                      pricesMap.get(priceType.value)[priceField]
-                    )
+                  ? Intl.NumberFormat().format(pricesMap.get(priceType.value)[priceField])
                   : '-'
               }}
             </td>
@@ -35,19 +31,13 @@
               <input
                 v-show="priceType.value === editableRowType"
                 :ref="priceType.value"
-                :value="
-                  finalPricesMap.has(priceType.value)
-                    ? finalPricesMap.get(priceType.value)[priceField]
-                    : null
-                "
+                :value="finalPricesMap.has(priceType.value) ? finalPricesMap.get(priceType.value)[priceField] : null"
                 class="input"
                 align="right"
                 type="number"
                 @blur="blurHandler"
                 @change="changeFinalPrice($event, priceType.value)"
-                @keypress.prevent.enter="
-                  changeFinalPrice($event, priceType.value)
-                "
+                @keypress.prevent.enter="changeFinalPrice($event, priceType.value)"
               />
               <div
                 v-if="priceType.value !== editableRowType"
@@ -56,9 +46,7 @@
               >
                 {{
                   finalPricesMap.has(priceType.value)
-                    ? Intl.NumberFormat().format(
-                        finalPricesMap.get(priceType.value)[priceField]
-                      )
+                    ? Intl.NumberFormat().format(finalPricesMap.get(priceType.value)[priceField])
                     : '-'
                 }}
               </div>
@@ -70,40 +58,28 @@
             <th class="text-right">
               {{
                 Array.isArray(prePrices)
-                  ? Intl.NumberFormat().format(
-                      prePrices.reduce(
-                        (sum, item) => (sum += item[priceField]),
-                        0
-                      )
-                    )
+                  ? Intl.NumberFormat().format(prePrices.reduce((sum, item) => (sum += item[priceField]), 0))
                   : 0
               }}
             </th>
             <th class="text-right">
               {{
                 Array.isArray(prices)
-                  ? Intl.NumberFormat().format(
-                      prices.reduce((sum, item) => (sum += item[priceField]), 0)
-                    )
+                  ? Intl.NumberFormat().format(prices.reduce((sum, item) => (sum += item[priceField]), 0))
                   : 0
               }}
             </th>
             <th class="text-right">
               {{
                 Array.isArray(finalPrices)
-                  ? Intl.NumberFormat().format(
-                      finalPrices.reduce(
-                        (sum, item) => (sum += item[priceField]),
-                        0
-                      )
-                    )
+                  ? Intl.NumberFormat().format(finalPrices.reduce((sum, item) => (sum += item[priceField]), 0))
                   : 0
               }}
             </th>
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </div>
 </template>
 <script>
@@ -129,15 +105,15 @@ export default {
     ...mapGetters(['orderPriceTypes']),
     prePricesMap() {
       if (!this.prePrices) return new Map()
-      return new Map(this.prePrices.map((item) => [item.type, item]))
+      return new Map(this.prePrices.map(item => [item.type, item]))
     },
     pricesMap() {
       if (!this.prices) return new Map()
-      return new Map(this.prices.map((item) => [item.type, item]))
+      return new Map(this.prices.map(item => [item.type, item]))
     },
     finalPricesMap() {
       if (this.finalPrices.length === 0) return new Map()
-      return new Map(this.finalPrices.map((item) => [item.type, item]))
+      return new Map(this.finalPrices.map(item => [item.type, item]))
     },
     priceField() {
       if (this.priceWithVat) return 'price'
@@ -156,14 +132,9 @@ export default {
       this.editableRowType = null
     },
     changeFinalPrice(e, type) {
-      const newFinalPrices = this.finalPrices
-        .slice()
-        .filter((i) => i.type !== type)
+      const newFinalPrices = this.finalPrices.slice().filter(i => i.type !== type)
       newFinalPrices.push({
-        ...new Price(
-          { price: e.target.value || 0, withVat: this.priceWithVat, type },
-          this.agreementVatRate
-        ),
+        ...new Price({ price: e.target.value || 0, withVat: this.priceWithVat, type }, this.agreementVatRate),
       })
       this.updateFinalPrices(newFinalPrices)
       if (e.key === 'Enter') this.blurHandler()
@@ -172,11 +143,11 @@ export default {
 }
 </script>
 <style scoped>
-.input {
-  width: 100%;
-  text-align: right;
-}
-.price-column {
-  width: 7rem;
-}
+  .input {
+    width: 100%;
+    text-align: right;
+  }
+  .price-column {
+    width: 7rem;
+  }
 </style>

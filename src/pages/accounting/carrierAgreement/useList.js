@@ -14,10 +14,7 @@ export const useListData = () => {
     search: null,
   }
 
-  const settings = usePersistedRef(
-    initialState,
-    'carrier_agreement_list_settings'
-  )
+  const settings = usePersistedRef(initialState, 'carrier_agreement_list_settings')
   const queryParams = computed(() => ({
     search: settings.value?.search,
     company: store.getters.directoriesProfile,
@@ -29,28 +26,19 @@ export const useListData = () => {
 
   //   TODO: почему то не сохраняются listOptions
 
-  const {
-    items,
-    loading,
-    count: totalCount,
-    refresh: refreshHandler,
-  } = useCarrierAgreements(queryParams)
+  const { items, loading, count: totalCount, refresh: refreshHandler } = useCarrierAgreements(queryParams)
 
   function createHandler() {
     router.push({ name: 'CarrierAgreementCreate' })
   }
   function onDeleteHandler(itemId) {
-    items.value = items.value.filter((i) => i._id !== itemId)
+    items.value = items.value.filter(i => i._id !== itemId)
   }
 
   function changeHeaders(val) {
     headers.value = val
   }
-  watch(
-    settings,
-    () => (listOptions.value = { ...listOptions.value, page: 1 }),
-    { deep: true }
-  )
+  watch(settings, () => (listOptions.value = { ...listOptions.value, page: 1 }), { deep: true })
 
   watch(listOptions, refreshHandler)
 

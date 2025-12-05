@@ -3,17 +3,17 @@
     :label="label"
     :type="type"
     :disabled="disabled"
-    :hide-details="!errors.length && hideDetails"
-    :prepend-inner-icon="showPrependIcon ? 'mdi-chevron-right' : null"
+    :hideDetails="!errors.length && hideDetails"
+    :prependInnerIcon="showPrependIcon ? 'mdi-chevron-right' : null"
     :readonly="readonly"
-    :dense="dense"
+    :density="dense ? 'compact' : 'default'"
     contenteditable
     :min="min"
     :max="max"
     :outlined="outlined"
-    :value="tmpDate"
+    :modelValue="tmpDate"
     :error="!!errors.length"
-    :error-messages="errors"
+    :errorMessages="errors"
     @paste="pasteDate"
     @change="change"
     @click:prepend-inner="setDate"
@@ -29,56 +29,56 @@ export default {
     prop: 'value',
     event: 'change',
   },
-  setup() {
-    const { pasteDate } = usePasteDateInput()
-    return { pasteDate }
-  },
-  props: {
-    min: String,
-    max: String,
-    value: {
-      type: [String, Date],
-    },
-    type: {
-      type: String,
-      validator: function (value) {
-        return ['date', 'datetime-local'].includes(value)
+    props: {
+      min: String,
+      max: String,
+      value: {
+        type: [String, Date],
       },
-      default: 'date',
-    },
-    label: String,
-    hideDetails: {
-      type: Boolean,
-      default: false,
-    },
+      type: {
+        type: String,
+        validator: function (value) {
+          return ['date', 'datetime-local'].includes(value)
+        },
+        default: 'date',
+      },
+      label: String,
+      hideDetails: {
+        type: Boolean,
+        default: false,
+      },
 
-    showPrependIcon: {
-      type: Boolean,
-      default: false,
-    },
+      showPrependIcon: {
+        type: Boolean,
+        default: false,
+      },
 
-    errorMessages: {
-      type: Array,
-    },
+      errorMessages: {
+        type: Array,
+      },
 
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+      disabled: {
+        type: Boolean,
+        default: false,
+      },
 
-    dense: {
-      type: Boolean,
-      default: false,
+      dense: {
+        type: Boolean,
+        default: false,
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
+      },
+      outlined: {
+        type: Boolean,
+        default: false,
+      },
     },
-    readonly: {
-      type: Boolean,
-      default: false,
+    setup() {
+      const { pasteDate } = usePasteDateInput()
+      return { pasteDate }
     },
-    outlined: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data: () => ({
     tmpDate: null,
     innerErrorMessage: [],
@@ -119,13 +119,9 @@ export default {
       }
 
       if (this.min && new Date(dateStr) < new Date(this.min)) {
-        this.innerErrorMessage = [
-          `Дата должна быть больше ${dayjs(this.min).format(this.dateFormat)}`,
-        ]
+        this.innerErrorMessage = [`Дата должна быть больше ${dayjs(this.min).format(this.dateFormat)}`]
       } else if (this.max && new Date(dateStr) > new Date(this.max)) {
-        this.innerErrorMessage = [
-          `Дата должна быть меньше ${dayjs(this.max).format(this.dateFormat)}`,
-        ]
+        this.innerErrorMessage = [`Дата должна быть меньше ${dayjs(this.max).format(this.dateFormat)}`]
       } else {
         this.innerErrorMessage = []
         this.$emit('change', dayjs(dateStr).toISOString())

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense class="mb-3">
+    <v-table class="mb-3">
       <template #default>
         <thead>
           <tr>
@@ -27,31 +27,19 @@
             <td>{{ item.note }}</td>
 
             <td class="action-column text-center">
-              <v-icon
-                v-if="item.allowEdit"
-                color="green"
-                class="px-1"
-                @click="editLastItem"
-              >
-                mdi-pencil
-              </v-icon>
-              <v-icon
-                v-if="item.allowDelete"
-                color="red"
-                class="px-1"
-                @click="popItem"
-              >
-                mdi-delete
-              </v-icon>
+              <v-icon v-if="item.allowEdit" color="green" class="px-1"
+@click="editLastItem">mdi-pencil</v-icon>
+              <v-icon v-if="item.allowDelete" color="red" class="px-1"
+@click="popItem">mdi-delete</v-icon>
             </td>
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
-    <v-btn color="primary" @click="addItemHandler" small text :disabled="!allowAddTransportItems">
+    </v-table>
+    <v-btn color="primary" size="small" variant="text" :disabled="!allowAddTransportItems" @click="addItemHandler">
       Добавить запись
     </v-btn>
-    <v-dialog v-model="dialog" max-width="600px" persistent>
+    <v-dialog :modelValue="dialog" maxWidth="600px" persistent @update:model-value="$emit('update:dialog', $event)">
       <TransportForm
         :item="editedItem"
         :minDateValue="editableItemMinDate"

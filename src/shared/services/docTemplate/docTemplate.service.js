@@ -10,17 +10,13 @@ class DocTemplateService {
   }
 
   async getAllowedTemplates({ client, type, agreement }) {
-    if (!client || !type)
-      throw new Error(
-        'DocTemplateService:getAllowedTemplates: missing required params!'
-      )
+    if (!client || !type) throw new Error('DocTemplateService:getAllowedTemplates: missing required params!')
     const cacheKey = client + type + agreement
-    if (this._templatesMap.has(cacheKey))
-      return this._templatesMap.get(cacheKey)
+    if (this._templatesMap.has(cacheKey)) return this._templatesMap.get(cacheKey)
 
     if (this.eo.pending(cacheKey)) {
-      const promise = new Promise((resolve) => {
-        this.eo.subscribe(cacheKey, (data) => {
+      const promise = new Promise(resolve => {
+        this.eo.subscribe(cacheKey, data => {
           resolve(data)
         })
       })

@@ -1,7 +1,7 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" @input="closeDialog">
+  <v-dialog :modelValue="dialog" maxWidth="800" @update:model-value="closeDialog">
     <v-card>
-      <v-card-title class="text-h5"> Добавить группу документов </v-card-title>
+      <v-card-title class="text-h5">Добавить группу документов</v-card-title>
 
       <form @submit.prevent="addHandler">
         <v-card-text class="form-wrapper">
@@ -12,18 +12,19 @@
             :label="item.text"
             :value="item.value"
             color="primary"
-            hide-details
+            hideDetails
             dense
-            @change="changeDocTypesHandler"
+            @update:model-value="changeDocTypesHandler"
           />
 
           <v-text-field
-            v-model="numberStr"
             ref="numberStrNode"
+            v-model="numberStr"
             label="Номера документов"
             hint="Номера документов через запятую"
             class="mt-5"
-            outlined
+            variant="outlined"
+       density="compact"
             autofocus
           />
           <v-radio-group v-model="docStatus" label="Статус документов">
@@ -35,20 +36,18 @@
               color="primary"
             />
           </v-radio-group>
-          <v-checkbox
-            label="Включать документы в опись"
-            v-model="addToRegistry"
-            color="primary"
-          />
-          <span>Будет создано документов: </span>{{ docCount }}
+          <v-checkbox v-model="addToRegistry" label="Включать документы в опись" color="primary" />
+          <span>Будет создано документов:</span>
+          {{ docCount }}
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" text :disabled="!docCount" type="submit">
-            Добавить
-          </v-btn>
+          <v-btn color="primary" variant="text" @click="closeDialog">Отмена</v-btn>
+          <v-btn
+color="primary"
+variant="text" :disabled="!docCount" type="submit"
+>Добавить</v-btn>
         </v-card-actions>
       </form>
     </v-card>
@@ -84,8 +83,8 @@ export default {
     const docCount = computed(() => {
       const numbers = numberStr.value
         .split(',')
-        .map((i) => i.trim())
-        .filter((i) => !!i).length
+        .map(i => i.trim())
+        .filter(i => !!i).length
 
       return docTypes.value.length * (numbers || 1)
     })
@@ -101,12 +100,12 @@ export default {
       const date = dayjs().format('YYYY-MM-DD')
       const numbers = numberStr.value
         .split(',')
-        .map((i) => i.trim())
-        .filter((i) => !!i)
+        .map(i => i.trim())
+        .filter(i => !!i)
 
       if (numbers.length) {
-        numbers.forEach((number) => {
-          docTypes.value.forEach((type) => {
+        numbers.forEach(number => {
+          docTypes.value.forEach(type => {
             res.push({
               type,
               number,
@@ -117,7 +116,7 @@ export default {
           })
         })
       } else {
-        docTypes.value.forEach((type) => {
+        docTypes.value.forEach(type => {
           res.push({
             type,
             number: '',

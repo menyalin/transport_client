@@ -1,40 +1,31 @@
 <template>
-  <v-app-bar app color="primary" dark dense>
+  <v-app-bar color="primary">
     <v-app-bar-nav-icon />
-    <v-img
-      src="/logo.svg"
-      height="40"
-      max-height="20"
-      max-width="20"
-      class="mx-3"
-    />
+    <v-img src="/logo.svg" height="40" max-height="20"
+max-width="20" class="mx-3" />
     <v-toolbar-title class="app-title" @click="toHomePage">
       {{ title || 's4log' }}
     </v-toolbar-title>
-    <slot />
+    <slot></slot>
     <v-spacer />
-    <v-btn
-      v-if="isLoggedIn && directoriesProfile"
-      :to="{ name: 'Schedule' }"
-      text
-    >
-      <v-icon left> mdi-pac-man </v-icon>
+    <v-btn v-if="isLoggedIn && directoriesProfile" :to="{ name: 'Schedule' }" variant="text">
+      <v-icon start>mdi-pac-man</v-icon>
       Распределение
     </v-btn>
-    <v-btn v-if="isLoggedIn && directoriesProfile" to="/orders" text>
-      <v-icon left> mdi-truck-fast </v-icon>
+    <v-btn v-if="isLoggedIn && directoriesProfile" to="/orders" variant="text">
+      <v-icon start>mdi-truck-fast</v-icon>
       Рейсы
     </v-btn>
-    <app-reports-menu v-if="isLoggedIn && directoriesProfile" />
-    <v-btn v-if="isLoggedIn" to="/profile" text>
-      <v-icon left> mdi-account-outline </v-icon>
+    <AppReportsMenu v-if="isLoggedIn && directoriesProfile" />
+    <v-btn v-if="isLoggedIn" to="/profile" variant="text">
+      <v-icon start>mdi-account-outline</v-icon>
       Профиль
     </v-btn>
-    <v-btn v-if="showAccountingModule" text to="/accounting">
-      <v-icon left> mdi-calculator-variant </v-icon>
+    <v-btn v-if="showAccountingModule" variant="text" to="/accounting">
+      <v-icon start>mdi-calculator-variant</v-icon>
       Учет
     </v-btn>
-    <v-btn v-if="showAdminModule" to="/admin" text> Админка </v-btn>
+    <v-btn v-if="showAdminModule" to="/admin" variant="text">Админка</v-btn>
     <v-btn v-if="!isLoggedIn" icon to="/auth/login">
       <v-icon>mdi-import</v-icon>
     </v-btn>
@@ -81,7 +72,7 @@ export default {
 }
 </script>
 <style scoped>
-.app-title {
-  cursor: pointer;
-}
+  .app-title {
+    cursor: pointer;
+  }
 </style>

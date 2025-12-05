@@ -34,7 +34,7 @@ export const useForm = (props, ctx) => {
 
   watch(
     () => props.item,
-    (val) => {
+    val => {
       state.value = val || initialState()
     },
     { immediate: true }

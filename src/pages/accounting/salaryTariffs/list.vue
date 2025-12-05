@@ -2,91 +2,89 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+        <ButtonsPanel
+          panelType="list"
+          :disabledRefresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('salaryTariff:write')"
           @submit="create"
           @refresh="refresh"
         />
         <div class="filter-wrapper">
-          <app-table-column-settings
+          <AppTableColumnSettings
             v-model="activeHeaders"
             :allHeaders="allHeaders"
             :listSettingsName="listSettingsName"
           />
           <v-text-field
-            v-model="settings.date"
+            :modelValue="settings.date"
             type="date"
-            outlined
-            dense
-            hide-details
+            variant="outlined"
+       density="compact"
+           
+            hideDetails
             label="Тарифы на дату"
             :style="{ 'max-width': '220px' }"
           />
           <v-select
-            v-model="settings.tk"
+            :modelValue="settings.tk"
             label="ТК"
             :items="$store.getters.tkNamesForSelect"
-            dense
-            outlined
+           
+            variant="outlined"
+       density="compact"
             clearable
-            hide-details
+            hideDetails
             :style="{ 'max-width': '220px' }"
           />
           <v-select
-            v-model="settings.type"
+            :modelValue="settings.type"
             :items="$store.getters.salaryTariffTypes"
-            outlined
+            variant="outlined"
+       density="compact"
             clearable
-            dense
-            hide-details
+           
+            hideDetails
             label="Тип тарифа"
             :style="{ 'max-width': '250px' }"
           />
           <v-select
-            v-model="settings.liftCapacity"
+            :modelValue="settings.liftCapacity"
             :items="$store.getters.liftCapacityTypes"
-            outlined
+            variant="outlined"
+       density="compact"
             clearable
-            dense
-            hide-details
+           
+            hideDetails
             label="Грузоподъемность"
             :style="{ 'max-width': '180px' }"
           />
         </div>
 
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="filteredList"
           :loading="loading"
           height="73vh"
-          dense
-          fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
+         
+          fixedHeader
+          :itemsLength="count"
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item._result`]="{ item }">
-            <app-zones-cell v-if="item.type === 'zones'" :item="item" />
-            <app-regions-cell
-              v-else-if="item.type === 'regions'"
-              :item="item"
-            />
-            <app-waiting-cell
-              v-else-if="item.type === 'waiting'"
-              :item="item"
-            />
-            <app-return-cell v-else-if="item.type === 'return'" :item="item" />
+            <AppZonesCell v-if="item.type === 'zones'" :item="item" />
+            <AppRegionsCell v-else-if="item.type === 'regions'" :item="item" />
+            <AppWaitingCell v-else-if="item.type === 'waiting'" :item="item" />
+            <AppReturnCell v-else-if="item.type === 'return'" :item="item" />
             <div v-else>
               {{ item._result }}
             </div>
           </template>
         </v-data-table>
-        <app-salary-tariff-form
+        <AppSalaryTariffForm
           v-model="editableItem"
           :dialog="dialog"
           @cancel="cancelDialog"
@@ -123,12 +121,11 @@ export default {
   },
 
   setup() {
-    const { listSettingsName, activeHeaders, allHeaders, headers } =
-      useListColumnSetting({
-        listSettingsName: 'salaryTariffList',
-        defaultHeaders: DEFAULT_HEADERS,
-        allHeaders: ALL_LIST_HEADERS,
-      })
+    const { listSettingsName, activeHeaders, allHeaders, headers } = useListColumnSetting({
+      listSettingsName: 'salaryTariffList',
+      defaultHeaders: DEFAULT_HEADERS,
+      allHeaders: ALL_LIST_HEADERS,
+    })
 
     return {
       listSettingsName,
@@ -159,21 +156,15 @@ export default {
     ...mapGetters(['directoriesProfile']),
 
     filteredList() {
-      return this.list.map((i) => ({
+      return this.list.map(i => ({
         ...i,
         _type: this.$store.getters.salaryTariffTypesMap.get(i.type),
         _date: new Date(i.date).toLocaleDateString(),
         _result: this.getResultStrByType(i),
-        _tks: i.tks
-          .map((tkId) => this.$store.getters.tkNamesMap.get(tkId).name)
-          .join(', '),
+        _tks: i.tks.map(tkId => this.$store.getters.tkNamesMap.get(tkId).name).join(', '),
         _sum: Intl.NumberFormat().format(i.sum),
-        _clients: i.clients
-          ?.map((client) => this.$store.getters.partnersMap.get(client)?.name)
-          .join(', '),
-        _consigneeTypes: i.consigneeTypes
-          ?.map((type) => this.$store.getters.partnerGroupsMap.get(type))
-          .join(', '),
+        _clients: i.clients?.map(client => this.$store.getters.partnersMap.get(client)?.name).join(', '),
+        _consigneeTypes: i.consigneeTypes?.map(type => this.$store.getters.partnerGroupsMap.get(type)).join(', '),
         _liftCapacity: i.liftCapacity.join(', '),
       }))
     },
@@ -200,23 +191,21 @@ export default {
   methods: {
     getResultStrByType(item) {
       switch (item.type) {
-        case 'points': {
-          const loadingStr =
-            this.$store.getters.addressMap.get(item.loading)?.shortName ||
-            this.$store.getters.addressMap.get(item.loading)?.name
-          const unloadingStr =
-            this.$store.getters.addressMap.get(item.unloading)?.shortName ||
-            this.$store.getters.addressMap.get(item.unloading)?.name
+      case 'points': {
+            const loadingStr =
+          this.$store.getters.addressMap.get(item.loading)?.shortName ||
+          this.$store.getters.addressMap.get(item.loading)?.name
+            const unloadingStr =
+          this.$store.getters.addressMap.get(item.unloading)?.shortName ||
+              this.$store.getters.addressMap.get(item.unloading)?.name
 
-          return loadingStr + '  >>>  ' + unloadingStr
-        }
+        return loadingStr + '  >>>  ' + unloadingStr
+          }
 
-        case 'directDistanceZones':
-          return `Погрузка: ${
-            this.$store.getters.addressMap.get(item.loading).shortName
-          } , до ${item.maxDistance}км`
-        default:
-          return '-'
+      case 'directDistanceZones':
+            return `Погрузка: ${this.$store.getters.addressMap.get(item.loading).shortName} , до ${item.maxDistance}км`
+          default:
+        return '-'
       }
     },
     create() {
@@ -228,7 +217,7 @@ export default {
     },
 
     dblClickRow(_, { item }) {
-      const cleanItem = this.list.find((i) => i._id === item._id)
+      const cleanItem = this.list.find(i => i._id === item._id)
       this.editableItem = { ...cleanItem }
       this.$nextTick(() => {
         this.dialog = true
@@ -248,16 +237,10 @@ export default {
           type: this.settings.type,
           tk: this.settings.tk,
           liftCapacity: this.settings.liftCapacity,
-          skip:
-            this.settings.listOptions.itemsPerPage *
-            (this.settings.listOptions.page - 1),
+          skip: this.settings.listOptions.itemsPerPage * (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
-          sortBy: this.settings.listOptions.sortBy.length
-            ? this.settings.listOptions.sortBy[0]
-            : null,
-          sortDesc: this.settings.listOptions.sortDesc.length
-            ? this.settings.listOptions.sortDesc[0]
-            : null,
+          sortBy: this.settings.listOptions.sortBy.length ? this.settings.listOptions.sortBy[0] : null,
+          sortDesc: this.settings.listOptions.sortDesc.length ? this.settings.listOptions.sortDesc[0] : null,
         })
         if (data.count) {
           this.list = data.items
@@ -278,7 +261,7 @@ export default {
       this.dialog = false
     },
     deletedItem(id) {
-      this.list = this.list.filter((i) => i._id !== id)
+      this.list = this.list.filter(i => i._id !== id)
       this.$nextTick(() => {
         this.cancelDialog()
       })
@@ -291,7 +274,7 @@ export default {
           body: item,
         })
         this.loading = false
-        const idx = this.list.findIndex((i) => i._id === item._id)
+        const idx = this.list.findIndex(i => i._id === item._id)
         if (idx !== -1) this.list.splice(idx, 1, updatedItem)
         this.dialog = false
       } catch (e) {
@@ -303,11 +286,11 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 15px;
-}
+  .filter-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+  }
 </style>

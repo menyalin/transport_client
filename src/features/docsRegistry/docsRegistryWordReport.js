@@ -18,8 +18,7 @@ function getZipContent(url) {
 
 export async function docsRegistryWordReport(reportData) {
   let data = null
-  const url =
-    import.meta.env.VITE_STATIC_URL + '/templates/docsRegistry_template.docx'
+  const url = import.meta.env.VITE_STATIC_URL + '/templates/docsRegistry_template.docx'
   try {
     data = await getZipContent(url)
   } catch (e) {
@@ -35,8 +34,7 @@ export async function docsRegistryWordReport(reportData) {
 
   const out = doc.getZip().generate({
     type: 'blob',
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   })
   saveAs(out, `${reportData.fileNameStr}.docx`)
 }

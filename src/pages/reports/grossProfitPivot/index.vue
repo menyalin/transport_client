@@ -6,69 +6,40 @@
     <div id="settings">
       <div id="period-settings">
         <v-btn icon @click.stop="getPivotData">
-          <v-icon> mdi-cached </v-icon>
+          <v-icon>mdi-cached</v-icon>
         </v-btn>
-        <date-range-input v-model="settings.dateRange" />
-        <v-checkbox
-          v-model="usePriceWithVat"
-          label="Цены с НДС"
-          hide-details
-          class="ml-3"
-        />
-        <v-checkbox
-          v-model="showOutsourceCosts"
-          label="Наемники"
-          hide-details
-          class="ml-3"
-        />
-        <v-checkbox
-          v-model="withRound"
-          label="Округление"
-          hide-details
-          class="ml-3"
-        />
+        <DateRangeInput :modelValue="settings.dateRange" />
+        <v-checkbox v-model="usePriceWithVat" label="Цены с НДС" hideDetails class="ml-3" />
+        <v-checkbox v-model="showOutsourceCosts" label="Наемники" hideDetails class="ml-3" />
+        <v-checkbox v-model="withRound" label="Округление" hideDetails class="ml-3" />
       </div>
 
-      <app-group-by-settings
-        id="group-settings"
-        v-model="settings.groupBy"
-        :items="groupItems"
-      />
-      <app-filters
-        id="main-filters"
-        v-model="mainFilters"
-        title="Основной отбор"
-        :agreements="agreements"
-      />
-      <app-filters
+      <AppGroupBySettings id="group-settings" :modelValue="settings.groupBy" :items="groupItems" />
+      <AppFilters id="main-filters" v-model="mainFilters" title="Основной отбор" :agreements="agreements" />
+      <AppFilters
         id="additional-filters"
         v-model="additionalFilters"
         title="Дополнительный отбор"
         :agreements="agreements"
       />
     </div>
-    <v-progress-linear
-      v-if="loading"
-      indeterminate
-      color="primary"
-      striped
-      rounded
-    />
+    <v-progress-linear v-if="loading" indeterminate color="primary"
+striped rounded />
     <div class="report-body">
-      <app-pivot-table
+      <AppPivotTable
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
-        @updateSelected="updateSelected"
         :daysCount="daysInRange"
         :agreements="agreements"
         :selectedGroups="selectedGroups"
         :showOutsourceCosts="showOutsourceCosts"
         :priceWithVat="usePriceWithVat"
         :withRound="withRound"
+        @updateSelected="updateSelected"
       />
       <v-divider />
-      <app-orders-table
+      <AppOrdersTable
         :mainFilters="mainFilters"
         :additionalFilters="additionalFilters"
         :priceWithVat="usePriceWithVat"
@@ -97,10 +68,7 @@ export default {
     AppOrdersTable,
   },
   setup() {
-    const showOutsourceCosts = usePersistedRef(
-      false,
-      'grossProfitPivot:showOutsourceCosts'
-    )
+    const showOutsourceCosts = usePersistedRef(false, 'grossProfitPivot:showOutsourceCosts')
     const {
       settings,
       groupItems,
@@ -139,44 +107,44 @@ export default {
 }
 </script>
 <style scoped>
-#wrapper {
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-#settings {
-  display: grid;
-  margin: 0 30px;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
+  #wrapper {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  #settings {
+    display: grid;
+    margin: 0 30px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
 
-#period-settings {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-}
-.report-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 100%;
-  gap: 10px;
-}
-#group-settings {
-  grid-column: 1/2;
-  grid-row: 2;
-}
+  #period-settings {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .report-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    gap: 10px;
+  }
+  #group-settings {
+    grid-column: 1/2;
+    grid-row: 2;
+  }
 
-#main-filters {
-  grid-column: 2/2;
-  grid-row: 1/5;
-}
-#additional-filters {
-  grid-column: 3/3;
-  grid-row: 1/5;
-}
+  #main-filters {
+    grid-column: 2/2;
+    grid-row: 1/5;
+  }
+  #additional-filters {
+    grid-column: 3/3;
+    grid-row: 1/5;
+  }
 </style>

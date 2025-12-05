@@ -8,38 +8,25 @@ export const useLinkedUserModel = (props, ctx) => {
   const loading = ref(false)
   const showUserInfo = computed(() => !!props.worker.user?._id || false)
 
-  const hasPermission = computed(() =>
-    store.getters.hasPermission('worker:userAdmin')
-  )
+  const hasPermission = computed(() => store.getters.hasPermission('worker:userAdmin'))
 
   const disableRolesSelect = computed(() => !hasPermission.value)
 
-  const showRolesSelect = computed(
-    () => (hasPermission.value && candidate.value._id) || showUserInfo.value
-  )
+  const showRolesSelect = computed(() => (hasPermission.value && candidate.value._id) || showUserInfo.value)
 
   const showPickUser = computed(() => hasPermission.value && !props.worker.user)
 
-  const showSendInviteBtn = computed(
-    () =>
-      candidate.value._id && roles.value?.length > 0 && !props.worker.accepted
-  )
+  const showSendInviteBtn = computed(() => candidate.value._id && roles.value?.length > 0 && !props.worker.accepted)
 
-  const showResendInviteBtn = computed(
-    () =>
-      !props.worker.accepted && !props.worker.pending && props.worker.user?._id
-  )
+  const showResendInviteBtn = computed(() => !props.worker.accepted && !props.worker.pending && props.worker.user?._id)
 
   const isRolesNotChanged = computed(() => {
     return (
-      props.worker.roles?.length === roles.value?.length &&
-      roles.value.every((item) => props.worker.roles.includes(item))
+      props.worker.roles?.length === roles.value?.length && roles.value.every(item => props.worker.roles.includes(item))
     )
   })
 
-  const showUpdateRolesBtn = computed(
-    () => hasPermission.value && props.worker.user?._id
-  )
+  const showUpdateRolesBtn = computed(() => hasPermission.value && props.worker.user?._id)
 
   async function sendInviteHandler() {
     const workerId = props.worker._id
@@ -122,7 +109,7 @@ export const useLinkedUserModel = (props, ctx) => {
 
   watch(
     () => props.worker,
-    (worker) => {
+    worker => {
       roles.value = worker.roles
     },
     { immediate: true, deep: true }

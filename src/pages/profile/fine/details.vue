@@ -2,21 +2,14 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          type="error"
-          dismissible
-          v-model="showError"
-          transition="scale-transition"
-        >
+        <v-alert v-model="showError" type="error" closable >
           {{ errorMessage }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <AppLoadSpinner v-if="loading" />
         <FineForm
           v-else
           :item="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('fine:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('fine:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -62,7 +55,7 @@ export default {
       }
     }
 
-    const submit = async (formState) => {
+    const submit = async formState => {
       try {
         if (props.id) await FineService.updateOne(props.id, formState)
         else await FineService.create(formState)
@@ -99,9 +92,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           await FineService.deleteById(this.id)

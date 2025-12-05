@@ -2,35 +2,36 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
+        <ButtonsPanel
+          panelType="list"
+          :disabledRefresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('city:write')"
           @submit="create"
           @refresh="refresh"
         />
         <div id="settings-wrapper">
           <v-text-field
-            v-model="settings.search"
+            :modelValue="settings.search"
             label="Поиск"
-            outlined
-            hide-details
-            dense
+            variant="outlined"
+       density="compact"
+            hideDetails
+           
             clearable
           />
         </div>
         <v-data-table
+          v-model:options="settings.listOptions"
           :headers="headers"
           :items="cities"
           :loading="loading"
-          fixed-header
+          fixedHeader
           :search="settings.search"
           height="73vh"
-          dense
-          :footer-props="{
+         
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
-          :options.sync="settings.listOptions"
           @dblclick:row="dblClickRow"
         />
       </v-col>
@@ -82,9 +83,9 @@ export default {
 }
 </script>
 <style scoped>
-#settings-wrapper {
-  display: grid;
-  grid-template-columns: 400px;
-  gap: 10px;
-}
+  #settings-wrapper {
+    display: grid;
+    grid-template-columns: 400px;
+    gap: 10px;
+  }
 </style>

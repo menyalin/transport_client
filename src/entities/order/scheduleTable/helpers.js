@@ -1,4 +1,4 @@
-export const roundingHours = (h) => {
+export const roundingHours = h => {
   switch (true) {
     case h < 6:
       return 0

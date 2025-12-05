@@ -13,16 +13,16 @@ class AgreementService {
     this.allAgreementsExpiresMs = 1000 * 60 * 5 // 5 минут
 
     this.eo = new EventObserver()
-    socket.on(this.MODEL_NAME + ':created', (data) => {
+    socket.on(this.MODEL_NAME + ':created', data => {
       store.commit('addAgreement', data)
       store.commit('addToCache', data)
     })
 
-    socket.on(this.MODEL_NAME + ':updated', (data) => {
+    socket.on(this.MODEL_NAME + ':updated', data => {
       store.commit('updateAgreement', data)
       store.commit('addToCache', data)
     })
-    socket.on(this.MODEL_NAME + ':deleted', (id) => {
+    socket.on(this.MODEL_NAME + ':deleted', id => {
       store.commit('deleteAgreement', id)
       store.commit('deleteFromCache', id)
     })
@@ -96,11 +96,10 @@ class AgreementService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else if (this.eo.pending(id)) {
-      const promise = new Promise((resolve) => {
-        this.eo.subscribe(id, (data) => {
+      const promise = new Promise(resolve => {
+        this.eo.subscribe(id, data => {
           resolve(data)
         })
       })

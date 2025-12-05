@@ -1,80 +1,75 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
-      :allHeaders="allHeaders"
-      listSettingsName="pickOrdersTable"
-      @change="updateHeadersHandler"
-    />
-    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
-    <date-range-input v-model="settings.period" class="mx-2" />
+    <AppTableColumnSetting :allHeaders="allHeaders" listSettingsName="pickOrdersTable" @change="updateHeadersHandler" />
+    <v-btn icon @click="refreshHandler"><v-icon>mdi-refresh</v-icon></v-btn>
+    <DateRangeInput :modelValue="settings.period" class="mx-2" @update:model-value="updateSettings($event, 'period')" />
     <v-select
-      v-model="settings.docStatus"
+      :modelValue="settings.docStatus"
       label="Документы"
       :items="docStatuses"
-      dense
-      hide-details
-      outlined
+     
+      hideDetails
+      variant="outlined"
+       density="compact"
       clearable
       :style="{ 'max-width': '220px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="updateDocStatus"
     />
     <v-autocomplete
-      v-model="settings.truck"
-      dense
+      :modelValue="settings.truck"
+     
       clearable
-      auto-select-first
+      autoSelectFirst
       :items="trucks"
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="updateTruck"
     />
     <v-autocomplete
-      v-model="settings.driver"
-      dense
-      auto-select-first
-      item-value="_id"
-      item-text="fullName"
+      :modelValue="settings.driver"
+     
+      autoSelectFirst
+      itemValue="_id"
+      itemTitle="fullName"
       clearable
       :items="drivers"
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       label="Водитель"
       :style="{ 'max-width': '300px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="updateDriver"
     />
     <v-autocomplete
-      v-model="settings.loadingZone"
-      dense
-      auto-select-first
-      item-value="_id"
-      item-text="name"
+      :modelValue="settings.loadingZone"
+     
+      autoSelectFirst
+      itemValue="_id"
+      itemTitle="name"
       clearable
       :items="loadingZoneItems"
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       label="Зона погрузки"
       :style="{ 'max-width': '250px' }"
-      @change="settings.listOptions.page = 1"
+      @update:model-value="updateLoadingZone"
     />
     <v-text-field
-      :value="settings.search"
-      dense
+      :modelValue="settings.search"
+     
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
       @change="searchInputHandler"
     />
-    <v-checkbox
-      v-model="settings.onlySelectable"
-      label="Только доступные рейсы"
-      hide-details
-      class="ml-2"
-      dense
-    />
+    <v-checkbox :modelValue="settings.onlySelectable" label="Только доступные рейсы" hideDetails class="ml-2" @update:model-value="updateSettings($event, 'onlySelectable')" />
   </div>
 </template>
 <script>
@@ -82,24 +77,17 @@ import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 export default {
   name: 'PickOrdersSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  components: { AppTableColumnSetting, DateRangeInput },
+    components: { AppTableColumnSetting, DateRangeInput },
+    model: {
+      prop: 'settings',
+      event: 'change',
+    },
   props: {
     settings: Object,
     allHeaders: Array,
   },
   setup(props, { emit }) {
-    const {
-      orderStatuses,
-      docStatuses,
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    } = useOrderListSettingsData()
+    const { orderStatuses, docStatuses, trailers, trucks, drivers, loadingZoneItems } = useOrderListSettingsData()
     const refreshHandler = () => {
       emit('refresh')
     }
@@ -116,11 +104,36 @@ export default {
       emit('change', Object.assign({}, props.settings, { search: val }))
     }
 
+    function updateSettingsPage() {
+      emit('change', Object.assign({}, props.settings, { listOptions: { ...props.settings.listOptions, page: 1 } }))
+    }
+
+    function updateDocStatus(value) {
+      emit('change', Object.assign({}, props.settings, { docStatus: value, listOptions: { ...props.settings.listOptions, page: 1 } }))
+    }
+
+    function updateTruck(value) {
+      emit('change', Object.assign({}, props.settings, { truck: value, listOptions: { ...props.settings.listOptions, page: 1 } }))
+    }
+
+    function updateDriver(value) {
+      emit('change', Object.assign({}, props.settings, { driver: value, listOptions: { ...props.settings.listOptions, page: 1 } }))
+    }
+
+    function updateLoadingZone(value) {
+      emit('change', Object.assign({}, props.settings, { loadingZone: value, listOptions: { ...props.settings.listOptions, page: 1 } }))
+    }
+
     return {
       refreshHandler,
       updateHeadersHandler,
       searchInputHandler,
       updateSettings,
+      updateSettingsPage,
+      updateDocStatus,
+      updateTruck,
+      updateDriver,
+      updateLoadingZone,
       orderStatuses,
       docStatuses,
       trailers,
@@ -132,10 +145,10 @@ export default {
 }
 </script>
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 </style>

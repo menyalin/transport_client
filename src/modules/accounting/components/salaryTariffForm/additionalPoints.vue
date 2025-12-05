@@ -2,31 +2,34 @@
   <div id="points-wrapper">
     <v-autocomplete
       ref="routeTypeEl"
-      label="Клиенты"
-      dense
-      :items="clients"
-      item-value="_id"
-      item-text="name"
-      multiple
-      outlined
-      hide-details
       v-model="tmpAdditionalPoints.clients"
+      label="Клиенты"
+     
+      :items="clients"
+      itemValue="_id"
+      itemTitle="name"
+      multiple
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-select
       v-model="tmpAdditionalPoints.orderType"
       label="Тип рейса"
       :items="$store.getters.orderAnalyticTypes"
-      dense
-      outlined
-      hide-details
+     
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
     <v-text-field
       v-model.number="tmpAdditionalPoints.includedPoints"
       label="Кол-во точек включенных в тариф"
-      dense
+     
       type="number"
-      outlined
-      hide-details
+      variant="outlined"
+       density="compact"
+      hideDetails
     />
   </div>
 </template>
@@ -51,7 +54,7 @@ export default {
   },
   computed: {
     clients() {
-      return this.$store.getters.partners.filter((i) => i.isClient)
+      return this.$store.getters.partners.filter(i => i.isClient)
     },
   },
   watch: {
@@ -77,9 +80,9 @@ export default {
 }
 </script>
 <style scoped>
-#points-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #points-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 </style>

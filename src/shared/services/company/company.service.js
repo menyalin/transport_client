@@ -5,10 +5,10 @@ const BASE_PATH = '/companies'
 
 class CompanyService {
   constructor() {
-    socket.on('company:updated', (payload) => {
+    socket.on('company:updated', payload => {
       store.commit('updateCompany', payload)
     })
-    socket.on('company:deleteEmployeeById', (payload) => {
+    socket.on('company:deleteEmployeeById', payload => {
       store.commit('deleteEmployee', payload)
     })
     socket.on('company:updateSettings', ({ settings, companyId }) => {
@@ -56,10 +56,7 @@ class CompanyService {
       return null
     }
     const companyId = store.getters.directoriesProfile
-    const { data } = await api.put(
-      BASE_PATH + '/settings/' + companyId,
-      settings
-    )
+    const { data } = await api.put(BASE_PATH + '/settings/' + companyId, settings)
     return data
   }
 }

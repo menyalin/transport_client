@@ -1,67 +1,72 @@
 <template>
   <div>
-    <app-block-title>{{ title }}</app-block-title>
+    <AppBlockTitle>{{ title }}</AppBlockTitle>
     <div class="fields-wrapper">
       <template v-if="truckType === 'truck'">
         <v-text-field
           label="Осаго №"
-          :value="params.osagoNum"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.osagoNum"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'osagoNum')"
         />
         <DateTimeInput
           label="Дата окончания"
           :value="params.osagoExpDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'osagoExpDate')"
+          hidePrependIcon
+          hideTimeInput
           outlined
           dense
-          hide-details
+          hideDetails
+          @change="change($event, 'osagoExpDate')"
         />
         <v-text-field
           label="Страховая компания"
-          :value="params.osagoCompany"
-          outlined
-          dense
-          hide-details
+          :modelValue="params.osagoCompany"
+          variant="outlined"
+       density="compact"
+         
+          hideDetails
           @change="change($event, 'osagoCompany')"
         />
       </template>
       <v-text-field
         label="Каско №"
-        :value="params.kaskoNum"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.kaskoNum"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'kaskoNum')"
       />
       <DateTimeInput
         label="Дата окончания"
         :value="params.kaskoExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'kaskoExpDate')"
+        hidePrependIcon
+        hideTimeInput
         outlined
         dense
-        hide-details
+        hideDetails
+        @change="change($event, 'kaskoExpDate')"
       />
       <v-text-field
         label="Страховая компания"
-        :value="params.kaskoCompany"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.kaskoCompany"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'kaskoCompany')"
       />
       <v-text-field
         label="Лизинговая компания"
-        :value="params.leasingСompany"
-        outlined
-        dense
-        hide-details
+        :modelValue="params.leasingСompany"
+        variant="outlined"
+       density="compact"
+       
+        hideDetails
         @change="change($event, 'leasingСompany')"
       />
     </div>
@@ -109,7 +114,7 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) {
-          this.fields.forEach((f) => {
+          this.fields.forEach(f => {
             this.params[f] = val[f]
           })
         }
@@ -130,10 +135,10 @@ export default {
 }
 </script>
 <style scoped>
-.fields-wrapper {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 220px 200px 220px 220px 200px 220px 220px;
-  margin-bottom: 20px;
-}
+  .fields-wrapper {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 220px 200px 220px 220px 200px 220px 220px;
+    margin-bottom: 20px;
+  }
 </style>

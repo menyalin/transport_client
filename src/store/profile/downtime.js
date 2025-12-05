@@ -17,15 +17,14 @@ export default {
       state.downtimes = payload
     },
     addDowntime(state, payload) {
-      if (state.downtimes.findIndex((item) => item._id === payload._id) === -1)
-        state.downtimes.push(payload)
+      if (state.downtimes.findIndex(item => item._id === payload._id) === -1) state.downtimes.push(payload)
     },
     updateDowntime(state, payload) {
-      const ind = state.downtimes.findIndex((item) => item._id === payload._id)
+      const ind = state.downtimes.findIndex(item => item._id === payload._id)
       if (ind !== -1) state.downtimes.splice(ind, 1, payload)
     },
     deleteDowntime(state, id) {
-      state.downtimes = state.downtimes.filter((item) => item._id !== id)
+      state.downtimes = state.downtimes.filter(item => item._id !== id)
     },
   },
   actions: {
@@ -43,8 +42,7 @@ export default {
     },
   },
   getters: {
-    downtimesMap: ({ downtimes }) =>
-      new Map(downtimes.map((item) => [item._id, item])),
+    downtimesMap: ({ downtimes }) => new Map(downtimes.map(item => [item._id, item])),
     downtimes: ({ downtimes }) => downtimes,
     downtimeTypes: ({ downtimeTypes }) => downtimeTypes,
     downtimeTypesHash: ({ downtimeTypes }) =>
@@ -54,13 +52,11 @@ export default {
       }, {}),
 
     downtimesForSchedule: ({ downtimes }, { schedulePeriod, hiddenTruckIds }) =>
-      downtimes.filter((d) => {
+      downtimes.filter(d => {
         const sP = dayjs(schedulePeriod[0])
         const eP = dayjs(schedulePeriod[1])
         return (
-          eP.isAfter(d.startPositionDate) &&
-          sP.isSameOrBefore(d.endPositionDate) &&
-          !hiddenTruckIds.includes(d.truck)
+          eP.isAfter(d.startPositionDate) && sP.isSameOrBefore(d.endPositionDate) && !hiddenTruckIds.includes(d.truck)
         )
       }),
   },

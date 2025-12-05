@@ -15,22 +15,20 @@ export default {
       state.agreements = payload
     },
     addAgreement(state, payload) {
-      if (state.agreements.findIndex((item) => item._id === payload._id) === -1)
-        state.agreements.push(payload)
+      if (state.agreements.findIndex(item => item._id === payload._id) === -1) state.agreements.push(payload)
     },
     updateAgreement(state, payload) {
-      const ind = state.agreements.findIndex((item) => item._id === payload._id)
+      const ind = state.agreements.findIndex(item => item._id === payload._id)
       if (ind !== -1) state.agreements.splice(ind, 1, payload)
     },
     deleteAgreement(state, id) {
-      state.agreements = state.agreements.filter((item) => item._id !== id)
+      state.agreements = state.agreements.filter(item => item._id !== id)
     },
   },
   actions: {},
   getters: {
     agreements: ({ agreements }) => agreements,
-    agreementsMap: ({ agreements }) =>
-      new Map(agreements.map((i) => [i._id, i])),
+    agreementsMap: ({ agreements }) => new Map(agreements.map(i => [i._id, i])),
     vatRates: ({ vatRates }) => vatRates,
   },
 }

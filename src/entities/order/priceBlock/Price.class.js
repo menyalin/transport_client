@@ -2,7 +2,7 @@ import store from '@/store/index'
 
 class Price {
   constructor({ price, withVat, type, note, cashPayment }, vatRate) {
-    const parsePrice = (price) => {
+    const parsePrice = price => {
       const parsed = parseFloat(price)
       if (isNaN(parsed)) throw new Error('Invalid price value')
       return parsed

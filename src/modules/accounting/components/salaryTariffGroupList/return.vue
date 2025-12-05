@@ -1,6 +1,8 @@
 <template>
   <span v-if="item.type === 'return'">
-    Рейс: <b>{{ orderTypeStr }}</b> Паллеты:
+    Рейс:
+    <b>{{ orderTypeStr }}</b>
+    Паллеты:
     <b>{{ item.isPltReturn ? 'Да' : 'Нет' }}</b>
   </span>
 </template>

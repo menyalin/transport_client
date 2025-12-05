@@ -1,24 +1,25 @@
 <template>
   <v-autocomplete
+    v-model:searchInput="search"
     clearable
-    outlined
-    dense
+    variant="outlined"
+       density="compact"
+   
     hint="Поиск работает по цифрам номера"
-    auto-select-first
-    return-object
-    :value="model"
+    autoSelectFirst
+    returnObject
+    :modelValue="model"
     :items="[...items, ...tmpItems]"
-    hide-no-data
+    hideNoData
     :loading="isLoading"
-    :search-input.sync="search"
-    :filter="() => true"
+    :customFilter="() => true"
     :label="label"
     placeholder="Введите текст для поиска"
     no-data-text="Данные не найдены"
     :disabled="disabled"
-    item-value="_id"
-    item-text="text"
-    @change="change"
+    itemValue="_id"
+    itemTitle="text"
+    @update:model-value="change"
     @click:clear="clear"
   />
 </template>
@@ -26,14 +27,13 @@
 import { mapGetters } from 'vuex'
 import TruckService from '../../services/truck.service'
 
-const _getTruckNameString = (truck) => {
+const _getTruckNameString = truck => {
   let resStr = ''
   if (truck.name) resStr += truck.name
   if (truck.liftCapacity === 0 && truck.allowUseTrailer) resStr += ' Тягач'
   if (truck.type === 'trailer') resStr += ' Прицеп'
   if (truck.regNum) resStr += ' гос.номер ' + truck.regNum
-  if (truck.liftCapacity > 0)
-    resStr += ' г/п: ' + truck.liftCapacity / 1000 + 'т.'
+  if (truck.liftCapacity > 0) resStr += ' г/п: ' + truck.liftCapacity / 1000 + 'т.'
   if (truck.pltCount > 0) resStr += ' ' + truck.pltCount + 'плт'
   return resStr
 }
@@ -103,12 +103,8 @@ export default {
   },
   methods: {
     async getItems(str) {
-      const res = await TruckService.search(
-        str,
-        this.type || null,
-        this.directoriesProfile
-      )
-      return res.map((item) => ({
+      const res = await TruckService.search(str, this.type || null, this.directoriesProfile)
+      return res.map(item => ({
         ...item,
         text: _getTruckNameString(item),
       }))

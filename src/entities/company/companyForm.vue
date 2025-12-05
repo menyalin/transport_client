@@ -1,46 +1,39 @@
 <template>
   <v-card>
     <form>
-      <buttons-panel
-        panel-type="form"
-        :disabled-submit="$v.form.$invalid"
-        @cancel="cancel"
-        @submit="submit"
-      />
+      <ButtonsPanel panelType="form" :disabledSubmit="$v.form.$invalid" @cancel="cancel" @submit="submit" />
       <v-card-text>
         <v-text-field
           v-model.trim="$v.form.name.$model"
           type="text"
           label="Сокращенное название"
-          :error-messages="nameErrors"
-          @input="$v.form.name.$touch()"
+          :errorMessages="nameErrors"
+          @update:model-value="$v.form.name.$touch()"
           @blur="$v.form.name.$touch()"
         />
         <v-text-field
           v-model.trim="$v.form.fullName.$model"
           type="text"
           label="Полное название"
-          :error-messages="fullNameErrors"
-          @input="$v.form.fullName.$touch()"
+          :errorMessages="fullNameErrors"
+          @update:model-value="$v.form.fullName.$touch()"
           @blur="$v.form.fullName.$touch()"
         />
         <v-text-field
           v-model="form.inn"
           type="text"
           label="ИНН"
-          :error-messages="innErrors"
-          @input="delayTouch($v.form.inn)"
+          :errorMessages="innErrors"
+          @update:model-value="delayTouch($v.form.inn)"
           @blur="$v.form.inn.$touch()"
         />
-        <v-checkbox
-          v-model="form.hasOwnDirectories"
-          label="У компании есть свои справочники"
-        />
-        <v-alert type="info" outlined>
+        <v-checkbox v-model="form.hasOwnDirectories" label="У компании есть свои справочники" />
+        <v-alert type="info" variant="outlined">
+       density="compact"
           <p>ИНН - Должен быть уникален</p>
           <p>
-            Пользователь может работать со справочниками только одной компании.
-            Если компания не основная, рекомендуем отключить опцию
+            Пользователь может работать со справочниками только одной компании. Если компания не основная, рекомендуем
+            отключить опцию
           </p>
         </v-alert>
       </v-card-text>
@@ -48,7 +41,7 @@
   </v-card>
 </template>
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import { mapActions } from 'vuex'
 const touchMap = new WeakMap()
@@ -72,23 +65,20 @@ export default {
     nameErrors() {
       const errors = []
       if (!this.$v.form.name.$dirty) return errors
-      !this.$v.form.name.required &&
-        errors.push('Название не может быть пустым')
+      !this.$v.form.name.required && errors.push('Название не может быть пустым')
       return errors
     },
     fullNameErrors() {
       const errors = []
       if (!this.$v.form.fullName.$dirty) return errors
-      !this.$v.form.fullName.required &&
-        errors.push('Полное название не может быть пустым')
+      !this.$v.form.fullName.required && errors.push('Полное название не может быть пустым')
       return errors
     },
     innErrors() {
       const errors = []
       if (!this.$v.form.inn.$dirty) return errors
       !this.$v.form.inn.required && errors.push('ИНН не может быть пустым')
-      !this.$v.form.inn.existInn &&
-        errors.push('ИНН уже зарегистрирован в системе')
+      !this.$v.form.inn.existInn && errors.push('ИНН уже зарегистрирован в системе')
       return errors
     },
   },
@@ -116,12 +106,12 @@ export default {
         required,
         existInn(val) {
           if (val === '') return true
-          return new Promise((resolve) => {
+          return new Promise(resolve => {
             this.isExistInn(val)
-              .then((res) => {
+              .then(res => {
                 resolve(!res)
               })
-              .catch((e) => {
+              .catch(e => {
                 this.$store.commit('setError', e)
               })
           })

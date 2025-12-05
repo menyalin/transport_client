@@ -6,10 +6,7 @@ import { usePersistedRef } from '@/shared/hooks'
 
 export const useFineList = () => {
   const initialSettings = {
-    period: [
-      dayjs().add(-120, 'd').format('YYYY-MM-DD'),
-      dayjs().add(25, 'd').format('YYYY-MM-DD'),
-    ],
+    period: [dayjs().add(-120, 'd').format('YYYY-MM-DD'), dayjs().add(25, 'd').format('YYYY-MM-DD')],
     periodSetting: 'date',
     fineStatus: 'all',
     status: 'notPaid',
@@ -64,10 +61,7 @@ export const useFineList = () => {
   const showOnlySelected = ref(false)
 
   const settings = usePersistedRef(initialSettings, 'fineList:settings')
-  const listOptions = usePersistedRef(
-    { page: 1, itemsPerPage: 100 },
-    'fineList:listOptions'
-  )
+  const listOptions = usePersistedRef({ page: 1, itemsPerPage: 100 }, 'fineList:listOptions')
 
   const queryParams = computed(() => ({
     company: store.getters.directoriesProfile,
@@ -87,7 +81,7 @@ export const useFineList = () => {
     limit: listOptions.value.itemsPerPage,
   }))
 
-  const getData = async (params) => {
+  const getData = async params => {
     if (!params) return null
     try {
       loading.value = true
@@ -132,28 +126,20 @@ export const useFineList = () => {
 
   const preparedList = computed(() => {
     return list.value
-      .filter((i) => {
+      .filter(i => {
         if (!showOnlySelected.value) return true
-        else return selected.value.map((s) => s._id).includes(i._id)
+        else return selected.value.map(s => s._id).includes(i._id)
       })
-      .map((i) => ({
+      .map(i => ({
         ...i,
         date: new Date(i.date).toLocaleDateString(),
         truck: store.getters.trucksMap.get(i.truck)?.regNum || '-',
         driver: store.getters.driversMap.get(i.driver)?.fullName || '-',
-        violationDate: i.violationDate
-          ? new Date(i.violationDate).toLocaleString()
-          : null,
+        violationDate: i.violationDate ? new Date(i.violationDate).toLocaleString() : null,
         isPayment: i.paymentDate || i.isPaydByDriver ? 'Да' : 'Нет',
-        category: i.category
-          ? store.getters.fineCategoriesMap.get(i.category)
-          : null,
-        paymentDate: i.paymentDate
-          ? new Date(i.paymentDate).toLocaleDateString()
-          : null,
-        expiryDateOfDiscount: i.expiryDateOfDiscount
-          ? new Date(i.expiryDateOfDiscount).toLocaleDateString()
-          : null,
+        category: i.category ? store.getters.fineCategoriesMap.get(i.category) : null,
+        paymentDate: i.paymentDate ? new Date(i.paymentDate).toLocaleDateString() : null,
+        expiryDateOfDiscount: i.expiryDateOfDiscount ? new Date(i.expiryDateOfDiscount).toLocaleDateString() : null,
       }))
   })
 

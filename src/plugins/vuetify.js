@@ -1,27 +1,29 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-import ru from 'vuetify/lib/locale/ru'
-Vue.use(Vuetify)
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import { ru } from 'vuetify/locale'
+import '@mdi/font/css/materialdesignicons.css'
 
-export default new Vuetify({
-  lang: {
-    locales: { ru },
-    current: 'ru',
+export default createVuetify({
+  components,
+  directives,
+  locale: {
+    locale: 'ru',
+    messages: { ru },
   },
   theme: {
-    // options: {
-    //   customProperties: true,
-    // },
-
+    defaultTheme: 'light',
     themes: {
       light: {
-        primary: '#0f335f',
-        secondary: '#ef6c00',
-        accent: '#ffc107',
-        error: '#FF5252',
-        info: '#2196F3',
-        success: '#6aff95',
-        warning: '#FFC107',
+        colors: {
+          primary: '#0f335f',
+          secondary: '#ef6c00',
+          accent: '#ffc107',
+          error: '#FF5252',
+          info: '#2196F3',
+          success: '#6aff95',
+          warning: '#FFC107',
+        },
       },
     },
   },

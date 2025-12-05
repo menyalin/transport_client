@@ -1,20 +1,14 @@
 <template>
   <div id="zones-wrapper">
-    <app-zone-autocomplete
+    <AppZoneAutocomplete
       ref="loadingEl"
       v-model="tmpPoints.loadingZone"
       label="Зона погрузки"
       dense
       outlined
-      hide-details
+      hideDetails
     />
-    <app-zone-autocomplete
-      v-model="tmpPoints.unloadingZone"
-      label="Зона разгрузки"
-      dense
-      outlined
-      hide-details
-    />
+    <AppZoneAutocomplete v-model="tmpPoints.unloadingZone" label="Зона разгрузки" dense outlined hideDetails />
   </div>
 </template>
 <script>
@@ -64,9 +58,9 @@ export default {
 }
 </script>
 <style scoped>
-#zones-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+  #zones-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 </style>

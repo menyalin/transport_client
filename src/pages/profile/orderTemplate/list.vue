@@ -1,35 +1,34 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
-      panel-type="list"
+  <EntityListWrapper>
+    <ButtonsPanel
+      panelType="list"
       :disabledSubmit="!$store.getters.hasPermission('orderTemplate:write')"
       @submit="create"
       @refresh="refresh"
     />
     <div class="filter-wrapper">
       <v-text-field
-        v-model="settings.search"
-        label="Поиск"
-        outlined
-        dense
-        hide-details
-      />
+:modelValue="settings.search"
+label="Поиск" variant="outlined"
+       density="compact"
+hideDetails
+/>
     </div>
     <v-data-table
+      v-model:options="settings.listOptions"
       :headers="headers"
       :items="items"
       :loading="loading"
       height="73vh"
-      dense
+     
       :search="settings.search"
-      fixed-header
-      :footer-props="{
+      fixedHeader
+      :footerProps="{
         'items-per-page-options': [50, 100, -1],
       }"
-      :options.sync="settings.listOptions"
       @dblclick:row="dblClickRow"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script>
 import { ButtonsPanel } from '@/shared/ui'
@@ -42,6 +41,20 @@ export default {
     ButtonsPanel,
     EntityListWrapper,
   },
+    beforeRouteLeave(to, from, next) {
+      this.$store.commit('setFormSettings', {
+        formName: this.formName,
+        settings: { ...this.settings },
+      })
+      next()
+    },
+  setup() {
+    const { items, headers } = useListData()
+    return {
+      items,
+      headers,
+    }
+  },
   data: () => ({
     formName: 'OrderTemplateList',
     loading: false,
@@ -53,25 +66,11 @@ export default {
       },
     },
   }),
-  setup() {
-    const { items, headers } = useListData()
-    return {
-      items,
-      headers,
-    }
-  },
 
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
+    created() {
+      if (this.$store.getters.formSettingsMap.has(this.formName))
+        this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+    },
   methods: {
     create() {
       this.$router.push({ name: 'OrderTemplateCreate' })
@@ -89,9 +88,9 @@ export default {
 }
 </script>
 <style scoped>
-.filter-wrapper {
-  display: grid;
-  grid-template-columns: 300px 280px;
-  align-items: center;
-}
+  .filter-wrapper {
+    display: grid;
+    grid-template-columns: 300px 280px;
+    align-items: center;
+  }
 </style>

@@ -52,13 +52,13 @@ export default {
 }
 </script>
 <style scoped>
-.period-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  width: 300px;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-}
+  .period-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 300px;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+  }
 </style>

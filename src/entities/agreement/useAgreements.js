@@ -13,16 +13,12 @@ export const useAgreements = () => {
 
   const allClientAgreements = computed(() => {
     return allAgreements.value
-      .filter((i) => !i.isOutsourceAgreement && i.isActive)
+      .filter(i => !i.isOutsourceAgreement && i.isActive)
       .sort((a, b) => (a.name > b.name ? 1 : -1))
   })
 
   const allAgreementMap = computed(() => {
-    return new Map(
-      allAgreements.value.length
-        ? allAgreements.value.map((i) => [i._id, i])
-        : null
-    )
+    return new Map(allAgreements.value.length ? allAgreements.value.map(i => [i._id, i]) : null)
   })
 
   return {
@@ -30,7 +26,7 @@ export const useAgreements = () => {
     allAgreementMap,
     allClientAgreements,
     allCarrierAgreements: computed(() => {
-      return allAgreements.value.filter((i) => i.isOutsourceAgreement)
+      return allAgreements.value.filter(i => i.isOutsourceAgreement)
     }),
     loading,
   }

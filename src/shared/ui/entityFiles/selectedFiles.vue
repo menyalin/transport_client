@@ -2,16 +2,16 @@
   <v-data-table
     :headers="headers"
     :items="prepatedItems"
-    hide-default-footer
-    :items-per-page="-1"
-    item-key="id"
+    hideDefaultFooter
+    :itemsPerPage="-1"
+    itemKey="id"
     class="elevation-1"
   >
     <template #[`item.note`]="{ item }">
       <v-text-field
-        :value="item.note"
-        dense
-        hide-details
+        :modelValue="item.note"
+       
+        hideDetails
         @change="changeNoteHandler(item.name, $event)"
       />
     </template>
@@ -20,15 +20,8 @@
     </template>
     <template #[`item.actions`]="{ item }">
       <span v-if="item.progress > 0">{{ item.progress }} %</span>
-      <v-icon
-        v-else
-        small
-        class="mr-2"
-        @click="removeFileHandler(item.name)"
-        color="red"
-      >
-        mdi-delete
-      </v-icon>
+      <v-icon v-else size="small" class="mr-2"
+color="red" @click="removeFileHandler(item.name)">mdi-delete</v-icon>
     </template>
   </v-data-table>
 </template>
@@ -65,7 +58,7 @@ export default {
     const prepatedItems = ref([])
 
     const refreshPrepatedItems = (progress, items) => {
-      prepatedItems.value = Array.from(items).map((i) => {
+      prepatedItems.value = Array.from(items).map(i => {
         return {
           name: i.name,
           size: i.size,
@@ -75,21 +68,21 @@ export default {
       })
     }
 
-    const removeFileHandler = (fileName) => {
-      const files = props.items?.filter((f) => f.name !== fileName)
+    const removeFileHandler = fileName => {
+      const files = props.items?.filter(f => f.name !== fileName)
       ctx.emit('change', files)
     }
 
     const changeNoteHandler = (filename, noteValue) => {
       const files = props.items.slice()
-      const item = files.find((i) => i.name === filename)
+      const item = files.find(i => i.name === filename)
       item.note = noteValue
       ctx.emit('change', files)
     }
 
     watch(
       [() => props.uploadProgress, () => props.items],
-      (val) => {
+      val => {
         refreshPrepatedItems(val[0], val[1])
       },
       { deep: true, immediate: true }

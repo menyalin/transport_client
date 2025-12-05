@@ -1,11 +1,5 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="preparedItems"
-    dense
-    :items-per-page="-1"
-    hide-default-footer
-  >
+  <v-data-table :headers="headers" :items="preparedItems" :itemsPerPage="-1" hideDefaultFooter>
     <template #[`item.truckKinds`]="{ item }">
       {{ formatTruckKinds(item.truckKinds) }}
     </template>
@@ -15,7 +9,9 @@
     <template #[`item.zones`]="{ item }">
       <div v-for="(zone, idx) of item.zones" :key="idx" class="my-1 zone-row">
         <div>
-          до <b>{{ zone.distance }}</b> км.
+          до
+          <b>{{ zone.distance }}</b>
+          км.
         </div>
         <div>
           <b>{{ formatPrice(zone.price) }}</b>
@@ -23,11 +19,11 @@
       </div>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn icon small @click="updateHandler(item)">
-        <v-icon small color="orange">mdi-pencil</v-icon>
+      <v-btn icon size="small" @click="updateHandler(item)">
+        <v-icon size="small" color="orange">mdi-pencil</v-icon>
       </v-btn>
-      <v-btn icon small @click="deleteHandler(item)">
-        <v-icon small color="red">mdi-delete</v-icon>
+      <v-btn icon size="small" @click="deleteHandler(item)">
+        <v-icon size="small" color="red">mdi-delete</v-icon>
       </v-btn>
     </template>
   </v-data-table>
@@ -65,9 +61,7 @@ export default {
       return moneyFormatter(price)
     }
     function formatTruckKinds(kinds) {
-      return (
-        kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
-      )
+      return kinds?.map(i => store.getters.truckKindsMap.get(i)).join('; ') || ''
     }
     function formatLiftCapacities(items) {
       return items?.join('; ') || ''
@@ -83,7 +77,7 @@ export default {
     }
 
     const preparedItems = computed(() => {
-      return props.items.map((i) => ({
+      return props.items.map(i => ({
         ...i,
         loadingZone: formatZone(i.loadingZone),
       }))
@@ -103,10 +97,10 @@ export default {
 }
 </script>
 <style scoped>
-.zone-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  min-width: 180px;
-}
+  .zone-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 180px;
+  }
 </style>

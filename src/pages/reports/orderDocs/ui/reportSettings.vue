@@ -1,218 +1,221 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
+    <RefreshBtn @click="$emit('refresh')" />
     <v-text-field
-      :value="settings.date"
+      :modelValue="settings.date"
       type="date"
       label="Дата (конец периода)"
-      dense
       clearable
-      outlined
-      hide-details
+      variant="outlined"
+      density="compact"
+      hideDetails
       :style="{ maxWidth: '230px' }"
       @change="updateSettings($event, 'date')"
     />
 
     <v-select
-      :value="settings.state"
+      :modelValue="settings.state"
       label="Документы"
-      dense
       clearable
       multiple
-      outlined
+      variant="outlined"
+      density="compact"
       :items="stateItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'state')"
+      @update:model-value="updateSettings($event, 'state')"
     />
 
     <v-select
-      :value="settings.tks"
-      item-text="name"
-      item-value="_id"
+      :modelValue="settings.tks"
+      itemTitle="name"
+      itemValue="_id"
       label="ТК"
-      dense
       clearable
       multiple
-      outlined
+      variant="outlined"
+      density="compact"
       :items="tkNameItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'tks')"
+      @update:model-value="updateSettings($event, 'tks')"
     />
 
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
-      item-value="_id"
+      :modelValue="settings.clients"
+      itemTitle="name"
+      itemValue="_id"
       label="Клиенты"
-      dense
       clearable
-      auto-select-first
+      autoSelectFirst
       multiple
-      outlined
+      variant="outlined"
+      density="compact"
       :items="clientItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '280px' }"
-      @change="updateSettings($event, 'clients')"
+      @update:model-value="updateSettings($event, 'clients')"
     />
 
     <v-autocomplete
-      :value="settings.driver"
-      item-text="fullName"
-      item-value="_id"
+      :modelValue="settings.driver"
+      itemTitle="fullName"
+      itemValue="_id"
       label="Водитель"
-      dense
       clearable
-      auto-select-first
-      outlined
+      autoSelectFirst
+      variant="outlined"
+      density="compact"
       :items="driverItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '320px' }"
-      @change="updateSettings($event, 'driver')"
+      @update:model-value="updateSettings($event, 'driver')"
     />
     <v-autocomplete
-      :value="settings.truck"
-      item-text="regNum"
-      item-value="_id"
+      :modelValue="settings.truck"
+      itemTitle="regNum"
+      itemValue="_id"
       label="Грузовик"
-      dense
-      auto-select-first
+      autoSelectFirst
       clearable
-      outlined
+      variant="outlined"
+      density="compact"
       :items="truckItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '320px' }"
-      @change="updateSettings($event, 'truck')"
+      @update:model-value="updateSettings($event, 'truck')"
     />
     <v-select
-      :value="settings.getDocsDays"
+      :modelValue="settings.getDocsDays"
       label="Сдача документов, дней"
-      dense
       clearable
       multiple
-      outlined
+      variant="outlined"
+      density="compact"
       :items="daysIntervalItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'getDocsDays')"
+      @update:model-value="updateSettings($event, 'getDocsDays')"
     />
     <v-select
-      :value="settings.reviewDocsDays"
+      :modelValue="settings.reviewDocsDays"
       label="Проверка документов, дней"
-      dense
       clearable
-      outlined
+      variant="outlined"
+      density="compact"
       multiple
       :items="daysIntervalItems"
-      hide-details
+      hideDetails
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'reviewDocsDays')"
+      @update:model-value="updateSettings($event, 'reviewDocsDays')"
     />
   </div>
 </template>
 
 <script>
-import store from '@/store'
-import { watch, ref, computed } from 'vue'
-import { RefreshBtn } from '@/shared/ui'
-import { AppTableColumnSetting } from '@/shared/ui'
+  import store from '@/store'
+  import { watch, ref, computed } from 'vue'
+  import { RefreshBtn } from '@/shared/ui'
+  import { AppTableColumnSetting } from '@/shared/ui'
 
-export default {
-  name: 'ReportSettings',
-  components: {
-    RefreshBtn,
-    AppTableColumnSetting,
-  },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-    allHeaders: {
-      type: Array,
-      required: true,
+  export default {
+    name: 'ReportSettings',
+    components: {
+      RefreshBtn,
+      AppTableColumnSetting,
     },
-  },
-  setup(props, ctx) {
-    const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
-    const activeHeaders = ref([])
+    props: {
+      modelValue: {
+        type: Object,
+        default: () => ({}),
+      },
+      settings: {
+        type: Object,
+        default: () => ({}),
+      },
+      allHeaders: {
+        type: Array,
+        required: true,
+      },
+    },
+    emits: ['update:modelValue', 'change', 'changeHeaders'],
+    setup(props, ctx) {
+      const listSettingsName = 'orderDocsReportPage'
+      const activeHeaders = ref([])
 
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+      function updateSettings(value, field) {
+        const currentSettings = props.modelValue || props.settings
+        const newSettings = Object.assign({}, currentSettings, { [field]: value })
+        ctx.emit('change', newSettings)
+        ctx.emit('update:modelValue', newSettings)
+      }
 
-    function updateActiveHeaders(value) {
-      ctx.emit('changeHeaders', value)
-    }
+      function updateActiveHeaders(value) {
+        ctx.emit('changeHeaders', value)
+      }
 
-    const stateItems = [
-      { text: 'Не получены', value: 'notGetted' },
-      { text: 'На проверке', value: 'review' },
-      { text: 'На исправлении', value: 'correction' },
-    ]
-    const groupByItems = [
-      { text: 'Месяцам', value: 'month' },
-      { text: 'Водителям', value: 'driver' },
-    ]
+      const stateItems = [
+        { text: 'Не получены', value: 'notGetted' },
+        { text: 'На проверке', value: 'review' },
+        { text: 'На исправлении', value: 'correction' },
+      ]
+      const groupByItems = [
+        { text: 'Месяцам', value: 'month' },
+        { text: 'Водителям', value: 'driver' },
+      ]
 
-    const daysIntervalItems = [
-      { text: '< 5', value: 1 },
-      { text: '5 - 10', value: 2 },
-      { text: '10 - 20', value: 3 },
-      { text: '20 - 30', value: 4 },
-      { text: ' > 30 ', value: 5 },
-    ]
+      const daysIntervalItems = [
+        { text: '< 5', value: 1 },
+        { text: '5 - 10', value: 2 },
+        { text: '10 - 20', value: 3 },
+        { text: '20 - 30', value: 4 },
+        { text: ' > 30 ', value: 5 },
+      ]
 
-    const tkNameItems = computed(() => {
-      return store.getters.tkNames
-    })
+      const tkNameItems = computed(() => {
+        return store.getters.tkNames
+      })
 
-    const driverItems = computed(() => {
-      return store.getters.drivers
-    })
+      const driverItems = computed(() => {
+        return store.getters.drivers
+      })
 
-    const truckItems = computed(() =>
-      store.getters.trucks.filter((i) => i.type === 'truck')
-    )
+      const truckItems = computed(() => store.getters.trucks.filter(i => i.type === 'truck'))
 
-    const clientItems = computed(() => {
-      return store.getters.partners.filter((i) => i.isClient)
-    })
+      const clientItems = computed(() => {
+        return store.getters.partners.filter(i => i.isClient)
+      })
 
-    watch([activeHeaders], () => {
-      ctx.emit('changeHeaders', activeHeaders.value)
-    })
-    return {
-      groupByItems,
-      updateActiveHeaders,
-      updateSettings,
-      listSettingsName,
-      allHeaders,
-      activeHeaders,
-      tkNameItems,
-      clientItems,
-      stateItems,
-      driverItems,
-      truckItems,
-      daysIntervalItems,
-    }
-  },
-}
+      watch([activeHeaders], () => {
+        ctx.emit('changeHeaders', activeHeaders.value)
+      })
+      return {
+        groupByItems,
+        updateActiveHeaders,
+        updateSettings,
+        listSettingsName,
+        activeHeaders,
+        tkNameItems,
+        clientItems,
+        stateItems,
+        driverItems,
+        truckItems,
+        daysIntervalItems,
+      }
+    },
+  }
 </script>
 
 <style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+  .settings-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 </style>

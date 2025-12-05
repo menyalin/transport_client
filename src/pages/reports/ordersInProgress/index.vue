@@ -5,47 +5,39 @@
         <ReportTitle title="Простой транспорта" />
         <div id="report-settings">
           <v-btn icon @click.stop="getData">
-            <v-icon> mdi-cached </v-icon>
+            <v-icon>mdi-cached</v-icon>
           </v-btn>
           <v-text-field
             v-model.trim="settings.search"
             label="Поиск"
             hideDetails
-            outlined
-            dense
+            variant="outlined"
+       density="compact"
+           
             :style="{ 'max-width': '300px' }"
           />
-          <v-checkbox
-            v-model="settings.selectedOnly"
-            label="Только выделенные"
-            hideDetails
-            dense
-            class="py-0 my-0"
-          />
+          <v-checkbox :modelValue="settings.selectedOnly" label="Только выделенные" hideDetails
+dense class="py-0 my-0" />
           <v-spacer />
-          <v-btn
-            v-if="showCopyButton"
-            text
-            color="primary"
-            small
-            @click="copyHandler"
-          >
+          <v-btn v-if="showCopyButton" variant="text"
+color="primary" size="small" @click="copyHandler"
+>
             скопировать в буфер
           </v-btn>
         </div>
         <v-data-table
-          v-model="settings.selected"
+          :modelValue="settings.selected"
           :itemKey="'_id'"
           :singleSelect="false"
           :headers="headers"
           :items="filteredRows"
           :loading="loading"
           :search="settings.search"
-          fixed-header
+          fixedHeader
           height="76vh"
-          dense
-          show-select
-          :footer-props="{
+         
+          showSelect
+          :footerProps="{
             'items-per-page-options': [50, 100, 200],
           }"
           @dblclick:row="dblClickRow"
@@ -91,11 +83,11 @@ export default {
     ...mapGetters(['directoriesProfile']),
     filteredRows() {
       return this.rows
-        .filter((item) => {
+        .filter(item => {
           if (!this.settings.selectedOnly) return true
-          return this.settings.selected.map((s) => s._id).includes(item._id)
+          return this.settings.selected.map(s => s._id).includes(item._id)
         })
-        .map((item) => ({
+        .map(item => ({
           ...item,
           date: new Date(item.plannedDate).toLocaleDateString(),
           state: item.state === 'loading' ? 'На погрузке' : 'На выгрузке',
@@ -178,15 +170,15 @@ export default {
 }
 </script>
 <style scoped>
-#report-settings {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-#report-settings > * {
-  margin: 10px;
-}
-.v-data-table {
-  white-space: nowrap;
-}
+  #report-settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  #report-settings > * {
+    margin: 10px;
+  }
+  .v-data-table {
+    white-space: nowrap;
+  }
 </style>

@@ -9,28 +9,31 @@
         label="Тип рейса"
         :items="$store.getters.orderAnalyticTypes"
         clearable
-        hide-details
-        dense
-        outlined
+        hideDetails
+       
+        variant="outlined"
+       density="compact"
         :style="{ 'max-width': '150px' }"
       />
       <v-text-field
         v-model.number="params.distanceRoad"
         label="Расстояние по дорогам, км"
         :loading="distanceLoading"
-        dense
+       
         hideDetails
-        outlined
-        append-icon="mdi-autorenew"
+        variant="outlined"
+       density="compact"
+       endIcon="mdi-autorenew"
         @click:append="getRoadDistance"
       />
       <v-text-field
         v-model.number="params.distanceDirect"
         label="Расстояние прямое, км"
-        dense
+       
         hideDetails
-        append-icon="mdi-autorenew"
-        outlined
+       endIcon="mdi-autorenew"
+        variant="outlined"
+       density="compact"
         @click:append="getDirectDistance"
       />
     </div>
@@ -77,45 +80,41 @@ export default {
       },
     }
   },
-  watch: {
-    item: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        if (val) {
-          this.params.type = val.type
-          this.params.distanceRoad = val.distanceRoad
-          this.params.distanceDirect = val.distanceDirect
-        }
+    computed: {
+      showDebugInfo() {
+        return this.$store.getters.hasPermission('fullAccess')
+      },
+      loadingZones() {
+        if (!this.item?.loadingZones || !Array.isArray(this.item.loadingZones)) return []
+        const zonesMap = this.$store.getters.zonesMap || new Map()
+        return this.item.loadingZones.map(i => zonesMap.get(i)?.name).filter(Boolean)
+      },
+      unloadingZones() {
+        if (!this.item?.unloadingZones || !Array.isArray(this.item.unloadingZones)) return []
+        const zonesMap = this.$store.getters.zonesMap || new Map()
+        return this.item.unloadingZones.map(i => zonesMap.get(i)?.name).filter(Boolean)
       },
     },
-    params: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
+    watch: {
+      item: {
+        immediate: true,
+        deep: true,
+        handler: function (val) {
+          if (val && typeof val === 'object') {
+            this.params.type = val.type ?? null
+            this.params.distanceRoad = val.distanceRoad ?? null
+            this.params.distanceDirect = val.distanceDirect ?? null
+          }
+        },
+      },
+      params: {
+        deep: true,
+        handler: function (val) {
+          this.$emit('change', val)
+        },
       },
     },
-  },
-  computed: {
-    showDebugInfo() {
-      return this.$store.getters.hasPermission('fullAccess')
-    },
-    loadingZones() {
-      return (
-        this.item.loadingZones?.map(
-          (i) => this.$store.getters.zonesMap.get(i)?.name
-        ) || null
-      )
-    },
-    unloadingZones() {
-      return (
-        this.item.unloadingZones?.map(
-          (i) => this.$store.getters.zonesMap.get(i)?.name
-        ) || null
-      )
-    },
-  },
-  methods: {
+    methods: {
     async getRoadDistance() {
       if (this.isValidRoute) {
         try {
@@ -138,19 +137,19 @@ export default {
 }
 </script>
 <style scoped>
-.analytic-block-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 600px;
-}
-.analytic-block-wrapper > * {
-  margin: 10px;
-}
-.zones-wrapper {
-  display: flex;
-  flex-direction: column;
-  font-size: small;
-}
+  .analytic-block-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 600px;
+  }
+  .analytic-block-wrapper > * {
+    margin: 10px;
+  }
+  .zones-wrapper {
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+  }
 </style>

@@ -36,11 +36,9 @@ const ParsedOrderDTOSchema = z.object({
   priceWOVat: z.number(),
   vat: z.number(),
   price: z.number(),
-  truckType: z
-    .string()
-    .refine((value) => Object.keys(truckTypeMapper).includes(value), {
-      message: (value) => `Invalid transport type: ${value}`,
-    }),
+  truckType: z.string().refine(value => Object.keys(truckTypeMapper).includes(value), {
+    message: value => `Invalid transport type: ${value}`,
+  }),
 })
 
 export class ParsedOrderDTO {
@@ -130,12 +128,8 @@ export class CompareItem {
   }
 
   get isDriverEqual() {
-    const preparedUploadedDriverName = CompareItem.prepareDriverName(
-      this.uploadedDriverName
-    )
-    const preparedDriverNameInOrder = CompareItem.prepareDriverName(
-      this.driverNameInOrder
-    )
+    const preparedUploadedDriverName = CompareItem.prepareDriverName(this.uploadedDriverName)
+    const preparedDriverNameInOrder = CompareItem.prepareDriverName(this.driverNameInOrder)
     return preparedDriverNameInOrder === preparedUploadedDriverName
   }
 
@@ -152,18 +146,11 @@ export class CompareItem {
           _id: pickedItem._id,
           orderId: pickedItem.orderId,
 
-          driverNameInOrder: store.getters.driversMap.get(
-            pickedItem.confirmedCrew.driver
-          )?.fullName,
+          driverNameInOrder: store.getters.driversMap.get(pickedItem.confirmedCrew.driver)?.fullName,
           pickedTruckType: pickedItem.reqTransport,
           pickedTruckTypeStr:
-            pickedItem.reqTransport.liftCapacity +
-            `т ${store.getters.truckKindsMap.get(
-              pickedItem.reqTransport.kind
-            )}`,
-          truckInOrder: store.getters.trucksMap.get(
-            pickedItem.confirmedCrew.truck
-          )?.regNum,
+            pickedItem.reqTransport.liftCapacity + `т ${store.getters.truckKindsMap.get(pickedItem.reqTransport.kind)}`,
+          truckInOrder: store.getters.trucksMap.get(pickedItem.confirmedCrew.truck)?.regNum,
           pickedPrices: {
             price: pickedItem.total.price,
             vat: pickedItem.total.price - pickedItem.total.priceWOVat,
@@ -188,10 +175,10 @@ export class CompareItem {
   }
 
   static createEntities(uploadedOrders, pickedOrders) {
-    return uploadedOrders.map((uploadedItem) =>
+    return uploadedOrders.map(uploadedItem =>
       CompareItem.createOne(
         uploadedItem,
-        pickedOrders.find((order) => order.client.num === uploadedItem.num)
+        pickedOrders.find(order => order.client.num === uploadedItem.num)
       )
     )
   }

@@ -1,10 +1,6 @@
 <template>
   <span>
-    {{
-      `Погрузка: ${
-        addressMap.get(item.loading).shortName
-      }, зоны до ${distances} км.`
-    }}
+    {{ `Погрузка: ${addressMap.get(item.loading).shortName}, зоны до ${distances} км.` }}
   </span>
 </template>
 <script>
@@ -15,7 +11,7 @@ export default {
   },
   computed: {
     distances() {
-      return this.item.zones.map((i) => i.distance).join(', ')
+      return this.item.zones.map(i => i.distance).join(', ')
     },
     addressMap() {
       return this.$store.getters.addressMap
