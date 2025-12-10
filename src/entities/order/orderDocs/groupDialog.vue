@@ -35,6 +35,7 @@
               color="primary"
             />
           </v-radio-group>
+          <v-text-field v-model="note" label="Общий комментарий" outlined />
           <v-checkbox
             label="Включать документы в опись"
             v-model="addToRegistry"
@@ -68,8 +69,9 @@ export default {
     },
   },
   setup(_props, { emit }) {
-    const numberStrNode = ref(null)
+    const numberStrNode = ref(null) // ссылка на DOM элемент
     const numberStr = ref('')
+    const note = ref('')
     const docTypes = ref([])
     const addToRegistry = ref(false)
     const docStatus = ref('accepted')
@@ -95,41 +97,50 @@ export default {
       numberStr.value = ''
     }
 
-    function addHandler() {
-      if (!docCount.value) return null
-      const res = []
-      const date = dayjs().format('YYYY-MM-DD')
-      const numbers = numberStr.value
+    // Вспомогательная функция для получения номеров документов
+    const getNumbers = () => {
+      return numberStr.value
         .split(',')
         .map((i) => i.trim())
         .filter((i) => !!i)
+    }
 
-      if (numbers.length) {
-        numbers.forEach((number) => {
-          docTypes.value.forEach((type) => {
-            res.push({
-              type,
-              number,
-              status: docStatus.value,
-              date,
-              addToRegistry: addToRegistry.value,
+    // Вспомогательная функция для создания документа
+    const createDocument = (type, number = '') => ({
+      type,
+      number,
+      status: docStatus.value,
+      date: dayjs().toISOString(),
+      addToRegistry: addToRegistry.value,
+      note: note.value,
+    })
+
+    async function addHandler() {
+      if (!docCount.value) return
+
+      try {
+        const numbers = getNumbers()
+        const res = []
+
+        // Если есть номера
+        if (numbers.length > 0) {
+          numbers.forEach((number) => {
+            docTypes.value.forEach((type) => {
+              res.push(createDocument(type, number))
             })
           })
-        })
-      } else {
-        docTypes.value.forEach((type) => {
-          res.push({
-            type,
-            number: '',
-            status: docStatus.value,
-            date,
-            addToRegistry: addToRegistry.value,
+        } else {
+          // Если нет номеров, создаем пустые
+          docTypes.value.forEach((type) => {
+            res.push(createDocument(type))
           })
-        })
-      }
+        }
 
-      emit('pushDocs', res)
-      clear()
+        emit('pushDocs', res)
+        closeDialog()
+      } catch (error) {
+        console.error('Ошибка при добавлении документов:', error)
+      }
     }
     function changeDocTypesHandler() {
       numberStrNode.value.focus()
@@ -147,6 +158,7 @@ export default {
       closeDialog,
       numberStrNode,
       changeDocTypesHandler,
+      note,
     }
   },
 }
