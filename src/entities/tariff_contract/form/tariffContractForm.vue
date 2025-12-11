@@ -12,10 +12,15 @@
         :items="agreements"
         item-text="name"
         item-value="_id"
-        label="Соглашение"
+        label="Соглашения"
         :readonly="agreementReadonly"
-        v-model="state.agreement"
+        v-model="state.agreements"
         :style="{ maxWidth: '300px' }"
+        multiple
+        chips
+        small-chips
+        deletable-chips
+        auto-select-first
       />
       <v-text-field
         label="Дата начала"
