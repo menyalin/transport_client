@@ -17,6 +17,12 @@
     <template #[`item.createdAt`]="{ item }">
       {{ new Date(item.createdAt).toLocaleString() }}
     </template>
+    <template #[`item.agreementsName`]="{ item }">
+      <div v-for="(name, idx) in item.agreementsName" :key="idx + ' ' + name">
+        {{ name }}
+      </div>
+    </template>
+
     <template #[`item.startDate`]="{ item }">
       {{ new Date(item.startDate).toLocaleDateString() }}
     </template>

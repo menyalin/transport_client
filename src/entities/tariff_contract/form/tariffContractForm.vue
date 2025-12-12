@@ -15,7 +15,6 @@
         label="Соглашения"
         :readonly="agreementReadonly"
         v-model="state.agreements"
-        :style="{ maxWidth: '300px' }"
         multiple
         chips
         small-chips
@@ -148,6 +147,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 15px;
+  flex-basis: auto;
 }
 </style>
