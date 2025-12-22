@@ -71,7 +71,7 @@ class AgreementService {
       let { data } = await api.get(BASE_PATH, {
         params: {
           company: store.getters.directoriesProfile,
-          limit: 1000,
+          limit: 10000,
           skip: 0,
         },
       })
@@ -88,7 +88,7 @@ class AgreementService {
       params: {
         client,
         company: store.getters.directoriesProfile,
-        limit: 100,
+        limit: 10000,
         skip: 0,
       },
     })
