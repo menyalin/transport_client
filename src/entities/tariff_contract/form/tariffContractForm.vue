@@ -12,10 +12,14 @@
         :items="agreements"
         item-text="name"
         item-value="_id"
-        label="Соглашение"
+        label="Соглашения"
         :readonly="agreementReadonly"
-        v-model="state.agreement"
-        :style="{ maxWidth: '300px' }"
+        v-model="state.agreements"
+        multiple
+        chips
+        small-chips
+        deletable-chips
+        auto-select-first
       />
       <v-text-field
         label="Дата начала"
@@ -143,6 +147,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 15px;
+  flex-basis: auto;
 }
 </style>

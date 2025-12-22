@@ -8,6 +8,7 @@ export const useTariffContractForm = (props, ctx) => {
   const initialState = () => ({
     name: null,
     agreement: null,
+    agreements: [],
     startDate: null,
     endDate: null,
     withVat: false,
@@ -22,8 +23,15 @@ export const useTariffContractForm = (props, ctx) => {
   let state = ref(initialState())
 
   function setState(newState) {
+    // Миграция: если agreements отсутствует, но есть agreement, создаем массив из agreement
+    let agreements = newState.agreements || []
+    if (agreements.length === 0 && newState.agreement) {
+      agreements = [newState.agreement]
+    }
+
     state.value = {
       ...newState,
+      agreements,
       startDate: dayjs(newState.startDate).format('YYYY-MM-DD'),
       endDate: newState.endDate
         ? dayjs(newState.endDate).format('YYYY-MM-DD')
@@ -33,7 +41,11 @@ export const useTariffContractForm = (props, ctx) => {
 
   const rules = {
     name: { required },
-    agreement: { required },
+    agreements: {
+      required: (value) => {
+        return value && value.length > 0
+      },
+    },
     startDate: { required },
     endDate: {},
     withVat: { required },

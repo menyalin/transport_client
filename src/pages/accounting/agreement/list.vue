@@ -8,7 +8,7 @@
           @submit="create"
           @refresh="refresh"
         />
-        <AgreementListSettings v-model="settings" />
+        <AgreementListSettings v-model="settings" :clientItems="clientItems" />
 
         <v-data-table
           :headers="headers"
@@ -47,6 +47,7 @@
 import { ref, watch, computed, getCurrentInstance } from 'vue'
 import { ButtonsPanel } from '@/shared/ui'
 import { AgreementListSettings } from '@/entities/agreement'
+import { usePartners } from '@/entities/partner'
 import { AgreementService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
 
@@ -57,6 +58,7 @@ export default {
     AgreementListSettings,
   },
   setup() {
+    const { clients: clientItems } = usePartners()
     const { proxy } = getCurrentInstance()
     const loading = ref(false)
     const list = ref([])
@@ -68,13 +70,14 @@ export default {
       'agreement_list_options'
     )
     const settings = usePersistedRef(
-      { search: null, executor: null },
+      { search: null, executor: null, client: null },
       'agreement_list_settings'
     )
     const queryParams = computed(() => ({
       company: proxy.$store.getters.directoriesProfile,
       skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
       executor: settings.value.executor,
+      clients: settings.value.clients,
       search: settings.value.search,
       limit: listOptions.value.itemsPerPage,
       sortBy: listOptions.value.sortBy.length
@@ -120,6 +123,7 @@ export default {
     return {
       loading,
       listOptions,
+      clientItems,
       settings,
       refresh,
       list,
@@ -135,6 +139,7 @@ export default {
         sortable: false,
       },
       { value: 'executorCarrierName', text: 'ТК исполнитель', sortable: false },
+      { value: 'clientsName', text: 'Клиенты', sortable: false },
       { value: 'date', text: 'Дата начала действия', sortable: true },
       { value: 'endDate', text: 'Дата завершения', sortable: false },
       { value: 'vatRateText', text: 'НДС', sortable: false },

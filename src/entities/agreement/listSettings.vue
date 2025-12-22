@@ -15,6 +15,20 @@ import { AddressForm } from '@/entities/address';
       @change="updateSettings($event, 'executor')"
       :style="{ maxWidth: '300px' }"
     />
+    <v-autocomplete
+      :value="settings.clients"
+      item-text="name"
+      item-value="_id"
+      :items="clientItems"
+      dense
+      hide-details
+      clearable
+      outlined
+      label="Клиенты"
+      @change="updateSettings($event, 'clients')"
+      :style="{ maxWidth: '400px' }"
+      multiple
+    />
     <v-text-field
       :value="settings.search"
       label="Поиск"
@@ -37,14 +51,20 @@ export default {
   },
   props: {
     settings: Object,
+    clientItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   setup(props, ctx) {
     const { allCarriers: carrierItems } = useCarriers()
+
     function updateSettings(value, field) {
       ctx.emit('change', { ...props.settings.value, [field]: value })
     }
     return {
       carrierItems,
+
       updateSettings,
     }
   },
