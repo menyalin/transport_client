@@ -4,6 +4,7 @@
     :items="items"
     :value="value"
     @change="$emit('change', $event)"
+    :label="$attrs.label || 'Ставка НДС'"
   />
 </template>
 <script>
