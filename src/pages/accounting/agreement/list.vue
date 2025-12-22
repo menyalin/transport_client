@@ -70,7 +70,13 @@ export default {
       'agreement_list_options'
     )
     const settings = usePersistedRef(
-      { search: null, executor: null, clients: [], vatRate: null },
+      {
+        search: null,
+        executor: null,
+        clients: [],
+        vatRate: null,
+        state: 'opened',
+      },
       'agreement_list_settings'
     )
     const queryParams = computed(() => ({
@@ -79,6 +85,7 @@ export default {
       executor: settings.value.executor,
       clients: settings.value.clients,
       vatRate: settings.value.vatRate,
+      state: settings.value.state,
       search: settings.value.search,
       limit: listOptions.value.itemsPerPage,
       sortBy: listOptions.value.sortBy.length
