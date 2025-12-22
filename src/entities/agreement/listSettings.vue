@@ -29,6 +29,16 @@ import { AddressForm } from '@/entities/address';
       :style="{ maxWidth: '400px' }"
       multiple
     />
+    <vat-rate-select
+      :value="settings.vatRate"
+      dense
+      hide-details
+      clearable
+      outlined
+      label="НДС"
+      @change="updateSettings($event, 'vatRate')"
+      :style="{ maxWidth: '200px' }"
+    />
     <v-text-field
       :value="settings.search"
       label="Поиск"
@@ -41,10 +51,12 @@ import { AddressForm } from '@/entities/address';
   </div>
 </template>
 <script>
+import { VatRateSelect } from '@/shared/ui'
 import { useCarriers } from '../carrier/useCarriers'
 
 export default {
   name: 'AgreementListSettings',
+  components: { VatRateSelect },
   model: {
     prop: 'settings',
     event: 'change',
@@ -64,7 +76,6 @@ export default {
     }
     return {
       carrierItems,
-
       updateSettings,
     }
   },
