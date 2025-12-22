@@ -1,6 +1,19 @@
 import { AddressForm } from '@/entities/address';
 <template>
   <div class="wrapper">
+    <v-select
+      :value="settings.state"
+      :items="stateItems"
+      dense
+      hide-details
+      clearable
+      outlined
+      auto-select-first
+      :style="{ maxWidth: '200px' }"
+      @change="updateSettings($event, 'state')"
+      label="Состояние"
+    />
+
     <v-autocomplete
       :value="settings.executor"
       :items="carrierItems"
@@ -70,11 +83,16 @@ export default {
   },
   setup(props, ctx) {
     const { allCarriers: carrierItems } = useCarriers()
-
+    const stateItems = [
+      { value: 'all', text: 'Все' },
+      { value: 'opened', text: 'Открытые' },
+      { value: 'closed', text: 'Закрытые' },
+    ]
     function updateSettings(value, field) {
       ctx.emit('change', { ...props.settings.value, [field]: value })
     }
     return {
+      stateItems,
       carrierItems,
       updateSettings,
     }
