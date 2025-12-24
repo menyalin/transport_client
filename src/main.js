@@ -11,15 +11,15 @@ import 'dayjs/locale/ru'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(customParseFormat)
 dayjs.locale('ru')
 
-Vue.config.productionTip = false
-
 Vue.use(Vuelidate)
+Vue.config.productionTip = false
 
 Vue.use(VuetifyConfirm, {
   vuetify,
@@ -32,9 +32,12 @@ Vue.use(VuetifyConfirm, {
   property: '$confirm',
 })
 
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
 new Vue({
   router,
   store,
+  pinia,
   vuetify,
   render: (h) => h(App),
 }).$mount('#app')
