@@ -1,4 +1,3 @@
-import { AddressForm } from '@/entities/address';
 <template>
   <div class="wrapper">
     <v-select
@@ -89,7 +88,7 @@ export default {
       { value: 'closed', text: 'Закрытые' },
     ]
     function updateSettings(value, field) {
-      ctx.emit('change', { ...props.settings.value, [field]: value })
+      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
     }
     return {
       stateItems,

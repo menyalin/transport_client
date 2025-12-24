@@ -63,12 +63,7 @@ export default {
     const loading = ref(false)
     const list = ref([])
     const count = ref(0)
-    const listOptions = usePersistedRef(
-      {
-        page: 1,
-      },
-      'agreement_list_options'
-    )
+    const listOptions = usePersistedRef({ page: 1 }, 'agreement_list_options')
     const settings = usePersistedRef(
       {
         search: null,
