@@ -31,6 +31,7 @@
       :agreementItems="agreementItems"
     />
     <v-divider />
+    <VatRatesInfo showTitle v-model="state.vatRates" />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
     <ContactsInfo v-model="state.contacts" />
@@ -53,6 +54,7 @@ import {
   CompanyInfoForm,
   ContactsInfo,
   EntityFiles,
+  VatRatesInfo,
 } from '@/shared/ui'
 import { useForm } from './useForm'
 import AllowedCarrierAgreements from './allowedCarrierAgreements'
@@ -66,6 +68,7 @@ export default {
     CompanyInfoForm,
     ContactsInfo,
     AllowedCarrierAgreements,
+    VatRatesInfo,
   },
 
   props: {
