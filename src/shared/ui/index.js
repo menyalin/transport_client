@@ -21,6 +21,8 @@ import ContactsInfo from './contactsInfo/contactsInfo.vue'
 import VatRateSelect from './vatRateSelect.vue'
 import VatRatesInfo from './vatRatesInfo/vatRatesInfo.vue'
 import EntityFiles from './entityFiles/index.vue'
+import AllowedAgreements from './allowedAgreements/index.vue'
+
 export {
   AppTableColumnSetting,
   ButtonsPanel,
@@ -45,4 +47,5 @@ export {
   VatRateSelect,
   VatRatesInfo,
   EntityFiles,
+  AllowedAgreements,
 }

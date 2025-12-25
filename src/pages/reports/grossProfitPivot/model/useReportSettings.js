@@ -58,7 +58,6 @@ export const useReportSettings = () => {
 
   function updateSelected(val) {
     selectedGroups.value = val
-    console.log('update selected: ', val)
     const groupItem = GROUP_BY_ITEMS.find(
       (i) => i.value === settings.value.groupBy
     )

@@ -26,7 +26,7 @@
       />
     </div>
 
-    <AllowedCarrierAgreements
+    <AllowedAgreements
       v-model="state.agreements"
       :agreementItems="agreementItems"
     />
@@ -57,7 +57,7 @@ import {
   VatRatesInfo,
 } from '@/shared/ui'
 import { useForm } from './useForm'
-import AllowedCarrierAgreements from './allowedCarrierAgreements'
+import { AllowedAgreements } from '@/shared/ui'
 
 export default {
   name: 'CarrierForm',
@@ -67,7 +67,7 @@ export default {
     BankAccountInfoForm,
     CompanyInfoForm,
     ContactsInfo,
-    AllowedCarrierAgreements,
+    AllowedAgreements,
     VatRatesInfo,
   },
 
