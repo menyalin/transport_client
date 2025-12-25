@@ -63,6 +63,10 @@
     />
     <v-checkbox v-model="state.isClient" label="Заказчик" hide-details dense />
     <v-checkbox v-model="state.isService" label="Сервис" dense />
+    <AllowedAgreements
+      v-model="state.agreements"
+      :agreementItems="clientAgreements"
+    />
 
     <v-expansion-panels focusable>
       <v-expansion-panel>
@@ -123,6 +127,7 @@ import {
   EntityFiles,
   CompanyInfoForm,
   BankAccountInfoForm,
+  AllowedAgreements,
 } from '@/shared/ui'
 import PlacesForTransferDocs from './placesForTransferDocs.vue'
 import IdleTruckNotifications from './idleTruckNotifications/idleTruckNotifications'
@@ -137,6 +142,7 @@ export default {
     CompanyInfoForm,
     IdleTruckNotifications,
     BankAccountInfoForm,
+    AllowedAgreements,
   },
   props: {
     item: {

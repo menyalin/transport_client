@@ -62,7 +62,7 @@ export default {
   },
   setup() {
     const { proxy } = getCurrentInstance()
-    const onlyTrucksWithRoutes = ref(false)
+    const onlyTrucksWithRoutes = ref(true)
     const onlyPlannedDates = ref(false)
 
     const changeOnlyTrucksWithRoutes = () => {
