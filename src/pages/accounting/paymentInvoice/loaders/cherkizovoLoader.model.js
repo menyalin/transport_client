@@ -14,6 +14,10 @@ const PickOrdersByClientNumbersPropsSchema = z.object({
 })
 
 const truckTypeMapper = {
+  '5т': {
+    liftCapacity: 5,
+    kind: 'ref',
+  },
   '10т': {
     liftCapacity: 10,
     kind: 'ref',
