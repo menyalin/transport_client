@@ -124,6 +124,7 @@
           dense
           outlined
           type="date"
+          :disabled="isActDateDisabled"
         />
       </div>
 
@@ -261,6 +262,7 @@ export default {
       acceptInvoiceBtnHandler,
       showPaidInvoiceBtn,
       paidInvoiceBtnHandler,
+      isActDateDisabled,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const {
@@ -373,6 +375,7 @@ export default {
       acceptInvoiceBtnHandler,
       showPaidInvoiceBtn,
       paidInvoiceBtnHandler,
+      isActDateDisabled,
     }
   },
   methods: {

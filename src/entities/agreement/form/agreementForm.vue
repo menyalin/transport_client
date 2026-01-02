@@ -80,7 +80,7 @@
           v-model="state.usePriceWithVAT"
           :disabled="state.vatRate === 0"
           color="primary"
-          label="При выгрузке показывать ставку с НДС"
+          label="Клиент оперирует ценами с НДС"
         />
         <v-checkbox
           v-model="state.calcWaitingByArrivalDateLoading"
