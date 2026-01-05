@@ -16,15 +16,24 @@
       @setDate="setDateHandler"
     />
 
-    <payment-invoice-result :orders="item.orders" />
+    <!-- Лоадер для секции с заказами -->
+    <v-card v-if="!loading" elevation="0" :loading="ordersLoading">
+      <v-progress-linear v-if="ordersLoading" indeterminate color="primary" />
 
-    <payment-invoice-orders-list
-      :orders="item.orders"
-      :disabled="disabledPickOrders"
-      @delete="deleteOrderFromPaymentInvoice"
-      @dblRowClick="dblRowClickHandler"
-      @updateItemPrice="updateItemPrice"
-    />
+      <payment-invoice-result
+        :orders="orders"
+        :usePriceWithVat="item.usePriceWithVat"
+        :vatRate="item.vatRate"
+      />
+
+      <payment-invoice-orders-list
+        :orders="orders"
+        :disabled="disabledPickOrders"
+        @delete="deleteOrderFromPaymentInvoice"
+        @dblRowClick="dblRowClickHandler"
+        @updateItemPrice="updateItemPrice"
+      />
+    </v-card>
 
     <v-dialog
       v-if="item._id"
@@ -67,7 +76,19 @@ export default {
   },
   setup(props) {
     const item = ref({})
-    const { downloadHandler } = useDownloadTemplate(item)
+
+    // State для заказов с ОТДЕЛЬНЫМ лоадером
+    const orders = ref([])
+    const ordersLoading = ref(false)
+    const ordersTotalCount = ref(0)
+    const ordersError = ref(null)
+
+    // Объединяем item и orders для useDownloadTemplate
+    const invoiceWithOrders = computed(() => ({
+      ...item.value,
+      orders: orders.value,
+    }))
+    const { downloadHandler } = useDownloadTemplate(invoiceWithOrders)
 
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
     const showPickOrderDialog = ref(
@@ -78,25 +99,21 @@ export default {
     )
 
     const needUpdateRows = computed(() =>
-      item.value.orders.some((i) => i.needUpdate)
+      orders.value.some((i) => i.needUpdate)
     )
 
     const disabledDownloadFiles = computed(
-      () =>
-        !item.value.orders ||
-        item.value.orders.length === 0 ||
-        needUpdateRows.value
+      () => orders.value.length === 0 || needUpdateRows.value
     )
     const disabledMainFields = computed(() => {
-      return item.value.orders?.length > 0
+      return item.value?.ordersCount > 0
     })
 
     const showDeleteBtn = computed(() => {
       return (
         !!props?.id &&
         store.getters.hasPermission('paymentInvoice:delete') &&
-        item.value?.orders &&
-        item.value?.orders.length === 0
+        orders.value.length === 0
       )
     })
 
@@ -106,6 +123,7 @@ export default {
         rowIds,
         paymentInvoiceId: item.value._id,
       })
+      // Socket событие обновит orders автоматически
     }
 
     function openDialog() {
@@ -122,6 +140,31 @@ export default {
     const showError = ref(false)
     const errorMessage = ref('')
 
+    // Функция загрузки заказов
+    async function loadInvoiceOrders(invoiceId) {
+      if (!invoiceId) {
+        orders.value = []
+        ordersTotalCount.value = 0
+        return
+      }
+      try {
+        ordersLoading.value = true
+        ordersError.value = null
+        const res = await PaymentInvoiceService.getInvoiceOrders(invoiceId, {
+          limit: 50,
+        })
+        orders.value = res.items || []
+        ordersTotalCount.value = res.totalCount || 0
+      } catch (e) {
+        ordersError.value = e.message
+        store.commit('setError', `Ошибка загрузки заказов: ${e.message}`)
+        orders.value = []
+        ordersTotalCount.value = 0
+      } finally {
+        ordersLoading.value = false
+      }
+    }
+
     async function getItem() {
       if (!props.id) return null
       try {
@@ -129,6 +172,8 @@ export default {
         const res = await PaymentInvoiceService.getById(props.id)
         item.value = { ...res }
         loading.value = false
+        // Загружаем заказы ПОСЛЕ того как акт загружен
+        await loadInvoiceOrders(props.id)
       } catch (e) {
         loading.value = false
         store.commit('setError', e.message)
@@ -166,6 +211,10 @@ export default {
           //  router.push('/accounting/paymentInvoice')
         } else {
           item.value = updatedItem
+          // Загружаем заказы после сохранения нового акта
+          if (updatedItem._id) {
+            await loadInvoiceOrders(updatedItem._id)
+          }
         }
       } catch (e) {
         showError.value = true
@@ -198,26 +247,32 @@ export default {
       router.push('/orders/' + orderId)
     }
 
-    function addOrders({ paymentInvoiceId, orders }) {
+    function addOrders({ paymentInvoiceId, orders: newOrders }) {
       if (paymentInvoiceId !== item.value._id) return null
 
-      if (Array.isArray(item.value.orders)) item.value.orders.push(...orders)
-      else item.value.orders = orders
+      if (!Array.isArray(orders.value)) {
+        orders.value = []
+      }
+      orders.value.push(...newOrders)
+      // Обновить ordersCount в item
+      item.value.ordersCount = orders.value.length
     }
 
     function removeOrders({ paymentInvoiceId, rowIds }) {
       if (paymentInvoiceId !== item.value._id) return null
 
-      item.value.orders = item.value.orders.filter(
-        (i) => !rowIds.includes(i.rowId)
-      )
+      orders.value = orders.value.filter((i) => !rowIds.includes(i.rowId))
+      // Обновить ordersCount в item
+      item.value.ordersCount = orders.value.length
     }
 
     async function updateItemPrice(itemId) {
       // Обновить цены по рейсы в акте
       const res = await PaymentInvoiceService.updatePrices(itemId)
-      const orderIdx = item.value.orders.findIndex((i) => itemId === i._id)
-      item.value.orders.splice(orderIdx, 1, res)
+      const orderIdx = orders.value.findIndex((i) => itemId === i._id)
+      if (orderIdx !== -1) {
+        orders.value.splice(orderIdx, 1, res)
+      }
     }
 
     socket.on('orders:addedToPaymentInvoice', addOrders)
@@ -231,6 +286,8 @@ export default {
     return {
       item,
       loading,
+      ordersLoading,
+      orders,
       showError,
       errorMessage,
       submit,

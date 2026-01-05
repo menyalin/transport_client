@@ -113,8 +113,8 @@ function usePaimentInvoiceForm(props, ctx) {
         return ''
     }
   })
-  const hasOrders = computed(() => !!props?.orders?.length)
-
+  const hasOrders = computed(() => (props.item?.ordersCount || 0) > 0)
+  const isActDateDisabled = computed(() => hasOrders.value)
   const showAcceptedInvoiceBtn = computed(() => state.value.status === 'sended')
 
   function acceptInvoiceBtnHandler() {
@@ -197,6 +197,7 @@ function usePaimentInvoiceForm(props, ctx) {
     acceptInvoiceBtnHandler,
     showPaidInvoiceBtn,
     paidInvoiceBtnHandler,
+    isActDateDisabled,
   }
 }
 

@@ -124,6 +124,7 @@
           dense
           outlined
           type="date"
+          :disabled="isActDateDisabled"
         />
       </div>
 
@@ -261,6 +262,7 @@ export default {
       acceptInvoiceBtnHandler,
       showPaidInvoiceBtn,
       paidInvoiceBtnHandler,
+      isActDateDisabled,
     } = usePaymentInvoiceForm(props.item, ctx)
 
     const {
@@ -271,8 +273,7 @@ export default {
     } = usePaymentInvoiceDocTemplates(state, props)
 
     const showLoaderBtn = computed(() => {
-      if (Array.isArray(props.item.orders) && props.item.orders.length > 0)
-        return false
+      if (props.item?.ordersCount > 0) return false
       return (
         !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
       )
@@ -305,7 +306,7 @@ export default {
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
     const isPaid = computed(() => props.item?.status === 'paid')
-    const hasOrders = computed(() => props.item?.orders?.length > 0)
+    const hasOrders = computed(() => (props.item?.ordersCount || 0) > 0)
     const statusItems = computed(() =>
       paymentInvoiceStatuses.map((i) => ({
         ...i,
@@ -373,6 +374,7 @@ export default {
       acceptInvoiceBtnHandler,
       showPaidInvoiceBtn,
       paidInvoiceBtnHandler,
+      isActDateDisabled,
     }
   },
   methods: {
