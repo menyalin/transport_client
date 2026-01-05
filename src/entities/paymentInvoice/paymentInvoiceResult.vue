@@ -1,7 +1,10 @@
 <template>
   <v-alert outlined dense>
-    Сумма: <b>{{ total }}</b
-    ><br />
+    Ставка НДС: <b>{{ vatRate }}</b> ; Расчет от цены с НДС:
+    <b>{{ usePriceWithVat }} </b>
+    <br />
+    Сумма: <b>{{ total }}</b>
+    <br />
 
     Сумма без НДС: <b> {{ totalWOVat }}</b> Сумма НДС:
     <b>{{ vatSum }}</b> Кол-во рейсов: <b>{{ ordersCount }}</b>
@@ -14,9 +17,10 @@ export default {
   name: 'PaymentInvoiceResult',
   props: {
     orders: { type: Array, required: true, default: () => [] },
+    vatRate: Number,
+    usePriceWithVat: Boolean,
   },
   setup(props) {
-    
     const total = computed(() => {
       const sum = props.orders.reduce(
         (res, item) => res + item?.savedTotal?.price,

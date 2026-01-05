@@ -118,6 +118,14 @@ class PaymentInvoiceService {
     return data
   }
 
+  async getInvoiceOrders(id, params = {}) {
+    const { limit = 50, skip = 0 } = params
+    let { data } = await api.get(BASE_PATH + '/' + id + '/orders', {
+      params: { limit, skip },
+    })
+    return data
+  }
+
   async deleteById(id) {
     let data = await api.delete(BASE_PATH + '/' + id)
     return data

@@ -12,8 +12,8 @@ const getPeriodDate = (orders, condFxName) => {
 const getInvoiceTotal = (orders) => {
   const result = orders.reduce(
     (res, item) => {
-      const discountKoef = (item.agreement.commission || 0) / 100
-      const vatRateKoef = (item.agreement.vatRate || 0) / 100
+      const discountKoef = (item.agreement?.commission || 0) / 100
+      const vatRateKoef = (item.vatRate || 0) / 100
       const discountSumWOVat = item.savedTotal.priceWOVat * discountKoef
       const itemPriceWOVat =
         (item.savedTotal.priceWOVat || 0) - discountSumWOVat
@@ -90,14 +90,15 @@ const getTtnNums = (order) =>
     .join('\n')
 
 export class TemplateDataBuilder {
-  constructor(invoice) {
+  constructor(invoice, orders = null) {
+    const ordersData = orders || invoice.orders || []
     this.docNumber = invoice.number || 'б/н'
     this.date = invoice.date ? dayjs(invoice.date).format(DATE_FORMAT) : ''
-    this.startPeriodDate = getPeriodDate(invoice.orders, Math.min)
-    this.endPeriodDate = getPeriodDate(invoice.orders, Math.max)
-    this.total = getInvoiceTotal(invoice.orders)
+    this.startPeriodDate = getPeriodDate(ordersData, Math.min)
+    this.endPeriodDate = getPeriodDate(ordersData, Math.max)
+    this.total = getInvoiceTotal(ordersData)
     this.hasDiscount = !!(this.total.rawDiscountSum > 0)
-    this.pO = invoice.orders.map((order, idx) => ({
+    this.pO = ordersData.map((order, idx) => ({
       ...order,
       idx: idx + 1,
       auctionNum: order.client.auctionNum?.trim() || '',
