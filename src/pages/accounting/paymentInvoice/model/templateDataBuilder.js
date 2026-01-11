@@ -9,56 +9,22 @@ const getPeriodDate = (orders, condFxName) => {
   return dayjs(targetDate).format(DATE_FORMAT)
 }
 
-const getInvoiceTotal = (orders) => {
-  const result = orders.reduce(
-    (res, item) => {
-      const discountKoef = (item.agreement?.commission || 0) / 100
-      const vatRateKoef = (item.vatRate || 0) / 100
-      const discountSumWOVat = item.savedTotal.priceWOVat * discountKoef
-      const itemPriceWOVat =
-        (item.savedTotal.priceWOVat || 0) - discountSumWOVat
-
-      return {
-        priceWOdiscountWOVat:
-          res.priceWOdiscountWOVat + item.savedTotal.priceWOVat,
-
-        priceWOdiscount:
-          res.priceWOdiscount +
-          item.savedTotal.priceWOVat +
-          item.savedTotal.priceWOVat * vatRateKoef,
-
-        priceWOVat: res.priceWOVat + itemPriceWOVat,
-
-        price: res.price + (itemPriceWOVat + itemPriceWOVat * vatRateKoef),
-
-        discountSumWOVat: res.discountSumWOVat + discountSumWOVat,
-
-        discountSum:
-          res.discountSum + (discountSumWOVat + discountSumWOVat * vatRateKoef),
-      }
-    },
-    {
-      priceWOdiscountWOVat: 0,
-      priceWOdiscount: 0,
-      priceWOVat: 0,
-      price: 0,
-      discountSumWOVat: 0,
-      discountSum: 0,
-    }
-  )
+const getInvoiceTotal = (invoice) => {
+  const discountKoef = 1 + (invoice.agreement?.commission || 0) / 100
 
   return {
-    priceWOdiscountWOVat: moneyFormatter(result.priceWOdiscountWOVat),
-    priceWOdiscount: moneyFormatter(result.priceWOdiscount),
-    priceWOVat: moneyFormatter(result.priceWOVat),
-    price: moneyFormatter(result.price),
-    vat: moneyFormatter(result.price - result.priceWOVat),
-    vatWOdiscount: moneyFormatter(
-      result.priceWOdiscount - result.priceWOdiscountWOVat
+    priceWOdiscountWOVat: moneyFormatter(invoice.priceWOVat),
+    priceWOdiscount: moneyFormatter(invoice.priceWithVat),
+    priceWOVat: moneyFormatter(invoice.priceWOVat / discountKoef),
+    price: moneyFormatter(invoice.priceWithVat / discountKoef),
+    vat: moneyFormatter(
+      (invoice.priceWithVat - invoice.priceWOVat) / discountKoef
     ),
-    discountSum: moneyFormatter(result.discountSum),
-    discountSumWOVat: moneyFormatter(result.discountSumWOVat),
-    rawDiscountSum: result.discountSum,
+    vatWOdiscount: moneyFormatter(invoice.priceWithVat - invoice.priceWOVat),
+
+    discountSum: moneyFormatter(invoice.priceWithVat * (discountKoef - 1)),
+    discountSumWOVat: moneyFormatter(invoice.priceWOVat * (discountKoef - 1)),
+    rawDiscountSum: invoice.priceWithVat * (discountKoef - 1),
   }
 }
 
@@ -96,7 +62,7 @@ export class TemplateDataBuilder {
     this.date = invoice.date ? dayjs(invoice.date).format(DATE_FORMAT) : ''
     this.startPeriodDate = getPeriodDate(ordersData, Math.min)
     this.endPeriodDate = getPeriodDate(ordersData, Math.max)
-    this.total = getInvoiceTotal(ordersData)
+    this.total = getInvoiceTotal(invoice)
     this.hasDiscount = !!(this.total.rawDiscountSum > 0)
     this.pO = ordersData.map((order, idx) => ({
       ...order,
