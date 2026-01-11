@@ -151,7 +151,7 @@ export default {
         ordersLoading.value = true
         ordersError.value = null
         const res = await PaymentInvoiceService.getInvoiceOrders(invoiceId, {
-          limit: 50,
+          limit: 25,
         })
         orders.value = res.items || []
         ordersTotalCount.value = res.totalCount || 0
@@ -303,7 +303,6 @@ export default {
       disabledDownloadFiles,
       updateItemPrice,
       downloadHandler,
-
       setDateHandler,
     }
   },

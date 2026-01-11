@@ -1,7 +1,8 @@
 <template>
   <v-alert outlined dense>
-    Ставка НДС: <b>{{ vatRate }}</b> ; Расчет от цены с НДС:
-    <b>{{ usePriceWithVat }} </b>
+    Ставка НДС: <b>{{ vatRate }}%</b> ; Расчет от цены
+    <b>{{ usePriceWithVat ? ' c НДС' : ' без НДС' }} </b>
+
     <br />
     Сумма: <b>{{ total }}</b>
     <br />

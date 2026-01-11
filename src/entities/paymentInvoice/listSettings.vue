@@ -90,22 +90,10 @@ export default {
       return paymentInvoiceStatuses
     })
     const periodByItems = [
-      {
-        value: 'date',
-        text: 'Дата акта',
-      },
-      {
-        value: 'sendDate',
-        text: 'Дата отправки',
-      },
-      {
-        value: 'plannedPayDate',
-        text: 'Плановая дата оплаты',
-      },
-      {
-        value: 'payDate',
-        text: 'Дата оплаты',
-      },
+      { value: 'date', text: 'Дата акта' },
+      { value: 'sendDate', text: 'Дата отправки' },
+      { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
+      { value: 'payDate', text: 'Дата оплаты' },
     ]
 
     function updateSettings(value, field) {
