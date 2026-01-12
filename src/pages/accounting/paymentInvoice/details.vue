@@ -20,14 +20,13 @@
     <v-card v-if="!loading" elevation="0" :loading="ordersLoading">
       <v-progress-linear v-if="ordersLoading" indeterminate color="primary" />
 
-      <payment-invoice-result
-        :orders="orders"
-        :usePriceWithVat="item.usePriceWithVat"
-        :vatRate="item.vatRate"
-      />
+      <payment-invoice-result :item="item" />
 
       <payment-invoice-orders-list
         :orders="orders"
+        :loading="ordersLoading"
+        :ordersTotalCount="item.ordersCount"
+        :listOptions.sync="listOptions"
         :disabled="disabledPickOrders"
         @delete="deleteOrderFromPaymentInvoice"
         @dblRowClick="dblRowClickHandler"
@@ -61,6 +60,7 @@ import {
 import { PickOrders } from '@/features/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
 import { useDownloadTemplate } from './model/useDownloadTemplate'
+import { usePersistedRef } from '@/shared/hooks'
 
 export default {
   name: 'PaymentInvoiceDetails',
@@ -77,13 +77,15 @@ export default {
   setup(props) {
     const item = ref({})
 
-    // State для заказов с ОТДЕЛЬНЫМ лоадером
+    const listOptions = usePersistedRef({}, 'invoice_orders: ' + props.id)
+
     const orders = ref([])
     const ordersLoading = ref(false)
     const ordersTotalCount = ref(0)
+    const totalPrice = ref(0)
+    const totalPriceWOVat = ref(0)
     const ordersError = ref(null)
 
-    // Объединяем item и orders для useDownloadTemplate
     const invoiceWithOrders = computed(() => ({
       ...item.value,
       orders: orders.value,
@@ -141,7 +143,9 @@ export default {
     const errorMessage = ref('')
 
     // Функция загрузки заказов
-    async function loadInvoiceOrders(invoiceId) {
+    async function loadInvoiceOrders() {
+      if (!listOptions.value.itemsPerPage) return
+      const invoiceId = props.id
       if (!invoiceId) {
         orders.value = []
         ordersTotalCount.value = 0
@@ -150,16 +154,15 @@ export default {
       try {
         ordersLoading.value = true
         ordersError.value = null
+        orders.value = []
         const res = await PaymentInvoiceService.getInvoiceOrders(invoiceId, {
-          limit: 25,
+          limit: listOptions.value.itemsPerPage,
+          skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
         })
         orders.value = res.items || []
-        ordersTotalCount.value = res.totalCount || 0
       } catch (e) {
         ordersError.value = e.message
         store.commit('setError', `Ошибка загрузки заказов: ${e.message}`)
-        orders.value = []
-        ordersTotalCount.value = 0
       } finally {
         ordersLoading.value = false
       }
@@ -171,12 +174,12 @@ export default {
         loading.value = true
         const res = await PaymentInvoiceService.getById(props.id)
         item.value = { ...res }
-        loading.value = false
+
         // Загружаем заказы ПОСЛЕ того как акт загружен
-        await loadInvoiceOrders(props.id)
       } catch (e) {
-        loading.value = false
         store.commit('setError', e.message)
+      } finally {
+        loading.value = false
       }
     }
     async function setDateHandler(params) {
@@ -212,9 +215,6 @@ export default {
         } else {
           item.value = updatedItem
           // Загружаем заказы после сохранения нового акта
-          if (updatedItem._id) {
-            await loadInvoiceOrders(updatedItem._id)
-          }
         }
       } catch (e) {
         showError.value = true
@@ -240,7 +240,7 @@ export default {
         store.commit('setError', e.message)
       }
     }
-
+    watch(listOptions, loadInvoiceOrders, { immediate: true, deep: true })
     watch(() => props.id, getItem, { immediate: true, deep: true })
 
     function dblRowClickHandler(orderId) {
@@ -288,6 +288,7 @@ export default {
       loading,
       ordersLoading,
       orders,
+      listOptions,
       showError,
       errorMessage,
       submit,
@@ -304,6 +305,9 @@ export default {
       updateItemPrice,
       downloadHandler,
       setDateHandler,
+      ordersTotalCount,
+      totalPrice,
+      totalPriceWOVat,
     }
   },
   methods: {
