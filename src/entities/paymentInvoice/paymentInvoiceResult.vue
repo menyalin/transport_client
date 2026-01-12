@@ -1,14 +1,14 @@
 <template>
   <v-alert outlined dense>
-    Ставка НДС: <b>{{ vatRate }}%</b> ; Расчет от цены
-    <b>{{ usePriceWithVat ? ' c НДС' : ' без НДС' }} </b>
+    Ставка НДС: <b>{{ item.vatRate }}%</b> ; Расчет от цены
+    <b>{{ item.usePriceWithVat ? ' c НДС' : ' без НДС' }} </b>
 
     <br />
     Сумма: <b>{{ total }}</b>
     <br />
 
     Сумма без НДС: <b> {{ totalWOVat }}</b> Сумма НДС:
-    <b>{{ vatSum }}</b> Кол-во рейсов: <b>{{ ordersCount }}</b>
+    <b>{{ vatSum }}</b> Кол-во рейсов: <b>{{ item.ordersCount }}</b>
   </v-alert>
 </template>
 <script>
@@ -17,42 +17,20 @@ import { computed } from 'vue'
 export default {
   name: 'PaymentInvoiceResult',
   props: {
-    orders: { type: Array, required: true, default: () => [] },
-    vatRate: Number,
-    usePriceWithVat: Boolean,
+    item: Object,
   },
   setup(props) {
     const total = computed(() => {
-      const sum = props.orders.reduce(
-        (res, item) => res + item?.savedTotal?.price,
-        0
-      )
-      return moneyFormatter(sum)
+      return moneyFormatter(props.item.priceWithVat)
     })
     const totalWOVat = computed(() => {
-      const sum = props.orders.reduce(
-        (res, item) => res + item?.savedTotal?.priceWOVat,
-        0
-      )
-      return moneyFormatter(sum)
+      return moneyFormatter(props.item.priceWOVat)
     })
     const vatSum = computed(() => {
-      const sum = props.orders.reduce(
-        (res, item) => res + item?.savedTotal?.price,
-        0
-      )
-      const sumWOVat = props.orders.reduce(
-        (res, item) => res + item?.savedTotal?.priceWOVat,
-        0
-      )
-      return moneyFormatter(sum - sumWOVat)
-    })
-    const ordersCount = computed(() => {
-      // const ordersOnly = orders.filter((i) => i.itemType !== 'paymentPart')
-      return props.orders.filter((i) => i.itemType !== 'paymentPart').length
+      return moneyFormatter(props.item.priceWithVat - props.item.priceWOVat)
     })
 
-    return { total, totalWOVat, vatSum, ordersCount }
+    return { total, totalWOVat, vatSum }
   },
 }
 </script>

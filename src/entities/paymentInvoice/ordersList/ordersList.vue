@@ -5,13 +5,17 @@
     v-model="selected"
     multiple
     item-key="_id"
+    :loading="loading"
     checkbox-color="primary"
     :showSelect="!disabled"
-    :itemsPerPage="-1"
+    :server-items-length="ordersTotalCount"
+    :itemsPerPage="25"
     :footerProps="{
-      itemsPerPageOptions: [-1, 100],
+      itemsPerPageOptions: [25, 50, 100],
     }"
     dense
+    :listOptions="listOptions"
+    @update:options="updateListOptionsHandler"
     @dblclick:row="dblclickRowHandler"
   >
     <template v-slot:top>
@@ -64,22 +68,30 @@ import store from '@/store'
 import { computed, ref } from 'vue'
 import { moneyFormatter } from '@/shared/utils'
 import ALL_HEADERS from './headers.js'
+
 export default {
   name: 'PaymentInvoiceOrdersList',
   props: {
     disabled: Boolean,
+    loading: Boolean,
+    ordersTotalCount: { type: Number, default: 0 },
     orders: {
       type: Array,
     },
+    listOptions: Object,
   },
   setup(props, { emit }) {
     const selected = ref([])
     const selectedOrderIds = computed(() => selected.value.map((i) => i.rowId))
     const expanded = ref([])
+
     const preparedOrders = computed(() => {
       if (!props.orders) return []
       return props.orders.map((item, idx) => ({
-        idx: idx + 1,
+        idx:
+          idx +
+          1 +
+          (props.listOptions.page - 1) * props.listOptions.itemsPerPage,
         ...item,
         plannedDate: new Date(item.plannedDate).toLocaleDateString(),
         savedTotal: item.savedTotal
@@ -123,7 +135,9 @@ export default {
       emit('updateItemPrice', itemId)
     }
     const headers = computed(() => ALL_HEADERS)
-
+    function updateListOptionsHandler(val) {
+      emit('update:listOptions', val)
+    }
     return {
       selected,
       selectedOrderIds,
@@ -134,6 +148,7 @@ export default {
       updateItemPrice,
       moneyFormatter,
       expanded,
+      updateListOptionsHandler,
     }
   },
 }
