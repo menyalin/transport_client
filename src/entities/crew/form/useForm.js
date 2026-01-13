@@ -146,11 +146,13 @@ export const useCrewForm = (props, ctx) => {
   }
 
   const driverItems = computed(() => {
-    return proxy.$store.getters.drivers.filter((driver) =>
-      state.value.onlyCarrierItems
-        ? driver.tkName._id === state.value.tkName
-        : true
-    )
+    return proxy.$store.getters.drivers
+      .filter((driver) =>
+        state.value.onlyCarrierItems
+          ? driver.tkName._id === state.value.tkName
+          : true
+      )
+      .filter((driver) => (crewId ? true : !driver.dismissalDate))
   })
 
   const cancelHandler = () => {
