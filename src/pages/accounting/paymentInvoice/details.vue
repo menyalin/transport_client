@@ -81,9 +81,7 @@ export default {
 
     const orders = ref([])
     const ordersLoading = ref(false)
-    const ordersTotalCount = ref(0)
-    const totalPrice = ref(0)
-    const totalPriceWOVat = ref(0)
+
     const ordersError = ref(null)
 
     const invoiceWithOrders = computed(() => ({
@@ -148,7 +146,7 @@ export default {
       const invoiceId = props.id
       if (!invoiceId) {
         orders.value = []
-        ordersTotalCount.value = 0
+
         return
       }
       try {
@@ -240,7 +238,7 @@ export default {
         store.commit('setError', e.message)
       }
     }
-    watch(listOptions, loadInvoiceOrders, { immediate: true, deep: true })
+    watch(listOptions, loadInvoiceOrders, { deep: true })
     watch(() => props.id, getItem, { immediate: true, deep: true })
 
     function dblRowClickHandler(orderId) {
@@ -305,9 +303,6 @@ export default {
       updateItemPrice,
       downloadHandler,
       setDateHandler,
-      ordersTotalCount,
-      totalPrice,
-      totalPriceWOVat,
     }
   },
   methods: {
