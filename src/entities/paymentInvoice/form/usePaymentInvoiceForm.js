@@ -7,12 +7,14 @@ import store from '@/store/index'
 
 const getInitialState = (editedItem) => {
   const prepareDate = (date) => (date ? dayjs(date).format('YYYY-MM-DD') : null)
+
   return {
     status: editedItem?.status || 'inProcess',
     number: editedItem?.number || null,
     client: editedItem?.client || undefined,
     agreement: editedItem?.agreementId || undefined,
     numberByClient: editedItem?.numberByClient || undefined,
+    ordersCount: editedItem.ordersCount || 0,
     note: editedItem?.note || null,
     date: prepareDate(editedItem?.date),
     plannedPayDate: prepareDate(editedItem?.plannedPayDate),
@@ -113,7 +115,7 @@ function usePaimentInvoiceForm(props, ctx) {
         return ''
     }
   })
-  const hasOrders = computed(() => (props.item?.ordersCount || 0) > 0)
+  const hasOrders = computed(() => (state.value.ordersCount || 0) > 0)
   const isActDateDisabled = computed(() => hasOrders.value)
   const showAcceptedInvoiceBtn = computed(() => state.value.status === 'sended')
 

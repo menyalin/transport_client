@@ -306,7 +306,8 @@ export default {
       () => store.getters?.partners.filter((i) => i.isClient) || []
     )
     const isPaid = computed(() => props.item?.status === 'paid')
-    const hasOrders = computed(() => (props.item?.ordersCount || 0) > 0)
+    const hasOrders = computed(() => (props.item.ordersCount || 0) > 0)
+
     const statusItems = computed(() =>
       paymentInvoiceStatuses.map((i) => ({
         ...i,
