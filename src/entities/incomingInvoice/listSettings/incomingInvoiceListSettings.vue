@@ -77,7 +77,7 @@ import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
 import allHeaders from './allHeaders.js'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-import { useCarriers } from '@/entities/carrier/useCarriers.js'
+
 export default {
   name: 'IncomingInvoiceListSettings',
   components: { AppTableColumnSetting, DateRangeInput },
@@ -88,9 +88,12 @@ export default {
   props: {
     settings: Object,
     agreementItems: Array,
+    outsourceCarriers: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props, ctx) {
-    const { outsourceCarriers } = useCarriers()
     const statusItems = computed(() => {
       return incomingInvoiceStatuses
     })
@@ -113,7 +116,7 @@ export default {
       statusItems,
       updateHeadersHandler,
       updateSettings,
-      outsourceCarriers,
+
       allHeaders,
       periodByItems,
     }

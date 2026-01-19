@@ -4,7 +4,7 @@
       <app-drivers-salary-period v-model="period" />
       <v-select
         v-model="tks"
-        :items="$store.getters.tkNames"
+        :items="carrierStore.carriers"
         label="ТК"
         dense
         multiple
@@ -77,6 +77,7 @@ import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalar
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
+import { useCarrierStore } from '@/entities/carrier'
 
 const getInitialPeriod = (historyState) => {
   if (historyState.period) return historyState.period
@@ -90,6 +91,7 @@ export default {
     DriverSalaryTable,
   },
   setup() {
+    const carrierStore = useCarrierStore()
     const historyState = window.history.state
     const tks = ref(historyState.tks || [])
     const driver = ref(historyState.driver)
@@ -154,6 +156,7 @@ export default {
     }
 
     return {
+      carrierStore,
       period,
       items,
       isLoading,

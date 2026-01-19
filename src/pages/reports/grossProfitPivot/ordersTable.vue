@@ -42,6 +42,7 @@ import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import useHistorySettings from '@/shared/hooks/useHistorySettings'
 import { ReportService } from '@/shared/services'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'OrdersTable',
@@ -53,8 +54,10 @@ export default {
     priceWithVat: Boolean,
   },
   setup() {
+    const carrierStore = useCarrierStore()
     const listOptions = useHistorySettings({}, 'orders_table_list_options')
     return {
+      carrierStore,
       listOptions,
     }
   },
@@ -65,7 +68,6 @@ export default {
       totalCount: 0,
       formName: 'ordersDetailReport',
       listSettingsName: 'ordersDetailReportFields',
-
       settings: {},
       activeHeaders: [],
       allHeaders: ALL_ORDER_TABLE_HEADERS,
@@ -85,7 +87,7 @@ export default {
         client: this.$store.getters.partnersMap.get(i.client)?.name || '-',
         truck: this.$store.getters.trucksMap.get(i.truckId)?.regNum || '-',
         driver: this.$store.getters.driversMap.get(i.driverId)?.fullName || '-',
-        tk: this.$store.getters.tkNamesMap.get(i.tkName)?.name || '-',
+        tk: this.carrierStore.carriersMap.get(i.tkName)?.name || '-',
         orderType: this.$store.getters.orderAnalyticTypesMap.get(i.orderType),
         addressesLoading: i.loadingAddressIds
           ?.map((a) => this.$store.getters.addressMap.get(a)?.shortName)

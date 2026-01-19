@@ -18,6 +18,7 @@
           :displayDeleteBtn="showDeleteBtn"
           :loading="loading"
           :addressActions="addressActions"
+          :carrierItemsMap="carrierStore.carriersMap"
           @cancel="cancel"
           @submit="submit($event)"
           @save="submit($event, true)"
@@ -33,6 +34,7 @@ import { OrderService } from '@/shared/services'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'DetailsOrder',
@@ -103,9 +105,10 @@ export default {
     }
   },
   setup() {
+    const carrierStore = useCarrierStore()
     const { actions: addressActions } = useAddress()
     const { beforeSubmitOrderValidation } = useOrderValidations()
-    return { beforeSubmitOrderValidation, addressActions }
+    return { beforeSubmitOrderValidation, addressActions, carrierStore }
   },
 
   methods: {

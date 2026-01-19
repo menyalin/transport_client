@@ -11,15 +11,15 @@
         <CarrierListSettings v-model="settings" />
         <v-data-table
           :headers="headers"
-          :items="items"
+          :items="carriers"
           :loading="loading"
-          :options.sync="listOptions"
-          :server-items-length="count"
+          :search="settings.search"
           fixed-header
           height="72vh"
           dense
+          :itemsPerPage="100"
           :footerProps="{
-            'items-per-page-options': [50, 100, 200],
+            'items-per-page-options': [100, 200, -1],
           }"
           @dblclick:row="dblClickRow"
         >
@@ -53,23 +53,14 @@ export default {
     CarrierListAgreementsCell,
   },
   setup() {
-    const {
-      items,
-      loading,
-      refreshHandler,
-      count,
-      settings,
-      listOptions,
-      headers,
-    } = useListData()
+    const { carriers, loading, refreshHandler, headers, settings } =
+      useListData()
     return {
-      items,
+      carriers,
       loading,
       refreshHandler,
-      count,
-      settings,
-      listOptions,
       headers,
+      settings,
     }
   },
 
@@ -77,9 +68,7 @@ export default {
     create() {
       this.$router.push({ name: 'CarrierCreate' })
     },
-    refresh() {
-      this.$store.dispatch('getTkNames', true)
-    },
+
     dblClickRow(_, { item }) {
       this.$router.push(`carriers/${item._id}`)
     },

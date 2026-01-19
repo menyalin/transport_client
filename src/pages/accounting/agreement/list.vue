@@ -8,7 +8,11 @@
           @submit="create"
           @refresh="refresh"
         />
-        <AgreementListSettings v-model="settings" :clientItems="clientItems" />
+        <AgreementListSettings
+          v-model="settings"
+          :clientItems="clientItems"
+          :carrierItems="carrierItems"
+        />
 
         <v-data-table
           :headers="headers"
@@ -50,6 +54,7 @@ import { AgreementListSettings } from '@/entities/agreement'
 import { usePartners } from '@/entities/partner'
 import { AgreementService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'AgreementListPage',
@@ -58,6 +63,7 @@ export default {
     AgreementListSettings,
   },
   setup() {
+    const carrierStore = useCarrierStore()
     const { clients: clientItems } = usePartners()
     const { proxy } = getCurrentInstance()
     const loading = ref(false)
@@ -131,6 +137,7 @@ export default {
       refresh,
       list,
       count,
+      carrierItems: computed(() => carrierStore.allowUseCustomerRoleCarriers),
     }
   },
   data: () => ({

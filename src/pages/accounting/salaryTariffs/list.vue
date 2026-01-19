@@ -4,7 +4,6 @@
       <v-col>
         <buttons-panel
           panel-type="list"
-          :disabled-refresh="!directoriesProfile"
           :disabledSubmit="!$store.getters.hasPermission('salaryTariff:write')"
           @submit="create"
           @refresh="refresh"
@@ -27,8 +26,10 @@
           <v-select
             v-model="settings.tk"
             label="ТК"
-            :items="$store.getters.tkNamesForSelect"
+            :items="carrierStore.carriers"
             dense
+            item-text="name"
+            item-value="_id"
             outlined
             clearable
             hide-details
@@ -88,6 +89,7 @@
         </v-data-table>
         <app-salary-tariff-form
           v-model="editableItem"
+          :carrierItems="carrierStore.carriers"
           :dialog="dialog"
           @cancel="cancelDialog"
           @update="updateItem"
@@ -109,6 +111,7 @@ import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupLis
 import AppWaitingCell from '@/modules/accounting/components/salaryTariffGroupList/waiting.vue'
 import AppReturnCell from '@/modules/accounting/components/salaryTariffGroupList/return.vue'
 import { ButtonsPanel } from '@/shared/ui'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'SalaryTariffList',
@@ -123,6 +126,7 @@ export default {
   },
 
   setup() {
+    const carrierStore = useCarrierStore
     const { listSettingsName, activeHeaders, allHeaders, headers } =
       useListColumnSetting({
         listSettingsName: 'salaryTariffList',
@@ -131,6 +135,7 @@ export default {
       })
 
     return {
+      carrierStore,
       listSettingsName,
       activeHeaders,
       allHeaders,
@@ -159,13 +164,14 @@ export default {
     ...mapGetters(['directoriesProfile']),
 
     filteredList() {
+      console.log('carriers', this.carrierStore.carriers)
       return this.list.map((i) => ({
         ...i,
         _type: this.$store.getters.salaryTariffTypesMap.get(i.type),
         _date: new Date(i.date).toLocaleDateString(),
         _result: this.getResultStrByType(i),
         _tks: i.tks
-          .map((tkId) => this.$store.getters.tkNamesMap.get(tkId).name)
+          .map((tkId) => this.carrierStore.carriersMap?.get(tkId)?.name)
           .join(', '),
         _sum: Intl.NumberFormat().format(i.sum),
         _clients: i.clients
@@ -236,10 +242,6 @@ export default {
     },
 
     async getData() {
-      if (!this.directoriesProfile) {
-        this.$router.push('/profile')
-        return null
-      }
       try {
         this.loading = true
         const data = await SalaryTariffService.getList({

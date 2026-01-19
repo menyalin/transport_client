@@ -7,6 +7,7 @@ export const carrierAgreementSelector = ({
   const sortedAgreements = [...allowedAgreements].sort(
     (a, b) => +new Date(b.startDate) - +new Date(a.startDate)
   )
+
   if (crewState.outsourceAgreement) {
     return sortedAgreements.find(
       (item) => item._id === crewState.outsourceAgreement

@@ -49,7 +49,7 @@
       Экипаж не задан
     </v-alert>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
-      <small>Перевозчик: {{ tkName ? tkName : 'Не указан' }}</small>
+      <small>Перевозчик: {{ carrierName }}</small>
       <small
         :class="{
           'deep-orange--text text--darken-4 font-weight-bold ':
@@ -72,6 +72,7 @@
   </div>
 </template>
 <script>
+import { computed } from 'vue'
 import { BlockTitle } from '@/entities/order'
 import { useConfirmedCrew } from './useConfirmedCrew'
 
@@ -91,6 +92,10 @@ export default {
     title: String,
     date: String,
     executorIdInClientAgreement: String,
+    carriersMap: {
+      type: Map,
+      required: true,
+    },
   },
   setup(props, ctx) {
     const {
@@ -98,7 +103,6 @@ export default {
       loading,
       outsourceAgreement,
       showOutsourceAgreementRow,
-      tkName,
       outsourceAgreementName,
       trucks,
       drivers,
@@ -112,12 +116,15 @@ export default {
       crewEmptyError,
       executorAndCustomerMissmatch,
     } = useConfirmedCrew(props, ctx)
+    const carrierName = computed(
+      () => props.carriersMap.get(state.value.tkName)?.name || ' - '
+    )
+
     return {
       state,
       loading,
       outsourceAgreement,
       showOutsourceAgreementRow,
-      tkName,
       outsourceAgreementName,
       trucks,
       drivers,
@@ -130,6 +137,7 @@ export default {
       truckReadOnly,
       crewEmptyError,
       executorAndCustomerMissmatch,
+      carrierName,
     }
   },
 }

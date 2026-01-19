@@ -11,6 +11,7 @@
       :minDate="minDate"
       @putTableToClipboard="putOrdersTableToClipboard(items)"
       :allHeaders="allHeaders"
+      :carrierItems="carrierStore.carriers"
       @updateHeaders="updateActiveHeaders"
     />
     <orders-table
@@ -19,6 +20,7 @@
       :loading="loading"
       :listOptions.sync="settings.listOptions"
       :statisticData="statisticData"
+      :carrierItemsMap="carrierStore.carriersMap"
       @openDocsDialog="openDocsDialog"
     />
     <v-dialog v-model="docDialog" max-width="1300" persistent>
@@ -42,6 +44,7 @@ import {
 } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'OrdersListPage',
@@ -53,6 +56,7 @@ export default {
     OrderDocsList,
   },
   setup(_props, _ctx) {
+    const carrierStore = useCarrierStore()
     const allHeaders = ORDERS_TABLE_HEADERS
     const headers = ref([])
 
@@ -97,6 +101,7 @@ export default {
       editableDocs,
       saveDocDialog,
       cancelDocDialog,
+      carrierStore,
     }
   },
 }

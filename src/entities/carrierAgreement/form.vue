@@ -42,7 +42,7 @@
           item-value="_id"
           outlined
           clearable
-          :items="carrierItems"
+          :items="allowUseCustomerRoleCarriers"
           :style="{ maxWidth: '300px' }"
         />
       </div>
@@ -122,6 +122,7 @@ export default {
   props: {
     readonly: Boolean,
     item: Object,
+    allowUseCustomerRoleCarriers: { type: Array, required: true },
   },
   setup(props, ctx) {
     const {
@@ -132,11 +133,9 @@ export default {
       saveHandler,
       invalidForm,
       vatRateDisabled,
-      carrierItems,
     } = useForm(props, ctx)
 
     return {
-      carrierItems,
       state,
       v$,
       submitHandler,

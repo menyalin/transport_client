@@ -64,7 +64,6 @@
 </template>
 <script>
 import { VatRateSelect } from '@/shared/ui'
-import { useCarriers } from '../carrier/useCarriers'
 
 export default {
   name: 'AgreementListSettings',
@@ -79,9 +78,12 @@ export default {
       type: Array,
       default: () => [],
     },
+    carrierItems: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props, ctx) {
-    const { allCarriers: carrierItems } = useCarriers()
     const stateItems = [
       { value: 'all', text: 'Все' },
       { value: 'opened', text: 'Открытые' },
@@ -92,7 +94,7 @@ export default {
     }
     return {
       stateItems,
-      carrierItems,
+
       updateSettings,
     }
   },

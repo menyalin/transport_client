@@ -153,6 +153,10 @@ export default {
       type: String,
       default: '_id',
     },
+    carrierItemsMap: {
+      type: Map,
+      required: true,
+    },
   },
   setup(props, ctx) {
     const orderAnalyticTypeMap = computed(
@@ -209,8 +213,8 @@ export default {
           null,
         tk:
           order.confirmedCrew?.tkName &&
-          store.getters.tkNamesMap.has(order.confirmedCrew.tkName)
-            ? store.getters.tkNamesMap.get(order.confirmedCrew.tkName).name
+          props.carrierItemsMap.has(order.confirmedCrew.tkName)
+            ? props.carrierItemsMap.get(order.confirmedCrew.tkName).name
             : '-',
         docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
         plannedDate: order?.route[0]

@@ -6,6 +6,7 @@
         <truck-form
           v-else
           :truck="truck"
+          :carrierItems="carrierStore.carriers"
           :displayDeleteBtn="$store.getters.hasPermission('truck:delete')"
           @cancel="cancel"
           @submit="submit"
@@ -18,6 +19,7 @@
 <script>
 import { TruckService } from '@/shared/services'
 import { TruckForm } from '@/entities/truck'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'TruckDetails',
@@ -29,6 +31,12 @@ export default {
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {

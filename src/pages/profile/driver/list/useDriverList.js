@@ -3,8 +3,11 @@ import { CrewService } from '@/shared/services'
 import { ref, computed, onMounted } from 'vue'
 import store from '@/store'
 import { headers } from './headers'
+import { useCarrierStore } from '@/entities/carrier'
 
 export const useDriverList = () => {
+  const carrierStore = useCarrierStore()
+
   function stateFilterHandler(driver) {
     if (listSettings.value.workState === 'all') return true
     if (listSettings.value.workState === 'holiday')
@@ -48,7 +51,7 @@ export const useDriverList = () => {
     await getData()
   }
 
-  const tkNameItems = computed(() => store.getters.tkNames)
+  const tkNameItems = computed(() => carrierStore.carriers)
 
   const crews = ref([])
   const loading = ref(false)

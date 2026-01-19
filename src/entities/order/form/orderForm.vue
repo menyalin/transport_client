@@ -136,6 +136,7 @@
             :confirmed="orderConfirmed"
             :hasIncomingInvoice="hasIncomingInvoice"
             :executorIdInClientAgreement="agreement ? agreement.executor : null"
+            :carriersMap="carrierItemsMap"
             title="Экипаж"
             class="crew"
           />
@@ -265,7 +266,6 @@ import {
 } from '@/entities/order'
 
 import AppPaymentToDriver from './paymentToDriver.vue'
-import { CarrierAgreementService } from '@/shared/services/index'
 
 export default {
   name: 'OrderForm',
@@ -300,6 +300,10 @@ export default {
     },
     loading: Boolean,
     addressActions: Object,
+    carrierItemsMap: {
+      type: Map,
+      required: true,
+    },
   },
   provide() {
     return {
@@ -330,12 +334,12 @@ export default {
     const readonlyPaymentParts = computed(() => {
       return hasPaymentInvoices.value
     })
+
     return {
       templates,
       docTemplateIsVisible,
       downloadDisabled,
       downloadTemplateHandler,
-
       isValidDocs,
       isReadonlyDocs,
       isShowDocs,
@@ -574,14 +578,13 @@ export default {
     },
   },
   watch: {
-    'confirmedCrew.outsourceAgreement': {
-      handler: async function (val) {
-        this.carrierAgreement = val
-          ? await CarrierAgreementService.getById(val)
-          : null
-      },
-      immediate: true,
-    },
+    // 'confirmedCrew.outsourceAgreement': {
+    //   handler: async function (val) {
+    //     this.carrierAgreement = val
+    //       ? await CarrierAgreementService.getById(val)
+    //       : null
+    //   },
+    // },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)

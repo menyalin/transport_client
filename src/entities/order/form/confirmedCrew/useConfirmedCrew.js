@@ -23,10 +23,6 @@ export const useConfirmedCrew = (props, ctx) => {
   // #region computeds
   const showOutsourceAgreementRow = computed(() => !!outsourceAgreement.value)
 
-  const tkName = computed(
-    () => proxy.$store.getters.tkNamesMap.get(state.value.tkName)?.name || '-'
-  )
-
   const outsourceAgreementName = computed(() => outsourceAgreement.value?.name)
   const trucks = computed(() =>
     proxy.$store.getters.trucks
@@ -93,6 +89,7 @@ export const useConfirmedCrew = (props, ctx) => {
         loading.value = false
       }
     }
+
     const carrierId = crew?.tkName || state.value.tkName || null
 
     if (carrierId) {
@@ -103,6 +100,7 @@ export const useConfirmedCrew = (props, ctx) => {
           carrierId: carrierId,
           agreementId: state.value.outsourceAgreement,
         })
+
       outsourceAgreement.value = carrierAgreementSelector({
         crewState: state.value,
         allowedAgreements: allowedAgreements.value,
@@ -112,6 +110,7 @@ export const useConfirmedCrew = (props, ctx) => {
 
     setState({
       truck: state.value.truck,
+      directiveAgreement: state.value.directiveAgreement,
       trailer: crew?.transport?.trailer || state.value.trailer,
       driver: crew?.driver || state.value.driver,
       tkName: carrierId,
@@ -187,7 +186,6 @@ export const useConfirmedCrew = (props, ctx) => {
     loading,
     outsourceAgreement,
     showOutsourceAgreementRow,
-    tkName,
     outsourceAgreementName,
     trucks,
     drivers,

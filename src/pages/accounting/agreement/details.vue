@@ -30,7 +30,7 @@
 <script>
 import { AgreementForm } from '@/entities/agreement'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import { useCarriers } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
@@ -42,8 +42,8 @@ export default {
   },
   mixins: [pageDetailsMixin],
   setup() {
-    const { allCarriers: carrierItems } = useCarriers()
-    return { carrierItems }
+    const carrierStore = useCarrierStore()
+    return { carrierItems: carrierStore.carriers }
   },
   data() {
     return {

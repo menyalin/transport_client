@@ -10,7 +10,7 @@
           <v-autocomplete
             v-model="settings.carriers"
             label="Перевозчик"
-            :items="carrierItems"
+            :items="carrierStore.carriers"
             hideDetails
             outlined
             item-text="name"
@@ -49,7 +49,7 @@
           @dblclick:row="dblClickRow"
         >
           <template #[`item.tkName`]="{ item }">
-            {{ $store.getters.tkNamesMap.get(item.tkName).name }}
+            {{ carrierStore.carriersMap.get(item.tkName).name }}
           </template>
           <template #[`item.note`]="{ item }">
             {{ item.controlDates.note || item.note }}
@@ -67,7 +67,7 @@ import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
 import { ReportTitle } from '@/shared/ui'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
-import { useCarriers } from '@/entities/carrier/useCarriers'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'DaysControl',
@@ -75,7 +75,7 @@ export default {
     ReportTitle,
   },
   setup() {
-    const { allCarriers: carrierItems } = useCarriers()
+    const carrierStore = useCarrierStore()
     const searchString = usePersistedRef(null, 'DaysControlReport:search')
     const settings = usePersistedRef(
       {
@@ -89,7 +89,7 @@ export default {
     return {
       searchString,
       settings,
-      carrierItems,
+      carrierStore,
     }
   },
   data() {

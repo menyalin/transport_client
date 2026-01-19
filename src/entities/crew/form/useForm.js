@@ -3,12 +3,11 @@ import { getCurrentInstance, ref, computed } from 'vue'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { CrewService } from '@/shared/services/index'
 import { useVuelidate } from '@vuelidate/core'
-import { useCarriers } from '@/entities/carrier/useCarriers'
 import { required, minLength } from '@vuelidate/validators'
 
 export const useCrewForm = (props, ctx) => {
   const loading = ref(false)
-  const { allCarriers } = useCarriers()
+
   const { proxy } = getCurrentInstance()
   const actualDriverCrew = ref(null)
   const crewId = props.crew?._id ?? null
@@ -259,7 +258,6 @@ export const useCrewForm = (props, ctx) => {
     crewEditable,
     actualDriverCrew,
     changeStartDateHandler,
-    carrierItems: allCarriers,
     driverItems,
     truckItems,
     trailerItems,

@@ -8,11 +8,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import { useAppStore } from './shared/useAppStore'
 
 export default {
   name: 'App',
   components: {
     AppLoadSpinner,
+  },
+  setup() {
+    useAppStore()
   },
   computed: {
     ...mapGetters(['appLoading']),

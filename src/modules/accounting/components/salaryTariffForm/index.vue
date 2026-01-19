@@ -18,7 +18,7 @@
           <v-select
             v-model="tmpItem.tks"
             label="ТК"
-            :items="$store.getters.tkNamesForSelect"
+            :items="carrierItems"
             multiple
             dense
             outlined
@@ -168,6 +168,10 @@ export default {
   props: {
     item: Object,
     dialog: Boolean,
+    carrierItems: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
