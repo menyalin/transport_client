@@ -3,7 +3,11 @@ import store from '@/store'
 import { utils } from './utis'
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 export class DataTableRow {
-  constructor(props) {
+  constructor(props, carrierItemsMap) {
+    if (!carrierItemsMap)
+      throw new Error(
+        'DataTableRow constructor error: carrierItemsMap is missing'
+      )
     DataTableRow.validationSchema.parse(props)
     this.orderId = props.orderId
     this.plannedDate = new Date(props.plannedDate)
@@ -12,8 +16,9 @@ export class DataTableRow {
       props.analytics.type
     )
     this.tkNameStr =
-      store.getters.tkNamesMap.get(props.confirmedCrew.tkName)?.name ||
+      carrierItemsMap?.get(props.confirmedCrew.tkName)?.name ||
       '__name not found__'
+
     this.truckNumStr = store.getters.trucksMap.get(
       props.confirmedCrew.truck
     )?.regNum

@@ -6,7 +6,7 @@ export const GROUP_BY_ITEMS = [
     disabled: false,
     filterName: 'agreements',
   },
-  { text: 'ТК', value: 'tkName', disabled: false, filterName: 'tkNames' },
+  { text: 'ТК', value: 'carrier', disabled: false, filterName: 'carriers' },
   {
     text: 'Регион',
     value: 'orderType',
@@ -108,7 +108,7 @@ export const MAIN_FILTER_LIST = {
     values: [],
     cond: 'in',
   },
-  tkNames: {
+  carriers: {
     values: [],
     cond: 'in',
   },
@@ -151,7 +151,7 @@ export const ADDITIONAL_FILTER_LIST = {
     values: [],
     cond: 'in',
   },
-  tkNames: {
+  carriers: {
     values: [],
     cond: 'in',
   },

@@ -22,7 +22,7 @@
       deletable-chips
       multiple
       outlined
-      :items="tkNameItems"
+      :items="carrierStore.carriers"
       hide-details
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'tks')"
@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import store from '@/store'
-import { watch, ref, computed } from 'vue'
+import { watch, ref } from 'vue'
 import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'ReportSettings',
@@ -76,6 +76,7 @@ export default {
     const listSettingsName = 'orderDocsReportPage'
     const allHeaders = props.allHeaders
     const activeHeaders = ref([])
+    const carrierStore = useCarrierStore()
 
     function updateSettings(value, field) {
       ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
@@ -84,10 +85,6 @@ export default {
     function updateActiveHeaders(value) {
       ctx.emit('changeHeaders', value)
     }
-
-    const tkNameItems = computed(() => {
-      return store.getters.tkNames
-    })
 
     watch([activeHeaders], () => {
       ctx.emit('changeHeaders', activeHeaders.value)
@@ -98,7 +95,7 @@ export default {
       listSettingsName,
       allHeaders,
       activeHeaders,
-      tkNameItems,
+      carrierStore,
     }
   },
 }

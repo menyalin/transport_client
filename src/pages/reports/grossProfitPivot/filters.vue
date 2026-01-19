@@ -23,7 +23,7 @@
             <v-autocomplete
               v-model="tmpFilters[filter.value].values"
               :label="filter.title"
-              :items="filter.items()"
+              :items="filter.items"
               multiple
               auto-select-first
               clearable
@@ -38,122 +38,125 @@
     </v-expansion-panels>
   </div>
 </template>
+
 <script>
+import { useCarrierStore } from '@/entities/carrier'
+import { ref, computed, watch, getCurrentInstance } from 'vue'
+
 export default {
   name: 'MainFilters',
+
   model: {
     prop: 'filters',
     event: 'change',
   },
+
   props: {
     filters: { type: Object },
     title: String,
     agreements: Array,
   },
-  data() {
-    return {
-      condItems: [
-        { value: 'in', text: 'Содержит' },
-        { value: 'notIn', text: 'Не содержит' },
-      ],
-      tmpFilters: [],
-      filterItems: [
-        { value: 'clients', title: 'Клиенты', items: () => this.clients },
-        {
-          value: 'agreements',
-          title: 'Соглашения',
-          items: () => this.agreements,
-        },
-        { value: 'orderTypes', title: 'Регионы', items: () => this.orderTypes },
-        { value: 'tkNames', title: 'ТК', items: () => this.tkNames },
-        { value: 'trucks', title: 'ТС', items: () => this.trucks },
-        { value: 'drivers', title: 'Водители', items: () => this.drivers },
-        {
-          value: 'loadingRegions',
-          title: 'Регион погрузки',
-          items: () => this.regions,
-        },
-        {
-          value: 'unloadingRegions',
-          title: 'Регион разгрузки',
-          items: () => this.regions,
-        },
-        {
-          value: 'loadingZones',
-          title: 'Зоны погрузки',
-          items: () => this.zones,
-        },
-        {
-          value: 'unloadingZones',
-          title: 'Зоны разгрузки',
-          items: () => this.zones,
-        },
-      ],
-    }
-  },
 
-  computed: {
-    clients() {
-      return this.$store.getters.partners
+  setup(props, { emit }) {
+    const { proxy } = getCurrentInstance()
+    const carrierStore = useCarrierStore()
+    const condItems = [
+      { value: 'in', text: 'Содержит' },
+      { value: 'notIn', text: 'Не содержит' },
+    ]
+
+    const tmpFilters = ref({})
+
+    // Getters
+    const clients = computed(() =>
+      proxy.$store.getters.partners
         .filter((i) => i.isClient)
         .sort((a, b) => a.name - b.name)
         .map((i) => ({ value: i._id, text: i.name }))
-    },
-    tkNames() {
-      return this.$store.getters.tkNames.map((i) => ({
+    )
+
+    const carriers = computed(() =>
+      carrierStore.carriers?.map((i) => ({
         value: i._id,
         text: i.name,
       }))
-    },
-    trucks() {
-      return this.$store.getters.trucks
+    )
+
+    const trucks = computed(() =>
+      proxy.$store.getters.trucks
         .filter((i) => i.type === 'truck')
         .map((i) => ({
           value: i._id,
           text: i.regNum,
         }))
-    },
-    drivers() {
-      return this.$store.getters.drivers.map((i) => ({
+    )
+
+    const drivers = computed(() =>
+      proxy.$store.getters.drivers.map((i) => ({
         value: i._id,
         text: i.fullName,
       }))
-    },
-    orderTypes() {
-      return this.$store.getters.orderAnalyticTypes
-    },
-    regions() {
-      return this.$store.getters.regions.map((i) => ({
+    )
+
+    const orderTypes = computed(() => proxy.$store.getters.orderAnalyticTypes)
+
+    const regions = computed(() =>
+      proxy.$store.getters.regions.map((i) => ({
         value: i._id,
         text: i.name,
       }))
-    },
-    zones() {
-      return this.$store.getters.zones.map((i) => ({
+    )
+
+    const zones = computed(() =>
+      proxy.$store.getters.zones.map((i) => ({
         value: i._id,
         text: i.name,
       }))
-    },
-  },
+    )
 
-  watch: {
-    filters: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        this.tmpFilters = val
+    // Элементы фильтров
+    const filterItems = computed(() => [
+      { value: 'clients', title: 'Клиенты', items: clients.value },
+      { value: 'agreements', title: 'Соглашения', items: props.agreements },
+      { value: 'orderTypes', title: 'Регионы', items: orderTypes.value },
+      { value: 'tkNames', title: 'ТК', items: carriers.value },
+      { value: 'trucks', title: 'ТС', items: trucks.value },
+      { value: 'drivers', title: 'Водители', items: drivers.value },
+      {
+        value: 'loadingRegions',
+        title: 'Регион погрузки',
+        items: regions.value,
       },
-    },
+      {
+        value: 'unloadingRegions',
+        title: 'Регион разгрузки',
+        items: regions.value,
+      },
+      { value: 'loadingZones', title: 'Зоны погрузки', items: zones.value },
+      { value: 'unloadingZones', title: 'Зоны разгрузки', items: zones.value },
+    ])
 
-    tmpFilters: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
+    // Watch
+    watch(
+      () => props.filters,
+      (val) => {
+        tmpFilters.value = val
       },
-    },
+      { immediate: true, deep: true }
+    )
+
+    watch(tmpFilters, (val) => emit('change', val), { deep: true })
+
+    return {
+      carriers,
+      condItems,
+      tmpFilters,
+      filterItems,
+    }
   },
 }
 </script>
+
 <style scoped>
 .filter-row {
   display: flex;

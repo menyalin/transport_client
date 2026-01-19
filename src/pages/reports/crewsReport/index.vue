@@ -25,7 +25,7 @@
       <v-select
         v-model="settings.tkNameFilter"
         label="Фильтр по ТК"
-        :items="tkNames"
+        :items="carrierStore.carriers"
         item-value="_id"
         item-text="name"
         hide-details
@@ -94,12 +94,19 @@ import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
 
 import { mapGetters } from 'vuex'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'CrewsReport',
   components: {
     DateRangeInput,
     AppLoadSpinner,
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {
@@ -128,7 +135,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['directoriesProfile', 'tkNames']),
+    ...mapGetters(['directoriesProfile']),
     analiticItems() {
       return this.groupItems.filter(
         (item) => item.value !== this.settings.group
