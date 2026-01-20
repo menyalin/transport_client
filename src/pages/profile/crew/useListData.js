@@ -1,12 +1,12 @@
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { CrewService } from '@/shared/services'
-import { useCarriers } from '@/entities/carrier'
 import dayjs from 'dayjs'
+import { useCarrierStore } from '@/entities/carrier'
 
 export const useListData = () => {
+  const carrierStore = useCarrierStore()
   const { proxy } = getCurrentInstance()
-  const { allCarriers: carrierItems } = useCarriers()
 
   const setInitialPeriod = () => {
     return [
@@ -98,9 +98,6 @@ export const useListData = () => {
       loading.value = false
     }
   }
-  function getCarrierName(tkNameId) {
-    return proxy.$store.getters.tkNamesMap.get(tkNameId)?.name || '__error__'
-  }
 
   function createHandler() {
     proxy.$router.push({ name: 'CrewCreate' })
@@ -161,10 +158,10 @@ export const useListData = () => {
     totalCount,
     createHandler,
     refreshHandler,
-    getCarrierName,
+
     dblClickRowHandler,
     downloadHandler,
-    carrierItems,
+    carrierItems: carrierStore.carriers,
     driverItems,
     truckItems,
     getTruckName,

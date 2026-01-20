@@ -1,29 +1,69 @@
 import { defineStore } from 'pinia'
 import { onMounted, ref, computed } from 'vue'
-import { CarrierService } from '@/shared/services'
+import CarrierService from './carrier.service'
+import { useAppStore } from '@/shared/useAppStore'
 
 export const useCarrierStore = defineStore('CarrierStore', () => {
-  console.log('CarrierStore props: ')
-  //   const { proxy } = getCurrentInstance()
+  const appStore = useAppStore()
+
   const carriers = ref([])
   const loading = ref(false)
 
-  //   const queryParams = computed(() => {
-  //     return {
-  //       company: proxy.$store.getters.directoriesProfile,
-  //     }
-  //   })
+  const queryParams = computed(() => ({
+    company: appStore.userCurrentProfile,
+  }))
   const ownCarriers = computed(() => carriers.value.filter((i) => !i.outsource))
   const outsourceCarriers = computed(() =>
-    carriers.value.ilter((i) => i.outsource)
+    carriers.value.filter((i) => i.outsource)
   )
+  const allowUseCustomerRoleCarriers = computed(() => {
+    return carriers.value.filter((i) => i.allowUseCustomerRole)
+  })
+
+  const carriersMap = computed(() => {
+    let map = new Map()
+    carriers.value.forEach((item) => {
+      map.set(item._id, item)
+    })
+    return map
+  })
 
   async function getItems() {
     try {
       loading.value = true
-      //   const res = await CarrierService.getList(params || queryParams.value)
-      const res = await CarrierService.getList()
-      carriers.value = res.items ?? []
+      const res = await CarrierService.getList(queryParams.value)
+      carriers.value = res.items.sort((a, b) => {
+        if (a.name > b.name) return 1
+        else return -1
+      })
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function getById(id) {
+    try {
+      loading.value = true
+      return await CarrierService.getById(id)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function updateOne(id, body) {
+    try {
+      loading.value = true
+      return await CarrierService.updateOne(id, body)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function deleteOne(id) {
+    try {
+      loading.value = true
+      await CarrierService.deleteById(id)
+      return true
     } finally {
       loading.value = false
     }
@@ -33,5 +73,17 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
     await getItems()
   })
 
-  return { carriers, loading, ownCarriers, outsourceCarriers }
+  return {
+    carriers,
+    queryParams,
+    loading,
+    ownCarriers,
+    outsourceCarriers,
+    allowUseCustomerRoleCarriers,
+    getItems,
+    carriersMap,
+    getById,
+    updateOne,
+    deleteOne,
+  }
 })

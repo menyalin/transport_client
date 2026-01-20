@@ -11,7 +11,7 @@
       <div class="row-wrapper tk-name">
         <v-select
           v-model.trim="$v.form.tkName.$model"
-          :items="tkNames"
+          :items="carriers"
           item-text="name"
           item-value="_id"
           label="ТК"
@@ -211,7 +211,6 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import AppMedBook from './medBook.vue'
 import {
@@ -237,6 +236,10 @@ export default {
     displayDeleteBtn: {
       type: Boolean,
       default: false,
+    },
+    carriers: {
+      type: Array,
+      required: true,
     },
   },
   data() {
@@ -274,7 +277,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['tkNames']),
     disabledSubmitForm() {
       return (
         !this.$store.getters.hasPermission('driver:write') ||

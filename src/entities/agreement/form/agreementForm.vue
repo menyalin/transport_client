@@ -64,7 +64,9 @@
         <v-select
           multiple
           outlined
-          :items="carriers"
+          :items="carrierItems"
+          item-value="_id"
+          item-text="name"
           label="Разрешенные ТК"
           :style="{ width: '500px' }"
           v-model="state.allowedCarriers"
@@ -199,8 +201,6 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      vatRates,
-      carriers,
     } = useForm(props, ctx)
 
     return {
@@ -209,8 +209,6 @@ export default {
       submitHandler,
       cancelHandler,
       isInvalidForm,
-      vatRates,
-      carriers,
     }
   },
 }

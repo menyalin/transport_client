@@ -34,7 +34,7 @@
             hide-details
             label="ТК"
             clearable
-            :items="tkNameItems"
+            :items="carrierStore.carriers"
             item-value="_id"
             item-text="name"
           />
@@ -82,6 +82,7 @@ import {
   EntityListWrapper,
   AppTableColumnSetting,
 } from '@/shared/ui'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'DriverList',
@@ -93,7 +94,7 @@ export default {
 
   setup() {
     const headers = ref([])
-
+    const carrierStore = useCarrierStore()
     function updateHeadersHandler(val) {
       headers.value = val
     }
@@ -110,6 +111,7 @@ export default {
     } = useDriverList()
 
     return {
+      carrierStore,
       headers,
       allHeaders,
       stuffStatusItems,

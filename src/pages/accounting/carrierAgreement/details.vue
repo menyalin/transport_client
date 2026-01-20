@@ -7,6 +7,7 @@
   >
     <CarrierAgreementForm
       :item="item"
+      :allowUseCustomerRoleCarriers="carrierStore.allowUseCustomerRoleCarriers"
       @submit="submit($event, false)"
       @save="submit($event, true)"
       @cancel="cancelHandler"
@@ -18,6 +19,7 @@ import { FormWrapper } from '@/shared/ui'
 import { CarrierAgreementForm } from '@/entities/carrierAgreement'
 import { useItemData } from './useItemData'
 import { computed } from 'vue'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 export default {
   name: 'CarrierAgreementDetails',
   components: { FormWrapper, CarrierAgreementForm },
@@ -25,6 +27,7 @@ export default {
     id: String,
   },
   setup(props, ctx) {
+    const carrierStore = useCarrierStore()
     const itemIsMissing = computed(() => props.id && item.value === null)
 
     const {
@@ -48,6 +51,7 @@ export default {
       showDeleteBtn,
       cancelHandler,
       itemIsMissing,
+      carrierStore,
     }
   },
 }

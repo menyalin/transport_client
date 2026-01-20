@@ -1,11 +1,10 @@
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { useCarriers } from '@/entities/carrier'
 
 export const useForm = (props, ctx) => {
   const { proxy } = getCurrentInstance()
-  const { allCarriers } = useCarriers()
+
   const initialState = {
     name: '',
     vatRate: 0,
@@ -35,9 +34,7 @@ export const useForm = (props, ctx) => {
       paymentBillDescription: {},
     }
   })
-  const carrierItems = computed(() =>
-    allCarriers.value.filter((i) => i.allowUseCustomerRole)
-  )
+
   const v$ = useVuelidate(rules, state)
   const invalidForm = computed(() => v$.value.$invalid)
   const vatRateDisabled = computed(() => {
@@ -53,7 +50,6 @@ export const useForm = (props, ctx) => {
   )
 
   return {
-    carrierItems,
     vatRateDisabled,
     state,
     v$,

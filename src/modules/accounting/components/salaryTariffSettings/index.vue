@@ -14,7 +14,9 @@
     <v-select
       v-model="tmpSettings.tks"
       label="ТК"
-      :items="$store.getters.tkNamesForSelect"
+      :items="carrierStore.carriers"
+      item-value="_id"
+      item-text="name"
       multiple
       dense
       outlined

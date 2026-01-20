@@ -7,6 +7,7 @@
           v-else
           :driver="driver"
           :displayDeleteBtn="$store.getters.hasPermission('driver:delete')"
+          :carriers="carrierStore.carriers"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -18,6 +19,7 @@
 <script>
 import { DriverForm } from '@/entities/driver'
 import { DriverService } from '@/shared/services'
+import { useCarrierStore } from '@/entities/carrier'
 export default {
   name: 'DriverDetails',
   components: {
@@ -28,6 +30,12 @@ export default {
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {

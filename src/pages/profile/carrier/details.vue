@@ -5,12 +5,12 @@
         <div v-if="loading">Загружаю...</div>
         <CarrierForm
           v-else
-          :item="tkName"
+          :item="carrier"
           :loading="loading || agreementsLoading"
           :displayDeleteBtn="$store.getters.hasPermission('carrier:delete')"
           :agreementItems="agreementItems"
-          @cancel="cancel"
-          @submit="submit"
+          @cancel="cancelHandler"
+          @submit="submitHandler"
           @delete="deleteHandler"
         />
       </v-col>
@@ -18,12 +18,12 @@
   </v-container>
 </template>
 <script>
-import { CarrierForm } from '@/entities/carrier'
+import { getCurrentInstance, onMounted, ref } from 'vue'
+import { CarrierForm, useCarrierStore } from '@/entities/carrier'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
-import { CarrierService } from '@/shared/services'
 
 export default {
-  name: 'TkNameDetails',
+  name: 'CarrierPage',
   components: {
     CarrierForm,
   },
@@ -33,45 +33,45 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    const { proxy } = getCurrentInstance()
+    const carrierStore = useCarrierStore()
+    const carrier = ref(null)
     const { items: agreementItems, loading: agreementsLoading } =
       useCarrierAgreements()
 
-    return { agreementsLoading, agreementItems }
-  },
-  data() {
-    return {
-      loading: false,
-      tkName: null,
+    async function submitHandler(val) {
+      carrier.value = await carrierStore.updateOne(props.id, val)
+      proxy.$router.go(-1)
     }
-  },
-  async created() {
-    this.loading = true
-    this.tkName = await CarrierService.getById(this.id)
-    this.loading = false
-  },
 
-  methods: {
-    async submit(val) {
-      this.loading = true
-      this.tkName = await CarrierService.updateOne(this.id, val)
-      this.loading = false
-      this.$router.go(-1)
-    },
-    cancel() {
-      this.$router.push({ name: 'CarrierList' })
-    },
-    async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
-      if (res) {
-        this.loading = true
-        await CarrierService.deleteById(this.id)
-        this.loading = false
-        this.$router.go(-1)
+    async function cancelHandler() {
+      proxy.$router.push({ name: 'CarrierList' })
+    }
+
+    async function deleteHandler() {
+      if (!props.id) return
+      const res = confirm('Вы действительно хотите удалить запись? ')
+      if (!res) return
+      await carrierStore.deleteOne(props.id)
+      proxy.$router.push({ name: 'CarrierList' })
+    }
+
+    onMounted(async () => {
+      if (props.id) {
+        carrier.value = await carrierStore.getById(props.id)
       }
-    },
+    })
+
+    return {
+      agreementsLoading,
+      agreementItems,
+      carrier,
+      loading: carrierStore.loading,
+      submitHandler,
+      cancelHandler,
+      deleteHandler,
+    }
   },
 }
 </script>

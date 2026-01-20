@@ -13,7 +13,7 @@
         <div class="base-info">
           <v-autocomplete
             v-model.trim="$v.form.tkName.$model"
-            :items="tkNames"
+            :items="carrierItems"
             item-text="name"
             item-value="_id"
             label="ТК"
@@ -317,6 +317,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    carrierItems: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
@@ -366,7 +370,6 @@ export default {
       'truckTypes',
       'truckKinds',
       'liftCapacityTypes',
-      'tkNames',
     ]),
     brigadiers() {
       return this.$store.getters.brigadiersForSelect

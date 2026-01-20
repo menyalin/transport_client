@@ -76,7 +76,7 @@
           @dblclick:row="dblClickRowHandler"
         >
           <template #[`item.tkName`]="{ item }">
-            {{ getCarrierName(item.tkName) }}
+            {{ item.carrierName }}
           </template>
           <template #[`item.startDate`]="{ item }">
             {{ new Date(item.startDate).toLocaleString() }}
@@ -125,7 +125,7 @@ export default {
       totalCount,
       createHandler,
       refreshHandler,
-      getCarrierName,
+
       dblClickRowHandler,
       downloadHandler,
       carrierItems,
@@ -146,7 +146,7 @@ export default {
       totalCount,
       createHandler,
       refreshHandler,
-      getCarrierName,
+
       dblClickRowHandler,
       downloadHandler,
       carrierItems,

@@ -1,7 +1,6 @@
 import AddressModule from './address'
 import CrewModule from './crew'
 import TruckModule from './truck'
-import TkNameModule from './tkName'
 import DriverModule from './driver'
 import PartnerModule from './partner'
 import DowntimeModule from './downtime'
@@ -114,7 +113,7 @@ export default {
         addresses,
         drivers,
         trucks,
-        tkNames,
+
         partners,
         partnerGroups,
         orderStatuses,
@@ -145,7 +144,7 @@ export default {
       if (addresses?.length) commit('setAddresses', addresses)
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
-      if (tkNames?.length) commit('setTkNames', tkNames)
+
       if (partners?.length) commit('setPartners', partners)
       if (orderStatuses?.length) commit('setOrderStatuses', orderStatuses)
       if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
@@ -237,7 +236,7 @@ export default {
     CrewModule,
     DriverModule,
     TruckModule,
-    TkNameModule,
+
     PartnerModule,
     DowntimeModule,
     OrderTemplateModule,

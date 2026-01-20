@@ -18,7 +18,7 @@
           />
           <v-select
             v-model="settings.tkName"
-            :items="$store.getters.tkNames"
+            :items="carrierStore.carriers"
             item-text="name"
             item-value="_id"
             label="ТК"
@@ -44,8 +44,8 @@
         >
           <template #[`item.tkName`]="{ item }">
             {{
-              tkNamesMap.has(item.tkName)
-                ? tkNamesMap.get(item.tkName).name
+              carrierStore.carriersMap.has(item.tkName)
+                ? carrierStore.carriersMap.get(item.tkName)?.name
                 : ''
             }}
           </template>
@@ -78,12 +78,19 @@
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
 import { DateTimeInput, ReportTitle } from '@/shared/ui'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'TruckStateOnDate',
   components: {
     DateTimeInput,
     ReportTitle,
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {
@@ -117,9 +124,6 @@ export default {
     },
     driversMap() {
       return this.$store.getters.driversMap
-    },
-    tkNamesMap() {
-      return this.$store.getters.tkNamesMap
     },
   },
   watch: {

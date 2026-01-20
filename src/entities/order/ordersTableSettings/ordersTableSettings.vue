@@ -86,7 +86,7 @@
       v-model="settings.tkNames"
       multiple
       label="ТК"
-      :items="$store.getters.tkNames"
+      :items="carrierItems"
       auto-select-first
       item-value="_id"
       item-text="name"
@@ -229,6 +229,10 @@ export default {
     settings: Object,
     minDate: String,
     allHeaders: Array,
+    carrierItems: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props, ctx) {
     const accountingMode = computed(() => props.settings.accountingMode)

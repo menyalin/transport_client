@@ -1,8 +1,10 @@
+import { useAppStore } from '@/shared/useAppStore'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { ref, watch, computed, getCurrentInstance } from 'vue'
+import { ref, watch, computed } from 'vue'
 export const useForm = (props, ctx) => {
-  const { proxy } = getCurrentInstance()
+  const appStore = useAppStore()
+
   const defaultState = {
     name: null,
     cashPayment: false,
@@ -38,16 +40,6 @@ export const useForm = (props, ctx) => {
   const v$ = useVuelidate(rules, state)
 
   const isInvalidForm = computed(() => v$.value.$invalid)
-  const vatRates = computed(() => proxy.$store.getters.vatRates)
-
-  const carriers = computed(() =>
-    proxy.$store.getters.tkNames
-      .map((i) => ({
-        value: i._id,
-        text: i.name,
-      }))
-      .sort((a, b) => a - b)
-  )
 
   function resetForm() {
     state.value = defaultState
@@ -58,7 +50,7 @@ export const useForm = (props, ctx) => {
   function submitHandler() {
     ctx.emit('submit', {
       ...state.value,
-      company: proxy.$store.getters.directoriesProfile,
+      company: appStore.userCurrentProfile,
     })
     resetForm()
   }
@@ -88,7 +80,5 @@ export const useForm = (props, ctx) => {
     submitHandler,
     cancelHandler,
     isInvalidForm,
-    vatRates,
-    carriers,
   }
 }

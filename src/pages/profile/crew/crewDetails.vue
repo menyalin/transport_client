@@ -6,6 +6,7 @@
         <CrewForm
           v-else
           :crew="crew"
+          :carrierItems="carrierStore.carriers"
           :displayDeleteBtn="$store.getters.hasPermission('crew:delete')"
           @cancel="cancel"
           @submit="submit"
@@ -18,7 +19,7 @@
 <script>
 import { CrewService } from '@/shared/services'
 import { CrewForm } from '@/entities/crew'
-
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 export default {
   name: 'CrewDetails',
   components: {
@@ -29,6 +30,12 @@ export default {
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {

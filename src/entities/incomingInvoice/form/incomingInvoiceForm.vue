@@ -165,7 +165,7 @@ import {
   DownloadDocTemplateMenu,
   DateTimeInput,
 } from '@/shared/ui'
-import { useCarriers } from '@/entities/carrier/useCarriers.js'
+
 import { usePrintForms } from './usePrintForms.js'
 
 export default {
@@ -181,6 +181,10 @@ export default {
     agreementItems: Array,
     readonly: Boolean,
     item: Object,
+    outsourceCarriers: {
+      type: Array,
+      required: true,
+    },
   },
   setup(props, ctx) {
     const {
@@ -189,8 +193,6 @@ export default {
       templates,
       downloadTemplateHandler,
     } = usePrintForms(props)
-
-    const { outsourceCarriers } = useCarriers()
 
     const statusItems = computed(() => {
       return incomingInvoiceStatuses.map((i) => ({
@@ -231,7 +233,7 @@ export default {
     })
     const carrierAgreementIds = computed(() => {
       if (!state.value.carrier) return []
-      const currentCarier = outsourceCarriers.value.find(
+      const currentCarier = props.outsourceCarriers?.value.find(
         (carrier) => carrier._id === state.value.carrier
       )
       if (!currentCarier || !currentCarier.agreements) return []
@@ -273,7 +275,7 @@ export default {
       disabledAgreement,
       carrierAgreements,
       hasOrders,
-      outsourceCarriers,
+
       disabledCarriers,
       carrierChangeHandler,
       downloadDisabled,

@@ -86,21 +86,6 @@
       @clearCrew="clearActualCrewHandler"
     />
 
-    <!-- <app-transport-table
-      v-if="showTransportTable"
-      :items="state.transport"
-      :truckItems="truckItems"
-      :trailerItems="trailerItems"
-      :date="state.startDate"
-      :driver="state.driver"
-      :crewId="crewId"
-      :crewEditable="crewEditable"
-      :isClosedCrew="!!state.endDate"
-      :tkName="state.tkName"
-      @addItem="addTransportItemHandler"
-      @itemsPop="deleteLastItemInTransportHandler"
-    /> -->
-
     <TransportTable2
       v-if="showTransportTable"
       :items.sync="state.transport"
@@ -152,6 +137,10 @@ export default {
     crew: {
       type: Object,
     },
+    carrierItems: {
+      type: Array,
+      required: true,
+    },
     displayDeleteBtn: {
       type: Boolean,
       default: false,
@@ -166,7 +155,7 @@ export default {
       actualDriverCrew,
       changeDriverHandler,
       changeStartDateHandler,
-      carrierItems,
+
       driverItems,
       truckItems,
       trailerItems,
@@ -199,7 +188,7 @@ export default {
       actualDriverCrew,
       changeDriverHandler,
       changeStartDateHandler,
-      carrierItems,
+
       truckItems,
       trailerItems,
       driverItems,

@@ -1,7 +1,9 @@
 import { computed } from 'vue'
 import store from '@/store'
+import { useCarrierStore } from '@/entities/carrier'
 
 export const usePivotTable = (props) => {
+  const carrierStore = useCarrierStore()
   const showOutsourceCosts = computed(() => props.showOutsourceCosts)
   const groupName = computed(() => {
     return props.groupItems.find((i) => i.value === props.groupBy)?.text || '-'
@@ -82,8 +84,8 @@ export const usePivotTable = (props) => {
           res.set(p._id, p.fullName)
         })
         break
-      case 'tkName':
-        store.getters.tkNames.forEach((p) => {
+      case 'carrier':
+        carrierStore.carriers.forEach((p) => {
           res.set(p._id, p.name)
         })
         break

@@ -122,6 +122,7 @@ import store from '@/store'
 import { watch, ref, computed } from 'vue'
 import { RefreshBtn } from '@/shared/ui'
 import { AppTableColumnSetting } from '@/shared/ui'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'ReportSettings',
@@ -142,6 +143,7 @@ export default {
   },
   setup(props, ctx) {
     const listSettingsName = 'orderDocsReportPage'
+    const carrierStore = useCarrierStore()
     const allHeaders = props.allHeaders
     const activeHeaders = ref([])
 
@@ -172,7 +174,7 @@ export default {
     ]
 
     const tkNameItems = computed(() => {
-      return store.getters.tkNames
+      return carrierStore.carriers
     })
 
     const driverItems = computed(() => {

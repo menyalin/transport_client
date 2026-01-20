@@ -4,6 +4,7 @@
       <v-col>
         <CrewForm
           :loading="loading"
+          :carrierItems="carrierStore.carriers"
           :disabledSubmit="!$store.getters.hasPermission('crew:write')"
           @submit="submit"
           @cancel="cancel"
@@ -13,6 +14,7 @@
   </v-container>
 </template>
 <script>
+import { useCarrierStore } from '@/entities/carrier'
 import { CrewForm } from '@/entities/crew'
 
 export default {
@@ -25,7 +27,12 @@ export default {
       loading: false,
     }
   },
-
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
+  },
   methods: {
     submit(item) {
       this.loading = true
