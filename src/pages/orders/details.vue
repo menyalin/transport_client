@@ -19,6 +19,7 @@
           :loading="loading"
           :addressActions="addressActions"
           :carrierItemsMap="carrierStore.carriersMap"
+          :getCarrierAgreementById="carrierAgreementStore.getById"
           @cancel="cancel"
           @submit="submit($event)"
           @save="submit($event, true)"
@@ -35,6 +36,7 @@ import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierAgreementStore } from '@/entities/carrierAgreement'
 
 export default {
   name: 'DetailsOrder',
@@ -47,6 +49,19 @@ export default {
     id: String,
     truckId: String,
     startDate: String,
+  },
+  setup() {
+    const carrierAgreementStore = useCarrierAgreementStore()
+    const carrierStore = useCarrierStore()
+    const { actions: addressActions } = useAddress()
+    const { beforeSubmitOrderValidation } = useOrderValidations()
+
+    return {
+      beforeSubmitOrderValidation,
+      addressActions,
+      carrierStore,
+      carrierAgreementStore,
+    }
   },
   data() {
     return {
@@ -103,12 +118,6 @@ export default {
         ],
       }
     }
-  },
-  setup() {
-    const carrierStore = useCarrierStore()
-    const { actions: addressActions } = useAddress()
-    const { beforeSubmitOrderValidation } = useOrderValidations()
-    return { beforeSubmitOrderValidation, addressActions, carrierStore }
   },
 
   methods: {
