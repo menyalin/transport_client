@@ -48,7 +48,7 @@
                 hide-details
                 label="ТК"
                 clearable
-                :items="tkNames"
+                :items="carrierStore.carriers"
                 item-value="_id"
                 item-text="name"
               />
@@ -87,11 +87,18 @@ import { CrewService } from '@/shared/services'
 import { ButtonsPanel } from '@/shared/ui'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
 import { mapGetters } from 'vuex'
+import { useCarrierStore } from '@/entities/carrier'
 export default {
   name: 'TruckList',
   components: {
     ButtonsPanel,
     AppTableColumnSettings,
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data: () => ({
     formName: 'TruckList',
@@ -213,12 +220,7 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters([
-      'trucks',
-      'directoriesProfile',
-      'truckTypesHash',
-      'tkNames',
-    ]),
+    ...mapGetters(['trucks', 'directoriesProfile', 'truckTypesHash']),
     filteredHeaders() {
       return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
     },

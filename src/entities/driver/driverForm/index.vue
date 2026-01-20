@@ -11,7 +11,7 @@
       <div class="row-wrapper tk-name">
         <v-select
           v-model.trim="$v.form.tkName.$model"
-          :items="carriers"
+          :items="carrierItems"
           item-text="name"
           item-value="_id"
           label="ТК"
@@ -237,7 +237,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    carriers: {
+    carrierItems: {
       type: Array,
       required: true,
     },
@@ -386,7 +386,7 @@ export default {
   width: 100%;
 }
 .tk-name > * {
-  max-width: 15rem;
+  max-width: 30rem;
 }
 .driver-name {
   display: grid;
