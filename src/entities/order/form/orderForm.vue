@@ -139,6 +139,7 @@
             :carriersMap="carrierItemsMap"
             title="Экипаж"
             class="crew"
+            @change="changeCrewHandler"
           />
 
           <div id="price">
@@ -238,7 +239,7 @@
   </v-container>
 </template>
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { OrderService, OrderTemplateService } from '@/shared/services'
 import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
@@ -300,6 +301,10 @@ export default {
     },
     loading: Boolean,
     addressActions: Object,
+    getCarrierAgreementById: {
+      type: Function,
+      required: true,
+    },
     carrierItemsMap: {
       type: Map,
       required: true,
@@ -314,18 +319,23 @@ export default {
     }
   },
   setup(props) {
+    const carrierAgreement = ref(null)
+
     const {
       templates,
       docTemplateIsVisible,
       downloadTemplateHandler,
       downloadDisabled,
     } = useOrderPrintForms({ order: props.order })
+
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
     const { isValidPrices, isValidClientNum, isValidAuctionNum } =
       useOrderValidations()
+
     const hasIncomingInvoice = computed(() => {
       return props.order?.incomingInvoice && props.order?.incomingInvoice._id
     })
+
     const hasPaymentInvoices = computed(() => {
       return (
         props.order?.paymentInvoices && props.order?.paymentInvoices.length > 0
@@ -334,7 +344,13 @@ export default {
     const readonlyPaymentParts = computed(() => {
       return hasPaymentInvoices.value
     })
-
+    async function changeCrewHandler(newValue) {
+      // если в экипаже есть соглашение, то обновляю объект с соглашением
+      if (newValue.outsourceAgreement && props?.getCarrierAgreementById)
+        carrierAgreement.value = await props.getCarrierAgreementById(
+          newValue.outsourceAgreement
+        )
+    }
     return {
       templates,
       docTemplateIsVisible,
@@ -349,11 +365,12 @@ export default {
       hasIncomingInvoice,
       readonlyPaymentParts,
       hasPaymentInvoices,
+      changeCrewHandler,
+      carrierAgreement,
     }
   },
   data() {
     return {
-      carrierAgreement: null,
       processingBeforeSubmit: false,
       agreement: null,
       docs: [],

@@ -72,7 +72,10 @@ export const useConfirmedCrew = (props, ctx) => {
   }
 
   async function getCrew() {
-    if (!state.value.truck) return
+    if (!state.value.truck) {
+      allowedAgreements.value = []
+      return
+    }
     let crew = null
 
     if (isNeedUpdateCrew.value || !props.crew?.driver) {
@@ -119,13 +122,10 @@ export const useConfirmedCrew = (props, ctx) => {
   }
 
   async function changeTruckHandler(val) {
-    if (!val) resetState()
-    else {
-      state.value.truck = val
-      state.value.trailer = null
-      state.value.driver = null
-      await getCrew()
-    }
+    resetState()
+    if (!val) return
+    state.value = { ...state.value, truck: val }
+    await getCrew()
   }
 
   const allowChangeOutsourceAgreement = computed(
