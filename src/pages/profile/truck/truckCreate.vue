@@ -2,17 +2,28 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <truck-form @submit="submit" @cancel="cancel" />
+        <truck-form
+          @submit="submit"
+          @cancel="cancel"
+          :carrierItems="carrierStore.carriers"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import { useCarrierStore } from '@/entities/carrier'
 import { TruckForm } from '@/entities/truck'
 export default {
   name: 'TruckCreate',
   components: {
     TruckForm,
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {

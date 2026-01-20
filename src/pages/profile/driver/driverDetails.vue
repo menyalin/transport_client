@@ -7,7 +7,7 @@
           v-else
           :driver="driver"
           :displayDeleteBtn="$store.getters.hasPermission('driver:delete')"
-          :carriers="carrierStore.carriers"
+          :carrierItems="carrierStore.carriers"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
