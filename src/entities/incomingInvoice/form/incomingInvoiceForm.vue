@@ -233,7 +233,7 @@ export default {
     })
     const carrierAgreementIds = computed(() => {
       if (!state.value.carrier) return []
-      const currentCarier = props.outsourceCarriers?.value.find(
+      const currentCarier = props.outsourceCarriers?.find(
         (carrier) => carrier._id === state.value.carrier
       )
       if (!currentCarier || !currentCarier.agreements) return []

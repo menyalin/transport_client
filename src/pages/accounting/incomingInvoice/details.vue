@@ -9,6 +9,7 @@
       v-if="item"
       :item="item"
       :agreementItems="allCarrierAgreements"
+      :outsourceCarriers="carrierStore.outsourceCarriers"
       :disabledPickOrders="disabledPickOrders"
       :disabledMainFields="disabledMainFields"
       @submit="submit($event, false)"
@@ -24,6 +25,7 @@ import { FormWrapper } from '@/shared/ui'
 import { IncomingInvoiceForm } from '@/entities/incomingInvoice'
 import { useItemData } from './model/useItemData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'PaymentInvoiceDetails',
@@ -36,6 +38,7 @@ export default {
   },
   setup(props) {
     const { items: allCarrierAgreements } = useCarrierAgreements(props)
+    const carrierStore = useCarrierStore()
     const {
       item,
       disabledPickOrders,
@@ -69,6 +72,7 @@ export default {
       allCarrierAgreements,
       pickOrdersHandler,
       savePayDateHandler,
+      carrierStore,
     }
   },
   methods: {

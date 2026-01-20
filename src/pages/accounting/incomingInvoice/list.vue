@@ -10,6 +10,7 @@
     <IncomingInvoiceListSettings
       v-model="settings"
       :agreementItems="allCarrierAgreements"
+      :outsourceCarriers="carrierStore.outsourceCarriers"
       @updateHeaders="changeHeaders"
     />
     <IncomingInvoiceDataTable
@@ -32,6 +33,7 @@ import {
 
 import { useListData } from './model/useListData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement/useCarrierAgreements.js'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'PaymentInvoiceList',
@@ -43,6 +45,7 @@ export default {
   },
   setup() {
     const { items: allCarrierAgreements } = useCarrierAgreements()
+    const carrierStore = useCarrierStore()
     const {
       create,
       refresh,
@@ -72,6 +75,7 @@ export default {
       downloadHandler,
       analyticsData,
       allCarrierAgreements,
+      carrierStore,
     }
   },
 }
