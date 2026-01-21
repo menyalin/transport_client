@@ -32,6 +32,7 @@
         :headers="headers"
         :loading="loading"
         :listOptions.sync="settings.listOptions"
+        :carrierItemsMap="carrierStore.carriersMap"
         @addItem="addItem"
         @openDocsDialog="openDocsDialog"
       />
@@ -54,6 +55,7 @@ import { OrdersTable, useOrderDocs, OrderDocsList } from '@/entities/order'
 import { useListData } from './model.js'
 import { PickOrdersForDocsRegistryHeaders } from '@/shared/constants'
 import { DocsRegistryService } from '@/shared/services'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'PickOrdersFeature',
@@ -67,6 +69,7 @@ export default {
   setup({ docsRegistry }, ctx) {
     const headers = ref([])
     const selectedOrders = ref([])
+    const carrierStore = useCarrierStore()
     const { loading, settings, items, refresh } = useListData(docsRegistry)
 
     const {
@@ -153,6 +156,7 @@ export default {
       editableDocs,
       saveDocDialog,
       cancelDocDialog,
+      carrierStore,
     }
   },
 }
