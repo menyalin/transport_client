@@ -31,6 +31,7 @@
         show-select
         itemIdField="orderId"
         :items="items"
+        :carrierItemsMap="carrierStore.carriersMap"
         :headers="headers"
         :loading="loading"
         :listOptions.sync="settings.listOptions"
@@ -56,6 +57,7 @@ import { OrdersTable, useOrderDocs, OrderDocsList } from '@/entities/order'
 import { useListData } from './model.js'
 import { PickOrdersForPaymentInvoiceHeaders } from '@/shared/constants'
 import { PaymentInvoiceService } from '@/shared/services'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'PickOrdersForPaymentInvoiceFeature',
@@ -70,7 +72,7 @@ export default {
     const headers = ref([])
     const selectedOrders = ref([])
     const { loading, settings, items, refresh } = useListData(paymentInvoice)
-
+    const carrierStore = useCarrierStore()
     const {
       editableOrderId,
       openDocsDialog,
@@ -128,6 +130,7 @@ export default {
       refresh()
     }
     return {
+      carrierStore,
       cancelHandler,
       addToInvoiceHandler,
       loading,
