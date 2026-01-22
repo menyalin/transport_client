@@ -137,7 +137,7 @@ export default {
       refresh,
       list,
       count,
-      carrierItems: computed(() => carrierStore.allowUseCustomerRoleCarriers),
+      carrierItems: carrierStore.carriers,
     }
   },
   data: () => ({
