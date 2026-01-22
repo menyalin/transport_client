@@ -2,6 +2,7 @@ import { computed, ref, getCurrentInstance, watch } from 'vue'
 import { CrewService, CarrierAgreementService } from '@/shared/services'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
 import { carrierAgreementSelector } from './utils/carrierAgreementSelector'
+import { nextTick } from 'vue'
 
 export const useConfirmedCrew = (props, ctx) => {
   const { proxy } = getCurrentInstance()
@@ -61,7 +62,7 @@ export const useConfirmedCrew = (props, ctx) => {
   // #endregion
 
   function setState(val) {
-    ctx.emit('change', val)
+    ctx.emit('change', { ...val })
   }
 
   function resetState() {
@@ -121,11 +122,15 @@ export const useConfirmedCrew = (props, ctx) => {
     })
   }
 
-  async function changeTruckHandler(val) {
-    resetState()
-    if (!val) return
-    state.value = { ...state.value, truck: val }
-    await getCrew()
+  function changeTruckHandler(val) {
+    if (!val) {
+      resetState()
+      return
+    }
+    setState({ ...state.value, truck: val })
+    nextTick(async () => {
+      await getCrew()
+    })
   }
 
   const allowChangeOutsourceAgreement = computed(
