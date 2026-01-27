@@ -595,13 +595,6 @@ export default {
     },
   },
   watch: {
-    // 'confirmedCrew.outsourceAgreement': {
-    //   handler: async function (val) {
-    //     this.carrierAgreement = val
-    //       ? await CarrierAgreementService.getById(val)
-    //       : null
-    //   },
-    // },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)

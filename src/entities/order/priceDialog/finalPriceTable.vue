@@ -108,7 +108,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import Price from '../priceBlock/Price.class'
+import Price from '../form/priceBlock/Price.class'
 export default {
   name: 'FinalPriceTable',
   inject: ['updateFinalPrices'],
