@@ -50,6 +50,15 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
     }
   }
 
+  async function create(carrier) {
+    try {
+      loading.value = true
+      return await CarrierService.create(carrier)
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function updateOne(id, body) {
     try {
       loading.value = true
@@ -82,6 +91,7 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
     allowUseCustomerRoleCarriers,
     getItems,
     carriersMap,
+    create,
     getById,
     updateOne,
     deleteOne,

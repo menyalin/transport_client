@@ -37,6 +37,7 @@
         @change="changeFieldHandler($event, 'auctionNum')"
       />
     </div>
+
     <v-btn
       v-if="showChangeAgreementBtn"
       color="primary"

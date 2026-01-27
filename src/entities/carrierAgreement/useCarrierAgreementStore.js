@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { defineStore } from 'pinia'
 
 import { CarrierAgreementService } from '@/shared/services'
@@ -6,6 +6,7 @@ import { CarrierAgreementService } from '@/shared/services'
 export const useCarrierAgreementStore = defineStore(
   'CarrierAgreementStore',
   () => {
+    const loading = ref(false)
     const items = ref([])
 
     const itemsMap = computed(() => {
@@ -17,14 +18,33 @@ export const useCarrierAgreementStore = defineStore(
     })
 
     async function getById(id) {
-      if (itemsMap.value.has(id)) return itemsMap.value.get(id)
-      const res = await CarrierAgreementService.getById(id)
-      if (res) {
-        items.value.push(res)
-        return res
-      } else null
+      try {
+        if (itemsMap.value.has(id)) return itemsMap.value.get(id)
+        loading.value = true
+        const res = await CarrierAgreementService.getById(id)
+        if (res) {
+          items.value.push(res)
+          return res
+        } else null
+      } finally {
+        loading.value = false
+      }
     }
 
-    return { items, itemsMap, getById }
+    async function getAll() {
+      try {
+        loading.value = true
+        const res = await CarrierAgreementService.getActiveAgreements()
+        items.value = res
+        return res
+      } finally {
+        loading.value = false
+      }
+    }
+
+    onMounted(async () => {
+      await getAll()
+    })
+    return { items, itemsMap, getById, loading }
   }
 )
