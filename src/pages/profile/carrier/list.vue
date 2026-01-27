@@ -44,6 +44,7 @@ import {
   CarrierListSettings,
   CarrierListAgreementsCell,
 } from '@/entities/carrier'
+import { onMounted } from 'vue'
 
 export default {
   name: 'CarrierList',
@@ -55,6 +56,9 @@ export default {
   setup() {
     const { carriers, loading, refreshHandler, headers, settings } =
       useListData()
+    onMounted(() => {
+      refreshHandler()
+    })
     return {
       carriers,
       loading,
