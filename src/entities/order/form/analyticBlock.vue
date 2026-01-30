@@ -34,7 +34,7 @@
         @click:append="getDirectDistance"
       />
     </div>
-    <div v-if="showDebugInfo" class="zones-wrapper">
+    <div v-if="showDebugInfo && false" class="zones-wrapper">
       <div>Зоны погрузки: {{ loadingZones }}</div>
       <div>Зоны разгрузки: {{ unloadingZones }}</div>
       {{ item.routeStats }}

@@ -25,6 +25,7 @@
           <app-salary-tariff-settings
             v-model="settings"
             :disabled="disabledSettings"
+            :carriers="carrierStore.carriers"
           />
           <v-btn
             color="primary"
@@ -39,6 +40,7 @@
           <app-salary-tariff-form
             v-model="editableTariff"
             :dialog="dialog"
+            :carrierItems="carrierStore.carriers"
             @cancel="closeDialog"
             @push="pushItem"
           />
@@ -58,6 +60,7 @@ import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTari
 import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
 import { ButtonsPanel } from '@/shared/ui'
 import { SalaryTariffService } from '@/shared/services'
+import { useCarrierStore } from '@/entities/carrier'
 
 export default {
   name: 'CreateTariff',
@@ -70,6 +73,12 @@ export default {
   },
   props: {
     id: String,
+  },
+  setup() {
+    const carrierStore = useCarrierStore()
+    return {
+      carrierStore,
+    }
   },
   data() {
     return {

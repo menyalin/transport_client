@@ -108,7 +108,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import Price from '../form/priceBlock/Price.class'
+import { Price } from '../priceBlock/Price.class'
 export default {
   name: 'FinalPriceTable',
   inject: ['updateFinalPrices'],
@@ -161,8 +161,8 @@ export default {
         .filter((i) => i.type !== type)
       newFinalPrices.push({
         ...new Price(
-          { price: e.target.value || 0, withVat: this.priceWithVat, type },
-          this.agreementVatRate
+          { price: e.target.value || 0, type },
+          { vatRate: this.agreementVatRate, usePriceWithVat: this.priceWithVat }
         ),
       })
       this.updateFinalPrices(newFinalPrices)

@@ -14,7 +14,7 @@
     <v-select
       v-model="tmpSettings.tks"
       label="ТК"
-      :items="carrierStore.carriers"
+      :items="carriers"
       item-value="_id"
       item-text="name"
       multiple
@@ -72,6 +72,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    carriers: {
+      type: Array,
+      required: true,
     },
   },
   data() {

@@ -1,12 +1,17 @@
 <template>
   <v-dialog v-model="dialog" max-width="800" persistent>
     <v-card>
-      <v-card-title>Редактировать сумму</v-card-title>
+      <v-card-title>
+        {{ 'Редактировать сумму' }}
+      </v-card-title>
       <v-card-text>
-        <div class="form-wrapper">
+        <div clas s="form-wrapper">
+          <v-alert outlined :type="vatRateInfoDescription.type" dense>
+            {{ vatRateInfoDescription.message }}
+          </v-alert>
           <div class="fields-row">
             <v-select
-              v-model="$v.tmpItem.type.$model"
+              v-model="state.type"
               label="Тип затрат"
               :items="availablePriceTypes"
               dense
@@ -14,36 +19,23 @@
               clearable
               :style="{ 'max-width': '300px' }"
               :errorMessages="typeErrorMessages"
-              @blur="$v.tmpItem.type.$touch()"
+              @blur="v$.type.$touch()"
             />
             <v-text-field
-              v-model="$v.tmpItem.price.$model"
-              label="Сумма"
+              v-model="state.price"
+              :label="priceWithVat ? 'Сумма с НДС' : 'Сумма без НДС'"
               outlined
               dense
               type="number"
               :errorMessages="priceErrorMessages"
               :style="{ 'max-width': '200px' }"
-              @blur="$v.tmpItem.price.$touch()"
-            />
-            <v-checkbox
-              v-if="allowedVat"
-              v-model="tmpItem.withVat"
-              :disabled="disabledVatRateCheckbox"
-              label="c НДС"
-              dense
-            />
-            <v-checkbox
-              v-if="allowedCashPayment"
-              v-model="tmpItem.cashPayment"
-              label="Оплата наличными"
-              hide-details
-              dense
+              @blur="v$.price.$touch()"
             />
           </div>
+
           <div class="fields-row">
             <v-text-field
-              v-model.lazy="tmpItem.note"
+              v-model.lazy="state.note"
               label="Комментарий"
               outlined
               dense
@@ -61,8 +53,12 @@
     </v-card>
   </v-dialog>
 </template>
+
 <script>
-import { required, decimal } from 'vuelidate/lib/validators'
+import { computed, getCurrentInstance, ref, watch } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required, decimal } from '@vuelidate/validators'
+
 export default {
   name: 'DialogForm',
   model: {
@@ -72,74 +68,106 @@ export default {
   props: {
     item: Object,
     dialog: Boolean,
-    allowedCashPayment: {
-      type: Boolean,
-      default: false,
-    },
-    allowedVat: {
-      type: Boolean,
-      default: false,
+    vatRateInfo: {
+      type: Object,
     },
     availibleTypes: {
       type: Array,
     },
   },
-  data() {
-    return {
-      tmpItem: {
-        price: 0,
-        type: '',
-      },
-    }
-  },
-  validations: {
-    tmpItem: {
+  setup(props, { emit }) {
+    const { proxy } = getCurrentInstance()
+    const state = ref({
+      price: 0,
+      type: '',
+      note: '',
+    })
+
+    const rules = {
       price: { required, decimal },
       type: { required },
-    },
-  },
-  computed: {
-    availablePriceTypes() {
-      return this.$store.getters.orderPriceTypes
-        .slice()
-        .filter((t) => this.availibleTypes.includes(t.value))
-    },
-    disabledVatRateCheckbox() {
-      return false
-    },
-    isInvalidForm() {
-      return this.$v.$invalid
-    },
-    priceErrorMessages() {
-      let errors = []
-      if (this.$v.tmpItem.price.$dirty && this.$v.tmpItem.price.$invalid)
+      note: {},
+    }
+
+    const v$ = useVuelidate(rules, state)
+
+    const availablePriceTypes = computed(() => {
+      return props.availibleTypes
+        ? proxy.$store.getters.orderPriceTypes
+            .slice()
+            .filter((t) => props.availibleTypes.includes(t.value))
+        : []
+    })
+
+    const disabledVatRateCheckbox = computed(() => false)
+
+    const isInvalidForm = computed(
+      () => v$.value.$invalid || props.vatRateInfo?.vatRate === undefined
+    )
+
+    const priceErrorMessages = computed(() => {
+      const errors = []
+      if (v$.value.price.$dirty && v$.value.price.$invalid)
         errors.push('Сумма обязательна к заполнению')
       return errors
-    },
-    typeErrorMessages() {
+    })
+
+    const typeErrorMessages = computed(() => {
       const errors = []
-      if (this.$v.tmpItem.type.$dirty && this.$v.tmpItem.type.$invalid)
+      if (v$.value.type.$dirty && v$.value.type.$invalid)
         errors.push('Укажите тип тарифа')
       return errors
-    },
-  },
-  watch: {
-    item: {
-      immediate: true,
-      handler: function (val) {
-        this.tmpItem = val
+    })
+
+    const priceWithVat = computed(() => {
+      return (
+        props.vatRateInfo?.usePriceWithVat && props.vatRateInfo?.vatRate > 0
+      )
+    })
+
+    const vatRateInfoDescription = computed(() => {
+      if (!props.vatRateInfo?.vatRate === undefined)
+        return {
+          type: 'error',
+          message: 'Ставка НДС не определена!',
+        }
+      return {
+        type: 'info',
+        message: `Ставка НДС: ${props.vatRateInfo?.vatRate}%`,
+      }
+    })
+
+    watch(
+      () => props.item,
+      (val) => {
+        state.value = { ...val }
       },
-    },
-  },
-  methods: {
-    submit() {
-      this.$emit('save', this.tmpItem)
-      this.cancel()
-    },
-    cancel() {
-      this.$emit('update:dialog', false)
-      this.$v.$reset()
-    },
+      { immediate: true }
+    )
+
+    const submit = () => {
+      emit('save', state.value)
+      cancel()
+    }
+
+    const cancel = () => {
+      emit('update:dialog', false)
+      v$.value.$reset()
+    }
+
+    return {
+      state,
+      v$,
+      availablePriceTypes,
+      disabledVatRateCheckbox,
+      isInvalidForm,
+      priceErrorMessages,
+      typeErrorMessages,
+      priceWithVat,
+      submit,
+      cancel,
+      vatRateInfoDescription,
+    }
   },
 }
 </script>

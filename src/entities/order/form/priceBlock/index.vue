@@ -9,16 +9,18 @@
       :agreement="agreement"
       title="Стоимость рейса"
       :prePrices="prePrices"
+      :vatRateInfo="clientVatRateInfo"
     />
+    <v-divider class="my-5" />
     <app-price-wrapper
       v-if="showOutsourceBlock"
       :items="outsourceCosts"
       @change="changeOutsourceCostsHandler"
-      class="mt-4"
       :readonly="readonlyCosts || hasIncomingInvoice"
       :agreement="carrierAgreement"
       title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
+      :vatRateInfo="carrierVatRateInfo"
     />
     <slot v-if="showOutsourceBlock" />
   </div>
@@ -42,6 +44,8 @@ export default {
     },
     prices: Array,
     outsourceCosts: Array,
+    clientVatRateInfo: { type: Object, required: true },
+    carrierVatRateInfo: { type: Object },
     agreement: Object,
     carrierAgreement: Object,
   },
