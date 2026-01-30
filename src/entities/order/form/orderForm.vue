@@ -413,7 +413,11 @@ export default {
       client: {
         client: null,
         agreement: null,
-        vatRateInfo: {},
+        clientVatRateInfo: {
+          date: new Date().toISOString(),
+          usePriceWithVat: false,
+          vatRate: 0
+        }
       },
       cargoParams: {
         weight: null,

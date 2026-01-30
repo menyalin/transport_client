@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!!clientVatRateInfo">
     <app-price-wrapper
       v-if="showPriceBlock"
       :items="prices"
@@ -44,7 +44,7 @@ export default {
     },
     prices: Array,
     outsourceCosts: Array,
-    clientVatRateInfo: { type: Object, required: true },
+    clientVatRateInfo: { type: Object },
     carrierVatRateInfo: { type: Object },
     agreement: Object,
     carrierAgreement: Object,
