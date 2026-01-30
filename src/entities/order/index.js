@@ -16,9 +16,9 @@ import { useOrderListUtils } from './hooks/useOrderListUtils'
 import { useOrderValidations } from './hooks/useOrderValidations'
 import { useOrderPrintForms } from './hooks/useOrderPrintForms'
 import { OrderRoute } from './orderRoute'
-import PriceBlock from './priceBlock'
-import PriceDialog from './priceDialog'
-import AnalyticBlock from './analyticBlock.vue'
+import PriceBlock from './form/priceBlock'
+
+import AnalyticBlock from './form/analyticBlock.vue'
 import OrderForm from './form/orderForm.vue'
 import ScheduleSettings from './scheduleSetting/index.vue'
 import ScheduleTable from './scheduleTable/index.vue'
@@ -42,7 +42,6 @@ export {
   CargoParams,
   OrderRoute,
   PriceBlock,
-  PriceDialog,
   AnalyticBlock,
   OrderForm,
   ScheduleSettings,

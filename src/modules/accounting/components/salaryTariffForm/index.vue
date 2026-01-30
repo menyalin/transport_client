@@ -20,6 +20,8 @@
             label="ТК"
             :items="carrierItems"
             multiple
+            item-text="name"
+            item-value="_id"
             dense
             outlined
             hide-details

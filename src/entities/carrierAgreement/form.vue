@@ -45,6 +45,12 @@
           :items="allowUseCustomerRoleCarriers"
           :style="{ maxWidth: '300px' }"
         />
+        <v-checkbox
+          dense
+          v-model="state.usePriceWithVAT"
+          label="Перевозчик оперирует ценами с НДС"
+          :disabled="!state.vatRate"
+        />
       </div>
 
       <div class="fields-row">
@@ -87,13 +93,7 @@
           label="Примечание для cчета на оплату"
         />
       </div>
-      <div class="fields-row">
-        <v-checkbox
-          v-model="state.usePriceWithVAT"
-          label="Показывать цены с НДС"
-          :disabled="!state.vatRate"
-        />
-      </div>
+
       <div class="fields-row">
         <v-text-field
           v-model="state.note"
@@ -151,13 +151,13 @@ export default {
 #form {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 15px;
   padding: 20px;
 }
 .fields-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 15px;
 }
 </style>

@@ -162,6 +162,8 @@
               :prePrices="prePrices"
               :outsourceCosts.sync="outsourceCosts"
               :agreement="agreement"
+              :clientVatRateInfo="client.vatRateInfo"
+              :carrierVatRateInfo="carrierVatRateInfo"
               :carrierAgreement="carrierAgreement"
               :analytics="analytics"
               :route="route"
@@ -174,11 +176,12 @@
               />
             </PriceBlock>
 
-            <PriceDialog
+            <FinalPriceDialog
               v-if="showFinalPriceDialog"
               :order="order"
               :readonly="hasPaymentInvoices"
               :agreement="agreement"
+              :vatRateInfo="client.vatRateInfo"
               :prePrices.sync="prePrices"
               :finalPrices="finalPrices"
               :dialog.sync="priceDialog"
@@ -239,13 +242,13 @@
   </v-container>
 </template>
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, getCurrentInstance } from 'vue'
 import { OrderService, OrderTemplateService } from '@/shared/services'
 import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
 import AppConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
-import AppAnalyticBlock from '@/entities/order/analyticBlock.vue'
+import AppAnalyticBlock from '@/entities/order/form/analyticBlock.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
 
 import {
@@ -263,9 +266,9 @@ import {
   useOrderValidations,
   useOrderPrintForms,
   PriceBlock,
-  PriceDialog,
 } from '@/entities/order'
 
+import FinalPriceDialog from './finalPriceDialog/index.vue'
 import AppPaymentToDriver from './paymentToDriver.vue'
 
 export default {
@@ -284,12 +287,12 @@ export default {
     AppGradeBlock,
     AppAnalyticBlock,
     PriceBlock,
-    PriceDialog,
     OrderDocsListForm,
     DocsRegistryLink,
     AppPaymentToDriver,
     OrderPaymentParts,
     OrderRoute,
+    FinalPriceDialog,
   },
   props: {
     order: {
@@ -305,6 +308,7 @@ export default {
       type: Function,
       required: true,
     },
+
     carrierItemsMap: {
       type: Map,
       required: true,
@@ -351,6 +355,26 @@ export default {
           newValue.outsourceAgreement
         )
     }
+
+    // Дублируем логику dateForCrew для использования в setup
+    const instance = getCurrentInstance()
+    const dateForCrew = computed(() => {
+      const proxy = instance.proxy
+      const route = proxy.route
+      const form = proxy.form
+      if (route[0]?.plannedDate) return route[0]?.plannedDate
+      return form.startPositionDate
+    })
+
+    const carrierVatRateInfo = computed(() => {
+      if (!carrierAgreement.value) return
+      return {
+        date: dateForCrew.value,
+        vatRate: carrierAgreement.value?.vatRate,
+        usePriceWithVat: carrierAgreement.value?.usePriceWithVAT,
+      }
+    })
+
     return {
       templates,
       docTemplateIsVisible,
@@ -367,6 +391,7 @@ export default {
       hasPaymentInvoices,
       changeCrewHandler,
       carrierAgreement,
+      carrierVatRateInfo,
     }
   },
   data() {
@@ -388,6 +413,7 @@ export default {
       client: {
         client: null,
         agreement: null,
+        vatRateInfo: {},
       },
       cargoParams: {
         weight: null,
@@ -595,13 +621,6 @@ export default {
     },
   },
   watch: {
-    // 'confirmedCrew.outsourceAgreement': {
-    //   handler: async function (val) {
-    //     this.carrierAgreement = val
-    //       ? await CarrierAgreementService.getById(val)
-    //       : null
-    //   },
-    // },
     templateSelector(value) {
       if (!value) return null
       const template = this.$store.getters.orderTemplatesMap.get(value)
@@ -730,19 +749,6 @@ export default {
         return true
       return false
     },
-    updatePricesUseAgreement(prices, agreement) {
-      if (!Array.isArray(prices) || prices.length === 0) return []
-      const vatKoef = agreement.vatRate / 100
-      const updatedPrices = []
-      prices.forEach((item) => {
-        updatedPrices.push({
-          ...item,
-          sumVat: item.priceWOVat * vatKoef,
-          price: item.priceWOVat * (1 + vatKoef),
-        })
-      })
-      return updatedPrices
-    },
 
     async submit(_val, saveOnly) {
       if (this.isInvalidForm) return null
@@ -755,16 +761,6 @@ export default {
         const { distanceRoad } = await OrderService.getDistance(this.coords)
         this.analytics.distanceRoad = distanceRoad
       }
-
-      this.prePrices = this.updatePricesUseAgreement(
-        this.prePrices,
-        this.agreement
-      )
-      this.prices = this.updatePricesUseAgreement(this.prices, this.agreement)
-      this.finalPrices = this.updatePricesUseAgreement(
-        this.finalPrices,
-        this.agreement
-      )
 
       this.processingBeforeSubmit = false
       this.$emit(saveOnly ? 'save' : 'submit', this.formState)

@@ -25,8 +25,7 @@
     <app-dialog-form
       :item="editedItem"
       :dialog.sync="dialog"
-      :allowedCashPayment="!!agreement.cashPayment"
-      :allowedVat="agreement.vatRate !== 0"
+      :vatRateInfo="vatRateInfo"
       :availibleTypes="availibleTypes"
       @save="saveItem"
     />
@@ -36,7 +35,7 @@
 import { BlockTitle } from '@/entities/order'
 import AppCostsTable from './costsTable.vue'
 import AppDialogForm from './dialogForm.vue'
-import Price from './Price.class'
+import { Price } from './Price.class'
 
 export default {
   name: 'PriceWrapper',
@@ -56,6 +55,9 @@ export default {
     agreement: Object,
     readonly: { type: Boolean, default: false },
     prePrices: Array,
+    vatRateInfo: {
+      type: Object,
+    },
     hidePrePrice: {
       type: Boolean,
       default: false,
@@ -66,6 +68,7 @@ export default {
       dialog: false,
       editedItem: {
         type: null,
+        price: 0,
       },
     }
   },
@@ -88,7 +91,9 @@ export default {
     },
 
     saveItem(val) {
-      const priceItem = new Price(val, this.agreement.vatRate)
+      if (!this.vatRateInfo) return
+      const priceItem = new Price(val, this.vatRateInfo)
+
       const idx = this.items.findIndex((i) => i.type === priceItem.type)
       const tmpArr = this.items.slice()
 
@@ -104,9 +109,7 @@ export default {
     addNewItem() {
       this.editedItem = {
         type: '',
-        withVat: Boolean(this.agreement.usePriceWithVAT) || false,
         price: 0,
-        cashPayment: this.agreement.cashPayment,
       }
 
       this.$nextTick(() => {
@@ -152,7 +155,9 @@ export default {
   align-items: center;
 }
 .invalid {
-  border: tomato 2px solid;
+  padding: 15px;
+  border: tomato 1px solid;
   border-radius: 5px;
+  box-shadow: inset 0 2px 8px rgba(255, 99, 71, 1);
 }
 </style>

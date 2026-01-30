@@ -60,12 +60,11 @@ export default {
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance()
     const carrierStore = useCarrierStore()
+    const tmpFilters = ref({})
     const condItems = [
       { value: 'in', text: 'Содержит' },
       { value: 'notIn', text: 'Не содержит' },
     ]
-
-    const tmpFilters = ref({})
 
     // Getters
     const clients = computed(() =>
@@ -119,7 +118,7 @@ export default {
       { value: 'clients', title: 'Клиенты', items: clients.value },
       { value: 'agreements', title: 'Соглашения', items: props.agreements },
       { value: 'orderTypes', title: 'Регионы', items: orderTypes.value },
-      { value: 'tkNames', title: 'ТК', items: carriers.value },
+      { value: 'carriers', title: 'ТК', items: carriers.value },
       { value: 'trucks', title: 'ТС', items: trucks.value },
       { value: 'drivers', title: 'Водители', items: drivers.value },
       {

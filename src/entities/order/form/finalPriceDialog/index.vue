@@ -3,6 +3,7 @@
     <v-card>
       <v-card-title>
         <div class="text-h6">Итоговые цены рейса</div>
+
         <v-spacer />
         <v-switch
           v-model="priceWithVat"
@@ -20,7 +21,7 @@
           :prices="order.prices"
           :priceWithVat="priceWithVat"
           :finalPrices="finalPrices"
-          :agreementVatRate="agreement.vatRate"
+          :agreementVatRate="vatRateInfo?.vatRate"
           :readonly="readonly"
         />
       </v-card-text>
@@ -41,9 +42,8 @@
 </template>
 <script>
 import { OrderService } from '@/shared/services'
-import appFinalPriceTable from './finalPriceTable.vue'
-
 import { mapGetters } from 'vuex'
+import appFinalPriceTable from './finalPriceTable.vue'
 
 export default {
   name: 'PriceDialog',
@@ -58,6 +58,10 @@ export default {
     prePrices: Array,
     agreement: Object,
     readonly: Boolean,
+    vatRateInfo: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
