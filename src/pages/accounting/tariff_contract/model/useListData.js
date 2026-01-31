@@ -14,7 +14,7 @@ export const useListData = () => {
   const listOptions = usePersistedRef(
     {
       page: 1,
-      itemsPerPage: 50,
+      itemsPerPage: 100,
       sortBy: [],
       sortDesc: [],
     },
@@ -61,6 +61,7 @@ export const useListData = () => {
   return {
     loading,
     items,
+    count,
     refresh,
     settings,
     listOptions,

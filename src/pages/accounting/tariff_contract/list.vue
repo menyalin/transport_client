@@ -7,6 +7,7 @@
     />
     <TariffContractListDataTable
       :items="items"
+      :count="count"
       :loading="loading"
       :listOptions.sync="listOptions"
     />
@@ -30,9 +31,11 @@ export default {
   },
   setup() {
     const { allClientAgreements } = useAgreements()
-    const { items, refresh, loading, listOptions, settings } = useListData()
+    const { items, count, refresh, loading, listOptions, settings } =
+      useListData()
     return {
       items,
+      count,
       allClientAgreements,
       refresh,
       loading,
