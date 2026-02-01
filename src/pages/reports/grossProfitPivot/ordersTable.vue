@@ -87,7 +87,7 @@ export default {
         client: this.$store.getters.partnersMap.get(i.client)?.name || '-',
         truck: this.$store.getters.trucksMap.get(i.truckId)?.regNum || '-',
         driver: this.$store.getters.driversMap.get(i.driverId)?.fullName || '-',
-        tk: this.carrierStore.carriersMap.get(i.tkName)?.name || '-',
+        carrierId: this.carrierStore.carriersMap.get(i.carrierId)?.name || '-',
         orderType: this.$store.getters.orderAnalyticTypesMap.get(i.orderType),
         addressesLoading: i.loadingAddressIds
           ?.map((a) => this.$store.getters.addressMap.get(a)?.shortName)

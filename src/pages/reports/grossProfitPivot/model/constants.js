@@ -31,7 +31,7 @@ export const ALL_ORDER_TABLE_HEADERS = [
   { value: 'agreementName', text: 'Соглашение', sortable: false },
   { value: 'truck', text: 'ТС', sortable: false },
   { value: 'driver', text: 'Водитель', sortable: false },
-  { value: 'carrier', text: 'ТК', sortable: false },
+  { value: 'carrierId', text: 'ТК', sortable: false },
   { value: 'orderType', text: 'Тип рейса', sortable: false },
   { value: 'regionsLoading', text: 'Регионы погрузки', sortable: false },
   { value: 'zonesLoading', text: 'Зоны погрузки', sortable: false },
