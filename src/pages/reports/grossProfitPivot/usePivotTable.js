@@ -2,9 +2,20 @@ import { computed } from 'vue'
 import store from '@/store'
 import { useCarrierStore } from '@/entities/carrier'
 
+function formatNumber(value) {
+  if (value == null || isNaN(value)) return '-'
+  return Intl.NumberFormat('ru-RU').format(Math.round(value))
+}
+
+const percentFormatter = new Intl.NumberFormat('ru-RU', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
+
 export const usePivotTable = (props) => {
   const carrierStore = useCarrierStore()
   const showOutsourceCosts = computed(() => props.showOutsourceCosts)
+
   const groupName = computed(() => {
     return props.groupItems.find((i) => i.value === props.groupBy)?.text || '-'
   })
@@ -52,13 +63,15 @@ export const usePivotTable = (props) => {
     return res
   })
   const roundBy = computed(() => (props.withRound ? 1000 : 1))
+
+  const totalData = computed(() => props.pivotData?.total)
+
   const totalAvgByDay = computed(() => {
-    const sum =
-      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
-      roundBy.value
-    if (isNaN(sum)) return null
+    const total = totalData.value
+    if (!total) return null
+    const sum = getItemField(total, 'total') / roundBy.value
     if (!props.daysCount) return null
-    return Intl.NumberFormat().format(Math.round(sum / props.daysCount))
+    return formatNumber(sum / props.daysCount)
   })
 
   const titlesMap = computed(() => {
@@ -103,23 +116,17 @@ export const usePivotTable = (props) => {
   })
 
   const totalSum = computed(() => {
-    const sum =
-      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
-      roundBy.value
-    if (isNaN(sum)) return null
-    return Intl.NumberFormat().format(Math.round(sum))
+    const total = totalData.value
+    if (!total) return null
+    return formatNumber(getItemField(total, 'total') / roundBy.value)
   })
 
   const totalAvg = computed(() => {
-    const avg =
-      props.pivotData[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] /
-      props.pivotData.totalCount /
-      roundBy.value
-    if (isNaN(avg)) return null
-    return Intl.NumberFormat().format(Math.round(avg))
-  })
-  const totalAvgOutsourceCost = computed(() => {
-    return 212121
+    const total = totalData.value
+    if (!total) return null
+    const totalCount = total.totalCount
+    if (!totalCount) return null
+    return formatNumber(getItemField(total, 'total') / totalCount / roundBy.value)
   })
 
   function setTitleColumn(id) {
@@ -130,48 +137,27 @@ export const usePivotTable = (props) => {
     return titlesMap.value.has(id) ? titlesMap.value.get(id) : '-'
   }
 
+  const fieldSuffix = computed(() => props.priceWithVat ? 'WithVat' : 'WOVat')
+
+  function getItemField(item, fieldName) {
+    return item[`${fieldName}${fieldSuffix.value}`]
+  }
+
   const items = computed(() => {
     if (!props.pivotData?.items) return []
-    const withVat = props.priceWithVat
     return props.pivotData.items.map((i) => ({
       ...i,
       _id: i._id?.toString(),
       titleColumn: setTitleColumn(i._id),
       count: i.totalCount,
-      sum: Intl.NumberFormat().format(
-        Math.round(i[withVat ? 'totalWithVat' : 'totalWOVat'] / roundBy.value)
-      ),
-
-      avg: Intl.NumberFormat().format(
-        Math.round(i[withVat ? 'avgWithVat' : 'avgWOVat'] / roundBy.value)
-      ),
-
+      sum: formatNumber(getItemField(i, 'total') / roundBy.value),
+      avg: formatNumber(getItemField(i, 'avg') / roundBy.value),
       isSelectable: !!i._id,
-      outsourceCosts: Intl.NumberFormat().format(
-        Math.round(
-          i[withVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat'] /
-            roundBy.value
-        )
-      ),
-      totalProfit: Intl.NumberFormat().format(
-        Math.round(
-          i[withVat ? 'totalProfitWithVat' : 'totalProfitWOVat'] / roundBy.value
-        )
-      ),
-      avgOutsourceCosts: Intl.NumberFormat().format(
-        Math.round(
-          i[withVat ? 'avgOutsourceCostsWithVat' : 'avgOutsourceCostsWOVat'] /
-            roundBy.value
-        )
-      ),
-      avgProfit: Intl.NumberFormat().format(
-        Math.round(
-          i[withVat ? 'avgProfitWithVat' : 'avgProfitWOVat'] / roundBy.value
-        )
-      ),
-      avgProfitWOVatPercent: Intl.NumberFormat().format(
-        Math.round(i.avgProfitWOVatPercent * 100) / 100
-      ),
+      outsourceCosts: formatNumber(getItemField(i, 'outsourceCosts') / roundBy.value),
+      totalProfit: formatNumber(getItemField(i, 'totalProfit') / roundBy.value),
+      avgOutsourceCosts: formatNumber(getItemField(i, 'avgOutsourceCosts') / roundBy.value),
+      avgProfit: formatNumber(getItemField(i, 'avgProfit') / roundBy.value),
+      avgProfitWOVatPercent: percentFormatter.format(i.avgProfitWOVatPercent),
     }))
   })
 
@@ -181,6 +167,5 @@ export const usePivotTable = (props) => {
     totalAvg,
     items,
     totalSum,
-    totalAvgOutsourceCost,
   }
 }

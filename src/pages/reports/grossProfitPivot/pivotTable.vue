@@ -17,7 +17,7 @@
         <th />
         <th>Итого:</th>
         <th class="text-right">
-          {{ pivotData.totalCount }}
+          {{ pivotData.total?.totalCount }}
         </th>
         <th class="text-right">
           {{ totalSum }}
@@ -30,7 +30,7 @@
           <th class="text-right">
             {{
               prepareSum(
-                pivotData[
+                pivotData.total?.[
                   priceWithVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat'
                 ]
               )
@@ -39,7 +39,7 @@
           <th class="text-right">
             {{
               prepareSum(
-                pivotData[
+                pivotData.total?.[
                   priceWithVat ? 'totalProfitWithVat' : 'totalProfitWOVat'
                 ]
               )
@@ -48,7 +48,7 @@
           <th class="text-right">
             {{
               prepareSum(
-                pivotData[
+                pivotData.total?.[
                   priceWithVat
                     ? 'avgOutsourceCostsWithVat'
                     : 'avgOutsourceCostsWOVat'
@@ -57,10 +57,10 @@
             }}
           </th>
           <th class="text-right">
-            {{ prepareSum(pivotData.avgProfitWOVat) }}
+            {{ prepareSum(pivotData.total?.avgProfitWOVat) }}
           </th>
           <th class="text-right">
-            {{ Math.round(pivotData.avgProfitWOVatPercent * 100) / 100 }}
+            {{ percentFormat(pivotData.total?.avgProfitWOVatPercent) }}
           </th>
         </template>
       </tr>
@@ -70,7 +70,7 @@
         <th class="text-right">
           {{
             Intl.NumberFormat().format(
-              Math.round(pivotData.totalCount / daysCount)
+              Math.round((pivotData.total?.totalCount || 0) / daysCount)
             )
           }}
         </th>
@@ -101,14 +101,8 @@ export default {
   },
   setup(props) {
     const selected = usePersistedRef([], 'selected_items')
-    const {
-      headers,
-      totalAvgByDay,
-      items,
-      totalSum,
-      totalAvg,
-      totalAvgOutsourceCost,
-    } = usePivotTable(props)
+    const { headers, totalAvgByDay, items, totalSum, totalAvg } =
+      usePivotTable(props)
     return {
       selected,
       headers,
@@ -116,15 +110,21 @@ export default {
       items,
       totalSum,
       totalAvg,
-      totalAvgOutsourceCost,
     }
   },
 
   methods: {
     prepareSum(sum) {
-      if (isNaN(sum)) return null
+      if (sum == null || isNaN(sum)) return '-'
       const roundBy = this.withRound ? 1000 : 1
-      return Intl.NumberFormat().format(Math.round(sum / roundBy))
+      return Intl.NumberFormat('ru-RU').format(Math.round(sum / roundBy))
+    },
+    percentFormat(value) {
+      if (value == null || isNaN(value)) return '-'
+      return new Intl.NumberFormat('ru-RU', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value)
     },
     selectHandler(val) {
       this.$emit(
