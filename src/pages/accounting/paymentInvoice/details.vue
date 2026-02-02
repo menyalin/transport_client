@@ -20,7 +20,7 @@
     <v-card v-if="!loading" elevation="0" :loading="ordersLoading">
       <v-progress-linear v-if="ordersLoading" indeterminate color="primary" />
 
-      <payment-invoice-result :item="item" />
+      <payment-invoice-result v-if="isExistedItem" :item="item" />
 
       <payment-invoice-orders-list
         :orders="orders"
@@ -83,6 +83,8 @@ export default {
     const ordersLoading = ref(false)
 
     const ordersError = ref(null)
+
+    const isExistedItem = computed(() => Boolean(props.id))
 
     const invoiceWithOrders = computed(() => ({
       ...item.value,
@@ -303,6 +305,7 @@ export default {
       updateItemPrice,
       downloadHandler,
       setDateHandler,
+      isExistedItem,
     }
   },
   methods: {
