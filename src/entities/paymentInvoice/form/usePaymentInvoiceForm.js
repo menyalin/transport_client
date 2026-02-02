@@ -27,7 +27,14 @@ const getInitialState = (editedItem) => {
 function usePaimentInvoiceForm(props, ctx) {
   let state = ref({})
   const agreements = ref([])
-  const agreementItems = computed(() => agreements.value || [])
+  const agreementItems = computed(() => {
+    if (!state.value.client) return []
+    return (
+      agreements.value.filter((agreement) =>
+        agreement.clients.includes(state.value.client)
+      ) || []
+    )
+  })
 
   async function setAgreements(client) {
     if (!client) {
