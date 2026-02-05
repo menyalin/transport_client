@@ -125,7 +125,6 @@ export default {
         rowIds,
         paymentInvoiceId: item.value._id,
       })
-      // Socket событие обновит orders автоматически
     }
 
     function openDialog() {
@@ -247,23 +246,27 @@ export default {
       router.push('/orders/' + orderId)
     }
 
-    function addOrders({ paymentInvoiceId, orders: newOrders }) {
-      if (paymentInvoiceId !== item.value._id) return null
+    function setInvoiceAnalytic(total) {
+      if (!item.value) return
+      item.value = Object.assign(item.value, total)
+    }
 
+    // function addOrders({ paymentInvoiceId, orders: newOrders }) {
+    function addOrders(payload) {
+      if (payload.paymentInvoiceId !== item.value._id) return null
+
+      setInvoiceAnalytic(payload.total)
       if (!Array.isArray(orders.value)) {
         orders.value = []
       }
-      orders.value.push(...newOrders)
+      orders.value.push(...payload.orders)
       // Обновить ordersCount в item
-      item.value.ordersCount = orders.value.length
     }
 
-    function removeOrders({ paymentInvoiceId, rowIds }) {
+    function removeOrders({ paymentInvoiceId, rowIds, total }) {
       if (paymentInvoiceId !== item.value._id) return null
-
+      setInvoiceAnalytic(total)
       orders.value = orders.value.filter((i) => !rowIds.includes(i.rowId))
-      // Обновить ordersCount в item
-      item.value.ordersCount = orders.value.length
     }
 
     async function updateItemPrice(itemId) {
