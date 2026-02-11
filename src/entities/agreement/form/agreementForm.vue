@@ -38,9 +38,11 @@
         <VatRateSelect
           v-model="state.vatRate"
           label="Ставка НДС"
-          :disabled="!!agreement && !!agreement._id"
+          disabled
           outlined
-          :style="{ 'max-width': '130px' }"
+          hint="поле будет удалено!"
+          persistent-hint
+          :style="{ 'max-width': '160px' }"
         />
       </div>
       <div class="mb-4">
@@ -80,7 +82,6 @@
 
         <v-checkbox
           v-model="state.usePriceWithVAT"
-          :disabled="state.vatRate === 0"
           color="primary"
           label="Клиент оперирует ценами с НДС"
         />

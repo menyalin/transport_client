@@ -34,7 +34,7 @@ export const useForm = (props, ctx) => {
   const rules = computed(() => ({
     name: { required },
     date: { required },
-    vatRate: { required },
+    vatRate: {},
   }))
 
   const v$ = useVuelidate(rules, state)

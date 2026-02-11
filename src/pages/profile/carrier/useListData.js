@@ -29,7 +29,7 @@ export const useListData = () => {
 
   return {
     carriers,
-    loading: carrierStore.loading,
+    loading: computed(() => carrierStore.loading),
     refreshHandler: carrierStore.getItems,
     settings,
     headers,

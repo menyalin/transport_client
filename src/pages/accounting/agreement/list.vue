@@ -137,7 +137,7 @@ export default {
       refresh,
       list,
       count,
-      carrierItems: carrierStore.carriers,
+      carrierItems: computed(() => carrierStore.carriers),
     }
   },
   data: () => ({
