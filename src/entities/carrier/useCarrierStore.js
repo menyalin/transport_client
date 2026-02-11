@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { onMounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import CarrierService from './carrier.service'
 import { useAppStore } from '@/shared/useAppStore'
 
@@ -8,6 +8,7 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
 
   const carriers = ref([])
   const loading = ref(false)
+  const initialized = ref(false)
 
   const queryParams = computed(() => ({
     company: appStore.userCurrentProfile,
@@ -36,6 +37,7 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
         if (a.name > b.name) return 1
         else return -1
       })
+      initialized.value = true
     } finally {
       loading.value = false
     }
@@ -78,14 +80,18 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
     }
   }
 
-  onMounted(async () => {
-    await getItems()
-  })
+  // Автоматически загружаем данные при создании store
+  setTimeout(() => {
+    if (!initialized.value && !loading.value) {
+      getItems()
+    }
+  }, 0)
 
   return {
     carriers,
     queryParams,
     loading,
+    initialized,
     ownCarriers,
     outsourceCarriers,
     allowUseCustomerRoleCarriers,

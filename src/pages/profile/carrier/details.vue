@@ -18,7 +18,7 @@
   </v-container>
 </template>
 <script>
-import { getCurrentInstance, onMounted, ref } from 'vue'
+import { computed, getCurrentInstance, onMounted, ref } from 'vue'
 import { CarrierForm, useCarrierStore } from '@/entities/carrier'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
 
@@ -67,7 +67,7 @@ export default {
       agreementsLoading,
       agreementItems,
       carrier,
-      loading: carrierStore.loading,
+      loading: computed(() => carrierStore.loading),
       submitHandler,
       cancelHandler,
       deleteHandler,

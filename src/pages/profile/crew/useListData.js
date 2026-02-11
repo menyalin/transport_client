@@ -161,7 +161,7 @@ export const useListData = () => {
 
     dblClickRowHandler,
     downloadHandler,
-    carrierItems: carrierStore.carriers,
+    carrierItems: computed(() => carrierStore.carriers),
     driverItems,
     truckItems,
     getTruckName,

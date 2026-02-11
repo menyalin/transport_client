@@ -28,6 +28,7 @@
   </v-container>
 </template>
 <script>
+import { computed } from 'vue'
 import { AgreementForm } from '@/entities/agreement'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
@@ -43,7 +44,7 @@ export default {
   mixins: [pageDetailsMixin],
   setup() {
     const carrierStore = useCarrierStore()
-    return { carrierItems: carrierStore.carriers }
+    return { carrierItems: computed(() => carrierStore.carriers) }
   },
   data() {
     return {
