@@ -12,6 +12,7 @@
       :items="items"
       :headers="headers"
       :loading="loading"
+      :carrierItemsMap="carrierStore.carriersMap"
       :listOptions.sync="listOptions"
       :statisticData="statisticData"
     />
@@ -23,6 +24,7 @@ import { ReportTitle } from '@/shared/ui'
 
 import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
+import { useCarrierStore } from '@/entities/carrier'
 export default {
   name: 'OrdersWOInvoice',
   components: {
@@ -32,7 +34,7 @@ export default {
   },
   setup() {
     const headers = ref([])
-
+    const carrierStore = useCarrierStore()
     const {
       settings,
       items,
@@ -57,6 +59,7 @@ export default {
       loading,
       statisticData,
       agreementItems,
+      carrierStore,
       allHeaders: ALL_HEADERS,
     }
   },

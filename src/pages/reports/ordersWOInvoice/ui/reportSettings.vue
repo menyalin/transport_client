@@ -11,21 +11,20 @@
       @change="updateSettings($event, 'period')"
     />
 
-    <v-select
-      :value="settings.tks"
+    <v-autocomplete
+      :value="settings.carriers"
       item-text="name"
       item-value="_id"
       label="ТК"
       dense
       clearable
-      chips
-      deletable-chips
+      auto-select-first
       multiple
       outlined
       :items="carrierStore.carriers"
       hide-details
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'tks')"
+      @change="updateSettings($event, 'carriers')"
     />
 
     <v-autocomplete
@@ -38,8 +37,6 @@
       auto-select-first
       multiple
       outlined
-      chips
-      deletable-chips
       :items="agreementItems"
       hide-details
       :style="{ maxWidth: '500px' }"

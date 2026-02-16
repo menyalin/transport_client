@@ -2,13 +2,14 @@ import z from 'zod'
 import store from '@/store'
 import { utils } from './utis'
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+import { useCarrierStore } from '@/entities/carrier'
+
 export class DataTableRow {
-  constructor(props, carrierItemsMap) {
-    if (!carrierItemsMap)
-      throw new Error(
-        'DataTableRow constructor error: carrierItemsMap is missing'
-      )
+  constructor(props) {
+    const carrierStore = useCarrierStore()
+
     DataTableRow.validationSchema.parse(props)
+
     this.orderId = props.orderId
     this.plannedDate = new Date(props.plannedDate)
     this.plannedDateStr = new Date(props.plannedDate).toLocaleString()
@@ -16,7 +17,7 @@ export class DataTableRow {
       props.analytics.type
     )
     this.tkNameStr =
-      carrierItemsMap?.get(props.confirmedCrew.tkName)?.name ||
+      carrierStore.carriersMap.get(props.confirmedCrew.tkName)?.name ||
       '__name not found__'
 
     this.truckNumStr = store.getters.trucksMap.get(
@@ -54,7 +55,7 @@ export class DataTableRow {
     )
     this.totalPriceWOvat = moneyFormatter(props.total.priceWOVat, 0)
     this.totalPrice = moneyFormatter(props.total.price, 0)
-    this.agreementName = props.agreement.name
+    this.agreementName = props.agreementName || ' -- '
   }
 
   static get validationSchema() {

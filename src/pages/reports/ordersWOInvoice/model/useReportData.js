@@ -13,7 +13,7 @@ export default function () {
 
   const initialState = {
     period: setInitialPeriod(),
-    tks: [],
+    carriers: [],
     agreements: [],
   }
   const settings = usePersistedRef(
@@ -74,11 +74,8 @@ export default function () {
     }
   }
 
-  watch(listOptions, async () => {
-    await getData()
-  })
-
   watch(settings, resetListOptions)
+  watch(listOptions, getData)
 
   onMounted(async () => {
     agreements.value = await AgreementService.getActiveAgreements()
