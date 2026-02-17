@@ -85,12 +85,7 @@ export class DataTableRow {
       analytics: z.object({
         type: z.string(),
       }),
-      confirmedCrew: z.object({
-        tkName: z.string(),
-        truck: z.string(),
-        trailer: z.string().nullable().optional(),
-        driver: z.string(),
-      }),
+
       total: z.object({
         price: z.number(),
         priceWOVat: z.number(),
