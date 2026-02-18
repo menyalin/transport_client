@@ -14,7 +14,8 @@ export default [
         name: 'CrewReport',
         component: () => import('@/pages/reports/crewsReport'),
         meta: {
-          title: 'Отчеты : Использование транспорта',
+          title: 'Отчеты : Использование транспорта (будет удален)',
+          permission: 'report:crew_diagram',
         },
       },
       {
@@ -23,6 +24,7 @@ export default [
         component: () => import('@/pages/reports/daysControl'),
         meta: {
           title: 'Отчеты : Контроль сроков',
+          permission: 'report:daysControl',
         },
       },
       {
@@ -30,7 +32,8 @@ export default [
         name: 'OrdersInProgress',
         component: () => import('@/pages/reports/ordersInProgress'),
         meta: {
-          title: 'Отчеты : Простой транспорта',
+          title: 'Отчеты : Простой транспорта (будет удален)',
+          permission: 'report:inProgressOrders',
         },
       },
       {
@@ -39,6 +42,7 @@ export default [
         component: () => import('@/pages/reports/truckStateOnDate'),
         meta: {
           title: 'Отчеты : Статус транспорта на дату',
+          permission: 'report:truckStateOnDate',
         },
       },
       {
@@ -47,7 +51,7 @@ export default [
         component: () => import('@/pages/reports/driversGrades'),
         meta: {
           title: 'Отчеты : Оценки водителей',
-          permission: 'report:drivers_grades',
+          permission: 'report:driversGrades',
         },
       },
 
@@ -57,7 +61,7 @@ export default [
         component: () => import('@/pages/reports/grossProfitPivot'),
         meta: {
           title: 'Отчеты : Валовая прибыль',
-          permission: 'report:gross_profit',
+          permission: 'report:grossProfit',
         },
       },
       {
@@ -75,7 +79,7 @@ export default [
         component: () => import('@/pages/reports/ordersWOInvoice'),
         meta: {
           title: 'Отчеты : Рейсы, не включенные в акты',
-          permission: 'report:orderDocs',
+          permission: 'report:ordersWOInvoice',
         },
       },
     ],
