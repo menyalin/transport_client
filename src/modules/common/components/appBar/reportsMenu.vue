@@ -1,5 +1,5 @@
 <template>
-  <v-menu bottom offset-y>
+  <v-menu v-if="hasAllowedReports" bottom offset-y>
     <template #activator="{ on, attrs }">
       <v-btn v-bind="attrs" text v-on="on"> Отчеты </v-btn>
     </template>
@@ -23,15 +23,28 @@ export default {
       reports: [
         {
           link: '/reports/truckStateOnDate',
-          title: 'Статус транспорта на дату',
+          title: 'Статус транспорта на дату (будет удален) ',
+          permission: 'report:truckStateOnDate',
         },
-        { link: '/reports/crews', title: 'Использование транспорта' },
-        { link: '/reports/daysControl', title: 'Контроль сроков' },
-        { link: '/reports/ordersInProgress', title: 'Простой транспорта' },
+        {
+          link: '/reports/crews',
+          title: 'Использование транспорта',
+          permission: 'report:crew_diagram',
+        },
+        {
+          link: '/reports/daysControl',
+          title: 'Контроль сроков',
+          permission: 'report:daysControl',
+        },
+        {
+          link: '/reports/ordersInProgress',
+          title: 'Простой транспорта',
+          permission: 'report:inProgressOrders',
+        },
         {
           link: '/reports/drivers_grades',
           title: 'Оценки водителей',
-          permission: 'report:drivers_grades',
+          permission: 'report:driversGrades',
         },
         {
           link: '/reports/order_docs',
@@ -41,12 +54,12 @@ export default {
         {
           link: '/reports/orders_wo_invoice',
           title: 'Рейсы, не включенные в акты',
-          permission: 'report:orders_wo_invoice',
+          permission: 'report:ordersWOInvoice',
         },
         {
           link: '/reports/gross_profit_pivot',
           title: 'Валовая прибыль свод',
-          permission: 'report:gross_profit',
+          permission: 'report:grossProfit',
         },
       ],
     }
@@ -56,6 +69,9 @@ export default {
       return this.reports.filter((i) =>
         i.permission ? this.$store.getters.hasPermission(i.permission) : true
       )
+    },
+    hasAllowedReports() {
+      return this.filteredReports.length > 0
     },
   },
 }
