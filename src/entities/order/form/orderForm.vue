@@ -218,14 +218,6 @@
           >
             <docs-registry-link :docsRegistry="form.docsRegistry" />
           </order-docs-list-form>
-
-          <order-payment-parts
-            v-if="routeDate"
-            id="payment-parts"
-            v-model="form.paymentParts"
-            :readonly="readonlyPaymentParts"
-            :routeDate="routeDate"
-          />
         </div>
 
         <v-btn
@@ -255,7 +247,6 @@ import {
   OrderRoute,
   DocsRegistryLink,
   OrderDocsListForm,
-  OrderPaymentParts,
   PaymentInvoiceLinks,
   IncomingInvoiceLink,
   ReqTransport,
@@ -290,7 +281,7 @@ export default {
     OrderDocsListForm,
     DocsRegistryLink,
     AppPaymentToDriver,
-    OrderPaymentParts,
+
     OrderRoute,
     FinalPriceDialog,
   },
@@ -345,9 +336,7 @@ export default {
         props.order?.paymentInvoices && props.order?.paymentInvoices.length > 0
       )
     })
-    const readonlyPaymentParts = computed(() => {
-      return hasPaymentInvoices.value
-    })
+
     async function changeCrewHandler(newValue) {
       // если в экипаже есть соглашение, то обновляю объект с соглашением
       if (newValue.outsourceAgreement && props?.getCarrierAgreementById)
@@ -387,7 +376,6 @@ export default {
       isValidClientNum,
       isValidAuctionNum,
       hasIncomingInvoice,
-      readonlyPaymentParts,
       hasPaymentInvoices,
       changeCrewHandler,
       carrierAgreement,
@@ -416,8 +404,8 @@ export default {
         clientVatRateInfo: {
           date: new Date().toISOString(),
           usePriceWithVat: false,
-          vatRate: 0
-        }
+          vatRate: 0,
+        },
       },
       cargoParams: {
         weight: null,
@@ -444,7 +432,6 @@ export default {
         note: null,
         noteAccountant: null,
         docsRegistry: null,
-        paymentParts: [],
         paymentInvoices: [],
       },
     }
@@ -897,13 +884,8 @@ export default {
   grid-row: 9/9;
 }
 
-#payment-parts {
-  grid-column: 2/4;
-  grid-row: 10/10;
-}
-
 #order-files {
   grid-column: 2/4;
-  grid-row: 11/11;
+  grid-row: 10/10;
 }
 </style>
