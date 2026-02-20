@@ -110,3 +110,12 @@ The application connects to a backend API running on `localhost:3040` during dev
 - `vuedraggable` - Drag and drop functionality
 - `uuid` - Unique identifier generation
 - `zod` - Schema validation
+
+### Git Conventions
+
+**Commit Message Format**: Используется conventional commits формат:
+- `feat(scope): description` - для новых функций
+- `refactor(scope): description` - для рефакторинга
+- `fix(scope): description` - для исправлений багов
+
+**ВАЖНО**: Никогда не добавляй подпись `Co-Authored-By` в коммиты. Описания коммитов должны быть чистыми, без подписей.
