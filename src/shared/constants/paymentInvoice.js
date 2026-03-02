@@ -74,7 +74,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
     default: true,
   },
   {
-    value: 'count',
+    value: 'ordersCount',
     text: 'Рейсы',
     sortable: false,
     default: true,
@@ -83,7 +83,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
 
   {
-    value: 'total.priceWOVat',
+    value: 'priceWOVat',
     text: 'Сумма без НДС',
     sortable: true,
     default: true,
@@ -100,7 +100,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
 
   {
-    value: 'total.price',
+    value: 'priceWithVat',
     text: 'Сумма',
     sortable: true,
     default: true,

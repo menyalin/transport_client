@@ -48,7 +48,7 @@
     </template>
 
     <template #[`item.priceWithVat`]="{ item }">
-      {{ moneyFormatter(item.total.priceWithVat) }}
+      {{ moneyFormatter(item.priceWithVat) }}
     </template>
 
     <template #[`item.note`]="{ item }">
