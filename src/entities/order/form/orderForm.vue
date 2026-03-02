@@ -331,7 +331,12 @@ export default {
       return props.order?.incomingInvoice && props.order?.incomingInvoice._id
     })
 
+    const hasPaymentInvoices = computed(() => {
+      return props.order?.paymentInvoices && props.order?.paymentInvoices.length
+    })
+
     const disabledInPaymentInvoice = computed(() => {
+      if (!hasPaymentInvoices.value) return false
       const invoice = props.order?.paymentInvoices[0] || null
       return invoice && invoice.status !== 'inProcess'
     })
@@ -376,6 +381,7 @@ export default {
       isValidAuctionNum,
       hasIncomingInvoice,
       disabledInPaymentInvoice,
+      hasPaymentInvoices,
       changeCrewHandler,
       carrierAgreement,
       carrierVatRateInfo,
