@@ -100,9 +100,9 @@ export default {
       () => !item.value?._id || item.value?.status !== 'inProcess'
     )
 
-    const needUpdateRows = computed(() =>
-      orders.value.some((i) => i.needUpdate)
-    )
+    const needUpdateRows = computed(() => {
+      return orders.value?.some((i) => i && i.needUpdate)
+    })
 
     const disabledDownloadFiles = computed(
       () => orders.value.length === 0 || needUpdateRows.value
@@ -270,11 +270,21 @@ export default {
     }
 
     async function updateItemPrice(itemId) {
-      // Обновить цены по рейсы в акте
-      const res = await PaymentInvoiceService.updatePrices(itemId)
-      const orderIdx = orders.value.findIndex((i) => itemId === i._id)
-      if (orderIdx !== -1) {
-        orders.value.splice(orderIdx, 1, res)
+      try {
+        ordersLoading.value = true
+        const res = await PaymentInvoiceService.updatePrices(itemId)
+
+        if (!res.order) return
+
+        const orderIdx = orders.value.findIndex((i) => itemId === i._id)
+        if (orderIdx !== -1) {
+          setInvoiceAnalytic(res.total)
+          orders.value.splice(orderIdx, 1, res.order)
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        ordersLoading.value = false
       }
     }
 

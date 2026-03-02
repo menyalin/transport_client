@@ -5,7 +5,7 @@
       :items="prices"
       @change="changePricesHandler"
       :isValid="isValidPrices"
-      :readonly="readonlyPrice || hasPaymentInvoice"
+      :readonly="readonlyPrice || disabledInPaymentInvoice"
       :agreement="agreement"
       title="Стоимость рейса"
       :prePrices="prePrices"
@@ -35,7 +35,7 @@ export default {
   },
   props: {
     hasIncomingInvoice: Boolean,
-    hasPaymentInvoice: Boolean,
+    disabledInPaymentInvoice: Boolean,
     prePrices: Array,
     route: Array,
     isValidPrices: {

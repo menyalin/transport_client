@@ -4,7 +4,6 @@
     :headers="headers"
     v-model="selected"
     multiple
-    item-key="_id"
     :loading="loading"
     checkbox-color="primary"
     :showSelect="!disabled"
@@ -53,7 +52,7 @@
 
     <template #[`item.needUpdate`]="{ item }">
       <v-icon
-        v-if="item.needUpdate"
+        v-if="item && item.needUpdate"
         color="orange"
         :style="{ cursor: 'pointer' }"
         @click="updateItemPrice(item._id)"
@@ -64,8 +63,7 @@
   </v-data-table>
 </template>
 <script>
-import store from '@/store'
-import { computed, ref } from 'vue'
+import { computed, getCurrentInstance, ref, watch } from 'vue'
 import { moneyFormatter } from '@/shared/utils'
 import ALL_HEADERS from './headers.js'
 
@@ -77,17 +75,20 @@ export default {
     ordersTotalCount: { type: Number, default: 0 },
     orders: {
       type: Array,
+      default: () => [],
     },
     listOptions: Object,
   },
-  setup(props, { emit }) {
+  setup(props, ctx) {
+    const { proxy } = getCurrentInstance()
     const selected = ref([])
+
     const selectedOrderIds = computed(() => selected.value.map((i) => i.rowId))
     const expanded = ref([])
+    const preparedOrders = ref([])
 
-    const preparedOrders = computed(() => {
-      if (!props.orders) return []
-      return props.orders.map((item, idx) => ({
+    function prepareItem(item, idx) {
+      return {
         idx:
           idx +
           1 +
@@ -105,39 +106,51 @@ export default {
           item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
         loadedPrice: item.loaderData?.price || 0,
         loadedPriceWOVat: item.loaderData?.priceWOVat || 0,
-      }))
-    })
+      }
+    }
 
     function deleteHandler() {
-      emit('delete', selectedOrderIds.value)
+      ctx.emit('delete', selectedOrderIds.value)
       selected.value = []
     }
 
     function dblclickRowHandler(_event, { item }) {
       if (!item.orderId) {
-        store.commit(
+        proxy.$store.commit(
           'setError',
           'Ссылка отсутствует! Необходимо удалить рейс из акта!'
         )
         return
       }
-      emit('dblRowClick', item.orderId)
+      ctx.emit('dblRowClick', item.orderId)
     }
 
     function updateItemPrice(itemId) {
       if (!itemId) {
-        store.commit(
+        proxy.$store.commit(
           'setError',
           'Ссылка отсутствует! Необходимо удалить рейс из акта!'
         )
         return
       }
-      emit('updateItemPrice', itemId)
+      ctx.emit('updateItemPrice', itemId)
     }
+
     const headers = computed(() => ALL_HEADERS)
+
     function updateListOptionsHandler(val) {
-      emit('update:listOptions', val)
+      ctx.emit('update:listOptions', val)
     }
+
+    watch(
+      () => props.orders,
+      (val) => {
+        preparedOrders.value = [
+          ...val.map((item, idx) => prepareItem(item, idx)),
+        ]
+      },
+      { deep: true }
+    )
     return {
       selected,
       selectedOrderIds,
