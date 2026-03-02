@@ -167,7 +167,7 @@
               :carrierAgreement="carrierAgreement"
               :analytics="analytics"
               :route="route"
-              :hasPaymentInvoice="hasPaymentInvoices"
+              :disabledInPaymentInvoice="disabledInPaymentInvoice"
               :hasIncomingInvoice="hasIncomingInvoice"
             >
               <IncomingInvoiceLink
@@ -179,7 +179,7 @@
             <FinalPriceDialog
               v-if="showFinalPriceDialog"
               :order="order"
-              :readonly="hasPaymentInvoices"
+              :readonly="disabledInPaymentInvoice"
               :agreement="agreement"
               :vatRateInfo="client.vatRateInfo"
               :prePrices.sync="prePrices"
@@ -331,10 +331,9 @@ export default {
       return props.order?.incomingInvoice && props.order?.incomingInvoice._id
     })
 
-    const hasPaymentInvoices = computed(() => {
-      return (
-        props.order?.paymentInvoices && props.order?.paymentInvoices.length > 0
-      )
+    const disabledInPaymentInvoice = computed(() => {
+      const invoice = props.order?.paymentInvoices[0] || null
+      return invoice && invoice.status !== 'inProcess'
     })
 
     async function changeCrewHandler(newValue) {
@@ -376,7 +375,7 @@ export default {
       isValidClientNum,
       isValidAuctionNum,
       hasIncomingInvoice,
-      hasPaymentInvoices,
+      disabledInPaymentInvoice,
       changeCrewHandler,
       carrierAgreement,
       carrierVatRateInfo,
