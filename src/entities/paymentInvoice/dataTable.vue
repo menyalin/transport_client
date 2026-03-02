@@ -39,16 +39,16 @@
       {{ item.date ? new Date(item.date).toLocaleDateString() : null }}
     </template>
 
-    <template #[`item.total.priceWOVat`]="{ item }">
-      {{ moneyFormatter(item.total.priceWOVat) }}
+    <template #[`item.priceWOVat`]="{ item }">
+      {{ moneyFormatter(item.priceWOVat) }}
     </template>
 
     <template #[`item.vatSum`]="{ item }">
-      {{ moneyFormatter(item.total.price - item.total.priceWOVat) }}
+      {{ moneyFormatter(item.priceWithVat - item.priceWOVat) }}
     </template>
 
-    <template #[`item.total.price`]="{ item }">
-      {{ moneyFormatter(item.total.price) }}
+    <template #[`item.priceWithVat`]="{ item }">
+      {{ moneyFormatter(item.total.priceWithVat) }}
     </template>
 
     <template #[`item.note`]="{ item }">
@@ -112,8 +112,8 @@ export default {
         .reduce(
           (res, item) => ({
             routesCount: res.routesCount + item.count || 0,
-            sum: res.sum + item.total?.price || 0,
-            sumWOVat: res.sumWOVat + item.total?.priceWOVat || 0,
+            sum: res.sum + item.priceWithVat || 0,
+            sumWOVat: res.sumWOVat + item.priceWOVat || 0,
           }),
           { routesCount: 0, sum: 0, sumWOVat: 0 }
         )
