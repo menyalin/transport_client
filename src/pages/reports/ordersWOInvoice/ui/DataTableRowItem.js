@@ -42,7 +42,7 @@ export class DataTableRow {
       props.route.filter((i) => i.type === 'unloading').map((i) => i.address)
     )
     this.docsStatusStr = utils.getDocsStatus(props.docs)
-    this.itemType = utils.getItemTypeStr(props.itemType)
+    this.itemType = 'order'
     this.basePriceWOvat = moneyFormatter(props.totalByTypes.base.priceWOVat, 0)
     this.basePrice = moneyFormatter(props.totalByTypes.base.price, 0)
     this.additionalPriceWOvat = moneyFormatter(
@@ -62,7 +62,7 @@ export class DataTableRow {
     return z.object({
       orderId: z.string(),
       plannedDate: z.string(),
-      itemType: z.string(),
+
       route: z
         .object({
           type: z.string(),
