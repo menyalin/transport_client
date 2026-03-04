@@ -332,7 +332,9 @@ export default {
     })
 
     const hasPaymentInvoices = computed(() => {
-      return props.order?.paymentInvoices && props.order?.paymentInvoices.length
+      return Boolean(
+        props.order?.paymentInvoices && props.order?.paymentInvoices.length
+      )
     })
 
     const disabledInPaymentInvoice = computed(() => {
