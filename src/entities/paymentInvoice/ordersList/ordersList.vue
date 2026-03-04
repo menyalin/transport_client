@@ -4,6 +4,7 @@
     :headers="headers"
     v-model="selected"
     multiple
+    itemKey="_id"
     :loading="loading"
     checkbox-color="primary"
     :showSelect="!disabled"
@@ -83,7 +84,7 @@ export default {
     const { proxy } = getCurrentInstance()
     const selected = ref([])
 
-    const selectedOrderIds = computed(() => selected.value.map((i) => i.rowId))
+    const selectedOrderIds = computed(() => selected.value.map((i) => i._id))
     const expanded = ref([])
     const preparedOrders = ref([])
 

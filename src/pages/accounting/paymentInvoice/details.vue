@@ -119,10 +119,10 @@ export default {
       )
     })
 
-    async function deleteOrderFromPaymentInvoice(rowIds) {
-      if (!rowIds || rowIds.length === 0) return null
+    async function deleteOrderFromPaymentInvoice(orderIds) {
+      if (!orderIds || orderIds.length === 0) return null
       await PaymentInvoiceService.deleteOrdersFromPaymentInvoice({
-        rowIds,
+        orderIds,
         paymentInvoiceId: item.value._id,
       })
     }
@@ -260,13 +260,12 @@ export default {
         orders.value = []
       }
       orders.value.push(...payload.orders)
-      // Обновить ordersCount в item
     }
 
-    function removeOrders({ paymentInvoiceId, rowIds, total }) {
+    function removeOrders({ paymentInvoiceId, orderIds, total }) {
       if (paymentInvoiceId !== item.value._id) return null
       setInvoiceAnalytic(total)
-      orders.value = orders.value.filter((i) => !rowIds.includes(i.rowId))
+      orders.value = orders.value.filter((i) => !orderIds.includes(i._id))
     }
 
     async function updateItemPrice(itemId) {

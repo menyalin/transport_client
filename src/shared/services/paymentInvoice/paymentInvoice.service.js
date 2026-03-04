@@ -96,16 +96,6 @@ class PaymentInvoiceService {
   }
 
   async deleteOrdersFromPaymentInvoice(params) {
-    if (!params.rowIds || params.rowIds.length === 0)
-      throw new Error(
-        'PaymentInvoiceService:deleteOrdersFromPaymentInvoice: _id is missing!'
-      )
-
-    if (!params.paymentInvoiceId)
-      throw new Error(
-        'PaymentInvoiceService:deleteOrdersFromPaymentInvoice: paymentInvoiceId is missing!'
-      )
-
     const { data } = await api.post(
       BASE_PATH + '/remove_orders_from_invoice',
       params
