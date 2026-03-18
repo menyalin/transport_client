@@ -24,12 +24,20 @@
           @submit="submit($event)"
           @save="submit($event, true)"
           @delete="deleteHandler"
-        />
+        >
+          <template
+            v-slot:transport_waybills
+            v-if="isVisibleTransportWaybillsWidget"
+          >
+            <TransportWaybillsInOrderWidget :orderId="item._id" />
+          </template>
+        </OrderForm>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import { computed } from 'vue'
 import socket from '@/socket'
 import { OrderService } from '@/shared/services'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
@@ -37,12 +45,14 @@ import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier'
 import { useCarrierAgreementStore } from '@/entities/carrierAgreement'
+import { TransportWaybillsInOrderWidget } from '@/widgets/transportWaybillsInOrder'
 
 export default {
   name: 'DetailsOrder',
   components: {
     OrderForm,
     AppLoadSpinner,
+    TransportWaybillsInOrderWidget,
   },
 
   props: {
@@ -50,17 +60,21 @@ export default {
     truckId: String,
     startDate: String,
   },
-  setup() {
+
+  setup(props) {
     const carrierAgreementStore = useCarrierAgreementStore()
     const carrierStore = useCarrierStore()
     const { actions: addressActions } = useAddress()
     const { beforeSubmitOrderValidation } = useOrderValidations()
+
+    const isVisibleTransportWaybillsWidget = computed(() => Boolean(props.id))
 
     return {
       beforeSubmitOrderValidation,
       addressActions,
       carrierStore,
       carrierAgreementStore,
+      isVisibleTransportWaybillsWidget,
     }
   },
   data() {
