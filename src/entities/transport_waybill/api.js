@@ -42,6 +42,10 @@ class TransportWaybillService {
 
   // Удалить транспортную накладную
   async deleteById(id) {
+    if (!id) {
+      console.log('id is missing: ', id)
+      return
+    }
     const { data } = await api.delete(`${BASE_PATH}/${id}`)
     return data
   }

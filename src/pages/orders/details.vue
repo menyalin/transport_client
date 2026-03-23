@@ -29,7 +29,10 @@
             v-slot:transport_waybills
             v-if="isVisibleTransportWaybillsWidget"
           >
-            <TransportWaybillsInOrderWidget :orderId="item._id" />
+            <TransportWaybillsInOrderWidget
+              :orderId="item._id"
+              :route="item.route"
+            />
           </template>
         </OrderForm>
       </v-col>
