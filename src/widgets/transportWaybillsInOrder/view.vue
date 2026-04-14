@@ -113,8 +113,8 @@ export default {
           templateName: 'common_transport_waybill',
         })
       } catch (e) {
-        console.log(e)
-        proxy.$store.commit('setError', e?.message || e)
+        const { message } = JSON.parse(await e.response.data.text())
+        proxy.$store.commit('setError', message || e?.message || e)
       } finally {
         loading.value = false
       }
