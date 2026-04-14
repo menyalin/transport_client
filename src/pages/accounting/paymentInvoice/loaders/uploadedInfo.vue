@@ -38,9 +38,11 @@ export default {
       return moneyFormatter(this.totalPickedSum)
     },
     hasTotalSumDiff() {
-      return this.ordersTotalSum !== this.totalPickedSum
+      const roundedTotal = Math.round(this.ordersTotalSum * 100) / 100
+      const roundedPicked = Math.round(this.totalPickedSum * 100) / 100
+      return roundedTotal !== roundedPicked
     },
   },
 }
 </script>
-<style scoped></style>
+<style scoped />

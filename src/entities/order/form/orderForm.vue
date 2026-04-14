@@ -218,6 +218,9 @@
           >
             <docs-registry-link :docsRegistry="form.docsRegistry" />
           </order-docs-list-form>
+          <div id="transport-waybills">
+            <slot name="transport_waybills" />
+          </div>
         </div>
 
         <v-btn
@@ -894,5 +897,9 @@ export default {
 #order-files {
   grid-column: 2/4;
   grid-row: 10/10;
+}
+#transport-waybills {
+  grid-column: 2/4;
+  grid-row: 11/11;
 }
 </style>
