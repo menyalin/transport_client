@@ -1,5 +1,5 @@
 import api from '@/api'
-
+import FileSaver from 'file-saver'
 const BASE_PATH = '/transport_waybills'
 
 class TransportWaybillService {
@@ -26,6 +26,36 @@ class TransportWaybillService {
   async getByOrderId(orderId) {
     const { data } = await api.get(`${BASE_PATH}/order/${orderId}`)
     return data
+  }
+
+  async downloadDoc(id, body) {
+    try {
+      const response = await api({
+        url: BASE_PATH + '/' + id + '/download_docs',
+        method: 'POST',
+        responseType: 'blob',
+        data: body,
+      })
+
+      const blob = new Blob([response.data], {
+        type: response.headers['content-type'],
+      })
+
+      // Имя файла из заголовка
+      let filename = `waybill_${id}.pdf`
+      const contentDisposition = response.headers['content-disposition']
+      if (contentDisposition) {
+        // Более простое и надежное регулярное выражение
+        const match = /filename="?([^"]+)"?/.exec(contentDisposition)
+        if (match?.[1]) {
+          filename = decodeURIComponent(match[1])
+        }
+      }
+
+      FileSaver.saveAs(blob, filename)
+    } catch (e) {
+      return null
+    }
   }
 
   // Создать транспортную накладную

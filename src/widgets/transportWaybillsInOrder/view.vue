@@ -8,6 +8,7 @@
         :items="items"
         :getAddressNameById="getAddressNameById"
         :getPartnerNameByAddressId="getPartnerNameByAddressId"
+        @download="handlers.download"
         @edit="handlers.editItem"
         @remove="handlers.removeItem"
       />
@@ -34,7 +35,7 @@
   </v-card>
 </template>
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, getCurrentInstance } from 'vue'
 import {
   TransportWaybillForm,
   TransportWaybillList,
@@ -61,6 +62,7 @@ export default {
     },
   },
   setup(props, ctx) {
+    const { proxy } = getCurrentInstance()
     const loading = ref(false)
     const items = ref([])
     const formDialog = ref(false)
@@ -99,6 +101,20 @@ export default {
         items.value = res
       } catch (e) {
         console.log('ошибка получения списка ТрН: ', e)
+      } finally {
+        loading.value = false
+      }
+    }
+
+    async function downloadHandler(itemId) {
+      try {
+        loading.value = true
+        await TransportWaybillService.downloadDoc(itemId, {
+          templateName: 'common_transport_waybill',
+        })
+      } catch (e) {
+        console.log(e)
+        proxy.$store.commit('setError', e?.message || e)
       } finally {
         loading.value = false
       }
@@ -164,6 +180,7 @@ export default {
         removeItem: removeItemHandler,
         submit: submitHandler,
         cancel: cancelHandler,
+        download: downloadHandler,
       },
     }
   },
