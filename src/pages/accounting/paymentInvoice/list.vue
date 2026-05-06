@@ -15,6 +15,7 @@
 
     <payment-invoices-list-settings
       v-model="settings"
+      :clientItems="partnerStore.clients"
       @updateHeaders="changeHeaders"
     />
     <payment-invoice-data-table
@@ -33,6 +34,7 @@
 import { ref } from 'vue'
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
+import { usePartnerStore } from '@/entities/partner'
 import {
   PaymentInvoicesListSettings,
   PaymentInvoiceDataTable,
@@ -47,6 +49,8 @@ export default {
     PaymentInvoiceDataTable,
   },
   setup() {
+    const partnerStore = usePartnerStore()
+    
     const headers = ref([])
     function changeHeaders(val) {
       headers.value = val
@@ -77,6 +81,7 @@ export default {
       loading,
       listOptions,
       downloadHandler,
+      partnerStore,
     }
   },
 }

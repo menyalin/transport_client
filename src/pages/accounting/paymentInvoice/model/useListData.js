@@ -41,6 +41,7 @@ export const useListData = () => {
   const queryParams = computed(() => ({
     periodBy: settings.value?.periodBy || 'date',
     period: settings.value?.period,
+    clients: settings.value?.clients,
     statuses: settings.value?.statuses,
     search: settings.value?.search,
     agreements: settings.value?.agreements,

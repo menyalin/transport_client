@@ -19,6 +19,21 @@
       @change="updateSettings($event, 'period')"
     />
     <v-autocomplete
+      :value="settings.clients"
+      item-text="name"
+      item-value="_id"
+      label="Клиенты"
+      :disabled="clientItems.length === 0"
+      dense
+      clearable
+      multiple
+      outlined
+      :items="clientItems"
+      hide-details
+      :style="{ maxWidth: '400px' }"
+      @change="updateSettings($event, 'clients')"
+    />
+    <v-autocomplete
       :value="settings.agreements"
       item-text="name"
       item-value="_id"
@@ -76,6 +91,11 @@ export default {
   },
   props: {
     settings: Object,
+    clientItems: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
   },
 
   setup(props, ctx) {
@@ -89,6 +109,7 @@ export default {
     const statusItems = computed(() => {
       return paymentInvoiceStatuses
     })
+
     const periodByItems = [
       { value: 'date', text: 'Дата акта' },
       { value: 'sendDate', text: 'Дата отправки' },
