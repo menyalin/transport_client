@@ -59,11 +59,7 @@ export default {
     }),
     menuItems() {
       return this.items
-        .filter(
-          (i) =>
-            !i.onlyWithDirectoriesProfile ||
-            !!this.$store.getters.directoriesProfile
-        )
+        .filter((i) => !i.onlyWithDirectoriesProfile || !!this.$store.getters.directoriesProfile)
         .filter((i) =>
           i.permission
             ? this.$store.getters.userRoles.includes('admin') ||

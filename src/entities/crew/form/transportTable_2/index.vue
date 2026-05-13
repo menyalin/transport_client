@@ -27,20 +27,10 @@
             <td>{{ item.note }}</td>
 
             <td class="action-column text-center">
-              <v-icon
-                v-if="item.allowEdit"
-                color="green"
-                class="px-1"
-                @click="editLastItem"
-              >
+              <v-icon v-if="item.allowEdit" color="green" class="px-1" @click="editLastItem">
                 mdi-pencil
               </v-icon>
-              <v-icon
-                v-if="item.allowDelete"
-                color="red"
-                class="px-1"
-                @click="popItem"
-              >
+              <v-icon v-if="item.allowDelete" color="red" class="px-1" @click="popItem">
                 mdi-delete
               </v-icon>
             </td>

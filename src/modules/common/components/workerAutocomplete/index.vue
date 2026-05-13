@@ -35,13 +35,11 @@ export default {
     labelOnly: { type: Boolean, default: false },
   },
   setup({ value }, ctx) {
-    const {
-      handleChange,
-      items,
-      handleSearchInputUpdate,
-      searchString,
-      loading,
-    } = useServerData({ ctx, service: WorkerService, propValue: value })
+    const { handleChange, items, handleSearchInputUpdate, searchString, loading } = useServerData({
+      ctx,
+      service: WorkerService,
+      propValue: value,
+    })
 
     const title = computed(() => {
       if (!value) return ''

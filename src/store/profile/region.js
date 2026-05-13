@@ -28,14 +28,9 @@ export default {
     async getRegions({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.regions.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.regions.length === 0 && getters.directoriesProfile)) {
           commit('setRegions', [])
-          const data = await RegionService.getByDirectoriesProfile(
-            getters.directoriesProfile
-          )
+          const data = await RegionService.getByDirectoriesProfile(getters.directoriesProfile)
           commit('setRegions', data)
         }
         commit('setLoading', false)
@@ -46,8 +41,7 @@ export default {
     },
   },
   getters: {
-    regionsMap: ({ regions }) =>
-      new Map(regions.map((item) => [item._id, item])),
+    regionsMap: ({ regions }) => new Map(regions.map((item) => [item._id, item])),
     regionsForAutocomplete: ({ regions }) =>
       regions
         .map((i) => ({ text: i.name, value: i._id }))

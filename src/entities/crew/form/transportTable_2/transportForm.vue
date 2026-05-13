@@ -68,12 +68,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn @click="cancelHandler">Отмена</v-btn>
-      <v-btn
-        @click="saveHandler"
-        color="primary"
-        :disabled="disabledSubmitBtn"
-        :loading="loading"
-      >
+      <v-btn @click="saveHandler" color="primary" :disabled="disabledSubmitBtn" :loading="loading">
         Сохранить
       </v-btn>
     </v-card-actions>

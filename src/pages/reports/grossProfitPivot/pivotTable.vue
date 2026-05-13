@@ -30,9 +30,14 @@
           <th class="text-right">
             {{
               prepareSum(
-                pivotData.total?.[
-                  priceWithVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat'
-                ]
+                pivotData.total?.[priceWithVat ? 'outsourceCostsWithVat' : 'outsourceCostsWOVat']
+              )
+            }}
+          </th>
+          <th class="text-right">
+            {{
+              prepareSum(
+                pivotData.total?.[priceWithVat ? 'totalProfitWithVat' : 'totalProfitWOVat']
               )
             }}
           </th>
@@ -40,18 +45,7 @@
             {{
               prepareSum(
                 pivotData.total?.[
-                  priceWithVat ? 'totalProfitWithVat' : 'totalProfitWOVat'
-                ]
-              )
-            }}
-          </th>
-          <th class="text-right">
-            {{
-              prepareSum(
-                pivotData.total?.[
-                  priceWithVat
-                    ? 'avgOutsourceCostsWithVat'
-                    : 'avgOutsourceCostsWOVat'
+                  priceWithVat ? 'avgOutsourceCostsWithVat' : 'avgOutsourceCostsWOVat'
                 ]
               )
             }}
@@ -69,9 +63,7 @@
         <th>Среднее по дням:</th>
         <th class="text-right">
           {{
-            Intl.NumberFormat().format(
-              Math.round((pivotData.total?.totalCount || 0) / daysCount)
-            )
+            Intl.NumberFormat().format(Math.round((pivotData.total?.totalCount || 0) / daysCount))
           }}
         </th>
         <th class="text-right">
@@ -101,8 +93,7 @@ export default {
   },
   setup(props) {
     const selected = usePersistedRef([], 'selected_items')
-    const { headers, totalAvgByDay, items, totalSum, totalAvg } =
-      usePivotTable(props)
+    const { headers, totalAvgByDay, items, totalSum, totalAvg } = usePivotTable(props)
     return {
       selected,
       headers,

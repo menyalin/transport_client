@@ -46,9 +46,7 @@ export const useCrewForm = (props, ctx) => {
       return proxy.$store.getters.trucks
         .filter((t) => t.type === 'truck')
         .filter((truck) =>
-          truck.allowedDrivers?.some(
-            ({ driver }) => driver === state.value.driver
-          )
+          truck.allowedDrivers?.some(({ driver }) => driver === state.value.driver)
         )
     else return proxy.$store.getters.trucks.filter((t) => t.type === 'truck')
   })
@@ -57,9 +55,7 @@ export const useCrewForm = (props, ctx) => {
     proxy.$store.getters.trucks
       .filter((t) => t.type === 'trailer')
       .filter((trailer) =>
-        state.value.onlyCarrierItems
-          ? trailer.tkName._id === state.value.tkName
-          : true
+        state.value.onlyCarrierItems ? trailer.tkName._id === state.value.tkName : true
       )
   )
   const lastDateInCrew = computed(() => {
@@ -92,10 +88,7 @@ export const useCrewForm = (props, ctx) => {
         date: val,
       })
 
-      if (
-        !driverCrew?.endDate ||
-        +new Date(driverCrew.endDate) > +new Date(state.value.startDate)
-      )
+      if (!driverCrew?.endDate || +new Date(driverCrew.endDate) > +new Date(state.value.startDate))
         actualDriverCrew.value = driverCrew
     } catch (e) {
       console.error(e)
@@ -115,12 +108,9 @@ export const useCrewForm = (props, ctx) => {
     let errors = []
     if (!v$.value.startDate.$dirty) return errors
 
-    if (v$.value.startDate.required.$invalid)
-      errors.push('Поле не может быть пустым')
+    if (v$.value.startDate.required.$invalid) errors.push('Поле не может быть пустым')
     if (v$.value.startDate.isLaterThan.$invalid) {
-      const dateStr = dayjs(v$.value.startDate.$params.isLaterThan.eq).format(
-        'DD.MM.YYYY HH:mm'
-      )
+      const dateStr = dayjs(v$.value.startDate.$params.isLaterThan.eq).format('DD.MM.YYYY HH:mm')
       errors.push(`Дата должна быть больше ${dateStr}`)
     }
     return errors
@@ -129,10 +119,7 @@ export const useCrewForm = (props, ctx) => {
   const endDateError = computed(() => {
     let errors = []
     if (v$.value.endDate.isLaterThan.$invalid)
-      errors.push(
-        'Дата должна быть больше: ' +
-          new Date(lastDateInCrew.value).toLocaleString()
-      )
+      errors.push('Дата должна быть больше: ' + new Date(lastDateInCrew.value).toLocaleString())
     return errors
   })
 
@@ -147,9 +134,7 @@ export const useCrewForm = (props, ctx) => {
   const driverItems = computed(() => {
     return proxy.$store.getters.drivers
       .filter((driver) =>
-        state.value.onlyCarrierItems
-          ? driver.tkName._id === state.value.tkName
-          : true
+        state.value.onlyCarrierItems ? driver.tkName._id === state.value.tkName : true
       )
       .filter((driver) => (crewId ? true : !driver.dismissalDate))
   })
@@ -215,9 +200,7 @@ export const useCrewForm = (props, ctx) => {
     const plainFields = ['onlyCarrierItems', 'startDate', 'endDate', 'note']
 
     const isPlainFiedsChanched = plainFields.some(
-      (key) =>
-        JSON.stringify(state.value[key] ?? true) !==
-        JSON.stringify(props.crew[key] ?? true)
+      (key) => JSON.stringify(state.value[key] ?? true) !== JSON.stringify(props.crew[key] ?? true)
     )
 
     if (isPlainFiedsChanched) return true
@@ -230,8 +213,7 @@ export const useCrewForm = (props, ctx) => {
     const isTransportChanged =
       state.value.transport.length !== props.crew.transport.length ||
       state.value.transport.some(
-        (item, idx) =>
-          JSON.stringify(item) !== JSON.stringify(props.crew.transport[idx])
+        (item, idx) => JSON.stringify(item) !== JSON.stringify(props.crew.transport[idx])
       )
     return isTransportChanged
   })
@@ -244,11 +226,7 @@ export const useCrewForm = (props, ctx) => {
     )
   })
   const disabledEndDateField = computed(() => {
-    return (
-      state.value.transport.length === 0 ||
-      !state.value.startDate ||
-      !crewEditable.value
-    )
+    return state.value.transport.length === 0 || !state.value.startDate || !crewEditable.value
   })
   return {
     v$,

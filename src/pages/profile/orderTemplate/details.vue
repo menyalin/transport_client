@@ -15,9 +15,7 @@
         <app-order-template-form
           v-else
           :orderTemplate="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('orderTemplate:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('orderTemplate:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

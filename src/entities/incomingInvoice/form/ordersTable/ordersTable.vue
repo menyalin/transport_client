@@ -57,9 +57,7 @@ export default {
       removeOrdersHandler,
     } = useTable(props, ctx)
 
-    const preparedItems = computed(() =>
-      items.value.map((i, idx) => ({ ...i, idx: idx + 1 }))
-    )
+    const preparedItems = computed(() => items.value.map((i, idx) => ({ ...i, idx: idx + 1 })))
 
     const formattedSum = computed(() => {
       return {

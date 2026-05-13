@@ -19,10 +19,7 @@
           />
         </div>
         <div class="input-fields-row">
-          <v-text-field
-            label="Процент от базовой стоимости рейса"
-            v-model.number="form.percent"
-          />
+          <v-text-field label="Процент от базовой стоимости рейса" v-model.number="form.percent" />
         </div>
       </v-card-text>
       <CardActionButtons
@@ -31,12 +28,7 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
+        <v-btn v-if="!editableMode" type="submit" color="primary" :disabled="isInvalidForm">
           Добавить в список
         </v-btn>
       </CardActionButtons>
@@ -74,17 +66,10 @@ export default {
       percent: null,
     })
 
-    const {
-      truckKindItems,
-      liftCapacityItems,
-      orderTypeItems,
-      commonRules,
-      focusableNodeRef,
-    } = useFormHelpers()
+    const { truckKindItems, liftCapacityItems, orderTypeItems, commonRules, focusableNodeRef } =
+      useFormHelpers()
 
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = {
       ...commonRules,

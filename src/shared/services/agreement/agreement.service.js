@@ -96,8 +96,7 @@ class AgreementService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else if (this.eo.pending(id)) {
       const promise = new Promise((resolve) => {
         this.eo.subscribe(id, (data) => {

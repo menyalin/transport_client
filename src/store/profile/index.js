@@ -80,9 +80,7 @@ export default {
     },
 
     updateCompany(state, company) {
-      const idx = state.myCompanies.findIndex(
-        (item) => item._id === company._id
-      )
+      const idx = state.myCompanies.findIndex((item) => item._id === company._id)
       if (idx === -1) return null
 
       state.myCompanies.splice(idx, 1, company)
@@ -148,18 +146,15 @@ export default {
       if (partners?.length) commit('setPartners', partners)
       if (orderStatuses?.length) commit('setOrderStatuses', orderStatuses)
       if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
-      if (orderAnalyticTypes?.length)
-        commit('setOrderAnalyticTypes', orderAnalyticTypes)
+      if (orderAnalyticTypes?.length) commit('setOrderAnalyticTypes', orderAnalyticTypes)
       if (orderPriceTypes?.length) commit('setOrderPriceTypes', orderPriceTypes)
       if (documentTypes?.length) commit('setDocumentTypes', documentTypes)
-      if (documentStatuses?.length)
-        commit('setDocumentStatuses', documentStatuses)
+      if (documentStatuses?.length) commit('setDocumentStatuses', documentStatuses)
       if (staffRoles?.length) commit('setStaffRoles', staffRoles)
       if (permissions) commit('setPermissionsMap', permissions)
       if (allTruckParams) commit('setAllTruckParams', allTruckParams)
       if (tariffTypes) commit('setTariffTypes', tariffTypes)
-      if (roundingWaitingByHours)
-        commit('setRoundingWaitingByHours', roundingWaitingByHours)
+      if (roundingWaitingByHours) commit('setRoundingWaitingByHours', roundingWaitingByHours)
       if (idleTimeRoundingIntervals)
         commit('setIdleTimeRoundingIntervals', idleTimeRoundingIntervals)
       if (documents?.length) commit('setDocuments', documents)
@@ -168,11 +163,9 @@ export default {
       if (cities?.length) commit('setCities', cities)
       if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
       if (fineCategories?.length) commit('setFineCategories', fineCategories)
-      if (salaryTariffTypes.length)
-        commit('setSalaryTariffTypes', salaryTariffTypes)
+      if (salaryTariffTypes.length) commit('setSalaryTariffTypes', salaryTariffTypes)
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
-      if (docsRegistryStatuses?.length)
-        commit('setDocsRegistryStatuses', docsRegistryStatuses)
+      if (docsRegistryStatuses?.length) commit('setDocsRegistryStatuses', docsRegistryStatuses)
       if (paymentInvoiceStatuses?.length)
         commit('setPaymentInvoiceStatuses', paymentInvoiceStatuses)
     },
@@ -221,8 +214,7 @@ export default {
     companySettings: ({ myCompanies }, { directoriesProfile }) =>
       myCompanies.find((i) => i._id === directoriesProfile)?.settings,
     staffRoles: ({ staffRoles }) => staffRoles,
-    staffRolesMap: ({ staffRoles }) =>
-      new Map(staffRoles.map((s) => [s.value, s.text])),
+    staffRolesMap: ({ staffRoles }) => new Map(staffRoles.map((s) => [s.value, s.text])),
 
     formSettingsMap: ({ formSettings }) => formSettings,
     permissionsMap: ({ permissionsMap }) => permissionsMap,

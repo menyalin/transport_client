@@ -6,9 +6,7 @@
         <app-zone-form
           v-else
           :zone="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('zone:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('zone:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

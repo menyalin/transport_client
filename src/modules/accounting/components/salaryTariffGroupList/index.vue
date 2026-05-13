@@ -23,14 +23,8 @@
                 {{ addressMap.get(item.unloading).shortName }}
               </div>
 
-              <app-direct-distance-zones
-                v-if="item.type === 'directDistanceZones'"
-                :item="item"
-              />
-              <app-additional-points-cell
-                v-if="item.type === 'additionalPoints'"
-                :item="item"
-              />
+              <app-direct-distance-zones v-if="item.type === 'directDistanceZones'" :item="item" />
+              <app-additional-points-cell v-if="item.type === 'additionalPoints'" :item="item" />
               <app-waiting-cell v-if="item.type === 'waiting'" :item="item" />
               <app-regions-cell v-if="item.type === 'regions'" :item="item" />
               <app-zones-cell v-if="item.type === 'zones'" :item="item" />
@@ -39,9 +33,7 @@
 
             <td class="text-center">
               {{
-                Array.isArray(item.liftCapacity)
-                  ? item.liftCapacity.join(', ')
-                  : item.liftCapacity
+                Array.isArray(item.liftCapacity) ? item.liftCapacity.join(', ') : item.liftCapacity
               }}
             </td>
             <td class="text-right">

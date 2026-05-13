@@ -2,8 +2,7 @@ import { computed, getCurrentInstance, ref } from 'vue'
 
 const dateFormatter = (date) => (date ? new Date(date).toLocaleString() : null)
 
-const truckFormatter = (store, id) =>
-  store.getters.trucksMap.get(id)?.regNum ?? null
+const truckFormatter = (store, id) => store.getters.trucksMap.get(id)?.regNum ?? null
 
 export const useTransportTableData = (props, ctx) => {
   const { proxy } = getCurrentInstance()
@@ -35,8 +34,7 @@ export const useTransportTableData = (props, ctx) => {
 
   const editLastItem = () => {
     editMode.value = 'edit'
-    if (props.items.length === 1)
-      editableItemMinDate.value = props.crewStartDate
+    if (props.items.length === 1) editableItemMinDate.value = props.crewStartDate
     else {
       startDateFieldDisabled.value = false
       editableItemMinDate.value =
@@ -52,8 +50,7 @@ export const useTransportTableData = (props, ctx) => {
 
     startDateFieldDisabled.value = props.items.length === 0
 
-    editableItemMinDate.value =
-      lastItem.value?.endDate ?? lastItem.value?.startDate
+    editableItemMinDate.value = lastItem.value?.endDate ?? lastItem.value?.startDate
 
     editedItem.value = {
       startDate: editableItemMinDate.value ?? props.crewStartDate,

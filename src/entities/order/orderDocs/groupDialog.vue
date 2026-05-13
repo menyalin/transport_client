@@ -36,20 +36,14 @@
             />
           </v-radio-group>
           <v-text-field v-model="note" label="Общий комментарий" outlined />
-          <v-checkbox
-            label="Включать документы в опись"
-            v-model="addToRegistry"
-            color="primary"
-          />
+          <v-checkbox label="Включать документы в опись" v-model="addToRegistry" color="primary" />
           <span>Будет создано документов: </span>{{ docCount }}
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" text :disabled="!docCount" type="submit">
-            Добавить
-          </v-btn>
+          <v-btn color="primary" text :disabled="!docCount" type="submit"> Добавить </v-btn>
         </v-card-actions>
       </form>
     </v-card>

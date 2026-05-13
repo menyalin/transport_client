@@ -41,12 +41,7 @@
             <v-btn icon @click="copyTimestamptsToClipboard">
               <v-icon>mdi-clock</v-icon>
             </v-btn>
-            <v-btn
-              v-if="showFinalPriceDialog"
-              color="green"
-              icon
-              @click="openPriceDialog"
-            >
+            <v-btn v-if="showFinalPriceDialog" color="green" icon @click="openPriceDialog">
               <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
 
@@ -54,10 +49,7 @@
               <v-card>
                 <v-card-title> Создать новый шаблон </v-card-title>
                 <v-card-text>
-                  <v-text-field
-                    v-model="templateName"
-                    label="Название шаблона"
-                  />
+                  <v-text-field v-model="templateName" label="Название шаблона" />
                 </v-card-text>
                 <v-card-actions>
                   <v-btn @click="cancelCreateTemplate"> Отмена </v-btn>
@@ -99,11 +91,7 @@
             :agreementDisabled="hasPaymentInvoices"
             @updateAgreement="updateAgreementHandler"
           />
-          <CargoParams
-            v-model="cargoParams"
-            title="Параметры груза"
-            class="cargo-params"
-          />
+          <CargoParams v-model="cargoParams" title="Параметры груза" class="cargo-params" />
 
           <ReqTransport
             v-model="reqTransport"
@@ -170,10 +158,7 @@
               :disabledInPaymentInvoice="disabledInPaymentInvoice"
               :hasIncomingInvoice="hasIncomingInvoice"
             >
-              <IncomingInvoiceLink
-                v-if="!!order"
-                :invoice="order.incomingInvoice"
-              />
+              <IncomingInvoiceLink v-if="!!order" :invoice="order.incomingInvoice" />
             </PriceBlock>
 
             <FinalPriceDialog
@@ -189,12 +174,7 @@
           </div>
 
           <div id="note">
-            <v-text-field
-              v-model="form.note"
-              outlined
-              label="Примечание"
-              dense
-            />
+            <v-text-field v-model="form.note" outlined label="Примечание" dense />
             <v-text-field
               v-model="form.noteAccountant"
               outlined
@@ -223,12 +203,7 @@
           </div>
         </div>
 
-        <v-btn
-          v-if="displayDeleteBtn"
-          color="error"
-          class="ma-4"
-          @click="$emit('delete')"
-        >
+        <v-btn v-if="displayDeleteBtn" color="error" class="ma-4" @click="$emit('delete')">
           <v-icon left dark> mdi-delete </v-icon>
           Удалить
         </v-btn>
@@ -319,25 +294,18 @@ export default {
   setup(props) {
     const carrierAgreement = ref(null)
 
-    const {
-      templates,
-      docTemplateIsVisible,
-      downloadTemplateHandler,
-      downloadDisabled,
-    } = useOrderPrintForms({ order: props.order })
+    const { templates, docTemplateIsVisible, downloadTemplateHandler, downloadDisabled } =
+      useOrderPrintForms({ order: props.order })
 
     const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
-    const { isValidPrices, isValidClientNum, isValidAuctionNum } =
-      useOrderValidations()
+    const { isValidPrices, isValidClientNum, isValidAuctionNum } = useOrderValidations()
 
     const hasIncomingInvoice = computed(() => {
       return props.order?.incomingInvoice && props.order?.incomingInvoice._id
     })
 
     const hasPaymentInvoices = computed(() => {
-      return Boolean(
-        props.order?.paymentInvoices && props.order?.paymentInvoices.length
-      )
+      return Boolean(props.order?.paymentInvoices && props.order?.paymentInvoices.length)
     })
 
     const disabledInPaymentInvoice = computed(() => {
@@ -349,9 +317,7 @@ export default {
     async function changeCrewHandler(newValue) {
       // если в экипаже есть соглашение, то обновляю объект с соглашением
       if (newValue.outsourceAgreement && props?.getCarrierAgreementById)
-        carrierAgreement.value = await props.getCarrierAgreementById(
-          newValue.outsourceAgreement
-        )
+        carrierAgreement.value = await props.getCarrierAgreementById(newValue.outsourceAgreement)
     }
 
     // Дублируем логику dateForCrew для использования в setup
@@ -470,15 +436,9 @@ export default {
           permission: 'order:daysForWrite',
           date: this.route[this.route.length - 1].departureDate,
         })
-      } else
-        hasPermission = this.$store.getters.hasPermission('order:daysForWrite')
+      } else hasPermission = this.$store.getters.hasPermission('order:daysForWrite')
 
-      return (
-        this.processingBeforeSubmit ||
-        this.isInvalidForm ||
-        this.loading ||
-        !hasPermission
-      )
+      return this.processingBeforeSubmit || this.isInvalidForm || this.loading || !hasPermission
     },
     currentPointInd() {
       return this.route.findIndex((p) => !p.departureDate)
@@ -535,15 +495,8 @@ export default {
       const length = this.route.length >= 2
       const firstPoint = this.route[0].type === 'loading'
       const lastPoint = this.route[this.route.length - 1].type === 'unloading'
-      const hasAddresses =
-        this.route.filter((item) => !!item.address).length === this.route.length
-      return (
-        length &&
-        firstPoint &&
-        lastPoint &&
-        hasAddresses &&
-        this.isValidDatesInRoute
-      )
+      const hasAddresses = this.route.filter((item) => !!item.address).length === this.route.length
+      return length && firstPoint && lastPoint && hasAddresses && this.isValidDatesInRoute
     },
     showGradeBlock() {
       return this.routeCompleted
@@ -613,11 +566,7 @@ export default {
         outsourceCosts: this.outsourceCosts,
         docs: this.docs,
         paymentToDriver: this.paymentToDriver,
-        isAdmin: this.$store.getters.hasPermission(
-          'fake permission. for admin only'
-        )
-          ? true
-          : null,
+        isAdmin: this.$store.getters.hasPermission('fake permission. for admin only') ? true : null,
       }
     },
   },
@@ -627,19 +576,11 @@ export default {
       const template = this.$store.getters.orderTemplatesMap.get(value)
       if (!template) return null
       this.client = Object.assign({}, this.client, { client: template.client })
-      this.reqTransport = Object.assign(
-        {},
-        this.reqTransport,
-        template.reqTransport
-      )
+      this.reqTransport = Object.assign({}, this.reqTransport, template.reqTransport)
       const plannedDate = this.route[0]?.plannedDate
       this.analytics = { ...template.analytics }
       this.route = OrderModel.fillRouteFromTemplate(template, plannedDate)
-      this.cargoParams = Object.assign(
-        {},
-        this.cargoParams,
-        template.cargoParams
-      )
+      this.cargoParams = Object.assign({}, this.cargoParams, template.cargoParams)
     },
     order: {
       immediate: true,
@@ -664,15 +605,13 @@ export default {
           newRouteValue.length
         ) {
           const firstPoint = newRouteValue[0]
-          if (!this.orderId)
-            this.form.startPositionDate = firstPoint.plannedDate
+          if (!this.orderId) this.form.startPositionDate = firstPoint.plannedDate
           // this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
         }
         // проверяю изменились ли адреса в рейсе и если изменились, очищаю расстояния в аналитике
         if (
           this.isValidRoute &&
-          newRouteValue.map((r) => r.address).join() !==
-            oldVal.map((r) => r.address).join()
+          newRouteValue.map((r) => r.address).join() !== oldVal.map((r) => r.address).join()
         ) {
           this.analytics.distanceDirect = 0
           this.analytics.distanceRoad = 0
@@ -688,11 +627,7 @@ export default {
 
     updateOrderType() {
       const regions = this.route
-        .map((i) =>
-          i.address
-            ? this.$store.getters.addressMap.get(i.address)?.region
-            : null
-        )
+        .map((i) => (i.address ? this.$store.getters.addressMap.get(i.address)?.region : null))
         .filter((i) => !!i)
       this.$nextTick(() => {
         this.analytics.type = new Set(regions).size >= 2 ? 'region' : 'city'
@@ -731,23 +666,18 @@ export default {
     },
     getMinArrivalDate(ind) {
       if (!ind) return null
-      if (ind > 0 && !!this.route[ind - 1].departureDate)
-        return this.route[ind - 1].departureDate
+      if (ind > 0 && !!this.route[ind - 1].departureDate) return this.route[ind - 1].departureDate
       return null
     },
     isDisabledArrivalDate(ind) {
-      if (this.currentPointInd === ind && !!this.route[ind].departureDate)
-        return true
+      if (this.currentPointInd === ind && !!this.route[ind].departureDate) return true
       if (this.currentPointInd !== ind) return true
       return false
     },
     isDisabledDepartureDate(ind) {
-      if (this.currentPointInd === ind && !this.route[ind].arrivalDate)
-        return true
-      if (this.currentPointInd !== -1 && !this.route[ind].arrivalDate)
-        return true
-      if (ind + 1 <= this.route.length - 1 && !!this.route[ind + 1].arrivalDate)
-        return true
+      if (this.currentPointInd === ind && !this.route[ind].arrivalDate) return true
+      if (this.currentPointInd !== -1 && !this.route[ind].arrivalDate) return true
+      if (ind + 1 <= this.route.length - 1 && !!this.route[ind + 1].arrivalDate) return true
       return false
     },
 
@@ -755,9 +685,7 @@ export default {
       if (this.isInvalidForm) return null
       this.processingBeforeSubmit = true
       if (!this.analytics.distanceDirect)
-        this.analytics.distanceDirect = OrderService.getDirectDistance(
-          this.coords
-        )
+        this.analytics.distanceDirect = OrderService.getDirectDistance(this.coords)
       if (!this.analytics.distanceRoad) {
         const { distanceRoad } = await OrderService.getDistance(this.coords)
         this.analytics.distanceRoad = distanceRoad

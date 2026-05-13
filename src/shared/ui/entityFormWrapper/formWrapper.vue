@@ -2,19 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          type="error"
-          dismissible
-          v-model="showError"
-          transition="scale-transition"
-        >
+        <v-alert type="error" dismissible v-model="showError" transition="scale-transition">
           {{ errorMessage }}
         </v-alert>
-        <v-alert
-          type="error"
-          v-if="itemIsMissing && !loading"
-          transition="scale-transition"
-        >
+        <v-alert type="error" v-if="itemIsMissing && !loading" transition="scale-transition">
           Запись не найдена
         </v-alert>
         <load-spinner v-if="loading" />
@@ -56,9 +47,7 @@ export default {
   },
   methods: {
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         this.$emit('delete')
       }

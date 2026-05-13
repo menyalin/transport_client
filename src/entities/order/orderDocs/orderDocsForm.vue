@@ -34,12 +34,7 @@
             :class="{ 'not-accepted': item.status !== 'accepted' }"
           >
             <td class="text-center">
-              <v-simple-checkbox
-                v-model="item.addToRegistry"
-                dense
-                hide-details
-                color="primary"
-              />
+              <v-simple-checkbox v-model="item.addToRegistry" dense hide-details color="primary" />
             </td>
             <td>
               <v-select
@@ -52,20 +47,10 @@
               />
             </td>
             <td>
-              <v-text-field
-                v-model.trim="item.number"
-                dense
-                hide-details
-                :disabled="readonly"
-              />
+              <v-text-field v-model.trim="item.number" dense hide-details :disabled="readonly" />
             </td>
             <td>
-              <v-text-field
-                v-model.trim="item.note"
-                dense
-                hide-details
-                :disabled="readonly"
-              />
+              <v-text-field v-model.trim="item.note" dense hide-details :disabled="readonly" />
             </td>
             <td>
               <v-select
@@ -86,19 +71,13 @@
               />
             </td>
             <td>
-              <v-icon small :disabled="readonly" @click="deleteRow(idx)">
-                mdi-delete
-              </v-icon>
+              <v-icon small :disabled="readonly" @click="deleteRow(idx)"> mdi-delete </v-icon>
             </td>
           </tr>
         </tbody>
       </template>
     </v-simple-table>
-    <app-group-dialog
-      :dialog="groupDialog"
-      @pushDocs="addGroup"
-      @close="closeGroupDocDialog"
-    />
+    <app-group-dialog :dialog="groupDialog" @pushDocs="addGroup" @close="closeGroupDocDialog" />
   </div>
 </template>
 <script>

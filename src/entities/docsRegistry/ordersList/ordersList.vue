@@ -15,13 +15,7 @@
     @dblclick:row="dblclickRowHandler"
   >
     <template v-slot:top>
-      <v-btn
-        :disabled="!selectedOrderIds.length"
-        small
-        text
-        color="error"
-        @click="deleteHandler"
-      >
+      <v-btn :disabled="!selectedOrderIds.length" small text color="error" @click="deleteHandler">
         Удалить выделенные рейсы
       </v-btn>
     </template>
@@ -39,9 +33,7 @@ export default {
   },
   setup(props, { emit }) {
     const selected = ref([])
-    const selectedOrderIds = computed(() =>
-      selected.value.map((i) => i.order._id)
-    )
+    const selectedOrderIds = computed(() => selected.value.map((i) => i.order._id))
 
     const preparedOrders = computed(() => {
       if (!props.orders) return []

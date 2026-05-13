@@ -1,10 +1,5 @@
 <template>
-  <span
-    class="note-wrapper"
-    :class="note.priority"
-    :style="styles"
-    @dblclick="dblCLickHandler"
-  >
+  <span class="note-wrapper" :class="note.priority" :style="styles" @dblclick="dblCLickHandler">
     {{ note.text }}
   </span>
 </template>

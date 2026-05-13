@@ -30,9 +30,7 @@
       <v-btn v-if="showRemoveBtn" @click="remove" color="error">Удалить</v-btn>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" @click="save" :disabled="invalidForm">
-        Сохранить
-      </v-btn>
+      <v-btn color="primary" @click="save" :disabled="invalidForm"> Сохранить </v-btn>
     </v-card-actions>
   </v-card>
 </template>

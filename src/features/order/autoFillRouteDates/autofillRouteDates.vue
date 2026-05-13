@@ -1,9 +1,6 @@
 <template>
   <div>
-    <TopButtonsPanel
-      :disabled="disabledSubmit"
-      @submit="autoFillDatesHandler"
-    />
+    <TopButtonsPanel :disabled="disabledSubmit" @submit="autoFillDatesHandler" />
 
     <v-alert type="info" text dismissible>
       {{ infoText }}
@@ -44,16 +41,8 @@
       :style="{ maxWidth: '600px' }"
       hide-details
     />
-    <v-btn small class="ma-2" color="primary" @click="selectAllTrucks">
-      Выбрать все
-    </v-btn>
-    <v-alert
-      v-for="(message, idx) in messages"
-      :key="idx"
-      :type="message.type"
-      dismissible
-      dense
-    >
+    <v-btn small class="ma-2" color="primary" @click="selectAllTrucks"> Выбрать все </v-btn>
+    <v-alert v-for="(message, idx) in messages" :key="idx" :type="message.type" dismissible dense>
       {{ message.content }}
     </v-alert>
   </div>

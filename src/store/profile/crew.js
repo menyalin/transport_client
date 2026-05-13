@@ -38,8 +38,7 @@ export default {
     createCrew({ commit }, payload) {
       return new Promise((resolve, reject) => {
         commit('setLoading', true)
-        CrewService
-          .create(payload)
+        CrewService.create(payload)
           .then((data) => {
             commit('addCrew', data)
             commit('setLoading', false)
@@ -57,8 +56,6 @@ export default {
     tkNameForCrews: ({ tkNameForCrews }) => tkNameForCrews,
 
     crews: ({ crews, tkNameForCrews }) =>
-      crews.filter((item) =>
-        tkNameForCrews ? item.tkName._id === tkNameForCrews : true
-      ),
+      crews.filter((item) => (tkNameForCrews ? item.tkName._id === tkNameForCrews : true)),
   },
 }

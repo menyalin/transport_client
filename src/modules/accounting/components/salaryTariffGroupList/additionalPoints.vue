@@ -1,7 +1,8 @@
 <template>
   <span>
     Рейс:
-    <b>{{ orderTypeStr }}</b>, Кол-во точек: <b> {{ item.includedPoints }}</b>
+    <b>{{ orderTypeStr }}</b
+    >, Кол-во точек: <b> {{ item.includedPoints }}</b>
   </span>
 </template>
 <script>

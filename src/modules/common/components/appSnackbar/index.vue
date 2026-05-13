@@ -5,9 +5,7 @@
         {{ error }}
       </div>
       <template #action="{ attrs }">
-        <v-btn color="accent" text v-bind="attrs" @click="close">
-          Закрыть
-        </v-btn>
+        <v-btn color="accent" text v-bind="attrs" @click="close"> Закрыть </v-btn>
       </template>
     </v-snackbar>
   </div>

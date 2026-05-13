@@ -28,15 +28,9 @@ export default {
   },
   setup(props) {
     const isBlockedUser = computed(() => props.worker.disabled)
-    const isPending = computed(
-      () => props.worker.pending && props.worker.accepted
-    )
-    const isAccepted = computed(
-      () => !props.worker.pending && props.worker.accepted
-    )
-    const isCanceled = computed(
-      () => !props.worker.pending && !props.worker.accepted
-    )
+    const isPending = computed(() => props.worker.pending && props.worker.accepted)
+    const isAccepted = computed(() => !props.worker.pending && props.worker.accepted)
+    const isCanceled = computed(() => !props.worker.pending && !props.worker.accepted)
     const message = computed(() => {
       if (isBlockedUser.value)
         return {

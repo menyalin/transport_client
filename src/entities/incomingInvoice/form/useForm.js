@@ -54,11 +54,7 @@ export const useForm = (props, ctx, hasOrders) => {
   })
 
   const isVisiblePayInvoiceBtn = computed(() => {
-    return (
-      !isVisiblePayDateField.value &&
-      state.value.status === 'toPay' &&
-      hasOrders.value
-    )
+    return !isVisiblePayDateField.value && state.value.status === 'toPay' && hasOrders.value
   })
 
   function savePayDateHandler() {

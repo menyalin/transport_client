@@ -35,12 +35,7 @@
         label="Загрузка"
         @change="change($event, 'loadDirection')"
       />
-      <v-checkbox
-        dense
-        hide-details
-        label="Гидроборт"
-        v-model="reqTransport.tailLift"
-      />
+      <v-checkbox dense hide-details label="Гидроборт" v-model="reqTransport.tailLift" />
     </div>
   </div>
 </template>
@@ -80,8 +75,7 @@ export default {
     },
     liftCapacityErrors() {
       const errors = []
-      if (!this.reqTransport?.liftCapacity)
-        errors.push('Поле не может быть пустым')
+      if (!this.reqTransport?.liftCapacity) errors.push('Поле не может быть пустым')
       return errors
     },
     companySettings() {
@@ -100,10 +94,7 @@ export default {
       )
     },
     hideTruckKindField() {
-      return (
-        this.companySettings.truckKinds.length === 1 &&
-        !!this.companySettings.defaultTruckKind
-      )
+      return this.companySettings.truckKinds.length === 1 && !!this.companySettings.defaultTruckKind
     },
   },
   watch: {

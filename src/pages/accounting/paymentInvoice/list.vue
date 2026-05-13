@@ -35,10 +35,7 @@ import { ref } from 'vue'
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import { usePartnerStore } from '@/entities/partner'
-import {
-  PaymentInvoicesListSettings,
-  PaymentInvoiceDataTable,
-} from '@/entities/paymentInvoice'
+import { PaymentInvoicesListSettings, PaymentInvoiceDataTable } from '@/entities/paymentInvoice'
 
 export default {
   name: 'PaymentInvoiceList',
@@ -50,7 +47,7 @@ export default {
   },
   setup() {
     const partnerStore = usePartnerStore()
-    
+
     const headers = ref([])
     function changeHeaders(val) {
       headers.value = val

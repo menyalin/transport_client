@@ -2,9 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('fine:write') || isInvalidForm
-      "
+      :disabled-submit="!$store.getters.hasPermission('fine:write') || isInvalidForm"
       class="mb-4"
       @cancel="cancel"
       @submit="submit"
@@ -39,12 +37,7 @@
         :style="{ maxWidth: '450px' }"
       />
     </div>
-    <v-text-field
-      v-model.trim="$v.form.violation.$model"
-      label="Нарушение"
-      outlined
-      dense
-    />
+    <v-text-field v-model.trim="$v.form.violation.$model" label="Нарушение" outlined dense />
 
     <div class="row-input mt-2">
       <v-text-field
@@ -104,25 +97,14 @@
         outlined
         dense
         :style="{ maxWidth: '350px' }"
-        :append-outer-icon="
-          form.truck && form.violationDate ? 'mdi-crosshairs' : null
-        "
+        :append-outer-icon="form.truck && form.violationDate ? 'mdi-crosshairs' : null"
         @click:append-outer="getDriver"
       />
     </div>
 
-    <v-text-field
-      v-model="$v.form.address.$model"
-      label="Место нарушения"
-      outlined
-      dense
-    />
+    <v-text-field v-model="$v.form.address.$model" label="Место нарушения" outlined dense />
     <div class="row-input">
-      <v-checkbox
-        v-model="$v.form.isCulpritDriver.$model"
-        dense
-        label="Виноват водитель"
-      />
+      <v-checkbox v-model="$v.form.isCulpritDriver.$model" dense label="Виноват водитель" />
       <v-checkbox
         v-if="form.isCulpritDriver"
         v-model="$v.form.isPaydByDriver.$model"
@@ -186,12 +168,7 @@
         dense
       />
     </div>
-    <v-text-field
-      v-model="$v.form.note.$model"
-      label="Примечание"
-      outlined
-      dense
-    />
+    <v-text-field v-model="$v.form.note.$model" label="Примечание" outlined dense />
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
@@ -276,17 +253,13 @@ export default {
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
+      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
     },
 
     formState() {
       const dates = {}
       this.dateFields.concat(this.dateTimeFields).forEach((item) => {
-        dates[item] = this.form[item]
-          ? dayjs(this.form[item]).toISOString()
-          : null
+        dates[item] = this.form[item] ? dayjs(this.form[item]).toISOString() : null
       })
       const withheldParams = {}
       if (this.form.isPaydByDriver) {

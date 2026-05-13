@@ -36,9 +36,9 @@ export const useItemsForAutocomplete = ({ ctx, propValue }) => {
     if (itemSelected) {
       itemSelected = false
     } else {
-      items.value = (
-        (await WorkerService.getForAutocomplete({ searchStr: val })) || []
-      ).map((i) => ({ value: i._id, text: i.fullName || i.name }))
+      items.value = ((await WorkerService.getForAutocomplete({ searchStr: val })) || []).map(
+        (i) => ({ value: i._id, text: i.fullName || i.name })
+      )
     }
     loading.value = false
   }

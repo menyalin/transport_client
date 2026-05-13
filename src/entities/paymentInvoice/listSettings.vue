@@ -14,10 +14,7 @@
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'periodBy')"
     />
-    <DateRangeInput
-      :period="settings.period"
-      @change="updateSettings($event, 'period')"
-    />
+    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
     <v-autocomplete
       :value="settings.clients"
       item-text="name"
@@ -76,10 +73,7 @@
 <script>
 import { computed, ref, onMounted } from 'vue'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
-import {
-  PAYMENT_INVOICE_TABLE_HEADERS,
-  paymentInvoiceStatuses,
-} from '@/shared/constants'
+import { PAYMENT_INVOICE_TABLE_HEADERS, paymentInvoiceStatuses } from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
 export default {

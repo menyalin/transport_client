@@ -1,9 +1,7 @@
 <template>
   <div>
     <buttons-panel
-      :disabledSubmit="
-        !$store.getters.hasPermission('truck:write') || isInvalidForm || loading
-      "
+      :disabledSubmit="!$store.getters.hasPermission('truck:write') || isInvalidForm || loading"
       panel-type="form"
       @cancel="cancel"
       @submit="submit"
@@ -36,9 +34,7 @@
             dense
             :items="liftCapacityTypes"
           />
-          <template
-            v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
-          >
+          <template v-if="form.type === 'trailer' || form.liftCapacityType !== 20">
             <v-select
               v-model="$v.form.kind.$model"
               outlined
@@ -86,26 +82,11 @@
           dense
           :error-messages="regNumErrors"
         />
-        <v-text-field
-          v-model.trim="$v.form.brand.$model"
-          outlined
-          label="Марка"
-          dense
-        />
+        <v-text-field v-model.trim="$v.form.brand.$model" outlined label="Марка" dense />
 
-        <v-text-field
-          v-model.trim="$v.form.model.$model"
-          outlined
-          label="Модель"
-          dense
-        />
+        <v-text-field v-model.trim="$v.form.model.$model" outlined label="Модель" dense />
 
-        <v-text-field
-          v-model.trim="$v.form.issueYear.$model"
-          outlined
-          label="Год выпуска"
-          dense
-        />
+        <v-text-field v-model.trim="$v.form.issueYear.$model" outlined label="Год выпуска" dense />
 
         <v-text-field
           v-model.number="$v.form.order.$model"
@@ -130,25 +111,10 @@
         />
       </div>
       <div class="row-wrapper third-row">
-        <v-text-field
-          v-model.trim="$v.form.win.$model"
-          outlined
-          label="WIN"
-          dense
-        />
-        <v-text-field
-          v-model.trim="$v.form.owner.$model"
-          outlined
-          label="Собственник"
-          dense
-        />
+        <v-text-field v-model.trim="$v.form.win.$model" outlined label="WIN" dense />
+        <v-text-field v-model.trim="$v.form.owner.$model" outlined label="Собственник" dense />
 
-        <v-text-field
-          v-model.trim="$v.form.sts.$model"
-          outlined
-          label="СТС"
-          dense
-        />
+        <v-text-field v-model.trim="$v.form.sts.$model" outlined label="СТС" dense />
         <DateTimeInput
           v-model="$v.form.stsDate.$model"
           label="Дата СТС"
@@ -158,33 +124,17 @@
           dense
           hide-details
         />
-        <v-text-field
-          v-model.trim="$v.form.pts.$model"
-          outlined
-          label="ПТС"
-          dense
-        />
+        <v-text-field v-model.trim="$v.form.pts.$model" outlined label="ПТС" dense />
       </div>
-      <app-insurance
-        v-model="insurance"
-        title="Страховка"
-        :truckType="form.type"
-      />
+      <app-insurance v-model="insurance" title="Страховка" :truckType="form.type" />
 
-      <app-permits
-        v-if="form.type === 'truck'"
-        v-model="permits"
-        title="Разрешения"
-      />
+      <app-permits v-if="form.type === 'truck'" v-model="permits" title="Разрешения" />
       <app-additional-details
         v-if="form.type === 'truck'"
         v-model="additionalDetails"
         title="Доп.реквизиты"
       />
-      <div
-        v-if="form.type === 'trailer' || form.liftCapacityType !== 20"
-        id="sanpassport"
-      >
+      <div v-if="form.type === 'trailer' || form.liftCapacityType !== 20" id="sanpassport">
         <DateTimeInput
           v-model="form.sanitaryPassportExpDate"
           label="Сан.паспорт действует до"
@@ -227,51 +177,27 @@
           :items="brigadiers"
           dense
         />
-        <v-autocomplete
-          v-model="form.mechanic"
-          label="Механик"
-          :items="mechanics"
-          outlined
-          dense
-        />
+        <v-autocomplete v-model="form.mechanic" label="Механик" :items="mechanics" outlined dense />
       </div>
       <additional-notifications v-model="additionalNotifications" />
       <div class="row-wrapper my-3">
-        <v-textarea
-          v-model.trim="$v.form.note.$model"
-          outlined
-          rows="3"
-          label="Примечание"
-          dense
-        />
+        <v-textarea v-model.trim="$v.form.note.$model" outlined rows="3" label="Примечание" dense />
       </div>
 
       <v-row v-if="!!form.tkName && form.type === 'truck'">
         <app-allowed-drivers
           v-model="$v.form.allowedDrivers.$model"
-          :tkName="
-            typeof form.tkName === 'Object' ? form.tkName._id : form.tkName
-          "
+          :tkName="typeof form.tkName === 'Object' ? form.tkName._id : form.tkName"
         />
       </v-row>
       <div class="row-wrapper my-3">
-        <v-checkbox
-          v-model="form.alwaysInSchedule"
-          label="Всегда в распределении"
-        />
-        <v-checkbox
-          v-model="form.hideInFines"
-          label="Не показывать в штрафах"
-        />
+        <v-checkbox v-model="form.alwaysInSchedule" label="Всегда в распределении" />
+        <v-checkbox v-model="form.hideInFines" label="Не показывать в штрафах" />
         <v-checkbox v-model="form.hasScans" label="Есть сканы документов" />
       </div>
       <v-divider />
     </div>
-    <EntityFiles
-      v-if="truck && truck._id"
-      :itemId="truck._id"
-      docType="truck"
-    />
+    <EntityFiles v-if="truck && truck._id" :itemId="truck._id" docType="truck" />
 
     <div class="delete-btn-row mt-3">
       <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
@@ -285,12 +211,7 @@
 import { mapGetters } from 'vuex'
 import { required, numeric } from 'vuelidate/lib/validators'
 
-import {
-  ButtonsPanel,
-  DateTimeInput,
-  AdditionalNotifications,
-  EntityFiles,
-} from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, AdditionalNotifications, EntityFiles } from '@/shared/ui'
 
 import AppAllowedDrivers from './allowedDrivers.vue'
 import AppInsurance from './insurance.vue'
@@ -383,37 +304,23 @@ export default {
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      )?.name
+      return this.myCompanies.find((item) => item._id === this.directoriesProfile)?.name
     },
     nameErrors() {
       const errors = []
-      if (
-        this.$v.form.name.$dirty &&
-        this.$v.form.name.$invalid &&
-        !this.loading
-      )
+      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid && !this.loading)
         errors.push('Имя не может быть пустым')
       return errors
     },
     regNumErrors() {
       const errors = []
-      if (
-        this.$v.form.regNum.$dirty &&
-        this.$v.form.regNum.$invalid &&
-        !this.loading
-      )
+      if (this.$v.form.regNum.$dirty && this.$v.form.regNum.$invalid && !this.loading)
         errors.push('Гос.номер должен быть заполнен')
       return errors
     },
     typeErrors() {
       const errors = []
-      if (
-        this.$v.form.type.$dirty &&
-        this.$v.form.type.$invalid &&
-        !this.loading
-      )
+      if (this.$v.form.type.$dirty && this.$v.form.type.$invalid && !this.loading)
         errors.push('Тип должен быть заполнен')
       return errors
     },
@@ -477,8 +384,7 @@ export default {
       keys.forEach((key) => {
         this.form[key] = val[key]
       })
-      if (val.additionalNotifications)
-        this.additionalNotifications = val.additionalNotifications
+      if (val.additionalNotifications) this.additionalNotifications = val.additionalNotifications
       if (val.insurance) this.insurance = val.insurance
       if (val.permits) this.permits = val.permits
       if (val.additionalDetails) this.additionalDetails = val.additionalDetails

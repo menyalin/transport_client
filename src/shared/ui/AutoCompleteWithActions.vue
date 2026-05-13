@@ -1,11 +1,5 @@
 <template>
-  <v-autocomplete
-    v-bind="$attrs"
-    :items="items"
-    :value="value"
-    @change="onInput"
-    show-select
-  >
+  <v-autocomplete v-bind="$attrs" :items="items" :value="value" @change="onInput" show-select>
     <template v-slot:append-item>
       <v-btn icon @click="createNewItem">
         <v-icon>mdi-plus</v-icon>

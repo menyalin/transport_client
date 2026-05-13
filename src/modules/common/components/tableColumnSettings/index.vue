@@ -56,9 +56,7 @@ export default {
   },
   mounted() {
     if (!this.activeHeaders) {
-      const savedHeaders = JSON.parse(
-        localStorage.getItem(this.listSettingsName)
-      )
+      const savedHeaders = JSON.parse(localStorage.getItem(this.listSettingsName))
       if (savedHeaders) this.tmpHeaders = savedHeaders
       else this.tmpHeaders = this.tmpHeaders = this.defaultHeaders
       this.emitActiveHeaders()
@@ -72,10 +70,7 @@ export default {
     inputHandler(field) {
       if (this.tmpHeaders.includes(field)) this.tmpHeaders.push(field)
       else this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
-      localStorage.setItem(
-        this.listSettingsName,
-        JSON.stringify(this.tmpHeaders)
-      )
+      localStorage.setItem(this.listSettingsName, JSON.stringify(this.tmpHeaders))
       this.$emit('change', this.tmpHeaders)
     },
   },

@@ -36,12 +36,7 @@
 <script>
 import { ref } from 'vue'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import {
-  OrdersTable,
-  OrderDocsList,
-  useOrderDocs,
-  OrdersTableSettings,
-} from '@/entities/order'
+import { OrdersTable, OrderDocsList, useOrderDocs, OrdersTableSettings } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 import { useCarrierStore } from '@/entities/carrier'
@@ -73,15 +68,7 @@ export default {
       headers.value = val
     }
 
-    const {
-      refresh,
-      create,
-      settings,
-      items,
-      loading,
-      minDate,
-      statisticData,
-    } = useListData()
+    const { refresh, create, settings, items, loading, minDate, statisticData } = useListData()
 
     return {
       putOrdersTableToClipboard,

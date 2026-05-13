@@ -3,10 +3,7 @@
     Входящий акт:
     <router-link :to="url">{{ text }}</router-link>
   </div>
-  <div
-    v-else
-    :style="{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }"
-  >
+  <div v-else :style="{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }">
     <small>Входящий акт не создан</small>
   </div>
 </template>
@@ -20,15 +17,11 @@ export default {
     invoice: Object,
   },
   setup(props) {
-    const statusStr = computed(() =>
-      incomingInvoiceStatusMap.get(props.invoice.status)
-    )
+    const statusStr = computed(() => incomingInvoiceStatusMap.get(props.invoice.status))
     const text = computed(() => {
       if (props.invoice) {
         return `  ${props.invoice.number} от ${
-          props.invoice.date
-            ? new Date(props.invoice.date).toLocaleDateString()
-            : ''
+          props.invoice.date ? new Date(props.invoice.date).toLocaleDateString() : ''
         } (${statusStr.value})`
       }
     })

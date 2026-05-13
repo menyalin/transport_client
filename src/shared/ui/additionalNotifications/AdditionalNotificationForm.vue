@@ -45,14 +45,7 @@
           </div>
 
           <!-- Примечание -->
-          <v-textarea
-            v-model="state.note"
-            label="Примечание"
-            outlined
-            dense
-            rows="3"
-            auto-grow
-          />
+          <v-textarea v-model="state.note" label="Примечание" outlined dense rows="3" auto-grow />
         </v-form>
       </v-card-text>
 
@@ -61,12 +54,7 @@
         <v-spacer />
         <v-btn text @click="handleCancel" :disabled="loading"> Отмена </v-btn>
 
-        <v-btn
-          color="primary"
-          @click="handleSubmit"
-          :loading="loading"
-          :disabled="isInvalidForm"
-        >
+        <v-btn color="primary" @click="handleSubmit" :loading="loading" :disabled="isInvalidForm">
           {{ isEdit ? 'Сохранить изменения' : 'Добавить' }}
         </v-btn>
       </v-card-actions>

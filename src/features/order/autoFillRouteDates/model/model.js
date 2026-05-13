@@ -7,10 +7,7 @@ import { OrderService } from '@/shared/services'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-3, 'd').startOf('day').format(),
-    todayM.add(-1, 'd').endOf('day').format(),
-  ]
+  return [todayM.add(-3, 'd').startOf('day').format(), todayM.add(-1, 'd').endOf('day').format()]
 }
 
 export function useFeatureModel() {
@@ -55,11 +52,9 @@ export function useFeatureModel() {
   const disabledSubmit = computed(() => {
     const trucks = !settings.value.truckIds.length
     const tripDurationInMinutes =
-      !!settings.value.tripDurationInMinutes &&
-      settings.value.tripDurationInMinutes >= 10
+      !!settings.value.tripDurationInMinutes && settings.value.tripDurationInMinutes >= 10
     const unloadingDurationInMinutes =
-      !!settings.value.unloadingDurationInMinutes &&
-      settings.value.unloadingDurationInMinutes >= 10
+      !!settings.value.unloadingDurationInMinutes && settings.value.unloadingDurationInMinutes >= 10
     return trucks || !tripDurationInMinutes || !unloadingDurationInMinutes
   })
   watch(

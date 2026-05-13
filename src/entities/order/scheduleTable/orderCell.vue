@@ -1,18 +1,7 @@
 <template>
-  <v-tooltip
-    bottom
-    nudge-left="70"
-    open-delay="700"
-    close-delay="50"
-    transition="fade-transition"
-  >
+  <v-tooltip bottom nudge-left="70" open-delay="700" close-delay="50" transition="fade-transition">
     <template #activator="{ on, attrs }">
-      <div
-        v-bind="attrs"
-        :class="orderClasses"
-        v-on="on"
-        @dblclick.stop="dblclickHandler"
-      >
+      <div v-bind="attrs" :class="orderClasses" v-on="on" @dblclick.stop="dblclickHandler">
         <div class="row-text">
           <span
             v-for="point of points.filter((p) => p.type === 'loading')"
@@ -68,9 +57,7 @@ export default {
     breakingSchedule() {
       if (this.order.route[0].arrivalDate) return false
       let roundedPlannedDate = dayjs(this.order?.route[0]?.plannedDate)
-      roundedPlannedDate = roundedPlannedDate.hour(
-        roundingHours(roundedPlannedDate.hour())
-      )
+      roundedPlannedDate = roundedPlannedDate.hour(roundingHours(roundedPlannedDate.hour()))
       let roundedStartPositionDate = dayjs(this.order.startPositionDate)
       roundedStartPositionDate = roundedStartPositionDate.hour(
         roundingHours(roundedStartPositionDate.hour())
@@ -98,14 +85,11 @@ export default {
     firstRow() {
       const addressId = this.order.route[0].address
       const hours = dayjs(this.order.route[0].plannedDate).format('HH')
-      const addressName =
-        this.$store.getters.addressMap.get(addressId)?.shortName || ' - '
+      const addressName = this.$store.getters.addressMap.get(addressId)?.shortName || ' - '
       return `${addressName} - ${hours}`
     },
     waitAtPoint() {
-      return this.order.route.findIndex(
-        (p) => !!p.arrivalDate && !p.departureDate
-      )
+      return this.order.route.findIndex((p) => !!p.arrivalDate && !p.departureDate)
     },
     nextPointIndex() {
       if (this.order.state.status !== 'inProgress') return null
@@ -121,19 +105,13 @@ export default {
     },
     delayToPointInd() {
       if (
-        [
-          'notСonfirmedByClient',
-          'weRefused',
-          'clientRefused',
-          'needGet',
-        ].includes(this.order.state.status)
+        ['notСonfirmedByClient', 'weRefused', 'clientRefused', 'needGet'].includes(
+          this.order.state.status
+        )
       )
         return -1
       const idx = this.order.route.findIndex(
-        (p) =>
-          !!p.plannedDate &&
-          new Date(p.plannedDate) < new Date() &&
-          !p.arrivalDate
+        (p) => !!p.plannedDate && new Date(p.plannedDate) < new Date() && !p.arrivalDate
       )
       return idx
     },
@@ -164,9 +142,7 @@ export default {
     getPointTitle(idx) {
       if (idx === null || undefined) return null
       let res = []
-      const address = this.$store.getters.addressMap.get(
-        this.order.route[idx].address
-      )?.shortName
+      const address = this.$store.getters.addressMap.get(this.order.route[idx].address)?.shortName
       res.push(address)
       let plannedTime = null
       if (this.order.route[idx]?.plannedDate) {

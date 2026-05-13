@@ -5,11 +5,7 @@
     </template>
 
     <v-list dense>
-      <v-list-item
-        v-for="item of filteredReports"
-        :key="item.link"
-        :to="item.link"
-      >
+      <v-list-item v-for="item of filteredReports" :key="item.link" :to="item.link">
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>

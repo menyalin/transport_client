@@ -101,14 +101,10 @@ export default {
 
   computed: {
     numErrorMessages() {
-      return this.isValidNum
-        ? []
-        : ['Номер заказа клиента не может быть пустым']
+      return this.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
     },
     auctionNumErrorMessages() {
-      return this.isValidAuctionNum
-        ? []
-        : ['Номер аукциона не может быть пустым']
+      return this.isValidAuctionNum ? [] : ['Номер аукциона не может быть пустым']
     },
   },
 }

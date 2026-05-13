@@ -17,9 +17,7 @@
           :address="item"
           :partnerItems="partnerApi.allPartners"
           :partnerActions="partnerApi.actions"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('address:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('address:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

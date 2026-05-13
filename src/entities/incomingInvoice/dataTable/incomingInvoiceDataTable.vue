@@ -27,19 +27,11 @@
     </template>
 
     <template #[`item.receiptDate`]="{ item }">
-      {{
-        item.receiptDate
-          ? new Date(item.receiptDate).toLocaleDateString()
-          : null
-      }}
+      {{ item.receiptDate ? new Date(item.receiptDate).toLocaleDateString() : null }}
     </template>
 
     <template #[`item.plannedPayDate`]="{ item }">
-      {{
-        item.plannedPayDate
-          ? new Date(item.plannedPayDate).toLocaleDateString()
-          : null
-      }}
+      {{ item.plannedPayDate ? new Date(item.plannedPayDate).toLocaleDateString() : null }}
     </template>
 
     <template #[`item.priceWOVat`]="{ item }">

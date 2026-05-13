@@ -35,15 +35,8 @@ export default {
   setup() {
     const headers = ref([])
     const carrierStore = useCarrierStore()
-    const {
-      settings,
-      items,
-      refresh,
-      loading,
-      statisticData,
-      agreementItems,
-      listOptions,
-    } = useReportData()
+    const { settings, items, refresh, loading, statisticData, agreementItems, listOptions } =
+      useReportData()
 
     function changeHeaders(value) {
       headers.value = value

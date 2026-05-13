@@ -18,9 +18,7 @@ export const useTransportFormValidation = (state, props) => {
 
   const allowUseTrailer = computed(() => {
     if (!state.value.truck) return false
-    return proxy.$store.getters.allowedToUseTrailersTrucksSet.has(
-      state.value.truck
-    )
+    return proxy.$store.getters.allowedToUseTrailersTrucksSet.has(state.value.truck)
   })
 
   const hasActiveCrews = computed(
@@ -40,8 +38,7 @@ export const useTransportFormValidation = (state, props) => {
 
       if (
         existedCrew.transport.endDate &&
-        +new Date(existedCrew.transport.endDate) <=
-          +new Date(state.value.startDate)
+        +new Date(existedCrew.transport.endDate) <= +new Date(state.value.startDate)
       )
         return null
 
@@ -70,12 +67,10 @@ export const useTransportFormValidation = (state, props) => {
   const startDateErrors = computed(() => {
     if (!v$.value.startDate.$dirty) return []
     const errors = []
-    if (v$.value.startDate.required.$invalid)
-      errors.push('Поле не может быть пустым')
+    if (v$.value.startDate.required.$invalid) errors.push('Поле не может быть пустым')
     if (v$.value.startDate.isLaterThan.$invalid)
       errors.push(
-        'Начальная дата должна быть больше: ' +
-          new Date(props.minDateValue).toLocaleString()
+        'Начальная дата должна быть больше: ' + new Date(props.minDateValue).toLocaleString()
       )
     return errors
   })
@@ -94,9 +89,7 @@ export const useTransportFormValidation = (state, props) => {
 
   const v$ = useVuelidate(rules, state)
 
-  const invalidForm = computed(
-    () => v$.value.$invalid || loading.value || hasActiveCrews.value
-  )
+  const invalidForm = computed(() => v$.value.$invalid || loading.value || hasActiveCrews.value)
 
   const trailerInputDisabled = computed(() => !allowUseTrailer.value)
 

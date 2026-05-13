@@ -6,8 +6,7 @@ export const useEntityFileHelpers = () => {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         'mdi-file-document-outline',
       'application/vnd.ms-excel': 'mdi-file-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        'mdi-file-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'mdi-file-excel',
       'image/jpeg': 'mdi-file-image',
       'image/png': 'mdi-file-image',
       'image/gif': 'mdi-file-image',
@@ -20,11 +19,7 @@ export const useEntityFileHelpers = () => {
 
   const formatSize = (size) => {
     const i = Math.round(Math.log(size) / Math.log(1024))
-    return (
-      (size / Math.pow(1024, i)).toFixed(2) * 1 +
-      ' ' +
-      ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'][i]
-    )
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'][i]
   }
 
   const formatDate = (date) => {

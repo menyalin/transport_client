@@ -35,25 +35,16 @@
         hide-details
         outlined
       />
-      <v-btn text small color="primary" @click="copyHandler">
-        Скопировать данные
-      </v-btn>
+      <v-btn text small color="primary" @click="copyHandler"> Скопировать данные </v-btn>
     </div>
-    <v-alert
-      v-if="crewEmptyError"
-      type="error"
-      dense
-      outlined
-      :style="{ maxWidth: '400px' }"
-    >
+    <v-alert v-if="crewEmptyError" type="error" dense outlined :style="{ maxWidth: '400px' }">
       Экипаж не задан
     </v-alert>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
       <small>Перевозчик: {{ carrierName }}</small>
       <small
         :class="{
-          'deep-orange--text text--darken-4 font-weight-bold ':
-            executorAndCustomerMissmatch,
+          'deep-orange--text text--darken-4 font-weight-bold ': executorAndCustomerMissmatch,
         }"
       >
         Соглашение: {{ outsourceAgreementName }}
@@ -117,9 +108,7 @@ export default {
       executorAndCustomerMissmatch,
     } = useConfirmedCrew(props, ctx)
 
-    const carrierName = computed(
-      () => props.carriersMap.get(state.value.tkName)?.name || ' - '
-    )
+    const carrierName = computed(() => props.carriersMap.get(state.value.tkName)?.name || ' - ')
 
     return {
       state,

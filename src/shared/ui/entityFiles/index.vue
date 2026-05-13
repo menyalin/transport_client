@@ -15,9 +15,7 @@
       <v-btn icon @click="getFilesHandler">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <v-btn small color="primary" @click="openDialogHandler">
-        Добавить файлы
-      </v-btn>
+      <v-btn small color="primary" @click="openDialogHandler"> Добавить файлы </v-btn>
     </v-card-actions>
     <v-dialog v-model="dialog" max-width="1200" persistent>
       <v-card>
@@ -30,15 +28,10 @@
             multiple
             truncate-length="30"
           />
-          <SelectedFiles
-            v-model="selectedFiles"
-            :uploadProgress="uploadProgress"
-          />
+          <SelectedFiles v-model="selectedFiles" :uploadProgress="uploadProgress" />
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="cancelDialogHandler" :disabled="loading">
-            Отменить загрузку файлов</v-btn
-          >
+          <v-btn @click="cancelDialogHandler" :disabled="loading"> Отменить загрузку файлов</v-btn>
           <v-spacer />
           <v-btn
             color="primary"

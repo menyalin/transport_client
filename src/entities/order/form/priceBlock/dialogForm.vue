@@ -46,9 +46,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn @click="cancel"> Отмена </v-btn>
-        <v-btn color="primary" :disabled="isInvalidForm" @click="submit">
-          Сохранить
-        </v-btn>
+        <v-btn color="primary" :disabled="isInvalidForm" @click="submit"> Сохранить </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -114,15 +112,12 @@ export default {
 
     const typeErrorMessages = computed(() => {
       const errors = []
-      if (v$.value.type.$dirty && v$.value.type.$invalid)
-        errors.push('Укажите тип тарифа')
+      if (v$.value.type.$dirty && v$.value.type.$invalid) errors.push('Укажите тип тарифа')
       return errors
     })
 
     const priceWithVat = computed(() => {
-      return (
-        props.vatRateInfo?.usePriceWithVat && props.vatRateInfo?.vatRate > 0
-      )
+      return props.vatRateInfo?.usePriceWithVat && props.vatRateInfo?.vatRate > 0
     })
 
     const vatRateInfoDescription = computed(() => {

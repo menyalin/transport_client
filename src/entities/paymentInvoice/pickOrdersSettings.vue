@@ -60,11 +60,7 @@
   </div>
 </template>
 <script>
-import {
-  AppTableColumnSetting,
-  DateRangeInput,
-  OrderDocStatusSelector,
-} from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 export default {
   name: 'PickOrdersForPaymentInvoiceSettings',

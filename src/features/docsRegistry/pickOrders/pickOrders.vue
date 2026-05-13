@@ -1,8 +1,6 @@
 <template>
   <v-card elevation="2" outlined class="ma-5">
-    <v-card-title>
-      Подобрать рейсы для описи № {{ docsRegistry.number }}
-    </v-card-title>
+    <v-card-title> Подобрать рейсы для описи № {{ docsRegistry.number }} </v-card-title>
     <v-card-subtitle>
       <b>{{ clientName }} </b>
       <span>{{ placeForTransferDocs.title }}</span>
@@ -81,9 +79,7 @@ export default {
       cancelDocDialog,
     } = useOrderDocs()
 
-    const client = computed(() =>
-      store.getters.partnersMap.get(docsRegistry.client)
-    )
+    const client = computed(() => store.getters.partnersMap.get(docsRegistry.client))
 
     const placeForTransferDocs = computed(() =>
       client.value.placesForTransferDocs.find(
@@ -95,9 +91,7 @@ export default {
       return client.value.name || '-'
     })
 
-    const selectedOrdersIds = computed(() =>
-      selectedOrders.value.map((i) => i._id)
-    )
+    const selectedOrdersIds = computed(() => selectedOrders.value.map((i) => i._id))
 
     function updateActiveHeaders(val) {
       headers.value = val
@@ -118,9 +112,7 @@ export default {
         orders: [orderId],
         docsRegistryId: docsRegistry._id,
       })
-      selectedOrders.value = selectedOrders.value.filter(
-        (item) => item._id !== orderId
-      )
+      selectedOrders.value = selectedOrders.value.filter((item) => item._id !== orderId)
       refresh()
     }
 

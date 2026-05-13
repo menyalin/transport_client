@@ -65,9 +65,7 @@ export default {
       return moneyFormatter(price)
     }
     function formatTruckKinds(kinds) {
-      return (
-        kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
-      )
+      return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
     }
     function formatLiftCapacities(items) {
       return items?.join('; ') || ''

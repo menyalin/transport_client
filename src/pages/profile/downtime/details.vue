@@ -15,9 +15,7 @@
         <DowntimeForm
           v-else
           :downtime="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('downtime:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('downtime:delete')"
           :addressActions="addressActions"
           :partnerActions="partnerActions"
           @cancel="cancel"

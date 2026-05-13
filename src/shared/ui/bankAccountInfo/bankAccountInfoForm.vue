@@ -4,11 +4,7 @@
     <v-text-field label="Расчетный счет" v-model="state.accountNumber" dense />
     <v-text-field label="Банк" v-model="state.bankName" dense />
     <v-text-field label="БИК" v-model="state.bankCode" dense />
-    <v-text-field
-      label="Корр.счет"
-      v-model="state.correspondentAccount"
-      dense
-    />
+    <v-text-field label="Корр.счет" v-model="state.correspondentAccount" dense />
   </div>
 </template>
 <script>

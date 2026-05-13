@@ -2,12 +2,9 @@
   <div class="wrapper">
     <div class="btn-wrapper">
       <v-btn @click="goBack" small>Вернуться в акт</v-btn>
-      <v-btn
-        :disabled="!selected.length || loading"
-        @click="addOrderHandler"
-        color="primary"
-        >Добавить в акт</v-btn
-      >
+      <v-btn :disabled="!selected.length || loading" @click="addOrderHandler" color="primary">
+        Добавить в акт
+      </v-btn>
     </div>
     <PickOrdersSettings v-model="settings" @refresh="refresh" />
     <v-data-table
@@ -50,16 +47,8 @@ export default {
   setup(props) {
     const { proxy } = getCurrentInstance()
 
-    const {
-      items,
-      loading,
-      refresh,
-      headers,
-      selected,
-      selectedIds,
-      settings,
-      addOrderHandler,
-    } = usePickOrdersForIncomingInvoice(props)
+    const { items, loading, refresh, headers, selected, selectedIds, settings, addOrderHandler } =
+      usePickOrdersForIncomingInvoice(props)
     function dblClickRow(_event, { item }) {
       proxy.$router.push({
         name: 'DetailsOrder',

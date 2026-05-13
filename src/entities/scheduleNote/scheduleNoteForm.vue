@@ -2,9 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="
-        !$store.getters.hasPermission('scheduleNote:write') || isInvalidForm
-      "
+      :disabledSubmit="!$store.getters.hasPermission('scheduleNote:write') || isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
@@ -19,19 +17,8 @@
       outlined
       dense
     />
-    <v-text-field
-      v-model.trim="$v.form.text.$model"
-      outlined
-      label="Текст"
-      dense
-    />
-    <v-select
-      v-model="form.priority"
-      label="Приоритет"
-      :items="priorityItems"
-      outlined
-      dense
-    />
+    <v-text-field v-model.trim="$v.form.text.$model" outlined label="Текст" dense />
+    <v-select v-model="form.priority" label="Приоритет" :items="priorityItems" outlined dense />
 
     <DateTimeInput
       v-model="$v.form.startPositionDate.$model"
@@ -41,12 +28,7 @@
       type="datetime-local"
       :style="{ maxWidth: '300px' }"
     />
-    <v-btn
-      v-if="displayDeleteBtn"
-      class="mt-5"
-      color="error"
-      @click="$emit('delete')"
-    >
+    <v-btn v-if="displayDeleteBtn" class="mt-5" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
       Удалить
     </v-btn>
@@ -101,9 +83,7 @@ export default {
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
+      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
     },
 
     formState() {

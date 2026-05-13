@@ -36,9 +36,7 @@ function useDocsRegistryForm() {
     const clientField = v$.value.client
     if (!clientField.$invalid) return err
 
-    clientField.$dirty &&
-      clientField.required.$invalid &&
-      err.push('Реквизит не может быть пустым')
+    clientField.$dirty && clientField.required.$invalid && err.push('Реквизит не может быть пустым')
     return err
   })
 
@@ -47,9 +45,7 @@ function useDocsRegistryForm() {
     const field = v$.value.placeForTransferDocs
     if (!field.$invalid) return err
 
-    field.$dirty &&
-      field.required.$invalid &&
-      err.push('Площадка не может быть пустой')
+    field.$dirty && field.required.$invalid && err.push('Площадка не может быть пустой')
     return err
   })
 
@@ -58,9 +54,7 @@ function useDocsRegistryForm() {
     const field = v$.value.agreement
     if (!field.$invalid) return err
 
-    field.$dirty &&
-      field.required.$invalid &&
-      err.push('Соглашение не может быть пустым')
+    field.$dirty && field.required.$invalid && err.push('Соглашение не может быть пустым')
     return err
   })
 

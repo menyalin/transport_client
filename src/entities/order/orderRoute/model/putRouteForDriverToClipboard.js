@@ -13,8 +13,7 @@ const getPointStr = (point) => {
     point.isReturn ? ' (возврат)' : ''
   }\n`
   // дата
-  if (point.plannedDate)
-    res += `**${new Date(point.plannedDate).toLocaleString()}** \n`
+  if (point.plannedDate) res += `**${new Date(point.plannedDate).toLocaleString()}** \n`
   res += `**${store.getters.partnersMap.get(address.partner)?.name}** \n`
   res += `${address.name}\n`
   if (point.note) res += `__${point.note}__ \n`
@@ -35,12 +34,7 @@ export default async (driverId, route, params, agreement) => {
   const user = store.getters.driversMap.get(driverId)
   const title = '__' + user.name + ', Ваш рейс:__ \n'
   const executor = '\n **ТК: ' + agreement.executorName + '**'
-  const points = route.reduce(
-    (res, item, idx) => res + `\n${idx + 1}. ` + getPointStr(item),
-    ''
-  )
+  const points = route.reduce((res, item, idx) => res + `\n${idx + 1}. ` + getPointStr(item), '')
 
-  await navigator.clipboard.writeText(
-    title + executor + getCargoParams(params) + points + '\n'
-  )
+  await navigator.clipboard.writeText(title + executor + getCargoParams(params) + points + '\n')
 }

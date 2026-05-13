@@ -72,9 +72,7 @@
             </div>
           </template>
           <template #[`item.hasScans`]="{ item }">
-            <v-icon v-if="item.hasScans" small color="green">
-              mdi-check
-            </v-icon>
+            <v-icon v-if="item.hasScans" small color="green"> mdi-check </v-icon>
             <v-icon v-else small color="red"> mdi-minus </v-icon>
           </template>
         </v-data-table>
@@ -227,9 +225,7 @@ export default {
     filteredTrucks() {
       return this.trucks
         .filter((item) =>
-          this.settings.tkNameFilter
-            ? item.tkName._id === this.settings.tkNameFilter
-            : true
+          this.settings.tkNameFilter ? item.tkName._id === this.settings.tkNameFilter : true
         )
         .filter((item) => {
           if (this.settings.truckFilter.length === 0) return true

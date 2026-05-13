@@ -114,12 +114,7 @@ export default {
     },
     disabledStatus(status) {
       if (this.params.status === 'needGet' && this.enableRefuse)
-        return ![
-          'needGet',
-          'getted',
-          'notСonfirmedByClient',
-          'weRefused',
-        ].includes(status.value)
+        return !['needGet', 'getted', 'notСonfirmedByClient', 'weRefused'].includes(status.value)
       if (this.params.status === 'needGet' && !this.enableRefuse)
         return !['needGet', 'getted'].includes(status.value)
       if (
@@ -128,9 +123,7 @@ export default {
         !this.params.clientNotified &&
         this.enableRefuse
       )
-        return !['needGet', 'getted', 'weRefused', 'clientRefused'].includes(
-          status.value
-        )
+        return !['needGet', 'getted', 'weRefused', 'clientRefused'].includes(status.value)
       if (
         this.params.status === 'getted' &&
         !this.params.driverNotified &&
@@ -160,33 +153,22 @@ export default {
       )
         return !['inProgress'].includes(status.value)
 
-      if (
-        this.params.status === 'inProgress' &&
-        this.routeCompleted &&
-        !this.isValidGrade
-      )
+      if (this.params.status === 'inProgress' && this.routeCompleted && !this.isValidGrade)
         return !['inProgress'].includes(status.value)
 
-      if (
-        this.params.status === 'inProgress' &&
-        this.routeCompleted &&
-        this.isValidGrade
-      )
+      if (this.params.status === 'inProgress' && this.routeCompleted && this.isValidGrade)
         return !['completed', 'inProgress'].includes(status.value)
 
       if (this.params.status === 'completed')
         return !['completed', 'inProgress'].includes(status.value)
 
-      if (this.params.status === 'weRefused')
-        return !['getted', 'weRefused'].includes(status.value)
+      if (this.params.status === 'weRefused') return !['getted', 'weRefused'].includes(status.value)
 
       if (this.params.status === 'clientRefused')
         return !['getted', 'clientRefused'].includes(status.value)
 
       if (this.params.status === 'notСonfirmedByClient')
-        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(
-          status.value
-        )
+        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(status.value)
       return true
     },
   },

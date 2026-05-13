@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      class="table-wrapper"
-      :style="{ 'max-height': settings.showBufferZone ? '77vh' : '93vh' }"
-    >
+    <div class="table-wrapper" :style="{ 'max-height': settings.showBufferZone ? '77vh' : '93vh' }">
       <table
         ref="tableBody"
         @dragover.prevent="dragOverHandler"
@@ -12,11 +9,7 @@
         @dblclick.stop="dblclickHandler"
       >
         <tr class="head-row" @dragover.prevent="disabledZone">
-          <td
-            ref="rowTitleColumn"
-            class="text-center"
-            :style="{ width: initTitleWidth }"
-          >
+          <td ref="rowTitleColumn" class="text-center" :style="{ width: initTitleWidth }">
             <app-settings-cell v-model="settings" />
           </td>
           <td
@@ -42,11 +35,7 @@
           :class="{ 'drag-over-row': idx === overRowInd }"
         >
           <td :style="cellStyles" @dragover.prevent="disabledZone">
-            <app-truck-title-cell
-              :id="truck._id"
-              :idx="idx"
-              :title="truck.regNum"
-            />
+            <app-truck-title-cell :id="truck._id" :idx="idx" :title="truck.regNum" />
           </td>
           <td v-for="column of columns" :key="column.title" />
         </tr>
@@ -72,20 +61,13 @@
           :key="item._id"
           tag="div"
           class="block"
-          :draggable="
-            item.itemType === 'order' && draggableMode
-              ? isDraggableOrder(item)
-              : false
-          "
+          :draggable="item.itemType === 'order' && draggableMode ? isDraggableOrder(item) : false"
           :style="getStylesForOrder(item)"
           @dragstart="dragStartHandler($event, item._id)"
           @dragend="dragEndHandler($event, item._id)"
           @dragover.prevent.stop="disabledZone"
         >
-          <app-order-cell
-            v-if="item.itemType === 'order'"
-            :orderId="item._id"
-          />
+          <app-order-cell v-if="item.itemType === 'order'" :orderId="item._id" />
           <app-downtime-cell v-else :itemId="item._id" />
         </div>
 
@@ -97,13 +79,7 @@
         />
       </table>
       <div>
-        <v-menu
-          v-model="showMenu"
-          :position-x="menuX"
-          :position-y="menuY"
-          absolute
-          offset-y
-        >
+        <v-menu v-model="showMenu" :position-x="menuX" :position-y="menuY" absolute offset-y>
           <v-list>
             <v-list-item
               :disabled="!$store.getters.hasPermission('order:create')"
@@ -235,10 +211,7 @@ export default {
               startPositionDate: note.startPositionDate,
               needRoundTime: true,
             }) + 'px',
-          top:
-            this.getTopShiftForOrder({ truckId: note.truck }) +
-            (LINE_HEIGHT - 3) / 2 +
-            'px',
+          top: this.getTopShiftForOrder({ truckId: note.truck }) + (LINE_HEIGHT - 3) / 2 + 'px',
         }
       })
       return styles
@@ -292,13 +265,8 @@ export default {
             ...o,
             itemType: 'order',
           }))
-          .concat(
-            this.filteredDountimes.map((d) => ({ ...d, itemType: 'downtime' }))
-          )
-          .sort(
-            (a, b) =>
-              new Date(a.startPositionDate) - new Date(b.startPositionDate)
-          ) || []
+          .concat(this.filteredDountimes.map((d) => ({ ...d, itemType: 'downtime' })))
+          .sort((a, b) => new Date(a.startPositionDate) - new Date(b.startPositionDate)) || []
       )
     },
     distributedOrders() {
@@ -345,12 +313,9 @@ export default {
 
     bufferHeight() {
       let arr = []
-      if (this.lineForUndistributedOrdersMap.size === 0)
-        return LINE_HEIGHT * 2 + 'px'
+      if (this.lineForUndistributedOrdersMap.size === 0) return LINE_HEIGHT * 2 + 'px'
       this.lineForUndistributedOrdersMap.forEach((val) => arr.push(val))
-      return (
-        ((Math.max(...arr) + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
-      )
+      return ((Math.max(...arr) + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
     },
   },
   watch: {
@@ -383,8 +348,7 @@ export default {
       startDateM = startDateM.hour(roundingHours(startDateM.hour()))
       this.tmpStartDate = startDateM.format('YYYY-MM-DD HH:00')
 
-      if (isBuffer && this.$store.getters.hasPermission('order:create'))
-        this.createOrder()
+      if (isBuffer && this.$store.getters.hasPermission('order:create')) this.createOrder()
       else if (!isBuffer) {
         const rowInd = Math.floor(offsetY / LINE_HEIGHT)
         this.truckId = this.rows[rowInd]._id
@@ -450,9 +414,7 @@ export default {
       let sPositionMoment
       if (needRoundTime) {
         sPositionMoment = dayjs(startPositionDate)
-        sPositionMoment = sPositionMoment.hour(
-          roundingHours(sPositionMoment.hour())
-        )
+        sPositionMoment = sPositionMoment.hour(roundingHours(sPositionMoment.hour()))
         sPositionMoment = sPositionMoment.minute(0)
       } else {
         // если это downtime
@@ -467,27 +429,19 @@ export default {
     },
 
     getTopShiftForOrder({ truckId, _id }) {
-      if (!truckId)
-        return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
+      if (!truckId) return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
 
       const rowIdx = this.rows.findIndex((item) => item._id === truckId)
       if (rowIdx === -1) return null
       return rowIdx * LINE_HEIGHT + this.titleRowHeight
     },
 
-    getOrderWidth({
-      startPositionDate,
-      endPositionDate,
-      type,
-      needRoundTime,
-      isCompleted,
-    }) {
+    getOrderWidth({ startPositionDate, endPositionDate, type, needRoundTime, isCompleted }) {
       let startPoint
       let endPoint
       const SEC_IN_SIX_HOURS = 6 * 60 * 60
       const SEC_IN_THREE_HOURS = 3 * 60 * 60
-      if (dayjs(startPositionDate).isBefore(this.period[0]))
-        startPoint = dayjs(this.period[0])
+      if (dayjs(startPositionDate).isBefore(this.period[0])) startPoint = dayjs(this.period[0])
       else {
         startPoint = dayjs(startPositionDate)
       }
@@ -504,10 +458,7 @@ export default {
       const dutation = endPoint.unix() - startPoint.unix()
       // если сервис и включен режим "планиуремых дат"
       if (type && this.$store.getters.onlyPlannedDates)
-        return (
-          (dutation > SEC_IN_THREE_HOURS ? dutation : SEC_IN_THREE_HOURS) /
-          this.secInPx
-        )
+        return (dutation > SEC_IN_THREE_HOURS ? dutation : SEC_IN_THREE_HOURS) / this.secInPx
       else
         return (
           (dutation > SEC_IN_SIX_HOURS ||
@@ -540,10 +491,7 @@ export default {
 
     dragEndHandler(e, orderId) {
       e.target.style.opacity = 1
-      if (
-        e.dataTransfer.dropEffect === 'none' ||
-        e.dataTransfer.mozUserCancelled
-      )
+      if (e.dataTransfer.dropEffect === 'none' || e.dataTransfer.mozUserCancelled)
         this.$emit('endDragOrder', orderId)
       this.overRowInd = null
       this.draggedOrderId = null
@@ -565,9 +513,7 @@ export default {
     dropOnBufferHandler(e) {
       this.draggedOrderId = null
       const x = e.layerX - this.titleColumnWidth
-      let startDate = dayjs.unix(
-        dayjs(this.period[0]).unix() + x * this.secInPx
-      )
+      let startDate = dayjs.unix(dayjs(this.period[0]).unix() + x * this.secInPx)
       startDate = startDate.hour(roundingHours(startDate.hour()))
       this.$emit('updateOrder', {
         truckId: null,
@@ -578,17 +524,11 @@ export default {
 
     dropHandler(e) {
       this.draggedOrderId = null
-      if (
-        this.overRowInd === null ||
-        this.overRowInd < 0 ||
-        this.overRowInd > this.rows.length - 1
-      )
+      if (this.overRowInd === null || this.overRowInd < 0 || this.overRowInd > this.rows.length - 1)
         return null
 
       const x = e.layerX - this.titleColumnWidth
-      let startDate = dayjs.unix(
-        dayjs(this.period[0]).unix() + x * this.secInPx
-      )
+      let startDate = dayjs.unix(dayjs(this.period[0]).unix() + x * this.secInPx)
       startDate = startDate.hour(roundingHours(startDate.hour()))
 
       this.$emit('updateOrder', {
@@ -607,8 +547,7 @@ export default {
 
     isDraggableOrder(order) {
       const disabled = order.isDisabled
-      const confirmed =
-        order.state?.driverNotified || order.state?.clientNotified
+      const confirmed = order.state?.driverNotified || order.state?.clientNotified
       return !disabled && !confirmed
     },
   },

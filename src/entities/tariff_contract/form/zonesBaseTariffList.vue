@@ -82,9 +82,7 @@ export default {
       return props.items.map((i) => ({
         ...i,
         loadingZone: formatZone(i.loadingZone),
-        unloadingZones: i.unloadingZones
-          .map((zone) => formatZone(zone))
-          .join('; '),
+        unloadingZones: i.unloadingZones.map((zone) => formatZone(zone)).join('; '),
       }))
     })
     return {

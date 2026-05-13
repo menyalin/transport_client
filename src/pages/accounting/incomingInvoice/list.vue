@@ -26,10 +26,7 @@
 </template>
 <script>
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
-import {
-  IncomingInvoiceListSettings,
-  IncomingInvoiceDataTable,
-} from '@/entities/incomingInvoice'
+import { IncomingInvoiceListSettings, IncomingInvoiceDataTable } from '@/entities/incomingInvoice'
 
 import { useListData } from './model/useListData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement/useCarrierAgreements.js'

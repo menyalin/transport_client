@@ -21,7 +21,18 @@ module.exports = {
     'vue/valid-v-slot': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/singleline-html-element-content-newline': 'off',
-    'vue/html-indent': ['error', 2],
+    // Отключено в пользу Prettier
+    // 'vue/html-indent': [
+    //   'error',
+    //   2,
+    //   {
+    //     attribute: 1,
+    //     baseIndent: 1,
+    //     closeBracket: 0,
+    //     alignAttributesVertically: true,
+    //     ignores: [],
+    //   },
+    // ],
     'vue/html-self-closing': [
       'error',
       {

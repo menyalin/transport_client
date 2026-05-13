@@ -6,10 +6,7 @@
       @submit="createHandler"
       @refresh="refreshHandler"
     />
-    <CarrierAgreementListSettings
-      v-model="settings"
-      @updateHeaders="changeHeaders"
-    />
+    <CarrierAgreementListSettings v-model="settings" @updateHeaders="changeHeaders" />
 
     <CarrierAgreementListDataTable
       :items="items"

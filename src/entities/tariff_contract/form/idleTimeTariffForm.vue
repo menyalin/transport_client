@@ -4,12 +4,7 @@
       <v-card-title>{{ formTitle }}</v-card-title>
       <v-card-text>
         <div class="input-fields-row">
-          <v-select
-            label="Тип ТС"
-            :items="truckKindItems"
-            multiple
-            v-model="form.truckKinds"
-          />
+          <v-select label="Тип ТС" :items="truckKindItems" multiple v-model="form.truckKinds" />
           <v-select
             multiple
             label="Грузоподъемность"
@@ -53,12 +48,7 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
+        <v-btn v-if="!editableMode" type="submit" color="primary" :disabled="isInvalidForm">
           Добавить в список
         </v-btn>
       </CardActionButtons>
@@ -71,8 +61,6 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, numeric, minLength } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
-
-
 
 export default {
   name: 'AdditionalPointsTariffForm',
@@ -105,9 +93,7 @@ export default {
       price: null,
     })
 
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = {
       ...commonRules,

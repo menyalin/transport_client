@@ -5,11 +5,7 @@
     :displayDeleteBtn="!!id && $store.getters.hasPermission('worker:delete')"
   >
     <worker-form :item="worker" @cancel="cancel" @submit="submit" />
-    <linked-user
-      v-if="id"
-      :worker="worker"
-      @updateWorker="updateWorkerHandler"
-    />
+    <linked-user v-if="id" :worker="worker" @updateWorker="updateWorkerHandler" />
   </form-wrapper>
 </template>
 <script>
@@ -70,9 +66,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           await WorkerService.deleteById(this.id)

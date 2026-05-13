@@ -6,9 +6,7 @@
         <app-region-form
           v-else
           :region="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('region:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('region:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -20,7 +18,7 @@
 <script>
 import AppRegionForm from '@/modules/profile/components/regionForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {RegionService } from '@/shared/services'
+import { RegionService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {

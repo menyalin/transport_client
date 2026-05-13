@@ -6,18 +6,10 @@ import { PaymentInvoiceService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
 
 const initPeriod = () => {
-  return [
-    dayjs().add(-1, 'month').startOf('month').toISOString(),
-    new Date().toISOString(),
-  ]
+  return [dayjs().add(-1, 'month').startOf('month').toISOString(), new Date().toISOString()]
 }
 
-export const useListData = ({
-  client,
-  _id,
-  agreementId,
-  date: invoiceDate,
-}) => {
+export const useListData = ({ client, _id, agreementId, date: invoiceDate }) => {
   if (!client) console.error('client id is missing')
   const initialState = {
     search: null,
@@ -27,10 +19,7 @@ export const useListData = ({
     docStatuses: ['accepted'],
     loadingZones: [],
   }
-  const settings = usePersistedRef(
-    initialState,
-    'paymentInvoice:pickOrders:settings'
-  )
+  const settings = usePersistedRef(initialState, 'paymentInvoice:pickOrders:settings')
   const items = ref([])
   const loading = ref(false)
 

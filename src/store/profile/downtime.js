@@ -43,8 +43,7 @@ export default {
     },
   },
   getters: {
-    downtimesMap: ({ downtimes }) =>
-      new Map(downtimes.map((item) => [item._id, item])),
+    downtimesMap: ({ downtimes }) => new Map(downtimes.map((item) => [item._id, item])),
     downtimes: ({ downtimes }) => downtimes,
     downtimeTypes: ({ downtimeTypes }) => downtimeTypes,
     downtimeTypesHash: ({ downtimeTypes }) =>

@@ -20,9 +20,7 @@
         </tr>
 
         <tr v-else-if="!items.length">
-          <td colspan="5" class="text-center py-8 grey--text">
-            Нет напоминаний
-          </td>
+          <td colspan="5" class="text-center py-8 grey--text">Нет напоминаний</td>
         </tr>
 
         <tr v-for="(item, index) in items" :key="`notification-${index}`">
@@ -51,13 +49,7 @@
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
 
-            <v-btn
-              icon
-              small
-              color="red"
-              @click="$emit('delete', index)"
-              :disabled="loading"
-            >
+            <v-btn icon small color="red" @click="$emit('delete', index)" :disabled="loading">
               <v-icon small>mdi-delete</v-icon>
             </v-btn>
           </td>
@@ -67,12 +59,7 @@
       <tfoot>
         <tr>
           <td colspan="5" class="pa-2">
-            <v-btn
-              color="primary"
-              @click="$emit('add')"
-              :disabled="loading"
-              small
-            >
+            <v-btn color="primary" @click="$emit('add')" :disabled="loading" small>
               Добавить напоминание
             </v-btn>
           </td>

@@ -28,15 +28,13 @@ class UserService {
 
   async changePassword(payload) {
     const { data } = await api.post(BASE_PATH + '/change_password', payload)
-    if (data.accessToken)
-      localStorage.setItem('token', `Bearer ${data.accessToken}`)
+    if (data.accessToken) localStorage.setItem('token', `Bearer ${data.accessToken}`)
     return true
   }
 
   async setPassword(payload) {
     const { data } = await api.post(BASE_PATH + '/set_password', payload)
-    if (data.accessToken)
-      localStorage.setItem('token', `Bearer ${data.accessToken}`)
+    if (data.accessToken) localStorage.setItem('token', `Bearer ${data.accessToken}`)
     return data
   }
 

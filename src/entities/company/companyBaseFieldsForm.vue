@@ -33,8 +33,9 @@ export default {
     item: { type: Object, required: true },
   },
   setup(props, ctx) {
-    const { v$, state, invalidForm, fullNameErrorMessages, setFormState } =
-      useBaseFieldsForm(props.item)
+    const { v$, state, invalidForm, fullNameErrorMessages, setFormState } = useBaseFieldsForm(
+      props.item
+    )
 
     function cancelHandler() {
       router.go(-1)

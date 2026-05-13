@@ -2,9 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('agreement:write') || isInvalidForm
-      "
+      :disabled-submit="!$store.getters.hasPermission('agreement:write') || isInvalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
     />
@@ -75,10 +73,7 @@
           chips
           deletable-chips
         />
-        <app-clients
-          v-model="state.clients"
-          :style="{ 'max-width': '400px' }"
-        />
+        <app-clients v-model="state.clients" :style="{ 'max-width': '400px' }" />
 
         <v-checkbox
           v-model="state.usePriceWithVAT"
@@ -154,11 +149,7 @@
           class="pl-2"
           label="Разрешены индивидуальные тарифы"
         />
-        <v-checkbox
-          v-model="state.closed"
-          class="pl-6"
-          label="Соглашение закрыто"
-        />
+        <v-checkbox v-model="state.closed" class="pl-6" label="Соглашение закрыто" />
       </div>
     </div>
 
@@ -196,13 +187,10 @@ export default {
     },
   },
   setup(props, ctx) {
-    const {
-      state,
-      deleteHandler,
-      submitHandler,
-      cancelHandler,
-      isInvalidForm,
-    } = useForm(props, ctx)
+    const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm } = useForm(
+      props,
+      ctx
+    )
 
     return {
       state,

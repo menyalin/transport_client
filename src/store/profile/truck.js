@@ -88,14 +88,9 @@ export default {
     async getTrucks({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.trucks.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.trucks.length === 0 && getters.directoriesProfile)) {
           commit('setTrucks', [])
-          const data = await TruckService.getByDirectoriesProfile(
-            getters.directoriesProfile
-          )
+          const data = await TruckService.getByDirectoriesProfile(getters.directoriesProfile)
           commit('setTrucks', data)
         }
         commit('setLoading', false)
@@ -128,9 +123,7 @@ export default {
 
     truckKinds: ({ allTruckParams }, { companySettings }) => {
       return allTruckParams.truckKinds.filter((i) =>
-        companySettings.truckKinds.length
-          ? companySettings.truckKinds.includes(i.value)
-          : true
+        companySettings.truckKinds.length ? companySettings.truckKinds.includes(i.value) : true
       )
     },
 
@@ -147,8 +140,7 @@ export default {
       )
     },
 
-    allLiftCapacityTypes: ({ allTruckParams }) =>
-      allTruckParams.liftCapacityTypes,
+    allLiftCapacityTypes: ({ allTruckParams }) => allTruckParams.liftCapacityTypes,
 
     truckTypesHash: ({ allTruckParams }) =>
       allTruckParams.truckTypes.reduce((hash, item) => {
@@ -181,8 +173,7 @@ export default {
           .filter((item) => (type ? item.type === type : true))
       },
 
-    outsourceTruckIds: ({ trucks }) =>
-      trucks.filter((t) => t.tkName.outsource).map((t) => t._id),
+    outsourceTruckIds: ({ trucks }) => trucks.filter((t) => t.tkName.outsource).map((t) => t._id),
 
     trucksMap: ({ trucks }) => {
       let map = new Map()
@@ -198,11 +189,9 @@ export default {
         if (!date || !dayjs(date).isValid) return trucks
         return trucks.filter((item) => {
           const startPeriodCond =
-            !item.startServiceDate ||
-            new Date(item.startServiceDate) <= new Date(date)
+            !item.startServiceDate || new Date(item.startServiceDate) <= new Date(date)
           const endPeriodCond =
-            !item.endServiceDate ||
-            new Date(item.endServiceDate) > new Date(date)
+            !item.endServiceDate || new Date(item.endServiceDate) > new Date(date)
           return startPeriodCond && endPeriodCond
         })
       },

@@ -96,21 +96,13 @@
       :crewStartDate="state.startDate"
     />
 
-    <v-text-field
-      v-model="state.note"
-      label="Примечание"
-      outlined
-      dense
-      class="mt-6"
-    />
+    <v-text-field v-model="state.note" label="Примечание" outlined dense class="mt-6" />
     <div v-if="crew && crew.manager" class="pb-4 text-caption">
       Отв.пользователь: {{ crew.manager.name }},
       {{ crew.manager.email }}
       <br />
       Создан: {{ new Date(crew.createdAt).toLocaleString() }}
-      <span v-if="crew.updatedAt">
-        Обновлен: {{ new Date(crew.updatedAt).toLocaleString() }}
-      </span>
+      <span v-if="crew.updatedAt"> Обновлен: {{ new Date(crew.updatedAt).toLocaleString() }} </span>
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>

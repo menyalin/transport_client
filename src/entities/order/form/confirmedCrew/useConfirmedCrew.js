@@ -14,9 +14,7 @@ export const useConfirmedCrew = (props, ctx) => {
     tkName: null,
     directiveAgreement: false,
   }
-  const state = ref(
-    props.crew ? { directiveAgreement: true, ...props.crew } : initialState
-  )
+  const state = ref(props.crew ? { directiveAgreement: true, ...props.crew } : initialState)
   const loading = ref(false)
   const crewEmptyError = ref(false)
   const allowedAgreements = ref([])
@@ -39,9 +37,7 @@ export const useConfirmedCrew = (props, ctx) => {
   )
   const executorAndCustomerMissmatch = computed(() => {
     if (!outsourceAgreement.value) return false
-    return (
-      props.executorIdInClientAgreement !== outsourceAgreement.value.customer
-    )
+    return props.executorIdInClientAgreement !== outsourceAgreement.value.customer
   })
   const trailers = computed(() =>
     proxy.$store.getters.trucks
@@ -51,9 +47,7 @@ export const useConfirmedCrew = (props, ctx) => {
 
   const hasTruck = computed(() => Boolean(state.value.truck))
 
-  const isNeedUpdateCrew = computed(
-    () => props.date && state.value.truck && !props.confirmed
-  )
+  const isNeedUpdateCrew = computed(() => props.date && state.value.truck && !props.confirmed)
 
   const truckReadOnly = computed(
     () => props.confirmed
@@ -97,13 +91,12 @@ export const useConfirmedCrew = (props, ctx) => {
     const carrierId = crew?.tkName || state.value.tkName || null
 
     if (carrierId) {
-      allowedAgreements.value =
-        await CarrierAgreementService.getAllowedAgreements({
-          company: proxy.$store.getters.directoriesProfile,
-          date: props.date,
-          carrierId: carrierId,
-          agreementId: state.value.outsourceAgreement,
-        })
+      allowedAgreements.value = await CarrierAgreementService.getAllowedAgreements({
+        company: proxy.$store.getters.directoriesProfile,
+        date: props.date,
+        carrierId: carrierId,
+        agreementId: state.value.outsourceAgreement,
+      })
 
       outsourceAgreement.value = carrierAgreementSelector({
         crewState: state.value,
@@ -144,8 +137,7 @@ export const useConfirmedCrew = (props, ctx) => {
       (item) => item._id === state.value.outsourceAgreement
     )
 
-    outsourceAgreement.value =
-      allowedAgreements.value[(idx + 1) % allowedAgreements.value.length]
+    outsourceAgreement.value = allowedAgreements.value[(idx + 1) % allowedAgreements.value.length]
 
     setState({
       ...state.value,

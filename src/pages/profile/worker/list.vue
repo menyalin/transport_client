@@ -81,9 +81,7 @@ export default {
         .map((i) => ({
           ...i,
           roles: i.roles
-            ? i.roles
-                .map((role) => store.getters.staffRolesMap.get(role))
-                .join(', ')
+            ? i.roles.map((role) => store.getters.staffRolesMap.get(role)).join(', ')
             : null,
         }))
         .sort((a, b) => {

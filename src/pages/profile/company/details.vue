@@ -29,9 +29,7 @@ export default {
   },
   setup(props) {
     const company = computed(() =>
-      store.state.ProfileModule.myCompanies.find(
-        (item) => item._id === props.id
-      )
+      store.state.ProfileModule.myCompanies.find((item) => item._id === props.id)
     )
 
     async function submitHandler(formState) {

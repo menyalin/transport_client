@@ -37,8 +37,7 @@ export default {
     const { proxy } = getCurrentInstance()
     const carrierStore = useCarrierStore()
     const carrier = ref(null)
-    const { items: agreementItems, loading: agreementsLoading } =
-      useCarrierAgreements()
+    const { items: agreementItems, loading: agreementsLoading } = useCarrierAgreements()
 
     async function submitHandler(val) {
       carrier.value = await carrierStore.updateOne(props.id, val)

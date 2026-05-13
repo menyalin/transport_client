@@ -116,9 +116,7 @@ export default {
     },
     daysBeforeMedExamination() {
       if (!this.params.annualCommisionDate) return null
-      const lastDate = dayjs(this.params.annualCommisionDate)
-        .add(1, 'year')
-        .unix()
+      const lastDate = dayjs(this.params.annualCommisionDate).add(1, 'year').unix()
       const todaySec = dayjs().unix()
       return Math.floor((lastDate - todaySec) / (60 * 60 * 24))
     },

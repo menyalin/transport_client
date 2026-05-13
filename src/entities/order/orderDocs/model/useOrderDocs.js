@@ -32,13 +32,9 @@ export function useOrderDocs() {
     return !docs.filter((item) => !item.type || !item.status).length
   }
 
-  const isReadonlyDocs = computed(
-    () => !store.getters.hasPermission('order:setDocs')
-  )
+  const isReadonlyDocs = computed(() => !store.getters.hasPermission('order:setDocs'))
 
-  const isShowDocs = computed(() =>
-    store.getters.hasPermission('order:readDocs')
-  )
+  const isShowDocs = computed(() => store.getters.hasPermission('order:readDocs'))
 
   return {
     openDocsDialog,

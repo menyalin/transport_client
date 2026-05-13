@@ -13,7 +13,7 @@ export const usePartnerStore = defineStore('PartnerStore', () => {
   })
 
   const clients = computed(() => {
-    return allPartners.value.filter(i => i.isClient)
+    return allPartners.value.filter((i) => i.isClient)
   })
 
   function getById(id) {

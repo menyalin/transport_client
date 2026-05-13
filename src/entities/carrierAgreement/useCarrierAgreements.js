@@ -17,9 +17,7 @@ export const useCarrierAgreements = (settings) => {
   })
 
   const itemsMap = computed(() => {
-    return new Map(
-      items.value.length ? items.value.map((i) => [i._id, i]) : null
-    )
+    return new Map(items.value.length ? items.value.map((i) => [i._id, i]) : null)
   })
 
   async function getData() {

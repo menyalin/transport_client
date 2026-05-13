@@ -28,14 +28,9 @@ export default {
     async getZones({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.zones.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.zones.length === 0 && getters.directoriesProfile)) {
           commit('setZones', [])
-          const data = await ZoneService.getByDirectoriesProfile(
-            getters.directoriesProfile
-          )
+          const data = await ZoneService.getByDirectoriesProfile(getters.directoriesProfile)
           commit('setZones', data)
         }
         commit('setLoading', false)

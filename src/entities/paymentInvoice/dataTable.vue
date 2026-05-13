@@ -29,11 +29,7 @@
       {{ item.payDate ? new Date(item.payDate).toLocaleDateString() : null }}
     </template>
     <template #[`item.plannedPayDate`]="{ item }">
-      {{
-        item.plannedPayDate
-          ? new Date(item.plannedPayDate).toLocaleDateString()
-          : null
-      }}
+      {{ item.plannedPayDate ? new Date(item.plannedPayDate).toLocaleDateString() : null }}
     </template>
     <template #[`item.date`]="{ item }">
       {{ item.date ? new Date(item.date).toLocaleDateString() : null }}
@@ -141,10 +137,7 @@ export default {
       (val) => {
         if (!val || !val.length) selected.value = []
         else if (!selected.value.length) return
-        else
-          selected.value = selected.value.filter((i) =>
-            existedIds.value.includes(i._id)
-          )
+        else selected.value = selected.value.filter((i) => existedIds.value.includes(i._id))
       }
     )
     return {

@@ -10,15 +10,13 @@ export const useDriverList = () => {
 
   function stateFilterHandler(driver) {
     if (listSettings.value.workState === 'all') return true
-    if (listSettings.value.workState === 'holiday')
-      return !crewsMapByDriver.value.has(driver._id)
+    if (listSettings.value.workState === 'holiday') return !crewsMapByDriver.value.has(driver._id)
     else return crewsMapByDriver.value.has(driver._id)
   }
 
   function stuffStatusFilterHandler(driver) {
     if (listSettings.value.stuffStatus === 'all') return true
-    if (listSettings.value.stuffStatus === 'employee')
-      return !driver.dismissalDate
+    if (listSettings.value.stuffStatus === 'employee') return !driver.dismissalDate
     if (listSettings.value.stuffStatus === 'fired') return driver.dismissalDate
   }
 

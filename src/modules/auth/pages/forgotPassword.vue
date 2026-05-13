@@ -14,12 +14,7 @@
                   {{ message }}
                 </v-alert>
               </transition>
-              <v-text-field
-                v-model="email"
-                label="Email"
-                prepend-icon="mdi-at"
-                type="email"
-              />
+              <v-text-field v-model="email" label="Email" prepend-icon="mdi-at" type="email" />
             </v-card-text>
             <v-card-actions>
               <router-link to="/auth/login">
@@ -79,15 +74,11 @@ export default {
       try {
         this.loading = true
         await UserService.forgotPassword(this.email)
-        this.showMessage(
-          'На указанный адрес отправлено письмо с ссылкой',
-          'info'
-        )
+        this.showMessage('На указанный адрес отправлено письмо с ссылкой', 'info')
         this.email = null
         this.loading = false
       } catch (e) {
-        if (e?.response?.status === 404)
-          this.showMessage('Email не найден', 'error')
+        if (e?.response?.status === 404) this.showMessage('Email не найден', 'error')
         else if (e?.response?.data) this.showMessage(e.response.data, 'error')
         else this.showMessage(e.message, 'error')
         this.loading = false

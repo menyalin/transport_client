@@ -6,9 +6,7 @@
         <app-document-form
           v-else
           :document="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('document:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('document:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"

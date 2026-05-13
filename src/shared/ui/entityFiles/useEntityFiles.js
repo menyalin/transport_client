@@ -10,9 +10,7 @@ export const useEntityFiles = (props) => {
 
   const uploadProgressHandler = (filename) => (progressEvent) => {
     if (progressEvent.lengthComputable) {
-      const progress = Math.round(
-        (progressEvent.loaded / progressEvent.total) * 100
-      )
+      const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
       uploadProgress.value = { ...uploadProgress.value, [filename]: progress }
     }
   }
@@ -22,12 +20,7 @@ export const useEntityFiles = (props) => {
     loading.value = true
     const uploadPromises = Array.from(selectedFiles.value).map(async (file) => {
       const { url: uploadUrl, key } = await getFileUploadUrl(file)
-      await FileService.uploadFile(
-        uploadUrl,
-        file,
-        key,
-        uploadProgressHandler(file.name)
-      )
+      await FileService.uploadFile(uploadUrl, file, key, uploadProgressHandler(file.name))
     })
 
     await Promise.all(uploadPromises)

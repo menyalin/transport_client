@@ -28,10 +28,7 @@ export const useOrderValidations = () => {
   function beforeSubmitOrderValidation(order) {
     let baseResult = [false, null]
 
-    const res = plannedDateInRetailPartnersControl(
-      order.state.status,
-      order.route
-    )
+    const res = plannedDateInRetailPartnersControl(order.state.status, order.route)
 
     if (res[0]) return res
 

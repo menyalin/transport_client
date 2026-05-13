@@ -11,10 +11,7 @@
     @dblclick:row="dblClickRow"
     :style="{ boxSizing: 'border-box' }"
   >
-    <template
-      v-if="preparedItems.length"
-      #[`body.append`]="{ headers, items: tableItems }"
-    >
+    <template v-if="preparedItems.length" #[`body.append`]="{ headers, items: tableItems }">
       <app-append-pivor-row :headers="headers" :items="tableItems" />
     </template>
 
@@ -84,17 +81,11 @@ export default {
         // Детализация по Водителю
         return props.items.map((i, idx) => ({
           ...i,
-          _paymentSum: i._paymentSum
-            ? new Intl.NumberFormat().format(i._paymentSum)
-            : 0,
-          _totalSum: i.totalSum
-            ? new Intl.NumberFormat().format(i.totalSum)
-            : 0,
+          _paymentSum: i._paymentSum ? new Intl.NumberFormat().format(i._paymentSum) : 0,
+          _totalSum: i.totalSum ? new Intl.NumberFormat().format(i.totalSum) : 0,
           _additionalPointsSum: i.additionalPointsSum,
           _rowNumber: idx + 1,
-          _orderDate: i.orderDate
-            ? new Date(i.orderDate).toLocaleString()
-            : null,
+          _orderDate: i.orderDate ? new Date(i.orderDate).toLocaleString() : null,
         }))
       // Сводная информация
       else

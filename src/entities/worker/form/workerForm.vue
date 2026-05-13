@@ -3,9 +3,7 @@
     <buttons-panel
       panel-type="form"
       :disabledSubmit="
-        !$store.getters.hasPermission('worker:write') ||
-        isInvalidForm ||
-        !formChanged
+        !$store.getters.hasPermission('worker:write') || isInvalidForm || !formChanged
       "
       class="mb-4"
       @cancel="cancel"
@@ -49,12 +47,7 @@
       />
     </div>
 
-    <v-text-field
-      v-model.trim="$v.form.position.$model"
-      outlined
-      label="Должность"
-      dense
-    />
+    <v-text-field v-model.trim="$v.form.position.$model" outlined label="Должность" dense />
 
     <v-text-field v-model.trim="form.note" outlined label="Примечание" dense />
 
@@ -131,9 +124,7 @@ export default {
     formState() {
       const dates = {}
       this.dateFields.forEach((item) => {
-        dates[item] = this.form[item]
-          ? dayjs(this.form[item]).toISOString()
-          : null
+        dates[item] = this.form[item] ? dayjs(this.form[item]).toISOString() : null
       })
       return { ...this.form, company: this.directoriesProfile, ...dates }
     },

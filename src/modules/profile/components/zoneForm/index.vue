@@ -2,11 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="
-        !$store.getters.hasPermission('zone:write') ||
-          isInvalidForm ||
-          !formChanged
-      "
+      :disabledSubmit="!$store.getters.hasPermission('zone:write') || isInvalidForm || !formChanged"
       @cancel="cancel"
       @submit="submit"
     />
@@ -65,9 +61,7 @@ export default {
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
+      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
     },
     nameErrors() {
       const errors = []

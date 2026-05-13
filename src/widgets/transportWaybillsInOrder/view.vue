@@ -17,9 +17,7 @@
       <v-btn icon @click="handlers.refreshList">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <v-btn small color="primary" @click="handlers.openDialog">
-        Добавить ТрН
-      </v-btn>
+      <v-btn small color="primary" @click="handlers.openDialog"> Добавить ТрН </v-btn>
     </v-card-actions>
 
     <v-dialog v-model="formDialog" persistent width="1000px">
@@ -77,15 +75,10 @@ export default {
     function getPartnerNameByAddressId(addressId) {
       const address = addressStore.getById(addressId)
       if (!address) return 'address not found'
-      return (
-        partnerStore.getById(address.partner)?.name || 'partner name not found'
-      )
+      return partnerStore.getById(address.partner)?.name || 'partner name not found'
     }
 
-    const { shipperAddressItems, consigneeAddressItems } = useOrderRouteData(
-      props,
-      ctx
-    )
+    const { shipperAddressItems, consigneeAddressItems } = useOrderRouteData(props, ctx)
 
     function editItemHandler(itemId) {
       const idx = items.value.findIndex((i) => i._id === itemId)
@@ -136,10 +129,7 @@ export default {
         orderId: props.orderId,
       }
       if (editedItem.value) {
-        const updatedItem = await TransportWaybillService.update(
-          editedItem.value._id,
-          body
-        )
+        const updatedItem = await TransportWaybillService.update(editedItem.value._id, body)
 
         const idx = items.value.findIndex((i) => i._id === editedItem.value._id)
         items.value.splice(idx, 1, updatedItem)

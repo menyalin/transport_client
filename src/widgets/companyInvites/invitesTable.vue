@@ -16,20 +16,12 @@
           <td>{{ item.company.inn }}</td>
           <td>{{ item.position }}</td>
           <td>
-            {{
-              item.roles
-                .map((role) => $store.getters.staffRolesMap.get(role))
-                .join(', ')
-            }}
+            {{ item.roles.map((role) => $store.getters.staffRolesMap.get(role)).join(', ') }}
           </td>
           <td class="text-center">
             <div class="buttons-container">
-              <v-icon color="green" @click="handleAccept(item._id, true)">
-                mdi-check
-              </v-icon>
-              <v-icon color="red" @click="handleAccept(item._id, false)">
-                mdi-cancel
-              </v-icon>
+              <v-icon color="green" @click="handleAccept(item._id, true)"> mdi-check </v-icon>
+              <v-icon color="red" @click="handleAccept(item._id, false)"> mdi-cancel </v-icon>
             </div>
           </td>
         </tr>

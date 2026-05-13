@@ -13,15 +13,11 @@
         <template #activator="{ on, attrs }">
           <span class="date-text" v-bind="attrs" v-on="on">
             c:
-            {{
-              tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-'
-            }}
+            {{ tmpPeriod[0] ? new Date(tmpPeriod[0]).toLocaleDateString() : '-' }}
           </span>
           <span class="date-text" v-bind="attrs" v-on="on">
             по:
-            {{
-              tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-'
-            }}
+            {{ tmpPeriod[1] ? new Date(tmpPeriod[1]).toLocaleDateString() : '-' }}
           </span>
         </template>
         <v-date-picker

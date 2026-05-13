@@ -4,12 +4,7 @@
       <v-card-title>{{ formTitle }}</v-card-title>
       <v-card-text>
         <div class="input-fields-row">
-          <v-select
-            label="Тип ТС"
-            :items="truckKindItems"
-            multiple
-            v-model="form.truckKinds"
-          />
+          <v-select label="Тип ТС" :items="truckKindItems" multiple v-model="form.truckKinds" />
           <v-select
             multiple
             label="Грузоподъемность"
@@ -22,10 +17,7 @@
             label="Кол-во точек, включенных в тариф"
             v-model.number="form.includedPoints"
           />
-          <v-text-field
-            label="Тариф за доп.точку"
-            v-model.number="form.pointPrice"
-          />
+          <v-text-field label="Тариф за доп.точку" v-model.number="form.pointPrice" />
         </div>
         <div class="input-fields-row">
           <v-autocomplete
@@ -57,12 +49,7 @@
         @submit="submitHandler"
         @cancel="cancelHandler"
       >
-        <v-btn
-          v-if="!editableMode"
-          type="submit"
-          color="primary"
-          :disabled="isInvalidForm"
-        >
+        <v-btn v-if="!editableMode" type="submit" color="primary" :disabled="isInvalidForm">
           Добавить в список
         </v-btn>
       </CardActionButtons>
@@ -97,17 +84,10 @@ export default {
     initialFormState: Object,
   },
   setup(props, ctx) {
-    const {
-      focusableNodeRef,
-      truckKindItems,
-      liftCapacityItems,
-      zoneItems,
-      commonRules,
-    } = useFormHelpers()
+    const { focusableNodeRef, truckKindItems, liftCapacityItems, zoneItems, commonRules } =
+      useFormHelpers()
 
-    const form = ref(
-      props.initialFormState ? props.initialFormState : defaultFormState()
-    )
+    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
     const rules = computed(() => ({
       ...commonRules,

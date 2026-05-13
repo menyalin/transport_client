@@ -37,9 +37,7 @@
           @dblclick:row="dblClickRow"
         >
           <template #[`item.truck`]="{ item }">
-            <span>{{
-              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
-            }}</span>
+            <span>{{ trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-' }}</span>
           </template>
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
@@ -56,10 +54,7 @@ import { ScheduleNoteService } from '@/shared/services'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(10, 'd').format('YYYY-MM-DD'),
-  ]
+  return [todayM.add(-10, 'd').format('YYYY-MM-DD'), todayM.add(10, 'd').format('YYYY-MM-DD')]
 }
 
 export default {
@@ -132,9 +127,7 @@ export default {
           startDate: new Date(this.settings.period[0]).toISOString(),
           endDate: new Date(this.settings.period[1]).toISOString(),
           truckFilter: this.settings.truckFilter,
-          skip:
-            this.settings.listOptions.itemsPerPage *
-            (this.settings.listOptions.page - 1),
+          skip: this.settings.listOptions.itemsPerPage * (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
           sortBy: this.settings.listOptions.sortBy.length
             ? this.settings.listOptions.sortBy[0]

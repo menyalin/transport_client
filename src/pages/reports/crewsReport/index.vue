@@ -43,11 +43,7 @@
         <thead>
           <tr>
             <th ref="titleCell" />
-            <th
-              v-for="day in tableColumns"
-              :key="day.title"
-              :class="{ todayHeader: day.isToday }"
-            >
+            <th v-for="day in tableColumns" :key="day.title" :class="{ todayHeader: day.isToday }">
               {{ day.title }}
             </th>
           </tr>
@@ -61,18 +57,9 @@
                 </router-link>
               </div>
             </td>
-            <td
-              v-for="day in tableColumns"
-              :key="day.title"
-              class="data-cell"
-            />
+            <td v-for="day in tableColumns" :key="day.title" class="data-cell" />
           </tr>
-          <div
-            v-for="block in blocks"
-            :key="block._id"
-            class="block"
-            :style="block.styles"
-          >
+          <div v-for="block in blocks" :key="block._id" class="block" :style="block.styles">
             <div>
               <router-link :to="'/profile/crews/' + block.crewId">
                 {{ block.title }}
@@ -137,23 +124,18 @@ export default {
   computed: {
     ...mapGetters(['directoriesProfile']),
     analiticItems() {
-      return this.groupItems.filter(
-        (item) => item.value !== this.settings.group
-      )
+      return this.groupItems.filter((item) => item.value !== this.settings.group)
     },
     filteredCrews() {
       return this.crews.filter((item) =>
-        this.settings.tkNameFilter
-          ? this.settings.tkNameFilter === item.tkNameId
-          : true
+        this.settings.tkNameFilter ? this.settings.tkNameFilter === item.tkNameId : true
       )
     },
   },
   watch: {
     ['settings.group']: async function (val) {
       await this.getData()
-      if (val === 'driver' || val === 'trailer')
-        this.settings.analitic = 'truck'
+      if (val === 'driver' || val === 'trailer') this.settings.analitic = 'truck'
       if (val === 'truck') this.settings.analitic = 'driver'
       this.resizeHandler()
     },
@@ -218,8 +200,7 @@ export default {
       this.tableColumns = getDaysFromPeriod(this.settings.period)
       this.tableRows = getRowsFromCrews(this.filteredCrews, this.settings.group)
       this.$nextTick(() => {
-        this.tableWidth =
-          this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
+        this.tableWidth = this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
         const dSec =
           dayjs(this.settings.period[1]).add(24, 'hour').unix() -
           dayjs(this.settings.period[0]).unix()
@@ -242,9 +223,7 @@ export default {
         startM = dayjs(this.settings.period[0]).unix()
       if (
         !block.endDate ||
-        dayjs(this.settings.period[1])
-          .add('24', 'hour')
-          .isSameOrBefore(block.endDate)
+        dayjs(this.settings.period[1]).add('24', 'hour').isSameOrBefore(block.endDate)
       )
         endM = dayjs(this.settings.period[1]).add(24, 'hour').unix()
       else endM = dayjs(block.endDate).unix()
@@ -264,19 +243,14 @@ export default {
 
     getTopShiftInPxForBlock(block) {
       const ROW_HEIGTH = 25
-      const rowIndex = this.tableRows.findIndex(
-        (item) => item._id === block.rowId
-      )
+      const rowIndex = this.tableRows.findIndex((item) => item._id === block.rowId)
       return rowIndex * ROW_HEIGTH + 'px'
     },
 
     initDateRange() {
       const dateFormat = 'YYYY-MM-DD'
       const today = dayjs()
-      return [
-        today.add(-7, 'd').format(dateFormat),
-        today.add(5, 'd').format(dateFormat),
-      ]
+      return [today.add(-7, 'd').format(dateFormat), today.add(5, 'd').format(dateFormat)]
     },
   },
 }

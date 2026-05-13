@@ -13,24 +13,15 @@ export class DataTableRow {
     this.orderId = props.orderId
     this.plannedDate = new Date(props.plannedDate)
     this.plannedDateStr = new Date(props.plannedDate).toLocaleString()
-    this.orderTypeStr = store.getters.orderAnalyticTypesMap.get(
-      props.analytics.type
-    )
+    this.orderTypeStr = store.getters.orderAnalyticTypesMap.get(props.analytics.type)
     this.tkNameStr =
-      carrierStore.carriersMap.get(props.confirmedCrew.tkName)?.name ||
-      '__name not found__'
+      carrierStore.carriersMap.get(props.confirmedCrew.tkName)?.name || '__name not found__'
 
-    this.truckNumStr = store.getters.trucksMap.get(
-      props.confirmedCrew.truck
-    )?.regNum
+    this.truckNumStr = store.getters.trucksMap.get(props.confirmedCrew.truck)?.regNum
 
-    this.trailerNumStr = store.getters.trucksMap.get(
-      props.confirmedCrew.trailer
-    )?.regNum
+    this.trailerNumStr = store.getters.trucksMap.get(props.confirmedCrew.trailer)?.regNum
 
-    this.driverFullName = store.getters.driversMap.get(
-      props.confirmedCrew.driver
-    )?.fullName
+    this.driverFullName = store.getters.driversMap.get(props.confirmedCrew.driver)?.fullName
 
     this.clientName = store.getters.partnersMap.get(props.client.client)?.name
     this.clientNum = props.client.num
@@ -49,10 +40,7 @@ export class DataTableRow {
       props.total.priceWOVat - props.totalByTypes.base.priceWOVat,
       0
     )
-    this.additionalPrice = moneyFormatter(
-      props.total.price - props.totalByTypes.base.price,
-      0
-    )
+    this.additionalPrice = moneyFormatter(props.total.price - props.totalByTypes.base.price, 0)
     this.totalPriceWOvat = moneyFormatter(props.total.priceWOVat, 0)
     this.totalPrice = moneyFormatter(props.total.price, 0)
     this.agreementName = props.agreementName || ' -- '

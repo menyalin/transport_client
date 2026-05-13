@@ -1,9 +1,5 @@
 <template>
-  <AdditionalNotificationsContainer
-    :items="items"
-    :loading="loading"
-    @change="handleChange"
-  />
+  <AdditionalNotificationsContainer :items="items" :loading="loading" @change="handleChange" />
 </template>
 
 <script>

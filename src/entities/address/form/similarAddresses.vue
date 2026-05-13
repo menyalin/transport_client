@@ -25,22 +25,16 @@
           <td>{{ item.label }}</td>
           <td>{{ item.note }}</td>
           <td>
-            <v-icon v-if="item.isShipmentPlace" color="green">
-              mdi-check
-            </v-icon>
+            <v-icon v-if="item.isShipmentPlace" color="green"> mdi-check </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </td>
 
           <td>
-            <v-icon v-if="item.isDeliveryPlace" color="green">
-              mdi-check
-            </v-icon>
+            <v-icon v-if="item.isDeliveryPlace" color="green"> mdi-check </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </td>
           <td>
-            <router-link :to="'/profile/address/' + item._id">
-              Перейти
-            </router-link>
+            <router-link :to="'/profile/address/' + item._id"> Перейти </router-link>
           </td>
           <td>{{ Math.round(item.score * 100) / 100 }}</td>
         </tr>

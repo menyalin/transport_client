@@ -54,9 +54,7 @@
         hide-details
         :style="{ 'max-width': '200px' }"
       />
-      <v-btn color="primary" @click="downloadReportHandler">
-        Скачать в excel
-      </v-btn>
+      <v-btn color="primary" @click="downloadReportHandler"> Скачать в excel </v-btn>
     </div>
 
     <DriverSalaryTable
@@ -100,15 +98,14 @@ export default {
     const orderType = ref(historyState.orderType)
     const period = useDebouncedRef(getInitialPeriod(historyState), 500)
 
-    const { items, isLoading, setListSettings, downloadReportHandler } =
-      useDriversSalaryData({
-        period,
-        driver,
-        clients,
-        orderType,
-        consigneeType,
-        tks,
-      })
+    const { items, isLoading, setListSettings, downloadReportHandler } = useDriversSalaryData({
+      period,
+      driver,
+      clients,
+      orderType,
+      consigneeType,
+      tks,
+    })
 
     const drivers = computed(() => {
       const startPeriod = dayjs(period.value).startOf('month')
