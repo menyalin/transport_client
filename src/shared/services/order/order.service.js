@@ -79,8 +79,7 @@ class OrderService {
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       try {
         const { data } = await api.get(BASE_PATH + '/' + id)
@@ -123,11 +122,7 @@ class OrderService {
     return data
   }
 
-  async downloadDoc(
-    id,
-    body,
-    filename = dayjs().format('YYYY_MM_DD hh.mm.ss') + '_order_contract'
-  ) {
+  async downloadDoc(id, body) {
     try {
       const response = await api({
         url: BASE_PATH + '/' + id + '/download_doc',
@@ -135,10 +130,27 @@ class OrderService {
         responseType: 'blob',
         data: body,
       })
+      if (response.status !== 200) {
+        // Пробуем распарсить ошибку
+        const errorText = await response.data.text()
+        const error = JSON.parse(errorText)
+        throw new Error(error.message || 'Ошибка скачивания файла')
+      }
+
       const blob = new Blob([response.data], {
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        type: response.headers['content-type'],
       })
-      FileSaver.saveAs(blob, filename + '.docx')
+
+      let filename = `order_${id}.pdf`
+      const contentDisposition = response.headers['content-disposition']
+      if (contentDisposition) {
+        const match = /filename="?([^"]+)"?/.exec(contentDisposition)
+        if (match?.[1]) {
+          filename = decodeURIComponent(match[1])
+        }
+      }
+
+      FileSaver.saveAs(blob, filename)
     } catch (e) {
       store.commit('setError', e.message)
       return null

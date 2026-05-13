@@ -5,11 +5,9 @@ module.exports = {
     node: true,
   },
 
-  extends: ['eslint:recommended', 'plugin:vue/base'],
-  plugins: ['prettier'],
+  extends: ['eslint:recommended', 'plugin:vue/base', 'plugin:prettier/recommended'],
   parserOptions: {
     sourceType: 'module',
- 
   },
 
   rules: {
@@ -23,7 +21,7 @@ module.exports = {
     'vue/valid-v-slot': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/singleline-html-element-content-newline': 'off',
-    'vue/max-attributes-per-line': 'off',
+    'vue/html-indent': ['error', 2],
     'vue/html-self-closing': [
       'error',
       {

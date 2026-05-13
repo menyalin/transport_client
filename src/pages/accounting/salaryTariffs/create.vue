@@ -11,9 +11,8 @@
         >
           {{ error.message }}
         </v-alert>
-        <div class="text-h5 ma-3">
-          {{ id ? 'Редактировать группу тарифов' : 'Создать группу тарифов' }}
-        </div>
+        <div class="text-h5 ma-3">Создать группу тарифов</div>
+
         <app-load-spinner v-if="loading" />
         <div v-else class="pt-2">
           <buttons-panel
@@ -37,17 +36,14 @@
           >
             Добавить тариф alt+N
           </v-btn>
-          <app-salary-tariff-form
+          <SalaryTariffForm
             v-model="editableTariff"
             :dialog="dialog"
             :carrierItems="carrierStore.carriers"
             @cancel="closeDialog"
             @push="pushItem"
           />
-          <app-salary-tariff-group-list
-            v-model="items"
-            @removeItem="deleteItem"
-          />
+          <app-salary-tariff-group-list v-model="items" @removeItem="deleteItem" />
         </div>
       </v-col>
     </v-row>
@@ -57,10 +53,11 @@
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
 import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings'
 import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
-import AppSalaryTariffForm from '@/modules/accounting/components/salaryTariffForm/index.vue'
+
 import { ButtonsPanel } from '@/shared/ui'
 import { SalaryTariffService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier'
+import { SalaryTariffForm } from '@/entities/salary'
 
 export default {
   name: 'CreateTariff',
@@ -69,13 +66,12 @@ export default {
     AppLoadSpinner,
     AppSalaryTariffSettings,
     AppSalaryTariffGroupList,
-    AppSalaryTariffForm,
+    SalaryTariffForm,
   },
-  props: {
-    id: String,
-  },
+
   setup() {
     const carrierStore = useCarrierStore()
+
     return {
       carrierStore,
     }
@@ -98,11 +94,7 @@ export default {
   },
   computed: {
     allowCreateTariffItem() {
-      return (
-        this.settings.date &&
-        Array.isArray(this.settings.tks) &&
-        this.settings.tks.length
-      )
+      return this.settings.date && Array.isArray(this.settings.tks) && this.settings.tks.length
     },
     disabledSettings() {
       return this.items.length > 0
@@ -112,18 +104,6 @@ export default {
     },
     hasWritePermission() {
       return this.$store.getters.hasPermission('salaryTariff:write')
-    },
-  },
-  watch: {
-    id: {
-      immediate: true,
-      handler: async function (newVal, oldVal) {
-        if (newVal && newVal !== oldVal) {
-          this.loading = true
-          this.item = await SalaryTariffService.getById(newVal)
-          this.loading = false
-        }
-      },
     },
   },
 
@@ -143,8 +123,7 @@ export default {
     addBtnHandler() {
       if (!this.allowCreateTariffItem) return null
       this.editableTariff = { ...this.settings }
-      if (this.editableTariff.type === 'additionalPoints')
-        this.editableTariff.includedPoints = 2
+      if (this.editableTariff.type === 'additionalPoints') this.editableTariff.includedPoints = 2
       this.dialog = false
       this.$nextTick(() => {
         this.dialog = true
@@ -177,27 +156,10 @@ export default {
           }))
         )
         this.loading = false
-        this.$router.go(-1)
+        this.$router.push({ name: 'SalaryTariffList' })
       } catch (e) {
         this.loading = false
         this.$store.commit('setError', e.message)
-      }
-    },
-
-    async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
-      if (res) {
-        try {
-          this.loading = true
-          await SalaryTariffService.deleteById(this.id)
-          this.loading = false
-          this.$router.go(-1)
-        } catch (e) {
-          this.loading = false
-          this.$store.commit('setError', e.message)
-        }
       }
     },
   },
