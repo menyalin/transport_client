@@ -20,23 +20,18 @@ export const useListData = ({ client, _id, agreementId, date: invoiceDate }) => 
     loadingZones: [],
   }
   const settings = usePersistedRef(initialState, 'paymentInvoice:pickOrders:settings')
+  const listOptions = usePersistedRef({}, 'paymentInvoice:pickOrders:listOptions')
   const items = ref([])
   const loading = ref(false)
 
-  async function refresh() {
-    await getData()
-  }
-
-  function resetSettings() {
-    //reset settings
-  }
+  watch(listOptions, async () => await getData(), { deep: true })
 
   watch(
     settings,
-    async () => {
-      await getData()
+    () => {
+      listOptions.value = { ...listOptions.value, page: 1 }
     },
-    { deep: true }
+    { deep: true, immediate: true }
   )
 
   const queryParams = computed(() => ({
@@ -77,8 +72,7 @@ export const useListData = ({ client, _id, agreementId, date: invoiceDate }) => 
 
   return {
     loading,
-    resetSettings,
-    refresh,
+    refresh: getData,
     settings,
     items,
   }

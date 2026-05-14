@@ -38,11 +38,11 @@ import dayjs from 'dayjs'
 export default {
   name: 'DateRange',
   model: {
-    prop: 'period',
+    prop: 'value',
     event: 'change',
   },
   props: {
-    period: {
+    value: {
       type: Array,
     },
     min: {
@@ -57,18 +57,18 @@ export default {
   },
   computed: {
     startDate() {
-      return this.period && this.period[0] ? this.period[0] : null
+      return this.value && this.value[0] ? this.value[0] : null
     },
     endDate() {
-      return this.period && this.period[1] ? this.period[1] : null
+      return this.value && this.value[1] ? this.value[1] : null
     },
   },
   watch: {
-    period: {
+    value: {
       immediate: true,
       deep: true,
       handler: function (val) {
-        this.tmpPeriod = val
+        this.tmpPeriod = val && val.length ? val : [null, null]
       },
     },
   },

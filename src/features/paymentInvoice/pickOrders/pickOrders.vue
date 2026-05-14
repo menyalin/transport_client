@@ -34,7 +34,7 @@
         :carrierItemsMap="carrierStore.carriersMap"
         :headers="headers"
         :loading="loading"
-        :listOptions.sync="settings.listOptions"
+        :listOptions.sync="listOptions"
         @addItem="addOrderToInvoice"
         @openDocsDialog="openDocsDialog"
       />
@@ -71,7 +71,7 @@ export default {
   setup({ paymentInvoice }, ctx) {
     const headers = ref([])
     const selectedOrders = ref([])
-    const { loading, settings, items, refresh } = useListData(paymentInvoice)
+    const { loading, settings, items, refresh, listOptions } = useListData(paymentInvoice)
     const carrierStore = useCarrierStore()
     const {
       editableOrderId,
@@ -131,6 +131,7 @@ export default {
       updateActiveHeaders,
       allHeaders: PickOrdersForPaymentInvoiceHeaders(),
       settings,
+      listOptions,
       items,
       headers,
       refreshHandler,

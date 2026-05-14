@@ -21,6 +21,10 @@ module.exports = {
     'vue/valid-v-slot': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/singleline-html-element-content-newline': 'off',
+    // Запрещает прямую мутацию props
+    'vue/no-mutating-props': 'warn',
+    // Запрещает деструктуризацию props (потеря реактивности)
+    // 'vue/no-prop-destructure': 'warn',
     // Отключено в пользу Prettier
     // 'vue/html-indent': [
     //   'error',

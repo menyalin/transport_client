@@ -6,10 +6,15 @@
       @change="updateHeadersHandler"
     />
     <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
-    <date-range-input v-model="settings.period" class="mx-2" />
+
+    <date-range-input
+      :value="settings.period"
+      class="mx-2"
+      @change="changeHandler($event, 'period')"
+    />
 
     <v-autocomplete
-      v-model="settings.truck"
+      :value="settings.truck"
       dense
       clearable
       auto-select-first
@@ -18,7 +23,7 @@
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="settings.listOptions.page = 1"
+      @change="changeHandler($event, 'truck')"
     />
 
     <v-text-field
@@ -29,10 +34,10 @@
       hide-details
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
-      @change="searchInputHandler"
+      @change="changeHandler($event, 'search')"
     />
     <order-doc-status-selector
-      v-model="settings.docStatuses"
+      :value="settings.docStatuses"
       multiple
       label="Документы"
       dense
@@ -40,12 +45,12 @@
       outlined
       clearable
       :style="{ 'max-width': '400px' }"
-      @change="settings.listOptions.page = 1"
+      @change="changeHandler($event, 'docStatuses')"
     />
     <v-autocomplete
-      label="Зоны погрузки"
-      v-model="settings.loadingZones"
+      :value="settings.loadingZones"
       :items="loadingZoneItems"
+      label="Зоны погрузки"
       item-value="_id"
       item-text="name"
       multiple
@@ -55,7 +60,7 @@
       outlined
       clearable
       :style="{ 'max-width': '500px' }"
-      @change="settings.listOptions.page = 1"
+      @change="changeHandler($event, 'loadingZones')"
     />
   </div>
 </template>
@@ -88,14 +93,17 @@ export default {
     //   emit('change', Object.assign({}, props.settings, { [field]: value }))
     // }
 
-    function searchInputHandler(val) {
-      emit('change', Object.assign({}, props.settings, { search: val }))
+    function changeHandler(val, field) {
+      emit('change', {
+        ...props.settings,
+        [field]: val,
+      })
     }
 
     return {
       refreshHandler,
       updateHeadersHandler,
-      searchInputHandler,
+      changeHandler,
       // updateSettings,
       orderStatuses,
       trailers,
