@@ -29,6 +29,7 @@ export const useForm = (props, ctx) => {
     allowedCarriers: [],
     actBasis: '',
     actDescription: '',
+    contract: '',
   }
   const state = ref(defaultState)
   const rules = computed(() => ({

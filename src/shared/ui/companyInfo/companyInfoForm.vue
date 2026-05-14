@@ -19,6 +19,7 @@
       dense
     />
     <v-text-field label="КПП" v-model="state.kpp" dense />
+    <v-text-field label="ОКПО" v-model="state.okpo" dense />
     <v-text-field label="Бухгалтер" v-model="accountantName" dense />
 
     <div v-if="directorPosition && !!state.director" class="director-wrapper">
@@ -101,6 +102,7 @@ export default {
       inn: null,
       ogrn: null,
       ogrnip: null,
+      okpo: null,
       kpp: null,
       director: directorDefaultState(),
       signatory: defaultSignatoryState(),
@@ -116,6 +118,7 @@ export default {
         legalAddress: {},
         inn: {},
         ogrn: {},
+        okpo: {},
         ogrnip: {},
         kpp: {},
         director: {

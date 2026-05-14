@@ -49,7 +49,7 @@
           outlined
           v-model="state.executorName"
           class="mt-4"
-          :style="{ width: '400px' }"
+          :style="{ width: '500px' }"
         />
         <v-autocomplete
           v-model="state.executor"
@@ -59,7 +59,7 @@
           item-text="name"
           outlined
           auto-select-first
-          :style="{ width: '400px' }"
+          :style="{ width: '500px' }"
         />
         <v-select
           multiple
@@ -73,7 +73,14 @@
           chips
           deletable-chips
         />
+        <v-text-field
+          label="Договор (наименование)"
+          v-model="state.contract"
+          outlined
+          :style="{ width: '500px' }"
+        />
         <app-clients v-model="state.clients" :style="{ 'max-width': '400px' }" />
+        <v-divider />
 
         <v-checkbox
           v-model="state.usePriceWithVAT"
