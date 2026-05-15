@@ -32,14 +32,9 @@ export default {
     async getPartners({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.partners.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.partners.length === 0 && getters.directoriesProfile)) {
           commit('setPartners', [])
-          const data = await service.getByDirectoriesProfile(
-            getters.directoriesProfile
-          )
+          const data = await service.getByDirectoriesProfile(getters.directoriesProfile)
           commit('setPartners', data)
         }
         commit('setLoading', false)
@@ -50,8 +45,7 @@ export default {
     },
   },
   getters: {
-    partnersMap: ({ partners }) =>
-      new Map(partners.map((item) => [item._id, item])),
+    partnersMap: ({ partners }) => new Map(partners.map((item) => [item._id, item])),
     partners: ({ partners }, { directoriesProfile }) =>
       partners
         .filter((item) => item.company === directoriesProfile)
@@ -68,7 +62,6 @@ export default {
           ...item,
         })),
     partnerGroups: ({ partnerGroups }) => partnerGroups,
-    partnerGroupsMap: ({ partnerGroups }) =>
-      new Map(partnerGroups.map((i) => [i.value, i.text])),
+    partnerGroupsMap: ({ partnerGroups }) => new Map(partnerGroups.map((i) => [i.value, i.text])),
   },
 }

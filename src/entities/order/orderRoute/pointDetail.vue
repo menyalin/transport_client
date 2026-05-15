@@ -287,11 +287,7 @@
 <script>
 import { inject } from 'vue'
 
-import {
-  BorderedBlock,
-  DateTimeInput,
-  AutoCompleteWithActions,
-} from '@/shared/ui'
+import { BorderedBlock, DateTimeInput, AutoCompleteWithActions } from '@/shared/ui'
 import { usePointDetail } from './usePointDetail'
 
 export default {

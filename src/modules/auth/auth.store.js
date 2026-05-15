@@ -1,7 +1,7 @@
 import api from '@/api'
 import router from '@/router'
 import socket from '@/socket'
-import  { UserService } from '@/shared/services'
+import { UserService } from '@/shared/services'
 
 export default {
   state: () => ({
@@ -86,9 +86,7 @@ export default {
 
     userRoles: ({ user }, { myCompanies }) => {
       if (!user?.directoriesProfile) return []
-      const currentCompany = myCompanies.find(
-        (c) => c._id === user.directoriesProfile
-      )
+      const currentCompany = myCompanies.find((c) => c._id === user.directoriesProfile)
       return currentCompany?.roles || []
     },
 
@@ -106,9 +104,7 @@ export default {
         if (!permissionsMap.has(permission)) return false
         if (!date) return true
         if (permissionsMap.get(permission) === -1) return true
-        const dayCount = Math.floor(
-          (new Date() - new Date(date)) / (1000 * 60 * 60 * 24)
-        )
+        const dayCount = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24))
         if (dayCount > permissionsMap.get(permission)) return false
         return true
       },

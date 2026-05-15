@@ -17,21 +17,13 @@
       {{ new Date(item.orderDate).toLocaleString() }}
     </template>
     <template #[`item.docsState.date`]="{ item }">
-      {{
-        item.docsState.date
-          ? new Date(item.docsState.date).toLocaleString()
-          : null
-      }}
+      {{ item.docsState.date ? new Date(item.docsState.date).toLocaleString() : null }}
     </template>
     <template #[`item.reviewDate`]="{ item }">
-      {{
-        item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null
-      }}
+      {{ item.reviewDate ? new Date(item.reviewDate).toLocaleDateString() : null }}
     </template>
     <template #[`item._docsStatusObj.text`]="{ item }">
-      <b :style="{ color: item._docsStatusObj.color }">{{
-        item._docsStatusObj.text
-      }}</b>
+      <b :style="{ color: item._docsStatusObj.color }">{{ item._docsStatusObj.text }}</b>
     </template>
     <template #[`footer.prepend`]>
       <order-list-footer-details

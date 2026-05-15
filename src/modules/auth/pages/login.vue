@@ -14,12 +14,7 @@
                   {{ message }}
                 </v-alert>
               </transition>
-              <v-text-field
-                v-model="email"
-                label="Email"
-                prepend-icon="mdi-at"
-                type="email"
-              />
+              <v-text-field v-model="email" label="Email" prepend-icon="mdi-at" type="email" />
               <v-text-field
                 id="password"
                 v-model="password"

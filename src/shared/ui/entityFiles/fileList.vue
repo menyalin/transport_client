@@ -7,15 +7,10 @@
     hide-default-footer
   >
     <template #[`item.icon`]="{ item }">
-      <v-icon :title="item.contentType">{{
-        mimeTypeToIcon(item.contentType)
-      }}</v-icon>
+      <v-icon :title="item.contentType">{{ mimeTypeToIcon(item.contentType) }}</v-icon>
     </template>
     <template #[`item.note`]="{ item }">
-      <v-edit-dialog
-        :return-value.sync="item.note"
-        @save="updateNoteHandler(item)"
-      >
+      <v-edit-dialog :return-value.sync="item.note" @save="updateNoteHandler(item)">
         {{ item.note }}
         <template v-slot:input>
           <v-text-field v-model="item.note" single-line />
@@ -82,9 +77,7 @@ export default {
 
     const removeItemHandler = async (item) => {
       console.log(item.origianlName)
-      const res = await proxy.$confirm(
-        `<b>Удалить?</b> <br/> файл: ${item.originalName}`
-      )
+      const res = await proxy.$confirm(`<b>Удалить?</b> <br/> файл: ${item.originalName}`)
       if (res) ctx.emit('remove', item.key)
     }
 

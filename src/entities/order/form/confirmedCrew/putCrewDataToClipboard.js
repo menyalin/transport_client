@@ -16,9 +16,7 @@ export default ({ truck, trailer, driver }) => {
     d.trailerRegNum || ''
   }\n`
   resStr += `${d.driver}\n`
-  resStr += `Паспорт ${d.passportId || '-'}, Выдан ${
-    d.passportIssued || '-'
-  }, от ${
+  resStr += `Паспорт ${d.passportId || '-'}, Выдан ${d.passportIssued || '-'}, от ${
     d.passportDate ? new Date(d.passportDate).toLocaleDateString() : '-'
   }\n`
   resStr += `ВУ ${d.licenseId || '-'}, от ${

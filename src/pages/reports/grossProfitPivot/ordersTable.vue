@@ -1,12 +1,7 @@
 <template>
   <div class="table-wrapper">
     <div>
-      <v-btn
-        color="primary"
-        :loading="loading"
-        :disabled="loading"
-        @click="getData"
-      >
+      <v-btn color="primary" :loading="loading" :disabled="loading" @click="getData">
         Получить детальные записи
       </v-btn>
     </div>
@@ -115,9 +110,7 @@ export default {
           .join(', '),
         capacityType: i.capacityType,
         truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
-        outsourceCostsWithVat: Intl.NumberFormat().format(
-          i.outsourceCostsWithVat
-        ),
+        outsourceCostsWithVat: Intl.NumberFormat().format(i.outsourceCostsWithVat),
         outsourceCostsWOVat: Intl.NumberFormat().format(i.outsourceCostsWOVat),
         basePrePrice: this.getBasePrice(i, 'prePrices', this.priceWithVat),
         basePrice: this.getBasePrice(i, 'prices', this.priceWithVat),
@@ -125,9 +118,7 @@ export default {
           Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
         ),
         kPrice: Intl.NumberFormat().format(
-          Math.round(
-            i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000
-          )
+          Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000)
         ),
       }))
     },
@@ -183,9 +174,7 @@ export default {
       const price = order[type]
       if (!price?.base) return 0
 
-      return Intl.NumberFormat().format(
-        Math.round(price.base[withVat ? 'price' : 'priceWOVat'])
-      )
+      return Intl.NumberFormat().format(Math.round(price.base[withVat ? 'price' : 'priceWOVat']))
     },
 
     clearItems() {

@@ -54,9 +54,7 @@ export default {
       return new Map(props.agreementItems.map((i) => [i._id, i]))
     })
     const formTitle = computed(() => {
-      return editedItem.value === null
-        ? 'Новое соглашение'
-        : 'Редактирование соглашения'
+      return editedItem.value === null ? 'Новое соглашение' : 'Редактирование соглашения'
     })
     const preparedAgreements = computed(() => {
       return props.agreements.map((i, idx) => ({

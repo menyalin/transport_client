@@ -14,9 +14,7 @@ export const useCarrierStore = defineStore('CarrierStore', () => {
     company: appStore.userCurrentProfile,
   }))
   const ownCarriers = computed(() => carriers.value.filter((i) => !i.outsource))
-  const outsourceCarriers = computed(() =>
-    carriers.value.filter((i) => i.outsource)
-  )
+  const outsourceCarriers = computed(() => carriers.value.filter((i) => i.outsource))
   const allowUseCustomerRoleCarriers = computed(() => {
     return carriers.value.filter((i) => i.allowUseCustomerRole)
   })

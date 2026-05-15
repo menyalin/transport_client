@@ -26,10 +26,9 @@ const _rowSorter = (type) => (a, b) => {
 }
 
 export default (crews, type) => {
-  if (!type || !ALLOWED_TYPES_GROUP.includes(type))
-    throw new Error('required argument not existed')
+  if (!type || !ALLOWED_TYPES_GROUP.includes(type)) throw new Error('required argument not existed')
   if (!crews || !crews.length) return []
-  
+
   const tmpCrews = crews.slice()
 
   let rows = []

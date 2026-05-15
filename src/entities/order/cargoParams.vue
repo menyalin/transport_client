@@ -36,13 +36,7 @@
         hide-details
         label="Объем, м3"
       />
-      <v-text-field
-        v-model="state.tRegime"
-        outlined
-        dense
-        hide-details
-        label="t-режим"
-      />
+      <v-text-field v-model="state.tRegime" outlined dense hide-details label="t-режим" />
     </div>
     <div>
       <v-text-field

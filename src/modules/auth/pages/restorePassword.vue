@@ -85,15 +85,13 @@ export default {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
       !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required &&
-        errors.push('Поле не может быть пустым')
+      !this.$v.form.password.required && errors.push('Поле не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.form.confirmPassword.$dirty) return errors
-      !this.$v.form.confirmPassword.required &&
-        errors.push('Поле не может быть пустым')
+      !this.$v.form.confirmPassword.required && errors.push('Поле не может быть пустым')
       !this.$v.form.confirmPassword.sameAs && errors.push('Пароли не совпадают')
       return errors
     },
@@ -140,8 +138,7 @@ export default {
         this.$store.dispatch('getUserData')
         this.$router.push('/')
       } catch (e) {
-        if (e?.response?.status === 404)
-          this.showMessage('Email не найден', 'error')
+        if (e?.response?.status === 404) this.showMessage('Email не найден', 'error')
         else if (e?.response?.data === 'jwt expired')
           this.showMessage('Время жизни ссылки истекло', 'error')
         else if (e?.response?.data) this.showMessage(e.response.data, 'error')

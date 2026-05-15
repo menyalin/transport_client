@@ -8,8 +8,7 @@ const BASE_PATH = '/storage'
 class FileService {
   async getFilesInfoByDocId(docId) {
     let { data } = await api.get(BASE_PATH + '/' + docId)
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
+    if (!Array.isArray(data)) throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
@@ -43,10 +42,7 @@ class FileService {
       })
       const parsedData = paramsSchema.parse(data)
 
-      const { data: url } = await api.put(
-        BASE_PATH + '/generate_upload_url',
-        parsedData
-      )
+      const { data: url } = await api.put(BASE_PATH + '/generate_upload_url', parsedData)
       return url
     } catch (e) {
       console.error('getUploadUrl : error ', e)

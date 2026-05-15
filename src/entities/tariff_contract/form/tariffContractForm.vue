@@ -34,11 +34,7 @@
         :style="{ maxWidth: '150px' }"
       />
 
-      <v-checkbox
-        color="primary"
-        v-model="state.withVat"
-        label="Тарифы указаны с НДС"
-      />
+      <v-checkbox color="primary" v-model="state.withVat" label="Тарифы указаны с НДС" />
     </div>
     <v-divider />
     <TariffListWrapper
@@ -76,11 +72,7 @@
     />
     <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
-    <EntityFiles
-      v-if="item && item._id"
-      :itemId="item._id"
-      docType="tariffContract"
-    />
+    <EntityFiles v-if="item && item._id" :itemId="item._id" docType="tariffContract" />
   </div>
 </template>
 <script>

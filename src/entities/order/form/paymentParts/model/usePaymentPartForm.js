@@ -74,9 +74,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   const invalidForm = computed(() => v$.value.$invalid)
   const v$ = useVuelidate(rules, state)
 
-  const clientItems = computed(() =>
-    store.getters.partners.filter((i) => i.isClient)
-  )
+  const clientItems = computed(() => store.getters.partners.filter((i) => i.isClient))
 
   async function setAgreement({ client, routeDate }) {
     const res = await AgreementService.getForClient({
@@ -90,8 +88,7 @@ export function usePaymentPartForm({ routeDate }, ctx) {
 
     if (firstAgreement) state.value.sumWithVAT = firstAgreement.usePriceWithVAT
 
-    if (firstAgreement && !state.value.agreement)
-      state.value.agreement = firstAgreement._id
+    if (firstAgreement && !state.value.agreement) state.value.agreement = firstAgreement._id
   }
 
   const agreement = computed(() => {
@@ -126,16 +123,12 @@ export function usePaymentPartForm({ routeDate }, ctx) {
   }
 
   watch(state, (newVal, oldVal) => {
-    if (newVal.agreement !== oldVal.agreement)
-      console.log('agreement changed: ', newVal)
+    if (newVal.agreement !== oldVal.agreement) console.log('agreement changed: ', newVal)
   })
 
-  watch(
-    [() => routeDate, () => state.value.client],
-    async ([routeDate, client]) => {
-      await setAgreement({ client, routeDate })
-    }
-  )
+  watch([() => routeDate, () => state.value.client], async ([routeDate, client]) => {
+    await setAgreement({ client, routeDate })
+  })
 
   watch(vatRate, (val) => {
     if (val === 0) state.value.sumWithVAT = false

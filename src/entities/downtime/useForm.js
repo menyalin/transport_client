@@ -7,8 +7,7 @@ import store from '@/store'
 
 export const useForm = (props, ctx) => {
   const formScope = 'root'
-  const { formId, getState, clearStoredForm, saveForm } =
-    usePersistedFormState()
+  const { formId, getState, clearStoredForm, saveForm } = usePersistedFormState()
   const initialState = {
     title: null,
     truck: null,
@@ -58,9 +57,7 @@ export const useForm = (props, ctx) => {
   )
 
   const serviceItems = computed(() =>
-    store.getters.partners
-      .filter((i) => i.isService)
-      .map((i) => ({ value: i._id, text: i.name }))
+    store.getters.partners.filter((i) => i.isService).map((i) => ({ value: i._id, text: i.name }))
   )
   //#endregion
 

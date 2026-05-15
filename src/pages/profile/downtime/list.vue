@@ -62,9 +62,7 @@
             }}</span>
           </template>
           <template #[`item.truck`]="{ item }">
-            <span>{{
-              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
-            }}</span>
+            <span>{{ trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-' }}</span>
           </template>
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
@@ -86,10 +84,7 @@ import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [
-    todayM.add(-10, 'd').format('YYYY-MM-DD'),
-    todayM.add(10, 'd').format('YYYY-MM-DD'),
-  ]
+  return [todayM.add(-10, 'd').format('YYYY-MM-DD'), todayM.add(10, 'd').format('YYYY-MM-DD')]
 }
 
 export default {
@@ -179,9 +174,7 @@ export default {
           endDate: this.settings.period[1],
           truckFilter: this.settings.truckFilter,
           partner: this.settings.partner,
-          skip:
-            this.settings.listOptions.itemsPerPage *
-            (this.settings.listOptions.page - 1),
+          skip: this.settings.listOptions.itemsPerPage * (this.settings.listOptions.page - 1),
           limit: this.settings.listOptions.itemsPerPage,
           sortBy: this.settings.listOptions.sortBy.length
             ? this.settings.listOptions.sortBy[0]

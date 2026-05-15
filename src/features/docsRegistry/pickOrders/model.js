@@ -5,10 +5,7 @@ import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
 
 const initPeriod = () => {
-  return [
-    dayjs().add(-1, 'month').startOf('month').toISOString(),
-    new Date().toISOString(),
-  ]
+  return [dayjs().add(-1, 'month').startOf('month').toISOString(), new Date().toISOString()]
 }
 
 export const useListData = ({ client, _id }) => {

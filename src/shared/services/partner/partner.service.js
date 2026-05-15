@@ -31,21 +31,14 @@ class PartnerService {
 
   async addIdleTruckNotify(partnerId, body) {
     if (!partnerId || !body)
-      throw new Error(
-        'PartnerService : addIdleTruckNotify : required args is missing'
-      )
-    const { data } = await api.post(
-      BASE_PATH + '/' + partnerId + '/idle_truck_notification',
-      body
-    )
+      throw new Error('PartnerService : addIdleTruckNotify : required args is missing')
+    const { data } = await api.post(BASE_PATH + '/' + partnerId + '/idle_truck_notification', body)
     return data
   }
 
   async deleteIdleTruckNotify(partnerId, idleId) {
     if (!partnerId || !idleId)
-      throw new Error(
-        'PartnerService : deleteIdleTruckNotify : required args is missing'
-      )
+      throw new Error('PartnerService : deleteIdleTruckNotify : required args is missing')
     const { data } = await api.delete(
       BASE_PATH + '/' + partnerId + '/idle_truck_notification/' + idleId
     )
@@ -54,9 +47,7 @@ class PartnerService {
 
   async updateIdleTruckNotify(partnerId, idleId, body) {
     if (!partnerId || !idleId)
-      throw new Error(
-        'PartnerService : updateIdleTruckNotify : required args is missing'
-      )
+      throw new Error('PartnerService : updateIdleTruckNotify : required args is missing')
     const { data } = await api.put(
       BASE_PATH + '/' + partnerId + '/idle_truck_notification/' + idleId,
       body
@@ -65,25 +56,17 @@ class PartnerService {
   }
 
   async addPlaceForTransferDocs(partnerId, body) {
-    const { data } = await api.post(
-      BASE_PATH + '/' + partnerId + '/places',
-      body
-    )
+    const { data } = await api.post(BASE_PATH + '/' + partnerId + '/places', body)
     return data
   }
 
   async deletePlaceForTransferDocs(partnerId, placeId) {
-    const { data } = await api.delete(
-      BASE_PATH + '/' + partnerId + '/places/' + placeId
-    )
+    const { data } = await api.delete(BASE_PATH + '/' + partnerId + '/places/' + placeId)
     return data
   }
 
   async updatePlaceForTransferDocs(partnerId, placeId, body) {
-    const { data } = await api.put(
-      BASE_PATH + '/' + partnerId + '/places/' + placeId,
-      body
-    )
+    const { data } = await api.put(BASE_PATH + '/' + partnerId + '/places/' + placeId, body)
     return data
   }
 
@@ -95,14 +78,12 @@ class PartnerService {
 
   async getByDirectoriesProfile(profile) {
     let { data } = await api.get(BASE_PATH, { params: { profile } })
-    if (!Array.isArray(data))
-      throw new Error('Нужен массив!! пришло что-то другое!')
+    if (!Array.isArray(data)) throw new Error('Нужен массив!! пришло что-то другое!')
     return data
   }
 
   async getById(id) {
-    if (store.getters.cacheDirectories.has(id))
-      return store.getters.cacheDirectories.get(id)
+    if (store.getters.cacheDirectories.has(id)) return store.getters.cacheDirectories.get(id)
     else {
       let { data } = await api.get(BASE_PATH + '/' + id)
       store.commit('addToCache', data)

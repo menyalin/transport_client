@@ -15,9 +15,7 @@
         <agreement-form
           v-else
           :agreement="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('agreement:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('agreement:delete')"
           :carrierItems="carrierItems"
           @cancel="cancel"
           @submit="submit"

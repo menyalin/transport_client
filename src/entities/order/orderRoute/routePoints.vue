@@ -93,16 +93,13 @@ export default {
 
     const showMainLoadingPointSelector = computed(() => {
       return (
-        props.points.filter(
-          (p) => p.type === 'loading' && (p.plannedDate || p.plannedDateDoc)
-        ).length > 1
+        props.points.filter((p) => p.type === 'loading' && (p.plannedDate || p.plannedDateDoc))
+          .length > 1
       )
     })
 
     const hasMainLoadingPoint = computed(() => {
-      return props.points.some(
-        (i) => i.isMainLoadingPoint && i.type === 'loading'
-      )
+      return props.points.some((i) => i.isMainLoadingPoint && i.type === 'loading')
     })
 
     const showReturnBtn = computed(() => {
@@ -138,8 +135,7 @@ export default {
     }
 
     async function getDriverRouteHandler() {
-      
-    await putRouteForDriverToClipboard(
+      await putRouteForDriverToClipboard(
         props.driverId,
         props.points,
         props.cargoParams,
@@ -152,17 +148,11 @@ export default {
     }
 
     function addReturn() {
-      ctx.emit('changePoints', [
-        ...props.points,
-        { type: 'unloading', isReturn: true },
-      ])
+      ctx.emit('changePoints', [...props.points, { type: 'unloading', isReturn: true }])
     }
 
     function deleteHandler(ind) {
-      ctx.emit('changePoints', [
-        ...props.points.slice(0, ind),
-        ...props.points.slice(ind + 1),
-      ])
+      ctx.emit('changePoints', [...props.points.slice(0, ind), ...props.points.slice(ind + 1)])
     }
 
     return {

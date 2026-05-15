@@ -1,9 +1,5 @@
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
+  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
     <payment-invoice-form
       :item="item"
       @submit="submit($event, false)"
@@ -34,13 +30,7 @@
       />
     </v-card>
 
-    <v-dialog
-      v-if="item._id"
-      v-model="showPickOrderDialog"
-      fullscreen
-      persistent
-      hide-overlay
-    >
+    <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent hide-overlay>
       <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>
   </form-wrapper>
@@ -93,9 +83,7 @@ export default {
     const { downloadHandler } = useDownloadTemplate(invoiceWithOrders)
 
     const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
-    const showPickOrderDialog = ref(
-      store.getters.storedValue(storedSettingsName) || false
-    )
+    const showPickOrderDialog = ref(store.getters.storedValue(storedSettingsName) || false)
     const disabledPickOrders = computed(
       () => !item.value?._id || item.value?.status !== 'inProcess'
     )
@@ -104,9 +92,7 @@ export default {
       return orders.value?.some((i) => i && i.needUpdate)
     })
 
-    const disabledDownloadFiles = computed(
-      () => orders.value.length === 0 || needUpdateRows.value
-    )
+    const disabledDownloadFiles = computed(() => orders.value.length === 0 || needUpdateRows.value)
     const disabledMainFields = computed(() => {
       return item.value?.ordersCount > 0
     })

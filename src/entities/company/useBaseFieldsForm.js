@@ -20,9 +20,7 @@ export const useBaseFieldsForm = (item) => {
     const field = v$.value.fullName
     if (!field.$invalid) return err
 
-    field.$dirty &&
-      field.required.$invalid &&
-      err.push('Полное имя компании не может быть пустым')
+    field.$dirty && field.required.$invalid && err.push('Полное имя компании не может быть пустым')
     return err
   })
 

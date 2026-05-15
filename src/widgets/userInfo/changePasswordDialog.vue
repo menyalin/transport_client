@@ -34,20 +34,13 @@
         <v-spacer />
         <v-btn text @click="cancel"> Отмена </v-btn>
 
-        <v-btn
-          :disabled="$v.$invalid"
-          color="primary"
-          text
-          @click="saveHandler"
-        >
-          Agree
-        </v-btn>
+        <v-btn :disabled="$v.$invalid" color="primary" text @click="saveHandler"> Agree </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script>
-import { UserService} from '@/shared/services'
+import { UserService } from '@/shared/services'
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
   name: 'ChangePasswordDialog',
@@ -72,8 +65,7 @@ export default {
     confirmPasswordErrors() {
       const errors = []
       if (!this.$v.confirmPassword.$dirty) return errors
-      !this.$v.confirmPassword.required &&
-        errors.push('Поле не может быть пустым')
+      !this.$v.confirmPassword.required && errors.push('Поле не может быть пустым')
       !this.$v.confirmPassword.sameAs && errors.push('Пароли не совпадают')
       return errors
     },

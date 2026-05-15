@@ -1,28 +1,10 @@
 <template>
   <div class="wrapper">
     <div v-if="showTitle" class="text-h6">Общая информация о компании:</div>
-    <v-select
-      label="Тип"
-      :items="legalFormItems"
-      v-model="state.legalForm"
-      dense
-      clearable
-    />
+    <v-select label="Тип" :items="legalFormItems" v-model="state.legalForm" dense clearable />
     <v-text-field label="Полное наименование" v-model="state.fullName" dense />
-    <v-textarea
-      label="Почтовый адрес"
-      v-model="state.postalAddress"
-      dense
-      outlined
-      rows="4"
-    />
-    <v-textarea
-      label="Юр. адрес"
-      v-model="state.legalAddress"
-      dense
-      outlined
-      rows="4"
-    />
+    <v-textarea label="Почтовый адрес" v-model="state.postalAddress" dense outlined rows="4" />
+    <v-textarea label="Юр. адрес" v-model="state.legalAddress" dense outlined rows="4" />
     <v-text-field label="ИНН" v-model="state.inn" dense />
     <v-text-field
       v-if="state.legalForm && state.legalForm === 'legalEntity'"
@@ -37,15 +19,11 @@
       dense
     />
     <v-text-field label="КПП" v-model="state.kpp" dense />
+    <v-text-field label="ОКПО" v-model="state.okpo" dense />
     <v-text-field label="Бухгалтер" v-model="accountantName" dense />
 
     <div v-if="directorPosition && !!state.director" class="director-wrapper">
-      <v-text-field
-        :label="directorPosition"
-        v-model="directorName"
-        hide-details
-        dense
-      />
+      <v-text-field :label="directorPosition" v-model="directorName" hide-details dense />
       <v-checkbox
         v-model="state.director.isMainSignatory"
         color="primary"
@@ -55,11 +33,7 @@
         @change="isMainSignatoryChangedHandler"
       />
     </div>
-    <SignatoryForm
-      v-if="showSignatory"
-      class="signatory-wrapper"
-      v-model="state.signatory"
-    />
+    <SignatoryForm v-if="showSignatory" class="signatory-wrapper" v-model="state.signatory" />
   </div>
 </template>
 <script>
@@ -128,6 +102,7 @@ export default {
       inn: null,
       ogrn: null,
       ogrnip: null,
+      okpo: null,
       kpp: null,
       director: directorDefaultState(),
       signatory: defaultSignatoryState(),
@@ -143,6 +118,7 @@ export default {
         legalAddress: {},
         inn: {},
         ogrn: {},
+        okpo: {},
         ogrnip: {},
         kpp: {},
         director: {
@@ -165,20 +141,14 @@ export default {
     const v$ = useVuelidate(rules, state)
 
     const directorPosition = computed(() => {
-      if (state.value?.legalForm === 'legalEntity')
-        return 'Генеральный директор'
-      else if (state.value?.legalForm === 'soleProprietor')
-        return 'Индивидуальный предприниматель'
+      if (state.value?.legalForm === 'legalEntity') return 'Генеральный директор'
+      else if (state.value?.legalForm === 'soleProprietor') return 'Индивидуальный предприниматель'
       else if (state.value?.legalForm === 'privatePerson') return 'Частное лицо'
       else return null
     })
 
     const showSignatory = computed(() => {
-      if (
-        !!state.value?.legalForm &&
-        state.value.director?.isMainSignatory === false
-      )
-        return true
+      if (!!state.value?.legalForm && state.value.director?.isMainSignatory === false) return true
       else return false
     })
 

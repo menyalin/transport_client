@@ -72,9 +72,7 @@
           item-text="title"
           item-value="address"
           outlined
-          :disabled="
-            !placeItems || placeItems.length === 0 || disabledMainFields
-          "
+          :disabled="!placeItems || placeItems.length === 0 || disabledMainFields"
           :items="placeItems"
           :style="{ maxWidth: '300px' }"
           @blur="v$.placeForTransferDocs.$touch"
@@ -89,20 +87,12 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          !state.placeForTransferDocs || disabledPickOrders || needSave
-        "
+        :disabled="!state.placeForTransferDocs || disabledPickOrders || needSave"
       >
         Подобрать рейсы
       </v-btn>
 
-      <v-text-field
-        v-model="state.note"
-        label="Примечание"
-        dense
-        outlined
-        @blur="v$.note.$touch"
-      />
+      <v-text-field v-model="state.note" label="Примечание" dense outlined @blur="v$.note.$touch" />
     </div>
   </div>
 </template>
@@ -170,17 +160,13 @@ export default {
       ctx.emit('downloadXlsx')
     }
 
-    const clientItems = computed(
-      () => store.getters?.partners.filter((i) => i.isClient) || []
-    )
+    const clientItems = computed(() => store.getters?.partners.filter((i) => i.isClient) || [])
 
     const statusItems = computed(() => store.getters.docsRegistryStatuses)
 
     const placeItems = computed(() => {
       if (!state.value?.client) return []
-      const client = store.getters.partners.find(
-        (i) => i._id === state.value.client
-      )
+      const client = store.getters.partners.find((i) => i._id === state.value.client)
       if (!client) return []
       return client.placesForTransferDocs
     })

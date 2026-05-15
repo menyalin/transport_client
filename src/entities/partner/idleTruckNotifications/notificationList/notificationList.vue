@@ -26,22 +26,15 @@
       <v-icon v-else color="black">mdi-minus</v-icon>
     </template>
     <template #[`item.isActive`]="{ item }">
-      <div
-        @click="switchStatus(item._id, item.isActive)"
-        :style="{ cursor: 'pointer' }"
-      >
+      <div @click="switchStatus(item._id, item.isActive)" :style="{ cursor: 'pointer' }">
         <v-icon v-if="item.isActive" color="green">mdi-check</v-icon>
         <v-icon v-else color="black">mdi-minus</v-icon>
       </div>
     </template>
     <template #[`item.active`]="{ item }">
       <div :style="{ display: 'flex', alignItems: 'center', gap: '15px' }">
-        <v-icon small color="green" @click="editHandler(item._id)">
-          mdi-pencil
-        </v-icon>
-        <v-icon small color="red" @click="removeItem(item._id)">
-          mdi-delete
-        </v-icon>
+        <v-icon small color="green" @click="editHandler(item._id)"> mdi-pencil </v-icon>
+        <v-icon small color="red" @click="removeItem(item._id)"> mdi-delete </v-icon>
       </div>
     </template>
   </v-data-table>
@@ -82,9 +75,7 @@ export default {
     async switchStatus(id, currentStatus) {
       if (!currentStatus) this.switchStatusHandler(id)
       else {
-        const res = await this.$confirm(
-          'Уверены? Выключение уведомления отменит созданные задачи'
-        )
+        const res = await this.$confirm('Уверены? Выключение уведомления отменит созданные задачи')
         if (!res) return
         this.switchStatusHandler(id)
       }

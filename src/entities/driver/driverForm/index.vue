@@ -105,13 +105,7 @@
           />
         </div>
         <div class="driver-cards">
-          <v-text-field
-            v-model.trim="$v.form.inn.$model"
-            outlined
-            hide-details
-            label="ИНН"
-            dense
-          />
+          <v-text-field v-model.trim="$v.form.inn.$model" outlined hide-details label="ИНН" dense />
           <v-text-field
             v-model.trim="$v.form.driverCardId.$model"
             outlined
@@ -149,18 +143,8 @@
       <app-med-book v-model="medBook" title="Мед.книжка" class="mb-5" />
       <div class="work-status">
         <div>
-          <v-checkbox
-            v-model="form.isBrigadier"
-            label="Бригадир"
-            hide-details
-            dense
-          />
-          <v-checkbox
-            v-model="form.isMechanic"
-            label="Механик"
-            hide-details
-            dense
-          />
+          <v-checkbox v-model="form.isBrigadier" label="Бригадир" hide-details dense />
+          <v-checkbox v-model="form.isMechanic" label="Механик" hide-details dense />
         </div>
         <DateTimeInput
           v-model="$v.form.employmentDate.$model"
@@ -189,19 +173,11 @@
       </div>
       <AdditionalNotifications v-model="additionalNotifications" />
       <v-checkbox v-model="form.hasScans" label="Есть сканы документов" dense />
-      <v-checkbox
-        v-model="form.hideInFines"
-        label="Не показывать в штрафах"
-        dense
-      />
+      <v-checkbox v-model="form.hideInFines" label="Не показывать в штрафах" dense />
 
       <v-checkbox v-model="form.isCalcSalary" dense label="Расчет ЗП" />
     </div>
-    <EntityFiles
-      v-if="driver && driver._id"
-      :itemId="driver._id"
-      docType="driver"
-    />
+    <EntityFiles v-if="driver && driver._id" :itemId="driver._id" docType="driver" />
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
       <v-btn color="error" @click="$emit('delete')">
         <v-icon left dark> mdi-delete </v-icon>
@@ -213,12 +189,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import AppMedBook from './medBook.vue'
-import {
-  ButtonsPanel,
-  DateTimeInput,
-  AdditionalNotifications,
-  EntityFiles,
-} from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, AdditionalNotifications, EntityFiles } from '@/shared/ui'
 
 export default {
   name: 'DriverForm',
@@ -357,8 +328,7 @@ export default {
     setFormFields(val) {
       const keys = Object.keys(this.form)
       this.medBook = val.medBook
-      if (val.additionalNotifications)
-        this.additionalNotifications = val.additionalNotifications
+      if (val.additionalNotifications) this.additionalNotifications = val.additionalNotifications
       keys.forEach((key) => {
         this.form[key] = val[key]
         if (val.tkName?._id) this.form.tkName = val.tkName._id

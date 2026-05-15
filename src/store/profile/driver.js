@@ -43,10 +43,7 @@ export default {
     async getDrivers({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.drivers.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.drivers.length === 0 && getters.directoriesProfile)) {
           const profile = getters.directoriesProfile
           const date = dayjs().format()
           // commit('setDrivers', [])
@@ -83,10 +80,8 @@ export default {
         if (!date || !dayjs(date).isValid) return drivers
         return drivers.filter((item) => {
           const startPeriodCond =
-            !item.employmentDate ||
-            new Date(item.employmentDate) <= new Date(date)
-          const endPeriodCond =
-            !item.dismissalDate || new Date(item.dismissalDate) > new Date(date)
+            !item.employmentDate || new Date(item.employmentDate) <= new Date(date)
+          const endPeriodCond = !item.dismissalDate || new Date(item.dismissalDate) > new Date(date)
           return startPeriodCond && endPeriodCond
         })
       },
@@ -136,10 +131,7 @@ const _addMedBookState = (driver) => {
   const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365
   let validDays
   const today = new Date()
-  if (
-    !driver?.medBook?.certifiedBeforeDate ||
-    !driver?.medBook?.annualCommisionDate
-  )
+  if (!driver?.medBook?.certifiedBeforeDate || !driver?.medBook?.annualCommisionDate)
     validDays = null
   else {
     const validCertDays = Math.floor(
@@ -147,8 +139,7 @@ const _addMedBookState = (driver) => {
     )
 
     const daysBeforeMedExamination = Math.floor(
-      (+new Date(driver.medBook.annualCommisionDate) + MS_IN_YEAR - today) /
-        MS_IN_DAY
+      (+new Date(driver.medBook.annualCommisionDate) + MS_IN_YEAR - today) / MS_IN_DAY
     )
     validDays = Math.min(daysBeforeMedExamination, validCertDays)
   }

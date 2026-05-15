@@ -17,9 +17,7 @@ const getInvoiceTotal = (invoice) => {
     priceWOdiscount: moneyFormatter(invoice.priceWithVat),
     priceWOVat: moneyFormatter(invoice.priceWOVat / discountKoef),
     price: moneyFormatter(invoice.priceWithVat / discountKoef),
-    vat: moneyFormatter(
-      (invoice.priceWithVat - invoice.priceWOVat) / discountKoef
-    ),
+    vat: moneyFormatter((invoice.priceWithVat - invoice.priceWOVat) / discountKoef),
     vatWOdiscount: moneyFormatter(invoice.priceWithVat - invoice.priceWOVat),
 
     discountSum: moneyFormatter(invoice.priceWithVat * (discountKoef - 1)),
@@ -31,10 +29,7 @@ const getInvoiceTotal = (invoice) => {
 const getAddressesByType = (route, pointType) => {
   const points = route
     .filter((i) => i.type === pointType)
-    .reduce(
-      (res, i) => (res.includes(i.address) ? res : res.concat([i.address])),
-      []
-    )
+    .reduce((res, i) => (res.includes(i.address) ? res : res.concat([i.address])), [])
     .map((i) => store.getters.addressMap.get(i))
     .map((address) => ({
       ...address,
@@ -69,8 +64,7 @@ export class TemplateDataBuilder {
       idx: idx + 1,
       auctionNum: order.client.auctionNum?.trim() || '',
       num: order.client.num?.trim() || '',
-      truckNum:
-        store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
+      truckNum: store.getters.trucksMap.get(order.confirmedCrew.truck).regNum || '',
       ttnNums: getTtnNums(order),
       driverName: order.driverName.split(' ').join('\n'),
       orderDate: dayjs(order.plannedDate).format(DATE_FORMAT),
@@ -99,16 +93,12 @@ export class TemplateDataBuilder {
       // Простой на погрузке
       loadingD: {
         price: moneyFormatter(order.savedTotalByTypes.loadingDowntime.price),
-        priceWOVat: moneyFormatter(
-          order.savedTotalByTypes.loadingDowntime.priceWOVat
-        ),
+        priceWOVat: moneyFormatter(order.savedTotalByTypes.loadingDowntime.priceWOVat),
       },
       // Простой на разгрузке
       unloadingD: {
         price: moneyFormatter(order.savedTotalByTypes.unloadingDowntime.price),
-        priceWOVat: moneyFormatter(
-          order.savedTotalByTypes.unloadingDowntime.priceWOVat
-        ),
+        priceWOVat: moneyFormatter(order.savedTotalByTypes.unloadingDowntime.priceWOVat),
       },
       returnP: {
         price: moneyFormatter(order.savedTotalByTypes.return.price),
@@ -116,9 +106,7 @@ export class TemplateDataBuilder {
       },
       additP: {
         price: moneyFormatter(order.savedTotalByTypes.additionalPoints.price),
-        priceWOVat: moneyFormatter(
-          order.savedTotalByTypes.additionalPoints.priceWOVat
-        ),
+        priceWOVat: moneyFormatter(order.savedTotalByTypes.additionalPoints.priceWOVat),
       },
       otherP: {
         price: moneyFormatter(order.savedTotalByTypes.other.price),

@@ -101,18 +101,10 @@ export default {
       return this.$store.getters.hasPermission('fullAccess')
     },
     loadingZones() {
-      return (
-        this.item.loadingZones?.map(
-          (i) => this.$store.getters.zonesMap.get(i)?.name
-        ) || null
-      )
+      return this.item.loadingZones?.map((i) => this.$store.getters.zonesMap.get(i)?.name) || null
     },
     unloadingZones() {
-      return (
-        this.item.unloadingZones?.map(
-          (i) => this.$store.getters.zonesMap.get(i)?.name
-        ) || null
-      )
+      return this.item.unloadingZones?.map((i) => this.$store.getters.zonesMap.get(i)?.name) || null
     },
   },
   methods: {

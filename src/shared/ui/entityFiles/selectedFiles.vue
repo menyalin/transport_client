@@ -20,13 +20,7 @@
     </template>
     <template #[`item.actions`]="{ item }">
       <span v-if="item.progress > 0">{{ item.progress }} %</span>
-      <v-icon
-        v-else
-        small
-        class="mr-2"
-        @click="removeFileHandler(item.name)"
-        color="red"
-      >
+      <v-icon v-else small class="mr-2" @click="removeFileHandler(item.name)" color="red">
         mdi-delete
       </v-icon>
     </template>

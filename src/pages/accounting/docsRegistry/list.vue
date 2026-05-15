@@ -7,10 +7,7 @@
       @submit="create"
       @refresh="refresh"
     />
-    <docs-registry-list-settings
-      v-model="settings"
-      @updateHeaders="changeHeaders"
-    />
+    <docs-registry-list-settings v-model="settings" @updateHeaders="changeHeaders" />
     <docs-registry-data-table
       v-model="settings"
       :items="items"
@@ -25,10 +22,7 @@
 <script>
 import { ref, onBeforeUnmount } from 'vue'
 import socket from '@/socket'
-import {
-  DocsRegistryListSettings,
-  DocsRegistryDataTable,
-} from '@/widgets/docsRegistry'
+import { DocsRegistryListSettings, DocsRegistryDataTable } from '@/widgets/docsRegistry'
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 

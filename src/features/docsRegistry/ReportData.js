@@ -54,9 +54,9 @@ export default class TableData {
   }
 
   get fileNameStr() {
-    return `Опись №${this.docsRegistry.number} от ${dayjs(
-      this.docsRegistry.date
-    ).format('YYYY-MM-DD')} : ${this.$placeName}`
+    return `Опись №${this.docsRegistry.number} от ${dayjs(this.docsRegistry.date).format(
+      'YYYY-MM-DD'
+    )} : ${this.$placeName}`
   }
 
   tableRows() {
@@ -74,8 +74,7 @@ export default class TableData {
   getCompanyName() {
     return (
       this.docsRegistry.executorName ||
-      store.getters.myCompanies.find((i) => i._id === this.docsRegistry.company)
-        .fullName
+      store.getters.myCompanies.find((i) => i._id === this.docsRegistry.company).fullName
     )
   }
   placeName() {
@@ -88,9 +87,7 @@ export default class TableData {
   }
 
   getClientName() {
-    return (
-      store.getters.partnersMap.get(this.docsRegistry.client)?.fullName || '???'
-    )
+    return store.getters.partnersMap.get(this.docsRegistry.client)?.fullName || '???'
   }
   getPlaces() {
     const placesSet = new Set(this.docsRegistry.orders.map((i) => i.placeName))

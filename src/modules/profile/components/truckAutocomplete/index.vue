@@ -32,8 +32,7 @@ const _getTruckNameString = (truck) => {
   if (truck.liftCapacity === 0 && truck.allowUseTrailer) resStr += ' Тягач'
   if (truck.type === 'trailer') resStr += ' Прицеп'
   if (truck.regNum) resStr += ' гос.номер ' + truck.regNum
-  if (truck.liftCapacity > 0)
-    resStr += ' г/п: ' + truck.liftCapacity / 1000 + 'т.'
+  if (truck.liftCapacity > 0) resStr += ' г/п: ' + truck.liftCapacity / 1000 + 'т.'
   if (truck.pltCount > 0) resStr += ' ' + truck.pltCount + 'плт'
   return resStr
 }
@@ -103,11 +102,7 @@ export default {
   },
   methods: {
     async getItems(str) {
-      const res = await TruckService.search(
-        str,
-        this.type || null,
-        this.directoriesProfile
-      )
+      const res = await TruckService.search(str, this.type || null, this.directoriesProfile)
       return res.map((item) => ({
         ...item,
         text: _getTruckNameString(item),

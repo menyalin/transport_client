@@ -24,15 +24,11 @@
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isShipmentPlace`]="{ item }">
-            <v-icon v-if="item.isShipmentPlace" color="green">
-              mdi-check
-            </v-icon>
+            <v-icon v-if="item.isShipmentPlace" color="green"> mdi-check </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </template>
           <template #[`item.isDeliveryPlace`]="{ item }">
-            <v-icon v-if="item.isDeliveryPlace" color="green">
-              mdi-check
-            </v-icon>
+            <v-icon v-if="item.isDeliveryPlace" color="green"> mdi-check </v-icon>
             <v-icon v-else> mdi-minus </v-icon>
           </template>
           <template #[`item.region`]="{ item }">
@@ -54,9 +50,7 @@
             <span v-if="Array.isArray(item.zones)">{{
               item.zones
                 .map((i) =>
-                  $store.getters.zonesMap.has(i)
-                    ? $store.getters.zonesMap.get(i).name
-                    : null
+                  $store.getters.zonesMap.has(i) ? $store.getters.zonesMap.get(i).name : null
                 )
                 .filter((i) => !!i)
                 .join(', ')

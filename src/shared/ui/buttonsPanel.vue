@@ -5,11 +5,7 @@
         <v-btn @click="$emit('cancel')"> Отмена </v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn
-          :disabled="disabledSubmit"
-          color="secondary"
-          @click="$emit('submit')"
-        >
+        <v-btn :disabled="disabledSubmit" color="secondary" @click="$emit('submit')">
           {{ submitTitle ? submitTitle : 'Сохранить и закрыть' }}
         </v-btn>
       </v-col>
@@ -24,16 +20,10 @@
     </v-row>
     <v-row v-else-if="panelType === 'list'">
       <v-col cols="auto">
-        <v-btn :disabled="disabledRefresh" @click="$emit('refresh')">
-          Обновить
-        </v-btn>
+        <v-btn :disabled="disabledRefresh" @click="$emit('refresh')"> Обновить </v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn
-          :disabled="disabledSubmit"
-          color="secondary"
-          @click="$emit('submit')"
-        >
+        <v-btn :disabled="disabledSubmit" color="secondary" @click="$emit('submit')">
           Создать
         </v-btn>
       </v-col>

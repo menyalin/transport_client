@@ -30,9 +30,7 @@ function usePaimentInvoiceForm(props, ctx) {
   const agreementItems = computed(() => {
     if (!state.value.client) return []
     return (
-      agreements.value.filter((agreement) =>
-        agreement.clients.includes(state.value.client)
-      ) || []
+      agreements.value.filter((agreement) => agreement.clients.includes(state.value.client)) || []
     )
   })
 
@@ -78,9 +76,7 @@ function usePaimentInvoiceForm(props, ctx) {
     const field = v$.value.agreement
     if (!field?.$invalid) return errors
 
-    field.$dirty &&
-      field.required.$invalid &&
-      errors.push('Соглашение не может быть пустым')
+    field.$dirty && field.required.$invalid && errors.push('Соглашение не может быть пустым')
     return errors
   })
 
@@ -97,9 +93,7 @@ function usePaimentInvoiceForm(props, ctx) {
 
   const commission = computed(() => {
     if (!state.value.agreement || agreements.value.length === 0) return 0
-    const { commission } = agreements.value.find(
-      (i) => i._id === state.value.agreement
-    )
+    const { commission } = agreements.value.find((i) => i._id === state.value.agreement)
     return commission || 0
   })
 

@@ -5,8 +5,7 @@ import { required, helpers } from '@vuelidate/validators'
 
 export const useFormState = (props, { emit }) => {
   function validateEmails(value) {
-    const emailRegex =
-      /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     const emails = value
       .split(';')
       .map((s) => s.trim())
@@ -30,8 +29,7 @@ export const useFormState = (props, { emit }) => {
       note: '',
       usePlannedDate: false,
     }
-    if (props.initialState?._id)
-      return { ...defaultState, ...props.initialState }
+    if (props.initialState?._id) return { ...defaultState, ...props.initialState }
     return defaultState
   }
 

@@ -125,15 +125,8 @@ export default {
     allowUseCustomerRoleCarriers: { type: Array, required: true },
   },
   setup(props, ctx) {
-    const {
-      state,
-      v$,
-      submitHandler,
-      cancelHandler,
-      saveHandler,
-      invalidForm,
-      vatRateDisabled,
-    } = useForm(props, ctx)
+    const { state, v$, submitHandler, cancelHandler, saveHandler, invalidForm, vatRateDisabled } =
+      useForm(props, ctx)
 
     return {
       state,

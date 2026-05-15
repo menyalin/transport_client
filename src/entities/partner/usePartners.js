@@ -7,8 +7,7 @@ export const usePartners = () => {
     clients: store.getters.partners.filter((i) => i.isClient),
     actions: {
       create: ({ query }) => router.push({ name: 'PartnerCreate', query }),
-      update: ({ id, query }) =>
-        router.push({ name: 'PartnerDetails', params: { id }, query }),
+      update: ({ id, query }) => router.push({ name: 'PartnerDetails', params: { id }, query }),
     },
   }
 }

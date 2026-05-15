@@ -9,20 +9,20 @@
     />
     <v-text-field
       label="ФИО"
-      v-model="value.fullName"
+      :value="value.fullName"
       dense
       @change="changeHandler('fullName', $event)"
     />
     <v-text-field
       label="Номер доверенности"
-      v-model="value.number"
+      :value="value.number"
       dense
       @change="changeHandler('number', $event)"
     />
     <DateTimeInput
       type="date"
       label="Дата доверенности"
-      v-model="value.date"
+      :value="value.date"
       dense
       @change="changeHandler('date', $event)"
     />

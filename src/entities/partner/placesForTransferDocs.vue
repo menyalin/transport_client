@@ -3,13 +3,7 @@
     <v-alert v-if="!partnerId" type="info">
       Добавление площадок возможно только после сохранения партнера
     </v-alert>
-    <v-btn
-      v-else
-      small
-      color="primary"
-      :style="{ maxWidth: '200px' }"
-      @click="addPlaceHandler"
-    >
+    <v-btn v-else small color="primary" :style="{ maxWidth: '200px' }" @click="addPlaceHandler">
       Добавить площадку
     </v-btn>
     <place-item
@@ -69,10 +63,7 @@ export default {
             formState
           )
         } else {
-          updatedPartner = await PartnerService.addPlaceForTransferDocs(
-            props.partnerId,
-            formState
-          )
+          updatedPartner = await PartnerService.addPlaceForTransferDocs(props.partnerId, formState)
         }
         ctx.emit('change', updatedPartner.placesForTransferDocs)
         placeForm.value.clear()

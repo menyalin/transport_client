@@ -106,8 +106,7 @@ export default {
     if (this.settings?.group) this.tmpSettings = { ...this.settings }
     else {
       // default values
-      this.tmpSettings.truckKind =
-        this.$store.getters.companySettings?.defaultTruckKind || null
+      this.tmpSettings.truckKind = this.$store.getters.companySettings?.defaultTruckKind || null
       this.tmpSettings.liftCapacity.push(
         this.$store.getters.companySettings?.defaultLiftCapacity || null
       )

@@ -64,9 +64,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" @click="submit" :disabled="invalidForm">
-        Сохранить
-      </v-btn>
+      <v-btn color="primary" @click="submit" :disabled="invalidForm"> Сохранить </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -124,9 +122,7 @@ export default {
       const titleField = v$.value.title
       if (!titleField.$invalid) return err
 
-      titleField.$dirty &&
-        titleField.required.$invalid &&
-        err.push('Название не может быть пустым')
+      titleField.$dirty && titleField.required.$invalid && err.push('Название не может быть пустым')
       return err
     })
 
@@ -135,9 +131,7 @@ export default {
       const field = v$.value.address
       if (!field.$invalid) return err
 
-      field.$dirty &&
-        field.required.$invalid &&
-        err.push('Адрес площадки не может быть пустым')
+      field.$dirty && field.required.$invalid && err.push('Адрес площадки не может быть пустым')
       return err
     })
 

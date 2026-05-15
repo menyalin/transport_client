@@ -15,17 +15,10 @@
         :style="{ maxWidth: '250px' }"
       />
     </div>
-    <v-btn :disabled="!isFilledParams" @click="getOrdersCountBtnHandler">
-      Кол-во рейсов
-    </v-btn>
+    <v-btn :disabled="!isFilledParams" @click="getOrdersCountBtnHandler"> Кол-во рейсов </v-btn>
     <p>Рейсов: {{ ordersCount }}</p>
     <div v-if="processingState.isOrdersProcessing" class="loader-row">
-      <v-progress-linear
-        v-model="processingState.percent"
-        color="green"
-        height="35"
-        class="my-6"
-      >
+      <v-progress-linear v-model="processingState.percent" color="green" height="35" class="my-6">
         <template v-slot:default="{ value }">
           <strong>{{ value }}%</strong>
         </template>

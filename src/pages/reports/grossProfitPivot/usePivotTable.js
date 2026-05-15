@@ -53,10 +53,7 @@ export const usePivotTable = (props) => {
         align: 'right',
       },
     ]
-    const res = [
-      { text: groupName.value, value: 'titleColumn' },
-      ...defaultFields,
-    ]
+    const res = [{ text: groupName.value, value: 'titleColumn' }, ...defaultFields]
     if (showOutsourceCosts.value) {
       res.push(...outsourceFields)
     }
@@ -131,13 +128,11 @@ export const usePivotTable = (props) => {
 
   function setTitleColumn(id) {
     if (Array.isArray(id))
-      return id.map((i) =>
-        titlesMap.value.has(i) ? titlesMap.value.get(i) : '-'
-      )
+      return id.map((i) => (titlesMap.value.has(i) ? titlesMap.value.get(i) : '-'))
     return titlesMap.value.has(id) ? titlesMap.value.get(id) : '-'
   }
 
-  const fieldSuffix = computed(() => props.priceWithVat ? 'WithVat' : 'WOVat')
+  const fieldSuffix = computed(() => (props.priceWithVat ? 'WithVat' : 'WOVat'))
 
   function getItemField(item, fieldName) {
     return item[`${fieldName}${fieldSuffix.value}`]

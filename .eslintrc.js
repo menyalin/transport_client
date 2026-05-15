@@ -5,11 +5,9 @@ module.exports = {
     node: true,
   },
 
-  extends: ['eslint:recommended', 'plugin:vue/base'],
-  plugins: ['prettier'],
+  extends: ['eslint:recommended', 'plugin:vue/base', 'plugin:prettier/recommended'],
   parserOptions: {
     sourceType: 'module',
- 
   },
 
   rules: {
@@ -23,7 +21,22 @@ module.exports = {
     'vue/valid-v-slot': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/singleline-html-element-content-newline': 'off',
-    'vue/max-attributes-per-line': 'off',
+    // Запрещает прямую мутацию props
+    'vue/no-mutating-props': 'warn',
+    // Запрещает деструктуризацию props (потеря реактивности)
+    // 'vue/no-prop-destructure': 'warn',
+    // Отключено в пользу Prettier
+    // 'vue/html-indent': [
+    //   'error',
+    //   2,
+    //   {
+    //     attribute: 1,
+    //     baseIndent: 1,
+    //     closeBracket: 0,
+    //     alignAttributesVertically: true,
+    //     ignores: [],
+    //   },
+    // ],
     'vue/html-self-closing': [
       'error',
       {

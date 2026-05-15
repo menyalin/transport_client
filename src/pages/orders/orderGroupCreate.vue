@@ -14,12 +14,7 @@
       <DateRangeInput v-model="period" />
       <v-spacer />
       <div>Будет создано рейсов: {{ totalOrderCount }}</div>
-      <v-btn
-        :disabled="!totalOrderCount || loading"
-        small
-        class="mx-3"
-        @click="crearTable"
-      >
+      <v-btn :disabled="!totalOrderCount || loading" small class="mx-3" @click="crearTable">
         Очистить таблицу
       </v-btn>
       <v-btn
@@ -38,11 +33,7 @@
           <thead>
             <tr>
               <th class="text-center">Шаблон</th>
-              <th
-                v-for="day of periodDays"
-                :key="day.title"
-                class="text-center column"
-              >
+              <th v-for="day of periodDays" :key="day.title" class="text-center column">
                 {{ day.title }}
               </th>
             </tr>
@@ -51,12 +42,7 @@
             <tr v-for="t of templates" :key="t">
               <td>
                 {{ templatesMap.get(t).name }}
-                <v-icon
-                  small
-                  color="red"
-                  class="ml-3"
-                  @click="deleteTemplate(t)"
-                >
+                <v-icon small color="red" class="ml-3" @click="deleteTemplate(t)">
                   mdi-delete
                 </v-icon>
               </td>
@@ -81,9 +67,7 @@
           hide-details
           :items="$store.getters.orderTemplatesForSelect"
         />
-        <v-btn small color="primary" @click="addAllTemplates">
-          Добавить все шаблоны
-        </v-btn>
+        <v-btn small color="primary" @click="addAllTemplates"> Добавить все шаблоны </v-btn>
       </div>
     </div>
   </div>
@@ -190,10 +174,7 @@ export default {
     initDateRange() {
       const dateFormat = 'YYYY-MM-DD'
       const today = dayjs()
-      return [
-        today.add(1, 'd').format(dateFormat),
-        today.add(8, 'd').format(dateFormat),
-      ]
+      return [today.add(1, 'd').format(dateFormat), today.add(8, 'd').format(dateFormat)]
     },
   },
 }

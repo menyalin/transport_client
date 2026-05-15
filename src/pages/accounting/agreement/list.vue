@@ -32,9 +32,7 @@
             <span>{{ downtimeTypesHash[item.type] }}</span>
           </template>
           <template #[`item.truck`]="{ item }">
-            <span>{{
-              trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-'
-            }}</span>
+            <span>{{ trucksHash[item.truck] ? trucksHash[item.truck].regNum : '-' }}</span>
           </template>
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
@@ -89,12 +87,8 @@ export default {
       state: settings.value.state,
       search: settings.value.search,
       limit: listOptions.value.itemsPerPage,
-      sortBy: listOptions.value.sortBy.length
-        ? listOptions.value.sortBy[0]
-        : null,
-      sortDesc: listOptions.value.sortDesc.length
-        ? listOptions.value.sortDesc[0]
-        : null,
+      sortBy: listOptions.value.sortBy.length ? listOptions.value.sortBy[0] : null,
+      sortDesc: listOptions.value.sortDesc.length ? listOptions.value.sortDesc[0] : null,
     }))
 
     async function getData() {
@@ -160,9 +154,8 @@ export default {
     filteredList() {
       if (!this.list) return []
       return this.list.map((i) => {
-        const vatRateText = this.$store.getters.vatRates.filter(
-          (vR) => vR.value === i.vatRate
-        )[0]?.text
+        const vatRateText = this.$store.getters.vatRates.filter((vR) => vR.value === i.vatRate)[0]
+          ?.text
         return {
           ...i,
           date: new Date(i.date).toLocaleDateString(),

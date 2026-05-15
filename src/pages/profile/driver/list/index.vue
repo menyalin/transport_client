@@ -66,9 +66,7 @@
         <v-icon v-else small color="red"> mdi-minus </v-icon>
       </template>
       <template #[`item.isCalcSalary`]="{ item }">
-        <v-icon v-if="item.isCalcSalary" small color="green">
-          mdi-check
-        </v-icon>
+        <v-icon v-if="item.isCalcSalary" small color="green"> mdi-check </v-icon>
         <v-icon v-else small color="red"> mdi-minus </v-icon>
       </template>
     </v-data-table>
@@ -77,11 +75,7 @@
 <script>
 import { ref } from 'vue'
 import { useDriverList } from './useDriverList'
-import {
-  ButtonsPanel,
-  EntityListWrapper,
-  AppTableColumnSetting,
-} from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, AppTableColumnSetting } from '@/shared/ui'
 import { useCarrierStore } from '@/entities/carrier'
 
 export default {

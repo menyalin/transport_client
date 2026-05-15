@@ -2,11 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <DriverForm
-          @submit="submit"
-          @cancel="cancel"
-          :carrierItems="carrierStore.carriers"
-        />
+        <DriverForm @submit="submit" @cancel="cancel" :carrierItems="carrierStore.carriers" />
       </v-col>
     </v-row>
   </v-container>

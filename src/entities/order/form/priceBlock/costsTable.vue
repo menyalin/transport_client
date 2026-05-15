@@ -4,9 +4,7 @@
       <thead>
         <tr>
           <th class="text-center" width="180">Тип</th>
-          <th v-if="usePriceWithVat" class="text-center" width="130">
-            Цена c НДС
-          </th>
+          <th v-if="usePriceWithVat" class="text-center" width="130">Цена c НДС</th>
           <th v-else class="text-center" width="130">Цена без НДС</th>
           <th class="text-center">Примечание</th>
           <th />
@@ -20,9 +18,7 @@
           </td>
 
           <td v-else class="text-right">
-            {{
-              basePrePrice ? moneyFormatter.format(basePrePrice.priceWOVat) : 0
-            }}
+            {{ basePrePrice ? moneyFormatter.format(basePrePrice.priceWOVat) : 0 }}
           </td>
 
           <td colspan="4" />
@@ -44,9 +40,7 @@
           </td>
 
           <td>
-            <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2">
-              mdi-cash
-            </v-icon>
+            <v-icon v-if="item.cashPayment" class="px-2" color="teal darken-2"> mdi-cash </v-icon>
 
             {{ item.note }}
           </td>
@@ -93,8 +87,7 @@ export default {
         .slice()
         .sort(
           (a, b) =>
-            typesOrder.findIndex((t) => t === a.type) -
-            typesOrder.findIndex((t) => t === b.type)
+            typesOrder.findIndex((t) => t === a.type) - typesOrder.findIndex((t) => t === b.type)
         )
     },
     showPrePrice() {

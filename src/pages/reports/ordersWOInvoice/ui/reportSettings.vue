@@ -6,10 +6,7 @@
       @change="updateActiveHeaders"
     />
     <refresh-btn @click.native="$emit('refresh')" />
-    <DateRangeInput
-      :period="settings.period"
-      @change="updateSettings($event, 'period')"
-    />
+    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
 
     <v-autocomplete
       :value="settings.carriers"

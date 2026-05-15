@@ -54,20 +54,11 @@
 
     <!-- Кнопки действий -->
     <v-card-actions class="pa-4 pt-0">
-      <v-btn
-        v-if="showRemoveBtn"
-        color="error"
-        @click="handleRemove"
-        class="mr-2"
-      >
-        Удалить
-      </v-btn>
+      <v-btn v-if="showRemoveBtn" color="error" @click="handleRemove" class="mr-2"> Удалить </v-btn>
       <v-spacer />
       <v-btn text @click="handleCancel"> Отмена </v-btn>
 
-      <v-btn color="primary" @click="handleSave" :disabled="invalidForm">
-        Сохранить
-      </v-btn>
+      <v-btn color="primary" @click="handleSave" :disabled="invalidForm"> Сохранить </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -191,9 +182,7 @@ export default {
       if (!state.value.startPeriod) return null
 
       const newStart = new Date(state.value.startPeriod)
-      const newEnd = state.value.endPeriod
-        ? new Date(state.value.endPeriod)
-        : null
+      const newEnd = state.value.endPeriod ? new Date(state.value.endPeriod) : null
 
       for (let i = 0; i < props.existingItems.length; i++) {
         const item = props.existingItems[i]
@@ -207,12 +196,7 @@ export default {
         const existingEnd = item.endPeriod ? new Date(item.endPeriod) : null
 
         // Проверка пересечения
-        const overlaps = periodsOverlap(
-          newStart,
-          newEnd,
-          existingStart,
-          existingEnd
-        )
+        const overlaps = periodsOverlap(newStart, newEnd, existingStart, existingEnd)
 
         if (overlaps) {
           return 'Этот период пересекается с существующим'
@@ -228,9 +212,7 @@ export default {
       const effectiveEnd2 = end2 ? end2.getTime() : Infinity
 
       // Используем <= для строгого разделения: периоды не должны соприкасаться
-      return (
-        start1.getTime() <= effectiveEnd2 && start2.getTime() <= effectiveEnd1
-      )
+      return start1.getTime() <= effectiveEnd2 && start2.getTime() <= effectiveEnd1
     }
 
     // Обработчики событий

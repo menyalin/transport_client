@@ -23,10 +23,7 @@ export default {
     item: Object,
   },
   setup(props, ctx) {
-    const { state, invalidForm, cancelHandler, submitHandler } = useForm(
-      props,
-      ctx
-    )
+    const { state, invalidForm, cancelHandler, submitHandler } = useForm(props, ctx)
     return {
       state,
       invalidForm,

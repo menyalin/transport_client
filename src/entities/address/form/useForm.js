@@ -11,13 +11,7 @@ export const useForm = (props, ctx) => {
   const validCoordinates = (val) => {
     if (!val) return true
     const arr = val.split(',')
-    return (
-      arr.length === 2 &&
-      +arr[0] >= -90 &&
-      +arr[0] <= 90 &&
-      +arr[1] >= -180 &&
-      +arr[1] <= 180
-    )
+    return arr.length === 2 && +arr[0] >= -90 && +arr[0] <= 90 && +arr[1] >= -180 && +arr[1] <= 180
   }
   const initialState = {
     name: null,

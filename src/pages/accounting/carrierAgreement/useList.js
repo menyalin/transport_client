@@ -14,10 +14,7 @@ export const useListData = () => {
     search: null,
   }
 
-  const settings = usePersistedRef(
-    initialState,
-    'carrier_agreement_list_settings'
-  )
+  const settings = usePersistedRef(initialState, 'carrier_agreement_list_settings')
   const queryParams = computed(() => ({
     search: settings.value?.search,
     company: store.getters.directoriesProfile,
@@ -46,11 +43,7 @@ export const useListData = () => {
   function changeHeaders(val) {
     headers.value = val
   }
-  watch(
-    settings,
-    () => (listOptions.value = { ...listOptions.value, page: 1 }),
-    { deep: true }
-  )
+  watch(settings, () => (listOptions.value = { ...listOptions.value, page: 1 }), { deep: true })
 
   watch(listOptions, refreshHandler)
 

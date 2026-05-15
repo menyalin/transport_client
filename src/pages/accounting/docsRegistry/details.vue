@@ -1,9 +1,5 @@
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
+  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
     <docs-registry-form
       :item="item"
       :disabledPickOrders="disabledPickOrders"
@@ -19,18 +15,8 @@
       @delete="deleteOrderFromRegistry"
       @dblRowClick="dblRowClickHandler"
     />
-    <v-dialog
-      v-if="item._id"
-      v-model="showPickOrderDialog"
-      fullscreen
-      persistent
-      hide-overlay
-    >
-      <pick-orders
-        :docsRegistry="item"
-        :client="item.client"
-        @cancel="closeDialog"
-      />
+    <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent hide-overlay>
+      <pick-orders :docsRegistry="item" :client="item.client" @cancel="closeDialog" />
     </v-dialog>
   </form-wrapper>
 </template>
@@ -43,15 +29,8 @@ import store from '@/store'
 import { DocsRegistryService } from '@/shared/services'
 import { FormWrapper } from '@/shared/ui'
 
-import {
-  PickOrders,
-  docsRegistryWordReport,
-  DocsRegistryReportData,
-} from '@/features/docsRegistry'
-import {
-  DocsRegistryForm,
-  DocsRegistryOrdersList,
-} from '@/entities/docsRegistry'
+import { PickOrders, docsRegistryWordReport, DocsRegistryReportData } from '@/features/docsRegistry'
+import { DocsRegistryForm, DocsRegistryOrdersList } from '@/entities/docsRegistry'
 
 export default {
   name: 'DocsRegistryDetail',
@@ -67,9 +46,7 @@ export default {
   setup(props) {
     const item = ref({})
     const storedSettingsName = 'docsRegistry:showPickOrderDialog'
-    const showPickOrderDialog = ref(
-      store.getters.storedValue(storedSettingsName) || false
-    )
+    const showPickOrderDialog = ref(store.getters.storedValue(storedSettingsName) || false)
     const disabledPickOrders = computed(() => {
       return !item.value?._id
     })
@@ -121,9 +98,7 @@ export default {
         store.commit('setError', e.message)
       }
     }
-    const docsRegistryReportData = computed(
-      () => new DocsRegistryReportData(item.value)
-    )
+    const docsRegistryReportData = computed(() => new DocsRegistryReportData(item.value))
 
     function downloadWordHandler() {
       docsRegistryWordReport(docsRegistryReportData.value)
@@ -180,9 +155,7 @@ export default {
 
     function removeOrders({ docsRegistry, orders }) {
       if (docsRegistry !== item.value._id) return null
-      item.value.orders = item.value.orders.filter(
-        (i) => !orders.includes(i.order._id)
-      )
+      item.value.orders = item.value.orders.filter((i) => !orders.includes(i.order._id))
     }
 
     socket.on('orders:addedToRegistry', addOrders)

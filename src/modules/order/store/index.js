@@ -2,9 +2,7 @@ import { OrderService } from '@/shared/services'
 import dayjs from 'dayjs'
 
 const _getStartPositionDate = (order) => {
-  return order.route[0]?.arrivalDate
-    ? order.route[0].arrivalDate
-    : order.startPositionDate
+  return order.route[0]?.arrivalDate ? order.route[0].arrivalDate : order.startPositionDate
 }
 
 const _getLastPlannedDate = (order) => {
@@ -14,9 +12,7 @@ const _getLastPlannedDate = (order) => {
   for (let point of tmpRoute) {
     plannedDates.push(point.plannedDate)
   }
-  plannedDates = plannedDates
-    .filter((x) => !!x)
-    .sort((a, b) => new Date(b) - new Date(a))
+  plannedDates = plannedDates.filter((x) => !!x).sort((a, b) => new Date(b) - new Date(a))
   return plannedDates.length ? plannedDates[0] : null
 }
 
@@ -45,26 +41,20 @@ export default {
     ],
     orderStatuses: [],
     scheduleDate: dayjs().format('YYYY-MM-DD'),
-    onlyPlannedDates:
-      localStorage.getItem('orders:onlyPlannedDates') === 'true' ?? false,
+    onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') === 'true' ?? false,
     orderAnalyticTypes: [],
     orderPriceTypes: [],
-    onlyTrucksWithRoutes:
-      localStorage.getItem('orders:onlyTrucksWithRoutes') === 'true' ?? false,
+    onlyTrucksWithRoutes: localStorage.getItem('orders:onlyTrucksWithRoutes') === 'true' ?? false,
   },
   mutations: {
     changeOnlyTrucksWithRoutes(state) {
       state.onlyTrucksWithRoutes = !state.onlyTrucksWithRoutes
-      localStorage.setItem(
-        'orders:onlyTrucksWithRoutes',
-        state.onlyTrucksWithRoutes
-      )
+      localStorage.setItem('orders:onlyTrucksWithRoutes', state.onlyTrucksWithRoutes)
     },
 
     changeOnlyPlannedDates(state) {
       state.onlyPlannedDates = !state.onlyPlannedDates
-      if (!state.onlyPlannedDates)
-        localStorage.removeItem('orders:onlyPlannedDates')
+      if (!state.onlyPlannedDates) localStorage.removeItem('orders:onlyPlannedDates')
       else localStorage.setItem('orders:onlyPlannedDates', true)
     },
     setPeriod(state, payload) {
@@ -77,14 +67,11 @@ export default {
       state.orders = payload
     },
     addOrder({ orders }, payload) {
-      if (orders.findIndex((item) => item._id === payload._id) === -1)
-        orders.push(payload)
+      if (orders.findIndex((item) => item._id === payload._id) === -1) orders.push(payload)
     },
     addOrdersToSchedule(state, payload) {
       state.orders = state.orders.concat(
-        payload.filter(
-          (i) => !state.orders.some((order) => order._id === i._id)
-        )
+        payload.filter((i) => !state.orders.some((order) => order._id === i._id))
       )
     },
     updateOrder(state, payload) {
@@ -105,9 +92,7 @@ export default {
       state.orderPriceTypes = payload
     },
     incScheduleDate(state, count) {
-      state.scheduleDate = dayjs(state.scheduleDate)
-        .add(count, 'day')
-        .format('YYYY-MM-DD')
+      state.scheduleDate = dayjs(state.scheduleDate).add(count, 'day').format('YYYY-MM-DD')
     },
     setScheduleDate(state, newDate) {
       state.scheduleDate = newDate
@@ -126,25 +111,18 @@ export default {
   getters: {
     onlyTrucksWithRoutes: ({ onlyTrucksWithRoutes }) => onlyTrucksWithRoutes,
     pointTypes: ({ pointTypes }) => pointTypes,
-    ordersForSchedule: (
-      { orders, period },
-      { schedulePeriod, onlyPlannedDates }
-    ) =>
+    ordersForSchedule: ({ orders, period }, { schedulePeriod, onlyPlannedDates }) =>
       orders
         .map((item) => ({
           _id: item._id,
           company: item.company,
           needRoundTime:
-            !item.route[0].arrivalDate ||
-            onlyPlannedDates ||
-            !item.confirmedCrew?.truck,
+            !item.route[0].arrivalDate || onlyPlannedDates || !item.confirmedCrew?.truck,
           isCompleted: !!item.route[item.route.length - 1]?.departureDate,
           startPositionDate: onlyPlannedDates
             ? item.startPositionDate
             : _getStartPositionDate(item),
-          endPositionDate: onlyPlannedDates
-            ? item.startPositionDate
-            : _getLastPositionDate(item), // для определения длины блока
+          endPositionDate: onlyPlannedDates ? item.startPositionDate : _getLastPositionDate(item), // для определения длины блока
           lastPlannedDate: _getLastPlannedDate(item), // для проверки при перемещении
           truckId: item.confirmedCrew?.truck,
           isDisabled: item.isDisabled,
@@ -156,15 +134,11 @@ export default {
           const sP = dayjs(schedulePeriod[0])
           const eP = dayjs(schedulePeriod[1])
           return (
-            eP.isAfter(order.startPositionDate) &&
-            sP.isSameOrBefore(order.endPositionDate)
+            eP.isAfter(order.startPositionDate) && sP.isSameOrBefore(order.endPositionDate)
             // &&            !order.truckId
           )
         })
-        .sort(
-          (a, b) =>
-            new Date(a.startPositionDate) - new Date(b.startPositionDate)
-        ),
+        .sort((a, b) => new Date(a.startPositionDate) - new Date(b.startPositionDate)),
     schedulePeriod: ({ period }) => {
       if (period.length !== 2) return null
       return [period[0], dayjs(period[1]).add(1, 'd').format('YYYY-MM-DD')]
@@ -191,13 +165,9 @@ export default {
         const zone = _getZoneName(order.startPositionDate)
         const newDay = {
           ...tmpRes.get(dayStr),
-          totalInDay: tmpRes.has(dayStr)
-            ? tmpRes.get(dayStr).totalInDay + 1
-            : 1,
+          totalInDay: tmpRes.has(dayStr) ? tmpRes.get(dayStr).totalInDay + 1 : 1,
           [zone]:
-            tmpRes.has(dayStr) && !!tmpRes.get(dayStr)[zone]
-              ? tmpRes.get(dayStr)[zone] + 1
-              : 1,
+            tmpRes.has(dayStr) && !!tmpRes.get(dayStr)[zone] ? tmpRes.get(dayStr)[zone] + 1 : 1,
         }
         tmpRes.set(dayStr, newDay)
       })

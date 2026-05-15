@@ -25,14 +25,8 @@
           @save="submit($event, true)"
           @delete="deleteHandler"
         >
-          <template
-            v-slot:transport_waybills
-            v-if="isVisibleTransportWaybillsWidget"
-          >
-            <TransportWaybillsInOrderWidget
-              :orderId="item._id"
-              :route="item.route"
-            />
+          <template v-slot:transport_waybills v-if="isVisibleTransportWaybillsWidget">
+            <TransportWaybillsInOrderWidget :orderId="item._id" :route="item.route" />
           </template>
         </OrderForm>
       </v-col>
@@ -183,9 +177,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           this.loading = true

@@ -3,9 +3,4 @@ import useOrderListSettingsData from './useOrderListSettingsData'
 import useHistorySettings from './useHistorySettings'
 import usePersistedRef from './usePersistedRef'
 
-export {
-  useListColumnSetting,
-  useOrderListSettingsData,
-  useHistorySettings,
-  usePersistedRef,
-}
+export { useListColumnSetting, useOrderListSettingsData, useHistorySettings, usePersistedRef }

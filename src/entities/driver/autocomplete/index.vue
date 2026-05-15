@@ -85,10 +85,7 @@ export default {
   },
   methods: {
     async getItems(str) {
-      const res = await DriverService.search(
-        str,
-        this.$store.getters.directoriesProfile
-      )
+      const res = await DriverService.search(str, this.$store.getters.directoriesProfile)
       return res.map((item) => ({
         ...item,
         text: _getDriverNameString(item),

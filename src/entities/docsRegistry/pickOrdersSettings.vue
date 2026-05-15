@@ -92,14 +92,8 @@ export default {
     allHeaders: Array,
   },
   setup(props, { emit }) {
-    const {
-      orderStatuses,
-      docStatuses,
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    } = useOrderListSettingsData()
+    const { orderStatuses, docStatuses, trailers, trucks, drivers, loadingZoneItems } =
+      useOrderListSettingsData()
     const refreshHandler = () => {
       emit('refresh')
     }

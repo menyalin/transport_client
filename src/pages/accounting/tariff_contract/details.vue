@@ -1,10 +1,6 @@
 a
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
+  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
     <TariffContractForm
       :item="item"
       :agreements="agreementItems"
@@ -18,10 +14,7 @@ import { computed, watch, ref } from 'vue'
 import store from '@/store'
 import router from '@/router'
 import { FormWrapper } from '@/shared/ui'
-import {
-  TariffContractForm,
-  useTariffContract,
-} from '@/entities/tariff_contract'
+import { TariffContractForm, useTariffContract } from '@/entities/tariff_contract'
 import { useAgreements } from '@/entities/agreement'
 export default {
   name: 'TariffContractDetail',

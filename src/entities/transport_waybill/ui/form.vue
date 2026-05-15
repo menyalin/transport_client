@@ -1,13 +1,8 @@
 <template>
   <v-card>
-    <v-card-title>
-      {{ item ? 'Редактирование' : 'Создание' }} транспортной накладной
-    </v-card-title>
+    <v-card-title> {{ item ? 'Редактирование' : 'Создание' }} транспортной накладной </v-card-title>
     <v-card-text class="form-wrapper">
-      <v-radio-group
-        v-model="form.shipperAddressId"
-        @change="changeShipperAddressHandler"
-      >
+      <v-radio-group v-model="form.shipperAddressId" @change="changeShipperAddressHandler">
         <template v-slot:label>
           <div><b>Грузоотправитель</b></div>
         </template>
@@ -76,9 +71,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn color="primary" :disabled="v$.$invalid" @click="submit">
-        Сохранить
-      </v-btn>
+      <v-btn color="primary" :disabled="v$.$invalid" @click="submit"> Сохранить </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -137,20 +130,14 @@ export default {
         return
       }
 
-      if (
-        !form.value.shipperAddressId &&
-        props.shipperAddressItems?.length === 1
-      )
+      if (!form.value.shipperAddressId && props.shipperAddressItems?.length === 1)
         form.value = {
           ...form.value,
           shipperAddressId: props.shipperAddressItems[0].value,
           date: props.shipperAddressItems[0].date,
         }
 
-      if (
-        !form.value.consigneeAddressId &&
-        props.consigneeAddressItems.length === 1
-      ) {
+      if (!form.value.consigneeAddressId && props.consigneeAddressItems.length === 1) {
         form.value = {
           ...form.value,
           consigneeAddressId: props.consigneeAddressItems[0].value,
@@ -172,9 +159,7 @@ export default {
     const submit = () => emit('submit', { ...form.value })
 
     function changeShipperAddressHandler(addressId) {
-      const addressItem = props.shipperAddressItems.find(
-        (i) => i.value === addressId
-      )
+      const addressItem = props.shipperAddressItems.find((i) => i.value === addressId)
       if (!addressItem) return
       form.value = { ...form.value, date: addressItem.date }
     }

@@ -14,10 +14,7 @@
       :style="{ maxWidth: '300px' }"
       @change="updateSettings($event, 'periodBy')"
     />
-    <DateRangeInput
-      :period="settings.period"
-      @change="updateSettings($event, 'period')"
-    />
+    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
     <v-autocomplete
       :value="settings.agreements"
       item-text="name"

@@ -64,10 +64,7 @@ export const useFineList = () => {
   const showOnlySelected = ref(false)
 
   const settings = usePersistedRef(initialSettings, 'fineList:settings')
-  const listOptions = usePersistedRef(
-    { page: 1, itemsPerPage: 100 },
-    'fineList:listOptions'
-  )
+  const listOptions = usePersistedRef({ page: 1, itemsPerPage: 100 }, 'fineList:listOptions')
 
   const queryParams = computed(() => ({
     company: store.getters.directoriesProfile,
@@ -141,16 +138,10 @@ export const useFineList = () => {
         date: new Date(i.date).toLocaleDateString(),
         truck: store.getters.trucksMap.get(i.truck)?.regNum || '-',
         driver: store.getters.driversMap.get(i.driver)?.fullName || '-',
-        violationDate: i.violationDate
-          ? new Date(i.violationDate).toLocaleString()
-          : null,
+        violationDate: i.violationDate ? new Date(i.violationDate).toLocaleString() : null,
         isPayment: i.paymentDate || i.isPaydByDriver ? 'Да' : 'Нет',
-        category: i.category
-          ? store.getters.fineCategoriesMap.get(i.category)
-          : null,
-        paymentDate: i.paymentDate
-          ? new Date(i.paymentDate).toLocaleDateString()
-          : null,
+        category: i.category ? store.getters.fineCategoriesMap.get(i.category) : null,
+        paymentDate: i.paymentDate ? new Date(i.paymentDate).toLocaleDateString() : null,
         expiryDateOfDiscount: i.expiryDateOfDiscount
           ? new Date(i.expiryDateOfDiscount).toLocaleDateString()
           : null,

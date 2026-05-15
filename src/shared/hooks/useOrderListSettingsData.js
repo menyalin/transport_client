@@ -68,9 +68,7 @@ export default (settings) => {
       settings?.tkName ? i.tkName._id === settings.tkName : true
     )
   )
-  const clientItems = computed(() =>
-    store.getters.partners.filter((i) => i.isClient)
-  )
+  const clientItems = computed(() => store.getters.partners.filter((i) => i.isClient))
 
   const addressItems = computed(() => store.getters.addressesForAutocomplete)
 

@@ -37,10 +37,7 @@ export default {
     async getAddresses({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.addresses.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.addresses.length === 0 && getters.directoriesProfile)) {
           commit('setAddresses', [])
           const addressList = await AddressService.getByDirectoriesProfile(
             getters.directoriesProfile
@@ -55,10 +52,7 @@ export default {
     },
   },
   getters: {
-    addressesForAutocomplete: (
-      { addresses },
-      { directoriesProfile, partnersMap }
-    ) =>
+    addressesForAutocomplete: ({ addresses }, { directoriesProfile, partnersMap }) =>
       addresses
         .filter((item) => item.company === directoriesProfile)
         .map((item) => ({
@@ -77,8 +71,7 @@ export default {
           ...a,
           partnerName: partnersMap.get(a.partner)?.name,
         })),
-    addressMap: ({ addresses }) =>
-      new Map(addresses.map((item) => [item._id, item])),
+    addressMap: ({ addresses }) => new Map(addresses.map((item) => [item._id, item])),
 
     addressIdsWithDateControlSet: ({ addresses }, { partners }) => {
       const controlledPartners = partners

@@ -40,12 +40,8 @@ export default {
     const savedFields = JSON.parse(localStorage.getItem(props.listSettingsName))
 
     function getHeaders() {
-      if (activeFields.value.length === 0)
-        return props.allHeaders.filter((i) => i.default)
-      else
-        return props.allHeaders.filter((i) =>
-          activeFields.value.includes(i.value)
-        )
+      if (activeFields.value.length === 0) return props.allHeaders.filter((i) => i.default)
+      else return props.allHeaders.filter((i) => activeFields.value.includes(i.value))
     }
 
     function inputHandler(field) {
@@ -58,18 +54,12 @@ export default {
     }
 
     if (savedFields && savedFields.length) activeFields.value = savedFields
-    else
-      activeFields.value = props.allHeaders
-        .filter((i) => i.default)
-        .map((i) => i.value)
+    else activeFields.value = props.allHeaders.filter((i) => i.default).map((i) => i.value)
 
     watch(
       activeFields,
       () => {
-        localStorage.setItem(
-          props.listSettingsName,
-          JSON.stringify(activeFields.value)
-        )
+        localStorage.setItem(props.listSettingsName, JSON.stringify(activeFields.value))
         emitHeaders()
       },
       { deep: true, immediate: true }

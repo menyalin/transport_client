@@ -101,11 +101,7 @@
           disabled
           :style="{ maxWidth: '250px' }"
         />
-        <v-btn
-          v-if="isVisiblePayInvoiceBtn"
-          color="primary"
-          @click="payInvoiceHandler"
-        >
+        <v-btn v-if="isVisiblePayInvoiceBtn" color="primary" @click="payInvoiceHandler">
           Счет оплачен
         </v-btn>
       </div>
@@ -129,20 +125,11 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          disabledPickOrders ||
-          needSave ||
-          invalidForm ||
-          !allowedToChangeOrders
-        "
+        :disabled="disabledPickOrders || needSave || invalidForm || !allowedToChangeOrders"
       >
         Подобрать рейсы
       </v-btn>
-      <OrdersTable
-        :invoiceId="item._id"
-        :allowDeleteOrders="allowedToChangeOrders"
-        class="ma-3"
-      />
+      <OrdersTable :invoiceId="item._id" :allowDeleteOrders="allowedToChangeOrders" class="ma-3" />
       <v-text-field
         v-model="state.note"
         label="Примечание"
@@ -160,11 +147,7 @@ import { incomingInvoiceStatuses } from '../config.js'
 import OrdersTable from './ordersTable/ordersTable.vue'
 import { useForm } from './useForm.js'
 
-import {
-  ButtonsPanel,
-  DownloadDocTemplateMenu,
-  DateTimeInput,
-} from '@/shared/ui'
+import { ButtonsPanel, DownloadDocTemplateMenu, DateTimeInput } from '@/shared/ui'
 
 import { usePrintForms } from './usePrintForms.js'
 
@@ -187,12 +170,8 @@ export default {
     },
   },
   setup(props, ctx) {
-    const {
-      downloadDisabled,
-      docTemplateIsVisible,
-      templates,
-      downloadTemplateHandler,
-    } = usePrintForms(props)
+    const { downloadDisabled, docTemplateIsVisible, templates, downloadTemplateHandler } =
+      usePrintForms(props)
 
     const statusItems = computed(() => {
       return incomingInvoiceStatuses.map((i) => ({
@@ -251,13 +230,11 @@ export default {
       ctx.emit('pickOrders')
     }
     const carrierChangeHandler = (val) => {
-      if (!val || carrierAgreements.value.length === 0)
-        state.value.agreement = null
+      if (!val || carrierAgreements.value.length === 0) state.value.agreement = null
       else if (carrierAgreements.value.length === 1)
         state.value.agreement = carrierAgreements.value[0]._id
 
-      if (!carrierAgreementIds.value.includes(state.value.agreement))
-        state.value.agreement = null
+      if (!carrierAgreementIds.value.includes(state.value.agreement)) state.value.agreement = null
     }
 
     return {

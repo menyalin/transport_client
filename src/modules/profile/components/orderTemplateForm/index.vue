@@ -2,19 +2,12 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('orderTemplate:write') || isInvalidForm
-      "
+      :disabled-submit="!$store.getters.hasPermission('orderTemplate:write') || isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
     <div class="body-wrapper">
-      <v-text-field
-        v-model.trim="$v.form.name.$model"
-        outlined
-        label="Название шаблона"
-        dense
-      />
+      <v-text-field v-model.trim="$v.form.name.$model" outlined label="Название шаблона" dense />
       <div id="client-row">
         <v-autocomplete
           v-model="$v.form.client.$model"
@@ -122,17 +115,14 @@ export default {
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
+      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
     },
     isValidRoute() {
       if (!this.route || this.route.length === 0) return false
       const length = this.route.length >= 2
       const firstPoint = this.route[0]?.type === 'loading'
       const lastPoint = this.route[this.route.length - 1].type === 'unloading'
-      const hasAddresses =
-        this.route.filter((item) => !!item.address).length === this.route.length
+      const hasAddresses = this.route.filter((item) => !!item.address).length === this.route.length
       return length && firstPoint && lastPoint && hasAddresses
     },
 

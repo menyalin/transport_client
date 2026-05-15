@@ -9,31 +9,12 @@
           <v-icon> mdi-cached </v-icon>
         </v-btn>
         <date-range-input v-model="settings.dateRange" />
-        <v-checkbox
-          v-model="usePriceWithVat"
-          label="Цены с НДС"
-          hide-details
-          class="ml-3"
-        />
-        <v-checkbox
-          v-model="showOutsourceCosts"
-          label="Наемники"
-          hide-details
-          class="ml-3"
-        />
-        <v-checkbox
-          v-model="withRound"
-          label="Округление"
-          hide-details
-          class="ml-3"
-        />
+        <v-checkbox v-model="usePriceWithVat" label="Цены с НДС" hide-details class="ml-3" />
+        <v-checkbox v-model="showOutsourceCosts" label="Наемники" hide-details class="ml-3" />
+        <v-checkbox v-model="withRound" label="Округление" hide-details class="ml-3" />
       </div>
 
-      <app-group-by-settings
-        id="group-settings"
-        v-model="settings.groupBy"
-        :items="groupItems"
-      />
+      <app-group-by-settings id="group-settings" v-model="settings.groupBy" :items="groupItems" />
       <app-filters
         id="main-filters"
         v-model="mainFilters"
@@ -47,13 +28,7 @@
         :agreements="agreements"
       />
     </div>
-    <v-progress-linear
-      v-if="loading"
-      indeterminate
-      color="primary"
-      striped
-      rounded
-    />
+    <v-progress-linear v-if="loading" indeterminate color="primary" striped rounded />
     <div class="report-body">
       <app-pivot-table
         :groupItems="groupItems"
@@ -97,10 +72,7 @@ export default {
     AppOrdersTable,
   },
   setup() {
-    const showOutsourceCosts = usePersistedRef(
-      false,
-      'grossProfitPivot:showOutsourceCosts'
-    )
+    const showOutsourceCosts = usePersistedRef(false, 'grossProfitPivot:showOutsourceCosts')
     const {
       settings,
       groupItems,

@@ -1,9 +1,6 @@
 import { ref, watch } from 'vue'
 
-export default function useHistorySettings(
-  initialState,
-  stateName = 'default'
-) {
+export default function useHistorySettings(initialState, stateName = 'default') {
   const state = ref(
     history.state[stateName]
       ? typeof initialState === 'object'
@@ -15,10 +12,7 @@ export default function useHistorySettings(
   watch(
     state,
     (newState) => {
-      history.pushState(
-        Object.assign({}, history.state, { [stateName]: newState }),
-        ''
-      )
+      history.pushState(Object.assign({}, history.state, { [stateName]: newState }), '')
     },
     { deep: true }
   )

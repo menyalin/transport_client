@@ -90,18 +90,11 @@ export default {
 
     function prepareItem(item, idx) {
       return {
-        idx:
-          idx +
-          1 +
-          (props.listOptions.page - 1) * props.listOptions.itemsPerPage,
+        idx: idx + 1 + (props.listOptions.page - 1) * props.listOptions.itemsPerPage,
         ...item,
         plannedDate: new Date(item.plannedDate).toLocaleDateString(),
-        savedTotal: item.savedTotal
-          ? item.savedTotal
-          : { price: 0, priceWOVat: 0 },
-        hasDiffPrice:
-          item.loaderData?.price &&
-          item.loaderData?.price !== item.savedTotal?.price,
+        savedTotal: item.savedTotal ? item.savedTotal : { price: 0, priceWOVat: 0 },
+        hasDiffPrice: item.loaderData?.price && item.loaderData?.price !== item.savedTotal?.price,
         hasDiffPriceWOVat:
           item.loaderData?.priceWOVat &&
           item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
@@ -117,10 +110,7 @@ export default {
 
     function dblclickRowHandler(_event, { item }) {
       if (!item.orderId) {
-        proxy.$store.commit(
-          'setError',
-          'Ссылка отсутствует! Необходимо удалить рейс из акта!'
-        )
+        proxy.$store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
         return
       }
       ctx.emit('dblRowClick', item.orderId)
@@ -128,10 +118,7 @@ export default {
 
     function updateItemPrice(itemId) {
       if (!itemId) {
-        proxy.$store.commit(
-          'setError',
-          'Ссылка отсутствует! Необходимо удалить рейс из акта!'
-        )
+        proxy.$store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
         return
       }
       ctx.emit('updateItemPrice', itemId)
@@ -146,9 +133,7 @@ export default {
     watch(
       () => props.orders,
       (val) => {
-        preparedOrders.value = [
-          ...val.map((item, idx) => prepareItem(item, idx)),
-        ]
+        preparedOrders.value = [...val.map((item, idx) => prepareItem(item, idx))]
       },
       { deep: true }
     )

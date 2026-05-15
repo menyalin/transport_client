@@ -10,13 +10,7 @@
       </v-btn>
     </div>
     <div id="report-body">
-      <v-progress-linear
-        v-if="loading"
-        indeterminate
-        color="primary"
-        striped
-        rounded
-      />
+      <v-progress-linear v-if="loading" indeterminate color="primary" striped rounded />
     </div>
   </div>
 </template>

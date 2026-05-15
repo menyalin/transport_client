@@ -9,15 +9,11 @@ export const carrierAgreementSelector = ({
   )
 
   if (crewState.outsourceAgreement) {
-    return sortedAgreements.find(
-      (item) => item._id === crewState.outsourceAgreement
-    )
+    return sortedAgreements.find((item) => item._id === crewState.outsourceAgreement)
   }
 
   if (executorInClientAgreement) {
-    return sortedAgreements.find(
-      (item) => item.customer === executorInClientAgreement
-    )
+    return sortedAgreements.find((item) => item.customer === executorInClientAgreement)
   }
   return sortedAgreements[0]
 }

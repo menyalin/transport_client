@@ -62,12 +62,7 @@
                 <small>Уже зарегистрирован</small>
               </router-link>
               <v-spacer />
-              <v-btn
-                color="primary"
-                type="submit"
-                :loading="loading"
-                :disabled="$v.form.$invalid"
-              >
+              <v-btn color="primary" type="submit" :loading="loading" :disabled="$v.form.$invalid">
                 Зарегистрироваться
               </v-btn>
             </v-card-actions>
@@ -139,8 +134,7 @@ export default {
       const errors = []
       if (!this.$v.form.password.$dirty) return errors
       !this.$v.form.password.minLength && errors.push('Слишком короткий пароль')
-      !this.$v.form.password.required &&
-        errors.push('Пароль не может быть пустым')
+      !this.$v.form.password.required && errors.push('Пароль не может быть пустым')
       return errors
     },
     confirmPasswordErrors() {
@@ -172,19 +166,14 @@ export default {
       this.signUp(newUser)
         .then((res) => {
           if (res.accessToken) {
-            this.$router.push(
-              '/profile/settings?status=need_email_confirmation'
-            )
+            this.$router.push('/profile/settings?status=need_email_confirmation')
           } else this.showMessage(res.message, 'warning')
         })
         .catch((e) => {
           if (e.response.data.message === 'validation fail') {
             this.showMessage('Incorrect data entered :( ', 'error')
           } else if (e.response.status === 406) {
-            this.showMessage(
-              'Пользователь с таким email уже зарегистрирован',
-              'error'
-            )
+            this.showMessage('Пользователь с таким email уже зарегистрирован', 'error')
           } else {
             this.showMessage(e.message, 'error')
           }

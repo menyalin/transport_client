@@ -5,11 +5,7 @@
     </template>
 
     <v-list>
-      <v-list-item
-        v-for="item in templates"
-        :key="item._id"
-        @click="itemClickHandler(item._id)"
-      >
+      <v-list-item v-for="item in templates" :key="item._id" @click="itemClickHandler(item._id)">
         <v-list-item-title>{{ item.name }}</v-list-item-title>
       </v-list-item>
     </v-list>
@@ -30,9 +26,7 @@ export default {
     },
   },
   setup(props, ctx) {
-    const disabled = computed(
-      () => props.templates.length === 0 || props.disabledDownloadFiles
-    )
+    const disabled = computed(() => props.templates.length === 0 || props.disabledDownloadFiles)
 
     function itemClickHandler(templateId) {
       const template = props.templates.find((i) => i._id === templateId)

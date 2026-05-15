@@ -3,9 +3,7 @@
     <buttons-panel
       panel-type="form"
       :disabledSubmit="
-        !$store.getters.hasPermission('region:write') ||
-        isInvalidForm ||
-        !formChanged
+        !$store.getters.hasPermission('region:write') || isInvalidForm || !formChanged
       "
       @cancel="cancel"
       @submit="submit"
@@ -65,9 +63,7 @@ export default {
     },
     directoriesProfileName() {
       if (!this.directoriesProfile) return null
-      return this.myCompanies.find(
-        (item) => item._id === this.directoriesProfile
-      ).name
+      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
     },
     nameErrors() {
       const errors = []

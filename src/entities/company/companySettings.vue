@@ -17,9 +17,7 @@
             v-model="settings.defaultTruckKind"
             label="Вид транспорта по умолчанию"
             :items="
-              $store.getters.allTruckKinds.filter((i) =>
-                settings.truckKinds.includes(i.value)
-              )
+              $store.getters.allTruckKinds.filter((i) => settings.truckKinds.includes(i.value))
             "
             :style="{ 'max-width': '220px' }"
             clearable
@@ -76,9 +74,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn :disabled="!changed" @click="cancel"> Отмена </v-btn>
-        <v-btn color="primary" :disabled="!changed" @click="submit">
-          Сохранить
-        </v-btn>
+        <v-btn color="primary" :disabled="!changed" @click="submit"> Сохранить </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -123,10 +119,7 @@ export default {
       if (!this.storedSettings) return null
       const keys = Object.keys(this.settings)
       for (let i = 0; i < keys.length; i++) {
-        if (
-          this.settings[keys[i]]?.toString() !==
-          this.storedSettings[keys[i]]?.toString()
-        )
+        if (this.settings[keys[i]]?.toString() !== this.storedSettings[keys[i]]?.toString())
           return true
       }
       return false
@@ -144,8 +137,7 @@ export default {
           this.settings.loadDirections = ['rear']
           this.settings.defaultLoadDirection = 'rear'
         }
-        if (!val.includes(this.settings.defaultTruckKind))
-          this.settings.defaultTruckKind = null
+        if (!val.includes(this.settings.defaultTruckKind)) this.settings.defaultTruckKind = null
         if (val.length === 1) this.settings.defaultTruckKind = val[0]
       },
 

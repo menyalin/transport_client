@@ -57,10 +57,7 @@ export const useTable = (props, _ctx) => {
   async function removeOrdersHandler() {
     try {
       loading.value = true
-      await IncomingInvoiceService.removeOrders(
-        props.invoiceId,
-        selectedIds.value
-      )
+      await IncomingInvoiceService.removeOrders(props.invoiceId, selectedIds.value)
       await getData(props.invoiceId)
     } catch (e) {
       proxy.$store.commit('setError', e.response.data || e.message)

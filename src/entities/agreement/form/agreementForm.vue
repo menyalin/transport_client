@@ -2,9 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('agreement:write') || isInvalidForm
-      "
+      :disabled-submit="!$store.getters.hasPermission('agreement:write') || isInvalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
     />
@@ -51,7 +49,7 @@
           outlined
           v-model="state.executorName"
           class="mt-4"
-          :style="{ width: '400px' }"
+          :style="{ width: '500px' }"
         />
         <v-autocomplete
           v-model="state.executor"
@@ -61,7 +59,7 @@
           item-text="name"
           outlined
           auto-select-first
-          :style="{ width: '400px' }"
+          :style="{ width: '500px' }"
         />
         <v-select
           multiple
@@ -75,10 +73,14 @@
           chips
           deletable-chips
         />
-        <app-clients
-          v-model="state.clients"
-          :style="{ 'max-width': '400px' }"
+        <v-text-field
+          label="Договор (наименование)"
+          v-model="state.contract"
+          outlined
+          :style="{ width: '500px' }"
         />
+        <app-clients v-model="state.clients" :style="{ 'max-width': '400px' }" />
+        <v-divider />
 
         <v-checkbox
           v-model="state.usePriceWithVAT"
@@ -154,11 +156,7 @@
           class="pl-2"
           label="Разрешены индивидуальные тарифы"
         />
-        <v-checkbox
-          v-model="state.closed"
-          class="pl-6"
-          label="Соглашение закрыто"
-        />
+        <v-checkbox v-model="state.closed" class="pl-6" label="Соглашение закрыто" />
       </div>
     </div>
 
@@ -196,13 +194,10 @@ export default {
     },
   },
   setup(props, ctx) {
-    const {
-      state,
-      deleteHandler,
-      submitHandler,
-      cancelHandler,
-      isInvalidForm,
-    } = useForm(props, ctx)
+    const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm } = useForm(
+      props,
+      ctx
+    )
 
     return {
       state,

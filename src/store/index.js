@@ -23,8 +23,7 @@ export default new Vuex.Store({
       state.loading = payload
     },
     setError(state, payload) {
-      if (payload?.response?.data?.message)
-        state.error = payload.response.data.message
+      if (payload?.response?.data?.message) state.error = payload.response.data.message
       else state.error = payload
     },
     clearError(state) {

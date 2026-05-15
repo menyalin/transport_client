@@ -181,9 +181,7 @@ export default {
       return store.getters.drivers
     })
 
-    const truckItems = computed(() =>
-      store.getters.trucks.filter((i) => i.type === 'truck')
-    )
+    const truckItems = computed(() => store.getters.trucks.filter((i) => i.type === 'truck'))
 
     const clientItems = computed(() => {
       return store.getters.partners.filter((i) => i.isClient)

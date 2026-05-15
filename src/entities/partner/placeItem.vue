@@ -18,9 +18,7 @@
         <div>{{ value.note }}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn small color="secondary" @click="editHandler">
-          Редактировать
-        </v-btn>
+        <v-btn small color="secondary" @click="editHandler"> Редактировать </v-btn>
         <v-btn small color="error" @click="deleteHandler">Удалить</v-btn>
       </v-card-actions>
     </v-card>
@@ -37,13 +35,9 @@ export default {
   },
   setup(props, ctx) {
     const { proxy } = getCurrentInstance()
-    const address = computed(() =>
-      store.getters.addressMap.get(props.value.address)
-    )
+    const address = computed(() => store.getters.addressMap.get(props.value.address))
     const allowedLoadingPoints = computed(() =>
-      props.value.allowedLoadingPoints.map((i) =>
-        store.getters.addressMap.get(i)
-      )
+      props.value.allowedLoadingPoints.map((i) => store.getters.addressMap.get(i))
     )
 
     async function deleteHandler() {

@@ -1,4 +1,4 @@
-import {CityService} from '@/shared/services'
+import { CityService } from '@/shared/services'
 
 export default {
   state: {
@@ -28,14 +28,9 @@ export default {
     async getCities({ commit, getters }, directiveUpdate) {
       try {
         commit('setLoading', true)
-        if (
-          directiveUpdate ||
-          (getters.cities.length === 0 && getters.directoriesProfile)
-        ) {
+        if (directiveUpdate || (getters.cities.length === 0 && getters.directoriesProfile)) {
           commit('setCities', [])
-          const data = await CityService.getByDirectoriesProfile(
-            getters.directoriesProfile
-          )
+          const data = await CityService.getByDirectoriesProfile(getters.directoriesProfile)
           commit('setCities', data)
         }
         commit('setLoading', false)

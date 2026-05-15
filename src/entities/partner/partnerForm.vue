@@ -2,9 +2,7 @@
   <div class="pb-4">
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="
-        !$store.getters.hasPermission('partner:write') || isInvalidForm
-      "
+      :disabledSubmit="!$store.getters.hasPermission('partner:write') || isInvalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
@@ -46,13 +44,7 @@
       dense
       clearable
     />
-    <v-text-field
-      v-model="state.contacts"
-      outlined
-      clearable
-      label="Контакты"
-      dense
-    />
+    <v-text-field v-model="state.contacts" outlined clearable label="Контакты" dense />
     <v-text-field
       v-if="state.isClient"
       v-model="state.cargoDescription"
@@ -63,10 +55,7 @@
     />
     <v-checkbox v-model="state.isClient" label="Заказчик" hide-details dense />
     <v-checkbox v-model="state.isService" label="Сервис" dense />
-    <AllowedAgreements
-      v-model="state.agreements"
-      :agreementItems="clientAgreements"
-    />
+    <AllowedAgreements v-model="state.agreements" :agreementItems="clientAgreements" />
 
     <v-expansion-panels focusable>
       <v-expansion-panel>
@@ -98,10 +87,7 @@
           <b> Площадки для приема документов</b>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <places-for-transfer-docs
-            v-model="state.placesForTransferDocs"
-            :partnerId="item._id"
-          />
+          <places-for-transfer-docs v-model="state.placesForTransferDocs" :partnerId="item._id" />
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel v-if="state.isClient">

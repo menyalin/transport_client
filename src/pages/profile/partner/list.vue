@@ -68,10 +68,7 @@ export default {
   },
   setup() {
     const { proxy } = getCurrentInstance()
-    const settings = usePersistedRef(
-      { search: null, partnerType: 'all' },
-      'PartnerList:settings'
-    )
+    const settings = usePersistedRef({ search: null, partnerType: 'all' }, 'PartnerList:settings')
 
     const listOptions = usePersistedRef(
       { page: 1, itemsPerPage: 50, sortBy: [], sortDesc: [] },
@@ -89,14 +86,12 @@ export default {
     }
 
     const filteredPartners = computed(() => {
-      return proxy.$store.getters.partners
-        .filter(partnerTypeCondition)
-        .map((i) => ({
-          ...i,
-          group: proxy.$store.getters.partnerGroupsMap.get(i.group),
-          created: new Date(i.createdAt),
-          updated: new Date(i.updatedAt),
-        }))
+      return proxy.$store.getters.partners.filter(partnerTypeCondition).map((i) => ({
+        ...i,
+        group: proxy.$store.getters.partnerGroupsMap.get(i.group),
+        created: new Date(i.createdAt),
+        updated: new Date(i.updatedAt),
+      }))
     })
     return {
       listOptions,

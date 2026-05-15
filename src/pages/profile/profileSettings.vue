@@ -3,11 +3,7 @@
     <v-row>
       <v-col>
         <app-user-info />
-        <app-company-invites
-          v-if="companyInvites.length"
-          class="my-3"
-          :invites="companyInvites"
-        />
+        <app-company-invites v-if="companyInvites.length" class="my-3" :invites="companyInvites" />
         <div v-if="user" class="mt-3">
           <h4>Выбрать профиль компании:</h4>
           <v-select
@@ -36,12 +32,7 @@ export default {
     AppUserInfo,
   },
   computed: {
-    ...mapGetters([
-      'myCompanies',
-      'directoriesProfile',
-      'companyInvites',
-      'user',
-    ]),
+    ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites', 'user']),
     companies() {
       return (
         this.myCompanies

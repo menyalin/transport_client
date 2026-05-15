@@ -6,18 +6,10 @@ import { PaymentInvoiceService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
 
 const initPeriod = () => {
-  return [
-    dayjs().add(-1, 'month').startOf('month').toISOString(),
-    new Date().toISOString(),
-  ]
+  return [dayjs().add(-1, 'month').startOf('month').toISOString(), new Date().toISOString()]
 }
 
-export const useListData = ({
-  client,
-  _id,
-  agreementId,
-  date: invoiceDate,
-}) => {
+export const useListData = ({ client, _id, agreementId, date: invoiceDate }) => {
   if (!client) console.error('client id is missing')
   const initialState = {
     search: null,
@@ -27,27 +19,19 @@ export const useListData = ({
     docStatuses: ['accepted'],
     loadingZones: [],
   }
-  const settings = usePersistedRef(
-    initialState,
-    'paymentInvoice:pickOrders:settings'
-  )
+  const settings = usePersistedRef(initialState, 'paymentInvoice:pickOrders:settings')
+  const listOptions = usePersistedRef({}, 'paymentInvoice:pickOrders:listOptions')
   const items = ref([])
   const loading = ref(false)
 
-  async function refresh() {
-    await getData()
-  }
-
-  function resetSettings() {
-    //reset settings
-  }
+  watch(listOptions, async () => await getData(), { deep: true })
 
   watch(
     settings,
-    async () => {
-      await getData()
+    () => {
+      listOptions.value = { ...listOptions.value, page: 1 }
     },
-    { deep: true }
+    { deep: true, immediate: true }
   )
 
   const queryParams = computed(() => ({
@@ -88,8 +72,7 @@ export const useListData = ({
 
   return {
     loading,
-    resetSettings,
-    refresh,
+    refresh: getData,
     settings,
     items,
   }

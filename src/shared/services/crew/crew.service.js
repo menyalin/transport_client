@@ -77,10 +77,7 @@ class CrewService {
       const { period } = params
 
       if (period && period.length === 2)
-        periodStr =
-          dayjs(period[0]).format(dateFormat) +
-          '_' +
-          dayjs(period[1]).format(dateFormat)
+        periodStr = dayjs(period[0]).format(dateFormat) + '_' + dayjs(period[1]).format(dateFormat)
       else periodStr = dayjs().format('YYYY_MM_DD hh.mm.ss')
 
       const filename = periodStr + '_crews.xlsx'

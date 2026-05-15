@@ -12,9 +12,7 @@
     checkbox-color="primary"
     height="65vh"
     multi-sort
-    :serverItemsLength="
-      statisticData && !!statisticData.count ? statisticData.count : undefined
-    "
+    :serverItemsLength="statisticData && !!statisticData.count ? statisticData.count : undefined"
     :footer-props="{
       'items-per-page-options': [50, 100, 200],
     }"
@@ -66,9 +64,7 @@
     </template>
     <template #[`item.analytics.type`]="{ item }">
       {{
-        !!item.analytics &&
-        !!item.analytics.type &&
-        orderAnalyticTypeMap.has(item.analytics.type)
+        !!item.analytics && !!item.analytics.type && orderAnalyticTypeMap.has(item.analytics.type)
           ? orderAnalyticTypeMap.get(item.analytics.type)
           : ''
       }}
@@ -100,13 +96,7 @@
       />
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn
-        color="primary"
-        icon
-        small
-        dark
-        @click="$emit('openDocsDialog', item[itemIdField])"
-      >
+      <v-btn color="primary" icon small dark @click="$emit('openDocsDialog', item[itemIdField])">
         <v-icon small> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>
@@ -159,9 +149,7 @@ export default {
     },
   },
   setup(props, ctx) {
-    const orderAnalyticTypeMap = computed(
-      () => store.getters.orderAnalyticTypesMap
-    )
+    const orderAnalyticTypeMap = computed(() => store.getters.orderAnalyticTypesMap)
 
     const partnersMap = computed(() => store.getters.partnersMap)
 
@@ -190,8 +178,7 @@ export default {
       ctx.emit('change', selectedItems)
     }
     function getOrderDocStatus(docs, isGetted) {
-      if (!isGetted && (!docs || !docs.length))
-        return { text: 'Не получены', fontColor: 'red' }
+      if (!isGetted && (!docs || !docs.length)) return { text: 'Не получены', fontColor: 'red' }
       else if (isGetted && (!docs || !docs.length))
         return { text: 'На проверке', fontColor: 'blue' }
       else if (isGetted && docs.some(isNotAccepted))
@@ -208,30 +195,24 @@ export default {
 
       return props.items.map((order) => ({
         ...order,
-        driver:
-          store.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName ||
-          null,
+        driver: store.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName || null,
         tk:
-          order.confirmedCrew?.tkName &&
-          props.carrierItemsMap.has(order.confirmedCrew.tkName)
+          order.confirmedCrew?.tkName && props.carrierItemsMap.has(order.confirmedCrew.tkName)
             ? props.carrierItemsMap.get(order.confirmedCrew.tkName).name
             : '-',
         docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
         plannedDate: order?.route[0]
           ? new Date(order.route[0]?.plannedDate).toLocaleString()
           : null,
-        loadingZones:
-          order._loadingZones?.map((i) => i.name).join(', ') || null,
+        loadingZones: order._loadingZones?.map((i) => i.name).join(', ') || null,
         loadingPoints:
           order.route
             .filter((p) => p.type === 'loading')
-            .map((p) => store.getters.addressMap.get(p.address)?.shortName) ||
-          null,
+            .map((p) => store.getters.addressMap.get(p.address)?.shortName) || null,
         unloadingPoints:
           order.route
             .filter((p) => p.type === 'unloading')
-            .map((p) => store.getters.addressMap.get(p.address)?.shortName) ||
-          null,
+            .map((p) => store.getters.addressMap.get(p.address)?.shortName) || null,
       }))
     })
 

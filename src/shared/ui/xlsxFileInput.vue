@@ -29,8 +29,7 @@ export default {
         (v) => !!v || 'File is required',
         (v) => v?.size <= 5 * 1024 * 1024 || 'File size should not exceed 5 MB',
         (v) =>
-          v?.type ===
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          v?.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
           'Only .xlsx files are allowed',
       ]
     },

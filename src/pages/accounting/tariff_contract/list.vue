@@ -1,10 +1,7 @@
 <template>
   <EntityListWrapper>
     <ButtonsPanel panelType="list" @submit="create" @refresh="refresh" />
-    <TariffContractListSettings
-      v-model="settings"
-      :agreementItems="allClientAgreements"
-    />
+    <TariffContractListSettings v-model="settings" :agreementItems="allClientAgreements" />
     <TariffContractListDataTable
       :items="items"
       :count="count"
@@ -16,10 +13,7 @@
 <script>
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import { useListData } from './model/useListData'
-import {
-  TariffContractListSettings,
-  TariffContractListDataTable,
-} from '@/entities/tariff_contract'
+import { TariffContractListSettings, TariffContractListDataTable } from '@/entities/tariff_contract'
 import { useAgreements } from '@/entities/agreement/useAgreements'
 export default {
   name: 'TariffContractList',
@@ -31,8 +25,7 @@ export default {
   },
   setup() {
     const { allClientAgreements } = useAgreements()
-    const { items, count, refresh, loading, listOptions, settings } =
-      useListData()
+    const { items, count, refresh, loading, listOptions, settings } = useListData()
     return {
       items,
       count,

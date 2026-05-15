@@ -14,9 +14,7 @@ export const useItemData = (props) => {
 
   const disabledPickOrders = computed(() => !item.value?._id)
 
-  const needUpdateRows = computed(() =>
-    item.value.orders.some((i) => i.needUpdate)
-  )
+  const needUpdateRows = computed(() => item.value.orders.some((i) => i.needUpdate))
 
   const disabledMainFields = computed(() => {
     return item.value.orders?.length > 0
@@ -107,17 +105,11 @@ export const useItemData = (props) => {
   async function savePayDateHandler(date) {
     try {
       loading.value = true
-      const updatedItem = await IncomingInvoiceService.setPayDate(
-        props.id,
-        date
-      )
+      const updatedItem = await IncomingInvoiceService.setPayDate(props.id, date)
       item.value = { ...item.value, ...updatedItem }
     } catch (e) {
       console.log('Ошибка при сохранении даты оплаты: ', e)
-      proxy.$store.commit(
-        'setError',
-        `Ошибка при сохранении даты оплаты: ${e.message}`
-      )
+      proxy.$store.commit('setError', `Ошибка при сохранении даты оплаты: ${e.message}`)
     } finally {
       loading.value = false
     }
@@ -133,9 +125,7 @@ export const useItemData = (props) => {
   function removeOrders({ paymentInvoiceId, rowIds }) {
     if (paymentInvoiceId !== item.value._id) return null
 
-    item.value.orders = item.value.orders.filter(
-      (i) => !rowIds.includes(i.rowId)
-    )
+    item.value.orders = item.value.orders.filter((i) => !rowIds.includes(i.rowId))
   }
 
   async function updateItemPrice(itemId) {

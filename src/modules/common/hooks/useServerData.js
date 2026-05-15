@@ -36,9 +36,10 @@ export const useServerData = ({ ctx, service, propValue }) => {
     if (itemSelected) {
       itemSelected = false
     } else {
-      items.value = (
-        (await service.getForAutocomplete({ searchStr: val })) || []
-      ).map((i) => ({ value: i._id, text: i.fullName || i.name }))
+      items.value = ((await service.getForAutocomplete({ searchStr: val })) || []).map((i) => ({
+        value: i._id,
+        text: i.fullName || i.name,
+      }))
     }
     loading.value = false
   }

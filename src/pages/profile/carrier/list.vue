@@ -40,10 +40,7 @@
 <script>
 import { ButtonsPanel } from '@/shared/ui'
 import { useListData } from './useListData'
-import {
-  CarrierListSettings,
-  CarrierListAgreementsCell,
-} from '@/entities/carrier'
+import { CarrierListSettings, CarrierListAgreementsCell } from '@/entities/carrier'
 import { onMounted } from 'vue'
 
 export default {
@@ -54,8 +51,7 @@ export default {
     CarrierListAgreementsCell,
   },
   setup() {
-    const { carriers, loading, refreshHandler, headers, settings } =
-      useListData()
+    const { carriers, loading, refreshHandler, headers, settings } = useListData()
     onMounted(() => {
       refreshHandler()
     })

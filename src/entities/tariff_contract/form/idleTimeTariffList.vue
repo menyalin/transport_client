@@ -50,9 +50,7 @@ export default {
       return moneyFormatter(price)
     }
     function formatTruckKinds(kinds) {
-      return (
-        kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
-      )
+      return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
     }
     function formatLiftCapacities(items) {
       return items?.join('; ') || ''
@@ -68,12 +66,8 @@ export default {
     const preparedItems = computed(() => {
       return props.items.map((i) => ({
         ...i,
-        orderTypes: i.orderTypes
-          .map((j) => (j === 'region' ? 'Регион' : 'Город'))
-          .join(', '),
-        roundingInterval:
-          store.getters.idleTimeRoundingIntervalsMap.get(i.roundingInterval) ??
-          '-',
+        orderTypes: i.orderTypes.map((j) => (j === 'region' ? 'Регион' : 'Город')).join(', '),
+        roundingInterval: store.getters.idleTimeRoundingIntervalsMap.get(i.roundingInterval) ?? '-',
         tariffBy: store.getters.waitingTariffByItemsMap.get(i.tariffBy) ?? '-',
       }))
     })

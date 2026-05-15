@@ -7,13 +7,7 @@
       @refresh="refresh"
     />
     <div class="filter-wrapper">
-      <v-text-field
-        v-model="settings.search"
-        label="Поиск"
-        outlined
-        dense
-        hide-details
-      />
+      <v-text-field v-model="settings.search" label="Поиск" outlined dense hide-details />
     </div>
     <v-data-table
       :headers="headers"

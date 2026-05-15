@@ -18,11 +18,7 @@ export const useAgreements = () => {
   })
 
   const allAgreementMap = computed(() => {
-    return new Map(
-      allAgreements.value.length
-        ? allAgreements.value.map((i) => [i._id, i])
-        : null
-    )
+    return new Map(allAgreements.value.length ? allAgreements.value.map((i) => [i._id, i]) : null)
   })
 
   return {

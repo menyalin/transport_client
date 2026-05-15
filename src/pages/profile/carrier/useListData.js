@@ -11,10 +11,7 @@ export const useListData = () => {
     { value: 'agreements', text: 'Соглашения' },
   ])
 
-  const settings = usePersistedRef(
-    { search: null, type: 'all' },
-    'CarrierListSettings'
-  )
+  const settings = usePersistedRef({ search: null, type: 'all' }, 'CarrierListSettings')
 
   const carriers = computed(() => {
     switch (settings.value.type) {

@@ -29,6 +29,7 @@ export const useForm = (props, ctx) => {
     allowedCarriers: [],
     actBasis: '',
     actDescription: '',
+    contract: '',
   }
   const state = ref(defaultState)
   const rules = computed(() => ({
@@ -67,8 +68,7 @@ export const useForm = (props, ctx) => {
   watch(
     state,
     (val) => {
-      if (val.vatRate === 0 && val.usePriceWithVAT)
-        state.value.usePriceWithVAT = false
+      if (val.vatRate === 0 && val.usePriceWithVAT) state.value.usePriceWithVAT = false
     },
     { deep: true }
   )

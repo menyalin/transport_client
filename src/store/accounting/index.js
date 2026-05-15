@@ -28,8 +28,7 @@ export default {
   actions: {},
   getters: {
     documentTypes: ({ documentTypes }) => documentTypes,
-    documentTypesMap: ({ documentTypes }) =>
-      new Map(documentTypes.map((i) => [i.value, i.text])),
+    documentTypesMap: ({ documentTypes }) => new Map(documentTypes.map((i) => [i.value, i.text])),
 
     documentStatuses: ({ documentStatuses }) => documentStatuses,
     documentStatusesMap: ({ documentStatuses }) =>
@@ -43,8 +42,7 @@ export default {
     docsRegistryStatusesMap: ({ docsRegistryStatuses }) =>
       new Map(docsRegistryStatuses.map((i) => [i.value, i.text])),
 
-    paymentInvoiceStatuses: ({ paymentInvoiceStatuses }) =>
-      paymentInvoiceStatuses,
+    paymentInvoiceStatuses: ({ paymentInvoiceStatuses }) => paymentInvoiceStatuses,
     paymentInvoiceStatusesMap: ({ paymentInvoiceStatuses }) =>
       new Map(paymentInvoiceStatuses.map((i) => [i.value, i.text])),
   },

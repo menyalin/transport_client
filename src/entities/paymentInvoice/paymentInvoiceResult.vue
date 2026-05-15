@@ -7,8 +7,8 @@
     Сумма: <b>{{ total }}</b>
     <br />
 
-    Сумма без НДС: <b> {{ totalWOVat }}</b> Сумма НДС:
-    <b>{{ vatSum }}</b> Кол-во рейсов: <b>{{ item.ordersCount }}</b>
+    Сумма без НДС: <b> {{ totalWOVat }}</b> Сумма НДС: <b>{{ vatSum }}</b> Кол-во рейсов:
+    <b>{{ item.ordersCount }}</b>
   </v-alert>
 </template>
 <script>

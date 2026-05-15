@@ -34,7 +34,7 @@
         :carrierItemsMap="carrierStore.carriersMap"
         :headers="headers"
         :loading="loading"
-        :listOptions.sync="settings.listOptions"
+        :listOptions.sync="listOptions"
         @addItem="addOrderToInvoice"
         @openDocsDialog="openDocsDialog"
       />
@@ -71,7 +71,7 @@ export default {
   setup({ paymentInvoice }, ctx) {
     const headers = ref([])
     const selectedOrders = ref([])
-    const { loading, settings, items, refresh } = useListData(paymentInvoice)
+    const { loading, settings, items, refresh, listOptions } = useListData(paymentInvoice)
     const carrierStore = useCarrierStore()
     const {
       editableOrderId,
@@ -82,17 +82,13 @@ export default {
       cancelDocDialog,
     } = useOrderDocs()
 
-    const client = computed(() =>
-      store.getters.partnersMap.get(paymentInvoice.clientId)
-    )
+    const client = computed(() => store.getters.partnersMap.get(paymentInvoice.clientId))
 
     const clientName = computed(() => {
       return client.value.name || '-'
     })
 
-    const selectedOrdersIds = computed(() =>
-      selectedOrders.value.map((i) => i._id)
-    )
+    const selectedOrdersIds = computed(() => selectedOrders.value.map((i) => i._id))
 
     function updateActiveHeaders(val) {
       headers.value = val
@@ -114,9 +110,7 @@ export default {
         paymentInvoiceId: paymentInvoice._id,
       })
 
-      selectedOrders.value = selectedOrders.value.filter(
-        (i) => i._id !== orderId
-      )
+      selectedOrders.value = selectedOrders.value.filter((i) => i._id !== orderId)
       refresh()
     }
 
@@ -137,6 +131,7 @@ export default {
       updateActiveHeaders,
       allHeaders: PickOrdersForPaymentInvoiceHeaders(),
       settings,
+      listOptions,
       items,
       headers,
       refreshHandler,

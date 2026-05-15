@@ -26,8 +26,7 @@ export default {
   actions: {},
   getters: {
     agreements: ({ agreements }) => agreements,
-    agreementsMap: ({ agreements }) =>
-      new Map(agreements.map((i) => [i._id, i])),
+    agreementsMap: ({ agreements }) => new Map(agreements.map((i) => [i._id, i])),
     vatRates: ({ vatRates }) => vatRates,
   },
 }

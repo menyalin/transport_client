@@ -62,12 +62,7 @@
             singleLine
             dense
           />
-          <v-checkbox
-            v-model="showOnlySelected"
-            label="Только отмеченные"
-            hide-details
-            dense
-          />
+          <v-checkbox v-model="showOnlySelected" label="Только отмеченные" hide-details dense />
           <v-checkbox
             v-model="settings.needToWithheld"
             label="Удержать из ЗП водителя"

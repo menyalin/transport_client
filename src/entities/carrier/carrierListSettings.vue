@@ -41,10 +41,7 @@ export default {
       { text: 'Привлеченный', value: 'outsource' },
     ]
     function updateSettings(val, field) {
-      ctx.emit(
-        'change',
-        Object.assign({}, props.settings.value, { [field]: val })
-      )
+      ctx.emit('change', Object.assign({}, props.settings.value, { [field]: val }))
     }
     return {
       carrierTypes,

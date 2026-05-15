@@ -40,9 +40,7 @@ export default {
     listOptions: Object,
   },
   setup(props, ctx) {
-    const preparedItems = computed(() =>
-      props.items.map((i) => new DataTableRow(i))
-    )
+    const preparedItems = computed(() => props.items.map((i) => new DataTableRow(i)))
     function dblClickRow(_, { item }) {
       if (item) router.push(`/orders/${item.orderId}`)
     }

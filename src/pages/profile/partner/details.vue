@@ -1,9 +1,5 @@
 <template>
-  <form-wrapper
-    :loading="loading"
-    @delete="deleteHandler"
-    :displayDeleteBtn="showDeleteBtn"
-  >
+  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
     <PartnerForm
       :item="item"
       :clientAgreements="allClientAgreements"
@@ -64,8 +60,7 @@ export default {
         if (this.id) this.item = await this.service.updateOne(this.id, val)
         else this.item = await this.service.create(val)
 
-        if (saveOnly && !this.id)
-          this.$router.replace(`/profile/partners/${this.item._id}`)
+        if (saveOnly && !this.id) this.$router.replace(`/profile/partners/${this.item._id}`)
         else if (!saveOnly) this.$router.go(-1)
       } catch (e) {
         if (e.response.status === 400 || e.response.status === 403) {

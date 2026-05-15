@@ -13,18 +13,14 @@ const getAddresses = (addresses = []) => {
 }
 
 const getDocsStatus = (docs = []) => {
-  const docsForRegistry = docs
-    .filter((doc) => doc.addToRegistry)
-    .map((i) => i.status)
+  const docsForRegistry = docs.filter((doc) => doc.addToRegistry).map((i) => i.status)
   if (docsForRegistry.every((status) => status === 'accepted')) return 'Приняты'
-  if (docsForRegistry.some((status) => status === 'needFix'))
-    return 'На исправлении'
+  if (docsForRegistry.some((status) => status === 'needFix')) return 'На исправлении'
   return 'Не приняты'
 }
 
 const getItemTypeStr = (itemType) => {
-  if (!['order', 'paymentPart'].includes(itemType))
-    throw new Error('Тип записи не известен!')
+  if (!['order', 'paymentPart'].includes(itemType)) throw new Error('Тип записи не известен!')
   return itemType === 'order' ? 'Рейс' : 'Часть рейса'
 }
 

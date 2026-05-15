@@ -23,13 +23,7 @@
             class="py-0 my-0"
           />
           <v-spacer />
-          <v-btn
-            v-if="showCopyButton"
-            text
-            color="primary"
-            small
-            @click="copyHandler"
-          >
+          <v-btn v-if="showCopyButton" text color="primary" small @click="copyHandler">
             скопировать в буфер
           </v-btn>
         </div>

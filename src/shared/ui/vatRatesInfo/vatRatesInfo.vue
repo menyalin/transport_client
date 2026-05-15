@@ -65,9 +65,7 @@ export default {
     const dialog = ref(false)
 
     const formTitle = computed(() => {
-      return editedItem.value === null
-        ? 'Новая ставка НДС'
-        : 'Редактирование ставки НДС'
+      return editedItem.value === null ? 'Новая ставка НДС' : 'Редактирование ставки НДС'
     })
 
     const preparedItems = computed(() => {
@@ -130,9 +128,7 @@ export default {
     }
 
     const removeHandler = async () => {
-      const res = await proxy.$confirm(
-        'Уверены, что хотите удалить эту ставку НДС?'
-      )
+      const res = await proxy.$confirm('Уверены, что хотите удалить эту ставку НДС?')
       if (!res) return
 
       const tmpRes = [...props.items]
@@ -165,9 +161,8 @@ export default {
           const dayBefore = new Date(newStartDate)
           dayBefore.setDate(dayBefore.getDate() - 1)
 
-          tmpRes[
-            tmpRes.findIndex((item) => item === lastItemWithoutEnd)
-          ].endPeriod = dayBefore.toISOString()
+          tmpRes[tmpRes.findIndex((item) => item === lastItemWithoutEnd)].endPeriod =
+            dayBefore.toISOString()
         }
 
         tmpRes.push(val)

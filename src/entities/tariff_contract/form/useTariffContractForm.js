@@ -33,9 +33,7 @@ export const useTariffContractForm = (props, ctx) => {
       ...newState,
       agreements,
       startDate: dayjs(newState.startDate).format('YYYY-MM-DD'),
-      endDate: newState.endDate
-        ? dayjs(newState.endDate).format('YYYY-MM-DD')
-        : null,
+      endDate: newState.endDate ? dayjs(newState.endDate).format('YYYY-MM-DD') : null,
     }
   }
 
@@ -53,10 +51,7 @@ export const useTariffContractForm = (props, ctx) => {
     zonesTariffs: {},
   }
   const disableSubmitBtn = computed(() => {
-    return (
-      invalidForm.value ||
-      !proxy.$store.getters.hasPermission('tariffContract:write')
-    )
+    return invalidForm.value || !proxy.$store.getters.hasPermission('tariffContract:write')
   })
   const mainFormV$ = useVuelidate(rules, state)
   const invalidForm = computed(() => mainFormV$.value.$invalid)
@@ -65,9 +60,7 @@ export const useTariffContractForm = (props, ctx) => {
     return {
       ...state.value,
       startDate: new Date(state.value.startDate + 'T00:00').toISOString(),
-      endDate: state.value.endDate
-        ? new Date(state.value.endDate + 'T00:00').toISOString()
-        : null,
+      endDate: state.value.endDate ? new Date(state.value.endDate + 'T00:00').toISOString() : null,
     }
   })
 

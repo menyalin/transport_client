@@ -15,9 +15,7 @@
     </div>
     <div v-if="showDataRow" class="data-row">
       <div><i>Сумма:</i> {{ new Intl.NumberFormat().format(value.sum) }}</div>
-      <div :style="{ maxWidth: '340px' }">
-        <i>Примечание:</i> {{ value.note }}
-      </div>
+      <div :style="{ maxWidth: '340px' }"><i>Примечание:</i> {{ value.note }}</div>
       <div>
         <i>Отв:</i>
         <app-worker-autocomplete labelOnly v-model="value.worker" />
@@ -38,18 +36,8 @@
             label="Сумма"
             :style="{ maxWidth: '200px' }"
           />
-          <v-text-field
-            v-model.trim="tmpVal.note"
-            outlined
-            dense
-            label="Примечание"
-          />
-          <app-worker-autocomplete
-            v-model="tmpVal.worker"
-            outlined
-            dense
-            label="Ответственный"
-          />
+          <v-text-field v-model.trim="tmpVal.note" outlined dense label="Примечание" />
+          <app-worker-autocomplete v-model="tmpVal.worker" outlined dense label="Ответственный" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />

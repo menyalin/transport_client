@@ -2,9 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="
-        !$store.getters.hasPermission('downtime:write') || isInvalidForm
-      "
+      :disabled-submit="!$store.getters.hasPermission('downtime:write') || isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
@@ -17,13 +15,7 @@
       outlined
       dense
     />
-    <v-select
-      v-model="state.type"
-      label="Тип простоя"
-      :items="downtimeTypes"
-      outlined
-      dense
-    />
+    <v-select v-model="state.type" label="Тип простоя" :items="downtimeTypes" outlined dense />
     <v-text-field v-model.trim="state.title" outlined label="Заголовок" dense />
 
     <AutoCompleteWithActions
@@ -67,17 +59,8 @@
         :style="{ 'max-width': '200px' }"
       />
     </div>
-    <v-text-field
-      v-model="state.note"
-      label="Примечание"
-      outlined
-      hide-details
-      dense
-    />
-    <v-checkbox
-      v-model="state.inOrderTime"
-      label="Разрешить пересечение с рейсом"
-    />
+    <v-text-field v-model="state.note" label="Примечание" outlined hide-details dense />
+    <v-checkbox v-model="state.inOrderTime" label="Разрешить пересечение с рейсом" />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon left dark> mdi-delete </v-icon>
       Удалить
@@ -85,11 +68,7 @@
   </div>
 </template>
 <script>
-import {
-  ButtonsPanel,
-  DateTimeInput,
-  AutoCompleteWithActions,
-} from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, AutoCompleteWithActions } from '@/shared/ui'
 
 import { useForm } from './useForm'
 

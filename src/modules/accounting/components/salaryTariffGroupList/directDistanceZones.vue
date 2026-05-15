@@ -1,10 +1,6 @@
 <template>
   <span>
-    {{
-      `Погрузка: ${
-        addressMap.get(item.loading).shortName
-      }, зоны до ${distances} км.`
-    }}
+    {{ `Погрузка: ${addressMap.get(item.loading).shortName}, зоны до ${distances} км.` }}
   </span>
 </template>
 <script>

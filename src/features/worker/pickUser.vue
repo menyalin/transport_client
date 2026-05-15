@@ -11,9 +11,7 @@
       :errorMessages="errorMessages"
       @change="changeHandler"
     />
-    <div v-if="candidate.name" class="text-h5 mb-5">
-      <small>Имя:</small> {{ candidate.name }}
-    </div>
+    <div v-if="candidate.name" class="text-h5 mb-5"><small>Имя:</small> {{ candidate.name }}</div>
   </div>
 </template>
 <script>

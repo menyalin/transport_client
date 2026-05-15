@@ -6,9 +6,7 @@
         <app-city-form
           v-else
           :city="item"
-          :displayDeleteBtn="
-            !!id && $store.getters.hasPermission('city:delete')
-          "
+          :displayDeleteBtn="!!id && $store.getters.hasPermission('city:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -20,7 +18,7 @@
 <script>
 import AppCityForm from '@/modules/profile/components/cityForm'
 import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import {CityService} from '@/shared/services'
+import { CityService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 
 export default {

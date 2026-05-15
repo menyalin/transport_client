@@ -2,19 +2,15 @@
   <div class="py-3">
     <v-alert
       v-if="
-        confirmationEmailSended ||
-        ($route.query.status === 'need_email_confirmation' &&
-          !user.emailConfirmed)
+        ($route.query.status === 'need_email_confirmation' && !user.emailConfirmed) ||
+        confirmationEmailSended
       "
       type="info"
     >
-      Для завершения регистрации необходимо подтверждение электронного адреса!
-      На <b>{{ user.email }}</b> отправлено письмо с ссылкой
+      Для завершения регистрации необходимо подтверждение электронного адреса! На
+      <b>{{ user.email }}</b> отправлено письмо с ссылкой
     </v-alert>
-    <v-alert
-      v-if="$route.query.status === 'email_confirmed' && user.emailConfirmed"
-      type="success"
-    >
+    <v-alert v-if="$route.query.status === 'email_confirmed' && user.emailConfirmed" type="success">
       Электронная почта подтверждена!
     </v-alert>
     <h3>Настройки профиля пользователя</h3>
@@ -27,11 +23,7 @@
           <div class="list-row">
             <div>email: {{ user.email }}</div>
             <v-icon class="ml-3" :color="user.emailConfirmed ? 'blue' : 'red'">
-              {{
-                user.emailConfirmed
-                  ? 'mdi-check-decagram'
-                  : 'mdi-alert-decagram'
-              }}
+              {{ user.emailConfirmed ? 'mdi-check-decagram' : 'mdi-alert-decagram' }}
             </v-icon>
             <v-btn
               v-if="!user.emailConfirmed"
@@ -48,18 +40,10 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-btn
-      text
-      outlined
-      color="secondary"
-      @click="showChangePasswordDialog = true"
-    >
+    <v-btn text outlined color="secondary" @click="showChangePasswordDialog = true">
       Изменить пароль
     </v-btn>
-    <app-change-password-dialog
-      :dialog="showChangePasswordDialog"
-      @cancel="cancelHandler"
-    />
+    <app-change-password-dialog :dialog="showChangePasswordDialog" @cancel="cancelHandler" />
   </div>
 </template>
 <script>

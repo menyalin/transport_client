@@ -39,8 +39,7 @@ export default {
     },
   },
   getters: {
-    scheduleNotesMap: ({ notes }) =>
-      new Map(notes.map((item) => [item._id, item])),
+    scheduleNotesMap: ({ notes }) => new Map(notes.map((item) => [item._id, item])),
 
     scheduleNotes: ({ notes }) => notes,
 
@@ -49,10 +48,7 @@ export default {
       return notes.filter((n) => {
         const sP = dayjs(schedulePeriod[0])
         const eP = dayjs(schedulePeriod[1])
-        return (
-          eP.isAfter(n.startPositionDate) &&
-          sP.isSameOrBefore(n.startPositionDate)
-        )
+        return eP.isAfter(n.startPositionDate) && sP.isSameOrBefore(n.startPositionDate)
       })
     },
   },

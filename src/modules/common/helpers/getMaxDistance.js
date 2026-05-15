@@ -25,9 +25,7 @@ const _distBetweenPoints = (a, b) => {
   const cdelta = Math.cos(delta)
   const sdelta = Math.sin(delta)
 
-  const y = Math.sqrt(
-    Math.pow(cl2 * sdelta, 2) + Math.pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2)
-  )
+  const y = Math.sqrt(Math.pow(cl2 * sdelta, 2) + Math.pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2))
   const x = sl1 * sl2 + cl1 * cl2 * cdelta
   const ad = Math.atan2(y, x)
   return ad * RAD

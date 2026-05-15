@@ -18,26 +18,16 @@
     </div>
     <div>
       Водитель:
-      {{
-        driversMap.has(crew.driver)
-          ? driversMap.get(crew.driver).fullName
-          : ' - '
-      }}
+      {{ driversMap.has(crew.driver) ? driversMap.get(crew.driver).fullName : ' - ' }}
     </div>
     <div>
       Грузовик:
-      {{
-        trucksMap.has(crew.transport.truck)
-          ? trucksMap.get(crew.transport.truck).regNum
-          : ' - '
-      }}
+      {{ trucksMap.has(crew.transport.truck) ? trucksMap.get(crew.transport.truck).regNum : ' - ' }}
     </div>
     <div>
       Прицеп:
       {{
-        trucksMap.has(crew.transport.trailer)
-          ? trucksMap.get(crew.transport.trailer).regNum
-          : ' - '
+        trucksMap.has(crew.transport.trailer) ? trucksMap.get(crew.transport.trailer).regNum : ' - '
       }}
     </div>
   </div>
@@ -79,10 +69,7 @@ export default {
       return this.$store.getters.trucksMap
     },
     crewDateStr() {
-      const dateValue =
-        this.type == 'crew'
-          ? this.crew.startDate
-          : this.crew.transport.startDate
+      const dateValue = this.type == 'crew' ? this.crew.startDate : this.crew.transport.startDate
       return new Date(dateValue).toLocaleString()
     },
     text() {
@@ -102,9 +89,7 @@ export default {
   },
   methods: {
     async goto() {
-      const res = await this.$confirm(
-        'Вы уверены? информация на странице будет потеряна'
-      )
+      const res = await this.$confirm('Вы уверены? информация на странице будет потеряна')
       if (res)
         this.$router.push({
           name: 'CrewDetails',

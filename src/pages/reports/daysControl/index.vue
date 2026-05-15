@@ -27,13 +27,7 @@
             outlined
             dense
           />
-          <v-text-field
-            v-model.trim="searchString"
-            label="Поиск"
-            hideDetails
-            outlined
-            dense
-          />
+          <v-text-field v-model.trim="searchString" label="Поиск" hideDetails outlined dense />
         </div>
         <v-data-table
           :headers="headers"

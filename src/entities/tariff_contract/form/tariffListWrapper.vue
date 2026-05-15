@@ -1,9 +1,7 @@
 <template>
   <div class="wrapper ma-2">
     <h5>{{ title }}</h5>
-    <v-btn color="primary" @click="addHandler" small :disabled="disabled">
-      Добавить
-    </v-btn>
+    <v-btn color="primary" @click="addHandler" small :disabled="disabled"> Добавить </v-btn>
     <component
       :is="tariffListComponent"
       :items="itemsWithIdx"
@@ -111,9 +109,7 @@ export default {
   },
   methods: {
     async removeHandler(idx) {
-      const res = await this.$confirm(
-        'Вы действительно хотите удалить запись? '
-      )
+      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         this.removeByIdx(idx)
       }

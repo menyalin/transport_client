@@ -173,11 +173,7 @@
       :style="{ 'max-width': '300px' }"
       @change="updateSettings($event, 'searchNum')"
     />
-    <v-switch
-      v-if="availableAccountantMode"
-      v-model="settings.accountingMode"
-      label="Бухгалтер"
-    />
+    <v-switch v-if="availableAccountantMode" v-model="settings.accountingMode" label="Бухгалтер" />
     <v-btn
       v-if="$store.getters.hasPermission('order:groupCreate')"
       color="primary"
@@ -211,11 +207,7 @@
 <script>
 import { computed } from 'vue'
 import store from '@/store'
-import {
-  AppTableColumnSetting,
-  DateRangeInput,
-  OrderDocStatusSelector,
-} from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 
 export default {

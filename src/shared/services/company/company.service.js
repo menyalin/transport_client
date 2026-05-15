@@ -56,10 +56,7 @@ class CompanyService {
       return null
     }
     const companyId = store.getters.directoriesProfile
-    const { data } = await api.put(
-      BASE_PATH + '/settings/' + companyId,
-      settings
-    )
+    const { data } = await api.put(BASE_PATH + '/settings/' + companyId, settings)
     return data
   }
 }

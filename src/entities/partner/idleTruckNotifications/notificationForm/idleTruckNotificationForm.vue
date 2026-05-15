@@ -84,9 +84,7 @@
     </v-card-text>
     <v-card-actions class="buttons-wrapper">
       <v-btn @click="cancel">Отмена</v-btn>
-      <v-btn @click="submit" :disabled="invalidForm || loading" color="primary">
-        Сохранить
-      </v-btn>
+      <v-btn @click="submit" :disabled="invalidForm || loading" color="primary"> Сохранить </v-btn>
     </v-card-actions>
   </v-card>
 </template>

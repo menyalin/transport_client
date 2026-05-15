@@ -67,9 +67,7 @@ export default {
     },
     preparedItems() {
       return this.parts.map((part) => {
-        const agreement = this.agreements.find(
-          (agreement) => agreement._id === part.agreement
-        )
+        const agreement = this.agreements.find((agreement) => agreement._id === part.agreement)
         return {
           ...part,
           agreementName: agreement?.name || '__no name__',

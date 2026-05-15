@@ -19,12 +19,7 @@
         @downloadTemplate="newDownloadHandler"
         class="mx-3"
       />
-      <v-btn
-        v-if="showLoaderBtn"
-        class="mx-3"
-        @click="goToLoader"
-        color="primary"
-      >
+      <v-btn v-if="showLoaderBtn" class="mx-3" @click="goToLoader" color="primary">
         Загрузить из реестра
       </v-btn>
       <span v-else-if="loaderPath" class="text-caption mx-3">
@@ -74,25 +69,13 @@
           outlined
           @change="changeStatusHandler"
         />
-        <v-btn
-          v-if="showSendInvoiceBtn"
-          color="primary"
-          @click="sendInvoiceBtnHandler('sendDate')"
-        >
+        <v-btn v-if="showSendInvoiceBtn" color="primary" @click="sendInvoiceBtnHandler('sendDate')">
           Отправлено клиенту
         </v-btn>
-        <v-btn
-          v-if="showAcceptedInvoiceBtn"
-          color="primary"
-          @click="acceptInvoiceBtnHandler"
-        >
+        <v-btn v-if="showAcceptedInvoiceBtn" color="primary" @click="acceptInvoiceBtnHandler">
           Принято клиентом
         </v-btn>
-        <v-btn
-          v-if="showPaidInvoiceBtn"
-          color="primary"
-          @click="paidInvoiceBtnHandler"
-        >
+        <v-btn v-if="showPaidInvoiceBtn" color="primary" @click="paidInvoiceBtnHandler">
           Оплачено
         </v-btn>
       </div>
@@ -112,12 +95,7 @@
         />
       </div>
       <div class="fields-row">
-        <v-text-field
-          label="Номер акта"
-          v-model.trim="state.number"
-          dense
-          outlined
-        />
+        <v-text-field label="Номер акта" v-model.trim="state.number" dense outlined />
         <DateTimeInput
           label="Дата акта"
           v-model="state.date"
@@ -161,21 +139,12 @@
         <v-card>
           <v-card-title>{{ dateDialogTitle }}</v-card-title>
           <v-card-text>
-            <DateTimeInput
-              label="Укажите дату"
-              v-model="dialogFieldData"
-              type="date"
-              outlined
-            />
+            <DateTimeInput label="Укажите дату" v-model="dialogFieldData" type="date" outlined />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn @click="cancelDialog">Отмена</v-btn>
-            <v-btn
-              @click="saveDialogDataHandler"
-              color="primary"
-              :disabled="!dialogFieldData"
-            >
+            <v-btn @click="saveDialogDataHandler" color="primary" :disabled="!dialogFieldData">
               Сохранить
             </v-btn>
           </v-card-actions>
@@ -185,9 +154,7 @@
         color="primary"
         @click="pickOrdersHandler"
         class="ma-3"
-        :disabled="
-          disabledPickOrders || isNeedSave || invalidForm || !isInProcess
-        "
+        :disabled="disabledPickOrders || isNeedSave || invalidForm || !isInProcess"
       >
         Подобрать рейсы
       </v-btn>
@@ -209,11 +176,7 @@ import { computed, watch, ref } from 'vue'
 import router from '@/router'
 import store from '@/store'
 import { paymentInvoiceStatuses } from '@/shared/constants'
-import {
-  ButtonsPanel,
-  DownloadDocTemplateMenu,
-  DateTimeInput,
-} from '@/shared/ui'
+import { ButtonsPanel, DownloadDocTemplateMenu, DateTimeInput } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
 
@@ -265,18 +228,12 @@ export default {
       isActDateDisabled,
     } = usePaymentInvoiceForm(props.item, ctx)
 
-    const {
-      docTemplates,
-      newDocTemplates,
-      newDownloadHandler,
-      updatePrintForms,
-    } = usePaymentInvoiceDocTemplates(state, props)
+    const { docTemplates, newDocTemplates, newDownloadHandler, updatePrintForms } =
+      usePaymentInvoiceDocTemplates(state, props)
 
     const showLoaderBtn = computed(() => {
       if (props.item?.ordersCount > 0) return false
-      return (
-        !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
-      )
+      return !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
     })
     const isInProcess = computed(() => state.value.status === 'inProcess')
 
@@ -302,9 +259,7 @@ export default {
       ctx.emit('download', filename)
     }
 
-    const clientItems = computed(
-      () => store.getters?.partners.filter((i) => i.isClient) || []
-    )
+    const clientItems = computed(() => store.getters?.partners.filter((i) => i.isClient) || [])
     const isPaid = computed(() => props.item?.status === 'paid')
     const hasOrders = computed(() => (props.item.ordersCount || 0) > 0)
 

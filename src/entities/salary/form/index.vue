@@ -80,13 +80,6 @@
             :style="{ 'min-width': '550px' }"
           />
 
-          <app-direct-distance-zones
-            v-if="tmpItem.type === 'directDistanceZones'"
-            ref="directDistanceZones"
-            v-model="directDistanceZones"
-            :groupVat="tmpItem.groupVat"
-            :style="{ 'min-width': '550px' }"
-          />
           <app-waiting
             v-if="tmpItem.type === 'waiting'"
             ref="waiting"
@@ -100,7 +93,6 @@
             :style="{ 'min-width': '550px' }"
           />
           <v-text-field
-            v-if="!['directDistanceZones'].includes(tmpItem.type)"
             v-model.number="tmpItem.sum"
             dense
             type="number"
@@ -118,26 +110,14 @@
         </v-card-text>
         <v-card-actions>
           <v-btn @click="tmpDialog = false"> Отмена </v-btn>
-          <v-btn
-            v-if="tmpItem._id"
-            :disabled="invalidItem"
-            color="primary"
-            @click="update"
-          >
+          <v-btn v-if="tmpItem._id" :disabled="invalidItem" color="primary" @click="update">
             Обновить
           </v-btn>
-          <v-btn
-            v-else
-            :disabled="invalidItem"
-            color="primary"
-            @click="pushItem"
-          >
+          <v-btn v-else :disabled="invalidItem" color="primary" @click="pushItem">
             Добавить в список
           </v-btn>
           <v-spacer />
-          <v-btn v-if="showDeleteBtn" color="error" @click="deleteItem">
-            Удалить
-          </v-btn>
+          <v-btn v-if="showDeleteBtn" color="error" @click="deleteItem"> Удалить </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -150,7 +130,6 @@ import AppRegions from './regions.vue'
 import AppAdditionalPoints from './additionalPoints.vue'
 import AppWaiting from './waiting.vue'
 import AppReturn from './return.vue'
-import { SalaryTariffService } from '@/shared/services'
 import { SalaryTariffDTO } from './salaryTariff.dto'
 
 export default {
@@ -179,17 +158,40 @@ export default {
     return {
       tks: [],
       tmpDialog: false,
-      points: {},
-      zones: {},
-      regions: {},
-      additionalPoints: {},
+      points: {
+        loading: '',
+        unloading: '',
+      },
+      zones: {
+        loadingZone: '',
+        unloadingZone: '',
+      },
+      regions: {
+        loadingRegion: '',
+        unloadingRegion: '',
+      },
+      additionalPoints: {
+        includedPoints: 2,
+        orderType: '',
+        clients: [],
+      },
       tmpItem: {
         liftCapacity: [],
         consigneeTypes: [],
       },
-      directDistanceZones: {},
-      waiting: {},
-      returnTariff: {},
+
+      waiting: {
+        includeHours: '',
+        roundByHours: '',
+        orderType: '',
+        tariffBy: '',
+        clients: [],
+      },
+      returnTariff: {
+        clients: [],
+        isPltReturn: false,
+        orderType: '',
+      },
     }
   },
   computed: {
@@ -197,27 +199,19 @@ export default {
       return SalaryTariffDTO.invalidItem({
         ...this.tmpItem,
         ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
-        ...(this.tmpItem.type && this.tmpItem.type === 'return'
-          ? this.returnTariff
-          : {}),
+        ...(this.tmpItem.type && this.tmpItem.type === 'return' ? this.returnTariff : {}),
       })
     },
     showDeleteBtn() {
-      return (
-        this.item._id &&
-        this.$store.getters.hasPermission('salaryTariff:delete')
-      )
+      return this.item._id && this.$store.getters.hasPermission('salaryTariff:delete')
     },
     formState() {
-      return {
-        ...new SalaryTariffDTO({
-          ...this.tmpItem,
-          ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
-          ...(this.tmpItem.type && this.tmpItem.type === 'return'
-            ? this.returnTariff
-            : {}),
-        }),
-      }
+      if (!this.tmpItem.type) return {}
+      return new SalaryTariffDTO({
+        ...this.tmpItem,
+        ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
+        ...(this.tmpItem.type && this.tmpItem.type === 'return' ? this.returnTariff : {}),
+      })
     },
   },
   watch: {
@@ -269,15 +263,7 @@ export default {
     async deleteItem() {
       const res = await this.$confirm('Вы уверены? Запись будет удалена')
       if (!res) return null
-      try {
-        this.loading = true
-        await SalaryTariffService.deleteById(this.item._id)
-        this.loading = false
-        this.$emit('deletedItem', this.item._id)
-      } catch (e) {
-        this.loading = false
-        this.$store.commit('setError', e.message)
-      }
+      else this.$emit('deletedItem', this.item._id)
     },
   },
 }

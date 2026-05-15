@@ -124,9 +124,7 @@ export default {
       this.editedItem = {
         ...item,
         withVat: Boolean(this.agreement.usePriceWithVAT),
-        price: +(
-          this.agreement.usePriceWithVAT ? item.price : item.priceWOVat
-        ).toFixed(2),
+        price: +(this.agreement.usePriceWithVAT ? item.price : item.priceWOVat).toFixed(2),
       }
 
       this.$nextTick(() => {

@@ -39,20 +39,13 @@
               v-model="state.sumWithVAT"
             />
           </div>
-          <v-text-field
-            label="Примечание"
-            outlined
-            dense
-            v-model.trim="state.note"
-          />
+          <v-text-field label="Примечание" outlined dense v-model.trim="state.note" />
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" text type="submit" :disabled="invalidForm">
-            Добавить
-          </v-btn>
+          <v-btn color="primary" text type="submit" :disabled="invalidForm"> Добавить </v-btn>
         </v-card-actions>
       </form>
     </v-card>

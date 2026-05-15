@@ -16,10 +16,7 @@ export default function () {
     carriers: [],
     agreements: [],
   }
-  const settings = usePersistedRef(
-    initialState,
-    'OrderWOInvoiceReport:settings'
-  )
+  const settings = usePersistedRef(initialState, 'OrderWOInvoiceReport:settings')
 
   function resetListOptions() {
     listOptions.value = { ...listOptions.value, page: 1 }

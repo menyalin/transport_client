@@ -16,18 +16,14 @@
             <td class="text-right price-column">
               {{
                 prePricesMap.has(priceType.value)
-                  ? Intl.NumberFormat().format(
-                      prePricesMap.get(priceType.value)[priceField]
-                    )
+                  ? Intl.NumberFormat().format(prePricesMap.get(priceType.value)[priceField])
                   : '-'
               }}
             </td>
             <td class="text-right price-column">
               {{
                 pricesMap.has(priceType.value)
-                  ? Intl.NumberFormat().format(
-                      pricesMap.get(priceType.value)[priceField]
-                    )
+                  ? Intl.NumberFormat().format(pricesMap.get(priceType.value)[priceField])
                   : '-'
               }}
             </td>
@@ -45,9 +41,7 @@
                 type="number"
                 @blur="blurHandler"
                 @change="changeFinalPrice($event, priceType.value)"
-                @keypress.prevent.enter="
-                  changeFinalPrice($event, priceType.value)
-                "
+                @keypress.prevent.enter="changeFinalPrice($event, priceType.value)"
               />
               <div
                 v-if="priceType.value !== editableRowType"
@@ -56,9 +50,7 @@
               >
                 {{
                   finalPricesMap.has(priceType.value)
-                    ? Intl.NumberFormat().format(
-                        finalPricesMap.get(priceType.value)[priceField]
-                      )
+                    ? Intl.NumberFormat().format(finalPricesMap.get(priceType.value)[priceField])
                     : '-'
                 }}
               </div>
@@ -71,10 +63,7 @@
               {{
                 Array.isArray(prePrices)
                   ? Intl.NumberFormat().format(
-                      prePrices.reduce(
-                        (sum, item) => (sum += item[priceField]),
-                        0
-                      )
+                      prePrices.reduce((sum, item) => (sum += item[priceField]), 0)
                     )
                   : 0
               }}
@@ -92,10 +81,7 @@
               {{
                 Array.isArray(finalPrices)
                   ? Intl.NumberFormat().format(
-                      finalPrices.reduce(
-                        (sum, item) => (sum += item[priceField]),
-                        0
-                      )
+                      finalPrices.reduce((sum, item) => (sum += item[priceField]), 0)
                     )
                   : 0
               }}
@@ -156,9 +142,7 @@ export default {
       this.editableRowType = null
     },
     changeFinalPrice(e, type) {
-      const newFinalPrices = this.finalPrices
-        .slice()
-        .filter((i) => i.type !== type)
+      const newFinalPrices = this.finalPrices.slice().filter((i) => i.type !== type)
       newFinalPrices.push({
         ...new Price(
           { price: e.target.value || 0, type },

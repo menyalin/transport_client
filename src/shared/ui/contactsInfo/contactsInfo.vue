@@ -11,11 +11,7 @@
       @remove="removeItem(idx)"
     />
     <v-dialog max-width="800" persistent v-model="dialog">
-      <ContactForm
-        :item="editedItem"
-        @cancel="cancelHandler"
-        @submit="submitHandler"
-      />
+      <ContactForm :item="editedItem" @cancel="cancelHandler" @submit="submitHandler" />
     </v-dialog>
   </div>
 </template>
@@ -40,9 +36,7 @@ export default {
   setup(props, ctx) {
     const dialog = ref(false)
     const editedItem = ref(null)
-    const emptyContacts = computed(
-      () => !props.items || props.items?.length === 0
-    )
+    const emptyContacts = computed(() => !props.items || props.items?.length === 0)
     function addItem() {
       dialog.value = true
     }
@@ -63,7 +57,7 @@ export default {
       dialog.value = false
       editedItem.value = null
     }
-    
+
     function submitHandler(formState) {
       const tmpItems = [...(props.items || [])]
       if (editedItem.value) tmpItems.splice(editedItem.value.idx, 1, formState)

@@ -38,12 +38,7 @@
         dense
         hide-details
       />
-      <v-switch
-        v-model="tmpSettings.showNotes"
-        label="Показать заметки"
-        dense
-        hide-details
-      />
+      <v-switch v-model="tmpSettings.showNotes" label="Показать заметки" dense hide-details />
     </v-list>
   </v-menu>
 </template>

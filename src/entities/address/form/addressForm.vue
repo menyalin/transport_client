@@ -2,9 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="
-        !$store.getters.hasPermission('address:write') || v$.$invalid
-      "
+      :disabledSubmit="!$store.getters.hasPermission('address:write') || v$.$invalid"
       @cancel="cancel"
       @submit="submit"
     />
@@ -55,12 +53,7 @@
       label="Город"
     />
 
-    <v-text-field
-      v-model="v$.note.$model"
-      outlined
-      dense
-      label="Примечание к адресу"
-    />
+    <v-text-field v-model="v$.note.$model" outlined dense label="Примечание к адресу" />
 
     <v-text-field
       v-model="v$.geo.$model"
@@ -70,41 +63,17 @@
       :errorMessages="geoErrors"
     />
 
-    <app-zone-autocomplete
-      v-model="v$.zones.$model"
-      dense
-      multiple
-      outlined
-      label="Зоны"
-    />
+    <app-zone-autocomplete v-model="v$.zones.$model" dense multiple outlined label="Зоны" />
 
-    <v-text-field
-      v-model="v$.contacts.$model"
-      outlined
-      dense
-      label="Контакты"
-    />
+    <v-text-field v-model="v$.contacts.$model" outlined dense label="Контакты" />
 
-    <v-checkbox
-      v-model="v$.isShipmentPlace.$model"
-      label="Место погрузки"
-      dense
-    />
-    <v-checkbox
-      v-model="v$.isDeliveryPlace.$model"
-      label="Место разгрузки"
-      dense
-    />
+    <v-checkbox v-model="v$.isShipmentPlace.$model" label="Место погрузки" dense />
+    <v-checkbox v-model="v$.isDeliveryPlace.$model" label="Место разгрузки" dense />
     <v-checkbox v-model="v$.isService.$model" label="Сервис" dense />
 
     <v-divider />
 
-    <v-btn
-      v-if="displayDeleteBtn"
-      color="error"
-      class="mt-4"
-      @click="$emit('delete')"
-    >
+    <v-btn v-if="displayDeleteBtn" color="error" class="mt-4" @click="$emit('delete')">
       <v-icon left>mdi-delete</v-icon> Удалить
     </v-btn>
   </div>

@@ -6,11 +6,7 @@
           <h5>{{ title }}</h5>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div
-            v-for="(filter, idx) of filterItems"
-            :key="idx"
-            class="filter-row mt-3"
-          >
+          <div v-for="(filter, idx) of filterItems" :key="idx" class="filter-row mt-3">
             <v-select
               v-model="tmpFilters[filter.value].cond"
               label="Сравнение"

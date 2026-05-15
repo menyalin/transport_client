@@ -8,14 +8,10 @@
     @dblclick:row="dblClickRowHandler"
   >
     <template #[`item.actions`]="{ item }">
-      <v-icon @click="removeItemHandler(item._id)" color="error">
-        mdi-delete
-      </v-icon>
+      <v-icon @click="removeItemHandler(item._id)" color="error"> mdi-delete </v-icon>
     </template>
     <template #[`item.download`]="{ item }">
-      <v-icon @click="downloadHandler(item._id)" color="primary">
-        mdi-download
-      </v-icon>
+      <v-icon @click="downloadHandler(item._id)" color="primary"> mdi-download </v-icon>
     </template>
   </v-data-table>
 </template>

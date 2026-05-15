@@ -41,11 +41,7 @@ export class Price {
       vatRateInfo.usePriceWithVat,
       vatRateInfo.vatRate
     )
-    this.price = calculatePrice(
-      parsedVal,
-      vatRateInfo.usePriceWithVat,
-      vatRateInfo.vatRate
-    )
+    this.price = calculatePrice(parsedVal, vatRateInfo.usePriceWithVat, vatRateInfo.vatRate)
 
     this.sumVat = this.price - this.priceWOVat
   }

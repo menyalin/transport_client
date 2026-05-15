@@ -69,21 +69,14 @@ router.beforeEach(async (to, from, next) => {
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title
   else document.title = process.env.VUE_APP_NAME || 's4log'
 
-  const permissions = to.matched
-    .map((r) => r.meta.permission)
-    .filter((p) => !!p)
+  const permissions = to.matched.map((r) => r.meta.permission).filter((p) => !!p)
 
-  if (
-    to.matched.some(
-      (record) => record.meta.authRequired && !store.getters.isLoggedIn
-    )
-  )
+  if (to.matched.some((record) => record.meta.authRequired && !store.getters.isLoggedIn))
     next({
       path: '/auth/login',
       query: { redirect: to.fullPath },
     })
-  else if (store.getters.user && permissions.length)
-    _checkPermissions(permissions, next, to, from)
+  else if (store.getters.user && permissions.length) _checkPermissions(permissions, next, to, from)
   else next()
 })
 

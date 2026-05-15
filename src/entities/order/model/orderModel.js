@@ -10,14 +10,7 @@ function convertTimeToHours(timeStr) {
   let [time, period] = timeStr.split(' ')
   let [hours, minutes] = time.split(':').map(Number)
 
-  if (
-    isNaN(hours) ||
-    isNaN(minutes) ||
-    hours < 0 ||
-    hours > 23 ||
-    minutes < 0 ||
-    minutes > 59
-  )
+  if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59)
     throw new Error('Invalid time string')
 
   if (period) {
@@ -30,8 +23,7 @@ function convertTimeToHours(timeStr) {
 export class OrderModel {
   static fillRouteFromTemplate(template, date) {
     if (!date) throw new Error('fillRouteFromTemplate: route date is missing')
-    if (!dayjs(date).isValid())
-      throw new Error('fillRouteFromTemplate: route date is invalid')
+    if (!dayjs(date).isValid()) throw new Error('fillRouteFromTemplate: route date is invalid')
     const orderDate = dayjs(date)
     let tmpRoute = []
 
@@ -58,9 +50,7 @@ export class OrderModel {
         point.plannedDate = plannedDate.toISOString()
         point.plannedDateDoc = plannedDate.toISOString()
         if (p.useInterval) {
-          point.intervalEndDate = plannedDate
-            .add(p.hoursInterval || 0, 'hours')
-            .toISOString()
+          point.intervalEndDate = plannedDate.add(p.hoursInterval || 0, 'hours').toISOString()
           point.intervalEndDateDoc = point.intervalEndDate
         }
       }

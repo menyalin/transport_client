@@ -34,9 +34,7 @@ export const useListData = () => {
     clients: settings.value?.clients,
     company: store.getters.directoriesProfile,
     limit: settings.value?.listOptions?.itemsPerPage || 50,
-    skip:
-      settings.value.listOptions.itemsPerPage *
-      (settings.value.listOptions.page - 1),
+    skip: settings.value.listOptions.itemsPerPage * (settings.value.listOptions.page - 1),
   }))
 
   async function getData() {
