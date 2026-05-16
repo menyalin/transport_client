@@ -1,5 +1,5 @@
-import List from '@/pages/profile/orderTemplate/list'
-import Details from '@/pages/profile/orderTemplate/details'
+import List from '@/pages/profile/orderTemplate/list.vue'
+import Details from '@/pages/profile/orderTemplate/details.vue'
 
 const BASE_PATH = 'order_templates'
 

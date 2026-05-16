@@ -16,8 +16,8 @@
   </v-container>
 </template>
 <script>
-import AppRegionForm from '@/modules/profile/components/regionForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppRegionForm from '@/modules/profile/components/regionForm/index.vue'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { RegionService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 

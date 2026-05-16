@@ -16,8 +16,8 @@
   </v-container>
 </template>
 <script>
-import AppZoneForm from '@/modules/profile/components/zoneForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppZoneForm from '@/modules/profile/components/zoneForm/index.vue'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { ZoneService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 

@@ -27,7 +27,7 @@
   </v-container>
 </template>
 <script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { DowntimeService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import { DowntimeForm } from '@/entities/downtime'

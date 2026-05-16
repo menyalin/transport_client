@@ -22,8 +22,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppCompanyInvites from '@/widgets/companyInvites' // TODO: переместить в entity
-import AppUserInfo from '@/widgets/userInfo' // TODO: переместить в entity
+import AppCompanyInvites from '@/widgets/companyInvites/index.vue' // TODO: переместить в entity
+import AppUserInfo from '@/widgets/userInfo/index.vue' // TODO: переместить в entity
 
 export default {
   name: 'ProfileSettingsPage',

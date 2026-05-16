@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import store from '@/store'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 function formatNumber(value) {
   if (value == null || isNaN(value)) return '-'

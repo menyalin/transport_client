@@ -1,6 +1,6 @@
-import DriverCreate from '@/pages/profile/driver/driverCreate'
+import DriverCreate from '@/pages/profile/driver/driverCreate.vue'
 import DriverList from '@/pages/profile/driver/list/index.vue'
-import DriverDetails from '@/pages/profile/driver/driverDetails'
+import DriverDetails from '@/pages/profile/driver/driverDetails.vue'
 
 export default [
   {

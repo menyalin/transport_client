@@ -1,4 +1,4 @@
-import AddressForm from './form/addressForm'
+import AddressForm from './form/addressForm.vue'
 import { useAddress } from './useAddress'
 import { useAddressStore } from './useAddressStore'
 

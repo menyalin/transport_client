@@ -50,7 +50,7 @@
 </template>
 <script>
 import { BlockTitle } from '@/entities/order'
-import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete'
+import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
 import { reactive, ref, computed } from 'vue'
 import store from '@/store'
 

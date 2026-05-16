@@ -50,13 +50,13 @@
   </v-container>
 </template>
 <script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
-import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings'
-import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
+import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings/index.vue'
+import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList/index.vue'
 
 import { ButtonsPanel } from '@/shared/ui'
 import { SalaryTariffService } from '@/shared/services'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { SalaryTariffForm } from '@/entities/salary'
 
 export default {

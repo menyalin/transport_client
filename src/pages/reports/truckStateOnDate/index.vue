@@ -78,7 +78,7 @@
 import { mapGetters } from 'vuex'
 import { ReportService } from '@/shared/services'
 import { DateTimeInput, ReportTitle } from '@/shared/ui'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'TruckStateOnDate',

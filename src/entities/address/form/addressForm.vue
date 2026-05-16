@@ -80,9 +80,9 @@
 </template>
 
 <script>
-import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion'
+import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion/index.vue'
 import { ButtonsPanel, AutoCompleteWithActions } from '@/shared/ui'
-import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
+import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
 
 import { useForm } from './useForm'
 

@@ -83,9 +83,9 @@
 <script>
 import { CrewService } from '@/shared/services'
 import { ButtonsPanel } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
 import { mapGetters } from 'vuex'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 export default {
   name: 'TruckList',
   components: {

@@ -9,7 +9,7 @@
 </template>
 <script>
 import { DriverForm } from '@/entities/driver/index.js'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'DriverCreate',

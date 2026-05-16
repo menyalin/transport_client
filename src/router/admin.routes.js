@@ -1,8 +1,8 @@
-import AdminLayout from '@/pages/admin/layout'
-import Users from '@/pages/admin/users'
-import Companies from '@/pages/admin/companies'
-import Contracts from '@/pages/admin/contracts'
-import MassOrdersUpdate from '@/pages/admin/massOrdersUpdate'
+import AdminLayout from '@/pages/admin/layout.vue'
+import Users from '@/pages/admin/users.vue'
+import Companies from '@/pages/admin/companies.vue'
+import Contracts from '@/pages/admin/contracts.vue'
+import MassOrdersUpdate from '@/pages/admin/massOrdersUpdate.vue'
 
 export default [
   {

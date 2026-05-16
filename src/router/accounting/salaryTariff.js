@@ -1,5 +1,5 @@
-import List from '@/pages/accounting/salaryTariffs/list'
-import Create from '@/pages/accounting/salaryTariffs/create'
+import List from '@/pages/accounting/salaryTariffs/list.vue'
+import Create from '@/pages/accounting/salaryTariffs/create.vue'
 
 const BASE_PATH = 'salaryTariffs'
 

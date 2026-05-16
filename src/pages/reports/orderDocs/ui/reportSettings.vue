@@ -122,7 +122,7 @@ import store from '@/store'
 import { watch, ref, computed } from 'vue'
 import { RefreshBtn } from '@/shared/ui'
 import { AppTableColumnSetting } from '@/shared/ui'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'ReportSettings',

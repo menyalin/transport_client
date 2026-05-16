@@ -2,7 +2,7 @@ import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 import { CrewService } from '@/shared/services'
 import dayjs from 'dayjs'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export const useListData = () => {
   const carrierStore = useCarrierStore()

@@ -28,7 +28,7 @@
 <script>
 import { computed } from 'vue'
 import { AgreementForm } from '@/entities/agreement'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'

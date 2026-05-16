@@ -19,7 +19,7 @@
 <script>
 import { TruckService } from '@/shared/services'
 import { TruckForm } from '@/entities/truck'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'TruckDetails',

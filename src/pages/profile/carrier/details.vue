@@ -19,7 +19,8 @@
 </template>
 <script>
 import { computed, getCurrentInstance, onMounted, ref } from 'vue'
-import { CarrierForm, useCarrierStore } from '@/entities/carrier'
+import { CarrierForm } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
 
 export default {

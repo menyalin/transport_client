@@ -8,7 +8,7 @@
   </v-container>
 </template>
 <script>
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { TruckForm } from '@/entities/truck'
 export default {
   name: 'TruckCreate',

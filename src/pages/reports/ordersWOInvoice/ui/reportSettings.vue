@@ -45,7 +45,7 @@
 <script>
 import { watch, ref } from 'vue'
 import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'ReportSettings',

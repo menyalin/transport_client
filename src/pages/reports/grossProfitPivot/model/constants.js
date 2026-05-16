@@ -91,7 +91,7 @@ export const DEFAULT_HEADERS = [
   'agreementName',
   'truck',
   'driver',
-  'carrier',
+  'carrierId',
   'orderType',
   'addressesLoading',
   'addressesUnloading',

@@ -3,7 +3,7 @@ import { CrewService } from '@/shared/services'
 import { ref, computed, onMounted } from 'vue'
 import store from '@/store'
 import { headers } from './headers'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export const useDriverList = () => {
   const carrierStore = useCarrierStore()

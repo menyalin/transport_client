@@ -1,6 +1,6 @@
-import TkNameCreate from '@/pages/profile/carrier/create'
-import TkNameList from '@/pages/profile/carrier/list'
-import TkNameDetails from '@/pages/profile/carrier/details'
+import TkNameCreate from '@/pages/profile/carrier/create.vue'
+import TkNameList from '@/pages/profile/carrier/list.vue'
+import TkNameDetails from '@/pages/profile/carrier/details.vue'
 const BASE_PATH = 'carriers'
 
 export default [

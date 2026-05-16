@@ -7,7 +7,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { useAppStore } from './shared/useAppStore'
 
 export default {

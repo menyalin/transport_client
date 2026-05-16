@@ -2,7 +2,7 @@ import z from 'zod'
 import store from '@/store'
 import { utils } from './utis'
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export class DataTableRow {
   constructor(props) {

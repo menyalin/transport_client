@@ -53,7 +53,7 @@ import { OrdersTable, useOrderDocs, OrderDocsList } from '@/entities/order'
 import { useListData } from './model.js'
 import { PickOrdersForDocsRegistryHeaders } from '@/shared/constants'
 import { DocsRegistryService } from '@/shared/services'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'PickOrdersFeature',

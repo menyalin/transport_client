@@ -1,11 +1,13 @@
-import DetailsOrder from '@/pages/orders/details'
+import DetailsOrder from '@/pages/orders/details.vue'
+import ListOrder from '@/pages/orders/list.vue'
 import CreateOrderGroup from '@/pages/orders/orderGroupCreate.vue'
+import AutoFillOrderDates from '@/pages/orders/autofillDates.vue'
 
 export default [
   {
     path: '/',
     name: 'ListOrder',
-    component: () => import('@/pages/orders/list'),
+    component: ListOrder,
   },
   {
     path: 'create',
@@ -30,7 +32,7 @@ export default [
   {
     path: 'fill_dates',
     name: 'AutoFillOrderDates',
-    component: () => import('@/pages/orders/autofillDates.vue'),
+    component: AutoFillOrderDates,
     props: true,
     meta: {
       permission: 'order:autoFillRouteDates',

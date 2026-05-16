@@ -1,3 +1,6 @@
+import RegionList from '@/pages/profile/region/list.vue'
+import RegionDetails from '@/pages/profile/region/details.vue'
+
 const BASE_PATH = 'regions'
 const PERMISSION_ITEM_NAME = 'region'
 
@@ -5,7 +8,7 @@ export default [
   {
     path: BASE_PATH,
     name: 'RegionList',
-    component: () => import('@/pages/profile/region/list'),
+    component: RegionList,
     meta: {
       permission: PERMISSION_ITEM_NAME + ':readList',
     },
@@ -13,7 +16,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'RegionCreate',
-    component: () => import('@/pages/profile/region/details'),
+    component: RegionDetails,
     props: true,
     meta: {
       permission: PERMISSION_ITEM_NAME + ':readItem',
@@ -22,7 +25,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'RegionDetails',
-    component: () => import('@/pages/profile/region/details'),
+    component: RegionDetails,
     props: true,
     meta: {
       permission: PERMISSION_ITEM_NAME + ':readItem',

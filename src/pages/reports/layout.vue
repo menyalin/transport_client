@@ -8,8 +8,8 @@
   </v-app>
 </template>
 <script>
-import AppBar from '@/modules/common/components/appBar'
-import AppSnackbar from '@/modules/common/components/appSnackbar'
+import AppBar from '@/modules/common/components/appBar/index.vue'
+import AppSnackbar from '@/modules/common/components/appSnackbar/index.vue'
 
 export default {
   name: 'ProfileLayout',

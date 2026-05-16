@@ -1,10 +1,13 @@
+import WorkerList from '@/pages/profile/worker/list.vue'
+import WorkerDetails from '@/pages/profile/worker/details.vue'
+
 const BASE_PATH = 'workers'
 
 export default [
   {
     path: BASE_PATH,
     name: 'WorkerList',
-    component: () => import('@/pages/profile/worker/list'),
+    component: WorkerList,
     meta: {
       permission: 'worker:readList',
     },
@@ -12,7 +15,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'WorkerCreate',
-    component: () => import('@/pages/profile/worker/details'),
+    component: WorkerDetails,
     props: true,
     meta: {
       permission: 'worker:readItem',
@@ -21,7 +24,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'WorkerDetails',
-    component: () => import('@/pages/profile/worker/details'),
+    component: WorkerDetails,
     props: true,
     meta: {
       permission: 'worker:readItem',

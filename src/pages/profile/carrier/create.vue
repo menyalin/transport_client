@@ -13,7 +13,8 @@
   </v-container>
 </template>
 <script>
-import { CarrierForm, useCarrierStore } from '@/entities/carrier'
+import { CarrierForm } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
 import { getCurrentInstance } from 'vue'
 

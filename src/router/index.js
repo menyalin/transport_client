@@ -11,8 +11,9 @@ import adminRoutes from '@/router/admin.routes.js'
 import orderRoutes from '@/router/orders/index.js'
 import reportsRoutes from '@/router/reports.routes.js'
 
-import serverNotAvailablePage from '@/modules/common/pages/error'
-import HomeLayout from '@/modules/common/pages/layout'
+import serverNotAvailablePage from '@/modules/common/pages/error.vue'
+import HomeLayout from '@/modules/common/pages/layout.vue'
+import AccessDeniedPage from '@/modules/common/pages/accessDenied.vue'
 import PermissionService from '@/shared/services/permission.service'
 
 const _checkPermissions = async (permissions, next, to, from) => {
@@ -47,13 +48,13 @@ const routes = [
   {
     path: '/accessDenied',
     name: 'AccessDenied',
-    component: () => import('@/modules/common/pages/accessDenied'),
+    component: AccessDeniedPage,
   },
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: import.meta.env.BASE_URL,
   routes,
 })
 
@@ -67,7 +68,7 @@ router.beforeEach(async (to, from, next) => {
     .find((r) => r.meta && r.meta.title)
 
   if (nearestWithTitle) document.title = nearestWithTitle.meta.title
-  else document.title = process.env.VUE_APP_NAME || 's4log'
+  else document.title = import.meta.env.VITE_APP_NAME || 's4log'
 
   const permissions = to.matched.map((r) => r.meta.permission).filter((p) => !!p)
 

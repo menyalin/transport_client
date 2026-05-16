@@ -1,5 +1,5 @@
-import List from '@/pages/profile/scheduleNotes/list'
-import Details from '@/pages/profile/scheduleNotes/details'
+import List from '@/pages/profile/scheduleNotes/list.vue'
+import Details from '@/pages/profile/scheduleNotes/details.vue'
 
 const BASE_PATH = 'schedule_notes'
 

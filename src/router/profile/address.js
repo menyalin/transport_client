@@ -1,5 +1,5 @@
-import List from '@/pages/profile/address/list'
-import Details from '@/pages/profile/address/details'
+import List from '@/pages/profile/address/list.vue'
+import Details from '@/pages/profile/address/details.vue'
 
 const BASE_PATH = 'address'
 

@@ -95,7 +95,7 @@
 </template>
 <script>
 import { ButtonsPanel } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
 
 import { mapGetters } from 'vuex'
 export default {

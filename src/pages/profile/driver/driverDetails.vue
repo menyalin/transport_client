@@ -19,7 +19,7 @@
 <script>
 import { DriverForm } from '@/entities/driver'
 import { DriverService } from '@/shared/services'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 export default {
   name: 'DriverDetails',
   components: {

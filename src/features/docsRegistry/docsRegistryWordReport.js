@@ -18,7 +18,7 @@ function getZipContent(url) {
 
 export async function docsRegistryWordReport(reportData) {
   let data = null
-  const url = process.env.VUE_APP_STATIC_URL + '/templates/docsRegistry_template.docx'
+  const url = import.meta.env.VITE_STATIC_URL + '/templates/docsRegistry_template.docx'
   try {
     data = await getZipContent(url)
   } catch (e) {
