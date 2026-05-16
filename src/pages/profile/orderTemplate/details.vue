@@ -26,8 +26,8 @@
 </template>
 <script>
 import { provide } from 'vue'
-import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm/index.vue'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { OrderTemplateService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import { useAddress } from '@/entities/address'

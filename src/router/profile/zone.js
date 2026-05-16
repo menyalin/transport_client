@@ -1,10 +1,13 @@
+import ZoneList from '@/pages/profile/zone/list.vue'
+import ZoneDetails from '@/pages/profile/zone/details.vue'
+
 const BASE_PATH = 'zones'
 
 export default [
   {
     path: BASE_PATH,
     name: 'ZoneList',
-    component: () => import('@/pages/profile/zone/list'),
+    component: ZoneList,
     meta: {
       permission: 'zone:readList',
     },
@@ -12,7 +15,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'ZoneCreate',
-    component: () => import('@/pages/profile/zone/details'),
+    component: ZoneDetails,
     props: true,
     meta: {
       permission: 'zone:readItem',
@@ -21,7 +24,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'ZoneDetails',
-    component: () => import('@/pages/profile/zone/details'),
+    component: ZoneDetails,
     props: true,
     meta: {
       permission: 'zone:readItem',

@@ -1,4 +1,12 @@
-import ReportLayout from '@/pages/reports/layout'
+import ReportLayout from '@/pages/reports/layout.vue'
+import CrewsReport from '@/pages/reports/crewsReport/index.vue'
+import DaysControl from '@/pages/reports/daysControl/index.vue'
+import OrdersInProgress from '@/pages/reports/ordersInProgress/index.vue'
+import TruckStateOnDate from '@/pages/reports/truckStateOnDate/index.vue'
+import DriversGrades from '@/pages/reports/driversGrades/index.vue'
+import GrossProfitPivot from '@/pages/reports/grossProfitPivot/index.vue'
+import OrderDocsReport from '@/pages/reports/orderDocs/index.vue'
+import OrdersNotIncludedInInvoice from '@/pages/reports/ordersWOInvoice/index.vue'
 
 export default [
   {
@@ -12,7 +20,7 @@ export default [
       {
         path: 'crews',
         name: 'CrewReport',
-        component: () => import('@/pages/reports/crewsReport'),
+        component: CrewsReport,
         meta: {
           title: 'Отчеты : Использование транспорта (будет удален)',
           permission: 'report:crew_diagram',
@@ -21,7 +29,7 @@ export default [
       {
         path: 'daysControl',
         name: 'DaysControl',
-        component: () => import('@/pages/reports/daysControl'),
+        component: DaysControl,
         meta: {
           title: 'Отчеты : Контроль сроков',
           permission: 'report:daysControl',
@@ -30,7 +38,7 @@ export default [
       {
         path: 'ordersInProgress',
         name: 'OrdersInProgress',
-        component: () => import('@/pages/reports/ordersInProgress'),
+        component: OrdersInProgress,
         meta: {
           title: 'Отчеты : Простой транспорта (будет удален)',
           permission: 'report:inProgressOrders',
@@ -39,7 +47,7 @@ export default [
       {
         path: 'truckStateOnDate',
         name: 'TruckStateOnDate',
-        component: () => import('@/pages/reports/truckStateOnDate'),
+        component: TruckStateOnDate,
         meta: {
           title: 'Отчеты : Статус транспорта на дату',
           permission: 'report:truckStateOnDate',
@@ -48,7 +56,7 @@ export default [
       {
         path: 'drivers_grades',
         name: 'DriversGrades',
-        component: () => import('@/pages/reports/driversGrades'),
+        component: DriversGrades,
         meta: {
           title: 'Отчеты : Оценки водителей',
           permission: 'report:driversGrades',
@@ -58,7 +66,7 @@ export default [
       {
         path: 'gross_profit_pivot',
         name: 'GrossProfitPivot',
-        component: () => import('@/pages/reports/grossProfitPivot'),
+        component: GrossProfitPivot,
         meta: {
           title: 'Отчеты : Валовая прибыль',
           permission: 'report:grossProfit',
@@ -67,7 +75,7 @@ export default [
       {
         path: 'order_docs',
         name: 'OrderDocsReport',
-        component: () => import('@/pages/reports/orderDocs'),
+        component: OrderDocsReport,
         meta: {
           title: 'Отчеты : Документы',
           permission: 'report:orderDocs',
@@ -76,7 +84,7 @@ export default [
       {
         path: 'orders_wo_invoice',
         name: 'OrdersNotIncludedInInvoice',
-        component: () => import('@/pages/reports/ordersWOInvoice'),
+        component: OrdersNotIncludedInInvoice,
         meta: {
           title: 'Отчеты : Рейсы, не включенные в акты',
           permission: 'report:ordersWOInvoice',

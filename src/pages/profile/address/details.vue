@@ -29,7 +29,7 @@
 <script>
 import { watch, ref, getCurrentInstance } from 'vue'
 import { AddressService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { AddressForm } from '@/entities/address'
 import { usePartners } from '@/entities/partner'
 import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'

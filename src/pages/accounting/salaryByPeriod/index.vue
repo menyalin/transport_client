@@ -75,7 +75,7 @@ import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalar
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 const getInitialPeriod = (historyState) => {
   if (historyState.period) return historyState.period

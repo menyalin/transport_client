@@ -1,6 +1,6 @@
-import AuthLayout from './pages/layout'
-import loginPage from './pages/login'
-import registrationPage from './pages/registration'
+import AuthLayout from './pages/layout.vue'
+import loginPage from './pages/login.vue'
+import registrationPage from './pages/registration.vue'
 
 export default [
   {

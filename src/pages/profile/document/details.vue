@@ -16,8 +16,8 @@
   </v-container>
 </template>
 <script>
-import AppDocumentForm from '@/modules/profile/components/documentForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppDocumentForm from '@/modules/profile/components/documentForm/index.vue'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { DocumentService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 

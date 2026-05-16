@@ -1,5 +1,5 @@
-import List from '@/pages/profile/fine/list'
-import Details from '@/pages/profile/fine/details'
+import List from '@/pages/profile/fine/list.vue'
+import Details from '@/pages/profile/fine/details.vue'
 
 const BASE_PATH = 'fines'
 

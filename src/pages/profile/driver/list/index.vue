@@ -76,7 +76,7 @@
 import { ref } from 'vue'
 import { useDriverList } from './useDriverList'
 import { ButtonsPanel, EntityListWrapper, AppTableColumnSetting } from '@/shared/ui'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'DriverList',

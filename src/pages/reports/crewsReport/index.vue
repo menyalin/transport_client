@@ -74,14 +74,14 @@
 <script>
 import dayjs from 'dayjs'
 import { CrewService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { DateRangeInput } from '@/shared/ui'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
 
 import { mapGetters } from 'vuex'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'CrewsReport',

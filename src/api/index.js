@@ -2,8 +2,10 @@ import router from '@/router/index'
 import store from '@/store/index'
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:3000/api',
+  baseURL: API_URL,
   withCredentials: true,
 })
 
@@ -26,11 +28,7 @@ api.interceptors.response.use(
     if (error?.response?.status == 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axios.post(
-          `${process.env.VUE_APP_API_URL}/auth/refresh`,
-          {},
-          { withCredentials: true }
-        )
+        const response = await axios.post(`${API_URL}/auth/refresh`, {}, { withCredentials: true })
         localStorage.setItem('token', `Bearer ${response?.data?.accessToken}`)
         return api.request(originalRequest)
       } catch (e) {

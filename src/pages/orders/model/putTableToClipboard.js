@@ -86,40 +86,45 @@ const _getBasePrice = (prices, agreement) => {
   }
   return agreement.usePriceWithVAT ? res.withVat : res.woVat
 }
-const headers = [
-  { val: 'plannedDate', text: 'Дата' },
-  { val: 'plannedTime', text: 'Время' },
-  { val: 'agreementName', text: 'Соглашение' },
-  { val: 'deliveryPlannedDate', text: 'Дата доставки (План)' },
-  { val: null, text: 'Дата счета' },
-  { val: 'regNum', text: 'Номер ТС' },
-  { val: 'truckKind', text: 'Тип ТС' },
-  { val: 'driverName', text: 'Водитель' },
-  { val: null, text: '№ рейса' },
-  { val: null, text: '№ аукциона' },
-  { val: null, text: '№ заявки' },
-  { val: null, text: '№ ТН' },
-  { val: 'loadingPartners', text: 'Грузоотправитель' },
-  { val: 'loadingAddresses', text: 'Пункты погрузки' },
-  { val: 'unloadingPartners', text: 'Грузополучатель' },
-  { val: 'unloadingAddresses', text: 'Пункты разгрузки' },
-  { val: 'price', text: 'Аукцион' },
-  { val: 'loadArrivalDate', text: 'Дата начала погрузки' },
-  { val: 'loadArrivalTime', text: 'Время начала погрузки' },
-  { val: 'loadDepartureDate', text: 'Дата окончания погрузки' },
-  { val: 'loadDepartureTime', text: 'Время окончания погрузки' },
-  { val: 'unloadArrivalDate', text: 'Дата начала разгрузки' },
-  { val: 'unloadArrivalTime', text: 'Время начала разгрузки' },
-  { val: 'unloadDepartureDate', text: 'Дата окончания разгрузки' },
-  { val: 'unloadDepartureTime', text: 'Время окончания разгрузки' },
-  ...getPriceFields().map((i) => ({ val: i.title, text: i.title })),
-  { val: 'cargoParams.note', text: 'Комментарий к грузу' },
-  { val: 'orderNote', text: 'Комментарий к рейсу' },
-  { val: 'pointNotes', text: 'Комментарии к адресам' },
-]
+
+const getHeaders = () => {
+  const baseHeaders = [
+    { val: 'plannedDate', text: 'Дата' },
+    { val: 'plannedTime', text: 'Время' },
+    { val: 'agreementName', text: 'Соглашение' },
+    { val: 'deliveryPlannedDate', text: 'Дата доставки (План)' },
+    { val: null, text: 'Дата счета' },
+    { val: 'regNum', text: 'Номер ТС' },
+    { val: 'truckKind', text: 'Тип ТС' },
+    { val: 'driverName', text: 'Водитель' },
+    { val: null, text: '№ рейса' },
+    { val: null, text: '№ аукциона' },
+    { val: null, text: '№ заявки' },
+    { val: null, text: '№ ТН' },
+    { val: 'loadingPartners', text: 'Грузоотправитель' },
+    { val: 'loadingAddresses', text: 'Пункты погрузки' },
+    { val: 'unloadingPartners', text: 'Грузополучатель' },
+    { val: 'unloadingAddresses', text: 'Пункты разгрузки' },
+    { val: 'price', text: 'Аукцион' },
+    { val: 'loadArrivalDate', text: 'Дата начала погрузки' },
+    { val: 'loadArrivalTime', text: 'Время начала погрузки' },
+    { val: 'loadDepartureDate', text: 'Дата окончания погрузки' },
+    { val: 'loadDepartureTime', text: 'Время окончания погрузки' },
+    { val: 'unloadArrivalDate', text: 'Дата начала разгрузки' },
+    { val: 'unloadArrivalTime', text: 'Время начала разгрузки' },
+    { val: 'unloadDepartureDate', text: 'Дата окончания разгрузки' },
+    { val: 'unloadDepartureTime', text: 'Время окончания разгрузки' },
+    ...getPriceFields().map((i) => ({ val: i.title, text: i.title })),
+    { val: 'cargoParams.note', text: 'Комментарий к грузу' },
+    { val: 'orderNote', text: 'Комментарий к рейсу' },
+    { val: 'pointNotes', text: 'Комментарии к адресам' },
+  ]
+  return baseHeaders
+}
 
 export default (items) => {
   if (!items.length) return null
+  const headers = getHeaders()
   const res = items.slice().map((row) => {
     const loadPoints = _getPoints({ route: row.route, type: 'loading' })
     const unloadPoints = _getPoints({ route: row.route, type: 'unloading' })

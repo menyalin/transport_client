@@ -1,5 +1,5 @@
-import List from '@/pages/profile/downtime/list'
-import Details from '@/pages/profile/downtime/details'
+import List from '@/pages/profile/downtime/list.vue'
+import Details from '@/pages/profile/downtime/details.vue'
 
 const BASE_PATH = 'downtimes'
 

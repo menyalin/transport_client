@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import AppDetailsZone from '@/pages/profile/zone/details'
+import AppDetailsZone from '@/pages/profile/zone/details.vue'
 
 export default {
   name: 'ZoneAutocomplete',

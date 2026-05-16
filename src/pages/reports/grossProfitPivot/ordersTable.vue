@@ -34,10 +34,10 @@
 </template>
 <script>
 import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
 import useHistorySettings from '@/shared/hooks/useHistorySettings'
 import { ReportService } from '@/shared/services'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'OrdersTable',

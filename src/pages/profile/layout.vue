@@ -11,9 +11,9 @@
   </v-app>
 </template>
 <script>
-import AppAdminBar from '@/modules/common/components/appBar'
-import AppLeftNav from '@/modules/common/components/leftNav'
-import AppSnackbar from '@/modules/common/components/appSnackbar'
+import AppAdminBar from '@/modules/common/components/appBar/index.vue'
+import AppLeftNav from '@/modules/common/components/leftNav/index.vue'
+import AppSnackbar from '@/modules/common/components/appSnackbar/index.vue'
 
 export default {
   name: 'ProfileLayout',

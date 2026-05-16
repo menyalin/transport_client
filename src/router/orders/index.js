@@ -1,4 +1,5 @@
-import Layout from '@/pages/orders/layout'
+import Layout from '@/pages/orders/layout.vue'
+import Schedule from '@/pages/orders/schedule.vue'
 import orderRoutes from './orders'
 
 export default [
@@ -9,7 +10,7 @@ export default [
       {
         path: '/',
         name: 'Schedule',
-        component: () => import('@/pages/orders/schedule'),
+        component: Schedule,
         meta: { title: 'Распределение' },
       },
     ],

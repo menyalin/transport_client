@@ -18,7 +18,7 @@ export class DocxTemplateBuilder {
 
   static async createDocxFile(template, data, filename = 'новый файл') {
     let templateFile
-    const url = process.env.VUE_APP_STATIC_URL + `/templates/${template.file}`
+    const url = import.meta.env.VITE_STATIC_URL + `/templates/${template.file}`
 
     try {
       templateFile = await this._getZipContent(url)

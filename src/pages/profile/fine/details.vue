@@ -21,7 +21,7 @@
 </template>
 <script>
 import { FineForm } from '@/entities/fine'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { FineService } from '@/shared/services'
 import router from '@/router'
 import store from '@/store'

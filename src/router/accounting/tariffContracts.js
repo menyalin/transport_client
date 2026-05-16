@@ -1,10 +1,13 @@
+import TariffContractList from '@/pages/accounting/tariff_contract/list.vue'
+import TariffContractDetails from '@/pages/accounting/tariff_contract/details.vue'
+
 const BASE_PATH = 'tariff_contracts'
 
 export default [
   {
     path: BASE_PATH,
     name: 'TariffContractList',
-    component: () => import('@/pages/accounting/tariff_contract/list'),
+    component: TariffContractList,
     meta: {
       permission: 'tariffContract:readList',
       title: 'Учет : Список контрактов',
@@ -13,7 +16,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'TariffContractCreate',
-    component: () => import('@/pages/accounting/tariff_contract/details'),
+    component: TariffContractDetails,
     props: true,
     meta: {
       permission: 'tariffContract:readItem',
@@ -23,7 +26,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'TariffContractDetails',
-    component: () => import('@/pages/accounting/tariff_contract/details'),
+    component: TariffContractDetails,
     props: true,
     meta: {
       permission: 'tariffContract:readItem',

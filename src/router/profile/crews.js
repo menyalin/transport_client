@@ -1,6 +1,6 @@
-import CrewCreate from '@/pages/profile/crew/crewCreate'
-import CrewList from '@/pages/profile/crew/crewList'
-import CrewDetails from '@/pages/profile/crew/crewDetails'
+import CrewCreate from '@/pages/profile/crew/crewCreate.vue'
+import CrewList from '@/pages/profile/crew/crewList.vue'
+import CrewDetails from '@/pages/profile/crew/crewDetails.vue'
 const BASE_PATH = 'crews'
 
 export default [

@@ -30,7 +30,7 @@ import { IncomingInvoiceListSettings, IncomingInvoiceDataTable } from '@/entitie
 
 import { useListData } from './model/useListData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement/useCarrierAgreements.js'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'PaymentInvoiceList',

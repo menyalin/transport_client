@@ -96,16 +96,16 @@
 import { ref, computed, watch, getCurrentInstance } from 'vue'
 
 import { ButtonsPanel } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
 import { SalaryTariffForm } from '@/entities/salary'
-import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
-import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
+import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones.vue'
+import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions.vue'
 import AppWaitingCell from '@/modules/accounting/components/salaryTariffGroupList/waiting.vue'
 import AppReturnCell from '@/modules/accounting/components/salaryTariffGroupList/return.vue'
 
 import { SalaryTariffService } from '@/shared/services'
 import { useListColumnSetting, usePersistedRef } from '@/shared/hooks'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 
 export default {

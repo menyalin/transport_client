@@ -25,7 +25,7 @@ import { FormWrapper } from '@/shared/ui'
 import { IncomingInvoiceForm } from '@/entities/incomingInvoice'
 import { useItemData } from './model/useItemData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export default {
   name: 'PaymentInvoiceDetails',

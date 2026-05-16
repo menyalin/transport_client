@@ -16,8 +16,8 @@
   </v-container>
 </template>
 <script>
-import AppCityForm from '@/modules/profile/components/cityForm'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppCityForm from '@/modules/profile/components/cityForm/index.vue'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { CityService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 

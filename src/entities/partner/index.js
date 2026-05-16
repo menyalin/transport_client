@@ -1,4 +1,4 @@
-import PartnerForm from './partnerForm'
+import PartnerForm from './partnerForm.vue'
 import { usePartners } from './usePartners'
 import { usePartnerStore } from './usePartnerStore'
 

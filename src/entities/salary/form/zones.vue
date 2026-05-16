@@ -22,7 +22,7 @@
 
 <script>
 import { ref } from 'vue'
-import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete'
+import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
 
 export default {
   name: 'TariffPointsType',

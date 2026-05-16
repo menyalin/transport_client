@@ -37,10 +37,10 @@
 import { computed } from 'vue'
 import socket from '@/socket'
 import { OrderService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner'
+import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useCarrierAgreementStore } from '@/entities/carrierAgreement'
 import { TransportWaybillsInOrderWidget } from '@/widgets/transportWaybillsInOrder'
 

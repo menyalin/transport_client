@@ -1,10 +1,13 @@
+import AgreementList from '@/pages/accounting/agreement/list.vue'
+import AgreementDetails from '@/pages/accounting/agreement/details.vue'
+
 const BASE_PATH = 'agreements'
 
 export default [
   {
     path: BASE_PATH,
     name: 'AgreementList',
-    component: () => import('@/pages/accounting/agreement/list'),
+    component: AgreementList,
     meta: {
       permission: 'agreement:readList',
       title: 'Учет : Список соглашений',
@@ -13,7 +16,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'AgreementCreate',
-    component: () => import('@/pages/accounting/agreement/details'),
+    component: AgreementDetails,
     props: true,
     meta: {
       permission: 'agreement:readItem',
@@ -23,7 +26,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'AgreementDetails',
-    component: () => import('@/pages/accounting/agreement/details'),
+    component: AgreementDetails,
     props: true,
     meta: {
       permission: 'agreement:readItem',

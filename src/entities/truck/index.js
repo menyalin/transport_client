@@ -1,3 +1,3 @@
-import TruckForm from './truckForm'
+import TruckForm from './truckForm.vue'
 
 export { TruckForm }

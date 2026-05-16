@@ -24,7 +24,7 @@ import { ReportTitle } from '@/shared/ui'
 
 import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 export default {
   name: 'OrdersWOInvoice',
   components: {

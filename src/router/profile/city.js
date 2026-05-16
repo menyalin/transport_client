@@ -1,3 +1,6 @@
+import CityList from '@/pages/profile/city/list.vue'
+import CityDetails from '@/pages/profile/city/details.vue'
+
 const BASE_PATH = 'cities'
 const PERMISSION_ITEM_NAME = 'city'
 
@@ -5,7 +8,7 @@ export default [
   {
     path: BASE_PATH,
     name: 'CityList',
-    component: () => import('@/pages/profile/city/list'),
+    component: CityList,
     meta: {
       permission: PERMISSION_ITEM_NAME + ':readList',
     },
@@ -13,7 +16,7 @@ export default [
   {
     path: BASE_PATH + '/create',
     name: 'CityCreate',
-    component: () => import('@/pages/profile/city/details'),
+    component: CityDetails,
     props: true,
     meta: {
       permission: PERMISSION_ITEM_NAME + ':readItem',
@@ -22,7 +25,7 @@ export default [
   {
     path: BASE_PATH + '/:id',
     name: 'CityDetails',
-    component: () => import('@/pages/profile/city/details'),
+    component: CityDetails,
     props: true,
     meta: {
       permission: PERMISSION_ITEM_NAME + ':readItem',

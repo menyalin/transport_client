@@ -1,3 +1,3 @@
-import LinkedUser from './linkedUser'
+import LinkedUser from './linkedUser.vue'
 
 export { LinkedUser }

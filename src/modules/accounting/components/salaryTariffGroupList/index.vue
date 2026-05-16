@@ -56,8 +56,8 @@
 import AppWaitingCell from './waiting.vue'
 import AppAdditionalPointsCell from './additionalPoints.vue'
 import AppReturnCell from './return.vue'
-import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones'
-import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions'
+import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones.vue'
+import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions.vue'
 import AppDirectDistanceZones from './directDistanceZones.vue'
 
 export default {

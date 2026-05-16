@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client'
 
-const URL = process.env.VUE_APP_API_WS_URL || 'http://localhost:3000'
+const URL = import.meta.env.VITE_API_WS_URL || 'http://localhost:3000'
 const socket = io(URL, { autoConnect: false })
 
 socket.onAny((_event, _args) => {

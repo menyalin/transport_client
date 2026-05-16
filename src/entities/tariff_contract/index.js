@@ -1,5 +1,5 @@
 import { useTariffContract } from './useTariffContract'
-import TariffContractForm from './form/tariffContractForm'
+import TariffContractForm from './form/tariffContractForm.vue'
 import TariffContractListSettings from './listSettings.vue'
 import TariffContractListDataTable from './listDataTable.vue'
 

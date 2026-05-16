@@ -14,7 +14,7 @@
   </v-container>
 </template>
 <script>
-import { useCarrierStore } from '@/entities/carrier'
+import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { CrewForm } from '@/entities/crew'
 
 export default {

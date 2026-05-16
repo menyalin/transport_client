@@ -1,6 +1,6 @@
-import TruckCreate from '@/pages/profile/truck/truckCreate'
-import TruckList from '@/pages/profile/truck/truckList'
-import TruckDetails from '@/pages/profile/truck/truckDetails'
+import TruckCreate from '@/pages/profile/truck/truckCreate.vue'
+import TruckList from '@/pages/profile/truck/truckList.vue'
+import TruckDetails from '@/pages/profile/truck/truckDetails.vue'
 
 export default [
   {
