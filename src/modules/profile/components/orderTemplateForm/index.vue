@@ -2,21 +2,19 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="!$store.getters.hasPermission('orderTemplate:write') || isInvalidForm"
+      :disabled-submit="!store.getters.hasPermission('orderTemplate:write') || isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
     <div class="body-wrapper">
-      <v-text-field v-model.trim="$v.form.name.$model" outlined label="Название шаблона" dense />
+      <v-text-field v-model.trim="form.name" label="Название шаблона" />
       <div id="client-row">
         <v-autocomplete
-          v-model="$v.form.client.$model"
+          v-model="form.client"
           :items="clientItems"
-          item-text="name"
+          item-title="name"
           item-value="_id"
           label="Заказчик"
-          outlined
-          dense
           hide-details
           :style="{ 'max-width': '350px' }"
         />
@@ -24,11 +22,9 @@
         <v-select
           v-model="analytics.type"
           label="Тип рейса"
-          :items="$store.getters.orderAnalyticTypes"
+          :items="store.getters.orderAnalyticTypes"
           clearable
           hide-details
-          dense
-          outlined
           :style="{ 'max-width': '180px' }"
         />
       </div>
@@ -51,141 +47,131 @@
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
 
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import { OrderRoute } from '@/entities/order'
 import { ReqTransport, CargoParams } from '@/entities/order'
-import store from '@/store/index'
-export default {
-  name: 'OrderTemplateForm',
-  components: {
-    ButtonsPanel,
 
-    OrderRoute,
-    ReqTransport,
-    CargoParams,
+const props = defineProps({
+  orderTemplate: {
+    type: Object,
   },
-  props: {
-    orderTemplate: {
-      type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    openInModal: {
-      type: Boolean,
-      default: false,
-    },
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
   },
-  setup() {
-    return {
-      clientItems: store.getters.partners.filter((partner) => partner.isClient),
-    }
+  openInModal: {
+    type: Boolean,
+    default: false,
   },
-  data() {
-    return {
-      route: [{ type: 'loading' }, { type: 'unloading' }],
-      cargoParams: {},
-      reqTransport: {},
-      analytics: {
-        type: null,
-      },
-      form: {
-        name: null,
-        client: null,
-        fixedTimeSlots: false,
-      },
-    }
-  },
+})
 
-  computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile']),
-    isInvalidForm() {
-      if (!this.directoriesProfile) return true
-      return this.$v.$invalid || !this.isValidRoute
-    },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
-    },
-    isValidRoute() {
-      if (!this.route || this.route.length === 0) return false
-      const length = this.route.length >= 2
-      const firstPoint = this.route[0]?.type === 'loading'
-      const lastPoint = this.route[this.route.length - 1].type === 'unloading'
-      const hasAddresses = this.route.filter((item) => !!item.address).length === this.route.length
-      return length && firstPoint && lastPoint && hasAddresses
-    },
+const emit = defineEmits(['submit', 'cancel', 'delete'])
 
-    formState() {
-      return {
-        ...this.form,
-        company: this.directoriesProfile,
-        reqTransport: this.reqTransport,
-        route: this.route,
-        cargoParams: this.cargoParams,
-        analytics: this.analytics,
-      }
-    },
-  },
-  watch: {
-    orderTemplate: {
-      immediate: true,
-      handler: function (val) {
-        if (val) this.setFormFields(val)
-      },
-    },
-  },
+const store = useStore()
 
-  validations() {
-    return {
-      form: {
-        name: { required },
-        client: { required },
-      },
-    }
-  },
+const route = ref([{ type: 'loading' }, { type: 'unloading' }])
+const cargoParams = ref({})
+const reqTransport = ref({})
+const analytics = ref({
+  type: null,
+})
+const form = ref({
+  name: null,
+  client: null,
+  fixedTimeSlots: false,
+})
 
-  methods: {
-    submit() {
-      this.$emit('submit', this.formState)
-      this.resetForm()
-    },
-    cancel() {
-      this.resetForm()
-      this.$emit('cancel')
-    },
-    setFormFields(val) {
-      if (val.cargoParams) this.cargoParams = val.cargoParams
-      if (val.reqTransport) this.reqTransport = val.reqTransport
-      if (val.route.length) this.route = val.route
-      if (val.analytics) this.analytics = val.analytics
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        this.form[key] = val[key]
-      })
-    },
-    resetForm() {
-      this.reqTransport = Object.assign({})
-      this.route = []
-      this.cargoParams = Object.assign({})
-      this.analytics = Object.assign({})
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        this.form[key] = null
-      })
-    },
+const rules = {
+  form: {
+    name: { required },
+    client: { required },
   },
 }
+
+const v = useVuelidate(rules, form)
+
+// const myCompanies = computed(() => store.getters.myCompanies)
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+const clientItems = computed(() => store.getters.partners.filter((partner) => partner.isClient))
+
+const isInvalidForm = computed(() => {
+  if (!directoriesProfile.value) return true
+  return v.value.$invalid || !isValidRoute.value
+})
+
+// const directoriesProfileName = computed(() => {
+//   if (!directoriesProfile.value) return null
+//   return myCompanies.value.find((item) => item._id === directoriesProfile.value)?.name
+// })
+
+const isValidRoute = computed(() => {
+  if (!route.value || route.value.length === 0) return false
+  const length = route.value.length >= 2
+  const firstPoint = route.value[0]?.type === 'loading'
+  const lastPoint = route.value[route.value.length - 1].type === 'unloading'
+  const hasAddresses = route.value.filter((item) => !!item.address).length === route.value.length
+  return length && firstPoint && lastPoint && hasAddresses
+})
+
+const formState = computed(() => ({
+  ...form.value,
+  company: directoriesProfile.value,
+  reqTransport: reqTransport.value,
+  route: route.value,
+  cargoParams: cargoParams.value,
+  analytics: analytics.value,
+}))
+
+const submit = () => {
+  emit('submit', formState.value)
+  resetForm()
+}
+
+const cancel = () => {
+  resetForm()
+  emit('cancel')
+}
+
+const setFormFields = (val) => {
+  if (val.cargoParams) cargoParams.value = val.cargoParams
+  if (val.reqTransport) reqTransport.value = val.reqTransport
+  if (val.route?.length) route.value = val.route
+  if (val.analytics) analytics.value = val.analytics
+  const keys = Object.keys(form.value)
+  keys.forEach((key) => {
+    form.value[key] = val[key]
+  })
+}
+
+const resetForm = () => {
+  reqTransport.value = {}
+  route.value = []
+  cargoParams.value = {}
+  analytics.value = {}
+  const keys = Object.keys(form.value)
+  keys.forEach((key) => {
+    form.value[key] = null
+  })
+}
+
+watch(
+  () => props.orderTemplate,
+  (val) => {
+    if (val) setFormFields(val)
+  },
+  { immediate: true }
+)
 </script>
 <style scoped>
 .body-wrapper {

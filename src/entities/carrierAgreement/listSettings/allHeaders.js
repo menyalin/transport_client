@@ -1,14 +1,14 @@
 export default [
   {
     value: 'name',
-    text: 'Наименование',
+    title: 'Наименование',
     sortable: true,
     default: true,
   },
 
   {
     value: 'note',
-    text: 'Примечание',
+    title: 'Примечание',
     sortable: false,
     default: true,
   },

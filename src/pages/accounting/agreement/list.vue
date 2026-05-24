@@ -9,23 +9,22 @@
           @refresh="refresh"
         />
         <AgreementListSettings
-          v-model="settings"
+          v-model:settings="settings"
           :clientItems="clientItems"
           :carrierItems="carrierItems"
         />
 
-        <v-data-table
+        <v-data-table-server
           :headers="headers"
           :items="filteredList"
+          :items-length="count"
           :loading="loading"
+          :page="listOptions.page"
+          :items-per-page="listOptions.itemsPerPage"
+          item-value="_id"
           height="73vh"
-          dense
           fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="listOptions"
+          @update:options="updateListOptionsHandler"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.type`]="{ item }">
@@ -40,7 +39,7 @@
           <template #[`item.endPositionDate`]="{ item }">
             <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>
@@ -67,28 +66,19 @@ export default {
     const loading = ref(false)
     const list = ref([])
     const count = ref(0)
-    const listOptions = usePersistedRef({ page: 1 }, 'agreement_list_options')
+    const listOptions = usePersistedRef({ page: 1, itemsPerPage: 25 }, 'agreement_list_options')
     const settings = usePersistedRef(
-      {
-        search: null,
-        executor: null,
-        clients: [],
-        vatRate: null,
-        state: 'opened',
-      },
+      { search: null, executor: null, clients: [], state: 'opened' },
       'agreement_list_settings'
     )
+
     const queryParams = computed(() => ({
+      ...settings.value,
       company: proxy.$store.getters.directoriesProfile,
-      skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
-      executor: settings.value.executor,
-      clients: settings.value.clients,
-      vatRate: settings.value.vatRate,
-      state: settings.value.state,
-      search: settings.value.search,
       limit: listOptions.value.itemsPerPage,
-      sortBy: listOptions.value.sortBy.length ? listOptions.value.sortBy[0] : null,
-      sortDesc: listOptions.value.sortDesc.length ? listOptions.value.sortDesc[0] : null,
+      skip: (listOptions.value.page - 1) * listOptions.value.itemsPerPage,
+      sortBy: listOptions.value.sortBy?.length ? listOptions.value?.sortBy[0] : null,
+      sortDesc: listOptions.value.sortDesc?.length ? listOptions.value.sortDesc[0] : null,
     }))
 
     async function getData() {
@@ -103,6 +93,10 @@ export default {
         loading.value = false
       }
     }
+    async function updateListOptionsHandler(options) {
+      listOptions.value = options
+      await getData()
+    }
 
     async function refresh() {
       await getData()
@@ -111,19 +105,13 @@ export default {
     watch(
       settings,
       () => {
-        listOptions.value = { ...listOptions.value, page: 1 }
-      },
-      { deep: true }
-    )
-    watch(
-      listOptions,
-      async () => {
-        await getData()
+        updateListOptionsHandler({ ...listOptions.value, page: 1 })
       },
       { deep: true }
     )
 
     return {
+      updateListOptionsHandler,
       loading,
       listOptions,
       clientItems,
@@ -136,31 +124,27 @@ export default {
   },
   data: () => ({
     headers: [
-      { value: 'name', text: 'Название', sortable: false },
+      { key: 'name', title: 'Название', sortable: false },
       {
-        value: 'executorName',
-        text: 'Наименование исполнителя',
+        key: 'executorName',
+        title: 'Наименование исполнителя',
         sortable: false,
       },
-      { value: 'executorCarrierName', text: 'ТК исполнитель', sortable: false },
-      { value: 'clientsName', text: 'Клиенты', sortable: false },
-      { value: 'date', text: 'Дата начала действия', sortable: true },
-      { value: 'endDate', text: 'Дата завершения', sortable: false },
-      { value: 'vatRateText', text: 'НДС', sortable: false },
-      { value: 'note', text: 'Примечание', sortable: false },
+      { key: 'executorCarrierName', title: 'ТК исполнитель', sortable: false },
+      { key: 'clientsName', title: 'Клиенты', sortable: false },
+      { key: 'date', title: 'Дата начала действия', sortable: false },
+      { key: 'endDate', title: 'Дата завершения', sortable: false },
+      { key: 'note', title: 'Примечание', sortable: false },
     ],
   }),
   computed: {
     filteredList() {
       if (!this.list) return []
       return this.list.map((i) => {
-        const vatRateText = this.$store.getters.vatRates.filter((vR) => vR.value === i.vatRate)[0]
-          ?.text
         return {
           ...i,
           date: new Date(i.date).toLocaleDateString(),
           endDate: i.endDate ? new Date(i.endDate).toLocaleDateString() : null,
-          vatRateText,
         }
       })
     },

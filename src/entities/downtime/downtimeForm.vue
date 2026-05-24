@@ -7,16 +7,9 @@
       @submit="submit"
     />
 
-    <v-autocomplete
-      v-model="state.truck"
-      label="Грузовик"
-      :items="truckItems"
-      auto-select-first
-      outlined
-      dense
-    />
-    <v-select v-model="state.type" label="Тип простоя" :items="downtimeTypes" outlined dense />
-    <v-text-field v-model.trim="state.title" outlined label="Заголовок" dense />
+    <v-autocomplete v-model="state.truck" label="Грузовик" :items="truckItems" auto-select-first />
+    <v-select v-model="state.type" label="Тип простоя" :items="downtimeTypes" itemTitle="text" />
+    <v-text-field v-model.trim="state.title" label="Заголовок" />
 
     <AutoCompleteWithActions
       v-if="state.type === 'repair'"
@@ -25,7 +18,6 @@
       label="Партнер"
       :hint="partnerContactsHint"
       :persistentHint="!!partnerContactsHint"
-      outlined
       @create="createPartnerHandler"
       @edit="updatePartnerHandler"
     />
@@ -35,7 +27,6 @@
       :items="serviceAdressItems"
       v-model="state.address"
       label="Адрес сервиса"
-      outlined
       @create="createAddressHandler"
       @edit="updateAddressHandler"
     />
@@ -45,8 +36,6 @@
         v-model="state.startPositionDate"
         label="Дата начала"
         type="datetime-local"
-        outlined
-        dense
         :style="{ 'max-width': '200px' }"
       />
       <DateTimeInput
@@ -54,15 +43,13 @@
         label="Дата завешения"
         type="datetime-local"
         :minDate="state.startPositionDate"
-        outlined
-        dense
         :style="{ 'max-width': '200px' }"
       />
     </div>
-    <v-text-field v-model="state.note" label="Примечание" outlined hide-details dense />
+    <v-text-field v-model="state.note" label="Примечание" hide-details />
     <v-checkbox v-model="state.inOrderTime" label="Разрешить пересечение с рейсом" />
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

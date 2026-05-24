@@ -13,7 +13,7 @@
     >
       Закрыть
     </span>
-    <div class="caption red--text" v-if="!isValidNewDate">
+    <div class="text-caption text-red" v-if="!isValidNewDate">
       <b>Дата начала должна быть больше {{ crewLastDateStr }}</b>
     </div>
     <div>
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     async goto() {
-      const res = await this.$confirm('Вы уверены? информация на странице будет потеряна')
+      const res = await confirm('Вы уверены? информация на странице будет потеряна')
       if (res)
         this.$router.push({
           name: 'CrewDetails',

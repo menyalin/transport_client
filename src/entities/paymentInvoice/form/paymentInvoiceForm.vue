@@ -31,33 +31,29 @@
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
           :disabled="disabledMainFields"
           :items="clientItems"
           @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
+          @update:model-value="changeClientHandler"
           :style="{ minWidth: '400px' }"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
           :disabled="!state.client || disabledMainFields"
           :items="agreementItems"
           @blur="v$.client.$touch"
           :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
+          @update:model-value="changeAgreementHandler"
           :style="{ minWidth: '400px' }"
         />
 
@@ -65,9 +61,7 @@
           label="Статус"
           v-model="state.status"
           :items="statusItems"
-          dense
-          outlined
-          @change="changeStatusHandler"
+          @update:model-value="changeStatusHandler"
         />
         <v-btn v-if="showSendInvoiceBtn" color="primary" @click="sendInvoiceBtnHandler('sendDate')">
           Отправлено клиенту
@@ -80,67 +74,37 @@
         </v-btn>
       </div>
       <div class="fields-row">
-        <v-text-field
-          label="Номер реестра клиента"
-          v-model.trim="state.numberByClient"
-          dense
-          outlined
-        />
-        <DateTimeInput
-          label="Дата реестра клиента"
-          v-model="state.dateByClient"
-          dense
-          outlined
-          type="date"
-        />
+        <v-text-field label="Номер реестра клиента" v-model.trim="state.numberByClient" />
+        <DateTimeInput label="Дата реестра клиента" v-model="state.dateByClient" type="date" />
       </div>
       <div class="fields-row">
-        <v-text-field label="Номер акта" v-model.trim="state.number" dense outlined />
+        <v-text-field label="Номер акта" v-model.trim="state.number" />
         <DateTimeInput
           label="Дата акта"
           v-model="state.date"
-          dense
-          outlined
           type="date"
           :disabled="isActDateDisabled"
         />
       </div>
 
       <div class="fields-row">
-        <DateTimeInput
-          readonly
-          label="Дата отправки"
-          v-model="state.sendDate"
-          dense
-          outlined
-          type="date"
-        />
-        <DateTimeInput
-          label="Плановая дата оплаты"
-          v-model="state.plannedPayDate"
-          dense
-          outlined
-          type="date"
-        />
-        <DateTimeInput
-          readonly
-          label="Дата оплаты"
-          v-model="state.payDate"
-          dense
-          outlined
-          type="date"
-        />
+        <DateTimeInput readonly label="Дата отправки" v-model="state.sendDate" type="date" />
+        <DateTimeInput label="Плановая дата оплаты" v-model="state.plannedPayDate" type="date" />
+        <DateTimeInput readonly label="Дата оплаты" v-model="state.payDate" type="date" />
       </div>
 
       <v-alert v-if="isNeedSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
-      <v-dialog v-model="showDateDialog" persistent max-width="400">
+      <v-dialog
+        :model-value="showDateDialog"
+        @update:model-value="showDialog = $event"
+        persistent
+        max-width="400"
+      >
         <v-card>
           <v-card-title>{{ dateDialogTitle }}</v-card-title>
-          <v-card-text>
-            <DateTimeInput label="Укажите дату" v-model="dialogFieldData" type="date" outlined />
-          </v-card-text>
+          <v-card-text />
           <v-card-actions>
             <v-spacer />
             <v-btn @click="cancelDialog">Отмена</v-btn>
@@ -158,14 +122,7 @@
       >
         Подобрать рейсы
       </v-btn>
-      <v-text-field
-        v-model="state.note"
-        label="Примечание"
-        dense
-        outlined
-        @blur="v$.note.$touch"
-        hide-details
-      />
+      <v-text-field v-model="state.note" label="Примечание" @blur="v$.note.$touch" hide-details />
     </div>
   </div>
 </template>

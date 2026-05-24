@@ -1,24 +1,20 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="preparedItems"
-    dense
     :headers="headers"
+    fixed-header
     :loading="loading"
-    :serverItemsLength="statisticData.count"
+    :items-length="statisticData.count"
     height="72vh"
     show-group-by
-    fixed-header
-    :listOptions="listOptions"
+    :items-per-page-options="[50, 100, 300]"
     @update:options="updateListOptions"
-    :footer-props="{
-      'items-per-page-options': [50, 100, 300],
-    }"
     @dblclick:row="dblClickRow"
   >
     <template #[`footer.prepend`]>
       <ReportStatisticData :data="statisticData" />
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script>

@@ -5,10 +5,10 @@
       <b>Рейсы: {{ total }}</b>
     </div>
     <div>
-      <b class="green--text">Приняты: {{ accepted }} </b><br />
-      <b class="orange--text">На исправлении: {{ needFix }}</b> <br />
-      <b class="red--text">На проверке: {{ onCheck }} </b><br />
-      <b class="red--text">Не получены: {{ missing }} </b><br />
+      <b class="text-green">Приняты: {{ accepted }} </b><br />
+      <b class="text-orange">На исправлении: {{ needFix }}</b> <br />
+      <b class="text-red">На проверке: {{ onCheck }} </b><br />
+      <b class="text-red">Не получены: {{ missing }} </b><br />
     </div>
   </div>
 </template>

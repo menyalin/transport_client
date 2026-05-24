@@ -1,17 +1,13 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :headers="headers"
     :items="items"
     :loading="loading"
     height="70vh"
-    dense
     fixed-header
-    :footer-props="{
-      'items-per-page-options': [50, 100, 200],
-    }"
-    :options="settings.listOptions"
-    :server-items-length="totalCount"
-    @update:options="updateListOptionsHandler"
+    :items-per-page-options="[50, 100, 200]"
+    v-model:options="settings.listOptions"
+    :items-length="totalCount"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.createdAt`]="{ item }">
@@ -22,7 +18,7 @@
         {{ item.note }}
       </span>
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script>
@@ -42,14 +38,11 @@ export default {
     headers: Array,
     loading: Boolean,
   },
-  setup(props, ctx) {
+  setup(props, _ctx) {
     const listOptions = ref(props.settings?.listOptions || {})
 
     function dblClickRow(_event, { item }) {
       router.push(`docsRegistry/${item._id}`)
-    }
-    function updateListOptionsHandler(options) {
-      ctx.emit('update:listOptions', { ...options })
     }
 
     // watch(
@@ -68,7 +61,6 @@ export default {
     return {
       dblClickRow,
       listOptions,
-      updateListOptionsHandler,
     }
   },
 }

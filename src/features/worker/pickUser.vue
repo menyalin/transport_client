@@ -2,9 +2,7 @@
   <div>
     <v-text-field
       v-model="emailStr"
-      dense
       label="Поиск пользователя по EMAIL"
-      outlined
       clearable
       :disabled="loading"
       :loading="loading"

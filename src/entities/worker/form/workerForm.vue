@@ -3,7 +3,7 @@
     <buttons-panel
       panel-type="form"
       :disabledSubmit="
-        !$store.getters.hasPermission('worker:write') || isInvalidForm || !formChanged
+        !store.getters.hasPermission('worker:write') || isInvalidForm || !formChanged
       "
       class="mb-4"
       @cancel="cancel"
@@ -12,27 +12,21 @@
 
     <div class="input-row">
       <v-text-field
-        v-model.trim="$v.form.name.$model"
+        v-model.trim="form.name"
         :error-messages="nameErrors"
-        outlined
         label="Сокращенное имя"
-        dense
         :style="{ 'max-width': '330px' }"
       />
       <v-text-field
-        v-model.trim="$v.form.fullName.$model"
+        v-model.trim="form.fullName"
         :error-messages="fullNameErrors"
-        outlined
         label="Полное имя"
-        dense
       />
     </div>
     <div class="input-row">
       <v-text-field
         v-model="form.employmentDate"
         type="date"
-        dense
-        outlined
         label="Дата приема на работу"
         :style="{ 'max-width': '260px' }"
       />
@@ -40,143 +34,144 @@
       <v-text-field
         v-model="form.dismissalDate"
         type="date"
-        dense
-        outlined
         label="Дата увольнения"
         :style="{ 'max-width': '260px' }"
       />
     </div>
 
-    <v-text-field v-model.trim="$v.form.position.$model" outlined label="Должность" dense />
+    <v-text-field v-model.trim="form.position" label="Должность" />
 
-    <v-text-field v-model.trim="form.note" outlined label="Примечание" dense />
+    <v-text-field v-model.trim="form.note" label="Примечание" />
 
     <div v-if="!item._id" class="text-caption mx-3">
       *Для сопоставления сотрудника с пользователем, запись необходимо сохранить
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
-<script>
+
+<script setup>
 import dayjs from 'dayjs'
-import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { ref, computed, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 
-export default {
-  name: 'WorkerForm',
-  components: {
-    ButtonsPanel,
+const props = defineProps({
+  item: {
+    type: Object,
   },
-  props: {
-    item: {
-      type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    openInModal: {
-      type: Boolean,
-      default: false,
-    },
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
   },
+  openInModal: {
+    type: Boolean,
+    default: false,
+  },
+})
 
-  data() {
-    return {
-      initialFormState: null,
-      dateFields: ['dismissalDate', 'employmentDate'],
-      form: {
-        name: null,
-        fullName: null,
-        position: null,
-        note: null,
-        employmentDate: null, // дата приема на работу
-        dismissalDate: null, // дата увольнения
-      },
-    }
-  },
+const emit = defineEmits(['submit', 'cancel', 'delete'])
 
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-    isInvalidForm() {
-      if (!this.directoriesProfile) return true
-      return this.$v.$invalid
-    },
+const store = useStore()
 
-    nameErrors() {
-      const errors = []
-      if (this.$v.form.name.$dirty && this.$v.form.name.$invalid)
-        errors.push('Имя не может быть пустым')
-      return errors
-    },
+const initialFormState = ref(null)
+const dateFields = ['dismissalDate', 'employmentDate']
+const form = ref({
+  name: null,
+  fullName: null,
+  position: null,
+  note: null,
+  employmentDate: null,
+  dismissalDate: null,
+})
 
-    fullNameErrors() {
-      const errors = []
-      if (this.$v.form.fullName.$dirty && this.$v.form.fullName.$invalid)
-        errors.push('Полное имя не может быть пустым')
-      return errors
-    },
-
-    formState() {
-      const dates = {}
-      this.dateFields.forEach((item) => {
-        dates[item] = this.form[item] ? dayjs(this.form[item]).toISOString() : null
-      })
-      return { ...this.form, company: this.directoriesProfile, ...dates }
-    },
-    formChanged() {
-      return JSON.stringify(this.formState) !== this.initialFormState
-    },
-  },
-  watch: {
-    item: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        if (val) this.setFormFields(val)
-      },
-    },
-  },
-
-  validations: {
-    form: {
-      name: { required },
-      fullName: { required },
-      position: {},
-    },
-  },
-  mounted() {
-    this.initialFormState = JSON.stringify(this.formState)
-  },
-  methods: {
-    submit() {
-      this.$emit('submit', this.formState)
-      this.resetForm()
-    },
-    cancel() {
-      this.resetForm()
-      this.$emit('cancel')
-    },
-    setFormFields(val) {
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        if (this.dateFields.includes(key) && !!val[key]) {
-          this.form[key] = dayjs(val[key]).format('YYYY-MM-DD')
-        } else this.form[key] = val[key]
-      })
-    },
-    resetForm() {
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        this.form[key] = null
-      })
-    },
+const rules = {
+  form: {
+    name: { required },
+    fullName: { required },
+    position: {},
   },
 }
+
+const v = useVuelidate(rules, form)
+
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
+const isInvalidForm = computed(() => {
+  if (!directoriesProfile.value) return true
+  return v.value.$invalid
+})
+
+const nameErrors = computed(() => {
+  const errors = []
+  if (v.value.form.name.$dirty && v.value.form.name.$invalid)
+    errors.push('Имя не может быть пустым')
+  return errors
+})
+
+const fullNameErrors = computed(() => {
+  const errors = []
+  if (v.value.form.fullName.$dirty && v.value.form.fullName.$invalid)
+    errors.push('Полное имя не может быть пустым')
+  return errors
+})
+
+const formState = computed(() => {
+  const dates = {}
+  dateFields.forEach((item) => {
+    dates[item] = form.value[item] ? dayjs(form.value[item]).toISOString() : null
+  })
+  return { ...form.value, company: directoriesProfile.value, ...dates }
+})
+
+const formChanged = computed(() => {
+  return JSON.stringify(formState.value) !== initialFormState.value
+})
+
+const submit = () => {
+  emit('submit', formState.value)
+  resetForm()
+}
+
+const cancel = () => {
+  resetForm()
+  emit('cancel')
+}
+
+const setFormFields = (val) => {
+  const keys = Object.keys(form.value)
+  keys.forEach((key) => {
+    if (dateFields.includes(key) && !!val[key]) {
+      form.value[key] = dayjs(val[key]).format('YYYY-MM-DD')
+    } else {
+      form.value[key] = val[key]
+    }
+  })
+}
+
+const resetForm = () => {
+  const keys = Object.keys(form.value)
+  keys.forEach((key) => {
+    form.value[key] = null
+  })
+}
+
+watch(
+  () => props.item,
+  (val) => {
+    if (val) setFormFields(val)
+  },
+  { immediate: true, deep: true }
+)
+
+onMounted(() => {
+  initialFormState.value = JSON.stringify(formState.value)
+})
 </script>
 <style scoped>
 .input-row {

@@ -120,8 +120,7 @@ export default {
     }
 
     const confirmDelete = () => {
-      // В реальном приложении здесь можно использовать $confirm или другой диалог
-      return window.confirm('Уверены, что хотите удалить это напоминание?')
+      return confirm('Уверены, что хотите удалить это напоминание?')
     }
 
     return {

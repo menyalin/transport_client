@@ -1,5 +1,10 @@
 <template>
-  <v-select v-bind="$attrs" :value="value" :items="items" @change="changeHandler" />
+  <v-select
+    v-bind="$attrs"
+    :model-value="value"
+    :items="items"
+    @update:model-value="changeHandler"
+  />
 </template>
 <script>
 import { ref } from 'vue'

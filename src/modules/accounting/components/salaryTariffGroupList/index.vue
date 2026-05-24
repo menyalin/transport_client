@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense>
+    <v-table>
       <template #default>
         <thead>
           <tr>
@@ -42,14 +42,14 @@
 
             <td>{{ item.note }}</td>
             <td class="text-right">
-              <v-btn small icon @click="removeHandler(ind)">
-                <v-icon small color="red"> mdi-delete </v-icon>
+              <v-btn size="small" icon @click="removeHandler(ind)">
+                <v-icon size="small" color="red"> mdi-delete </v-icon>
               </v-btn>
             </td>
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </div>
 </template>
 <script>

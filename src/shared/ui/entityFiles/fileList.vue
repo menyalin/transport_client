@@ -19,19 +19,19 @@
     </template>
     <template #[`item.size`]="{ item }">
       <span v-if="item.size">{{ formatSize(item.size) }}</span>
-      <span v-else class="grey--text">~</span>
+      <span v-else class="text-grey">~</span>
     </template>
     <template #[`item.uploadDate`]="{ item }">
       <span v-if="item.uploadDate">{{ formatDate(item.uploadDate) }}</span>
-      <span v-else class="grey--text">~</span>
+      <span v-else class="text-grey">~</span>
     </template>
 
     <template #[`item.actions`]="{ item }">
       <div class="actions-wrapper">
-        <v-icon color="primary" small @click="downloadItemHandler(item)">
+        <v-icon color="primary" size="small" @click="downloadItemHandler(item)">
           {{ 'mdi-download' }}
         </v-icon>
-        <v-icon color="red" small @click="removeItemHandler(item)">
+        <v-icon color="red" size="small" @click="removeItemHandler(item)">
           {{ 'mdi-delete' }}
         </v-icon>
       </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
 import { useEntityFileHelpers } from './utils/useEntityFileHelpers'
 export default {
   name: 'FileList',
@@ -61,7 +61,6 @@ export default {
     },
   },
   setup(_props, ctx) {
-    const { proxy } = getCurrentInstance()
     const { formatSize, formatDate, mimeTypeToIcon } = useEntityFileHelpers()
     const updateNoteHandler = (item) => {
       ctx.emit('updateNote', item)
@@ -76,8 +75,7 @@ export default {
     ])
 
     const removeItemHandler = async (item) => {
-      console.log(item.origianlName)
-      const res = await proxy.$confirm(`<b>Удалить?</b> <br/> файл: ${item.originalName}`)
+      const res = confirm(`<b>Удалить?</b> <br/> файл: ${item.originalName}`)
       if (res) ctx.emit('remove', item.key)
     }
 

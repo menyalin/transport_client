@@ -1,14 +1,12 @@
 <template>
-  <v-app>
-    <app-bar />
-    <v-main>
-      <div class="layout">
-        <app-left-nav :items="navButtons" />
-        <router-view />
-      </div>
-      <app-snackbar />
-    </v-main>
-  </v-app>
+  <app-bar />
+  <v-main>
+    <div class="layout">
+      <app-left-nav :items="navButtons" />
+      <router-view />
+    </div>
+    <app-snackbar />
+  </v-main>
 </template>
 <script>
 import AppBar from '@/modules/common/components/appBar/index.vue'

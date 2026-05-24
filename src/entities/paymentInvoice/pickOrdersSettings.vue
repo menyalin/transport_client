@@ -14,23 +14,19 @@
     />
 
     <v-autocomplete
-      :value="settings.truck"
-      dense
+      :model-value="settings.truck"
       clearable
       auto-select-first
       :items="trucks"
-      outlined
       hide-details
       label="Грузовик"
       :style="{ 'max-width': '200px' }"
-      @change="changeHandler($event, 'truck')"
+      @update:model-value="changeHandler($event, 'truck')"
     />
 
     <v-text-field
-      :value="settings.search"
-      dense
+      :model-value="settings.search"
       clearable
-      outlined
       hide-details
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
@@ -40,27 +36,23 @@
       :value="settings.docStatuses"
       multiple
       label="Документы"
-      dense
       hide-details
-      outlined
       clearable
       :style="{ 'max-width': '400px' }"
       @change="changeHandler($event, 'docStatuses')"
     />
     <v-autocomplete
-      :value="settings.loadingZones"
+      :model-value="settings.loadingZones"
       :items="loadingZoneItems"
       label="Зоны погрузки"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
       auto-select-first
-      dense
       hide-details
-      outlined
       clearable
       :style="{ 'max-width': '500px' }"
-      @change="changeHandler($event, 'loadingZones')"
+      @update:model-value="changeHandler($event, 'loadingZones')"
     />
   </div>
 </template>

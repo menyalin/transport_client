@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert type="error" dismissible v-model="showError" transition="scale-transition">
+        <v-alert type="error" closable v-model="showError">
           {{ errorMessage }}
         </v-alert>
         <app-load-spinner v-if="loading" />
@@ -92,7 +92,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
+      const res = confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           await FineService.deleteById(this.id)

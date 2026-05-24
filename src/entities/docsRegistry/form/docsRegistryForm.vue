@@ -8,70 +8,61 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <v-btn small @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
+      <v-btn size="small" @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
     </buttons-panel>
     <div id="form">
       <div id="fields-row">
         <v-text-field
           v-if="state.number"
           label="Номер"
-          :value="state.number"
+          :model-value="state.number"
           readonly
-          dense
-          outlined
           :style="{ maxWidth: '100px' }"
         />
         <v-select
           label="Статус"
           v-model="state.status"
           :items="statusItems"
-          dense
-          outlined
+          itemTitle="text"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
           v-model="state.client"
           label="Клиент"
-          dense
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
           :disabled="disabledMainFields"
           :items="clientItems"
           :style="{ maxWidth: '300px' }"
           @blur="v$.client.$touch"
           :error-messages="clientErrorMessages"
-          @change="changeClientHandler"
+          @update:model-value="changeClientHandler"
         />
         <v-select
           v-model="state.agreement"
           label="Соглашение"
-          dense
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
+          itemTitle="text"
           clearable
-          outlined
           :disabled="disabledAgreements || disabledMainFields"
           :loading="loadingAgreements"
           :items="agreementItems"
           :style="{ maxWidth: '300px' }"
           @blur="v$.agreement.$touch"
           :error-messages="agreementErrorMessages"
-          @change="changeAgreementHandler"
+          @update:model-value="changeAgreementHandler"
         />
 
         <v-select
           label="Площадка"
           v-model="state.placeForTransferDocs"
-          dense
           required
           clearable
-          item-text="title"
           item-value="address"
-          outlined
           :disabled="!placeItems || placeItems.length === 0 || disabledMainFields"
           :items="placeItems"
           :style="{ maxWidth: '300px' }"
@@ -92,7 +83,7 @@
         Подобрать рейсы
       </v-btn>
 
-      <v-text-field v-model="state.note" label="Примечание" dense outlined @blur="v$.note.$touch" />
+      <v-text-field v-model="state.note" label="Примечание" @blur="v$.note.$touch" />
     </div>
   </div>
 </template>

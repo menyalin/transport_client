@@ -1,51 +1,46 @@
 <template>
-  <v-dialog :value="dialog" max-width="800" @input="closeDialog" persistent>
+  <v-dialog :model-value="dialog" max-width="800" @update:model-value="closeDialog" persistent>
     <v-card>
       <v-card-title class="text-h5">{{ dialogTitle }}</v-card-title>
       <form @submit.prevent="submitHandler">
         <v-card-text class="form-wrapper">
           <v-autocomplete
             label="Клиент"
-            outlined
-            dense
             v-model="state.client"
             :items="clientItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
 
           <v-autocomplete
             label="Соглашение"
-            outlined
-            dense
             v-model="state.agreement"
             :items="agreements"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
           <div class="row-sum">
             <v-text-field
               label="Сумма"
-              outlined
-              dense
               :disabled="sumFieldIsDisabled"
               v-model.number="state.sum"
               :style="{ maxWidth: '200px' }"
             />
             <v-checkbox
               label="Сумма с НДС"
-              dense
               :disabled="vatCheckboxIsDisabled"
               v-model="state.sumWithVAT"
             />
           </div>
-          <v-text-field label="Примечание" outlined dense v-model.trim="state.note" />
+          <v-text-field label="Примечание" v-model.trim="state.note" />
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" text @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" text type="submit" :disabled="invalidForm"> Добавить </v-btn>
+          <v-btn color="primary" variant="text" @click="closeDialog"> Отмена </v-btn>
+          <v-btn color="primary" variant="text" type="submit" :disabled="invalidForm">
+            Добавить
+          </v-btn>
         </v-card-actions>
       </form>
     </v-card>

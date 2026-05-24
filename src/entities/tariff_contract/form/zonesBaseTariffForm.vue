@@ -24,7 +24,7 @@
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
             v-model="form.loadingZone"
           />
@@ -34,7 +34,7 @@
             multiple
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
             v-model="form.unloadingZones"
             hint="Важна последовательность зон"

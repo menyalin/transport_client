@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
     <div v-if="showTitle" class="text-h6">Банковские реквизиты:</div>
-    <v-text-field label="Расчетный счет" v-model="state.accountNumber" dense />
-    <v-text-field label="Банк" v-model="state.bankName" dense />
-    <v-text-field label="БИК" v-model="state.bankCode" dense />
-    <v-text-field label="Корр.счет" v-model="state.correspondentAccount" dense />
+    <v-text-field label="Расчетный счет" v-model="state.accountNumber" />
+    <v-text-field label="Банк" v-model="state.bankName" />
+    <v-text-field label="БИК" v-model="state.bankCode" />
+    <v-text-field label="Корр.счет" v-model="state.correspondentAccount" />
   </div>
 </template>
 <script>

@@ -2,13 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
         <app-load-spinner v-if="loading" />
@@ -177,7 +171,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
+      const res = confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           this.loading = true

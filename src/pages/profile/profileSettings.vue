@@ -8,12 +8,13 @@
           <h4>Выбрать профиль компании:</h4>
           <v-select
             class="ma-4"
-            solo
-            :value="directoriesProfile"
+            :model-value="directoriesProfile"
             :items="companies"
             clearable
+            itemTitle="text"
             label="Профиль компании"
-            @change="changeDirectoriesProfile"
+            @update:model-value="changeDirectoriesProfile"
+            max-width="500px"
           />
         </div>
       </v-col>
@@ -22,8 +23,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import AppCompanyInvites from '@/widgets/companyInvites/index.vue' // TODO: переместить в entity
-import AppUserInfo from '@/widgets/userInfo/index.vue' // TODO: переместить в entity
+import AppCompanyInvites from '@/widgets/companyInvites/index.vue'
+import AppUserInfo from '@/widgets/userInfo/index.vue'
 
 export default {
   name: 'ProfileSettingsPage',

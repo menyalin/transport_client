@@ -6,38 +6,34 @@
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
-        :value="state.truck"
+        :model-value="state.truck"
         label="Грузовик"
         :loading="loading"
-        dense
         :clearable="!confirmed"
         :readonly="truckReadOnly"
         :items="trucks"
-        outlined
         hide-details
-        @change="changeTruckHandler"
+        @update:model-value="changeTruckHandler"
       />
       <v-autocomplete
         label="Водитель"
-        :value="state.driver"
+        :model-value="state.driver"
         :items="drivers"
         readonly
         hide-details
-        dense
-        outlined
       />
       <v-autocomplete
         label="Прицеп"
-        :value="state.trailer"
+        :model-value="state.trailer"
         :items="trailers"
         readonly
-        dense
         hide-details
-        outlined
       />
-      <v-btn text small color="primary" @click="copyHandler"> Скопировать данные </v-btn>
+      <v-btn variant="text" size="small" color="primary" @click="copyHandler">
+        Скопировать данные
+      </v-btn>
     </div>
-    <v-alert v-if="crewEmptyError" type="error" dense outlined :style="{ maxWidth: '400px' }">
+    <v-alert v-if="crewEmptyError" type="error" :style="{ maxWidth: '400px' }">
       Экипаж не задан
     </v-alert>
     <div v-if="showOutsourceAgreementRow" class="outsource-agreement-row ml-4">
@@ -52,10 +48,10 @@
       </small>
       <v-btn
         v-if="allowChangeOutsourceAgreement"
-        small
+        size="small"
         color="primary"
         @click="changeOutsourceAgreementHandler"
-        text
+        variant="text"
       >
         Изменить соглашение
       </v-btn>

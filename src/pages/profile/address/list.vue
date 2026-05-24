@@ -17,7 +17,6 @@
           fixed-header
           :options.sync="settings.listOptions"
           height="72vh"
-          dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"
@@ -79,8 +78,6 @@
               />
               <v-text-field
                 v-model="settings.search"
-                outlined
-                dense
                 hide-details
                 clearable
                 label="Быстрый поиск"

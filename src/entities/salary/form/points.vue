@@ -2,22 +2,18 @@
   <div id="points-wrapper">
     <v-autocomplete
       ref="loadingEl"
-      :value="points.loading"
+      :model-value="points.loading"
       :items="loadingAddressItems"
       label="Погрузка"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'loading')"
+      @update:model-value="changeHandler($event, 'loading')"
     />
     <v-autocomplete
-      :value="points.unloading"
+      :model-value="points.unloading"
       :items="unloadingAddressItems"
       label="Разгрузка"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'unloading')"
+      @update:model-value="changeHandler($event, 'unloading')"
     />
   </div>
 </template>

@@ -2,41 +2,36 @@
   <v-navigation-drawer permanent>
     <v-list>
       <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6 center">
-            {{ user ? user.name : null }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ user ? user.email : null }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
+        <v-list-item-title class="text-h6 center">
+          {{ user ? user.name : null }}
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          {{ user ? user.email : null }}
+        </v-list-item-subtitle>
       </v-list-item>
     </v-list>
     <v-divider />
-    <v-list nav dense>
-      <v-list-item-group v-model="selectedItem" color="primary">
-        <v-badge
-          v-for="item in menuItems"
-          :key="item.link"
-          color="error"
-          :content="item.badge ? item.badge : null"
-          :value="item.badge ? item.badge : null"
-          :style="{ width: '100%' }"
-          offset-x="20"
-          offset-y="10"
-          overlap
-          bordered
+    <v-list selected-color="primary" nav>
+      <v-badge
+        v-for="item in menuItems"
+        :key="item.link"
+        color="error"
+        :content="item.badge"
+        :model-value="!!item.badge"
+        offset-x="20"
+        offset-y="10"
+        bordered
+      >
+        <v-list-item
+          :to="item.link"
+          :prepend-icon="item.icon"
+          :active="selectedItem === item.link"
+          :value="item.link"
+          @click="selectedItem = item.link"
         >
-          <v-list-item :to="item.link">
-            <v-list-item-icon>
-              <v-icon v-text="item.icon" />
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.text" />
-            </v-list-item-content>
-          </v-list-item>
-        </v-badge>
-      </v-list-item-group>
+          <v-list-item-title v-text="item.text" />
+        </v-list-item>
+      </v-badge>
     </v-list>
   </v-navigation-drawer>
 </template>

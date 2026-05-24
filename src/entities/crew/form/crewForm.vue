@@ -11,12 +11,10 @@
       <v-autocomplete
         v-model="state.tkName"
         :items="carrierItems"
-        item-text="name"
+        item-title="name"
         auto-select-first
         item-value="_id"
         label="ТК"
-        dense
-        outlined
         :disabled="!!crewId"
         :style="{ maxWidth: '300px' }"
       />
@@ -24,22 +22,19 @@
         v-model="state.onlyCarrierItems"
         label="Только водители ТК"
         :disabled="!!crewId || !!state.driver"
-        dense
-        outlined
-        @change="changeOnlyCarrierItemsHandler"
+        @update:model-value="changeOnlyCarrierItemsHandler"
       />
     </div>
 
     <v-autocomplete
       v-model="state.driver"
-      outlined
       clearable
       auto-select-first
       label="Водитель"
       class="mb-2"
       :items="driverItems"
       item-value="_id"
-      item-text="fullName"
+      item-title="fullName"
       :disabled="!state.tkName || !!crewId"
       :style="{ maxWidth: '600px' }"
     />
@@ -50,11 +45,9 @@
         label="Дата начала"
         :errorMessages="startDateError"
         :disabled="!state.driver || !!crewId"
-        dense
-        outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
-        @change="changeStartDateHandler"
+        @update:model-value="changeStartDateHandler"
       />
       <DateTimeInput
         v-model="state.endDate"
@@ -62,8 +55,6 @@
         label="Дата завершения"
         :errorMessages="endDateError"
         @blur="v$.endDate.$touch"
-        dense
-        outlined
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
       />
@@ -72,7 +63,7 @@
         @click="returnToWorkHandler"
         class="mx-2"
         color="primary"
-        text
+        variant="text"
       >
         Вернуть экипаж в работу
       </v-btn>
@@ -96,7 +87,7 @@
       :crewStartDate="state.startDate"
     />
 
-    <v-text-field v-model="state.note" label="Примечание" outlined dense class="mt-6" />
+    <v-text-field v-model="state.note" label="Примечание" class="mt-6" />
     <div v-if="crew && crew.manager" class="pb-4 text-caption">
       Отв.пользователь: {{ crew.manager.name }},
       {{ crew.manager.email }}
@@ -105,7 +96,7 @@
       <span v-if="crew.updatedAt"> Обновлен: {{ new Date(crew.updatedAt).toLocaleString() }} </span>
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

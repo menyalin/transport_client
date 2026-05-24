@@ -6,9 +6,8 @@
         v-model="tks"
         :items="carrierStore.carriers"
         label="ТК"
-        dense
         multiple
-        item-text="name"
+        item-title="name"
         item-value="_id"
         clearable
         hide-details
@@ -20,10 +19,9 @@
         v-model="driver"
         :items="drivers"
         item-value="_id"
-        item-text="fullName"
+        item-title="fullName"
         hide-details
         auto-select-first
-        dense
         clearable
         :style="{ maxWidth: '300px' }"
       />
@@ -31,7 +29,6 @@
         v-model="clients"
         :items="clientItems"
         label="Клиент"
-        dense
         hide-details
         multiple
         :style="{ 'max-width': '250px' }"
@@ -40,7 +37,6 @@
         v-model="consigneeType"
         :items="$store.getters.partnerGroups"
         label="Тип грузополучателя"
-        dense
         clearable
         hide-details
         :style="{ 'max-width': '250px' }"
@@ -49,7 +45,6 @@
         v-model="orderType"
         :items="$store.getters.orderAnalyticTypes"
         label="Тип рейса"
-        dense
         clearable
         hide-details
         :style="{ 'max-width': '200px' }"

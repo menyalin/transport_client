@@ -13,7 +13,6 @@
       :loading="loading"
       fixed-header
       height="71vh"
-      dense
       :footer-props="{
         'items-per-page-options': [50, 100, 200],
       }"
@@ -29,45 +28,29 @@
           />
           <v-select
             v-model="listSettings.tkNameFilter"
-            dense
-            outlined
             hide-details
             label="ТК"
             clearable
             :items="carrierStore.carriers"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
-          <v-select
-            v-model="listSettings.workState"
-            label="Статус"
-            :items="workStateItems"
-            outlined
-            dense
-          />
+          <v-select v-model="listSettings.workState" label="Статус" :items="workStateItems" />
           <v-select
             v-model="listSettings.stuffStatus"
             label="Сотрудники"
             :items="stuffStatusItems"
-            outlined
-            dense
           />
-          <v-text-field
-            v-model="listSettings.search"
-            outlined
-            hide-details
-            dense
-            label="Быстрый поиск"
-          />
+          <v-text-field v-model="listSettings.search" hide-details label="Быстрый поиск" />
         </div>
       </template>
       <template #[`item.hasScans`]="{ item }">
-        <v-icon v-if="item.hasScans" small color="green"> mdi-check </v-icon>
-        <v-icon v-else small color="red"> mdi-minus </v-icon>
+        <v-icon v-if="item.hasScans" size="small" color="green"> mdi-check </v-icon>
+        <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
       </template>
       <template #[`item.isCalcSalary`]="{ item }">
-        <v-icon v-if="item.isCalcSalary" small color="green"> mdi-check </v-icon>
-        <v-icon v-else small color="red"> mdi-minus </v-icon>
+        <v-icon v-if="item.isCalcSalary" size="small" color="green"> mdi-check </v-icon>
+        <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
       </template>
     </v-data-table>
   </EntityListWrapper>

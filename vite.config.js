@@ -1,16 +1,23 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue2'
+import vue from '@vitejs/plugin-vue'
+import vuetify from 'vite-plugin-vuetify'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   plugins: [
     vue(),
+    vuetify({
+      autoImport: true,
+    }),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.js', '.vue', '.json', '.ts'],
+  },
+  optimizeDeps: {
+    exclude: ['vuetify', '@vuelidate/core', '@vuelidate/validators', 'pinia'],
   },
   server: {
     port: 8080,
@@ -33,8 +40,5 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-  },
-  define: {
-    'process.env': process.env,
   },
 })

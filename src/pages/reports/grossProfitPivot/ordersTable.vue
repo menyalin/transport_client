@@ -6,18 +6,15 @@
       </v-btn>
     </div>
 
-    <v-data-table
+    <v-data-table-server
       checkbox-color="primary"
       :headers="filteredHeaders"
       :items="preparedItems"
-      :server-items-length="totalCount"
+      :items-length="totalCount"
       :loading="loading"
-      :options.sync="listOptions"
+      v-model:options="listOptions"
       :items-per-page="50"
-      dense
-      :footer-props="{
-        'items-per-page-options': [50, 100, 200],
-      }"
+      :items-per-page-options="[50, 100, 200]"
       @dblclick:row="dblClickRow"
     >
       <template #top>
@@ -29,7 +26,7 @@
           />
         </div>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </div>
 </template>
 <script>

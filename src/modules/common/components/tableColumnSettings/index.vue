@@ -1,20 +1,18 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu :close-on-content-click="false">
+    <template #activator="{ props }">
+      <v-btn color="primary" v-bind="props" icon>
+        <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
     <v-list class="px-2">
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
-        v-model="tmpHeaders"
+        :model-value="tmpHeaders.includes(field.value)"
         :label="field.text"
-        :value="field.value"
-        dense
         hide-details
-        @change="inputHandler(field.value)"
+        @update:model-value="toggleHeader(field.value)"
       />
     </v-list>
   </v-menu>
@@ -22,13 +20,10 @@
 <script>
 export default {
   name: 'TableColumnSettings',
-  model: {
-    prop: 'activeHeaders',
-    event: 'change',
-  },
   props: {
-    activeHeaders: {
+    modelValue: {
       type: Array,
+      default: () => [],
     },
     allHeaders: {
       type: Array,
@@ -46,32 +41,35 @@ export default {
     }
   },
   watch: {
-    activeHeaders: {
+    modelValue: {
       immediate: true,
       deep: true,
       handler: function (val) {
-        if (val) this.tmpHeaders = val
+        if (Array.isArray(val)) this.tmpHeaders = [...val]
       },
     },
   },
   mounted() {
-    if (!this.activeHeaders) {
+    if (!this.modelValue || this.modelValue.length === 0) {
       const savedHeaders = JSON.parse(localStorage.getItem(this.listSettingsName))
       if (savedHeaders) this.tmpHeaders = savedHeaders
-      else this.tmpHeaders = this.tmpHeaders = this.defaultHeaders
+      else this.tmpHeaders = this.defaultHeaders || []
       this.emitActiveHeaders()
     }
   },
   methods: {
     emitActiveHeaders() {
-      this.$emit('change', this.tmpHeaders)
+      this.$emit('update:modelValue', this.tmpHeaders)
     },
 
-    inputHandler(field) {
-      if (this.tmpHeaders.includes(field)) this.tmpHeaders.push(field)
-      else this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
+    toggleHeader(field) {
+      if (this.tmpHeaders.includes(field)) {
+        this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
+      } else {
+        this.tmpHeaders.push(field)
+      }
       localStorage.setItem(this.listSettingsName, JSON.stringify(this.tmpHeaders))
-      this.$emit('change', this.tmpHeaders)
+      this.emitActiveHeaders()
     },
   },
 }

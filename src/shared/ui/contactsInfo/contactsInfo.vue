@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="text-h6">Контакты:</div>
-    <v-btn color="primary" small @click="addItem"> Добавить контакт </v-btn>
+    <v-btn color="primary" size="small" @click="addItem"> Добавить контакт </v-btn>
     <div v-if="emptyContacts" class="text-subtitle-2">Контакты отсутствуют</div>
     <ItemCard
       v-for="(item, idx) of items"
@@ -10,7 +10,12 @@
       @edit="editHandler(idx)"
       @remove="removeItem(idx)"
     />
-    <v-dialog max-width="800" persistent v-model="dialog">
+    <v-dialog
+      :model-value="dialog"
+      @update:model-value="dialog = $event"
+      max-width="800"
+      persistent
+    >
       <ContactForm :item="editedItem" @cancel="cancelHandler" @submit="submitHandler" />
     </v-dialog>
   </div>

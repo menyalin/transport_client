@@ -2,26 +2,22 @@
   <div id="zones-wrapper">
     <v-autocomplete
       ref="loadingEl"
-      :value="regions.loadingRegion"
+      :model-value="regions.loadingRegion"
       label="Регион погрузки"
       :items="regionItems"
       item-value="_id"
-      item-text="name"
-      dense
-      outlined
+      item-title="name"
       hide-details
-      @change="changeHandler($event, 'loadingRegion')"
+      @update:model-value="changeHandler($event, 'loadingRegion')"
     />
     <v-autocomplete
-      :value="regions.unloadingRegion"
+      :model-value="regions.unloadingRegion"
       label="Регион разгрузки"
-      dense
       item-value="_id"
-      item-text="name"
-      outlined
+      item-title="name"
       :items="regionItems"
       hide-details
-      @change="changeHandler($event, 'unloadingRegion')"
+      @update:model-value="changeHandler($event, 'unloadingRegion')"
     />
   </div>
 </template>

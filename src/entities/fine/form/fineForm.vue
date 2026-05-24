@@ -2,7 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="!$store.getters.hasPermission('fine:write') || isInvalidForm"
+      :disabled-submit="!store.getters.hasPermission('fine:write') || isInvalidForm"
       class="mb-4"
       @cancel="cancel"
       @submit="submit"
@@ -10,60 +10,49 @@
 
     <div class="row-input">
       <v-text-field
-        v-model="$v.form.date.$model"
+        v-model="form.date"
         type="date"
         label="Дата постановления"
-        outlined
-        dense
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
 
       <v-text-field
-        v-model.trim="$v.form.number.$model"
+        v-model.trim="form.number"
         label="Номер постановления"
-        outlined
-        dense
         :style="{ maxWidth: '350px' }"
         @blur="$emit('fineNumberUpdated', $event)"
       />
       <v-select
-        v-model.trim="$v.form.category.$model"
-        :items="$store.getters.fineCategories"
+        v-model.trim="form.category"
+        :items="store.getters.fineCategories"
         label="Категория"
-        outlined
+        itemTitle="text"
         clearable
-        dense
         :style="{ maxWidth: '450px' }"
       />
     </div>
-    <v-text-field v-model.trim="$v.form.violation.$model" label="Нарушение" outlined dense />
+    <v-text-field v-model.trim="form.violation" label="Нарушение" />
 
     <div class="row-input mt-2">
       <v-text-field
-        v-model.number="$v.form.discountedSum.$model"
+        v-model.number="form.discountedSum"
         type="number"
         label="Сумма штрафа со скидкой"
-        outlined
-        dense
         :style="{ maxWidth: '300px' }"
       />
 
       <v-text-field
-        v-model.number="$v.form.totalSum.$model"
+        v-model.number="form.totalSum"
         type="number"
         label="Общая сумма штрафа"
-        outlined
-        dense
         :style="{ maxWidth: '300px' }"
       />
 
       <v-text-field
-        v-model="$v.form.expiryDateOfDiscount.$model"
+        v-model="form.expiryDateOfDiscount"
         type="date"
         label="Скидка до"
-        outlined
-        dense
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
@@ -73,62 +62,51 @@
       <v-text-field
         v-model="form.violationDate"
         type="datetime-local"
-        outlined
-        dense
         label="Дата и время нарушения"
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
       />
 
       <v-autocomplete
-        v-model="$v.form.truck.$model"
+        v-model="form.truck"
         label="Грузовик / Прицеп"
         :items="trucks"
         auto-select-first
-        outlined
-        dense
         :style="{ maxWidth: '250px' }"
       />
       <v-autocomplete
-        v-model="$v.form.driver.$model"
+        v-model="form.driver"
         label="Водитель"
         :items="drivers"
         auto-select-first
-        outlined
-        dense
         :style="{ maxWidth: '350px' }"
-        :append-outer-icon="form.truck && form.violationDate ? 'mdi-crosshairs' : null"
-        @click:append-outer="getDriver"
+        :append-inner-icon="form.truck && form.violationDate ? 'mdi-crosshairs' : null"
+        @click:append-inner="getDriver"
       />
     </div>
 
-    <v-text-field v-model="$v.form.address.$model" label="Место нарушения" outlined dense />
+    <v-text-field v-model="form.address" label="Место нарушения" />
     <div class="row-input">
-      <v-checkbox v-model="$v.form.isCulpritDriver.$model" dense label="Виноват водитель" />
+      <v-checkbox v-model="form.isCulpritDriver" label="Виноват водитель" />
       <v-checkbox
         v-if="form.isCulpritDriver"
-        v-model="$v.form.isPaydByDriver.$model"
+        v-model="form.isPaydByDriver"
         :disabled="!!form.payingByWorker"
-        dense
         label="Оплачен водителем"
       />
     </div>
 
     <div v-if="showPaymentBlock" class="row-input">
       <v-text-field
-        v-model.number="$v.form.paymentSum.$model"
+        v-model.number="form.paymentSum"
         type="number"
         label="Сумма оплаты"
-        outlined
-        dense
         :style="{ maxWidth: '300px' }"
       />
 
       <v-text-field
-        v-model="$v.form.paymentDate.$model"
+        v-model="form.paymentDate"
         type="date"
-        outlined
-        dense
         label="Дата оплаты"
         :style="{ maxWidth: '250px' }"
         @paste="pasteDate"
@@ -137,251 +115,253 @@
       <app-worker-autocomplete
         v-model="form.payingByWorker"
         label="Кто оплатил"
-        dense
-        outlined
         :style="{ maxWidth: '350px' }"
       />
       <v-select
         v-if="isNeedWithheldFromDriver"
-        v-model="$v.form.kX.$model"
+        v-model="form.kX"
         :items="[1, 2, 4]"
+        itemTitle="text"
         label="kX"
-        outlined
-        dense
         :style="{ maxWidth: '80px' }"
       />
       <v-text-field
         v-if="isNeedWithheldFromDriver"
-        v-model.number="$v.form.withheldSum.$model"
+        v-model.number="form.withheldSum"
         type="number"
-        outlined
         readonly
-        dense
         label="Удержать"
         :style="{ maxWidth: '250px' }"
       />
       <v-checkbox
         v-if="isNeedWithheldFromDriver && showIsWithheldField"
-        v-model="$v.form.isWithheld.$model"
+        v-model="form.isWithheld"
         label="Удержано"
         :disabled="isWithheldReadonly"
-        dense
       />
     </div>
-    <v-text-field v-model="$v.form.note.$model" label="Примечание" outlined dense />
+    <v-text-field v-model="form.note" label="Примечание" />
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
 </template>
-<script>
+
+<script setup>
 import dayjs from 'dayjs'
-import { mapGetters } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
 import { CrewService } from '@/shared/services'
-import { usePasteDateInput } from '@/modules/common/hooks/usePasteDateInput'
+import { usePasteDateInput } from '@/shared/ui/DateInputs/usePasteDateInput'
 
-export default {
-  name: 'FineForm',
-  components: {
-    ButtonsPanel,
-    AppWorkerAutocomplete,
-  },
-  props: {
-    item: { type: Object },
-    displayDeleteBtn: { type: Boolean, default: false },
-    openInModal: { type: Boolean, default: false },
-  },
-  setup() {
-    const { pasteDate } = usePasteDateInput()
-    return { pasteDate }
-  },
-  data() {
-    return {
-      dateFields: ['date', 'paymentDate', 'expiryDateOfDiscount'],
-      dateTimeFields: ['violationDate'],
-      form: {
-        date: null,
-        number: null,
-        category: null,
-        violation: null,
-        violationDate: null,
-        truck: null,
-        driver: null,
-        totalSum: null,
-        discountedSum: null,
-        expiryDateOfDiscount: null,
-        address: null,
-        paymentDate: null,
-        paymentSum: null,
-        isPaydByDriver: false,
-        payingByWorker: null,
-        isCulpritDriver: false,
-        kX: 2,
-        withheldSum: 0,
-        isWithheld: false,
-        note: null,
-      },
-    }
-  },
+const props = defineProps({
+  item: { type: Object },
+  displayDeleteBtn: { type: Boolean, default: false },
+  openInModal: { type: Boolean, default: false },
+})
 
-  computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile']),
-    showIsWithheldField() {
-      return (
-        this.isNeedWithheldFromDriver &&
-        this.form.withheldSum > 0 &&
-        this.$store.getters.hasPermission('fine:isWithheldRead')
-      )
-    },
-    isWithheldReadonly() {
-      return !this.$store.getters.hasPermission('fine:isWithheldWrite')
-    },
-    isInvalidForm() {
-      if (!this.directoriesProfile) return true
-      return this.$v.$invalid
-    },
-    isNeedWithheldFromDriver() {
-      return this.form.isCulpritDriver && !this.form.isPaydByDriver
-    },
-    showPaymentBlock() {
-      return !this.form.isPaydByDriver
-    },
-    directoriesProfileName() {
-      if (!this.directoriesProfile) return null
-      return this.myCompanies.find((item) => item._id === this.directoriesProfile).name
-    },
+const emit = defineEmits(['submit', 'cancel', 'delete', 'fineNumberUpdated'])
 
-    formState() {
-      const dates = {}
-      this.dateFields.concat(this.dateTimeFields).forEach((item) => {
-        dates[item] = this.form[item] ? dayjs(this.form[item]).toISOString() : null
-      })
-      const withheldParams = {}
-      if (this.form.isPaydByDriver) {
-        withheldParams.withheldSum = 0
-        withheldParams.payingByWorker = null
-      }
-      return {
-        ...this.form,
-        company: this.directoriesProfile,
-        ...dates,
-        ...withheldParams,
-      }
-    },
+const { pasteDate } = usePasteDateInput()
+const store = useStore()
 
-    trucks() {
-      return this.$store.getters
-        .activeTrucksOnDate(this.form.violationDate)
-        .filter((item) => ['truck', 'trailer'].includes(item.type))
-        .filter((item) => !item.hideInFines)
-        .map((item) => ({ value: item._id, text: item.regNum }))
-    },
+const dateFields = ['date', 'paymentDate', 'expiryDateOfDiscount']
+const dateTimeFields = ['violationDate']
+const form = ref({
+  date: null,
+  number: null,
+  category: null,
+  violation: null,
+  violationDate: null,
+  truck: null,
+  driver: null,
+  totalSum: null,
+  discountedSum: null,
+  expiryDateOfDiscount: null,
+  address: null,
+  paymentDate: null,
+  paymentSum: null,
+  isPaydByDriver: false,
+  payingByWorker: null,
+  isCulpritDriver: false,
+  kX: 2,
+  withheldSum: 0,
+  isWithheld: false,
+  note: null,
+})
 
-    drivers() {
-      return this.$store.getters
-        .activeDriversOnDate(this.form.violationDate)
-        .filter((item) => !item.hideInFines)
-        .map((item) => ({ value: item._id, text: item.fullName }))
-    },
-  },
-  watch: {
-    item: {
-      immediate: true,
-      handler: function (val) {
-        if (val) this.setFormFields(val)
-      },
-    },
-    'form.violationDate': {
-      handler: function () {
-        this.form.truck = null
-        this.form.driver = null
-      },
-    },
-
-    'form.paymentSum': {
-      immediate: true,
-      handler: function (val) {
-        if (!val || !this.isNeedWithheldFromDriver) this.form.withheldSum = 0
-        else this.form.withheldSum = this.form.kX * this.form.paymentSum
-      },
-    },
-    'form.kX': {
-      handler: function () {
-        this.form.withheldSum = this.form.kX * this.form.paymentSum
-      },
-    },
-  },
-
-  validations() {
-    return {
-      form: {
-        date: { required },
-        number: { required },
-        truck: { required },
-        totalSum: { required },
-        category: {},
-        discountedSum: { required },
-        expiryDateOfDiscount: {},
-        driver: {},
-        violation: {},
-        violationDate: {},
-        address: {},
-        paymentDate: {},
-        paymentSum: {},
-        isPaydByDriver: {},
-        payingByWorker: {},
-        isCulpritDriver: {},
-        kX: {},
-        withheldSum: {},
-        isWithheld: {},
-        note: {},
-      },
-    }
-  },
-  methods: {
-    async getDriver() {
-      if (!this.form.truck || !this.form.violationDate) return null
-      const crew = await CrewService.getCrewByTruckAndDate({
-        truck: this.form.truck,
-        date: new Date(this.form.violationDate).toISOString(),
-      })
-      if (crew) this.form.driver = crew.driver
-      else {
-        this.form.driver = null
-        this.$store.commit('setError', 'Экипаж не найден')
-      }
-    },
-    submit() {
-      this.$emit('submit', this.formState)
-      // this.resetForm()
-    },
-    cancel() {
-      this.resetForm()
-      this.$emit('cancel')
-    },
-    setFormFields(val) {
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        if (this.dateFields.includes(key) && !!val[key]) {
-          this.form[key] = dayjs(val[key]).format('YYYY-MM-DD')
-        } else if (this.dateTimeFields.includes(key) && !!val[key]) {
-          this.form[key] = dayjs(val[key]).format('YYYY-MM-DDTHH:mm')
-        } else this.form[key] = val[key]
-      })
-    },
-    resetForm() {
-      const keys = Object.keys(this.form)
-      keys.forEach((key) => {
-        this.form[key] = null
-      })
-    },
+const rules = {
+  form: {
+    date: { required },
+    number: { required },
+    truck: { required },
+    totalSum: { required },
+    category: {},
+    discountedSum: { required },
+    expiryDateOfDiscount: {},
+    driver: {},
+    violation: {},
+    violationDate: {},
+    address: {},
+    paymentDate: {},
+    paymentSum: {},
+    isPaydByDriver: {},
+    payingByWorker: {},
+    isCulpritDriver: {},
+    kX: {},
+    withheldSum: {},
+    isWithheld: {},
+    note: {},
   },
 }
+
+const v = useVuelidate(rules, form)
+
+// const myCompanies = computed(() => store.getters.myCompanies)
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
+const showIsWithheldField = computed(() => {
+  return (
+    isNeedWithheldFromDriver.value &&
+    form.value.withheldSum > 0 &&
+    store.getters.hasPermission('fine:isWithheldRead')
+  )
+})
+
+const isWithheldReadonly = computed(() => {
+  return !store.getters.hasPermission('fine:isWithheldWrite')
+})
+
+const isInvalidForm = computed(() => {
+  if (!directoriesProfile.value) return true
+  return v.value.$invalid
+})
+
+const isNeedWithheldFromDriver = computed(() => {
+  return form.value.isCulpritDriver && !form.value.isPaydByDriver
+})
+
+const showPaymentBlock = computed(() => {
+  return !form.value.isPaydByDriver
+})
+
+// const directoriesProfileName = computed(() => {
+//   if (!directoriesProfile.value) return null
+//   return myCompanies.value.find((item) => item._id === directoriesProfile.value)?.name
+// })
+
+const formState = computed(() => {
+  const dates = {}
+  dateFields.concat(dateTimeFields).forEach((item) => {
+    dates[item] = form.value[item] ? dayjs(form.value[item]).toISOString() : null
+  })
+  const withheldParams = {}
+  if (form.value.isPaydByDriver) {
+    withheldParams.withheldSum = 0
+    withheldParams.payingByWorker = null
+  }
+  return {
+    ...form.value,
+    company: directoriesProfile.value,
+    ...dates,
+    ...withheldParams,
+  }
+})
+
+const trucks = computed(() => {
+  return store.getters
+    .activeTrucksOnDate(form.value.violationDate)
+    .filter((item) => ['truck', 'trailer'].includes(item.type))
+    .filter((item) => !item.hideInFines)
+    .map((item) => ({ value: item._id, text: item.regNum }))
+})
+
+const drivers = computed(() => {
+  return store.getters
+    .activeDriversOnDate(form.value.violationDate)
+    .filter((item) => !item.hideInFines)
+    .map((item) => ({ value: item._id, text: item.fullName }))
+})
+
+const getDriver = async () => {
+  if (!form.value.truck || !form.value.violationDate) return null
+  const crew = await CrewService.getCrewByTruckAndDate({
+    truck: form.value.truck,
+    date: new Date(form.value.violationDate).toISOString(),
+  })
+  if (crew) form.value.driver = crew.driver
+  else {
+    form.value.driver = null
+    store.commit('setError', 'Экипаж не найден')
+  }
+}
+
+const submit = () => {
+  emit('submit', formState.value)
+}
+
+const cancel = () => {
+  resetForm()
+  emit('cancel')
+}
+
+const setFormFields = (val) => {
+  const keys = Object.keys(form.value)
+  keys.forEach((key) => {
+    if (dateFields.includes(key) && !!val[key]) {
+      form.value[key] = dayjs(val[key]).format('YYYY-MM-DD')
+    } else if (dateTimeFields.includes(key) && !!val[key]) {
+      form.value[key] = dayjs(val[key]).format('YYYY-MM-DDTHH:mm')
+    } else {
+      form.value[key] = val[key]
+    }
+  })
+}
+
+const resetForm = () => {
+  const keys = Object.keys(form.value)
+  keys.forEach((key) => {
+    form.value[key] = null
+  })
+}
+
+watch(
+  () => props.item,
+  (val) => {
+    if (val) setFormFields(val)
+  },
+  { immediate: true }
+)
+
+watch(
+  () => form.value.violationDate,
+  () => {
+    form.value.truck = null
+    form.value.driver = null
+  }
+)
+
+watch(
+  () => form.value.paymentSum,
+  (val) => {
+    if (!val || !isNeedWithheldFromDriver.value) form.value.withheldSum = 0
+    else form.value.withheldSum = form.value.kX * form.value.paymentSum
+  },
+  { immediate: true }
+)
+
+watch(
+  () => form.value.kX,
+  () => {
+    form.value.withheldSum = form.value.kX * form.value.paymentSum
+  }
+)
 </script>
 <style>
 .row-input {

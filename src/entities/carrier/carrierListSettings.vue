@@ -1,25 +1,20 @@
 <template>
   <div class="settings-wrapper">
     <v-select
-      :value="settings.type"
+      :model-value="settings.type"
       label="Тип перевозчика"
       :items="carrierTypes"
-      dense
       hide-details
-      clearable
-      outlined
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'type')"
+      @update:model-value="updateSettings($event, 'type')"
     />
     <v-text-field
-      :value="settings.search"
+      :model-value="settings.search"
       label="Поиск"
-      dense
       hide-details
       clearable
-      outlined
       :style="{ maxWidth: '500px' }"
-      @change="updateSettings($event, 'search')"
+      @update:model-value="updateSettings($event, 'search')"
     />
   </div>
 </template>
@@ -31,17 +26,24 @@ export default {
     event: 'change',
   },
   props: {
-    settings: Object,
+    settings: {
+      type: Object,
+      default: () => ({
+        type: 'all',
+        search: '',
+      }),
+    },
   },
 
   setup(props, ctx) {
     const carrierTypes = [
-      { text: 'Все', value: 'all' },
-      { text: 'Свой', value: 'own' },
-      { text: 'Привлеченный', value: 'outsource' },
+      { title: 'Все', value: 'all' },
+      { title: 'Свой', value: 'own' },
+      { title: 'Привлеченный', value: 'outsource' },
     ]
     function updateSettings(val, field) {
-      ctx.emit('change', Object.assign({}, props.settings.value, { [field]: val }))
+      console.log('props.settings: ', props.settings)
+      ctx.emit('update:model-value', { ...props.settings, [field]: val })
     }
     return {
       carrierTypes,

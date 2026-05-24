@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import store from '@/store'
 
@@ -15,6 +14,7 @@ import serverNotAvailablePage from '@/modules/common/pages/error.vue'
 import HomeLayout from '@/modules/common/pages/layout.vue'
 import AccessDeniedPage from '@/modules/common/pages/accessDenied.vue'
 import PermissionService from '@/shared/services/permission.service'
+import TestVue3Page from '@/test-vue3.vue'
 
 const _checkPermissions = async (permissions, next, to, from) => {
   if (!permissions.length) next()
@@ -25,8 +25,6 @@ const _checkPermissions = async (permissions, next, to, from) => {
     })
   } else next()
 }
-
-Vue.use(VueRouter)
 
 const routes = [
   ...authRoutes,
@@ -41,6 +39,11 @@ const routes = [
     component: HomeLayout,
   },
   {
+    path: '/test-vue3',
+    name: 'TestVue3',
+    component: TestVue3Page,
+  },
+  {
     path: '/error',
     name: 'serverNotAvailable',
     component: serverNotAvailablePage,
@@ -52,9 +55,8 @@ const routes = [
   },
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: import.meta.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(),
   routes,
 })
 

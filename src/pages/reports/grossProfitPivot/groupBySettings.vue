@@ -1,7 +1,13 @@
 <template>
   <div>
     <span>Группировка:</span>
-    <v-radio-group class="mt-0 pt-0" :value="value" dense hide-details row @change="change">
+    <v-radio-group
+      class="mt-0 pt-0"
+      :model-value="value"
+      hide-details
+      inline
+      @update:model-value="change"
+    >
       <v-radio
         v-for="item in items"
         :key="item.value"

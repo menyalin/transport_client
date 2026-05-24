@@ -5,7 +5,12 @@ module.exports = {
     node: true,
   },
 
-  extends: ['eslint:recommended', 'plugin:vue/base', 'plugin:prettier/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/base',
+    'plugin:prettier/recommended',
+    'plugin:vuetify/base',
+  ],
   parserOptions: {
     sourceType: 'module',
   },
@@ -22,7 +27,7 @@ module.exports = {
     'vue/attribute-hyphenation': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     // Запрещает прямую мутацию props
-    'vue/no-mutating-props': 'warn',
+    'vue/no-mutating-props': 'off',
     // Запрещает деструктуризацию props (потеря реактивности)
     // 'vue/no-prop-destructure': 'warn',
     // Отключено в пользу Prettier

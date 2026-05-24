@@ -9,6 +9,7 @@
           @refresh="refreshHandler"
         />
         <CarrierListSettings v-model="settings" />
+        {{ settings }}
         <v-data-table
           :headers="headers"
           :items="carriers"
@@ -16,7 +17,6 @@
           :search="settings.search"
           fixed-header
           height="72vh"
-          dense
           :itemsPerPage="100"
           :footerProps="{
             'items-per-page-options': [100, 200, -1],

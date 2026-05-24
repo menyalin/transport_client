@@ -3,11 +3,9 @@
     <v-text-field
       v-model="tmpSettings.date"
       label="Дата"
-      outlined
       :disabled="disabled"
       type="date"
       hide-details
-      dense
       :style="{ 'max-width': '200px' }"
     />
 
@@ -16,10 +14,8 @@
       label="ТК"
       :items="carriers"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      dense
-      outlined
       hide-details
       :style="{ 'max-width': '220px' }"
     />
@@ -28,8 +24,6 @@
       v-model="tmpSettings.type"
       label="Тип тарифа"
       :items="$store.getters.salaryTariffTypes"
-      dense
-      outlined
       hide-details
       :style="{ 'max-width': '220px' }"
     />
@@ -37,9 +31,7 @@
       v-model="tmpSettings.consigneeTypes"
       label="Типы грузополучателей"
       :items="$store.getters.partnerGroups"
-      dense
       multiple
-      outlined
       clearable
       hide-details
       :style="{ 'max-width': '300px' }"
@@ -48,9 +40,7 @@
       v-model="tmpSettings.liftCapacity"
       label="Грузоподъемность"
       :items="$store.getters.liftCapacityTypes"
-      dense
       multiple
-      outlined
       hide-details
       :style="{ 'max-width': '220px' }"
     />

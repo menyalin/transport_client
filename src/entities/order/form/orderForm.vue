@@ -24,9 +24,7 @@
               v-model="templateSelector"
               label="Заполнить из шаблона"
               clearable
-              outlined
               :disabled="state.status !== 'needGet'"
-              dense
               hide-details
               :items="$store.getters.orderTemplatesForSelect"
               :style="{ width: '350px' }"
@@ -45,7 +43,12 @@
               <v-icon>mdi-currency-usd</v-icon>
             </v-btn>
 
-            <v-dialog v-model="templateDialog" persistent max-width="600">
+            <v-dialog
+              :model-value="templateDialog"
+              @update:model-value="showDialog = $event"
+              persistent
+              max-width="600"
+            >
               <v-card>
                 <v-card-title> Создать новый шаблон </v-card-title>
                 <v-card-text>
@@ -174,13 +177,8 @@
           </div>
 
           <div id="note">
-            <v-text-field v-model="form.note" outlined label="Примечание" dense />
-            <v-text-field
-              v-model="form.noteAccountant"
-              outlined
-              label="Примечание для бухгалтера"
-              dense
-            />
+            <v-text-field v-model="form.note" label="Примечание" />
+            <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
           </div>
           <EntityFiles
             id="order-files"
@@ -204,7 +202,7 @@
         </div>
 
         <v-btn v-if="displayDeleteBtn" color="error" class="ma-4" @click="$emit('delete')">
-          <v-icon left dark> mdi-delete </v-icon>
+          <v-icon start> mdi-delete </v-icon>
           Удалить
         </v-btn>
       </v-col>

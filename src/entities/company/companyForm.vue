@@ -3,37 +3,37 @@
     <form>
       <buttons-panel
         panel-type="form"
-        :disabled-submit="$v.form.$invalid"
+        :disabled-submit="v.form.$invalid"
         @cancel="cancel"
         @submit="submit"
       />
       <v-card-text>
         <v-text-field
-          v-model.trim="$v.form.name.$model"
+          v-model.trim="form.name"
           type="text"
           label="Сокращенное название"
           :error-messages="nameErrors"
-          @input="$v.form.name.$touch()"
-          @blur="$v.form.name.$touch()"
+          @update:model-value="v.form.name.$touch()"
+          @blur="v.form.name.$touch()"
         />
         <v-text-field
-          v-model.trim="$v.form.fullName.$model"
+          v-model.trim="form.fullName"
           type="text"
           label="Полное название"
           :error-messages="fullNameErrors"
-          @input="$v.form.fullName.$touch()"
-          @blur="$v.form.fullName.$touch()"
+          @update:model-value="v.form.fullName.$touch()"
+          @blur="v.form.fullName.$touch()"
         />
         <v-text-field
           v-model="form.inn"
           type="text"
           label="ИНН"
           :error-messages="innErrors"
-          @input="delayTouch($v.form.inn)"
-          @blur="$v.form.inn.$touch()"
+          @update:model-value="delayTouch(v.value.form.inn)"
+          @blur="v.form.inn.$touch()"
         />
         <v-checkbox v-model="form.hasOwnDirectories" label="У компании есть свои справочники" />
-        <v-alert type="info" outlined>
+        <v-alert type="info">
           <p>ИНН - Должен быть уникален</p>
           <p>
             Пользователь может работать со справочниками только одной компании. Если компания не
@@ -44,85 +44,88 @@
     </form>
   </v-card>
 </template>
-<script>
-import { required } from 'vuelidate/lib/validators'
+
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
-import { mapActions } from 'vuex'
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const store = useStore()
+
+const form = ref({
+  name: '',
+  fullName: '',
+  inn: '',
+  hasOwnDirectories: true,
+})
+
 const touchMap = new WeakMap()
 
-export default {
-  name: 'CompanyForm',
-  components: {
-    ButtonsPanel,
-  },
-  data() {
-    return {
-      form: {
-        name: '',
-        fullName: '',
-        inn: '',
-        hasOwnDirectories: true,
-      },
-    }
-  },
-  computed: {
-    nameErrors() {
-      const errors = []
-      if (!this.$v.form.name.$dirty) return errors
-      !this.$v.form.name.required && errors.push('Название не может быть пустым')
-      return errors
-    },
-    fullNameErrors() {
-      const errors = []
-      if (!this.$v.form.fullName.$dirty) return errors
-      !this.$v.form.fullName.required && errors.push('Полное название не может быть пустым')
-      return errors
-    },
-    innErrors() {
-      const errors = []
-      if (!this.$v.form.inn.$dirty) return errors
-      !this.$v.form.inn.required && errors.push('ИНН не может быть пустым')
-      !this.$v.form.inn.existInn && errors.push('ИНН уже зарегистрирован в системе')
-      return errors
-    },
-  },
-  methods: {
-    ...mapActions(['isExistInn']),
-    cancel() {
-      this.$emit('cancel')
-    },
-    submit() {
-      this.$emit('submit', Object.assign({}, this.$v.form.$model))
-    },
-    delayTouch($v) {
-      $v.$reset()
-      if (touchMap.has($v)) {
-        clearTimeout(touchMap.get($v))
-      }
-      touchMap.set($v, setTimeout($v.$touch, 500))
-    },
-  },
-  validations: {
-    form: {
-      name: { required },
-      fullName: { required },
-      inn: {
-        required,
-        existInn(val) {
-          if (val === '') return true
-          return new Promise((resolve) => {
-            this.isExistInn(val)
-              .then((res) => {
-                resolve(!res)
-              })
-              .catch((e) => {
-                this.$store.commit('setError', e)
-              })
-          })
-        },
+const rules = {
+  form: {
+    name: { required },
+    fullName: { required },
+    inn: {
+      required,
+      existInn: (val) => {
+        if (val === '') return true
+        return new Promise((resolve) => {
+          store
+            .dispatch('isExistInn', val)
+            .then((res) => {
+              resolve(!res)
+            })
+            .catch((e) => {
+              store.commit('setError', e)
+            })
+        })
       },
     },
   },
+}
+
+const v = useVuelidate(rules, form)
+
+const nameErrors = computed(() => {
+  const errors = []
+  if (!v.value.form.name.$dirty) return errors
+  !v.value.form.name.required && errors.push('Название не может быть пустым')
+  return errors
+})
+
+const fullNameErrors = computed(() => {
+  const errors = []
+  if (!v.value.form.fullName.$dirty) return errors
+  !v.value.form.fullName.required && errors.push('Полное название не может быть пустым')
+  return errors
+})
+
+const innErrors = computed(() => {
+  const errors = []
+  if (!v.value.form.inn.$dirty) return errors
+  !v.value.form.inn.required && errors.push('ИНН не может быть пустым')
+  !v.value.form.inn.existInn && errors.push('ИНН уже зарегистрирован в системе')
+  return errors
+})
+
+const cancel = () => {
+  emit('cancel')
+}
+
+const submit = () => {
+  emit('submit', { ...form.value })
+}
+
+const delayTouch = (vField) => {
+  vField.$reset()
+  if (touchMap.has(vField)) {
+    clearTimeout(touchMap.get(vField))
+  }
+  touchMap.set(vField, setTimeout(vField.$touch, 500))
 }
 </script>
 <style></style>

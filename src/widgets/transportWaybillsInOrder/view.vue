@@ -17,10 +17,15 @@
       <v-btn icon @click="handlers.refreshList">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <v-btn small color="primary" @click="handlers.openDialog"> Добавить ТрН </v-btn>
+      <v-btn size="small" color="primary" @click="handlers.openDialog"> Добавить ТрН </v-btn>
     </v-card-actions>
 
-    <v-dialog v-model="formDialog" persistent width="1000px">
+    <v-dialog
+      :model-value="formDialog"
+      @update:model-value="showDialog = $event"
+      persistent
+      width="1000px"
+    >
       <TransportWaybillForm
         :shipperAddressItems="shipperAddressItems"
         :consigneeAddressItems="consigneeAddressItems"

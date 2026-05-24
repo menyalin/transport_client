@@ -1,5 +1,5 @@
 <template>
-  <v-alert outlined dense>
+  <v-alert>
     Ставка НДС: <b>{{ item.vatRate }}%</b> ; Расчет от цены
     <b>{{ item.usePriceWithVat ? ' c НДС' : ' без НДС' }} </b>
 

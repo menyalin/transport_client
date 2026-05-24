@@ -1,17 +1,19 @@
 <template>
   <table>
-    <tr>
-      <td>Всего рейсов:</td>
-      <td>{{ data.count }}</td>
-    </tr>
-    <tr>
-      <td>Сумма без НДС:</td>
-      <td>{{ totalWOVat }}</td>
-    </tr>
-    <tr>
-      <td>Сумма c НДС:</td>
-      <td>{{ totalWithVat }}</td>
-    </tr>
+    <tbody>
+      <tr>
+        <td>Всего рейсов:</td>
+        <td>{{ data.count }}</td>
+      </tr>
+      <tr>
+        <td>Сумма без НДС:</td>
+        <td>{{ totalWOVat }}</td>
+      </tr>
+      <tr>
+        <td>Сумма c НДС:</td>
+        <td>{{ totalWithVat }}</td>
+      </tr>
+    </tbody>
   </table>
 </template>
 <script>

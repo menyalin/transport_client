@@ -1,7 +1,13 @@
 <template>
-  <v-dialog v-model="dialog" max-width="800px" persistent scrollable>
+  <v-dialog
+    :model-value="dialog"
+    @update:model-value="showDialog = $event"
+    max-width="800px"
+    persistent
+    scrollable
+  >
     <v-card>
-      <v-card-title class="primary white--text">
+      <v-card-title class="bg-primary text-white">
         <span class="text-h5">
           {{ isEdit ? 'Редактировать напоминание' : 'Новое напоминание' }}
         </span>
@@ -13,8 +19,6 @@
           <v-text-field
             v-model="state.title"
             label="Заголовок"
-            outlined
-            dense
             :error-messages="titleErrors"
             @blur="v$.title.$touch()"
           />
@@ -24,10 +28,6 @@
             <DateTimeInput
               v-model="state.expDate"
               label="Действительно до"
-              hide-prepend-icon
-              outlined
-              dense
-              hide-time-input
               :error-messages="expDateErrors"
               @blur="v$.expDate.$touch()"
               class="flex-grow-1 mr-2"
@@ -37,22 +37,20 @@
               v-model="state.daysBeforeRemind"
               label="Дней до напоминания"
               type="number"
-              outlined
-              dense
               :error-messages="daysBeforeRemindErrors"
               @blur="v$.daysBeforeRemind.$touch()"
             />
           </div>
 
           <!-- Примечание -->
-          <v-textarea v-model="state.note" label="Примечание" outlined dense rows="3" auto-grow />
+          <v-textarea v-model="state.note" label="Примечание" rows="3" auto-grow />
         </v-form>
       </v-card-text>
 
       <!-- Кнопки действий -->
       <v-card-actions class="pa-4 pt-0">
         <v-spacer />
-        <v-btn text @click="handleCancel" :disabled="loading"> Отмена </v-btn>
+        <v-btn variant="text" @click="handleCancel" :disabled="loading"> Отмена </v-btn>
 
         <v-btn color="primary" @click="handleSubmit" :loading="loading" :disabled="isInvalidForm">
           {{ isEdit ? 'Сохранить изменения' : 'Добавить' }}

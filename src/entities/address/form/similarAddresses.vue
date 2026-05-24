@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table dense>
+  <v-table>
     <template>
       <caption class="text-left text-subtitle-2">
         Похожие адреса
@@ -40,7 +40,7 @@
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 export default {

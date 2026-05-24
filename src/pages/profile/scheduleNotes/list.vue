@@ -14,26 +14,21 @@
             v-model="settings.truckFilter"
             label="Грузовик"
             :items="trucks"
-            item-text="regNum"
+            item-title="regNum"
             item-value="_id"
-            dense
-            outlined
             hide-details
             clearable
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           :headers="headers"
           :items="list"
           :loading="loading"
           height="73vh"
-          dense
           fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="settings.listOptions"
+          :items-length="count"
+          :items-per-page-options="[50, 100, 200]"
+          v-model:options="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.truck`]="{ item }">
@@ -42,7 +37,7 @@
           <template #[`item.startPositionDate`]="{ item }">
             <span>{{ new Date(item.startPositionDate).toLocaleString() }}</span>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

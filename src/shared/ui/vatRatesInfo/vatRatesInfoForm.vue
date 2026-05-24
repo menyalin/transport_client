@@ -1,50 +1,34 @@
 <template>
   <v-card>
-    <v-card-title class="primary white--text">
+    <v-card-title class="bg-primary text-white">
       <span class="text-h5">{{ title }}</span>
     </v-card-title>
 
     <v-card-text class="pa-6">
-      <!-- Дата начала периода -->
       <DateTimeInput
         v-model="state.startPeriod"
         label="Дата начала периода"
-        hide-prepend-icon
-        outlined
-        dense
-        hide-time-input
         :error-messages="startPeriodErrors"
       />
 
-      <!-- Дата окончания периода -->
       <DateTimeInput
         v-model="state.endPeriod"
         label="Дата окончания периода"
-        hide-prepend-icon
-        outlined
-        dense
-        hide-time-input
         :error-messages="endPeriodErrors"
         class="mt-4"
         persistent-hint
       />
 
-      <!-- Ставка НДС -->
       <VatRateSelect
         v-model="state.vatRate"
         label="Ставка НДС"
-        outlined
-        dense
         :error-messages="vatRateErrors"
         class="mt-4"
       />
 
-      <!-- Примечание -->
       <v-textarea
         v-model="state.note"
         label="Примечание"
-        outlined
-        dense
         rows="3"
         auto-grow
         class="mt-4"
@@ -52,12 +36,10 @@
       />
     </v-card-text>
 
-    <!-- Кнопки действий -->
     <v-card-actions class="pa-4 pt-0">
       <v-btn v-if="showRemoveBtn" color="error" @click="handleRemove" class="mr-2"> Удалить </v-btn>
       <v-spacer />
-      <v-btn text @click="handleCancel"> Отмена </v-btn>
-
+      <v-btn variant="text" @click="handleCancel"> Отмена </v-btn>
       <v-btn color="primary" @click="handleSave" :disabled="invalidForm"> Сохранить </v-btn>
     </v-card-actions>
   </v-card>

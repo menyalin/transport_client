@@ -21,58 +21,47 @@
           />
           <v-autocomplete
             v-model="settings.tkName"
-            dense
-            outlined
             hide-details
             auto-select-first
             label="ТК"
             clearable
             :items="carrierItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
           />
 
           <v-select
             v-model="settings.crewStatus"
-            dense
             :items="crewStatuses"
-            outlined
             hide-details
             label="Состояние экипажа"
           />
           <v-autocomplete
             v-model="settings.driver"
-            dense
             clearable
             auto-select-first
             :items="driverItems"
-            outlined
             hide-details
             label="Водитель"
           />
           <v-autocomplete
             v-model="settings.truck"
-            dense
             clearable
             auto-select-first
             :items="truckItems"
-            outlined
             hide-details
             label="Грузовик"
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           :headers="headers"
           :items="items"
           height="72vh"
           fixed-header
           :loading="loading"
-          :serverItemsLength="totalCount"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="listOptions"
-          dense
+          :items-length="totalCount"
+          :items-per-page-options="[50, 100, 200]"
+          v-model:options="listOptions"
           @dblclick:row="dblClickRowHandler"
         >
           <template #[`item.tkName`]="{ item }">
@@ -98,7 +87,7 @@
               {{ isActualCrew(item) ? 'mdi-check' : 'mdi-minus' }}
             </v-icon>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>

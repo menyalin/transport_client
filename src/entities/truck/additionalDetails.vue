@@ -5,47 +5,33 @@
       <div id="platon">
         <v-text-field
           label="Платон №"
-          :value="params.platonNumber"
-          outlined
-          dense
+          :model-value="params.platonNumber"
           hide-details
           @change="change($event, 'platonNumber')"
         />
         <DateTimeInput
           label="Дата замены"
-          :value="params.platonDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'platonDate')"
-          outlined
-          dense
+          :model-value="params.platonDate"
+          @update:model-value="change($event, 'platonDate')"
           hide-details
         />
       </div>
       <div id="tachograph">
         <v-text-field
           label="Тахограф №"
-          :value="params.tachographNumber"
-          outlined
-          dense
+          :model-value="params.tachographNumber"
           hide-details
           @change="change($event, 'tachographNumber')"
         />
         <DateTimeInput
           label="Дата сделующей калибровки"
-          :value="params.tachographExpDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'tachographExpDate')"
-          outlined
-          dense
+          :model-value="params.tachographExpDate"
+          @update:model-value="change($event, 'tachographExpDate')"
           hide-details
         />
         <v-text-field
           label="Примечание (тахограф)"
-          :value="params.tachographNote"
-          outlined
-          dense
+          :model-value="params.tachographNote"
           hide-details
           @change="change($event, 'tachographNote')"
         />
@@ -54,47 +40,33 @@
       <div id="transponder">
         <v-text-field
           label="Транспондер, №"
-          :value="params.transponderNumber"
-          outlined
-          dense
+          :model-value="params.transponderNumber"
           hide-details
           @change="change($event, 'transponderNumber')"
         />
         <DateTimeInput
           label="Дата выдачи"
-          :value="params.transponderDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'transponderDate')"
-          outlined
-          dense
+          :model-value="params.transponderDate"
+          @update:model-value="change($event, 'transponderDate')"
           hide-details
         />
       </div>
       <div id="fuel-card">
         <v-text-field
           label="Топливная карта"
-          :value="params.fuelCardNumber"
-          outlined
-          dense
+          :model-value="params.fuelCardNumber"
           hide-details
           @change="change($event, 'fuelCardNumber')"
         />
         <DateTimeInput
           label="Дата выдачи карты"
-          :value="params.fuelCardDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'fuelCardDate')"
-          outlined
-          dense
+          :model-value="params.fuelCardDate"
+          @update:model-value="change($event, 'fuelCardDate')"
           hide-details
         />
         <v-text-field
           label="Примечание (Топливная карта)"
-          :value="params.fuelCardNote"
-          outlined
-          dense
+          :model-value="params.fuelCardNote"
           hide-details
           @change="change($event, 'fuelCardNote')"
         />

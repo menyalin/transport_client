@@ -1,10 +1,9 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     v-model="selected"
     :headers="headers"
     :items="preparedItems"
     :loading="loading"
-    dense
     item-key="_id"
     show-select
     checkbox-color="primary"
@@ -17,7 +16,7 @@
     :options.sync="listOptions"
   >
     <template #[`top`]>
-      <v-alert dense outlined v-if="total.count > 0">
+      <v-alert v-if="total.count > 0">
         <div>Всего рейсов: {{ total.count }}</div>
         <div>Сумма с НДС: {{ formattedSum.withVat }}</div>
         <div>Сумма без НДС: {{ formattedSum.woVat }}</div>
@@ -26,13 +25,13 @@
         :disabled="selected.length === 0 || !allowDeleteOrders"
         color="error"
         @click="removeOrdersHandler"
-        small
+        size="small"
         class="ma-2"
       >
         Удалить выбранные рейсы
       </v-btn>
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script>
 import { computed } from 'vue'

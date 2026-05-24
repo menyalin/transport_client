@@ -171,7 +171,7 @@ export const useCrewForm = (props, ctx) => {
   }
 
   const deleteCrewHandler = () => {
-    const res = proxy.$confirm('Вы уверены?')
+    const res = confirm('Вы уверены?')
     if (res) {
       ctx.emit('delete')
     }

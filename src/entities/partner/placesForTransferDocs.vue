@@ -3,7 +3,13 @@
     <v-alert v-if="!partnerId" type="info">
       Добавление площадок возможно только после сохранения партнера
     </v-alert>
-    <v-btn v-else small color="primary" :style="{ maxWidth: '200px' }" @click="addPlaceHandler">
+    <v-btn
+      v-else
+      size="small"
+      color="primary"
+      :style="{ maxWidth: '200px' }"
+      @click="addPlaceHandler"
+    >
       Добавить площадку
     </v-btn>
     <place-item
@@ -13,7 +19,12 @@
       @edit="editPlaceHandler"
       @delete="deletePlaceHandler"
     />
-    <v-dialog v-model="showDialog" max-width="1200" persistent>
+    <v-dialog
+      :model-value="showDialog"
+      @update:model-value="showDialog = $event"
+      max-width="1200"
+      persistent
+    >
       <place-for-transfer-docs-form
         ref="placeForm"
         :item="editableItem"

@@ -1,18 +1,16 @@
 <template>
   <v-autocomplete
     v-if="!labelOnly"
-    :value="value"
+    :model-value="value"
     :label="label"
-    :outlined="outlined"
     clearable
     :loading="loading"
-    :dense="dense"
     no-filter
     :items="items"
-    :filter="() => true"
-    :search-input="searchString"
-    @update:search-input="handleSearchInputUpdate"
-    @change="handleChange"
+    :customFilter="() => true"
+    :search="searchString"
+    @update:search="handleSearchInputUpdate"
+    @update:model-value="handleChange"
   />
   <span v-else> {{ title }} </span>
 </template>
@@ -30,8 +28,6 @@ export default {
   props: {
     value: String,
     label: String,
-    outlined: Boolean,
-    dense: Boolean,
     labelOnly: { type: Boolean, default: false },
   },
   setup({ value }, ctx) {

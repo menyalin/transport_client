@@ -6,54 +6,38 @@
     <div class="fields-wrapper">
       <v-text-field
         label="Пропуск ДЕНЬ, №"
-        :value="params.dayPermitNumber"
-        outlined
-        dense
+        :model-value="params.dayPermitNumber"
         hide-details
         @change="change($event, 'dayPermitNumber')"
       />
       <DateTimeInput
         label="Действует до"
-        :value="params.dayPermitExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'dayPermitExpDate')"
-        outlined
-        dense
+        :model-value="params.dayPermitExpDate"
+        @update:model-value="change($event, 'dayPermitExpDate')"
         hide-details
       />
       <v-text-field
         label="Зона действия"
-        :value="params.dayPermitZone"
-        outlined
-        dense
+        :model-value="params.dayPermitZone"
         hide-details
         @change="change($event, 'dayPermitZone')"
       />
 
       <v-text-field
         label="Пропуск НОЧЬ, №"
-        :value="params.nightPermitNumber"
-        outlined
-        dense
+        :model-value="params.nightPermitNumber"
         hide-details
         @change="change($event, 'nightPermitNumber')"
       />
       <DateTimeInput
         label="Действует до"
-        :value="params.nightPermitExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'nightPermitExpDate')"
-        outlined
-        dense
+        :model-value="params.nightPermitExpDate"
+        @update:model-value="change($event, 'nightPermitExpDate')"
         hide-details
       />
       <v-text-field
         label="Зона действия"
-        :value="params.nightPermitZone"
-        outlined
-        dense
+        :model-value="params.nightPermitZone"
         hide-details
         @change="change($event, 'nightPermitZone')"
       />

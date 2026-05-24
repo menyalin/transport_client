@@ -10,10 +10,8 @@
       <v-text-field
         v-model="state.fullName"
         label="Полное названии компании"
-        dense
         required
         clearable
-        outlined
         @blur="v$.fullName.$touch"
         :error-messages="fullNameErrorMessages"
         :style="{ maxWidth: '400px' }"

@@ -1,7 +1,7 @@
 <template>
   <div v-if="invoice" class="block-wrapper">
     Входящий акт:
-    <router-link :to="url">{{ text }}</router-link>
+    <router-link :to="url">{{ (variant = 'text') }}</router-link>
   </div>
   <div v-else :style="{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }">
     <small>Входящий акт не создан</small>

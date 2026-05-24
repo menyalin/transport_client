@@ -1,25 +1,17 @@
 <template>
-  <v-data-table
-    :value="selected"
+  <v-data-table-server
     :headers="headers"
-    dense
     color="primary"
     :loading="loading"
     :items="preparedItems"
     :showSelect="showSelect"
     item-key="_id"
     fixed-header
-    checkbox-color="primary"
     height="65vh"
-    multi-sort
-    :serverItemsLength="statisticData && !!statisticData.count ? statisticData.count : undefined"
-    :footer-props="{
-      'items-per-page-options': [50, 100, 200],
-    }"
-    :options="listOptions"
+    :items-length="statisticData && !!statisticData.count ? statisticData.count : 0"
+    :items-per-page-options="[50, 100, 200]"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
-    @input="selectHandler"
   >
     <template #[`item.state.status`]="{ item }">
       {{ getStatusText(item.state.status) }}
@@ -27,7 +19,7 @@
     <template #[`item.addItemColumn`]="{ item }">
       <v-icon
         v-if="item.isSelectable"
-        small
+        size="small"
         color="primary"
         :disabled="!item.isSelectable"
         @click="addItem(item._id)"
@@ -79,7 +71,7 @@
       </b>
     </template>
     <template #[`item.docsGetted`]="{ item }">
-      <v-simple-checkbox
+      <v-checkbox-btn
         :value="item.docsState ? item.docsState.getted : false"
         :disabled="!!item.docs && !!item.docs.length"
         color="primary"
@@ -96,8 +88,8 @@
       />
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn color="primary" icon small dark @click="$emit('openDocsDialog', item[itemIdField])">
-        <v-icon small> mdi-file-document-multiple </v-icon>
+      <v-btn color="primary" icon size="small" @click="$emit('openDocsDialog', item[itemIdField])">
+        <v-icon size="small"> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>
     <template #[`item.total.price`]="{ item }">
@@ -109,7 +101,7 @@
     <template #[`item.total.sumVat`]="{ item }">
       {{ new Intl.NumberFormat().format(item.total.sumVat) }}
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script>
 import store from '@/store'

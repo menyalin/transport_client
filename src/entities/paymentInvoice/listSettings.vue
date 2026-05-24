@@ -7,62 +7,55 @@
     />
     <v-select
       label="Период по"
-      :value="settings.periodBy"
+      :model-value="settings.periodBy"
       :items="periodByItems"
-      outlined
-      dense
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'periodBy')"
+      @update:model-value="updateSettings($event, 'periodBy')"
     />
-    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
+    <DateRangeInput
+      :model-value="settings.period"
+      @update:model-value="updateSettings($event, 'period')"
+    />
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
+      :model-value="settings.clients"
+      item-title="name"
       item-value="_id"
       label="Клиенты"
       :disabled="clientItems.length === 0"
-      dense
       clearable
       multiple
-      outlined
       :items="clientItems"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'clients')"
+      @update:model-value="updateSettings($event, 'clients')"
     />
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
+      :model-value="settings.agreements"
+      item-title="name"
       item-value="_id"
       label="Соглашения"
       :disabled="agreementItems.length === 0"
-      dense
       clearable
       multiple
-      outlined
       :items="agreementItems"
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
     <v-select
-      :value="settings.statuses"
+      :model-value="settings.statuses"
       label="Статус"
       multiple
-      dense
       clearable
-      outlined
       hide-details
       :items="statusItems"
       :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'statuses')"
+      @update:model-value="updateSettings($event, 'statuses')"
     />
     <v-text-field
-      :value="settings.search"
+      :model-value="settings.search"
       label="Поиск по номеру"
-      dense
       clearable
-      outlined
       hide-details
       :style="{ maxWidth: '200px' }"
       @change="updateSettings($event, 'search')"

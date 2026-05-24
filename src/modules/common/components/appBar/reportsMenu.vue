@@ -1,10 +1,10 @@
 <template>
-  <v-menu v-if="hasAllowedReports" bottom offset-y>
-    <template #activator="{ on, attrs }">
-      <v-btn v-bind="attrs" text v-on="on"> Отчеты </v-btn>
+  <v-menu v-if="hasAllowedReports">
+    <template #activator="{ props }">
+      <v-btn v-bind="props"> Отчеты </v-btn>
     </template>
 
-    <v-list dense>
+    <v-list>
       <v-list-item v-for="item of filteredReports" :key="item.link" :to="item.link">
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>

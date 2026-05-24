@@ -9,28 +9,23 @@
         label="Тип рейса"
         :items="$store.getters.orderAnalyticTypes"
         clearable
+        itemTitle="text"
         hide-details
-        dense
-        outlined
         :style="{ 'max-width': '150px' }"
       />
       <v-text-field
         v-model.number="params.distanceRoad"
         label="Расстояние по дорогам, км"
         :loading="distanceLoading"
-        dense
         hideDetails
-        outlined
         append-icon="mdi-autorenew"
         @click:append="getRoadDistance"
       />
       <v-text-field
         v-model.number="params.distanceDirect"
         label="Расстояние прямое, км"
-        dense
         hideDetails
         append-icon="mdi-autorenew"
-        outlined
         @click:append="getDirectDistance"
       />
     </div>

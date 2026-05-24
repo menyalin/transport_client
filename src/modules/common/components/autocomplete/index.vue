@@ -3,16 +3,14 @@
     <v-autocomplete
       :label="label"
       :items="items"
-      :value="value"
-      :dense="dense"
+      :model-value="value"
       :disabled="disabled"
       :hideDetails="hideDetails"
-      :outlined="outlined"
       clearable
-      :search-input.sync="search"
-      :append-outer-icon="appendIcon"
-      @change="change"
-      @click:append-outer="appendClick"
+      :search.sync="search"
+      :append-icon="appendIcon"
+      @update:model-value="change"
+      @click:append="appendClick"
     />
   </div>
 </template>
@@ -25,8 +23,6 @@ export default {
   },
   props: {
     hideDetails: { type: Boolean, default: false },
-    outlined: { type: Boolean, default: false },
-    dense: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     value: String,
     label: String,

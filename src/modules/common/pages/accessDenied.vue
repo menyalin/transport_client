@@ -2,7 +2,7 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row align="center" justify="center">
+        <v-row class="align-center justify-center">
           <v-col cols="12" md="6">
             <v-alert type="error"> Доступ к запрашиваемой странице запрещен </v-alert>
             <router-link :to="$route.query.redirect">

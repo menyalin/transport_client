@@ -10,14 +10,7 @@
           @refresh="refresh"
         />
         <div id="settings-wrapper">
-          <v-text-field
-            v-model="settings.search"
-            label="Поиск"
-            outlined
-            hide-details
-            dense
-            clearable
-          />
+          <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
         </div>
         <v-data-table
           :headers="headers"
@@ -26,7 +19,6 @@
           fixed-header
           :search="settings.search"
           height="73vh"
-          dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"

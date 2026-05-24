@@ -2,7 +2,6 @@
   <v-data-table
     :items="preparedItems"
     :headers="tableHeaders"
-    dense
     fixed-header
     :options.sync="options"
     height="75vh"

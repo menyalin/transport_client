@@ -2,12 +2,12 @@
   <v-app>
     <v-main>
       <v-container fluid>
-        <v-row align="center" justify="center">
+        <v-row class="align-center justify-center">
           <v-col cols="12" md="6">
-            <v-subheader>
+            <h3>
               Что-то пошло не так, скорее всего не доступен сервер или отсутствует подключение к
               интернету
-            </v-subheader>
+            </h3>
             <v-alert type="error">
               {{ $route.query.message }}
             </v-alert>

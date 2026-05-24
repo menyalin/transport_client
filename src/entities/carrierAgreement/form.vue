@@ -10,26 +10,16 @@
     />
     <div id="form">
       <div class="fields-row">
-        <v-text-field
-          label="Название"
-          v-model.trim="state.name"
-          dense
-          outlined
-          :style="{ maxWidth: '500px' }"
-        />
+        <v-text-field label="Название" v-model.trim="state.name" :style="{ maxWidth: '500px' }" />
         <VatRateSelect
           v-model="state.vatRate"
           :disabled="vatRateDisabled"
-          outlined
-          dense
           label="Ставка НДС"
           :style="{ maxWidth: '150px' }"
         />
         <v-text-field
           type="number"
           v-model.number="state.paymentOfDays"
-          outlined
-          dense
           label="Отсрочка оплаты, раб.дней"
           :style="{ maxWidth: '200px' }"
         />
@@ -37,16 +27,13 @@
           label="Заказчик"
           v-model="state.customer"
           auto-select-first
-          dense
-          item-text="name"
+          item-title="name"
           item-value="_id"
-          outlined
           clearable
           :items="allowUseCustomerRoleCarriers"
           :style="{ maxWidth: '300px' }"
         />
         <v-checkbox
-          dense
           v-model="state.usePriceWithVAT"
           label="Перевозчик оперирует ценами с НДС"
           :disabled="!state.vatRate"
@@ -57,7 +44,6 @@
         <v-textarea
           v-model="state.paymentDescription"
           rows="4"
-          outlined
           label="Описание условий оплаты (для заявки)"
         />
       </div>
@@ -65,7 +51,6 @@
         <v-textarea
           v-model="state.orderContractNote"
           rows="10"
-          outlined
           label="Примечание для Договора-заявки"
         />
       </div>
@@ -73,15 +58,12 @@
         <v-text-field
           label="Основание для входящего акта об оказании услуг и счета"
           v-model="state.actBasis"
-          outlined
-          dense
         />
       </div>
       <div class="fields-row">
         <v-textarea
           v-model="state.actDescription"
           rows="10"
-          outlined
           label="Примечание для входящего акта об оказании услуг"
         />
       </div>
@@ -89,20 +71,12 @@
         <v-textarea
           v-model="state.paymentBillDescription"
           rows="10"
-          outlined
           label="Примечание для cчета на оплату"
         />
       </div>
 
       <div class="fields-row">
-        <v-text-field
-          v-model="state.note"
-          label="Примечание"
-          dense
-          outlined
-          @blur="v$.note.$touch"
-          hide-details
-        />
+        <v-text-field v-model="state.note" label="Примечание" @blur="v$.note.$touch" hide-details />
       </div>
     </div>
   </div>

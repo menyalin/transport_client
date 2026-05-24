@@ -5,8 +5,8 @@
     </div>
     <div id="settings">
       <date-range-input v-model="dateRange" />
-      <v-btn small color="primary" @click="getReportHandler">
-        <v-icon left> mdi-download </v-icon> Скачать отчет
+      <v-btn size="small" color="primary" @click="getReportHandler">
+        <v-icon start> mdi-download </v-icon> Скачать отчет
       </v-btn>
     </div>
     <div id="report-body">

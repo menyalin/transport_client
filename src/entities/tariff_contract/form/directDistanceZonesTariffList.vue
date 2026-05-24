@@ -1,11 +1,5 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="preparedItems"
-    dense
-    :items-per-page="-1"
-    hide-default-footer
-  >
+  <v-data-table :headers="headers" :items="preparedItems" :items-per-page="-1" hide-default-footer>
     <template #[`item.truckKinds`]="{ item }">
       {{ formatTruckKinds(item.truckKinds) }}
     </template>
@@ -23,11 +17,11 @@
       </div>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn icon small @click="updateHandler(item)">
-        <v-icon small color="orange">mdi-pencil</v-icon>
+      <v-btn icon size="small" @click="updateHandler(item)">
+        <v-icon size="small" color="orange">mdi-pencil</v-icon>
       </v-btn>
-      <v-btn icon small @click="deleteHandler(item)">
-        <v-icon small color="red">mdi-delete</v-icon>
+      <v-btn icon size="small" @click="deleteHandler(item)">
+        <v-icon size="small" color="red">mdi-delete</v-icon>
       </v-btn>
     </template>
   </v-data-table>

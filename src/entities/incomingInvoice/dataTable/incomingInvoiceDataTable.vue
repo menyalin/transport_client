@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :headers="headers"
     checkbox-color="primary"
     v-model="selected"
@@ -8,14 +8,10 @@
     showSelect
     :loading="loading"
     height="70vh"
-    dense
-    :serverItemsLength="totalCount"
+    :items-length="totalCount"
     fixed-header
-    :footer-props="{
-      'items-per-page-options': [50, 100, 200],
-    }"
-    :options="listOptions"
-    @update:options="updateListOptionsHandler"
+    :items-per-page-options="[50, 100, 200]"
+    @update:model-value="onSelectedChange"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.date`]="{ item }">
@@ -51,7 +47,7 @@
     <template #[`footer.prepend`]>
       <IncomingInvoiceListAnalytics :data="analytics" />
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 
 <script>
@@ -104,11 +100,15 @@ export default {
     function updateListOptionsHandler(options) {
       ctx.emit('update:listOptions', { ...options })
     }
+    function onSelectedChange(value) {
+      selected.value = value
+    }
 
     return {
       selected,
       dblClickRow,
       updateListOptionsHandler,
+      onSelectedChange,
       moneyFormatter,
       analytics,
     }

@@ -3,10 +3,8 @@
     <h5>Документы:</h5>
     <div class="btn-wrapper">
       <v-btn
-        text
-        small
+        size="small"
         color="primary"
-        outlined
         :disabled="readonly || !isValid"
         @click="openGroupDocDialog"
       >
@@ -14,7 +12,7 @@
       </v-btn>
       <slot />
     </div>
-    <v-simple-table dense>
+    <v-table>
       <template #default>
         <thead>
           <tr>
@@ -33,50 +31,44 @@
             :key="idx"
             :class="{ 'not-accepted': item.status !== 'accepted' }"
           >
-            <td class="text-center">
-              <v-simple-checkbox v-model="item.addToRegistry" dense hide-details color="primary" />
-            </td>
+            <td class="text-center" />
             <td>
               <v-select
                 v-model="item.type"
-                dense
                 hide-details
                 :disabled="readonly"
                 :items="docTypes"
+                itemTitle="text"
                 class="my-2"
               />
             </td>
             <td>
-              <v-text-field v-model.trim="item.number" dense hide-details :disabled="readonly" />
+              <v-text-field v-model.trim="item.number" hide-details :disabled="readonly" />
             </td>
             <td>
-              <v-text-field v-model.trim="item.note" dense hide-details :disabled="readonly" />
+              <v-text-field v-model.trim="item.note" hide-details :disabled="readonly" />
             </td>
             <td>
               <v-select
                 v-model="item.status"
-                dense
                 hide-details
                 :items="docStatuses"
+                itemTitle="text"
                 :disabled="readonly"
               />
             </td>
             <td>
-              <v-text-field
-                v-model="item.date"
-                type="date"
-                dense
-                hide-details
-                :disabled="readonly"
-              />
+              <v-text-field v-model="item.date" type="date" hide-details :disabled="readonly" />
             </td>
             <td>
-              <v-icon small :disabled="readonly" @click="deleteRow(idx)"> mdi-delete </v-icon>
+              <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
+                mdi-delete
+              </v-icon>
             </td>
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
     <app-group-dialog :dialog="groupDialog" @pushDocs="addGroup" @close="closeGroupDocDialog" />
   </div>
 </template>

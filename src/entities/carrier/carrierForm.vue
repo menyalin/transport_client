@@ -7,7 +7,7 @@
       @submit="submitHandler"
     />
 
-    <v-text-field v-model="state.name" outlined label="Название ТК" dense hide-details />
+    <v-text-field v-model="state.name" label="Название ТК" hide-details />
     <div class="row-input">
       <v-checkbox v-model="state.outsource" label="Привлеченный перевозчик" />
       <v-checkbox
@@ -24,7 +24,7 @@
     <ContactsInfo v-model="state.contacts" />
     <EntityFiles v-if="item && item._id" :itemId="item._id" docType="carrier" />
     <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler" class="mt-5">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>

@@ -2,13 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
         <div class="text-h5 ma-3">Создать группу тарифов</div>
@@ -28,7 +22,7 @@
           />
           <v-btn
             color="primary"
-            small
+            size="small"
             class="ma-2"
             hint="alt + N"
             :disabled="!allowCreateTariffItem"

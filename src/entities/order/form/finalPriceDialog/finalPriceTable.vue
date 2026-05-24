@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense>
+    <v-table>
       <template #default>
         <thead>
           <tr>
@@ -36,8 +36,7 @@
                     ? finalPricesMap.get(priceType.value)[priceField]
                     : null
                 "
-                class="input"
-                align="right"
+                class="input align-right"
                 type="number"
                 @blur="blurHandler"
                 @change="changeFinalPrice($event, priceType.value)"
@@ -89,7 +88,7 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </div>
 </template>
 <script>

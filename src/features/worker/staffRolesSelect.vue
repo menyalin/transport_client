@@ -5,11 +5,11 @@
       v-for="role in allRoles"
       :key="role.value"
       :label="role.text"
-      :input-value="roles?.includes(role.value)"
+      :model-value="roles?.includes(role.value)"
       :disabled="disabled"
       hide-details
       class="mt-0 pt-0"
-      @change="toggleRole(role.value)"
+      @update:model-value="toggleRole(role.value)"
     />
   </div>
 </template>

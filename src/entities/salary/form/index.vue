@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-dialog v-model="tmpDialog" max-width="800px" persistent>
+    <v-dialog
+      :model-value="tmpDialog"
+      @update:model-value="showDialog = $event"
+      max-width="800px"
+      persistent
+    >
       <v-card>
         <v-card-title>
           {{ tmpItem._id ? 'Редактировать тариф' : 'Добавить тариф' }}
@@ -10,8 +15,6 @@
             v-model="tmpItem.type"
             label="Тип"
             :items="$store.getters.salaryTariffTypes"
-            dense
-            outlined
             hide-details
           />
 
@@ -20,38 +23,24 @@
             label="ТК"
             :items="carrierItems"
             multiple
-            item-text="name"
+            item-title="name"
             item-value="_id"
-            dense
-            outlined
             hide-details
           />
 
-          <v-text-field
-            v-model="tmpItem.date"
-            type="date"
-            label="Дата"
-            dense
-            outlined
-            hide-details
-            readonly
-          />
+          <v-text-field v-model="tmpItem.date" type="date" label="Дата" hide-details readonly />
 
           <v-select
             v-model="tmpItem.liftCapacity"
             :items="$store.getters.liftCapacityTypes"
             label="Грузоподъемность ТС"
-            outlined
             multiple
-            dense
             hide-details
           />
           <v-select
             label="Типы грузополучателей"
             :items="$store.getters.partnerGroups"
-            dense
             multiple
-            outlined
             hide-details
             v-model="tmpItem.consigneeTypes"
           />
@@ -92,21 +81,8 @@
             v-model="returnTariff"
             :style="{ 'min-width': '550px' }"
           />
-          <v-text-field
-            v-model.number="tmpItem.sum"
-            dense
-            type="number"
-            label="Тариф"
-            outlined
-            hide-details
-          />
-          <v-text-field
-            v-model.trim="tmpItem.note"
-            label="Примечание"
-            dense
-            outlined
-            hide-details
-          />
+          <v-text-field v-model.number="tmpItem.sum" type="number" label="Тариф" hide-details />
+          <v-text-field v-model.trim="tmpItem.note" label="Примечание" hide-details />
         </v-card-text>
         <v-card-actions>
           <v-btn @click="tmpDialog = false"> Отмена </v-btn>
@@ -260,8 +236,8 @@ export default {
       this.$emit('update', this.formState)
       this.tmpDialog = false
     },
-    async deleteItem() {
-      const res = await this.$confirm('Вы уверены? Запись будет удалена')
+    deleteItem() {
+      const res = confirm('Вы уверены? Запись будет удалена')
       if (!res) return null
       else this.$emit('deletedItem', this.item._id)
     },

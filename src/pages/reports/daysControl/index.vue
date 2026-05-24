@@ -12,22 +12,14 @@
             label="Перевозчик"
             :items="carrierStore.carriers"
             hideDetails
-            outlined
-            item-text="name"
+            item-title="name"
             item-value="_id"
-            dense
             multiple
             clearable
             :style="{ 'max-width': '300px' }"
           />
-          <v-text-field
-            v-model.number="settings.dayCount"
-            label="Кол-во дней"
-            hideDetails
-            outlined
-            dense
-          />
-          <v-text-field v-model.trim="searchString" label="Поиск" hideDetails outlined dense />
+          <v-text-field v-model.number="settings.dayCount" label="Кол-во дней" hideDetails />
+          <v-text-field v-model.trim="searchString" label="Поиск" hideDetails />
         </div>
         <v-data-table
           :headers="headers"
@@ -36,7 +28,6 @@
           :search="searchString"
           fixed-header
           height="76vh"
-          dense
           :footer-props="{
             'items-per-page-options': [100, 200],
           }"

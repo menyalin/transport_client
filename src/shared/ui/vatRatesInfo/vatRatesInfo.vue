@@ -1,19 +1,18 @@
 <template>
   <div class="wrapper">
     <div v-if="showTitle" class="text-h6">НДС:</div>
-    <v-btn @click="addHandler" small color="primary">Добавить</v-btn>
+    <v-btn @click="addHandler" size="small" color="primary">Добавить</v-btn>
     <v-data-table
       :headers="HEADERS"
       :items="preparedItems"
       hide-default-footer
       height="300px"
-      dense
       fixed-header
       :itemsPerPage="-1"
       @dblclick:row="dblClickRowHandler"
     />
 
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog :model-value="dialog" @update:model-value="showDialog = $event" max-width="600">
       <VatRatesInfoForm
         :title="formTitle"
         :item="editedItem"
@@ -29,7 +28,7 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { HEADERS } from './tableHeaders'
 import VatRatesInfoForm from './vatRatesInfoForm.vue'
 
@@ -59,7 +58,6 @@ export default {
   emits: ['change'],
 
   setup(props, ctx) {
-    const { proxy } = getCurrentInstance()
     const editedItem = ref(null)
     const editingItemIndex = ref(null)
     const dialog = ref(false)
@@ -128,7 +126,7 @@ export default {
     }
 
     const removeHandler = async () => {
-      const res = await proxy.$confirm('Уверены, что хотите удалить эту ставку НДС?')
+      const res = confirm('Уверены, что хотите удалить эту ставку НДС?')
       if (!res) return
 
       const tmpRes = [...props.items]

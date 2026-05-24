@@ -6,15 +6,14 @@
       @submit="createHandler"
       @refresh="refreshHandler"
     />
-    <CarrierAgreementListSettings v-model="settings" @updateHeaders="changeHeaders" />
+    <CarrierAgreementListSettings v-model:settings="settings" @updateHeaders="changeHeaders" />
 
     <CarrierAgreementListDataTable
       :items="items"
       :loading="loading"
       :headers="headers"
       :totalCount="totalCount"
-      :options.sync="listOptions"
-      :settings="settings"
+      v-model:options="listOptions"
       @dblClickRow="dblClickRow"
     />
   </EntityListWrapper>
@@ -65,7 +64,7 @@ export default {
   },
 
   methods: {
-    dblClickRow(_, { item }) {
+    dblClickRow(item) {
       this.$router.push(`carrierAgreements/${item._id}`)
     },
   },

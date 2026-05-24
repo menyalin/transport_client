@@ -24,7 +24,7 @@
             label="Зона погрузки"
             :items="zoneItems"
             item-value="_id"
-            item-text="name"
+            item-title="name"
             auto-select-first
             v-model="form.loadingZone"
           />
@@ -34,16 +34,14 @@
             v-model.number="form.zones[idx].distance"
             label="До, км"
             :style="{ 'max-width': '100px' }"
-            dense
           />
           <v-text-field
             v-model.number="form.zones[idx].price"
             label="Тариф"
-            dense
             :style="{ 'max-width': '160px' }"
           />
-          <v-btn v-if="showDeleteBtn(idx)" icon small color="red" @click="deleteRow">
-            <v-icon small> mdi-delete </v-icon>
+          <v-btn v-if="showDeleteBtn(idx)" icon size="small" color="red" @click="deleteRow">
+            <v-icon size="small"> mdi-delete </v-icon>
           </v-btn>
           <v-btn v-if="showAddBtn(idx) && !invalidZones" icon color="primary" @click="addRow">
             <v-icon> mdi-plus-circle </v-icon>
@@ -198,4 +196,4 @@ export default {
   align-items: center;
 }
 </style>
-import { numeric } from 'vuelidate/lib/validators'
+import { numeric } from '@vuelidate/validators'

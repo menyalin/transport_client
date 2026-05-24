@@ -1,12 +1,17 @@
 <template>
-  <v-dialog v-model="dialog" max-width="800" persistent>
+  <v-dialog
+    :model-value="dialog"
+    @update:model-value="showDialog = $event"
+    max-width="800"
+    persistent
+  >
     <v-card>
       <v-card-title>
         {{ 'Редактировать сумму' }}
       </v-card-title>
       <v-card-text>
         <div clas s="form-wrapper">
-          <v-alert outlined :type="vatRateInfoDescription.type" dense>
+          <v-alert :type="vatRateInfoDescription.type">
             {{ vatRateInfoDescription.message }}
           </v-alert>
           <div class="fields-row">
@@ -14,9 +19,8 @@
               v-model="state.type"
               label="Тип затрат"
               :items="availablePriceTypes"
-              dense
-              outlined
               clearable
+              itemTitle="text"
               :style="{ 'max-width': '300px' }"
               :errorMessages="typeErrorMessages"
               @blur="v$.type.$touch()"
@@ -24,8 +28,6 @@
             <v-text-field
               v-model="state.price"
               :label="priceWithVat ? 'Сумма с НДС' : 'Сумма без НДС'"
-              outlined
-              dense
               type="number"
               :errorMessages="priceErrorMessages"
               :style="{ 'max-width': '200px' }"
@@ -34,13 +36,7 @@
           </div>
 
           <div class="fields-row">
-            <v-text-field
-              v-model.lazy="state.note"
-              label="Комментарий"
-              outlined
-              dense
-              hide-details
-            />
+            <v-text-field v-model.lazy="state.note" label="Комментарий" hide-details />
           </div>
         </div>
       </v-card-text>

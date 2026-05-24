@@ -5,18 +5,15 @@
     </v-btn>
     <DateRangeInput v-model="settings.period" class="mx-2" />
     <OrderDocStatusSelector
-      outlined
       v-model="settings.docStatuses"
       multiple
       clearable
-      dense
       label="Документы"
       hide-details
       :style="{ 'max-width': '400px' }"
     />
     <v-checkbox
       v-model="settings.includedIntoPaymentInvoice"
-      dense
       label="Только рейсы, включенные в исходящие акты"
     />
   </div>

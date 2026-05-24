@@ -11,6 +11,7 @@
             :items="$store.getters.allTruckKinds"
             clearable
             multiple
+            itemTitle="text"
             :style="{ 'max-width': '400px' }"
           />
           <v-select
@@ -20,6 +21,7 @@
               $store.getters.allTruckKinds.filter((i) => settings.truckKinds.includes(i.value))
             "
             :style="{ 'max-width': '220px' }"
+            itemTitle="text"
             clearable
           />
         </div>
@@ -28,6 +30,7 @@
             v-model="settings.liftCapacityTypes"
             label="Типы грузоподъемности"
             :items="$store.getters.allLiftCapacityTypes"
+            itemTitle="text"
             multiple
             clearable
             :style="{ 'max-width': '400px' }"
@@ -41,6 +44,7 @@
               )
             "
             clearable
+            itemTitle="text"
             :style="{ 'max-width': '220px' }"
           />
         </div>
@@ -48,6 +52,7 @@
           <v-select
             v-model="settings.loadDirections"
             label="Варианты загрузки"
+            itemTitle="text"
             :items="$store.getters.allLoadDirection"
             multiple
             clearable
@@ -61,6 +66,7 @@
                 settings.loadDirections.includes(i.value)
               )
             "
+            itemTitle="text"
             clearable
             :style="{ 'max-width': '220px' }"
           />
@@ -69,7 +75,6 @@
           v-model="settings.commonOrderContractNote"
           label="Примечание для договора-заявки"
           rows="15"
-          outlined
         />
       </v-card-text>
       <v-card-actions>

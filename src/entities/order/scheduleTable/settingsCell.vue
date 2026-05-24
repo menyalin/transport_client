@@ -1,44 +1,31 @@
 <template>
-  <v-menu offset-y :close-on-content-click="false">
-    <template #activator="{ on, attrs }">
-      <v-btn color="primary" dark v-bind="attrs" icon v-on="on">
-        <v-icon small> mdi-cog </v-icon>
+  <v-menu v-model="menuOpen" :close-on-content-click="false">
+    <template #activator="{ props }">
+      <v-btn color="primary" v-bind="props" icon>
+        <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
     <v-list class="px-3">
       <v-switch
         v-model="onlyTrucksWithRoutes"
         label="Только грузовики с рейсами"
-        dense
         hide-details
-        @change="changeOnlyTrucksWithRoutes"
+        @update:model-value="changeOnlyTrucksWithRoutes"
       />
       <v-switch
         v-model="onlyPlannedDates"
         label="Планируемые даты"
-        dense
         hide-details
-        @change="changeOnlyPlannedDates"
+        @update:model-value="changeOnlyPlannedDates"
       />
-      <v-switch
-        v-model="tmpSettings.showBufferZone"
-        label="Показать буферную зону"
-        dense
-        hide-details
-      />
-      <v-switch
-        v-model="tmpSettings.controlOnly"
-        label="Показывать 'на контроле'"
-        dense
-        hide-details
-      />
+      <v-switch v-model="tmpSettings.showBufferZone" label="Показать буферную зону" hide-details />
+      <v-switch v-model="tmpSettings.controlOnly" label="Показывать 'на контроле'" hide-details />
       <v-switch
         v-model="tmpSettings.showDowntimes"
         label="Показывать сервисы/выходные"
-        dense
         hide-details
       />
-      <v-switch v-model="tmpSettings.showNotes" label="Показать заметки" dense hide-details />
+      <v-switch v-model="tmpSettings.showNotes" label="Показать заметки" hide-details />
     </v-list>
   </v-menu>
 </template>
@@ -46,12 +33,8 @@
 import { ref, getCurrentInstance, onMounted } from 'vue'
 export default {
   name: 'SettingsCell',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
   props: {
-    settings: {
+    modelValue: {
       type: Object,
     },
   },
@@ -59,6 +42,7 @@ export default {
     const { proxy } = getCurrentInstance()
     const onlyTrucksWithRoutes = ref(true)
     const onlyPlannedDates = ref(false)
+    const menuOpen = ref(false)
 
     const changeOnlyTrucksWithRoutes = () => {
       proxy.$store.commit('changeOnlyTrucksWithRoutes')
@@ -75,6 +59,7 @@ export default {
     return {
       onlyTrucksWithRoutes,
       onlyPlannedDates,
+      menuOpen,
       changeOnlyTrucksWithRoutes,
       changeOnlyPlannedDates,
     }
@@ -95,7 +80,7 @@ export default {
       deep: true,
       handler: function (val) {
         localStorage.setItem(this.settingsName, JSON.stringify(val))
-        this.$emit('change', val)
+        this.$emit('update:modelValue', val)
       },
     },
   },

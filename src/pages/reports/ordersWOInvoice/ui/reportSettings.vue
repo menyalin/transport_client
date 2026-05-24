@@ -5,39 +5,35 @@
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
-    <DateRangeInput :period="settings.period" @change="updateSettings($event, 'period')" />
-
-    <v-autocomplete
-      :value="settings.carriers"
-      item-text="name"
-      item-value="_id"
-      label="ТК"
-      dense
-      clearable
-      auto-select-first
-      multiple
-      outlined
-      :items="carrierStore.carriers"
-      hide-details
-      :style="{ maxWidth: '300px' }"
-      @change="updateSettings($event, 'carriers')"
+    <refresh-btn @click="$emit('refresh')" />
+    <DateRangeInput
+      :model-value="settings.period"
+      @update:model-value="updateSettings($event, 'period')"
     />
 
     <v-autocomplete
-      :value="settings.agreements"
-      item-text="name"
+      :model-value="settings.carriers"
+      item-title="name"
+      item-value="_id"
+      label="ТК"
+      multiple
+      :items="carrierStore.carriers"
+      hide-details
+      :style="{ maxWidth: '300px' }"
+      @update:model-value="updateSettings($event, 'carriers')"
+    />
+
+    <v-autocomplete
+      :model-value="settings.agreements"
+      item-title="name"
       item-value="_id"
       label="Соглашения"
-      dense
       clearable
-      auto-select-first
       multiple
-      outlined
       :items="agreementItems"
       hide-details
       :style="{ maxWidth: '500px' }"
-      @change="updateSettings($event, 'agreements')"
+      @update:model-value="updateSettings($event, 'agreements')"
     />
   </div>
 </template>

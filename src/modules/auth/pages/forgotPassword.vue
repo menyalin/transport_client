@@ -1,6 +1,6 @@
 <template>
   <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
+    <v-row class="align-center justify-center">
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-4">
           <v-toolbar color="primary" dark flat>

@@ -12,20 +12,11 @@
         <div class="settings-wrapper">
           <v-select
             v-model="settings.partnerType"
-            outlined
             :items="partnerTypeItems"
             hide-details
-            dense
             :style="{ 'max-width': '400px' }"
           />
-          <v-text-field
-            v-model="settings.search"
-            label="Поиск"
-            outlined
-            hide-details
-            dense
-            clearable
-          />
+          <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
         </div>
         <v-data-table
           :headers="headers"
@@ -34,7 +25,6 @@
           fixed-header
           :search="settings.search"
           height="73vh"
-          dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"

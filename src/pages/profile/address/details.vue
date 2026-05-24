@@ -2,13 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert
-          v-model="error.show"
-          dismissible
-          type="error"
-          transition="scale-transition"
-          @change="toggleAlert"
-        >
+        <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
         <app-load-spinner v-if="loading" />
@@ -47,7 +41,7 @@ export default {
   setup(props, ctx) {
     const { updatePrevFormValue } = usePersistedFormState()
     const { proxy } = getCurrentInstance()
-    const { $router, $confirm, $store, $route } = proxy
+    const { $router, $store, $route } = proxy
 
     const item = ref(null)
     const tmpVal = ref(null)
@@ -92,7 +86,7 @@ export default {
       else $router.go(-1)
     }
     async function deleteHandler() {
-      const res = await $confirm('Вы действительно хотите удалить запись? ')
+      const res = confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           loading.value = true

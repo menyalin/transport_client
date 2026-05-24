@@ -1,25 +1,18 @@
 <template>
-  <div>
-    <app-load-spinner v-if="appLoading" />
-    <router-view v-else />
-  </div>
+  <v-app class="rounded rounded-md border">
+    <LoadSpinner v-if="appLoading" />
+    <router-view />
+  </v-app>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import { useAppStore } from './shared/useAppStore'
+import { LoadSpinner } from '@/shared/ui'
 
-export default {
-  name: 'App',
-  components: {
-    AppLoadSpinner,
-  },
-  setup() {
-    useAppStore()
-  },
-  computed: {
-    ...mapGetters(['appLoading']),
-  },
-}
+useAppStore()
+
+const vuexStore = useStore()
+const appLoading = computed(() => vuexStore.getters.appLoading)
 </script>

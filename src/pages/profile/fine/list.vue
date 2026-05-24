@@ -12,9 +12,7 @@
           <v-select
             v-model="settings.periodSetting"
             :items="periodSettingItems"
-            dense
             hide-details
-            outlined
             label="Период по"
             :style="{ maxWidth: '300px' }"
           />
@@ -23,9 +21,7 @@
           <v-select
             v-model="settings.status"
             :items="fineStatuses"
-            dense
             hide-details
-            outlined
             label="Статус"
             :style="{ maxWidth: '200px' }"
           />
@@ -33,49 +29,36 @@
             v-model="settings.truck"
             label="Грузовик / Прицеп"
             :items="trucks"
-            clearable
-            auto-select-first
-            outlined
             hide-details
-            dense
             :style="{ maxWidth: '250px' }"
           />
           <v-autocomplete
             v-model="settings.driver"
             label="Водитель"
             :items="drivers"
-            auto-select-first
-            clearable
-            outlined
             hide-details
-            dense
             :style="{ maxWidth: '350px' }"
           />
           <v-select
             v-model.trim="settings.categories"
             :items="$store.getters.fineCategories"
             label="Категория"
-            outlined
             clearable
             multiple
             hide-details
             singleLine
-            dense
           />
-          <v-checkbox v-model="showOnlySelected" label="Только отмеченные" hide-details dense />
+          <v-checkbox v-model="showOnlySelected" label="Только отмеченные" hide-details />
           <v-checkbox
             v-model="settings.needToWithheld"
             label="Удержать из ЗП водителя"
             hide-details
-            dense
           />
           <v-text-field
             v-model.lazy.trim="settings.searchStr"
             label="Поиск"
-            outlined
             clearable
             hide-details
-            dense
             :style="{ minWidth: '450px', maxWidth: '600px' }"
           />
           <v-autocomplete
@@ -84,33 +67,28 @@
             :items="workerItems"
             auto-select-first
             clearable
-            outlined
             hide-details
-            dense
             :loading="workerIsLoading"
             :style="{ maxWidth: '350px' }"
-            :filter="() => true"
-            :search-input="searchString"
-            @update:search-input="handleSearchInputUpdate"
-            @change="handleChange"
+            :customFilter="() => true"
+            :search="searchString"
+            @update:search="handleSearchInputUpdate"
+            @update:model-value="handleChange"
           />
         </div>
-        <v-data-table
+        <v-data-table-server
           v-model="selected"
           item-key="_id"
           show-select
           :headers="headers"
           :items="preparedList"
           :loading="loading"
-          :singleSelect="false"
-          dense
           fixed-header
           height="71vh"
-          :serverItemsLength="count"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="listOptions"
+          :items-length="count"
+          :items-per-page-options="[50, 100, 200]"
+          v-model:options="listOptions"
+          @update:model-value="onSelectedChange"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isWithheld`]="{ item }">
@@ -120,105 +98,79 @@
           <template #[`footer.prepend`]>
             <FineListAnalitics :data="analyticData" />
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
+
+<script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { ButtonsPanel, DateRangeInput } from '@/shared/ui'
 import { useItemsForAutocomplete } from '@/entities/worker'
 import { FineListAnalitics } from '@/entities/fine'
 import { useFineList } from './useList'
 
-export default {
-  name: 'FineList',
-  components: {
-    ButtonsPanel,
-    DateRangeInput,
-    FineListAnalitics,
-  },
+defineOptions({ name: 'FineList' })
 
-  setup(_props, ctx) {
-    const {
-      fineStatuses,
-      settings,
-      headers,
-      selected,
-      showOnlySelected,
-      periodSettingItems,
-      loading,
-      refetch,
-      count,
-      analyticData,
-      preparedList,
-      setInitSettings,
-      listOptions,
-    } = useFineList()
+const router = useRouter()
+const store = useStore()
 
-    const {
-      items: workers,
-      loading: workerIsLoading,
-      handleChange,
-      handleSearchInputUpdate,
-      searchString,
-    } = useItemsForAutocomplete({
-      ctx,
-      propValue: settings.value.payingByWorker,
-    })
-    const workerItems = computed(() => {
-      return [{ value: '__driver__', text: 'ВОДИТЕЛЬ' }, ...workers.value]
-    })
-    return {
-      workerItems,
-      workerIsLoading,
-      handleChange,
-      handleSearchInputUpdate,
-      searchString,
-      fineStatuses,
-      periodSettingItems,
-      settings,
-      listOptions,
-      headers,
-      loading,
-      refetch,
-      count,
-      analyticData,
-      preparedList,
-      selected,
-      showOnlySelected,
-      setInitSettings,
-    }
-  },
-  computed: {
-    trucks() {
-      return this.$store.getters
-        .activeTrucksOnDate()
-        .filter((item) => ['truck', 'trailer'].includes(item.type))
-        .filter((item) => !item.hideInFines)
-        .map((item) => ({ value: item._id, text: item.regNum }))
-    },
+const {
+  fineStatuses,
+  settings,
+  headers,
+  selected,
+  showOnlySelected,
+  periodSettingItems,
+  loading,
+  refetch,
+  count,
+  analyticData,
+  preparedList,
+  listOptions,
+  onSelectedChange,
+} = useFineList()
 
-    drivers() {
-      return this.$store.getters
-        .activeDriversOnDate()
-        .filter((item) => !item.hideInFines)
-        .map((item) => ({ value: item._id, text: item.fullName }))
-    },
-  },
+const {
+  items: workers,
+  loading: workerIsLoading,
+  handleChange,
+  handleSearchInputUpdate,
+  searchString,
+} = useItemsForAutocomplete({
+  ctx: { emit: () => {} },
+  propValue: computed(() => settings.value.payingByWorker),
+})
 
-  methods: {
-    create() {
-      this.$router.push({ name: 'FineCreate' })
-    },
+const workerItems = computed(() => [{ value: '__driver__', text: 'ВОДИТЕЛЬ' }, ...workers.value])
 
-    dblClickRow(_, { item }) {
-      this.$router.push(`fines/${item._id}`)
-    },
-  },
+const trucks = computed(() =>
+  store.getters
+    .activeTrucksOnDate()
+    .filter((item) => ['truck', 'trailer'].includes(item.type))
+    .filter((item) => !item.hideInFines)
+    .map((item) => ({ value: item._id, text: item.regNum }))
+)
+
+const drivers = computed(() =>
+  store.getters
+    .activeDriversOnDate()
+    .filter((item) => !item.hideInFines)
+    .map((item) => ({ value: item._id, text: item.fullName }))
+)
+
+function create() {
+  router.push({ name: 'FineCreate' })
+}
+
+function dblClickRow(_, { item }) {
+  router.push(`fines/${item._id}`)
 }
 </script>
+
 <style scoped>
 .filter-wrapper {
   display: flex;

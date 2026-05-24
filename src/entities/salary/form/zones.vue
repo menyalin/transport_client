@@ -4,16 +4,12 @@
       ref="loadingEl"
       :value="zones.loadingZone"
       label="Зона погрузки"
-      dense
-      outlined
       hide-details
       @change="changeHandler($event, 'loadingZone')"
     />
     <app-zone-autocomplete
       :value="zones.unloadingZone"
       label="Зона разгрузки"
-      dense
-      outlined
       hide-details
       @change="changeHandler($event, 'unloadingZone')"
     />

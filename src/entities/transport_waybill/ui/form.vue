@@ -2,7 +2,10 @@
   <v-card>
     <v-card-title> {{ item ? 'Редактирование' : 'Создание' }} транспортной накладной </v-card-title>
     <v-card-text class="form-wrapper">
-      <v-radio-group v-model="form.shipperAddressId" @change="changeShipperAddressHandler">
+      <v-radio-group
+        v-model="form.shipperAddressId"
+        @update:model-value="changeShipperAddressHandler"
+      >
         <template v-slot:label>
           <div><b>Грузоотправитель</b></div>
         </template>
@@ -30,8 +33,6 @@
         <v-text-field
           label="Номер ТрН"
           v-model="v$.number.$model"
-          dense
-          outlined
           required
           @blur="v$.number.$touch"
           :error-messages="getErrorMessage(v$.number)"
@@ -39,8 +40,6 @@
         <DateTimeInput
           label="Дата накладной"
           v-model="v$.date.$model"
-          dense
-          outlined
           required
           :error-messages="getErrorMessage(v$.date)"
           :style="{ maxWidth: '200px' }"
@@ -52,8 +51,6 @@
         auto-grow
         rows="3"
         v-model="v$.docsDescription.$model"
-        outlined
-        dense
         @blur="v$.note.$touch"
         :error-messages="getErrorMessage(v$.docsDescription)"
       />
@@ -62,8 +59,6 @@
         auto-grow
         rows="3"
         v-model="v$.note.$model"
-        outlined
-        dense
         @blur="v$.note.$touch"
         :error-messages="getErrorMessage(v$.note)"
       />

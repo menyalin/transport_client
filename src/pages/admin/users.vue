@@ -2,9 +2,9 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-data-table dense :headers="headers" :items="activeConnection" :items-per-page="-1">
+        <v-data-table :headers="headers" :items="activeConnection" :items-per-page="-1">
           <template #top>
-            <v-subheader>Active connections</v-subheader>
+            <h3>Active connections</h3>
           </template>
         </v-data-table>
       </v-col>

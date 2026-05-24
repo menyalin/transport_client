@@ -1,19 +1,18 @@
 <template>
   <div class="wrapper">
     <div class="text-h6">Доступные соглашения:</div>
-    <v-btn @click="addAgreementHandler" small color="primary">Добавить</v-btn>
+    <v-btn @click="addAgreementHandler" size="small" color="primary">Добавить</v-btn>
     <v-data-table
       :headers="headers"
       :items="preparedAgreements"
       hide-default-footer
       height="300px"
-      dense
       fixed-header
       :itemsPerPage="-1"
       selected
       @dblclick:row="dblClickRowHandler"
     />
-    <v-dialog v-model="dialog" max-width="800">
+    <v-dialog :model-value="dialog" @update:model-value="showDialog = $event" max-width="800">
       <AllowedAgreementForm
         :title="formTitle"
         :item="editedItem"
@@ -27,7 +26,7 @@
   </div>
 </template>
 <script>
-import { ref, computed, getCurrentInstance, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { BorderedBlock } from '@/shared/ui'
 import { HEADERS } from './tableHeaders'
 import AllowedAgreementForm from './allowedAgreementForm.vue'
@@ -47,7 +46,6 @@ export default {
     agreementItems: Array, // все соглашения с перевозчика - для селекта
   },
   setup(props, ctx) {
-    const { proxy } = getCurrentInstance()
     const editedItem = ref(null)
     const dialog = ref(false)
     const agreementItemsMap = computed(() => {
@@ -89,7 +87,7 @@ export default {
       dialog.value = true
     }
     const removeHandler = async () => {
-      const res = await proxy.$confirm('Вы уверены?')
+      const res = confirm('Вы уверены?')
       if (!res) return
 
       const tmpRes = [...props.agreements]

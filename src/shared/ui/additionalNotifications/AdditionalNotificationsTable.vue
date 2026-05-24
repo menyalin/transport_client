@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table>
+  <v-table>
     <template #default>
       <thead>
         <tr>
@@ -20,7 +20,7 @@
         </tr>
 
         <tr v-else-if="!items.length">
-          <td colspan="5" class="text-center py-8 grey--text">Нет напоминаний</td>
+          <td colspan="5" class="text-center py-8 text-grey">Нет напоминаний</td>
         </tr>
 
         <tr v-for="(item, index) in items" :key="`notification-${index}`">
@@ -35,22 +35,28 @@
           </td>
           <td>
             <span v-if="item.note">{{ item.note }}</span>
-            <span v-else class="grey--text text--lighten-1">-</span>
+            <span v-else class="text-grey-lighten-1">-</span>
           </td>
           <td class="text-center">
             <v-btn
               icon
-              small
+              size="small"
               color="orange"
               class="mr-2"
               @click="$emit('edit', index)"
               :disabled="loading"
             >
-              <v-icon small>mdi-pencil</v-icon>
+              <v-icon size="small">mdi-pencil</v-icon>
             </v-btn>
 
-            <v-btn icon small color="red" @click="$emit('delete', index)" :disabled="loading">
-              <v-icon small>mdi-delete</v-icon>
+            <v-btn
+              icon
+              size="small"
+              color="red"
+              @click="$emit('delete', index)"
+              :disabled="loading"
+            >
+              <v-icon size="small">mdi-delete</v-icon>
             </v-btn>
           </td>
         </tr>
@@ -59,14 +65,14 @@
       <tfoot>
         <tr>
           <td colspan="5" class="pa-2">
-            <v-btn color="primary" @click="$emit('add')" :disabled="loading" small>
+            <v-btn color="primary" @click="$emit('add')" :disabled="loading" size="small">
               Добавить напоминание
             </v-btn>
           </td>
         </tr>
       </tfoot>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 
 <script>

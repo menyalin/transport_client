@@ -20,26 +20,22 @@
         <v-autocomplete
           v-model="state.carrier"
           label="Перевозчик"
-          dense
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
           :disabled="disabledCarriers"
           :items="outsourceCarriers"
           :style="{ minWidth: '400px' }"
-          @change="carrierChangeHandler"
+          @update:model-value="carrierChangeHandler"
         />
         <v-autocomplete
           v-model="state.agreement"
           label="Соглашение"
-          dense
           required
           item-value="_id"
-          item-text="name"
+          item-title="name"
           clearable
-          outlined
           :disabled="disabledAgreement || hasOrders"
           :items="carrierAgreements"
           :style="{ minWidth: '400px' }"
@@ -48,68 +44,41 @@
           label="Статус"
           v-model="state.status"
           :items="statusItems"
-          dense
-          outlined
+          itemTitle="text"
           :disabled="!allowToChangeStatus"
-          @change="statusChangeHandler"
+          @update:model-value="statusChangeHandler"
           :style="{ maxWidth: '200px' }"
         />
       </div>
 
       <div class="fields-row">
-        <v-text-field
-          label="Номер"
-          v-model.trim="state.number"
-          dense
-          outlined
-          :style="{ maxWidth: '250px' }"
-        />
-        <DateTimeInput
-          label="Дата акта"
-          v-model="state.date"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-        />
+        <v-text-field label="Номер" v-model.trim="state.number" :style="{ maxWidth: '250px' }" />
+        <DateTimeInput label="Дата акта" v-model="state.date" />
       </div>
 
       <div class="fields-row">
-        <DateTimeInput
-          label="Дата получения акта"
-          v-model="state.receiptDate"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-        />
-        <DateTimeInput
-          label="Плановая дата оплаты"
-          v-model="state.plannedPayDate"
-          dense
-          outlined
-          type="date"
-          :style="{ maxWidth: '250px' }"
-        />
+        <DateTimeInput label="Дата получения акта" v-model="state.receiptDate" />
+        <DateTimeInput label="Плановая дата оплаты" v-model="state.plannedPayDate" />
         <DateTimeInput
           v-if="isVisiblePayDateField"
           label="Факт оплаты"
           v-model="state.payDate"
-          dense
-          outlined
-          type="date"
           disabled
-          :style="{ maxWidth: '250px' }"
         />
         <v-btn v-if="isVisiblePayInvoiceBtn" color="primary" @click="payInvoiceHandler">
           Счет оплачен
         </v-btn>
       </div>
-      <v-dialog v-model="payDateDialog" persistent max-width="400">
+      <v-dialog
+        :model-value="payDateDialog"
+        @update:model-value="showDialog = $event"
+        persistent
+        max-width="400"
+      >
         <v-card>
           <v-card-title>Дата оплаты</v-card-title>
           <v-card-text>
-            <DateTimeInput v-model="payDateFieldData" type="date" outlined />
+            <DateTimeInput v-model="payDateFieldData" />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -130,14 +99,7 @@
         Подобрать рейсы
       </v-btn>
       <OrdersTable :invoiceId="item._id" :allowDeleteOrders="allowedToChangeOrders" class="ma-3" />
-      <v-text-field
-        v-model="state.note"
-        label="Примечание"
-        dense
-        outlined
-        @blur="v$.note.$touch"
-        hide-details
-      />
+      <v-text-field v-model="state.note" label="Примечание" @blur="v$.note.$touch" hide-details />
     </div>
   </div>
 </template>

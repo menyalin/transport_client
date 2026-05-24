@@ -1,42 +1,26 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
-import Vuelidate from 'vuelidate'
-import VuetifyConfirm from 'vuetify-confirm'
+import { createPinia } from 'pinia'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { createPinia, PiniaVuePlugin } from 'pinia'
 
+dayjs.extend(customParseFormat)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(customParseFormat)
 dayjs.locale('ru')
 
-Vue.use(Vuelidate)
-Vue.config.productionTip = false
+const app = createApp(App)
 
-Vue.use(VuetifyConfirm, {
-  vuetify,
-  buttonTrueText: 'Ок',
-  buttonFalseText: 'Отмена',
-  color: 'error',
-  icon: 'mdi-alert',
-  title: 'Внимание',
-  width: 350,
-  property: '$confirm',
-})
+app.use(router)
+app.use(store)
+app.use(vuetify)
+app.use(createPinia())
 
-Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
-new Vue({
-  router,
-  store,
-  pinia,
-  vuetify,
-  render: (h) => h(App),
-}).$mount('#app')
+app.mount('#app')

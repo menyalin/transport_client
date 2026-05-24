@@ -1,7 +1,7 @@
 export const VAT_RATE_ITEMS = [
-  { text: 'Без НДС', value: 0 },
-  { text: '5%', value: 5 },
-  { text: '8%', value: 8 },
-  { text: '20%', value: 20 },
-  { text: '22%', value: 22 },
+  { title: 'Без НДС', value: 0 },
+  { title: '5%', value: 5 },
+  { title: '8%', value: 8 },
+  { title: '20%', value: 20 },
+  { title: '22%', value: 22 },
 ]

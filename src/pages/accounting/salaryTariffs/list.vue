@@ -17,8 +17,6 @@
           <v-text-field
             v-model="settings.date"
             type="date"
-            outlined
-            dense
             hide-details
             label="Тарифы на дату"
             :style="{ 'max-width': '220px' }"
@@ -27,10 +25,8 @@
             v-model="settings.tk"
             label="ТК"
             :items="carriers"
-            dense
-            item-text="name"
+            item-title="name"
             item-value="_id"
-            outlined
             clearable
             hide-details
             :style="{ 'max-width': '220px' }"
@@ -38,9 +34,7 @@
           <v-select
             v-model="settings.type"
             :items="salaryTariffTypes"
-            outlined
             clearable
-            dense
             hide-details
             label="Тип тарифа"
             :style="{ 'max-width': '250px' }"
@@ -48,27 +42,22 @@
           <v-select
             v-model="settings.liftCapacity"
             :items="liftCapacityTypes"
-            outlined
             clearable
-            dense
             hide-details
             label="Грузоподъемность"
             :style="{ 'max-width': '180px' }"
           />
         </div>
 
-        <v-data-table
+        <v-data-table-server
           :headers="headers"
           :items="filteredList"
           :loading="loading"
           height="73vh"
-          dense
           fixed-header
-          :serverItemsLength="count"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="settings.listOptions"
+          :items-length="count"
+          :items-per-page-options="[50, 100, 200]"
+          v-model:options="settings.listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item._result`]="{ item }">
@@ -78,7 +67,7 @@
             <app-return-cell v-else-if="item.type === 'return'" :item="item" />
             <div v-else>{{ item._result }}</div>
           </template>
-        </v-data-table>
+        </v-data-table-server>
         <salary-tariff-form
           v-model="editableItem"
           :carrierItems="carriers"

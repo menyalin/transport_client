@@ -10,20 +10,16 @@
           <DateTimeInput
             v-model="settings.date"
             label="Отчет на дату"
-            outlined
             hideDetails
-            dense
             type="datetime-local"
             :style="{ 'max-width': '200px' }"
           />
           <v-select
             v-model="settings.tkName"
             :items="carrierStore.carriers"
-            item-text="name"
+            item-title="name"
             item-value="_id"
             label="ТК"
-            dense
-            outlined
             hide-details
             clearable
             :style="{ 'max-width': '260px' }"
@@ -36,7 +32,6 @@
           :search="settings.search"
           fixed-header
           height="78vh"
-          dense
           :footer-props="{
             'items-per-page-options': [50, 100, 200],
           }"

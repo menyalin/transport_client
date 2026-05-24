@@ -1,30 +1,11 @@
 <template>
-  <v-select
-    v-bind="$attrs"
-    :items="items"
-    :value="value"
-    @change="$emit('change', $event)"
-    :label="$attrs.label || 'Ставка НДС'"
-  />
+  <v-select v-bind="$attrs" v-model="value" :label="$attrs.label || 'Ставка НДС'" :items="items" />
 </template>
-<script>
+
+<script setup>
 import { VAT_RATE_ITEMS } from '@/shared/constants'
 
-export default {
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    value: {
-      type: Number,
-      default: null,
-    },
-  },
+const value = defineModel()
 
-  setup() {
-    return { items: VAT_RATE_ITEMS }
-  },
-}
+const items = VAT_RATE_ITEMS
 </script>
-<style lang=""></style>

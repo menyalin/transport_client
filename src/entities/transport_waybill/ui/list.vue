@@ -2,7 +2,6 @@
   <v-data-table
     :items="preparedItems"
     :headers="headers"
-    dense
     :itemsPerPage="-1"
     hide-default-footer
     @dblclick:row="dblClickRowHandler"
@@ -16,7 +15,7 @@
   </v-data-table>
 </template>
 <script>
-import { computed, getCurrentInstance } from 'vue'
+import { computed } from 'vue'
 export default {
   name: 'TransportWaybillList',
   props: {
@@ -28,7 +27,6 @@ export default {
     getPartnerNameByAddressId: Function,
   },
   setup(props, ctx) {
-    const { proxy } = getCurrentInstance()
     const headers = [
       { value: 'download' },
       { value: 'number', text: 'Номер' },
@@ -61,8 +59,8 @@ export default {
       ctx.emit('download', itemId)
     }
 
-    async function removeItemHandler(itemId) {
-      const res = await proxy.$confirm('Уверены?')
+    function removeItemHandler(itemId) {
+      const res = confirm('Уверены?')
       if (res) ctx.emit('remove', itemId)
     }
 

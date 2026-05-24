@@ -1,33 +1,27 @@
 <template>
   <div id="points-wrapper">
     <v-autocomplete
-      :value="additionalPoints.clients"
+      :model-value="additionalPoints.clients"
       ref="routeTypeEl"
       label="Клиенты"
-      dense
       :items="clients"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      outlined
       hide-details
-      @change="changeHandler($event, 'clients')"
+      @update:model-value="changeHandler($event, 'clients')"
     />
     <v-select
-      :value="additionalPoints.orderType"
+      :model-value="additionalPoints.orderType"
       label="Тип рейса"
       :items="orderAnalyticTypes"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'orderType')"
+      @update:model-value="changeHandler($event, 'orderType')"
     />
     <v-text-field
-      :value="additionalPoints.includedPoints"
+      :model-value="additionalPoints.includedPoints"
       label="Кол-во точек включенных в тариф"
-      dense
       type="number"
-      outlined
       hide-details
       @change="changeHandler($event, 'includedPoints')"
     />

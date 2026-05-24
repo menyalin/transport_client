@@ -1,7 +1,6 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="items"
-    dense
     :headers="headers"
     :loading="loading"
     :serverItemsLength="count"
@@ -29,7 +28,7 @@
     <template #[`item.endDate`]="{ item }">
       {{ item.endDate ? new Date(item.endDate).toLocaleDateString() : null }}
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script>
 import tableHeaders from './listDataTableHeaders'

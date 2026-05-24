@@ -7,112 +7,96 @@
     />
     <refresh-btn @click.native="$emit('refresh')" />
     <v-text-field
-      :value="settings.date"
+      :model-value="settings.date"
       type="date"
       label="Дата (конец периода)"
-      dense
       clearable
-      outlined
       hide-details
       :style="{ maxWidth: '230px' }"
       @change="updateSettings($event, 'date')"
     />
 
     <v-select
-      :value="settings.state"
+      :model-value="settings.state"
       label="Документы"
-      dense
       clearable
       multiple
-      outlined
       :items="stateItems"
       hide-details
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'state')"
+      @update:model-value="updateSettings($event, 'state')"
     />
 
     <v-select
-      :value="settings.tks"
-      item-text="name"
+      :model-value="settings.tks"
+      item-title="name"
       item-value="_id"
       label="ТК"
-      dense
       clearable
       multiple
-      outlined
       :items="tkNameItems"
       hide-details
       :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'tks')"
+      @update:model-value="updateSettings($event, 'tks')"
     />
 
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
+      :model-value="settings.clients"
+      item-title="name"
       item-value="_id"
       label="Клиенты"
-      dense
       clearable
       auto-select-first
       multiple
-      outlined
       :items="clientItems"
       hide-details
       :style="{ maxWidth: '280px' }"
-      @change="updateSettings($event, 'clients')"
+      @update:model-value="updateSettings($event, 'clients')"
     />
 
     <v-autocomplete
-      :value="settings.driver"
-      item-text="fullName"
+      :model-value="settings.driver"
+      item-title="fullName"
       item-value="_id"
       label="Водитель"
-      dense
       clearable
       auto-select-first
-      outlined
       :items="driverItems"
       hide-details
       :style="{ maxWidth: '320px' }"
-      @change="updateSettings($event, 'driver')"
+      @update:model-value="updateSettings($event, 'driver')"
     />
     <v-autocomplete
-      :value="settings.truck"
-      item-text="regNum"
+      :model-value="settings.truck"
+      item-title="regNum"
       item-value="_id"
       label="Грузовик"
-      dense
       auto-select-first
       clearable
-      outlined
       :items="truckItems"
       hide-details
       :style="{ maxWidth: '320px' }"
-      @change="updateSettings($event, 'truck')"
+      @update:model-value="updateSettings($event, 'truck')"
     />
     <v-select
-      :value="settings.getDocsDays"
+      :model-value="settings.getDocsDays"
       label="Сдача документов, дней"
-      dense
       clearable
       multiple
-      outlined
       :items="daysIntervalItems"
       hide-details
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'getDocsDays')"
+      @update:model-value="updateSettings($event, 'getDocsDays')"
     />
     <v-select
-      :value="settings.reviewDocsDays"
+      :model-value="settings.reviewDocsDays"
       label="Проверка документов, дней"
-      dense
       clearable
-      outlined
       multiple
       :items="daysIntervalItems"
       hide-details
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'reviewDocsDays')"
+      @update:model-value="updateSettings($event, 'reviewDocsDays')"
     />
   </div>
 </template>

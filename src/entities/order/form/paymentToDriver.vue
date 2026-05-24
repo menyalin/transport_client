@@ -2,14 +2,7 @@
   <div>
     <div class="title-row">
       <BlockTitle>Доплата водителю</BlockTitle>
-      <v-btn
-        v-if="!showDataRow && hasWritePermission"
-        small
-        text
-        outlined
-        color="primary"
-        @click="add"
-      >
+      <v-btn v-if="!showDataRow && hasWritePermission" size="small" color="primary" @click="add">
         Добавить
       </v-btn>
     </div>
@@ -20,24 +13,21 @@
         <i>Отв:</i>
         <app-worker-autocomplete labelOnly v-model="value.worker" />
       </div>
-      <v-btn v-if="hasWritePermission" icon small @click="deletePayment">
-        <v-icon color="red" small>mdi-delete</v-icon>
+      <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment">
+        <v-icon color="red" size="small">mdi-delete</v-icon>
       </v-btn>
     </div>
-    <v-dialog v-model="dialog" max-width="800px">
+    <v-dialog :model-value="dialog" @update:model-value="showDialog = $event" max-width="800px">
       <v-card>
         <v-card-title>Доплата водителю </v-card-title>
         <v-card-text>
           <v-text-field
             type="number"
             v-model.number="tmpVal.sum"
-            outlined
-            dense
             label="Сумма"
             :style="{ maxWidth: '200px' }"
           />
-          <v-text-field v-model.trim="tmpVal.note" outlined dense label="Примечание" />
-          <app-worker-autocomplete v-model="tmpVal.worker" outlined dense label="Ответственный" />
+          <v-text-field v-model.trim="tmpVal.note" label="Примечание" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />

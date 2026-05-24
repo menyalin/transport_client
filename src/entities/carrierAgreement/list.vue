@@ -1,41 +1,37 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="items"
     :headers="headers"
     item-key="_id"
     :loading="loading"
-    :serverItemsLength="totalCount"
-    :options="options"
-    dense
+    :items-length="totalCount"
+    :page="options.page"
+    :items-per-page="options.itemsPerPage"
     height="70vh"
-    :footerProps="{
-      'items-per-page-options': [50, 100, 200],
-    }"
     @dblclick:row="dblClickRow"
     @update:options="updateOptionsHandler"
   />
 </template>
-<script>
-export default {
+<script setup>
+defineOptions({
   name: 'CarrierAgreementList',
-  props: {
-    items: Array,
-    headers: Array,
-    totalCount: Number,
-    options: Object,
-    settings: Object,
-    loading: Boolean,
-  },
-  setup(props, ctx) {
-    const dblClickRow = (...args) => ctx.emit('dblClickRow', ...args)
+})
 
-    const updateOptionsHandler = (...args) => {
-      ctx.emit('update:options', ...args)
-    }
-    return {
-      dblClickRow,
-      updateOptionsHandler,
-    }
-  },
+const options = defineModel('options')
+
+defineProps({
+  items: Array,
+  headers: Array,
+  totalCount: Number,
+  loading: Boolean,
+})
+
+const emits = defineEmits(['dblClickRow'])
+const dblClickRow = (_, { item }) => {
+  emits('dblClickRow', item)
+}
+
+const updateOptionsHandler = (val) => {
+  emits('update:options', val)
 }
 </script>

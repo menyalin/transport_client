@@ -1,11 +1,9 @@
 <template>
-  <v-app>
-    <app-bar title="Отчеты" />
-    <v-main>
-      <router-view />
-      <app-snackbar />
-    </v-main>
-  </v-app>
+  <app-bar title="Отчеты" />
+  <v-main>
+    <router-view />
+    <app-snackbar />
+  </v-main>
 </template>
 <script>
 import AppBar from '@/modules/common/components/appBar/index.vue'

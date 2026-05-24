@@ -1,105 +1,68 @@
 <template>
   <div class="wrapper">
     <v-select
-      :value="settings.state"
+      v-model="settings.state"
       :items="stateItems"
-      dense
       hide-details
       clearable
-      outlined
-      auto-select-first
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'state')"
       label="Состояние"
     />
 
     <v-autocomplete
-      :value="settings.executor"
+      v-model="settings.executor"
       :items="carrierItems"
-      item-text="name"
+      item-title="name"
       item-value="_id"
       label="ТК Исполнитель"
-      dense
       hide-details
-      clearable
-      outlined
-      auto-select-first
-      @change="updateSettings($event, 'executor')"
       :style="{ maxWidth: '300px' }"
     />
     <v-autocomplete
-      :value="settings.clients"
-      item-text="name"
-      item-value="_id"
+      v-model="settings.clients"
       :items="clientItems"
-      dense
+      item-title="name"
+      item-value="_id"
       hide-details
       clearable
-      outlined
       label="Клиенты"
-      @change="updateSettings($event, 'clients')"
       :style="{ maxWidth: '400px' }"
       multiple
     />
-    <vat-rate-select
-      :value="settings.vatRate"
-      dense
-      hide-details
-      clearable
-      outlined
+    <!-- <vat-rate-select
       label="НДС"
-      @change="updateSettings($event, 'vatRate')"
-      :style="{ maxWidth: '200px' }"
-    />
-    <v-text-field
-      :value="settings.search"
-      label="Поиск"
-      dense
+      v-model="settings.vatRate"
       hide-details
       clearable
-      outlined
-      @change="updateSettings($event, 'search')"
-    />
+      :style="{ maxWidth: '200px' }"
+    /> -->
+    <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
   </div>
 </template>
-<script>
-import { VatRateSelect } from '@/shared/ui'
 
-export default {
-  name: 'AgreementListSettings',
-  components: { VatRateSelect },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-    clientItems: {
-      type: Array,
-      default: () => [],
-    },
-    carrierItems: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const stateItems = [
-      { value: 'all', text: 'Все' },
-      { value: 'opened', text: 'Открытые' },
-      { value: 'closed', text: 'Закрытые' },
-    ]
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
-    return {
-      stateItems,
+<script setup>
+// import { VatRateSelect } from '@/shared/ui'
 
-      updateSettings,
-    }
+const settings = defineModel('settings')
+
+defineProps({
+  clientItems: {
+    type: Array,
+    default: () => [],
   },
-}
+  carrierItems: {
+    type: Array,
+    required: true,
+  },
+})
+
+const stateItems = [
+  { value: 'all', title: 'Все' },
+  { value: 'opened', title: 'Открытые' },
+  { value: 'closed', title: 'Закрытые' },
+]
 </script>
+
 <style scoped>
 .wrapper {
   display: flex;

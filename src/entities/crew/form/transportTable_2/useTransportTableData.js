@@ -78,8 +78,8 @@ export const useTransportTableData = (props, ctx) => {
     ctx.emit('update:items', updatedItems.filter(Boolean))
   }
 
-  const popItem = async () => {
-    const res = await proxy.$confirm('Вы уверены?')
+  const popItem = () => {
+    const res = confirm('Вы уверены?')
     if (!res) return
 
     const updatedItems = [...props.items]

@@ -34,30 +34,30 @@ export const useFineList = () => {
     { text: 'Все', value: 'all' },
   ]
   const headers = [
-    { value: 'date', text: 'Дата постановления', sortable: true },
-    { value: 'number', text: 'Номер постановления', sortable: false },
-    { value: 'violationDate', text: 'Дата нарушения', sortable: true },
-    { value: 'truck', text: 'Грузовик / Прицеп', sortable: false },
-    { value: 'driver', text: 'Водитель', sortable: false },
+    { value: 'date', title: 'Дата постановления', sortable: true },
+    { value: 'number', title: 'Номер постановления', sortable: false },
+    { value: 'violationDate', title: 'Дата нарушения', sortable: true },
+    { value: 'truck', title: 'Грузовик / Прицеп', sortable: false },
+    { value: 'driver', title: 'Водитель', sortable: false },
     {
       value: 'totalSum',
-      text: 'Общая сумма штрафа',
+      title: 'Общая сумма штрафа',
       sortable: true,
       align: 'right',
     },
     {
       value: 'discountedSum',
-      text: 'Сумма, с учетом скидки',
+      title: 'Сумма, с учетом скидки',
       sortable: true,
       align: 'right',
     },
-    { value: 'expiryDateOfDiscount', text: 'Скидка до', sortable: true },
-    { value: 'isPayment', text: 'Оплачен', sortable: false },
-    { value: 'withheldSum', text: 'Удержать', sortable: false, align: 'right' },
-    { value: 'paymentDate', text: 'Дата оплаты', sortable: false },
-    { value: '_worker.name', text: 'Оплатил', sortable: false },
-    { value: 'category', text: 'Категория', sortable: false },
-    { value: 'note', text: 'Примечание', sortable: false },
+    { value: 'expiryDateOfDiscount', title: 'Скидка до', sortable: true },
+    { value: 'isPayment', title: 'Оплачен', sortable: false },
+    { value: 'withheldSum', title: 'Удержать', sortable: false, align: 'right' },
+    { value: 'paymentDate', title: 'Дата оплаты', sortable: false },
+    { value: '_worker.name', title: 'Оплатил', sortable: false },
+    { value: 'category', title: 'Категория', sortable: false },
+    { value: 'note', title: 'Примечание', sortable: false },
   ]
   const loading = ref(false)
   const selected = ref([])
@@ -170,13 +170,17 @@ export const useFineList = () => {
         ...headers,
         {
           value: 'isWithheld',
-          text: 'Удержано',
+          title: 'Удержано',
           sortable: false,
           align: 'center',
         },
       ]
     else return headers
   })
+  const onSelectedChange = (value) => {
+    selected.value = value
+  }
+
   return {
     selected,
     showOnlySelected,
@@ -192,5 +196,6 @@ export const useFineList = () => {
     analyticData,
     preparedList,
     listOptions,
+    onSelectedChange,
   }
 }

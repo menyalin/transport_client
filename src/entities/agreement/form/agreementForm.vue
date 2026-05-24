@@ -7,46 +7,21 @@
       @submit="submitHandler"
     />
     <div>
-      <div id="title-row">
-        <v-text-field
-          v-model="state.name"
-          class="mt-3"
-          label="Название"
-          outlined
-          :style="{ 'max-width': '500px' }"
-        />
-        <DateTimeInput
-          v-model="state.date"
-          label="Дата начала"
-          outlined
-          hideTimeInput
-          hidePrependIcon
-          class="mb-4"
-          :style="{ 'max-width': '300px' }"
-        />
-        <DateTimeInput
-          v-model="state.endDate"
-          label="Дата окончания"
-          outlined
-          hideTimeInput
-          hidePrependIcon
-          class="mb-4"
-          :style="{ 'max-width': '300px' }"
-        />
+      <div class="title-row">
+        <v-text-field v-model="state.name" label="Название" :style="{ 'min-width': '500px' }" />
+        <DateTimeInput v-model="state.date" label="Дата начала" />
+        <DateTimeInput v-model="state.endDate" label="Дата окончания" />
         <VatRateSelect
           v-model="state.vatRate"
           label="Ставка НДС"
           disabled
-          outlined
           hint="поле будет удалено!"
           persistent-hint
-          :style="{ 'max-width': '160px' }"
         />
       </div>
       <div class="mb-4">
         <v-text-field
           label="Наименование исполнителя"
-          outlined
           v-model="state.executorName"
           class="mt-4"
           :style="{ width: '500px' }"
@@ -56,100 +31,78 @@
           label="Исполнитель"
           :items="carrierItems"
           item-value="_id"
-          item-text="name"
-          outlined
-          auto-select-first
+          item-title="name"
           :style="{ width: '500px' }"
         />
         <v-select
           multiple
-          outlined
           :items="carrierItems"
           item-value="_id"
-          item-text="name"
+          item-title="name"
           label="Разрешенные ТК"
           :style="{ width: '500px' }"
           v-model="state.allowedCarriers"
           chips
-          deletable-chips
+          closable-chips
         />
         <v-text-field
           label="Договор (наименование)"
           v-model="state.contract"
-          outlined
           :style="{ width: '500px' }"
         />
         <app-clients v-model="state.clients" :style="{ 'max-width': '400px' }" />
         <v-divider />
 
-        <v-checkbox
-          v-model="state.usePriceWithVAT"
-          color="primary"
-          label="Клиент оперирует ценами с НДС"
-        />
+        <v-checkbox v-model="state.usePriceWithVAT" label="Клиент оперирует ценами с НДС" />
         <v-checkbox
           v-model="state.calcWaitingByArrivalDateLoading"
-          color="primary"
           label="Расчет простоя по фактическому времени прибытия на погрузку"
           hide-details
         />
         <v-checkbox
           v-model="state.calcWaitingByArrivalDateUnloading"
-          color="primary"
           label="Расчет простоя по фактическому времени прибытия на выгрузку"
           hide-details
         />
 
         <v-checkbox
           v-model="state.noWaitingPaymentForAreLateLoading"
-          color="primary"
           label="Запрет оплаты простоя при опоздании на погрузку"
           hide-details
         />
 
         <v-checkbox
           v-model="state.noWaitingPaymentForAreLateUnloading"
-          color="primary"
           label="Запрет оплаты простоя при опоздании на выгрузку"
           hide-details
         />
         <v-divider class="mt-5" />
         <v-checkbox
           v-model="state.priceRequired"
-          color="primary"
           label="Обязательно заполнение аукционной цены"
           hide-details
         />
 
         <v-checkbox
           v-model="state.clientNumRequired"
-          color="primary"
           hide-details
           label="Обязательно заполнение номера заказа клиента"
         />
 
         <v-checkbox
           v-model="state.auctionNumRequired"
-          color="primary"
           hide-details
           label="Обязательно заполнение номера аукциона"
         />
       </div>
 
-      <v-text-field
-        v-model="state.actBasis"
-        label="Основание для счета и акта выполненных работ"
-        outlined
-        dense
-      />
+      <v-text-field v-model="state.actBasis" label="Основание для счета и акта выполненных работ" />
       <v-textarea
         rows="4"
         v-model="state.actDescription"
         label="Примечание для акта выполненных работ"
-        outlined
-        dense
       />
-      <v-text-field v-model="state.note" label="Примечание" outlined dense />
+      <v-text-field v-model="state.note" label="Примечание" />
       <div class="row mb-2">
         <v-checkbox
           v-model="state.useCustomPrices"
@@ -161,7 +114,7 @@
     </div>
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
-      <v-icon left dark> mdi-delete </v-icon>
+      <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
   </div>
@@ -209,7 +162,7 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
 .row-input {
   display: flex;
   flex-direction: row;
@@ -218,11 +171,14 @@ export default {
   transition: transform 1s;
 }
 
-#title-row {
+.title-row {
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
 }
-#title-row > * {
-  margin: 10px;
+.title-row > * {
+  flex: 0 1 auto;
 }
 </style>

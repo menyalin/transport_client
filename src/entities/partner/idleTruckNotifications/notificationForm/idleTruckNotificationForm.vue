@@ -9,18 +9,15 @@
           v-model="v$.title.$model"
           label="Название оповещения"
           :errorMessages="titleFieldErrors"
-          outlined
-          dense
         />
 
         <v-autocomplete
           multiple
           v-model="v$.addresses.$model"
           label="Адреса"
-          outlined
           chips
           :errorMessages="addressFieldErrors"
-          deletable-chips
+          closable-chips
           :items="addressItems"
           clearable
           auto-select-first
@@ -29,8 +26,7 @@
           :items="agreements"
           v-model="v$.agreement.$model"
           label="Соглашение"
-          outlined
-          deletable-chips
+          closable-chips
           clearable
           auto-select-first
         />
@@ -40,24 +36,18 @@
           label="Получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="emailFieldErrors"
-          outlined
-          dense
         />
         <v-text-field
           v-model="v$.ccEmails.$model"
           label="Получатели копии оповещений"
           hint="email адреса через ','"
           :errorMessages="ccEmailFieldErrors"
-          outlined
-          dense
         />
         <v-text-field
           v-model="v$.bccEmails.$model"
           label="Скрытые получатели оповещений"
           hint="email адреса через ','"
           :errorMessages="bccEmailFieldErrors"
-          outlined
-          dense
         />
         <div class="row_section">
           <div class="column left_column">
@@ -65,7 +55,6 @@
               type="number"
               v-model="state.idleHoursBeforeNotify"
               label="Часов до отправки уведомления"
-              outlined
             />
           </div>
           <div class="column">
@@ -79,7 +68,7 @@
           </div>
         </div>
 
-        <v-text-field v-model="state.note" label="Примечание" outlined dense />
+        <v-text-field v-model="state.note" label="Примечание" />
       </div>
     </v-card-text>
     <v-card-actions class="buttons-wrapper">

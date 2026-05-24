@@ -1,34 +1,25 @@
 <template>
   <div class="wrapper">
-    <v-alert
-      v-model="showAlert"
-      type="info"
-      class="my-4"
-      dense
-      transition="fade-transition"
-      dismissible
-    >
-      Рейсы успешно созданы
-    </v-alert>
+    <v-alert v-model="showAlert" type="info" class="my-4" closable> Рейсы успешно созданы </v-alert>
     <div class="settings">
       <DateRangeInput v-model="period" />
       <v-spacer />
       <div>Будет создано рейсов: {{ totalOrderCount }}</div>
-      <v-btn :disabled="!totalOrderCount || loading" small class="mx-3" @click="crearTable">
+      <v-btn :disabled="!totalOrderCount || loading" size="small" class="mx-3" @click="crearTable">
         Очистить таблицу
       </v-btn>
       <v-btn
         :disabled="!totalOrderCount || loading"
         :loading="loading"
         color="error"
-        small
+        size="small"
         @click="createOrders"
       >
         Создать рейсы
       </v-btn>
     </div>
     <div v-if="isValidPeriod" class="table-wrapper">
-      <v-simple-table dense>
+      <v-table>
         <template #default>
           <thead>
             <tr>
@@ -42,15 +33,14 @@
             <tr v-for="t of templates" :key="t">
               <td>
                 {{ templatesMap.get(t).name }}
-                <v-icon small color="red" class="ml-3" @click="deleteTemplate(t)">
+                <v-icon size="small" color="red" class="ml-3" @click="deleteTemplate(t)">
                   mdi-delete
                 </v-icon>
               </td>
               <td v-for="day of periodDays" :key="day.title">
                 <input
                   :value="orders[[t, day.date]]"
-                  class="input"
-                  align="right"
+                  class="input align-right"
                   type="text"
                   @change="setOrder($event, [t, day.date])"
                 />
@@ -58,16 +48,15 @@
             </tr>
           </tbody>
         </template>
-      </v-simple-table>
+      </v-table>
       <div class="bottom-panel">
         <v-autocomplete
           v-model="templateSearch"
           label="Добавить шаблон"
-          dense
           hide-details
           :items="$store.getters.orderTemplatesForSelect"
         />
-        <v-btn small color="primary" @click="addAllTemplates"> Добавить все шаблоны </v-btn>
+        <v-btn size="small" color="primary" @click="addAllTemplates"> Добавить все шаблоны </v-btn>
       </div>
     </div>
   </div>
@@ -143,7 +132,7 @@ export default {
   },
   methods: {
     async createOrders() {
-      const res = await this.$confirm('Вы уверены?')
+      const res = confirm('Вы уверены?')
       if (!res) return null
       try {
         this.loading = true

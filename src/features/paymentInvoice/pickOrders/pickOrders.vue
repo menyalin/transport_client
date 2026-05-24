@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" outlined class="ma-5">
+  <v-card elevation="2" border class="ma-5">
     <v-card-title>
       Подобрать рейсы для акта выполненных работ №
       {{ paymentInvoice.number || 'б/н' }}
@@ -38,7 +38,12 @@
         @addItem="addOrderToInvoice"
         @openDocsDialog="openDocsDialog"
       />
-      <v-dialog v-model="docDialog" max-width="1300" persistent>
+      <v-dialog
+        :model-value="docDialog"
+        @update:model-value="showDialog = $event"
+        max-width="1300"
+        persistent
+      >
         <order-docs-list
           :orderId="editableOrderId"
           :docs="editableDocs"

@@ -2,8 +2,7 @@
   <div>
     <v-autocomplete
       ref="input"
-      :value="value"
-      dense
+      :model-value="value"
       :hide-details="hideDetails"
       hide-no-data
       :items="items"
@@ -13,12 +12,16 @@
       :multiple="multiple"
       persistent-hint
       :label="label"
-      :outlined="outlined"
       :append-icon="hideAppendIcon || multiple ? null : appendIcon"
       @click:append="appendClick"
-      @change="changeValue"
+      @update:model-value="changeValue"
     />
-    <v-dialog v-model="dialog" max-width="700" persistent>
+    <v-dialog
+      :model-value="dialog"
+      @update:model-value="showDialog = $event"
+      max-width="700"
+      persistent
+    >
       <v-card>
         <app-details-zone
           :id="value"
@@ -46,8 +49,6 @@ export default {
   props: {
     label: String,
     hideDetails: { type: Boolean, default: false },
-    outlined: { type: Boolean, default: false },
-    dense: { type: Boolean, default: false },
     value: [String, Array],
     disabled: { type: Boolean, default: false },
     hideAppendIcon: { type: Boolean, default: false },

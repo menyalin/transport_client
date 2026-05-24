@@ -4,7 +4,7 @@ export default function useHistorySettings(initialState, stateName = 'default') 
   const state = ref(
     history.state[stateName]
       ? typeof initialState === 'object'
-        ? Object.assign(initialState, history.state[stateName])
+        ? { ...initialState, ...history.state[stateName] }
         : history.state[stateName]
       : initialState
   )
@@ -12,7 +12,7 @@ export default function useHistorySettings(initialState, stateName = 'default') 
   watch(
     state,
     (newState) => {
-      history.pushState(Object.assign({}, history.state, { [stateName]: newState }), '')
+      history.pushState({ ...history.state, [stateName]: newState })
     },
     { deep: true }
   )

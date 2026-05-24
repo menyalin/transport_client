@@ -6,32 +6,21 @@
       </v-btn>
       <DateRangeInput v-model="settings.period" />
 
-      <v-select
-        v-model="settings.group"
-        label="Группировать по"
-        :items="groupItems"
-        hide-details
-        outlined
-        dense
-      />
+      <v-select v-model="settings.group" label="Группировать по" :items="groupItems" hide-details />
       <v-select
         v-model="settings.analitic"
         label="Детализация"
         :items="analiticItems"
         hide-details
-        outlined
-        dense
       />
       <v-select
         v-model="settings.tkNameFilter"
         label="Фильтр по ТК"
         :items="carrierStore.carriers"
         item-value="_id"
-        item-text="name"
+        item-title="name"
         hide-details
-        outlined
         clearable
-        dense
       />
     </div>
     <div v-if="!filteredCrews.length" class="text-center">

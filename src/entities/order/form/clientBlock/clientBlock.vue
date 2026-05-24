@@ -8,20 +8,16 @@
         :items="clientItems"
         v-model="state.client"
         label="Заказчик"
-        outlined
         :loading="loading"
         :messages="agreementNameSring"
         :error="!loading && !currentAgreement"
-        dense
-        @change="changeClientHandler"
+        @update:model-value="changeClientHandler"
         :style="{ maxWidth: '400px' }"
         :disabled="agreementDisabled"
       />
 
       <v-text-field
         v-model.trim="state.num"
-        outlined
-        dense
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
         :style="{ maxWidth: '250px' }"
@@ -29,8 +25,6 @@
       />
       <v-text-field
         v-model.trim="state.auctionNum"
-        outlined
-        dense
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
         :style="{ maxWidth: '250px' }"
@@ -41,9 +35,7 @@
     <v-btn
       v-if="showChangeAgreementBtn"
       color="primary"
-      outlined
-      text
-      small
+      size="small"
       class="mb-3 ml-5"
       @click="changeAgreementHandler"
     >

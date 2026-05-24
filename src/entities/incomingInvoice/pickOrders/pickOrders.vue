@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="btn-wrapper">
-      <v-btn @click="goBack" small>Вернуться в акт</v-btn>
+      <v-btn @click="goBack" size="small">Вернуться в акт</v-btn>
       <v-btn :disabled="!selected.length || loading" @click="addOrderHandler" color="primary">
         Добавить в акт
       </v-btn>
@@ -11,7 +11,6 @@
       :items="items"
       :headers="headers"
       v-model="selected"
-      dense
       item-key="_id"
       item-value="id"
       show-select

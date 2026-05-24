@@ -1,15 +1,13 @@
 <template>
   <v-select
-    outlined
-    dense
     :hide-details="hideDetails"
-    :value="value"
+    :model-value="value"
     :label="label"
     :items="trucksForSelect"
-    item-text="regNum"
+    item-title="regNum"
     item-value="_id"
     :disabled="disabled"
-    @change="change"
+    @update:model-value="change"
   />
 </template>
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table>
+  <v-table>
     <template v-slot:default>
       <thead>
         <tr>
@@ -21,7 +21,7 @@
         />
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 <script>
 import CompareItemsTableRow from './compareItemsTableRow.vue'

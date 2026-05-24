@@ -66,7 +66,7 @@ export default {
     },
 
     async deleteHandler() {
-      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
+      const res = confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         try {
           await WorkerService.deleteById(this.id)

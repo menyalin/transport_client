@@ -33,8 +33,8 @@
     </template>
     <template #[`item.active`]="{ item }">
       <div :style="{ display: 'flex', alignItems: 'center', gap: '15px' }">
-        <v-icon small color="green" @click="editHandler(item._id)"> mdi-pencil </v-icon>
-        <v-icon small color="red" @click="removeItem(item._id)"> mdi-delete </v-icon>
+        <v-icon size="small" color="green" @click="editHandler(item._id)"> mdi-pencil </v-icon>
+        <v-icon size="small" color="red" @click="removeItem(item._id)"> mdi-delete </v-icon>
       </div>
     </template>
   </v-data-table>
@@ -75,13 +75,13 @@ export default {
     async switchStatus(id, currentStatus) {
       if (!currentStatus) this.switchStatusHandler(id)
       else {
-        const res = await this.$confirm('Уверены? Выключение уведомления отменит созданные задачи')
+        const res = confirm('Уверены? Выключение уведомления отменит созданные задачи')
         if (!res) return
         this.switchStatusHandler(id)
       }
     },
     async removeItem(id) {
-      const res = await this.$confirm('Вы уверены?')
+      const res = confirm('Вы уверены?')
       if (res) this.deleteHandler(id)
     },
   },

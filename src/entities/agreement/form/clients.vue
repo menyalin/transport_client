@@ -5,84 +5,78 @@
       <div v-if="!clientList || !clientList.length" class="text-caption pl-6 my-2">нет данных</div>
       <v-list v-else>
         <v-list-item v-for="item in clientList" :key="item">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ partnersMap.has(item) ? partnersMap.get(item).name : 'запись недоступна' }}
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-icon small color="error" @click="deleteClient(item)"> mdi-delete </v-icon>
-          </v-list-item-action>
+          <v-list-item-title>
+            {{ partnersMap.get(item)?.name ?? 'запись недоступна' }}
+          </v-list-item-title>
+          <template #append>
+            <v-icon size="small" color="error" @click="deleteClient(item)"> mdi-delete </v-icon>
+          </template>
         </v-list-item>
       </v-list>
-      <v-autocomplete :items="clientItems" v-if="!isVisibleBtn" onlyClients @change="addClient" />
-      <v-btn v-else small text color="primary" @click="showAutocomplete"> Добавить клиента </v-btn>
+      <v-autocomplete :items="clientItems" v-if="!isVisibleBtn" @update:model-value="addClient" />
+      <v-btn v-else size="small" variant="text" color="primary" @click="showAutocomplete">
+        Добавить клиента
+      </v-btn>
     </div>
   </div>
 </template>
-<script>
-import { computed } from 'vue'
 
-import store from '@/store/index'
+<script setup>
+import { computed, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'AgreementClientList',
-  model: {
-    prop: 'clientList',
-    event: 'change',
+const store = useStore()
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => [],
   },
-  props: {
-    clientList: {
-      type: Array,
-    },
-  },
-  setup() {
-    const clientItems = computed(() => {
-      return store.getters.partners
-        .filter((i) => i.isClient)
-        .map((i) => ({ value: i._id, text: i.name }))
-    })
-    return { clientItems }
-  },
-  data() {
-    return {
-      selectedClients: [],
-      isVisibleBtn: true,
-    }
-  },
-  computed: {
-    partnersMap() {
-      return this.$store.getters.partnersMap
-    },
-  },
-  watch: {
-    clientList: {
-      immediate: true,
-      handler: function (val) {
-        if (!!val && val.length) this.selectedClients = val
-      },
-    },
-  },
-  methods: {
-    showAutocomplete() {
-      this.isVisibleBtn = false
-    },
+})
 
-    addClient(val) {
-      if (val && !this.selectedClients.includes(val)) {
-        this.selectedClients.push(val)
-        this.$emit('change', this.selectedClients)
-      }
-      this.isVisibleBtn = true
-    },
-    async deleteClient(id) {
-      if (!id) return null
-      const res = await this.$confirm('Вы уверены? ')
-      if (!res) return null
-      this.selectedClients = this.selectedClients.filter((item) => item !== id)
-      this.$emit('change', this.selectedClients)
-    },
+const emit = defineEmits(['update:modelValue'])
+
+const tmpItems = ref([])
+const clientList = computed(() => props.modelValue)
+
+const isVisibleBtn = ref(true)
+
+const clientItems = computed(() => {
+  return store.getters.partners
+    .filter((i) => i.isClient)
+    .map((i) => ({ value: i._id, text: i.name }))
+})
+
+const partnersMap = computed(() => store.getters.partnersMap)
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    tmpItems.value = val
   },
+  { immediate: true }
+)
+
+const showAutocomplete = () => {
+  isVisibleBtn.value = false
+}
+
+const addClient = (val) => {
+  if (val && !tmpItems.value.includes(val)) {
+    tmpItems.value.push(val)
+    emit('update:modelValue', tmpItems.value)
+  }
+  isVisibleBtn.value = true
+}
+
+const deleteClient = async (id) => {
+  if (!id) return null
+  const res = confirm('Вы уверены? ')
+  if (!res) return null
+  emit(
+    'update:modelValue',
+    tmpItems.value.filter((item) => item !== id)
+  )
 }
 </script>
+
 <style></style>

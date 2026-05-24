@@ -1,18 +1,16 @@
 <template>
   <div class="main-filter-wrapper">
-    <v-expansion-panels v-if="Object.keys(tmpFilters).length > 0" focusable>
+    <v-expansion-panels v-if="tmpFilters && Object.keys(tmpFilters).length > 0">
       <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <h5>{{ title }}</h5>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <div v-for="(filter, idx) of filterItems" :key="idx" class="filter-row mt-3">
             <v-select
               v-model="tmpFilters[filter.value].cond"
               label="Сравнение"
               :items="condItems"
-              dense
-              outlined
               hide-details
               :style="{ 'max-width': '180px' }"
             />
@@ -23,13 +21,11 @@
               multiple
               auto-select-first
               clearable
-              dense
-              outlined
               hide-details
               :style="{ 'max-width': '400px' }"
             />
           </div>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
@@ -42,13 +38,8 @@ import { ref, computed, watch, getCurrentInstance } from 'vue'
 export default {
   name: 'MainFilters',
 
-  model: {
-    prop: 'filters',
-    event: 'change',
-  },
-
   props: {
-    filters: { type: Object },
+    modelValue: { type: Object },
     title: String,
     agreements: Array,
   },
@@ -133,14 +124,14 @@ export default {
 
     // Watch
     watch(
-      () => props.filters,
+      () => props.modelValue,
       (val) => {
         tmpFilters.value = val
       },
       { immediate: true, deep: true }
     )
 
-    watch(tmpFilters, (val) => emit('change', val), { deep: true })
+    watch(tmpFilters, (val) => emit('update:modelValue', val), { deep: true })
 
     return {
       carriers,

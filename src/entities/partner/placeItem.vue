@@ -1,6 +1,6 @@
 <template>
   <div class="item-wrapper">
-    <v-card outlined>
+    <v-card>
       <v-card-title>{{ value.title }}</v-card-title>
       <v-card-subtitle>{{ address.name }}</v-card-subtitle>
       <v-card-text>
@@ -18,14 +18,14 @@
         <div>{{ value.note }}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn small color="secondary" @click="editHandler"> Редактировать </v-btn>
-        <v-btn small color="error" @click="deleteHandler">Удалить</v-btn>
+        <v-btn size="small" color="secondary" @click="editHandler"> Редактировать </v-btn>
+        <v-btn size="small" color="error" @click="deleteHandler">Удалить</v-btn>
       </v-card-actions>
     </v-card>
   </div>
 </template>
 <script>
-import { computed, getCurrentInstance } from 'vue'
+import { computed } from 'vue'
 import store from '@/store'
 
 export default {
@@ -34,16 +34,13 @@ export default {
     value: Object,
   },
   setup(props, ctx) {
-    const { proxy } = getCurrentInstance()
     const address = computed(() => store.getters.addressMap.get(props.value.address))
     const allowedLoadingPoints = computed(() =>
       props.value.allowedLoadingPoints.map((i) => store.getters.addressMap.get(i))
     )
 
-    async function deleteHandler() {
-      const res = await proxy.$confirm(
-        `Вы действительно хотите удалить площадку <b>${props.value.title}</b>?`
-      )
+    function deleteHandler() {
+      const res = confirm(`Вы действительно хотите удалить площадку <b>${props.value.title}</b>?`)
       if (res) ctx.emit('delete', props.value._id)
     }
 

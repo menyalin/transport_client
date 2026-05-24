@@ -5,7 +5,7 @@
     accept=".xlsx"
     :label="label"
     prepend-icon="mdi-microsoft-excel"
-    @change="fileInputChanged"
+    @update:model-value="fileInputChanged"
   />
 </template>
 <script>
@@ -37,11 +37,11 @@ export default {
   methods: {
     async fileInputChanged(file) {
       if (!file) {
-        this.$emit('change', null)
+        this.$emit('update:model-value', null)
         return
       }
       const res = await xlsxToJson(file)
-      this.$emit('change', res)
+      this.$emit('update:model-value', res)
     },
   },
 }

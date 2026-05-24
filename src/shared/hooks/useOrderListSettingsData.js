@@ -10,15 +10,15 @@ export default (settings) => {
   }
   const orderStatuses = computed(() => store.getters.orderStatuses)
   const invoiceStatusItems = [
-    { text: 'Включен', value: 'included' },
-    { text: 'Не включен', value: 'notIncluded' },
+    { title: 'Включен', value: 'included' },
+    { title: 'Не включен', value: 'notIncluded' },
   ]
   const docStatuses = computed(() => {
     const docStatusesWithCustomNames = [
-      { value: 'accepted', text: 'Приняты' },
-      { value: 'needFix', text: 'На исправлении' },
-      { value: 'onCheck', text: 'На проверке' },
-      { value: 'missing', text: 'Не получены' },
+      { value: 'accepted', title: 'Приняты' },
+      { value: 'needFix', title: 'На исправлении' },
+      { value: 'onCheck', title: 'На проверке' },
+      { value: 'missing', title: 'Не получены' },
     ]
 
     store.getters.documentStatuses

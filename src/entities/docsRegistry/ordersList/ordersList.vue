@@ -11,11 +11,16 @@
     :footerProps="{
       itemsPerPageOptions: [-1, 100],
     }"
-    dense
     @dblclick:row="dblclickRowHandler"
   >
     <template v-slot:top>
-      <v-btn :disabled="!selectedOrderIds.length" small text color="error" @click="deleteHandler">
+      <v-btn
+        :disabled="!selectedOrderIds.length"
+        size="small"
+        variant="text"
+        color="error"
+        @click="deleteHandler"
+      >
         Удалить выделенные рейсы
       </v-btn>
     </template>

@@ -1,20 +1,18 @@
 <template>
-  <v-app>
-    <app-admin-bar title="Admin panel" />
-    <v-main>
-      <v-container fluid>
-        <v-row>
-          <v-col cols="auto">
-            <app-left-nav :items="navButtons" />
-          </v-col>
-          <v-col>
-            <router-view />
-          </v-col>
-        </v-row>
-      </v-container>
-      <app-snackbar />
-    </v-main>
-  </v-app>
+  <app-admin-bar title="Admin panel" />
+  <v-main>
+    <v-container fluid>
+      <v-row>
+        <v-col cols="auto">
+          <app-left-nav :items="navButtons" />
+        </v-col>
+        <v-col>
+          <router-view />
+        </v-col>
+      </v-row>
+    </v-container>
+    <app-snackbar />
+  </v-main>
 </template>
 <script>
 import AppAdminBar from '@/modules/common/components/appBar/index.vue'

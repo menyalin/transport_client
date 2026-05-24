@@ -7,31 +7,24 @@
           label="Дата начала"
           v-model="state.startDate"
           type="datetime-local"
-          dense
           :disabled="readonlyStartDate"
           :errorMessages="startDateErrors"
-          outlined
         />
 
         <DateTimeInput
           label="Дата завершения"
           v-model="state.endDate"
           type="datetime-local"
-          dense
-          outlined
           :errorMessages="endDateErrors"
         />
         <v-autocomplete
           label="Грузовик"
           v-model="state.truck"
           :items="trucks"
-          auto-select-first
           item-value="_id"
-          item-text="regNum"
-          dense
-          outlined
+          item-title="regNum"
           clearable
-          @change="changeTruckHandler($event, 'truck')"
+          @update:model-value="changeTruckHandler($event, 'truck')"
         />
         <CrewMessage
           v-if="!!existedTruckCrew"
@@ -45,14 +38,11 @@
           label="Прицеп"
           v-model="state.trailer"
           :items="trailers"
-          auto-select-first
           item-value="_id"
-          item-text="regNum"
-          dense
-          outlined
+          item-title="regNum"
           clearable
           :disabled="trailerInputDisabled"
-          @change="changeTruckHandler($event, 'trailer')"
+          @update:model-value="changeTruckHandler($event, 'trailer')"
         />
         <CrewMessage
           v-if="!!existedTrailerCrew"
@@ -62,7 +52,7 @@
           class="pb-2"
           @clearCrew="clearExistedCrews"
         />
-        <v-text-field label="Примечание" v-model="state.note" dense outlined />
+        <v-text-field label="Примечание" v-model="state.note" />
       </div>
     </v-card-text>
     <v-card-actions>

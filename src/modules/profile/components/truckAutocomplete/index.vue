@@ -1,24 +1,21 @@
 <template>
   <v-autocomplete
     clearable
-    outlined
-    dense
     hint="Поиск работает по цифрам номера"
     auto-select-first
     return-object
-    :value="model"
+    :model-value="model"
     :items="[...items, ...tmpItems]"
     hide-no-data
     :loading="isLoading"
-    :search-input.sync="search"
-    :filter="() => true"
+    :search.sync="search"
+    :customFilter="() => true"
     :label="label"
     placeholder="Введите текст для поиска"
     no-data-text="Данные не найдены"
     :disabled="disabled"
     item-value="_id"
-    item-text="text"
-    @change="change"
+    @update:model-value="change"
     @click:clear="clear"
   />
 </template>

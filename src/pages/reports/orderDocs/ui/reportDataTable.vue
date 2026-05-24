@@ -1,7 +1,6 @@
 <template>
   <v-data-table
     :items="preparedItems"
-    dense
     :headers="headers"
     :loading="loading"
     :items-per-page="-1"

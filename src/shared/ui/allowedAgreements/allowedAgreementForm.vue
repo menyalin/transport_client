@@ -5,23 +5,14 @@
       <v-autocomplete
         v-model="state.agreement"
         label="Соглашение"
-        dense
         :items="agreementItems"
-        item-text="name"
+        item-title="name"
         item-value="_id"
         no-data-text="Соглашения отсутствуют"
       />
       <div class="dates-row">
-        <DateTimeInput
-          v-model="state.startDate"
-          label="Дата начала"
-          :style="{ maxWidth: '250px' }"
-        />
-        <DateTimeInput
-          v-model="state.endDate"
-          label="Дата окончания"
-          :style="{ maxWidth: '250px' }"
-        />
+        <DateTimeInput v-model="state.startDate" label="Дата начала" />
+        <DateTimeInput v-model="state.endDate" label="Дата окончания" />
       </div>
 
       <v-text-field v-model="state.note" label="Примечание" hide-details />
@@ -38,7 +29,7 @@
 import { ref } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
 import { computed } from 'vue'
-import { required } from 'vuelidate/lib/validators'
+import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { watch } from 'vue'
 

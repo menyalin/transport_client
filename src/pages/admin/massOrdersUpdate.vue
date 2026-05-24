@@ -11,7 +11,7 @@
         :loading="companyListLoading"
         :disabled="companyListLoading"
         item-value="_id"
-        item-text="name"
+        item-title="name"
         :style="{ maxWidth: '250px' }"
       />
     </div>

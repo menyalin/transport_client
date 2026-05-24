@@ -5,64 +5,46 @@
       <template v-if="truckType === 'truck'">
         <v-text-field
           label="Осаго №"
-          :value="params.osagoNum"
-          outlined
-          dense
+          :model-value="params.osagoNum"
           hide-details
           @change="change($event, 'osagoNum')"
         />
         <DateTimeInput
           label="Дата окончания"
-          :value="params.osagoExpDate"
-          hide-prepend-icon
-          hide-time-input
-          @change="change($event, 'osagoExpDate')"
-          outlined
-          dense
+          :model-value="params.osagoExpDate"
+          @update:model-value="change($event, 'osagoExpDate')"
           hide-details
         />
         <v-text-field
           label="Страховая компания"
-          :value="params.osagoCompany"
-          outlined
-          dense
+          :model-value="params.osagoCompany"
           hide-details
-          @change="change($event, 'osagoCompany')"
+          @update:model-value="change($event, 'osagoCompany')"
         />
       </template>
       <v-text-field
         label="Каско №"
-        :value="params.kaskoNum"
-        outlined
-        dense
+        :model-value="params.kaskoNum"
         hide-details
-        @change="change($event, 'kaskoNum')"
+        @update:model-value="change($event, 'kaskoNum')"
       />
       <DateTimeInput
         label="Дата окончания"
-        :value="params.kaskoExpDate"
-        hide-prepend-icon
-        hide-time-input
-        @change="change($event, 'kaskoExpDate')"
-        outlined
-        dense
+        :model-value="params.kaskoExpDate"
+        @update:model-value="change($event, 'kaskoExpDate')"
         hide-details
       />
       <v-text-field
         label="Страховая компания"
-        :value="params.kaskoCompany"
-        outlined
-        dense
+        :model-value="params.kaskoCompany"
         hide-details
-        @change="change($event, 'kaskoCompany')"
+        @update:model-value="change($event, 'kaskoCompany')"
       />
       <v-text-field
         label="Лизинговая компания"
-        :value="params.leasingСompany"
-        outlined
-        dense
+        :model-value="params.leasingСompany"
         hide-details
-        @change="change($event, 'leasingСompany')"
+        @update:model-value="change($event, 'leasingСompany')"
       />
     </div>
   </div>

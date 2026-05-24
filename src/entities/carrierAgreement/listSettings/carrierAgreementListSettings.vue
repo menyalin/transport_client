@@ -7,51 +7,30 @@
     />
 
     <v-text-field
-      :value="settings.search"
+      v-model.lazy="settings.search"
       label="Поиск"
-      dense
       clearable
-      outlined
       hide-details
       :style="{ maxWidth: '400px' }"
-      @change="updateSettings($event, 'search')"
     />
   </div>
 </template>
-<script>
+<script setup>
 import allHeaders from './allHeaders.js'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { AppTableColumnSetting } from '@/shared/ui'
 
-export default {
-  name: 'IncomingInvoiceListSettings',
-  components: { AppTableColumnSetting, DateRangeInput },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-  },
-  setup(props, ctx) {
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+const emit = defineEmits(['updateHeaders'])
+const settings = defineModel('settings')
 
-    function updateHeadersHandler(val) {
-      ctx.emit('updateHeaders', val)
-    }
-    return {
-      updateHeadersHandler,
-      updateSettings,
-      allHeaders,
-    }
-  },
+function updateHeadersHandler(val) {
+  emit('updateHeaders', val)
 }
 </script>
 <style scoped>
 .settings-wrapper {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   padding: 10px;
   gap: 15px;
 }

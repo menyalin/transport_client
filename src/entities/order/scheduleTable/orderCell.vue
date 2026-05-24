@@ -1,7 +1,7 @@
 <template>
-  <v-tooltip bottom nudge-left="70" open-delay="700" close-delay="50" transition="fade-transition">
-    <template #activator="{ on, attrs }">
-      <div v-bind="attrs" :class="orderClasses" v-on="on" @dblclick.stop="dblclickHandler">
+  <v-tooltip location="bottom" open-delay="700" close-delay="50" transition="fade-transition">
+    <template #activator="{ props }">
+      <div v-bind="props" :class="orderClasses" @dblclick.stop="dblclickHandler">
         <div class="row-text">
           <span
             v-for="point of points.filter((p) => p.type === 'loading')"

@@ -5,16 +5,16 @@
       <b>Рейсы: {{ total }}</b>
     </div>
     <div>
-      <b v-if="accepted" class="green--text"> Приняты: {{ accepted }} <br /> </b>
+      <b v-if="accepted" class="text-green"> Приняты: {{ accepted }} <br /> </b>
 
-      <b v-if="needFix" class="orange--text"> На исправлении: {{ needFix }}<br /> </b>
+      <b v-if="needFix" class="text-orange"> На исправлении: {{ needFix }}<br /> </b>
 
       <b v-if="onCheck" :style="{ color: 'blue' }">
         На проверке: {{ onCheck }}
         <br />
       </b>
 
-      <b v-if="missing" class="red--text">
+      <b v-if="missing" class="text-red">
         Не получены: {{ missing }}
         <br />
       </b>

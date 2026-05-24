@@ -12,7 +12,6 @@
         <v-data-table
           :search="settings.search"
           :headers="filteredHeaders"
-          dense
           fixed-header
           height="72vh"
           :footer-props="{
@@ -36,44 +35,32 @@
               <v-select
                 v-model="settings.serviceStatus"
                 label="Статус ТС"
-                outlined
-                dense
                 hide-details
                 :items="serviceStatusItems"
               />
               <v-select
                 v-model="settings.tkNameFilter"
-                dense
-                outlined
                 hide-details
                 label="ТК"
                 clearable
                 :items="carrierStore.carriers"
                 item-value="_id"
-                item-text="name"
+                item-title="name"
               />
               <v-select
                 v-model="settings.truckFilter"
-                dense
                 multiple
-                outlined
                 hide-details
                 label="Тип транспорта"
                 clearable
                 :items="truckFilterOptions"
               />
-              <v-text-field
-                v-model="settings.search"
-                outlined
-                hide-details
-                dense
-                label="Быстрый поиск"
-              />
+              <v-text-field v-model="settings.search" hide-details label="Быстрый поиск" />
             </div>
           </template>
           <template #[`item.hasScans`]="{ item }">
-            <v-icon v-if="item.hasScans" small color="green"> mdi-check </v-icon>
-            <v-icon v-else small color="red"> mdi-minus </v-icon>
+            <v-icon v-if="item.hasScans" size="small" color="green"> mdi-check </v-icon>
+            <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
           </template>
         </v-data-table>
       </v-col>

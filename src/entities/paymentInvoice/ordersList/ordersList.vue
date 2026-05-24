@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-server
     :items="preparedOrders"
     :headers="headers"
     v-model="selected"
@@ -13,7 +13,6 @@
     :footerProps="{
       itemsPerPageOptions: [25, 50, 100],
     }"
-    dense
     :listOptions="listOptions"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblclickRowHandler"
@@ -22,8 +21,8 @@
       <v-btn
         v-if="!disabled"
         :disabled="!selectedOrderIds.length"
-        small
-        text
+        size="small"
+        variant="text"
         color="error"
         @click="deleteHandler"
       >
@@ -61,7 +60,7 @@
         mdi-alert
       </v-icon>
     </template>
-  </v-data-table>
+  </v-data-table-server>
 </template>
 <script>
 import { computed, getCurrentInstance, ref, watch } from 'vue'

@@ -30,7 +30,14 @@
       />
     </v-card>
 
-    <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent hide-overlay>
+    <v-dialog
+      v-if="item._id"
+      :model-value="showPickOrderDialog"
+      @update:model-value="showPickOrderDialog = $event"
+      fullscreen
+      persistent
+      :scrim="false"
+    >
       <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>
   </form-wrapper>

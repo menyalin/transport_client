@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense class="mb-3">
+    <v-table class="mb-3">
       <template #default>
         <thead>
           <tr>
@@ -37,11 +37,22 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
-    <v-btn color="primary" @click="addItemHandler" small text :disabled="!allowAddTransportItems">
+    </v-table>
+    <v-btn
+      color="primary"
+      @click="addItemHandler"
+      size="small"
+      variant="text"
+      :disabled="!allowAddTransportItems"
+    >
       Добавить запись
     </v-btn>
-    <v-dialog v-model="dialog" max-width="600px" persistent>
+    <v-dialog
+      :model-value="dialog"
+      @update:model-value="showDialog = $event"
+      max-width="600px"
+      persistent
+    >
       <TransportForm
         :item="editedItem"
         :minDateValue="editableItemMinDate"

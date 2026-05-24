@@ -6,33 +6,23 @@
     <div class="med-book-wrapper">
       <div class="first-column">
         <v-text-field
-          hide-details
-          outlined
-          :value="params.number"
-          dense
           label="Номер"
-          @change="change($event, 'number')"
+          :model-value="params.number"
+          hide-details
+          @update:model-value="change($event, 'number')"
         />
         <DateTimeInput
           label="Дата выдачи"
-          :value="params.issueDate"
-          hide-prepend-icon
-          hide-time-input
-          outlined
+          :model-value="params.issueDate"
           hideDetails
-          dense
-          @change="change($event, 'issueDate')"
+          @update:model-value="change($event, 'issueDate')"
         />
         <div class="date-input-row">
           <DateTimeInput
             label="Аттестация до"
-            :value="params.certifiedBeforeDate"
-            hide-prepend-icon
-            hide-time-input
-            outlined
+            :model-value="params.certifiedBeforeDate"
             hideDetails
-            dense
-            @change="change($event, 'certifiedBeforeDate')"
+            @update:model-value="change($event, 'certifiedBeforeDate')"
           />
           <v-chip
             v-if="certificateValidityPeriod !== null"
@@ -45,13 +35,9 @@
         <div class="date-input-row">
           <DateTimeInput
             label="Ежегодная комиссия от"
-            :value="params.annualCommisionDate"
-            hide-prepend-icon
-            hide-time-input
+            :model-value="params.annualCommisionDate"
             hideDetails
-            outlined
-            dense
-            @change="change($event, 'annualCommisionDate')"
+            @update:model-value="change($event, 'annualCommisionDate')"
           />
           <v-chip
             v-if="daysBeforeMedExamination !== null"
@@ -64,10 +50,9 @@
       </div>
       <v-textarea
         label="Примечание"
-        :value="params.note"
-        outlined
+        :model-value="params.note"
         hide-details
-        @change="change($event, 'note')"
+        @update:model-value="change($event, 'note')"
       />
     </div>
   </div>

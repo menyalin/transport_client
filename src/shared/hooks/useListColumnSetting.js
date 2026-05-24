@@ -1,7 +1,7 @@
 import { ref, onMounted, computed } from 'vue'
 
 export default ({ listSettingsName, defaultHeaders, allHeaders }) => {
-  let activeHeaders = ref([])
+  const activeHeaders = ref([])
 
   onMounted(() => {
     const fields = JSON.parse(localStorage.getItem(listSettingsName))

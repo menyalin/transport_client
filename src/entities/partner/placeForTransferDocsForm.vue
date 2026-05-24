@@ -8,18 +8,14 @@
         <v-text-field
           v-model="state.title"
           label="Название площадки"
-          dense
-          outlined
           @blur="v$.title.$touch"
           :errorMessages="titleErrorMessages"
           :style="{ maxWidth: '600px' }"
         />
         <v-autocomplete
           v-model="state.address"
-          dense
           label="Адрес площадки"
           :items="addressItems"
-          outlined
           auto-select-first
           clearable
           @blur="v$.address.$touch"
@@ -29,28 +25,14 @@
           v-model="state.allowedLoadingPoints"
           label="Разрешенные пункты погрузки"
           :items="addressItems"
-          outlined
           multiple
           auto-select-first
           clearable
-          dense
           @blur="v$.allowedLoadingPoints.$touch"
         />
-        <v-text-field
-          v-model="state.contacts"
-          label="Контакты"
-          dense
-          outlined
-          @blur="v$.contacts.$touch"
-        />
+        <v-text-field v-model="state.contacts" label="Контакты" @blur="v$.contacts.$touch" />
 
-        <v-text-field
-          v-model="v$.note.$model"
-          label="Примечание"
-          dense
-          outlined
-          @blur="v$.note.$touch"
-        />
+        <v-text-field v-model="v$.note.$model" label="Примечание" @blur="v$.note.$touch" />
         <v-checkbox
           v-model="state.resctrictAddresses"
           :disabled="disabledResctrictAddresses"

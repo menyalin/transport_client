@@ -10,15 +10,14 @@
     <div class="main-block">
       <v-autocomplete
         :items="agreements"
-        item-text="name"
+        item-title="name"
         item-value="_id"
         label="Соглашения"
         :readonly="agreementReadonly"
         v-model="state.agreements"
         multiple
         chips
-        small-chips
-        deletable-chips
+        closable-chips
         auto-select-first
       />
       <v-text-field

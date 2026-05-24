@@ -2,32 +2,28 @@
   <div id="wrapper">
     <v-autocomplete
       ref="firstField"
-      :value="item.clients"
+      :model-value="item.clients"
       label="Клиенты"
-      dense
       :items="clientItems"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      outlined
       hide-details
-      @change="changeHandler($event, 'clients')"
+      @update:model-value="changeHandler($event, 'clients')"
     />
 
     <v-select
-      :value="item.orderType"
+      :model-value="item.orderType"
       label="Тип рейса"
       :items="orderAnalyticTypes"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'orderType')"
+      @update:model-value="changeHandler($event, 'orderType')"
     />
     <v-checkbox
       label="Возврат паллет"
-      v-model="item.isPltReturn"
+      :value="item.isPltReturn"
       color="primary"
-      @change="changeHandler($event, 'isPltReturn')"
+      @update:model-value="changeHandler($event, 'isPltReturn')"
     />
   </div>
 </template>

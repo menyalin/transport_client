@@ -6,7 +6,7 @@
       @submit="create"
       @refresh="refresh"
     />
-    <orders-table-settings
+    <!-- <orders-table-settings
       v-model="settings"
       :minDate="minDate"
       @putTableToClipboard="putOrdersTableToClipboard(items)"
@@ -23,14 +23,19 @@
       :carrierItemsMap="carrierStore.carriersMap"
       @openDocsDialog="openDocsDialog"
     />
-    <v-dialog v-model="docDialog" max-width="1300" persistent>
+    <v-dialog
+      :model-value="docDialog"
+      @update:model-value="showDialog = $event"
+      max-width="1300"
+      persistent
+    >
       <order-docs-list
         :orderId="editableOrderId"
         :docs="editableDocs"
         @save="saveDocDialog"
         @cancel="cancelDocDialog"
       />
-    </v-dialog>
+    </v-dialog> -->
   </entity-list-wrapper>
 </template>
 <script>

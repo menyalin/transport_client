@@ -1,14 +1,19 @@
 <template>
   <div class="wrapper ma-2">
     <h5>{{ title }}</h5>
-    <v-btn color="primary" @click="addHandler" small :disabled="disabled"> Добавить </v-btn>
+    <v-btn color="primary" @click="addHandler" size="small" :disabled="disabled"> Добавить </v-btn>
     <component
       :is="tariffListComponent"
       :items="itemsWithIdx"
       @deleteByIdx="removeHandler"
       @updateByIdx="updateHandler"
     />
-    <v-dialog v-model="dialog" max-width="800" persistent>
+    <v-dialog
+      :model-value="dialog"
+      @update:model-value="showDialog = $event"
+      max-width="800"
+      persistent
+    >
       <component
         :is="tariffFormComponent"
         :editableMode="Boolean(item)"
@@ -108,8 +113,8 @@ export default {
     }
   },
   methods: {
-    async removeHandler(idx) {
-      const res = await this.$confirm('Вы действительно хотите удалить запись? ')
+    removeHandler(idx) {
+      const res = confirm('Вы действительно хотите удалить запись? ')
       if (res) {
         this.removeByIdx(idx)
       }

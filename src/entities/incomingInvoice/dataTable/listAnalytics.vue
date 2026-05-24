@@ -1,5 +1,5 @@
 <template>
-  <table border="0">
+  <table b class="order-0">
     <tr>
       <td class="row-title">Всего актов:</td>
       <td class="row-value">{{ data.count }}</td>

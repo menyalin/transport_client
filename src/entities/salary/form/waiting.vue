@@ -1,53 +1,43 @@
 <template>
   <div id="wrapper">
     <v-autocomplete
-      :value="item.clients"
+      :model-value="item.clients"
       ref="firstField"
       label="Клиенты"
-      dense
       :items="clientItems"
       item-value="_id"
-      item-text="name"
+      item-title="name"
       multiple
-      outlined
       hide-details
-      @change="changeHandler($event, 'clients')"
+      @update:model-value="changeHandler($event, 'clients')"
     />
     <v-select
-      :value="item.orderType"
+      :model-value="item.orderType"
       label="Тип рейса"
       :items="orderAnalyticTypes"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'orderType')"
+      @update:model-value="changeHandler($event, 'orderType')"
     />
     <v-text-field
-      :value="item.includeHours"
+      :model-value="item.includeHours"
       type="number"
       label="Кол-во часов включенных в тариф"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'includeHours')"
+      @update:model-value="changeHandler($event, 'includeHours')"
     />
     <v-select
-      :value="item.roundByHours"
+      :model-value="item.roundByHours"
       label="Округление времени"
       :items="roundingWaitingByHours"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'roundByHours')"
+      @update:model-value="changeHandler($event, 'roundByHours')"
     />
     <v-select
-      :value="item.tariffBy"
+      :model-value="item.tariffBy"
       label="Тариф за"
       :items="waitingTariffByItems"
-      dense
-      outlined
       hide-details
-      @change="changeHandler($event, 'tariffBy')"
+      @update:model-value="changeHandler($event, 'tariffBy')"
     />
   </div>
 </template>
