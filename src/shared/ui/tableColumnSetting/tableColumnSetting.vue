@@ -64,7 +64,7 @@ watch(
       <v-switch
         v-for="field of allHeaders"
         :key="field.value"
-        :label="field.hiddenTitle || field.text"
+        :label="field.hiddenTitle || field.text || field.title"
         :model-value="activeFields.includes(field.value)"
         hide-details
         @update:model-value="inputHandler(field.value)"
