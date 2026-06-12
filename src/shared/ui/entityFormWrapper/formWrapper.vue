@@ -9,7 +9,7 @@
         <load-spinner v-if="loading" />
         <div v-else>
           <slot />
-          <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler">
+          <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler" class="ma-3">
             <v-icon start> mdi-delete </v-icon>
             Удалить
           </v-btn>

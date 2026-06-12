@@ -15,6 +15,7 @@
       clearable
       multiple
       chips
+      autocomplete="off"
       closable-chips
       hide-details
       :style="{ maxWidth: '600px' }"

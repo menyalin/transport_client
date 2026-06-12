@@ -1,15 +1,12 @@
 <template>
   <v-data-table-server
+    :v-bind="$attrs"
     :headers="headers"
-    color="primary"
     :loading="loading"
     :items="preparedItems"
-    :showSelect="showSelect"
-    item-key="_id"
     fixed-header
     height="65vh"
     :items-length="statisticData && !!statisticData.count ? statisticData.count : 0"
-    :items-per-page-options="[50, 100, 200]"
     @update:options="updateListOptionsHandler"
     @dblclick:row="dblClickRow"
   >
@@ -121,10 +118,6 @@ export default {
   },
   props: {
     selected: Array,
-    showSelect: {
-      type: Boolean,
-      default: false,
-    },
     headers: { type: Array, required: true },
     loading: { type: Boolean, required: true },
     items: Array,

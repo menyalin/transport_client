@@ -1,7 +1,13 @@
 pages:
   [+] agreement:
   [+] carrier agreement
-  [] docsRegistry
+  [+] docsRegistry
+    [+] list
+    [+] form
+    [+] pick orders list - работаю на список рейсов
+  [-] orders:
+    [-] список рейсов
+    [-] форма рейса
 
 
  ui:

@@ -15,7 +15,7 @@
         <v-text-field
           v-if="state.number"
           label="Номер"
-          :model-value="state.number"
+          v-model="state.number"
           readonly
           :style="{ maxWidth: '100px' }"
         />
@@ -46,7 +46,6 @@
           required
           item-value="_id"
           item-title="name"
-          itemTitle="text"
           clearable
           :disabled="disabledAgreements || disabledMainFields"
           :loading="loadingAgreements"

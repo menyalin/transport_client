@@ -46,7 +46,7 @@ export default (settings) => {
       .map((t) => ({
         ...t,
         value: t._id,
-        text: t.regNum,
+        title: t.regNum,
       }))
   )
 
@@ -59,7 +59,7 @@ export default (settings) => {
       .map((t) => ({
         ...t,
         value: t._id,
-        text: t.regNum,
+        title: t.regNum,
       }))
   )
 

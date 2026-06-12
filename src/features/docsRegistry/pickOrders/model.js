@@ -1,23 +1,25 @@
-import store from '@/store'
 import socket from '@/socket'
 import dayjs from 'dayjs'
 import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { DocsRegistryService } from '@/shared/services'
+import { usePersistedRef } from '@/shared/hooks'
+import { useStore } from 'vuex'
 
 const initPeriod = () => {
   return [dayjs().add(-1, 'month').startOf('month').toISOString(), new Date().toISOString()]
 }
 
-export const useListData = ({ client, _id }) => {
-  if (!client) console.error('client id is missing')
-  const historyState = window.history.state
+export const useListData = (props) => {
+  if (!props.client) console.error('client id is missing')
+  const vuexStore = useStore()
   const initialState = {
     search: null,
     docsRegistryId: null,
     onlySelectable: true,
     period: initPeriod(),
   }
-  const settings = ref(historyState.settings || initialState)
+  const settings = usePersistedRef(initialState, 'docsRegistry:pickOrders:settings')
+  const listOptions = usePersistedRef({ page: 1 }, 'docsRegistry:pickOrders:listOptions')
   const items = ref([])
   const loading = ref(false)
 
@@ -25,29 +27,19 @@ export const useListData = ({ client, _id }) => {
     await getData()
   }
 
-  function resetSettings() {
-    //reset settings
-  }
-
   watch(
     settings,
-    async () => {
-      await getData()
-      window.history.pushState({ settings: settings.value }, '')
+    () => {
+      listOptions.value = { ...listOptions.value, page: 1 }
     },
     { deep: true }
   )
+  watch(listOptions, refresh, { deep: true })
 
   const queryParams = computed(() => ({
-    client,
-    docsRegistryId: _id,
-    docStatus: settings.value.docStatus,
-    truck: settings.value.truck,
-    driver: settings.value.driver,
-    onlySelectable: settings.value.onlySelectable,
-    loadingZone: settings.value.loadingZone,
-    period: settings.value.period,
-    search: settings.value.search,
+    ...settings.value,
+    client: props.client,
+    docsRegistryId: props._id,
   }))
 
   async function getData() {
@@ -55,16 +47,12 @@ export const useListData = ({ client, _id }) => {
       loading.value = true
       const data = await DocsRegistryService.pickOrders(queryParams.value)
       items.value = data
-      loading.value = false
     } catch (e) {
+      vuexStore.commit('setError', e.message)
+    } finally {
       loading.value = false
-      store.commit('setError', e.message)
     }
   }
-
-  addEventListener('popstate', (e) => {
-    settings.value = e.state.settings
-  })
 
   function updateItems(data) {
     if (!items.value) return null
@@ -80,7 +68,7 @@ export const useListData = ({ client, _id }) => {
 
   return {
     loading,
-    resetSettings,
+    listOptions,
     refresh,
     settings,
     items,

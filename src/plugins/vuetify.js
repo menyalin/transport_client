@@ -25,11 +25,12 @@ export default createVuetify({
     VTextarea: { density: 'compact', autocomplete: false },
     VCheckbox: { density: 'compact', color: 'primary' },
     VDataTableServer: {
+      itemValue: '_id',
       density: 'compact',
       color: 'primary',
       itemsPerPageOptions: [25, 50, 100, 200],
     },
-    VDataTable: { density: 'compact', color: 'primary' },
+    VDataTable: { density: 'compact', color: 'primary', itemValue: '_id' },
   },
   theme: {
     defaultTheme: 'githubLight',
@@ -39,9 +40,9 @@ export default createVuetify({
         colors: {
           primary: '#18559bc5', // GitHub's accent blue for primary elements
           secondary: '#b1b2b3', // Neutral gray for secondary elements
-          accent: '#ffac2f', // Accent color
+          accent: '#4574ff', // Accent color
           error: '#d1242f', // Danger red
-          warning: '#ca9223', // Attention yellow/orange
+          warning: '#ff9361', // Attention yellow/orange
           info: '#2581eb', // Info blue
           success: '#24aa4a', // Success green
           background: '#f8f6f6', // Main background

@@ -3,9 +3,9 @@
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="pickOrdersTable"
-      @change="updateHeadersHandler"
+      @change="$emit('update-headers', $event)"
     />
-    <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
+    <v-btn @click="$emit('refresh')" icon size="small"> <v-icon>mdi-refresh</v-icon></v-btn>
     <date-range-input v-model="settings.period" class="mx-2" />
     <v-select
       v-model="settings.docStatus"
@@ -14,33 +14,27 @@
       hide-details
       clearable
       :style="{ 'max-width': '220px' }"
-      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.truck"
-      clearable
-      auto-select-first
-      :items="trucks"
-      hide-details
       label="Грузовик"
+      :items="trucks"
+      item-title="title"
+      item-value="value"
+      hide-details
       :style="{ 'max-width': '200px' }"
-      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
+      label="Водитель"
       v-model="settings.driver"
-      auto-select-first
       item-value="_id"
       item-title="fullName"
-      clearable
       :items="drivers"
       hide-details
-      label="Водитель"
       :style="{ 'max-width': '300px' }"
-      @update:model-value="settings.listOptions.page = 1"
     />
     <v-autocomplete
       v-model="settings.loadingZone"
-      auto-select-first
       item-value="_id"
       item-title="name"
       clearable
@@ -48,71 +42,30 @@
       hide-details
       label="Зона погрузки"
       :style="{ 'max-width': '250px' }"
-      @update:model-value="settings.listOptions.page = 1"
     />
     <v-text-field
-      :model-value="settings.search"
+      label="Поиск по номеру"
+      v-model="settings.search"
       clearable
       hide-details
-      label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
-      @change="searchInputHandler"
     />
-    <v-checkbox
-      v-model="settings.onlySelectable"
-      label="Только доступные рейсы"
-      hide-details
-      class="ml-2"
-    />
+    <v-checkbox v-model="settings.onlySelectable" label="Только доступные рейсы" hide-details />
   </div>
 </template>
-<script>
+<script setup>
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
-export default {
-  name: 'PickOrdersSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  components: { AppTableColumnSetting, DateRangeInput },
-  props: {
-    settings: Object,
-    allHeaders: Array,
-  },
-  setup(props, { emit }) {
-    const { orderStatuses, docStatuses, trailers, trucks, drivers, loadingZoneItems } =
-      useOrderListSettingsData()
-    const refreshHandler = () => {
-      emit('refresh')
-    }
 
-    function updateHeadersHandler(val) {
-      emit('updateHeaders', val)
-    }
+defineOptions({ name: 'PickOrdersSettings' })
+const settings = defineModel('settings')
 
-    function updateSettings(value, field) {
-      emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+defineProps({
+  allHeaders: Array,
+})
+defineEmits(['refresh', 'update-headers'])
 
-    function searchInputHandler(val) {
-      emit('change', Object.assign({}, props.settings, { search: val }))
-    }
-
-    return {
-      refreshHandler,
-      updateHeadersHandler,
-      searchInputHandler,
-      updateSettings,
-      orderStatuses,
-      docStatuses,
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    }
-  },
-}
+const { docStatuses, trucks, drivers, loadingZoneItems } = useOrderListSettingsData()
 </script>
 <style scoped>
 .settings-wrapper {
