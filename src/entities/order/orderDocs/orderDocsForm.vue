@@ -12,26 +12,24 @@
       </v-btn>
       <slot />
     </div>
-    <v-table>
+    <v-table density="compact">
       <template #default>
         <thead>
           <tr>
-            <th class="text-center" width="10px">Включать в опись</th>
+            <th class="text-center" width="50px">Опись</th>
             <th class="text-left">Тип*</th>
             <th class="text-left">Номер</th>
             <th class="text-left">Комментарий</th>
             <th class="text-left">Статус*</th>
-            <th class="text-left">Дата получения</th>
-            <th />
+            <th class="text-left" width="220px">Дата получения</th>
+            <th width="50px" />
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, idx) of docs"
-            :key="idx"
-            :class="{ 'not-accepted': item.status !== 'accepted' }"
-          >
-            <td class="text-center" />
+          <tr v-for="(item, idx) of value" :key="idx">
+            <td class="text-center">
+              <v-checkbox v-model="item.addToRegistry" hide-details />
+            </td>
             <td>
               <v-select
                 v-model="item.type"
@@ -43,7 +41,12 @@
               />
             </td>
             <td>
-              <v-text-field v-model.trim="item.number" hide-details :disabled="readonly" />
+              <v-text-field
+                v-model.trim="item.number"
+                hide-details
+                :disabled="readonly"
+                :style="{ minWidth: '150px' }"
+              />
             </td>
             <td>
               <v-text-field v-model.trim="item.note" hide-details :disabled="readonly" />
@@ -55,10 +58,11 @@
                 :items="docStatuses"
                 itemTitle="text"
                 :disabled="readonly"
+                :class="{ 'not-accepted': item.status !== 'accepted' }"
               />
             </td>
             <td>
-              <v-text-field v-model="item.date" type="date" hide-details :disabled="readonly" />
+              <date-time-input v-model="item.date" hide-details :disabled="readonly" />
             </td>
             <td>
               <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
@@ -72,91 +76,42 @@
     <app-group-dialog :dialog="groupDialog" @pushDocs="addGroup" @close="closeGroupDocDialog" />
   </div>
 </template>
-<script>
-import dayjs from 'dayjs'
+<script setup>
+import { ref, computed } from 'vue'
+import { DateTimeInput } from '@/shared/ui'
 import appGroupDialog from './groupDialog.vue'
+import { useStore } from 'vuex'
 
-const DATE_FORMAT = 'YYYY-MM-DD'
+const vuexStore = useStore()
 
-export default {
-  name: 'DocListForm',
-  components: {
-    appGroupDialog,
+defineOptions({ name: 'DocListForm' })
+const value = defineModel()
+const groupDialog = ref(false)
+defineProps({
+  isValid: {
+    type: Boolean,
+    required: true,
   },
-  model: {
-    prop: 'value',
-    event: 'change',
+  readonly: {
+    type: Boolean,
+    required: true,
   },
-  props: {
-    value: {
-      type: Array,
-    },
-    isValid: {
-      type: Boolean,
-      required: true,
-    },
-    readonly: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      docs: [],
-      groupDialog: false,
-    }
-  },
-  computed: {
-    docTypes() {
-      return this.$store.getters.documentTypes
-    },
-    docStatuses() {
-      return this.$store.getters.documentStatuses
-    },
-    invalidItems() {
-      return !!this.value.filter((item) => !item.type || !item.status).length
-    },
-  },
-  watch: {
-    value: {
-      deep: true,
-      immediate: true,
-      handler: function (val, oldVal) {
-        if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
-        this.docs = val.map((i) => ({
-          ...i,
-          addToRegistry: i.addToRegistry === undefined ? true : i.addToRegistry,
-          date: dayjs(i.date).format(DATE_FORMAT),
-        }))
-      },
-    },
-    docs: {
-      deep: true,
-      handler: function (val) {
-        this.$emit(
-          'change',
-          val.map((i) => ({
-            ...i,
-            date: i.date ? new Date(i.date).toISOString() : null,
-          }))
-        )
-      },
-    },
-  },
-  methods: {
-    addGroup(val) {
-      this.docs.push(...val)
-    },
-    openGroupDocDialog() {
-      this.groupDialog = true
-    },
-    closeGroupDocDialog() {
-      this.groupDialog = false
-    },
-    deleteRow(idx) {
-      this.docs.splice(idx, 1)
-    },
-  },
+})
+const docTypes = computed(() => vuexStore.getters.documentTypes)
+const docStatuses = computed(() => vuexStore.getters.documentStatuses)
+
+function openGroupDocDialog() {
+  groupDialog.value = true
+}
+function closeGroupDocDialog() {
+  groupDialog.value = false
+}
+
+function addGroup(val) {
+  value.value.push(...val)
+}
+function deleteRow(idx) {
+  value.value.splice(idx, 1)
 }
 </script>
 <style scoped>
@@ -166,7 +121,7 @@ export default {
 }
 .invalid {
   border: tomato 2px solid;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 .btn-wrapper {
   display: flex;
@@ -174,9 +129,9 @@ export default {
   flex-wrap: nowrap;
   gap: 15px;
   align-items: center;
-  margin: 10px;
+  margin-bottom: 15px;
 }
 .not-accepted {
-  background-color: rgba(255, 0, 0, 0.4);
+  background-color: rgba(255, 0, 0, 0.1);
 }
 </style>

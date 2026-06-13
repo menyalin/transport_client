@@ -6,7 +6,7 @@
       @submit="create"
       @refresh="refresh"
     />
-    <!-- <orders-table-settings
+    <orders-table-settings
       v-model="settings"
       :minDate="minDate"
       @putTableToClipboard="putOrdersTableToClipboard(items)"
@@ -14,31 +14,27 @@
       :carrierItems="carrierStore.carriers"
       @updateHeaders="updateActiveHeaders"
     />
+
     <orders-table
       :items="items"
       :headers="headers"
       :loading="loading"
-      :listOptions.sync="settings.listOptions"
+      v-model:options="listOptions"
       :statisticData="statisticData"
       :carrierItemsMap="carrierStore.carriersMap"
       @openDocsDialog="openDocsDialog"
     />
-    <v-dialog
-      :model-value="docDialog"
-      @update:model-value="showDialog = $event"
-      max-width="1300"
-      persistent
-    >
+    <v-dialog v-model="docDialog" max-width="1300" persistent>
       <order-docs-list
         :orderId="editableOrderId"
         :docs="editableDocs"
         @save="saveDocDialog"
         @cancel="cancelDocDialog"
       />
-    </v-dialog> -->
+    </v-dialog>
   </entity-list-wrapper>
 </template>
-<script>
+<script setup>
 import { ref } from 'vue'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import { OrdersTable, OrderDocsList, useOrderDocs, OrdersTableSettings } from '@/entities/order'
@@ -46,55 +42,18 @@ import { useListData, putOrdersTableToClipboard } from './model'
 import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'OrdersListPage',
-  components: {
-    EntityListWrapper,
-    ButtonsPanel,
-    OrdersTable,
-    OrdersTableSettings,
-    OrderDocsList,
-  },
-  setup(_props, _ctx) {
-    const carrierStore = useCarrierStore()
-    const allHeaders = ORDERS_TABLE_HEADERS
-    const headers = ref([])
+defineOptions({ name: 'OrdersListPage' })
 
-    const {
-      editableOrderId,
-      openDocsDialog,
-      docDialog,
-      editableDocs,
-      saveDocDialog,
-      cancelDocDialog,
-    } = useOrderDocs()
+const carrierStore = useCarrierStore()
+const allHeaders = ORDERS_TABLE_HEADERS
+const headers = ref([])
 
-    function updateActiveHeaders(val) {
-      headers.value = val
-    }
+const { editableOrderId, openDocsDialog, docDialog, editableDocs, saveDocDialog, cancelDocDialog } =
+  useOrderDocs()
 
-    const { refresh, create, settings, items, loading, minDate, statisticData } = useListData()
-
-    return {
-      putOrdersTableToClipboard,
-      loading,
-      refresh,
-      create,
-      settings,
-      items,
-      minDate,
-      allHeaders,
-      updateActiveHeaders,
-      headers,
-      statisticData,
-      openDocsDialog,
-      docDialog,
-      editableOrderId,
-      editableDocs,
-      saveDocDialog,
-      cancelDocDialog,
-      carrierStore,
-    }
-  },
+function updateActiveHeaders(val) {
+  headers.value = val
 }
+const { refresh, create, settings, items, loading, minDate, statisticData, listOptions } =
+  useListData()
 </script>

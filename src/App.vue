@@ -1,5 +1,5 @@
 <template>
-  <v-app class="rounded rounded-md border">
+  <v-app class="rounded rounded-md">
     <LoadSpinner v-if="appLoading" />
     <router-view />
   </v-app>

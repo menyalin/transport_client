@@ -4,17 +4,11 @@
       <v-card-title class="text-h5"> Изменение пароля </v-card-title>
       <v-card-text>
         <form @submit.prevent>
-          <v-text-field
-            v-model="password"
-            type="password"
-            autocomplete="off"
-            label="Действующий пароль"
-          />
+          <v-text-field v-model="password" type="password" label="Действующий пароль" />
           <v-text-field
             v-model="newPassword"
             type="password"
             label="Новый пароль"
-            autocomplete="off"
             :error-messages="newPasswordErrors"
             @update:model-value="v.newPassword.$touch()"
             @blur="v.newPassword.$touch()"
@@ -23,7 +17,6 @@
             v-model="confirmPassword"
             type="password"
             label="Новый пароль"
-            autocomplete="off"
             :error-messages="confirmPasswordErrors"
             @update:model-value="v.confirmPassword.$touch()"
             @blur="v.confirmPassword.$touch()"

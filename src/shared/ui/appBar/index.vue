@@ -1,11 +1,17 @@
 <template>
-  <v-app-bar color="primary">
-    <v-app-bar-nav-icon />
-    <v-img src="/logo.svg" height="40" max-height="20" max-width="20" class="mx-3" />
-    <v-toolbar-title class="app-title" @click="toHomePage">
+  <v-app-bar color="primary" density="compact">
+    <v-img
+      src="/logo.svg"
+      height="40"
+      max-height="20"
+      max-width="20"
+      :style="{ margin: '0px 15px' }"
+    />
+    <slot name="prepend" />
+    <v-toolbar-title class="app-title">
       {{ title || 's4log' }}
     </v-toolbar-title>
-    <slot />
+    <slot name="toolbar" />
     <v-spacer />
     <v-btn v-if="isLoggedIn && directoriesProfile" :to="{ name: 'Schedule' }" variant="text">
       <v-icon start> mdi-pac-man </v-icon>
@@ -63,9 +69,6 @@ export default {
     ...mapActions(['logOut']),
     logoutClick() {
       this.logOut()
-    },
-    toHomePage() {
-      if (this.$route.path !== '/') this.$router.push('/')
     },
   },
 }

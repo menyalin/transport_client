@@ -5,7 +5,7 @@
         <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <agreement-form
           v-else
           :agreement="item"
@@ -22,16 +22,16 @@
 <script>
 import { computed } from 'vue'
 import { AgreementForm } from '@/entities/agreement'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { AgreementService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { LoadSpinner } from '@/shared/ui'
 
 export default {
   name: 'AgreementDetails',
   components: {
     AgreementForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   setup() {

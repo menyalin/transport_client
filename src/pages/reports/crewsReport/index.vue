@@ -24,7 +24,7 @@
       />
     </div>
     <div v-if="!filteredCrews.length" class="text-center">
-      <app-load-spinner v-if="false" />
+      <load-spinner v-if="false" />
       <h4 v-else>Нет данных для отображния</h4>
     </div>
     <div v-else class="table-wrapper">
@@ -63,8 +63,8 @@
 <script>
 import dayjs from 'dayjs'
 import { CrewService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
-import { DateRangeInput } from '@/shared/ui'
+
+import { DateRangeInput, LoadSpinner } from '@/shared/ui'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
@@ -76,7 +76,7 @@ export default {
   name: 'CrewsReport',
   components: {
     DateRangeInput,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   setup() {
     const carrierStore = useCarrierStore()

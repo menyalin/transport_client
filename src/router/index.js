@@ -10,9 +10,9 @@ import adminRoutes from '@/router/admin.routes.js'
 import orderRoutes from '@/router/orders/index.js'
 import reportsRoutes from '@/router/reports.routes.js'
 
-import serverNotAvailablePage from '@/modules/common/pages/error.vue'
-import HomeLayout from '@/modules/common/pages/layout.vue'
-import AccessDeniedPage from '@/modules/common/pages/accessDenied.vue'
+import serverNotAvailablePage from '@/pages/error.vue'
+import HomeLayout from '@/pages/home.vue'
+import AccessDeniedPage from '@/pages/accessDenied.vue'
 import PermissionService from '@/shared/services/permission.service'
 import TestVue3Page from '@/test-vue3.vue'
 

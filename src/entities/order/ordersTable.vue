@@ -1,9 +1,12 @@
 <template>
   <v-data-table-server
+    v-model="selected"
     :v-bind="$attrs"
     :headers="headers"
     :loading="loading"
     :items="preparedItems"
+    v-model:items-per-page="options.itemsPerPage"
+    v-model:page="options.page"
     fixed-header
     height="65vh"
     :items-length="statisticData && !!statisticData.count ? statisticData.count : 0"
@@ -69,10 +72,10 @@
     </template>
     <template #[`item.docsGetted`]="{ item }">
       <v-checkbox-btn
-        :value="item.docsState ? item.docsState.getted : false"
+        :model-value="item.docsState ? item.docsState.getted : false"
         :disabled="!!item.docs && !!item.docs.length"
         color="primary"
-        @input="setDocStateStatus($event, item._id)"
+        @update:model-value="setDocStateStatus($event, item._id)"
       />
     </template>
     <template #[`footer.prepend`] v-if="statisticData && statisticData.count">
@@ -85,7 +88,12 @@
       />
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn color="primary" icon size="small" @click="$emit('openDocsDialog', item[itemIdField])">
+      <v-btn
+        color="primary"
+        variant="outlined"
+        size="small"
+        @click="$emit('openDocsDialog', item[itemIdField])"
+      >
         <v-icon size="small"> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>
@@ -100,119 +108,98 @@
     </template>
   </v-data-table-server>
 </template>
-<script>
-import store from '@/store'
-import router from '@/router'
+<script setup>
 import { computed } from 'vue'
 import { OrderService } from '@/shared/services'
 import { OrderListFooterDetails } from '@/shared/ui'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'OrdersTable',
-  components: {
-    OrderListFooterDetails,
+defineOptions({ name: 'OrdersTable' })
+const selected = defineModel()
+const options = defineModel('options')
+
+const props = defineProps({
+  headers: { type: Array, required: true },
+  loading: { type: Boolean, required: true },
+  items: Array,
+  count: Number,
+  statisticData: Object,
+
+  itemIdField: {
+    type: String,
+    default: '_id',
   },
-  model: {
-    prop: 'selected',
-    event: 'change',
+  carrierItemsMap: {
+    type: Map,
+    required: true,
   },
-  props: {
-    selected: Array,
-    headers: { type: Array, required: true },
-    loading: { type: Boolean, required: true },
-    items: Array,
-    count: Number,
-    statisticData: Object,
-    listOptions: Object,
-    itemIdField: {
-      type: String,
-      default: '_id',
-    },
-    carrierItemsMap: {
-      type: Map,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const orderAnalyticTypeMap = computed(() => store.getters.orderAnalyticTypesMap)
+})
 
-    const partnersMap = computed(() => store.getters.partnersMap)
+const emits = defineEmits(['addItem', 'update:options', 'openDocsDialog'])
 
-    const trucksMap = computed(() => store.getters.trucksMap)
+const vuexStore = useStore()
+const router = useRouter()
 
-    function getStatusText(status) {
-      return store.getters.orderStatusesMap.get(status) || ' --- '
-    }
+const orderAnalyticTypeMap = computed(() => vuexStore.getters.orderAnalyticTypesMap)
 
-    function dblClickRow(_, { item }) {
-      if (item) router.push(`/orders/${item[props.itemIdField]}`)
-    }
+const partnersMap = computed(() => vuexStore.getters.partnersMap)
 
-    function updateListOptionsHandler(options) {
-      ctx.emit('update:listOptions', { ...options })
-    }
+const trucksMap = computed(() => vuexStore.getters.trucksMap)
 
-    async function setDocStateStatus(val, id) {
-      await OrderService.setDocState(id, val)
-    }
-
-    function isNotAccepted(doc) {
-      return doc.status !== 'accepted'
-    }
-    function selectHandler(selectedItems) {
-      ctx.emit('change', selectedItems)
-    }
-    function getOrderDocStatus(docs, isGetted) {
-      if (!isGetted && (!docs || !docs.length)) return { text: 'Не получены', fontColor: 'red' }
-      else if (isGetted && (!docs || !docs.length))
-        return { text: 'На проверке', fontColor: 'blue' }
-      else if (isGetted && docs.some(isNotAccepted))
-        return { text: 'На исправлении', fontColor: 'orange' }
-      else return { text: 'Приняты', fontColor: 'green' }
-    }
-
-    function addItem(itemId) {
-      ctx.emit('addItem', itemId)
-    }
-
-    const preparedItems = computed(() => {
-      if (!props.items || props.items.length === 0) return []
-
-      return props.items.map((order) => ({
-        ...order,
-        driver: store.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName || null,
-        tk:
-          order.confirmedCrew?.tkName && props.carrierItemsMap.has(order.confirmedCrew.tkName)
-            ? props.carrierItemsMap.get(order.confirmedCrew.tkName).name
-            : '-',
-        docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
-        plannedDate: order?.route[0]
-          ? new Date(order.route[0]?.plannedDate).toLocaleString()
-          : null,
-        loadingZones: order._loadingZones?.map((i) => i.name).join(', ') || null,
-        loadingPoints:
-          order.route
-            .filter((p) => p.type === 'loading')
-            .map((p) => store.getters.addressMap.get(p.address)?.shortName) || null,
-        unloadingPoints:
-          order.route
-            .filter((p) => p.type === 'unloading')
-            .map((p) => store.getters.addressMap.get(p.address)?.shortName) || null,
-      }))
-    })
-
-    return {
-      orderAnalyticTypeMap,
-      dblClickRow,
-      partnersMap,
-      trucksMap,
-      updateListOptionsHandler,
-      getStatusText,
-      setDocStateStatus,
-      preparedItems,
-      selectHandler,
-      addItem,
-    }
-  },
+function getStatusText(status) {
+  return vuexStore.getters.orderStatusesMap.get(status) || ' --- '
 }
+
+function updateListOptionsHandler(value) {
+  emits('update:options', value)
+}
+
+function dblClickRow(_, { item }) {
+  if (item) router.push(`/orders/${item[props.itemIdField]}`)
+}
+
+async function setDocStateStatus(val, id) {
+  await OrderService.setDocState(id, val)
+}
+
+function isNotAccepted(doc) {
+  return doc.status !== 'accepted'
+}
+
+function getOrderDocStatus(docs, isGetted) {
+  if (!isGetted && (!docs || !docs.length)) return { text: 'Не получены', fontColor: 'red' }
+  else if (isGetted && (!docs || !docs.length)) return { text: 'На проверке', fontColor: 'blue' }
+  else if (isGetted && docs.some(isNotAccepted))
+    return { text: 'На исправлении', fontColor: 'orange' }
+  else return { text: 'Приняты', fontColor: 'green' }
+}
+
+function addItem(itemId) {
+  emits('addItem', itemId)
+}
+
+const preparedItems = computed(() => {
+  if (!props.items || props.items.length === 0) return []
+
+  return props.items.map((order) => ({
+    ...order,
+    driver: vuexStore.getters.driversMap.get(order.confirmedCrew?.driver)?.fullName || null,
+    tk:
+      order.confirmedCrew?.tkName && props.carrierItemsMap.has(order.confirmedCrew.tkName)
+        ? props.carrierItemsMap.get(order.confirmedCrew.tkName).name
+        : '-',
+    docStatus: getOrderDocStatus(order.docs, order.docsState?.getted),
+    plannedDate: order?.route[0] ? new Date(order.route[0]?.plannedDate).toLocaleString() : null,
+    loadingZones: order._loadingZones?.map((i) => i.name).join(', ') || null,
+    loadingPoints:
+      order.route
+        .filter((p) => p.type === 'loading')
+        .map((p) => vuexStore.getters.addressMap.get(p.address)?.shortName) || null,
+    unloadingPoints:
+      order.route
+        .filter((p) => p.type === 'unloading')
+        .map((p) => vuexStore.getters.addressMap.get(p.address)?.shortName) || null,
+  }))
+})
 </script>

@@ -5,7 +5,7 @@
         <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <AddressForm
           v-else
           :address="item"
@@ -23,7 +23,7 @@
 <script>
 import { watch, ref, getCurrentInstance } from 'vue'
 import { AddressService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
+import { LoadSpinner } from '@/shared/ui'
 import { AddressForm } from '@/entities/address'
 import { usePartners } from '@/entities/partner'
 import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'
@@ -32,7 +32,7 @@ export default {
   name: 'AddressDetailsPage',
   components: {
     AddressForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   props: {
     id: String,

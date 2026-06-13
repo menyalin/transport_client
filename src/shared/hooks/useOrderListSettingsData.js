@@ -1,14 +1,16 @@
 import { computed, onMounted, ref } from 'vue'
-import store from '@/store'
+
 import { AgreementService } from '@/shared/services'
+import { useStore } from 'vuex'
 
 export default (settings) => {
+  const vuexStore = useStore()
   const agreements = ref([])
   async function getAgreements() {
     const res = await AgreementService.getActiveAgreements()
     agreements.value = res
   }
-  const orderStatuses = computed(() => store.getters.orderStatuses)
+  const orderStatuses = computed(() => vuexStore.getters.orderStatuses)
   const invoiceStatusItems = [
     { title: 'Включен', value: 'included' },
     { title: 'Не включен', value: 'notIncluded' },
@@ -21,7 +23,7 @@ export default (settings) => {
       { value: 'missing', title: 'Не получены' },
     ]
 
-    store.getters.documentStatuses
+    vuexStore.getters.documentStatuses
       .map((i) => i.value)
       .forEach((i) => {
         if (!docStatusesWithCustomNames.map((j) => j.value).includes(i))
@@ -38,41 +40,40 @@ export default (settings) => {
   })
 
   const trailers = computed(() =>
-    store.getters
+    vuexStore.getters
       .trucksForSelect({
         type: 'trailer',
         tkName: settings?.tkName,
       })
       .map((t) => ({
-        ...t,
         value: t._id,
         title: t.regNum,
       }))
   )
 
   const trucks = computed(() =>
-    store.getters
+    vuexStore.getters
       .trucksForSelect({
         type: 'truck',
         tkName: settings?.tkName,
       })
       .map((t) => ({
-        ...t,
         value: t._id,
         title: t.regNum,
       }))
   )
 
   const drivers = computed(() =>
-    store.getters.drivers.filter((i) =>
+    vuexStore.getters.drivers.filter((i) =>
       settings?.tkName ? i.tkName._id === settings.tkName : true
     )
   )
-  const clientItems = computed(() => store.getters.partners.filter((i) => i.isClient))
+  const clientItems = computed(() => vuexStore.getters.partners.filter((i) => i.isClient))
 
-  const addressItems = computed(() => store.getters.addressesForAutocomplete)
+  const addressItems = computed(() => vuexStore.getters.addressesForAutocomplete)
 
-  const loadingZoneItems = computed(() => store.getters.zones)
+  const loadingZoneItems = computed(() => vuexStore.getters.zones)
+
   onMounted(async () => {
     await getAgreements()
   })

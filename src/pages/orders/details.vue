@@ -5,7 +5,7 @@
         <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <OrderForm
           v-else
           :order="item"
@@ -31,7 +31,7 @@
 import { computed } from 'vue'
 import socket from '@/socket'
 import { OrderService } from '@/shared/services'
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
+import { LoadSpinner } from '@/shared/ui'
 import { OrderForm, useOrderValidations } from '@/entities/order'
 import { useAddress } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
@@ -42,7 +42,7 @@ export default {
   name: 'DetailsOrder',
   components: {
     OrderForm,
-    AppLoadSpinner,
+    LoadSpinner,
     TransportWaybillsInOrderWidget,
   },
 

@@ -5,7 +5,7 @@
         <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <ScheduleNoteForm
           v-else
           :scheduleNote="item"
@@ -19,7 +19,7 @@
   </v-container>
 </template>
 <script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
+import { LoadSpinner } from '@/shared/ui'
 import { ScheduleNoteService } from '@/shared/services'
 import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
 import { ScheduleNoteForm } from '@/entities/scheduleNote'
@@ -28,7 +28,7 @@ export default {
   name: 'ScheduleNoteDetails',
   components: {
     ScheduleNoteForm,
-    AppLoadSpinner,
+    LoadSpinner,
   },
   mixins: [pageDetailsMixin],
   props: {

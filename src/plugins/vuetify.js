@@ -8,26 +8,31 @@ import { md3 } from 'vuetify/blueprints'
 
 export default createVuetify({
   defaults: {
-    VTextField: { density: 'compact' },
-    VSelect: { density: 'compact' },
+    VTextField: { density: 'compact', color: 'primary', autocomplete: 'off' },
+    VSelect: { density: 'compact', color: 'primary' },
     VAutocomplete: {
       density: 'compact',
       itemTitle: 'text',
       clearable: true,
       color: 'primary',
       autoSelectFirst: true,
+      autocomplete: 'off',
     },
     VSwitch: {
       color: 'primary',
       density: 'compact',
       class: 'ma-2',
     },
-    VTextarea: { density: 'compact', autocomplete: false },
+    VBtn: {
+      variant: 'outlined',
+    },
+    VTextarea: { density: 'compact', autocomplete: 'off' },
     VCheckbox: { density: 'compact', color: 'primary' },
     VDataTableServer: {
       itemValue: '_id',
       density: 'compact',
       color: 'primary',
+      itemsPerPage: 50,
       itemsPerPageOptions: [25, 50, 100, 200],
     },
     VDataTable: { density: 'compact', color: 'primary', itemValue: '_id' },

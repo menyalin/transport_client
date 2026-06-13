@@ -7,7 +7,7 @@
         </v-alert>
         <div class="text-h5 ma-3">Создать группу тарифов</div>
 
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <div v-else class="pt-2">
           <buttons-panel
             panel-type="form"
@@ -44,7 +44,7 @@
   </v-container>
 </template>
 <script>
-import AppLoadSpinner from '@/modules/common/components/appLoadSpinner/index.vue'
+import { LoadSpinner } from '@/shared/ui'
 import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings/index.vue'
 import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList/index.vue'
 
@@ -57,7 +57,7 @@ export default {
   name: 'CreateTariff',
   components: {
     ButtonsPanel,
-    AppLoadSpinner,
+    LoadSpinner,
     AppSalaryTariffSettings,
     AppSalaryTariffGroupList,
     SalaryTariffForm,

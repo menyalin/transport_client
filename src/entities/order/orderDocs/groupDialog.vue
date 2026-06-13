@@ -8,7 +8,7 @@
           <v-checkbox
             v-for="item of docTypeItems"
             :key="item.value"
-            v-model="docTypes"
+            v-model:model-value="docTypes"
             :label="item.text"
             :value="item.value"
             color="primary"
@@ -22,9 +22,8 @@
             label="Номера документов"
             hint="Номера документов через запятую"
             class="mt-5"
-            autofocus
           />
-          <v-radio-group v-model="docStatus" label="Статус документов">
+          <v-radio-group v-model:model-value="docStatus" label="Статус документов">
             <v-radio
               v-for="item in docStatusItems"
               :key="item.value"
@@ -40,10 +39,8 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" variant="text" @click="closeDialog"> Отмена </v-btn>
-          <v-btn color="primary" variant="text" :disabled="!docCount" type="submit">
-            Добавить
-          </v-btn>
+          <v-btn color="primary" @click="closeDialog"> Отмена </v-btn>
+          <v-btn color="primary" :disabled="!docCount" type="submit"> Добавить </v-btn>
         </v-card-actions>
       </form>
     </v-card>

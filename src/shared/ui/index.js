@@ -22,6 +22,8 @@ import VatRateSelect from './vatRateSelect.vue'
 import VatRatesInfo from './vatRatesInfo/vatRatesInfo.vue'
 import EntityFiles from './entityFiles/index.vue'
 import AllowedAgreements from './allowedAgreements/index.vue'
+import PageLayout from './PageLayout.vue'
+import ErrorPage from './ErrorPage.vue'
 
 export {
   AppTableColumnSetting,
@@ -48,4 +50,6 @@ export {
   VatRatesInfo,
   EntityFiles,
   AllowedAgreements,
+  PageLayout,
+  ErrorPage,
 }

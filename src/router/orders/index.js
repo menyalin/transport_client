@@ -21,7 +21,7 @@ export default [
   {
     path: '/orders',
     component: Layout,
-    children: [...orderRoutes],
+    children: orderRoutes,
     meta: {
       authRequired: true,
       title: 'Рейсы',

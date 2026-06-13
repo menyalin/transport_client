@@ -1,27 +1,26 @@
 <template>
-  <v-app>
-    <app-bar title="Рейсы">
-      <ScheduleSettings v-if="$route.fullPath === '/schedule/'" />
-    </app-bar>
-    <v-main>
-      <router-view />
-      <app-snackbar />
-    </v-main>
-  </v-app>
+  <page-layout :title="title">
+    <template #toolbar>
+      <schedule-settings v-if="$route.fullPath === '/schedule/'" />
+    </template>
+
+    <router-view />
+  </page-layout>
 </template>
-<script>
-import AppBar from '@/modules/common/components/appBar/index.vue'
-import AppSnackbar from '@/modules/common/components/appSnackbar/index.vue'
+
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { PageLayout } from '@/shared/ui'
 import { ScheduleSettings } from '@/entities/order'
 
-export default {
-  name: 'ProfileLayout',
+const route = useRoute()
 
-  components: {
-    AppBar,
-    AppSnackbar,
-    ScheduleSettings,
-  },
-}
+const title = computed(() => {
+  if (route.path.startsWith('/schedule')) return 'Распределение'
+  if (route.path.startsWith('/orders')) return 'Рейсы'
+  return ''
+})
 </script>
-<style></style>
+
+<style scoped></style>

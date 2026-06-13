@@ -3,6 +3,7 @@ import store from '@/store'
 import router from '@/router'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
 import { usePersistedRef } from '@/shared/hooks'
+import { sortingAdapterForOldApi } from '@/shared/utils/migrationUtils'
 
 export const useListData = () => {
   const listOptions = usePersistedRef(
@@ -20,8 +21,8 @@ export const useListData = () => {
     company: store.getters.directoriesProfile,
     limit: listOptions.value?.itemsPerPage || 50,
     skip: listOptions.value?.itemsPerPage * (listOptions.value?.page - 1) || 0,
-    sortBy: listOptions.value?.sortBy || [],
-    sortDesc: listOptions.value?.sortDesc || [],
+    sortBy: sortingAdapterForOldApi(listOptions.value?.sortBy).sortBy,
+    sortDesc: sortingAdapterForOldApi(listOptions.value?.sortBy).sortDesc,
   }))
 
   //   TODO: почему то не сохраняются listOptions

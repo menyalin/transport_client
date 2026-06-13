@@ -5,6 +5,7 @@ import store from '@/store'
 import socket from '@/socket'
 import { OrderService, PermissionService } from '@/shared/services'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
+import { sortingAdapterForOldApi } from '@/shared/utils/migrationUtils'
 
 const _initPeriod = () => {
   const todayM = dayjs()
@@ -17,7 +18,7 @@ export const useListData = () => {
       operation: 'order:daysForRead',
     })
   )
-  const historyState = window.history.state
+
   const initialState = {
     clients: [],
     agreements: [],
@@ -33,50 +34,41 @@ export const useListData = () => {
     invoiceStatus: null,
     accountingMode: !!parseInt(localStorage.getItem('orders:accontingMode')),
     period: _initPeriod(),
-    listOptions: {
-      page: 1,
-      itemsPerPage: 50,
-    },
   }
 
   const loading = ref(false)
-  const settings = usePersistedRef(historyState?.settings || initialState, 'ordersListSettings')
+  const settings = usePersistedRef(initialState, 'ordersList:settings')
+  const listOptions = usePersistedRef(initialState, 'ordersList:listOptions')
+
   const items = ref([])
   const statisticData = ref({
     count: 0,
   })
 
-  async function refresh() {
-    await getData()
-  }
-
   function create() {
     router.push('/orders/create')
   }
 
-  watch(settings, async () => await getData(), { deep: true })
+  watch(
+    settings,
+    () => {
+      listOptions.value = { ...listOptions.value, page: 1 }
+    },
+    { deep: true }
+  )
+  watch(listOptions, getData, { deep: true })
 
   const queryParams = computed(() => ({
-    clients: settings.value.clients,
-    trucks: settings.value.trucks,
-    trailer: settings.value.trailer,
-    address: settings.value.address,
-    driver: settings.value.driver,
-    agreements: settings.value.agreements,
-    docStatuses: settings.value.docStatuses,
-    invoiceStatus: settings.value.invoiceStatus,
-    tkNames: settings.value.tkNames,
-    statuses: settings.value.statuses,
-    searchNum: settings.value.searchNum,
-    loadingZones: settings.value.loadingZones,
+    ...settings.value,
     profile: store.getters.directoriesProfile,
     startDate: settings.value.period[0],
     endDate: settings.value.period[1],
     accountingMode: settings.value.accountingMode || null,
-    skip: settings.value.listOptions.itemsPerPage * (settings.value.listOptions.page - 1),
-    limit: settings.value.listOptions.itemsPerPage,
-    sortBy: settings.value.listOptions.sortBy,
-    sortDesc: settings.value.listOptions.sortDesc,
+    skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
+    limit: listOptions.value.itemsPerPage,
+    // TODO: Переделать на новое API сортировки (на сервере)
+    sortBy: sortingAdapterForOldApi(listOptions.value.sortBy).sortBy,
+    sortDesc: sortingAdapterForOldApi(listOptions.value.sortBy).sortDesc,
   }))
 
   async function getData() {
@@ -104,9 +96,10 @@ export const useListData = () => {
   })
 
   return {
-    refresh,
+    refresh: getData,
     create,
     settings,
+    listOptions,
     items,
     statisticData,
     loading,

@@ -5,7 +5,7 @@ import AutoFillOrderDates from '@/pages/orders/autofillDates.vue'
 
 export default [
   {
-    path: '/',
+    path: '',
     name: 'ListOrder',
     component: ListOrder,
   },

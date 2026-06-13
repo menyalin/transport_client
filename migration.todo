@@ -11,4 +11,7 @@ pages:
 
 
  ui:
+  [-] mixins: [pageDetailsMixin] - вырезать
+
+
 

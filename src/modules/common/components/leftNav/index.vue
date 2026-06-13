@@ -1,6 +1,10 @@
 <template>
-  <v-navigation-drawer permanent>
-    <v-list>
+  <v-navigation-drawer
+    :permanent="!collapsed"
+    :temporary="false"
+    :width="collapsed ? 45 : undefined"
+  >
+    <v-list v-if="!collapsed">
       <v-list-item>
         <v-list-item-title class="text-h6 center">
           {{ user ? user.name : null }}
@@ -10,7 +14,7 @@
         </v-list-item-subtitle>
       </v-list-item>
     </v-list>
-    <v-divider />
+    <v-divider v-if="!collapsed" />
     <v-list selected-color="primary" nav>
       <v-badge
         v-for="item in menuItems"
@@ -29,7 +33,7 @@
           :value="item.link"
           @click="selectedItem = item.link"
         >
-          <v-list-item-title v-text="item.text" />
+          <v-list-item-title v-if="!collapsed" v-text="item.text" />
         </v-list-item>
       </v-badge>
     </v-list>
@@ -38,11 +42,17 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   name: 'LeftAdminNav',
   props: {
     items: {
       type: Array,
+      default: () => [],
+    },
+    collapsed: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
@@ -65,4 +75,10 @@ export default {
   },
 }
 </script>
-<style></style>
+
+<style scoped>
+/* При сворачивании скрываем текст, оставляем только иконки */
+.v-navigation-drawer :deep(.v-list-item-title) {
+  transition: opacity 0.2s;
+}
+</style>
