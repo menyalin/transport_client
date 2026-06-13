@@ -6,7 +6,7 @@
     <div class="client-block">
       <v-autocomplete
         :items="clientItems"
-        v-model="state.client"
+        v-model="model.client"
         label="Заказчик"
         :loading="loading"
         :messages="agreementNameSring"
@@ -17,18 +17,16 @@
       />
 
       <v-text-field
-        v-model.trim="state.num"
+        v-model.trim="model.num"
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
         :style="{ maxWidth: '250px' }"
-        @change="changeFieldHandler($event, 'num')"
       />
       <v-text-field
-        v-model.trim="state.auctionNum"
+        v-model.trim="model.auctionNum"
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
         :style="{ maxWidth: '250px' }"
-        @change="changeFieldHandler($event, 'auctionNum')"
       />
     </div>
 
@@ -43,63 +41,43 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script setup>
 import { BlockTitle } from '@/entities/order'
 import { useClientBlock } from './useClientBlock'
+import { computed } from 'vue'
 
-export default {
-  name: 'ClientBlock',
-  components: {
-    BlockTitle,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    title: String,
-    item: Object,
-    routeDate: String,
-    agreementDisabled: Boolean,
-    orderConfirmed: Boolean,
-    carrier: String,
-    isValidNum: { type: Boolean, default: true },
-    isValidAuctionNum: { type: Boolean, default: true },
-  },
-  setup(props, ctx) {
-    const {
-      clientItems,
-      agreementNameSring,
-      currentAgreement,
-      state,
-      loading,
-      changeClientHandler,
-      changeFieldHandler,
-      changeAgreementHandler,
-      showChangeAgreementBtn,
-    } = useClientBlock(props, ctx)
-    return {
-      clientItems,
-      agreementNameSring,
-      currentAgreement,
-      state,
-      loading,
-      changeClientHandler,
-      changeFieldHandler,
-      showChangeAgreementBtn,
-      changeAgreementHandler,
-    }
-  },
+defineOptions({ name: 'ClientBlock' })
+const model = defineModel()
 
-  computed: {
-    numErrorMessages() {
-      return this.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
-    },
-    auctionNumErrorMessages() {
-      return this.isValidAuctionNum ? [] : ['Номер аукциона не может быть пустым']
-    },
-  },
-}
+const props = defineProps({
+  title: String,
+  routeDate: String,
+  agreementDisabled: Boolean,
+  orderConfirmed: Boolean,
+  carrier: String,
+  isValidNum: { type: Boolean, default: true },
+  isValidAuctionNum: { type: Boolean, default: true },
+})
+
+const emits = defineEmits(['update-agreement', 'change', 'update:model-value'])
+
+const {
+  clientItems,
+  agreementNameSring,
+  currentAgreement,
+  loading,
+  changeClientHandler,
+  changeAgreementHandler,
+  showChangeAgreementBtn,
+} = useClientBlock(model, props, emits)
+
+const numErrorMessages = computed(() =>
+  props.isValidNum ? [] : ['Номер заказа клиента не может быть пустым']
+)
+
+const auctionNumErrorMessages = computed(() =>
+  props.isValidAuctionNum ? [] : ['Номер аукциона не может быть пустым']
+)
 </script>
 <style scoped>
 .client-block {

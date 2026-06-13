@@ -10,12 +10,21 @@
       <v-icon :title="item.contentType">{{ mimeTypeToIcon(item.contentType) }}</v-icon>
     </template>
     <template #[`item.note`]="{ item }">
-      <v-edit-dialog :return-value.sync="item.note" @save="updateNoteHandler(item)">
-        {{ item.note }}
-        <template v-slot:input>
-          <v-text-field v-model="item.note" single-line />
+      <v-menu v-model="item._menuOpen" :close-on-content-click="false">
+        <template v-slot:activator="{ props }">
+          <span v-bind="props" class="cursor-pointer">{{ item.note }}</span>
         </template>
-      </v-edit-dialog>
+        <v-card>
+          <v-card-text>
+            <v-text-field v-model="item.note" single-line label="Описание" autofocus />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn text color="primary" @click="item._menuOpen = false">Отмена</v-btn>
+            <v-btn text color="primary" variant="text" @click="saveNote(item)">OK</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
     </template>
     <template #[`item.size`]="{ item }">
       <span v-if="item.size">{{ formatSize(item.size) }}</span>
@@ -65,6 +74,10 @@ export default {
     const updateNoteHandler = (item) => {
       ctx.emit('updateNote', item)
     }
+    const saveNote = (item) => {
+      item._menuOpen = false
+      ctx.emit('updateNote', item)
+    }
     const headers = ref([
       { value: 'icon', width: '2rem', align: 'center' },
       { text: 'Имя файла', value: 'originalName' },
@@ -91,6 +104,7 @@ export default {
       removeItemHandler,
       downloadItemHandler,
       updateNoteHandler,
+      saveNote,
     }
   },
 }
@@ -101,5 +115,8 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 20px;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

@@ -86,7 +86,7 @@ export default {
     }
 
     const showDataRow = computed(() => {
-      return !!props.value.sum && props.value.sum > 0
+      return !!props.value?.sum && props.value.sum > 0
     })
 
     const isValidForm = computed(() => {

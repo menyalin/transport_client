@@ -43,7 +43,7 @@ export default createVuetify({
       githubLight: {
         dark: false,
         colors: {
-          primary: '#18559bc5', // GitHub's accent blue for primary elements
+          primary: '#18559be0', // GitHub's accent blue for primary elements
           secondary: '#b1b2b3', // Neutral gray for secondary elements
           accent: '#4574ff', // Accent color
           error: '#d1242f', // Danger red

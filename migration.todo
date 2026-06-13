@@ -4,9 +4,9 @@ pages:
   [+] docsRegistry
     [+] list
     [+] form
-    [+] pick orders list - работаю на список рейсов
+    [+] pick orders list
   [-] orders:
-    [-] список рейсов
+    [+] список рейсов
     [-] форма рейса
 
 

@@ -1,213 +1,193 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <div class="top-panel">
-          <buttons-panel
-            :disabled-submit="disabledSubmitForm"
-            show-save-btn
-            panel-type="form"
-            @cancel="cancel"
-            @submit="submit($event)"
-            @save="submit($event, true)"
-          >
-            <DownloadDocTemplateMenu
-              v-if="docTemplateIsVisible"
-              :templates="templates"
-              :disabledDownloadFiles="downloadDisabled"
-              @downloadTemplate="downloadTemplateHandler"
-            />
-            <PaymentInvoiceLinks :items="form.paymentInvoices" />
-          </buttons-panel>
-          <div class="template-panel">
-            <v-autocomplete
-              v-model="templateSelector"
-              label="Заполнить из шаблона"
-              clearable
-              :disabled="state.status !== 'needGet'"
-              hide-details
-              :items="$store.getters.orderTemplatesForSelect"
-              :style="{ width: '350px' }"
-            />
+  <div class="top-panel">
+    <buttons-panel
+      :disabled-submit="disabledSubmitForm"
+      show-save-btn
+      panel-type="form"
+      @cancel="cancel"
+      @submit="submit($event)"
+      @save="submit($event, true)"
+    >
+      <DownloadDocTemplateMenu
+        v-if="docTemplateIsVisible"
+        :templates="templates"
+        :disabledDownloadFiles="downloadDisabled"
+        @downloadTemplate="downloadTemplateHandler"
+      />
+      <PaymentInvoiceLinks :items="form.paymentInvoices" />
+    </buttons-panel>
+    <div class="template-panel">
+      <v-autocomplete
+        v-model="templateSelector"
+        label="Заполнить из шаблона"
+        :disabled="state.status !== 'needGet'"
+        hide-details
+        :items="$store.getters.orderTemplatesForSelect"
+        :style="{ width: '350px' }"
+      />
+      <v-btn :disabled="isInvalidForm || !!templateSelector" @click="templateDialog = true">
+        Создать шаблон
+      </v-btn>
+      <v-btn icon @click="copyTimestamptsToClipboard">
+        <v-icon>mdi-clock</v-icon>
+      </v-btn>
+      <v-btn v-if="showFinalPriceDialog" color="green" icon @click="openPriceDialog">
+        <v-icon>mdi-currency-usd</v-icon>
+      </v-btn>
+
+      <v-dialog
+        :model-value="templateDialog"
+        @update:model-value="showDialog = $event"
+        persistent
+        max-width="600"
+      >
+        <v-card>
+          <v-card-title> Создать новый шаблон </v-card-title>
+          <v-card-text>
+            <v-text-field v-model="templateName" label="Название шаблона" />
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="cancelCreateTemplate"> Отмена </v-btn>
             <v-btn
-              color="primary"
-              :disabled="isInvalidForm || !!templateSelector"
-              @click="templateDialog = true"
+              color="secondary"
+              :disabled="!templateName"
+              :loading="createTemplateLoading"
+              @click="createTemplateHandler"
             >
-              Создать шаблон
+              Сохранить
             </v-btn>
-            <v-btn icon @click="copyTimestamptsToClipboard">
-              <v-icon>mdi-clock</v-icon>
-            </v-btn>
-            <v-btn v-if="showFinalPriceDialog" color="green" icon @click="openPriceDialog">
-              <v-icon>mdi-currency-usd</v-icon>
-            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </div>
 
-            <v-dialog
-              :model-value="templateDialog"
-              @update:model-value="showDialog = $event"
-              persistent
-              max-width="600"
-            >
-              <v-card>
-                <v-card-title> Создать новый шаблон </v-card-title>
-                <v-card-text>
-                  <v-text-field v-model="templateName" label="Название шаблона" />
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn @click="cancelCreateTemplate"> Отмена </v-btn>
-                  <v-btn
-                    color="secondary"
-                    :disabled="!templateName"
-                    :loading="createTemplateLoading"
-                    @click="createTemplateHandler"
-                  >
-                    Сохранить
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </div>
-        </div>
+  <div class="wrapper">
+    <app-route-state
+      v-model="state"
+      :enableConfirm="enableConfirmOrder"
+      :routeCompleted="routeCompleted"
+      :enableRefuse="enableRefuseOrder"
+      :isExistFirstArrivalDate="isExistFirstArrivalDate"
+      :isValidGrade="isValidGrade"
+      :readonly="disabledSubmitForm"
+      title="Статус рейса"
+      class="route-state"
+    />
+    <ClientBlock
+      v-model="client"
+      title="Информация о клиенте"
+      class="client"
+      :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
+      :isValidNum="isValidClientNum(agreement, client, state)"
+      :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
+      :orderConfirmed="orderConfirmed"
+      :routeDate="routeDate"
+      :agreementDisabled="hasPaymentInvoices"
+      @updateAgreement="updateAgreementHandler"
+    />
+    <CargoParams v-model="cargoParams" title="Параметры груза" class="cargo-params" />
 
-        <div class="wrapper">
-          <app-route-state
-            v-model="state"
-            :enableConfirm="enableConfirmOrder"
-            :routeCompleted="routeCompleted"
-            :enableRefuse="enableRefuseOrder"
-            :isExistFirstArrivalDate="isExistFirstArrivalDate"
-            :isValidGrade="isValidGrade"
-            :readonly="disabledSubmitForm"
-            title="Статус рейса"
-            class="route-state"
-          />
-          <ClientBlock
-            v-model="client"
-            title="Информация о клиенте"
-            class="client"
-            :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
-            :isValidNum="isValidClientNum(agreement, client, state)"
-            :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
-            :orderConfirmed="orderConfirmed"
-            :routeDate="routeDate"
-            :agreementDisabled="hasPaymentInvoices"
-            @updateAgreement="updateAgreementHandler"
-          />
-          <CargoParams v-model="cargoParams" title="Параметры груза" class="cargo-params" />
+    <ReqTransport v-model="reqTransport" title="Требования к транспорту" class="req-transport" />
 
-          <ReqTransport
-            v-model="reqTransport"
-            title="Требования к транспорту"
-            class="req-transport"
-          />
+    <app-grade-block
+      v-if="showGradeBlock"
+      v-model="grade"
+      :disabled="state.status === 'completed'"
+      title="Оценка водителя"
+      class="grade"
+    />
+    <OrderRoute
+      v-model="preparedRoute"
+      :driverId="confirmedCrew.driver"
+      title="Маршрут"
+      :state="state"
+      :cargoParams="cargoParams"
+      :agreement="agreement"
+      :confirmed="orderInProgress"
+      class="route-points"
+      :isValid="isValidRoute"
+    />
 
-          <app-grade-block
-            v-if="showGradeBlock"
-            v-model="grade"
-            :disabled="state.status === 'completed'"
-            title="Оценка водителя"
-            class="grade"
-          />
-          <OrderRoute
-            v-model="preparedRoute"
-            :driverId="confirmedCrew.driver"
-            title="Маршрут"
-            :state="state"
-            :cargoParams="cargoParams"
-            :agreement="agreement"
-            :confirmed="orderInProgress"
-            class="route-points"
-            :isValid="isValidRoute"
-          />
+    <app-confirmed-crew
+      v-model="confirmedCrew"
+      :date="dateForCrew"
+      :confirmed="orderConfirmed"
+      :hasIncomingInvoice="hasIncomingInvoice"
+      :executorIdInClientAgreement="agreement ? agreement.executor : null"
+      :carriersMap="carrierItemsMap"
+      title="Экипаж"
+      class="crew"
+      @change="changeCrewHandler"
+    />
 
-          <app-confirmed-crew
-            v-model="confirmedCrew"
-            :date="dateForCrew"
-            :confirmed="orderConfirmed"
-            :hasIncomingInvoice="hasIncomingInvoice"
-            :executorIdInClientAgreement="agreement ? agreement.executor : null"
-            :carriersMap="carrierItemsMap"
-            title="Экипаж"
-            class="crew"
-            @change="changeCrewHandler"
-          />
+    <div id="price">
+      <app-analytic-block
+        v-model="analytics"
+        :isValidRoute="isValidRoute"
+        :coords="coords"
+        title="Аналитика"
+      />
 
-          <div id="price">
-            <app-analytic-block
-              v-model="analytics"
-              :isValidRoute="isValidRoute"
-              :coords="coords"
-              title="Аналитика"
-            />
+      <app-payment-to-driver
+        v-if="showPaymentToDriver"
+        id="payment-to-driver"
+        v-model="paymentToDriver"
+      />
 
-            <app-payment-to-driver
-              v-if="showPaymentToDriver"
-              id="payment-to-driver"
-              v-model="paymentToDriver"
-            />
+      <PriceBlock
+        :isValidPrices="isValidPrices(agreement, prices, state)"
+        :prices.sync="prices"
+        :prePrices="prePrices"
+        :outsourceCosts.sync="outsourceCosts"
+        :agreement="agreement"
+        :clientVatRateInfo="client.vatRateInfo"
+        :carrierVatRateInfo="carrierVatRateInfo"
+        :carrierAgreement="carrierAgreement"
+        :analytics="analytics"
+        :route="route"
+        :disabledInPaymentInvoice="disabledInPaymentInvoice"
+        :hasIncomingInvoice="hasIncomingInvoice"
+      >
+        <IncomingInvoiceLink v-if="!!order" :invoice="order.incomingInvoice" />
+      </PriceBlock>
 
-            <PriceBlock
-              :isValidPrices="isValidPrices(agreement, prices, state)"
-              :prices.sync="prices"
-              :prePrices="prePrices"
-              :outsourceCosts.sync="outsourceCosts"
-              :agreement="agreement"
-              :clientVatRateInfo="client.vatRateInfo"
-              :carrierVatRateInfo="carrierVatRateInfo"
-              :carrierAgreement="carrierAgreement"
-              :analytics="analytics"
-              :route="route"
-              :disabledInPaymentInvoice="disabledInPaymentInvoice"
-              :hasIncomingInvoice="hasIncomingInvoice"
-            >
-              <IncomingInvoiceLink v-if="!!order" :invoice="order.incomingInvoice" />
-            </PriceBlock>
+      <FinalPriceDialog
+        v-if="showFinalPriceDialog"
+        :order="order"
+        :readonly="disabledInPaymentInvoice"
+        :agreement="agreement"
+        :vatRateInfo="client.vatRateInfo"
+        :prePrices.sync="prePrices"
+        :finalPrices="finalPrices"
+        :dialog.sync="priceDialog"
+      />
+    </div>
 
-            <FinalPriceDialog
-              v-if="showFinalPriceDialog"
-              :order="order"
-              :readonly="disabledInPaymentInvoice"
-              :agreement="agreement"
-              :vatRateInfo="client.vatRateInfo"
-              :prePrices.sync="prePrices"
-              :finalPrices="finalPrices"
-              :dialog.sync="priceDialog"
-            />
-          </div>
+    <div id="note">
+      <v-text-field v-model="form.note" label="Примечание" />
+      <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
+    </div>
+    <EntityFiles id="order-files" v-if="order && order._id" :itemId="order._id" docType="order" />
+    <order-docs-list-form
+      v-if="isShowDocs"
+      id="docs"
+      v-model="docs"
+      title="Документы"
+      :isValid="isValidDocs(docs)"
+      :readonly="isReadonlyDocs"
+    >
+      <docs-registry-link :docsRegistry="form.docsRegistry" />
+    </order-docs-list-form>
+    <div id="transport-waybills">
+      <slot name="transport_waybills" />
+    </div>
+  </div>
 
-          <div id="note">
-            <v-text-field v-model="form.note" label="Примечание" />
-            <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
-          </div>
-          <EntityFiles
-            id="order-files"
-            v-if="order && order._id"
-            :itemId="order._id"
-            docType="order"
-          />
-          <order-docs-list-form
-            v-if="isShowDocs"
-            id="docs"
-            v-model="docs"
-            title="Документы"
-            :isValid="isValidDocs(docs)"
-            :readonly="isReadonlyDocs"
-          >
-            <docs-registry-link :docsRegistry="form.docsRegistry" />
-          </order-docs-list-form>
-          <div id="transport-waybills">
-            <slot name="transport_waybills" />
-          </div>
-        </div>
-
-        <v-btn v-if="displayDeleteBtn" color="error" class="ma-4" @click="$emit('delete')">
-          <v-icon start> mdi-delete </v-icon>
-          Удалить
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-btn v-if="displayDeleteBtn" color="error" class="ma-4" @click="$emit('delete')">
+    <v-icon start> mdi-delete </v-icon>
+    Удалить
+  </v-btn>
 </template>
 <script>
 import { computed, ref, getCurrentInstance } from 'vue'
@@ -751,6 +731,8 @@ export default {
 .template-panel {
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
 }
 .dates-position-block {

@@ -84,8 +84,8 @@ export default {
     sortedItems() {
       const typesOrder = this.$store.getters.orderPriceTypes.map((i) => i.value)
       return this.items
-        .slice()
-        .sort(
+        ?.slice()
+        ?.sort(
           (a, b) =>
             typesOrder.findIndex((t) => t === a.type) - typesOrder.findIndex((t) => t === b.type)
         )

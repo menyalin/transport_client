@@ -3,22 +3,13 @@ import store from '@/store/index'
 import { ref, computed, watch } from 'vue'
 import { clientAgreementSelector } from './utils/clientAgreementSelector'
 
-export const useClientBlock = (props, ctx) => {
-  const loading = ref(true)
+export const useClientBlock = (model, props, emits) => {
+  const loading = ref(false)
   const currentAgreement = ref(null)
   const allowedAgreements = ref([])
 
-  const initialState = {
-    client: null,
-    num: null,
-    auctionNum: null,
-    agreement: null,
-    directiveAgreement: false,
-  }
-  const state = ref(initialState)
-
   const allowToChangeAgreement = computed(() => {
-    if (props.orderConfirmed || state.value.directiveAgreement) return false
+    if (props.orderConfirmed || model.value.directiveAgreement) return false
     return true
   })
 
@@ -29,30 +20,28 @@ export const useClientBlock = (props, ctx) => {
         allowedAgreements: allowedAgreements.value,
         carrierId: props.carrier,
       })
-      state.value = {
-        ...state.value,
+      model.value = {
+        ...model.value,
         agreement: currentAgreement.value?._id ?? null,
         directiveAgreement: false,
       }
-      ctx.emit('change', state.value)
     } else {
-      currentAgreement.value = allowedAgreements.value.find((i) => i._id === state.value.agreement)
+      currentAgreement.value = allowedAgreements.value.find((i) => i._id === model.value.agreement)
     }
-
-    ctx.emit('updateAgreement', currentAgreement.value)
+    emits('update-agreement', currentAgreement.value)
   }
 
   async function getAllowedAgreements() {
-    if (!props.routeDate || !state.value.client) {
+    if (!props.routeDate || !model.value.client) {
       loading.value = false
       return
     }
     try {
       loading.value = true
       allowedAgreements.value = await AgreementService.getForClient({
-        client: state.value.client,
+        client: model.value.client,
         date: new Date(props.routeDate).toISOString(),
-        currentAgreementId: state.value.agreement,
+        currentAgreementId: model.value.agreement,
       })
     } catch (e) {
       store.commit('setError', e)
@@ -64,58 +53,52 @@ export const useClientBlock = (props, ctx) => {
   async function changeClientHandler(val) {
     if (!val) return
     await getAllowedAgreements()
-    ctx.emit('change', state.value)
   }
 
   function changeAgreementHandler() {
-    const idx = allowedAgreements.value.findIndex((i) => i._id === state.value.agreement) || 0
+    const idx = allowedAgreements.value.findIndex((i) => i._id === model.value.agreement) || 0
     currentAgreement.value = allowedAgreements.value[(idx + 1) % allowedAgreements.value.length]
 
-    state.value = {
-      ...state.value,
+    model.value = {
+      ...model.value,
       agreement: currentAgreement.value._id,
       directiveAgreement: true,
     }
-    ctx.emit('change', state.value)
-  }
-  function changeFieldHandler(value, field) {
-    state.value = { ...state.value, [field]: value }
-    ctx.emit('change', state.value)
   }
 
   watch(
-    () => props.item,
-    async (newVal, oldVal) => {
-      state.value = { ...newVal }
-      if (newVal?.client !== oldVal?.client) {
+    () => model.value.client,
+    async (newClient, oldClient) => {
+      console.log('watch', { newClient, oldClient })
+      if (newClient && newClient !== oldClient) {
+        console.log('watch before new query')
         await getAllowedAgreements()
+        setAgreement()
       }
     },
-    { deep: true, immediate: true }
-  )
-
-  watch(
-    () => props.carrier,
-    (newVal, oldVal) => {
-      if (newVal === oldVal) return
-      setAgreement()
-    }
-  )
-
-  watch(
-    () => props.routeDate,
-    async () => await getAllowedAgreements(),
     { immediate: true }
   )
 
-  watch(allowedAgreements, setAgreement)
+  // watch(
+  //   () => props.carrier,
+  //   (newVal, oldVal) => {
+  //     if (newVal === oldVal) return
+  //     setAgreement()
+  //   }
+  // )
+
+  // watch(
+  //   () => props.routeDate,
+  //   async () => await getAllowedAgreements(),
+  //   { immediate: true }
+  // )
+
+  // watch(allowedAgreements, setAgreement)
 
   return {
-    state,
     loading,
     currentAgreement,
     changeClientHandler,
-    changeFieldHandler,
     changeAgreementHandler,
     clientItems: computed(() =>
       store.getters.partners.filter((p) => p.isClient).map((i) => ({ value: i._id, text: i.name }))
@@ -125,7 +108,7 @@ export const useClientBlock = (props, ctx) => {
     ),
 
     agreementNameSring: computed(() => {
-      const suffix = state.value.directiveAgreement ? ' (Установлено вручную)' : ''
+      const suffix = model.value.directiveAgreement ? ' (Установлено вручную)' : ''
       return currentAgreement.value
         ? [currentAgreement.value.name + suffix]
         : ['Соглашение отсутствует']

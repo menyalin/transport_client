@@ -4,20 +4,20 @@
       <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <v-text-field
-      v-model="state.description"
+      v-model="cargoParams.description"
       hide-details
       label="Груз"
       :style="{ 'max-width': '600px' }"
     />
     <div class="cargo-params-block py-2">
-      <v-text-field v-model.number="state.weight" type="Number" hide-details label="Вес, тонн" />
-      <v-text-field v-model.number="state.plt" type="Number" hide-details label="Плт, шт" />
-      <v-text-field v-model.number="state.volume" type="Number" hide-details label="Объем, м3" />
-      <v-text-field v-model="state.tRegime" hide-details label="t-режим" />
+      <v-text-field v-model.number="cargoParams.weight" hide-details label="Вес, тонн" />
+      <v-text-field v-model.number="cargoParams.plt" type="Number" hide-details label="Плт, шт" />
+      <v-text-field v-model.number="cargoParams.volume" hide-details label="Объем, м3" />
+      <v-text-field v-model="cargoParams.tRegime" hide-details label="t-режим" />
     </div>
     <div>
       <v-text-field
-        v-model="state.note"
+        v-model="cargoParams.note"
         hide-details
         label="Примечание"
         :style="{ 'max-width': '600px' }"
@@ -25,43 +25,14 @@
     </div>
   </div>
 </template>
-<script>
-import { ref, watch } from 'vue'
+<script setup>
 import { BlockTitle } from '@/entities/order'
-export default {
-  name: 'CargoParams',
-  components: {
-    BlockTitle,
-  },
-  model: {
-    prop: 'cargoParams',
-    event: 'change',
-  },
-  props: {
-    cargoParams: Object,
-    title: String,
-  },
-  setup(props, ctx) {
-    const state = ref({
-      description: null,
-      volume: null,
-      weight: null,
-      plt: null,
-      tRegime: null,
-      note: null,
-    })
-    watch(
-      () => props.cargoParams,
-      (val) => {
-        state.value = val
-      },
-      { immediate: true }
-    )
-    watch(state.value, (val) => ctx.emit('change', { ...val }))
 
-    return { state }
-  },
-}
+defineOptions({ name: 'CargoParams' })
+
+const cargoParams = defineModel()
+
+defineProps({ title: String })
 </script>
 <style scoped>
 .cargo-params-block {
