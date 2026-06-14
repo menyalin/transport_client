@@ -5,178 +5,162 @@
     </div>
     <div class="state-block">
       <div>
-        <v-radio-group
-          :model-value="params.status"
-          mandatory
-          :readonly="readonly"
-          @update:model-value="change($event, 'status')"
-        >
+        <v-radio-group v-model="model.status" :readonly="readonly">
           <v-radio
-            v-for="status in orderStatuses"
+            v-for="status of orderStatuses"
             :key="status.value"
+            :disabled="disabledStatus(status.value)"
             :label="status.text"
-            :disabled="disabledStatus(status)"
             :value="status.value"
           />
         </v-radio-group>
       </div>
       <div>
         <v-checkbox
-          :value="params.driverNotified"
+          v-model="model.driverNotified"
           :readonly="readonly"
           label="Водитель оповещен"
-          class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
           hide-details
-          @update:model-value="change($event, 'driverNotified')"
+          density="compact"
         />
         <v-checkbox
-          :value="params.clientNotified"
+          v-model="model.clientNotified"
           label="Клиент оповещен"
           :readonly="readonly"
-          class="pt-0 mt-1"
           :disabled="!enableConfirm || disabledNotification"
           hide-details
-          @update:model-value="change($event, 'clientNotified')"
+          density="compact"
         />
         <v-checkbox
-          :value="params.warning"
+          v-model="model.warning"
           label="На контроле"
           :readonly="readonly"
-          class="pt-0 mt-3 mb-2"
           hide-details
-          @update:model-value="change($event, 'warning')"
+          density="compact"
         />
       </div>
     </div>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+
+<script setup>
+import { computed } from 'vue'
 import { BlockTitle } from '@/entities/order'
-export default {
-  name: 'RouteState',
-  components: {
-    BlockTitle,
-  },
-  model: {
-    prop: 'routeState',
-    event: 'change',
-  },
-  props: {
-    routeState: Object,
-    title: String,
-    enableConfirm: Boolean,
-    routeCompleted: Boolean,
-    enableRefuse: Boolean,
-    isExistFirstArrivalDate: Boolean,
-    isValidGrade: Boolean,
-    readonly: Boolean,
-  },
-  data() {
-    return {
-      params: {
-        status: 'needGet',
-        warning: false,
-        driverNotified: false,
-        clientNotified: false,
-      },
+import { useStore } from 'vuex'
+
+const vuexStore = useStore()
+
+defineOptions({ name: 'RouteState' })
+const model = defineModel('model-value', {
+  default: () => ({
+    status: 'needGet',
+    warning: false,
+    driverNotified: false,
+    clientNotified: false,
+  }),
+})
+
+const props = defineProps({
+  title: String,
+  enableConfirm: Boolean,
+  routeCompleted: Boolean,
+  enableRefuse: Boolean,
+  isExistFirstArrivalDate: Boolean,
+  isValidGrade: Boolean,
+  readonly: Boolean,
+})
+
+// Константы статусов для читаемости
+const STATUSES = {
+  NEED_GET: 'needGet',
+  GETTED: 'getted',
+  IN_PROGRESS: 'inProgress',
+  COMPLETED: 'completed',
+  WE_REFUSED: 'weRefused',
+  CLIENT_REFUSED: 'clientRefused',
+  NOT_CONFIRMED_BY_CLIENT: 'notСonfirmedByClient',
+}
+
+const orderStatuses = computed(() => vuexStore.getters.orderStatuses)
+
+// Lookup-таблица: [текущий статус + условия] → доступные статусы
+function getAllowedStatuses() {
+  const { status, driverNotified, clientNotified } = model.value
+  const { enableRefuse, routeCompleted, isExistFirstArrivalDate, isValidGrade } = props
+
+  // needGet
+  if (status === STATUSES.NEED_GET) {
+    return enableRefuse
+      ? [STATUSES.NEED_GET, STATUSES.GETTED, STATUSES.NOT_CONFIRMED_BY_CLIENT, STATUSES.WE_REFUSED]
+      : [STATUSES.NEED_GET, STATUSES.GETTED]
+  }
+
+  // getted
+  if (status === STATUSES.GETTED) {
+    if (!driverNotified && !clientNotified) {
+      return enableRefuse
+        ? [STATUSES.NEED_GET, STATUSES.GETTED, STATUSES.WE_REFUSED, STATUSES.CLIENT_REFUSED]
+        : [STATUSES.NEED_GET, STATUSES.GETTED]
     }
-  },
-  computed: {
-    ...mapGetters([]),
-    orderStatuses() {
-      return this.$store.getters.orderStatuses
-    },
-    disabledNotification() {
-      return !['getted'].includes(this.params.status)
-    },
-  },
-  watch: {
-    routeState: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          this.$nextTick(() => {
-            this.params.status = val.status
-            this.params.warning = val.warning
-            this.params.driverNotified = val.driverNotified
-            this.params.clientNotified = val.clientNotified
-          })
-        }
-      },
-    },
-  },
-  methods: {
-    change(val, field) {
-      this.params[field] = val
-      this.$emit('change', this.params)
-    },
-    disabledStatus(status) {
-      if (this.params.status === 'needGet' && this.enableRefuse)
-        return !['needGet', 'getted', 'notСonfirmedByClient', 'weRefused'].includes(status.value)
-      if (this.params.status === 'needGet' && !this.enableRefuse)
-        return !['needGet', 'getted'].includes(status.value)
-      if (
-        this.params.status === 'getted' &&
-        !this.params.driverNotified &&
-        !this.params.clientNotified &&
-        this.enableRefuse
-      )
-        return !['needGet', 'getted', 'weRefused', 'clientRefused'].includes(status.value)
-      if (
-        this.params.status === 'getted' &&
-        !this.params.driverNotified &&
-        !this.params.clientNotified &&
-        !this.enableRefuse
-      )
-        return !['needGet', 'getted'].includes(status.value)
+    if (driverNotified && clientNotified) {
+      return [STATUSES.GETTED, STATUSES.IN_PROGRESS]
+    }
+  }
 
-      if (
-        this.params.status === 'getted' &&
-        this.params.driverNotified &&
-        this.params.clientNotified
-      )
-        return !['getted', 'inProgress'].includes(status.value)
+  // inProgress
+  if (status === STATUSES.IN_PROGRESS) {
+    if (!routeCompleted && !isExistFirstArrivalDate) {
+      return [STATUSES.IN_PROGRESS, STATUSES.GETTED]
+    }
+    if (!routeCompleted && isExistFirstArrivalDate) {
+      return [STATUSES.IN_PROGRESS]
+    }
+    if (routeCompleted && !isValidGrade) {
+      return [STATUSES.IN_PROGRESS]
+    }
+    if (routeCompleted && isValidGrade) {
+      return [STATUSES.IN_PROGRESS, STATUSES.COMPLETED]
+    }
+  }
 
-      if (
-        this.params.status === 'inProgress' &&
-        !this.routeCompleted &&
-        !this.isExistFirstArrivalDate
-      )
-        return !['inProgress', 'getted'].includes(status.value)
+  // completed
+  if (status === STATUSES.COMPLETED) {
+    return [STATUSES.COMPLETED, STATUSES.IN_PROGRESS]
+  }
 
-      if (
-        this.params.status === 'inProgress' &&
-        !this.routeCompleted &&
-        this.isExistFirstArrivalDate
-      )
-        return !['inProgress'].includes(status.value)
+  // weRefused
+  if (status === STATUSES.WE_REFUSED) {
+    return [STATUSES.GETTED, STATUSES.WE_REFUSED]
+  }
 
-      if (this.params.status === 'inProgress' && this.routeCompleted && !this.isValidGrade)
-        return !['inProgress'].includes(status.value)
+  // clientRefused
+  if (status === STATUSES.CLIENT_REFUSED) {
+    return [STATUSES.GETTED, STATUSES.CLIENT_REFUSED]
+  }
 
-      if (this.params.status === 'inProgress' && this.routeCompleted && this.isValidGrade)
-        return !['completed', 'inProgress'].includes(status.value)
+  // notСonfirmedByClient
+  if (status === STATUSES.NOT_CONFIRMED_BY_CLIENT) {
+    return [STATUSES.NEED_GET, STATUSES.GETTED, STATUSES.NOT_CONFIRMED_BY_CLIENT]
+  }
 
-      if (this.params.status === 'completed')
-        return !['completed', 'inProgress'].includes(status.value)
+  return []
+}
 
-      if (this.params.status === 'weRefused') return !['getted', 'weRefused'].includes(status.value)
+const disabledNotification = computed(() => [STATUSES.GETTED].includes(model.value.status))
 
-      if (this.params.status === 'clientRefused')
-        return !['getted', 'clientRefused'].includes(status.value)
-
-      if (this.params.status === 'notСonfirmedByClient')
-        return !['needGet', 'getted', 'notСonfirmedByClient'].includes(status.value)
-      return true
-    },
-  },
+// Простая проверка через lookup-таблицу
+function disabledStatus(statusValue) {
+  const allowed = getAllowedStatuses()
+  return !allowed.includes(statusValue)
 }
 </script>
+
 <style scoped>
 .state-block {
-  display: grid;
-  grid-template-columns: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 </style>

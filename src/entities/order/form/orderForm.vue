@@ -22,7 +22,7 @@
         label="Заполнить из шаблона"
         :disabled="state.status !== 'needGet'"
         hide-details
-        :items="$store.getters.orderTemplatesForSelect"
+        :items="orderTemplatesForSelect"
         :style="{ width: '350px' }"
       />
       <v-btn :disabled="isInvalidForm || !!templateSelector" @click="templateDialog = true">
@@ -35,12 +35,7 @@
         <v-icon>mdi-currency-usd</v-icon>
       </v-btn>
 
-      <v-dialog
-        :model-value="templateDialog"
-        @update:model-value="showDialog = $event"
-        persistent
-        max-width="600"
-      >
+      <v-dialog v-model="templateDialog" persistent max-width="600">
         <v-card>
           <v-card-title> Создать новый шаблон </v-card-title>
           <v-card-text>
@@ -84,7 +79,7 @@
       :orderConfirmed="orderConfirmed"
       :routeDate="routeDate"
       :agreementDisabled="hasPaymentInvoices"
-      @updateAgreement="updateAgreementHandler"
+      @updateAgreement="updateAgreement"
     />
     <CargoParams v-model="cargoParams" title="Параметры груза" class="cargo-params" />
 
@@ -105,20 +100,20 @@
       :cargoParams="cargoParams"
       :agreement="agreement"
       :confirmed="orderInProgress"
-      class="route-points"
       :isValid="isValidRoute"
+      class="route-points"
     />
 
-    <app-confirmed-crew
+    <ConfirmedCrew
       v-model="confirmedCrew"
+      title="Экипаж"
       :date="dateForCrew"
       :confirmed="orderConfirmed"
       :hasIncomingInvoice="hasIncomingInvoice"
       :executorIdInClientAgreement="agreement ? agreement.executor : null"
       :carriersMap="carrierItemsMap"
-      title="Экипаж"
+      @update:model-value="changeCrewHandler"
       class="crew"
-      @change="changeCrewHandler"
     />
 
     <div id="price">
@@ -137,9 +132,9 @@
 
       <PriceBlock
         :isValidPrices="isValidPrices(agreement, prices, state)"
-        :prices.sync="prices"
+        v-model:prices="prices"
         :prePrices="prePrices"
-        :outsourceCosts.sync="outsourceCosts"
+        v-model:outsourceCosts="outsourceCosts"
         :agreement="agreement"
         :clientVatRateInfo="client.vatRateInfo"
         :carrierVatRateInfo="carrierVatRateInfo"
@@ -158,9 +153,9 @@
         :readonly="disabledInPaymentInvoice"
         :agreement="agreement"
         :vatRateInfo="client.vatRateInfo"
-        :prePrices.sync="prePrices"
+        :prePrices="prePrices"
         :finalPrices="finalPrices"
-        :dialog.sync="priceDialog"
+        v-model:dialog="priceDialog"
       />
     </div>
 
@@ -184,17 +179,19 @@
     </div>
   </div>
 
-  <v-btn v-if="displayDeleteBtn" color="error" class="ma-4" @click="$emit('delete')">
+  <v-btn v-if="displayDeleteBtn" color="error" class="ma-4" @click="emit('delete')">
     <v-icon start> mdi-delete </v-icon>
     Удалить
   </v-btn>
 </template>
-<script>
-import { computed, ref, getCurrentInstance } from 'vue'
+
+<script setup>
+import { computed, watch, provide, nextTick } from 'vue'
+import { useStore } from 'vuex'
 import { OrderService, OrderTemplateService } from '@/shared/services'
 import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
-import AppConfirmedCrew from './confirmedCrew/index.vue'
+import ConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from '@/entities/order/form/analyticBlock.vue'
 import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
@@ -217,510 +214,243 @@ import {
 
 import FinalPriceDialog from './finalPriceDialog/index.vue'
 import AppPaymentToDriver from './paymentToDriver.vue'
+import { useOrderForm } from './composables/useOrderForm'
 
-export default {
-  name: 'OrderForm',
-  components: {
-    EntityFiles,
-    DownloadDocTemplateMenu,
-    PaymentInvoiceLinks,
-    IncomingInvoiceLink,
-    ButtonsPanel,
-    ReqTransport,
-    CargoParams,
-    AppRouteState,
-    AppConfirmedCrew,
-    ClientBlock,
-    AppGradeBlock,
-    AppAnalyticBlock,
-    PriceBlock,
-    OrderDocsListForm,
-    DocsRegistryLink,
-    AppPaymentToDriver,
+defineOptions({ name: 'OrderForm' })
 
-    OrderRoute,
-    FinalPriceDialog,
+const props = defineProps({
+  order: {
+    type: Object,
+    default: () => null,
   },
-  props: {
-    order: {
-      type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    loading: Boolean,
-    addressActions: Object,
-    getCarrierAgreementById: {
-      type: Function,
-      required: true,
-    },
-
-    carrierItemsMap: {
-      type: Map,
-      required: true,
-    },
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
   },
-  provide() {
-    return {
-      addressActions: this.addressActions,
-      updateFinalPrices: (val) => {
-        this.finalPrices = [...val]
-      },
-    }
+  loading: {
+    type: Boolean,
+    default: false,
   },
-  setup(props) {
-    const carrierAgreement = ref(null)
-
-    const { templates, docTemplateIsVisible, downloadTemplateHandler, downloadDisabled } =
-      useOrderPrintForms({ order: props.order })
-
-    const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
-    const { isValidPrices, isValidClientNum, isValidAuctionNum } = useOrderValidations()
-
-    const hasIncomingInvoice = computed(() => {
-      return props.order?.incomingInvoice && props.order?.incomingInvoice._id
-    })
-
-    const hasPaymentInvoices = computed(() => {
-      return Boolean(props.order?.paymentInvoices && props.order?.paymentInvoices.length)
-    })
-
-    const disabledInPaymentInvoice = computed(() => {
-      if (!hasPaymentInvoices.value) return false
-      const invoice = props.order?.paymentInvoices[0] || null
-      return invoice && invoice.status !== 'inProcess'
-    })
-
-    async function changeCrewHandler(newValue) {
-      // если в экипаже есть соглашение, то обновляю объект с соглашением
-      if (newValue.outsourceAgreement && props?.getCarrierAgreementById)
-        carrierAgreement.value = await props.getCarrierAgreementById(newValue.outsourceAgreement)
-    }
-
-    // Дублируем логику dateForCrew для использования в setup
-    const instance = getCurrentInstance()
-    const dateForCrew = computed(() => {
-      const proxy = instance.proxy
-      const route = proxy.route
-      const form = proxy.form
-      if (route[0]?.plannedDate) return route[0]?.plannedDate
-      return form.startPositionDate
-    })
-
-    const carrierVatRateInfo = computed(() => {
-      if (!carrierAgreement.value) return
-      return {
-        date: dateForCrew.value,
-        vatRate: carrierAgreement.value?.vatRate,
-        usePriceWithVat: carrierAgreement.value?.usePriceWithVAT,
-      }
-    })
-
-    return {
-      templates,
-      docTemplateIsVisible,
-      downloadDisabled,
-      downloadTemplateHandler,
-      isValidDocs,
-      isReadonlyDocs,
-      isShowDocs,
-      isValidPrices,
-      isValidClientNum,
-      isValidAuctionNum,
-      hasIncomingInvoice,
-      disabledInPaymentInvoice,
-      hasPaymentInvoices,
-      changeCrewHandler,
-      carrierAgreement,
-      carrierVatRateInfo,
-    }
+  addressActions: {
+    type: Object,
+    default: () => ({}),
   },
-  data() {
-    return {
-      processingBeforeSubmit: false,
-      agreement: null,
-      docs: [],
-      paymentToDriver: {},
-      priceDialog: false,
-      createTemplateLoading: false,
-      templateDialog: false,
-      templateName: null,
-      templateSelector: null,
-      orderId: null,
-      prePrices: [],
-      prices: [],
-      finalPrices: [],
-      outsourceCosts: [],
-      client: {
-        client: null,
-        agreement: null,
-        clientVatRateInfo: {
-          date: new Date().toISOString(),
-          usePriceWithVat: false,
-          vatRate: 0,
-        },
-      },
-      cargoParams: {
-        weight: null,
-        places: null,
-        note: null,
-        tRegime: null,
-      },
-      grade: {
-        grade: null,
-        note: null,
-      },
-      analytics: {},
-      state: {
-        status: 'needGet',
-      },
-      route: [
-        { type: 'loading', address: null, plannedDate: '', note: '' },
-        { type: 'unloading', address: null, plannedDate: '', note: '' },
-      ],
-      reqTransport: {},
-      confirmedCrew: {},
-      form: {
-        startPositionDate: null,
-        note: null,
-        noteAccountant: null,
-        docsRegistry: null,
-        paymentInvoices: [],
-      },
-    }
+  getCarrierAgreementById: {
+    type: Function,
+    required: true,
   },
-
-  computed: {
-    showPaymentToDriver() {
-      return (
-        this.$store.getters.hasPermission('order:readPaymentToDriver') &&
-        !this.confirmedCrew.outsourceAgreement
-      )
-    },
-
-    showFinalPriceDialog() {
-      return (
-        !!this.$store.getters.hasPermission('order:readFinalPrices') &&
-        !!this.client?.agreement &&
-        !!this.order?._id &&
-        !!this.isValidRoute
-      )
-    },
-    disabledSubmitForm() {
-      let hasPermission
-      if (this.state.status === 'completed') {
-        hasPermission = this.$store.getters.allowedPeriodForPermission({
-          permission: 'order:daysForWrite',
-          date: this.route[this.route.length - 1].departureDate,
-        })
-      } else hasPermission = this.$store.getters.hasPermission('order:daysForWrite')
-
-      return this.processingBeforeSubmit || this.isInvalidForm || this.loading || !hasPermission
-    },
-    currentPointInd() {
-      return this.route.findIndex((p) => !p.departureDate)
-    },
-    routeDate() {
-      return this.route[0].plannedDate
-    },
-    preparedRoute: {
-      get: function () {
-        return this.route.map((point, ind) => ({
-          ...point,
-          arrivalDateDisabled: this.isDisabledArrivalDate(ind),
-          departureDateDisabled: this.isDisabledDepartureDate(ind),
-          minArrivalDate: this.getMinArrivalDate(ind),
-        }))
-      },
-      set: function (val) {
-        this.route = val
-      },
-    },
-    dateForCrew() {
-      if (this.route[0]?.plannedDate) return this.route[0]?.plannedDate
-      return this.form.startPositionDate
-    },
-    isInvalidForm() {
-      return (
-        !this.form.startPositionDate ||
-        !this.isValidRoute ||
-        !this.isValidDocs(this.docs) ||
-        !this.isValidPrices(this.agreement, this.prices, this.state) ||
-        !this.isValidClientNum(this.agreement, this.client, this.state) ||
-        !this.isValidAuctionNum(this.agreement, this.client, this.state) ||
-        !this.isValidClientInfo ||
-        !this.reqTransport.kind ||
-        !this.reqTransport.liftCapacity
-      )
-    },
-
-    isValidDatesInRoute() {
-      let dates = []
-      this.route.forEach((p) => {
-        if (p.arrivalDate) dates.push(new Date(p.arrivalDate))
-        if (p.departureDate) dates.push(new Date(p.departureDate))
-      })
-      if (dates.length < 2) return true
-      for (let i = 1; i < dates.length; i++) {
-        if (dates[i] < dates[i - 1]) return false
-      }
-      return true
-    },
-
-    isValidRoute() {
-      if (!this.route) return false
-      const length = this.route.length >= 2
-      const firstPoint = this.route[0].type === 'loading'
-      const lastPoint = this.route[this.route.length - 1].type === 'unloading'
-      const hasAddresses = this.route.filter((item) => !!item.address).length === this.route.length
-      return length && firstPoint && lastPoint && hasAddresses && this.isValidDatesInRoute
-    },
-    showGradeBlock() {
-      return this.routeCompleted
-    },
-    isValidGrade() {
-      if (!this.grade.grade) return false
-      if (this.grade.grade === 2) return true
-      else return !!this.grade.note
-    },
-
-    isValidClientInfo() {
-      return !!this.client?.client
-    },
-
-    enableConfirmOrder() {
-      return !!this.confirmedCrew.driver
-    },
-    enableRefuseOrder() {
-      return !this.confirmedCrew.truck && !!this.form.note
-    },
-    orderConfirmed() {
-      return this.state.driverNotified || this.state.clientNotified
-    },
-    orderInProgress() {
-      return this.orderConfirmed && this.state.status === 'inProgress'
-    },
-    routeCompleted() {
-      return this.route.filter((point) => !point.departureDate).length === 0
-    },
-    isExistFirstArrivalDate() {
-      return !!this.route[0]?.arrivalDate
-    },
-    addressMap() {
-      return this.$store.getters.addressMap
-    },
-    coords() {
-      let tmp = []
-      this.route
-        .filter((p) => !p.isReturn)
-        .forEach((point) => {
-          if (this.addressMap.has(point.address)) {
-            tmp.push(
-              this.addressMap
-                .get(point.address)
-                ?.geo.split(', ')
-                .map((s) => parseFloat(s))
-                .reverse()
-            )
-          }
-        })
-      return tmp
-    },
-    formState() {
-      return {
-        ...this.form,
-        client: this.client,
-        state: this.state,
-        route: this.route,
-        company: this.$store.getters.directoriesProfile,
-        cargoParams: this.cargoParams,
-        reqTransport: this.reqTransport,
-        confirmedCrew: this.confirmedCrew,
-        grade: this.grade,
-        analytics: this.analytics,
-        prices: this.prices,
-        prePrices: this.prePrices,
-        outsourceCosts: this.outsourceCosts,
-        docs: this.docs,
-        paymentToDriver: this.paymentToDriver,
-        isAdmin: this.$store.getters.hasPermission('fake permission. for admin only') ? true : null,
-      }
-    },
+  carrierItemsMap: {
+    type: Map,
+    required: true,
   },
-  watch: {
-    templateSelector(value) {
-      if (!value) return null
-      const template = this.$store.getters.orderTemplatesMap.get(value)
-      if (!template) return null
-      this.client = Object.assign({}, this.client, { client: template.client })
-      this.reqTransport = Object.assign({}, this.reqTransport, template.reqTransport)
-      const plannedDate = this.route[0]?.plannedDate
-      this.analytics = { ...template.analytics }
-      this.route = OrderModel.fillRouteFromTemplate(template, plannedDate)
-      this.cargoParams = Object.assign({}, this.cargoParams, template.cargoParams)
-    },
-    order: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          this.orderId = val._id
-          this.setFormFields(val)
-        }
-      },
-    },
-    route: {
-      // редактирование маршрута
-      deep: true,
-      handler: function (newRouteValue, oldVal) {
-        // при изменении маршрута определяется тип рейса город / регион
-        if (this.isValidRoute) this.updateOrderType()
-        // при создании рейса
-        if (
-          // !this.orderId &&
-          newRouteValue &&
-          Array.isArray(newRouteValue) &&
-          newRouteValue.length
-        ) {
-          const firstPoint = newRouteValue[0]
-          if (!this.orderId) this.form.startPositionDate = firstPoint.plannedDate
-          // this.form.endPositionDate = this.getEndPositionDate(newRouteValue)
-        }
-        // проверяю изменились ли адреса в рейсе и если изменились, очищаю расстояния в аналитике
-        if (
-          this.isValidRoute &&
-          newRouteValue.map((r) => r.address).join() !== oldVal.map((r) => r.address).join()
-        ) {
-          this.analytics.distanceDirect = 0
-          this.analytics.distanceRoad = 0
-        }
-      },
-    },
-  },
+})
 
-  methods: {
-    updateAgreementHandler(agreement) {
-      this.agreement = Object.assign({}, agreement)
-    },
+const emit = defineEmits(['delete', 'cancel', 'save', 'submit', 'change'])
+const vuexStore = useStore()
 
-    updateOrderType() {
-      const regions = this.route
-        .map((i) => (i.address ? this.$store.getters.addressMap.get(i.address)?.region : null))
-        .filter((i) => !!i)
-      this.$nextTick(() => {
-        this.analytics.type = new Set(regions).size >= 2 ? 'region' : 'city'
-      })
-    },
+// Используем новый composable
+const {
+  processingBeforeSubmit,
+  orderId,
+  docs,
+  paymentToDriver,
+  priceDialog,
+  createTemplateLoading,
+  templateDialog,
+  templateName,
+  templateSelector,
+  cargoParams,
+  grade,
+  analytics,
+  state,
+  reqTransport,
+  confirmedCrew,
+  form,
+  route,
+  routeDate,
+  routeCompleted,
+  isExistFirstArrivalDate,
+  isValidRoute,
+  preparedRoute,
+  prices,
+  prePrices,
+  finalPrices,
+  outsourceCosts,
+  agreement,
+  carrierAgreement,
+  client,
+  isValidClientInfo,
+  hasIncomingInvoice,
+  hasPaymentInvoices,
+  disabledInPaymentInvoice,
+  showPaymentToDriver,
+  showFinalPriceDialog,
+  disabledSubmitForm,
+  dateForCrew,
+  carrierVatRateInfo,
+  isValidGrade,
+  enableConfirmOrder,
+  enableRefuseOrder,
+  orderConfirmed,
+  orderInProgress,
+  showGradeBlock,
+  coords,
+  openPriceDialog,
+  cancelCreateTemplate,
+  changeCrewHandler,
+  setFormFields,
+  resetForm,
+  updateAgreement,
+  setRoute,
+} = useOrderForm(props)
 
-    openPriceDialog() {
-      this.priceDialog = true
-    },
+// Provide
+provide('addressActions', props.addressActions)
+provide('updateFinalPrices', (val) => {
+  finalPrices.length = 0
+  finalPrices.push(...val)
+})
 
-    copyTimestamptsToClipboard() {
-      _putRouteDatesToClipboard(this.route)
-    },
+// Composables
+const { templates, docTemplateIsVisible, downloadTemplateHandler, downloadDisabled } =
+  useOrderPrintForms({ order: props.order })
 
-    async createTemplateHandler() {
-      try {
-        this.createTemplateLoading = true
-        await OrderTemplateService.create(
-          Object.assign({}, this.formState, {
-            name: this.templateName,
-            client: this.formState.client.client,
-          })
-        )
-        this.createTemplateLoading = false
-        this.templateName = null
-        this.templateDialog = false
-      } catch (e) {
-        this.createTemplateLoading = false
-        this.$store.commit('setError', e.message)
-      }
-    },
+const { isValidDocs, isReadonlyDocs, isShowDocs } = useOrderDocs()
+const { isValidPrices, isValidClientNum, isValidAuctionNum } = useOrderValidations()
 
-    cancelCreateTemplate() {
-      this.templateDialog = false
-      this.templateName = null
-    },
-    getMinArrivalDate(ind) {
-      if (!ind) return null
-      if (ind > 0 && !!this.route[ind - 1].departureDate) return this.route[ind - 1].departureDate
-      return null
-    },
-    isDisabledArrivalDate(ind) {
-      if (this.currentPointInd === ind && !!this.route[ind].departureDate) return true
-      if (this.currentPointInd !== ind) return true
-      return false
-    },
-    isDisabledDepartureDate(ind) {
-      if (this.currentPointInd === ind && !this.route[ind].arrivalDate) return true
-      if (this.currentPointInd !== -1 && !this.route[ind].arrivalDate) return true
-      if (ind + 1 <= this.route.length - 1 && !!this.route[ind + 1].arrivalDate) return true
-      return false
-    },
+// Store getters as computed
+const orderTemplatesForSelect = computed(() => vuexStore.getters.orderTemplatesForSelect)
+const orderTemplatesMap = computed(() => vuexStore.getters.orderTemplatesMap)
 
-    async submit(_val, saveOnly) {
-      if (this.isInvalidForm) return null
-      this.processingBeforeSubmit = true
-      if (!this.analytics.distanceDirect)
-        this.analytics.distanceDirect = OrderService.getDirectDistance(this.coords)
-      if (!this.analytics.distanceRoad) {
-        const { distanceRoad } = await OrderService.getDistance(this.coords)
-        this.analytics.distanceRoad = distanceRoad
-      }
+// Additional computed
+const isInvalidForm = computed(() => {
+  return (
+    !form.startPositionDate ||
+    !isValidRoute.value ||
+    !isValidDocs(docs.value) ||
+    !isValidPrices(agreement.value, prices.value, state.value) ||
+    !isValidClientNum(agreement.value, client.value, state.value) ||
+    !isValidAuctionNum(agreement.value, client.value, state.value) ||
+    !isValidClientInfo.value ||
+    !reqTransport.value.kind ||
+    !reqTransport.value.liftCapacity
+  )
+})
 
-      this.processingBeforeSubmit = false
-      this.$emit(saveOnly ? 'save' : 'submit', this.formState)
-    },
-    cancel() {
-      this.$emit('cancel')
-    },
-    setFormFields(val) {
-      const keys = Object.keys(this.form)
-      if (val.grade) this.grade = val.grade
-      if (val.client) this.client = val.client
-      if (val.confirmedCrew) this.confirmedCrew = val.confirmedCrew
-      if (val.state) this.state = val.state
-      if (val.route) this.route = val.route
-      if (val.cargoParams) this.cargoParams = val.cargoParams
-      if (val.reqTransport) this.reqTransport = val.reqTransport
-      if (val.analytics) this.analytics = val.analytics
-      if (val.prices) this.prices = val.prices
-      if (val.prePrices) this.prePrices = val.prePrices
-      if (val.outsourceCosts) this.outsourceCosts = val.outsourceCosts
-      if (val.finalPrices) this.finalPrices = val.finalPrices
-      if (val.docs) this.docs = val.docs
-      if (val.paymentToDriver) this.paymentToDriver = val.paymentToDriver
+const formState = computed(() => ({
+  ...form,
+  client: client.value,
+  state: state.value,
+  route: route.value,
+  company: vuexStore.getters.directoriesProfile,
+  cargoParams: cargoParams.value,
+  reqTransport: reqTransport.value,
+  confirmedCrew: confirmedCrew.value,
+  grade: grade.value,
+  analytics: analytics.value,
+  prices: prices.value,
+  prePrices: prePrices.value,
+  outsourceCosts: outsourceCosts.value,
+  docs: docs.value,
+  paymentToDriver: paymentToDriver.value,
+  isAdmin: vuexStore.getters.hasPermission('fake permission. for admin only') ? true : null,
+}))
 
-      keys.forEach((key) => {
-        this.form[key] = val[key]
-      })
-    },
-
-    resetForm() {
-      const keys = Object.keys(this.form)
-      this.route = []
-      this.grade = { ...{} }
-      this.client = { ...{} }
-      this.confirmedCrew = { ...{} }
-      this.state = { ...{} }
-      this.cargoParams = { ...{} }
-      this.reqTransport = { ...{} }
-      this.analytics = { ...{} }
-      this.paymentToDriver = { ...{} }
-      this.prices = []
-      this.prePrices = []
-      this.finalPrices = []
-      this.outsourceCosts = []
-
-      this.docs = []
-      keys.forEach((key) => {
-        this.form[key] = null
-      })
-    },
-  },
+// Methods
+function updateOrderType() {
+  const regions = route.value
+    .map((i) => (i.address ? vuexStore.getters.addressMap.get(i.address)?.region : null))
+    .filter((i) => !!i)
+  nextTick(() => {
+    analytics.value.type = new Set(regions).size >= 2 ? 'region' : 'city'
+  })
 }
+
+function copyTimestamptsToClipboard() {
+  _putRouteDatesToClipboard(route.value)
+}
+
+async function createTemplateHandler() {
+  try {
+    createTemplateLoading.value = true
+    await OrderTemplateService.create({
+      ...formState.value,
+      name: templateName.value,
+      client: formState.value.client.client,
+    })
+    createTemplateLoading.value = false
+    templateName.value = null
+    templateDialog.value = false
+  } catch (e) {
+    createTemplateLoading.value = false
+    vuexStore.commit('setError', e.message)
+  }
+}
+
+async function submit(_val, saveOnly) {
+  if (isInvalidForm.value) return null
+  processingBeforeSubmit.value = true
+  if (!analytics.value.distanceDirect)
+    analytics.value.distanceDirect = OrderService.getDirectDistance(coords.value)
+  if (!analytics.value.distanceRoad) {
+    const { distanceRoad } = await OrderService.getDistance(coords.value)
+    analytics.value.distanceRoad = distanceRoad
+  }
+
+  processingBeforeSubmit.value = false
+  emit(saveOnly ? 'save' : 'submit', formState.value)
+}
+
+function cancel() {
+  emit('cancel')
+}
+
+// Expose для внешнего доступа
+defineExpose({ resetForm })
+
+// Watch
+watch(templateSelector, (value) => {
+  if (!value) return null
+  const template = orderTemplatesMap.value.get(value)
+  if (!template) return null
+  client.value = { ...client.value, client: template.client }
+  reqTransport.value = { ...reqTransport.value, ...template.reqTransport }
+  const plannedDate = route.value[0]?.plannedDate
+  analytics.value = { ...template.analytics }
+  setRoute(OrderModel.fillRouteFromTemplate(template, plannedDate))
+  cargoParams.value = { ...cargoParams.value, ...template.cargoParams }
+})
+
+watch(
+  () => props.order,
+  (val) => {
+    if (val) {
+      setFormFields(val)
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  route,
+  (newRouteValue, oldVal) => {
+    if (isValidRoute.value) updateOrderType()
+    if (Array.isArray(newRouteValue) && newRouteValue.length) {
+      const firstPoint = newRouteValue[0]
+      if (!orderId.value) form.startPositionDate = firstPoint.plannedDate
+    }
+    if (
+      isValidRoute.value &&
+      newRouteValue.map((r) => r.address).join() !== oldVal.map((r) => r.address).join()
+    ) {
+      analytics.value.distanceDirect = 0
+      analytics.value.distanceRoad = 0
+    }
+  },
+  { deep: true }
+)
 </script>
+
 <style scoped>
 .top-panel {
   display: flex;
@@ -748,18 +478,18 @@ export default {
   display: grid;
   align-content: start;
   justify-content: flex-start;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: auto 1fr auto;
   gap: 15px;
   align-content: stretch;
 }
 .route-state {
-  grid-column: 1/2;
-  grid-row: 1/5;
+  grid-column: 1/1;
+  grid-row: 1/6;
 }
 
 .grade {
   grid-column: 1/2;
-  grid-row: 5;
+  grid-row: 6;
 }
 .client {
   grid-column: 2/3;
@@ -774,7 +504,7 @@ export default {
   grid-row: 3/4;
 }
 .route-points {
-  grid-column: 2/4;
+  grid-column: 2/3;
   grid-row: 5/8;
 }
 .crew {
@@ -793,21 +523,21 @@ export default {
   grid-row: 1/4;
 }
 #note {
-  grid-column: 2/4;
+  grid-column: 2/3;
   grid-row: 8/8;
   margin-top: 10px;
 }
 #docs {
-  grid-column: 2/4;
+  grid-column: 2/3;
   grid-row: 9/9;
 }
 
 #order-files {
-  grid-column: 2/4;
+  grid-column: 2/3;
   grid-row: 10/10;
 }
 #transport-waybills {
-  grid-column: 2/4;
+  grid-column: 2/3;
   grid-row: 11/11;
 }
 </style>

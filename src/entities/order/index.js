@@ -15,7 +15,7 @@ import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 import { useOrderListUtils } from './hooks/useOrderListUtils'
 import { useOrderValidations } from './hooks/useOrderValidations'
 import { useOrderPrintForms } from './hooks/useOrderPrintForms'
-import { OrderRoute } from './orderRoute'
+import { OrderRoute } from './form/orderRoute/index.js'
 import PriceBlock from './form/priceBlock/index.vue'
 
 import AnalyticBlock from './form/analyticBlock.vue'

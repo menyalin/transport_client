@@ -1,9 +1,10 @@
 import { AgreementService } from '@/shared/services/index'
-import store from '@/store/index'
 import { ref, computed, watch } from 'vue'
 import { clientAgreementSelector } from './utils/clientAgreementSelector'
+import { useStore } from 'vuex'
 
 export const useClientBlock = (model, props, emits) => {
+  const vuexStore = useStore()
   const loading = ref(false)
   const currentAgreement = ref(null)
   const allowedAgreements = ref([])
@@ -32,20 +33,22 @@ export const useClientBlock = (model, props, emits) => {
   }
 
   async function getAllowedAgreements() {
+    console.log('getting agreements (model)-1: ', model.value)
+    console.log('getting agreements (props)-1: ', props)
     if (!props.routeDate || !model.value.client) {
       loading.value = false
       return
     }
     try {
       loading.value = true
+      console.log('getting agreements (model)-2: ', model.value)
       allowedAgreements.value = await AgreementService.getForClient({
         client: model.value.client,
         date: new Date(props.routeDate).toISOString(),
         currentAgreementId: model.value.agreement,
       })
     } catch (e) {
-      store.commit('setError', e)
-      console.error(e)
+      vuexStore.commit('setError', e)
     } finally {
       loading.value = false
     }
@@ -67,16 +70,11 @@ export const useClientBlock = (model, props, emits) => {
   }
 
   watch(
-    () => model.value.client,
-    async (newClient, oldClient) => {
-      console.log('watch', { newClient, oldClient })
-      if (newClient && newClient !== oldClient) {
-        console.log('watch before new query')
-        await getAllowedAgreements()
-        setAgreement()
-      }
+    model,
+    async (newVal, oldVal) => {
+      if (newVal?.client && newVal.client !== oldVal?.client) await getAllowedAgreements()
     },
-    { immediate: true }
+    { immediate: true, deep: true }
   )
 
   // watch(
@@ -93,15 +91,18 @@ export const useClientBlock = (model, props, emits) => {
   //   { immediate: true }
   // )
 
-  // watch(allowedAgreements, setAgreement)
+  watch(allowedAgreements, setAgreement)
 
   return {
+    allowedAgreements,
     loading,
     currentAgreement,
     changeClientHandler,
     changeAgreementHandler,
     clientItems: computed(() =>
-      store.getters.partners.filter((p) => p.isClient).map((i) => ({ value: i._id, text: i.name }))
+      vuexStore.getters.partners
+        .filter((p) => p.isClient)
+        .map((i) => ({ value: i._id, text: i.name }))
     ),
     showChangeAgreementBtn: computed(
       () => allowedAgreements.value?.length > 1 && !props.agreementDisabled

@@ -28,6 +28,7 @@ export default createVuetify({
     },
     VTextarea: { density: 'compact', autocomplete: 'off' },
     VCheckbox: { density: 'compact', color: 'primary' },
+    VRadioGroup: { density: 'compact', color: 'primary' },
     VDataTableServer: {
       itemValue: '_id',
       density: 'compact',
