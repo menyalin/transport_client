@@ -1,80 +1,82 @@
 <template>
-  <div class="docs-wrapper" :class="{ invalid: !isValid }">
-    <h5>Документы:</h5>
-    <div class="btn-wrapper">
-      <v-btn
-        size="small"
-        color="primary"
-        :disabled="readonly || !isValid"
-        @click="openGroupDocDialog"
-      >
-        Добавить документы
-      </v-btn>
-      <slot />
-    </div>
-    <v-table density="compact">
-      <template #default>
-        <thead>
-          <tr>
-            <th class="text-center" width="50px">Опись</th>
-            <th class="text-left">Тип*</th>
-            <th class="text-left">Номер</th>
-            <th class="text-left">Комментарий</th>
-            <th class="text-left">Статус*</th>
-            <th class="text-left" width="220px">Дата получения</th>
-            <th width="50px" />
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, idx) of value" :key="idx">
-            <td class="text-center">
-              <v-checkbox v-model="item.addToRegistry" hide-details />
-            </td>
-            <td>
-              <v-select
-                v-model="item.type"
-                hide-details
-                :disabled="readonly"
-                :items="docTypes"
-                itemTitle="text"
-                class="my-2"
-              />
-            </td>
-            <td>
-              <v-text-field
-                v-model.trim="item.number"
-                hide-details
-                :disabled="readonly"
-                :style="{ minWidth: '150px' }"
-              />
-            </td>
-            <td>
-              <v-text-field v-model.trim="item.note" hide-details :disabled="readonly" />
-            </td>
-            <td>
-              <v-select
-                v-model="item.status"
-                hide-details
-                :items="docStatuses"
-                itemTitle="text"
-                :disabled="readonly"
-                :class="{ 'not-accepted': item.status !== 'accepted' }"
-              />
-            </td>
-            <td>
-              <date-time-input v-model="item.date" hide-details :disabled="readonly" />
-            </td>
-            <td>
-              <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
-                mdi-delete
-              </v-icon>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-table>
-    <app-group-dialog :dialog="groupDialog" @pushDocs="addGroup" @close="closeGroupDocDialog" />
-  </div>
+  <v-card>
+    <v-card-title>
+      <h5>Документы</h5>
+    </v-card-title>
+
+    <v-card-text>
+      <v-table density="compact">
+        <template #default>
+          <thead>
+            <tr>
+              <th class="text-center" width="50px">Опись</th>
+              <th class="text-left">Тип*</th>
+              <th class="text-left">Номер</th>
+              <th class="text-left">Комментарий</th>
+              <th class="text-left">Статус*</th>
+              <th class="text-left" width="220px">Дата получения</th>
+              <th width="50px" />
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, idx) of value" :key="idx">
+              <td class="text-center">
+                <v-checkbox v-model="item.addToRegistry" hide-details />
+              </td>
+              <td>
+                <v-select
+                  v-model="item.type"
+                  hide-details
+                  :disabled="readonly"
+                  :items="docTypes"
+                  itemTitle="text"
+                  class="my-2"
+                />
+              </td>
+              <td>
+                <v-text-field
+                  v-model.trim="item.number"
+                  hide-details
+                  :disabled="readonly"
+                  :style="{ minWidth: '150px' }"
+                />
+              </td>
+              <td>
+                <v-text-field v-model.trim="item.note" hide-details :disabled="readonly" />
+              </td>
+              <td>
+                <v-select
+                  v-model="item.status"
+                  hide-details
+                  :items="docStatuses"
+                  itemTitle="text"
+                  :disabled="readonly"
+                  :class="{ 'not-accepted': item.status !== 'accepted' }"
+                />
+              </td>
+              <td>
+                <date-time-input v-model="item.date" hide-details :disabled="readonly" />
+              </td>
+              <td>
+                <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
+                  mdi-delete
+                </v-icon>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-table>
+      <app-group-dialog :dialog="groupDialog" @pushDocs="addGroup" @close="closeGroupDocDialog" />
+    </v-card-text>
+    <v-card-actions>
+      <div class="btn-wrapper">
+        <v-btn :disabled="readonly || !isValid" @click="openGroupDocDialog">
+          Добавить документы
+        </v-btn>
+        <slot />
+      </div>
+    </v-card-actions>
+  </v-card>
 </template>
 <script setup>
 import { ref, computed } from 'vue'

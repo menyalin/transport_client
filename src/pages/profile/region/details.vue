@@ -6,7 +6,7 @@
         <app-region-form
           v-else
           :region="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('region:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('region:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -15,24 +15,24 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import AppRegionForm from '@/modules/profile/components/regionForm/index.vue'
 import { LoadSpinner } from '@/shared/ui'
 import { RegionService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 
-export default {
-  name: 'RegionDetails',
-  components: {
-    AppRegionForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
-  data() {
-    return {
-      service: RegionService,
-    }
-  },
-}
+defineOptions({ name: 'RegionDetails' })
+
+const props = defineProps({
+  id: String,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { item, loading, submit, cancel, deleteHandler } = usePageDetails(
+  RegionService,
+  () => props.id,
+  { emit }
+)
 </script>
 <style></style>

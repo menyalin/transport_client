@@ -162,5 +162,6 @@ function disabledStatus(statusValue) {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  min-width: 270px;
 }
 </style>

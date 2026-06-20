@@ -102,11 +102,10 @@ const setCurrentDate = () => {
 <template>
   <v-text-field
     v-bind="$attrs"
-    class="d-inline-flex"
-    style="width: auto"
+    class="d-inline-flex px-0"
     :type
     :hide-details="!errors.length && (hideDetails?.value ?? $attrs.hideDetails)"
-    :prependInnerIcon="showPrependIcon ? 'mdi-chevron-right' : null"
+    :prependInnerIcon="showPrependIcon && false ? 'mdi-chevron-right' : null"
     :model-value="tmpDate"
     :error="!!errors.length"
     :error-messages="errors"

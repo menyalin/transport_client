@@ -9,7 +9,7 @@
         <app-order-template-form
           v-else
           :orderTemplate="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('orderTemplate:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('orderTemplate:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -18,30 +18,29 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import { provide } from 'vue'
 import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm/index.vue'
 import { LoadSpinner } from '@/shared/ui'
 import { OrderTemplateService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 import { useAddress } from '@/entities/address'
 
-export default {
-  name: 'OrderTemplateDetails',
-  components: {
-    AppOrderTemplateForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
-  setup() {
-    const { actions: addressActions } = useAddress()
-    provide('addressActions', addressActions)
-  },
-  data() {
-    return {
-      service: OrderTemplateService,
-    }
-  },
-}
+defineOptions({ name: 'OrderTemplateDetails' })
+
+const props = defineProps({
+  id: String,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { actions: addressActions } = useAddress()
+provide('addressActions', addressActions)
+
+const { item, loading, error, toggleAlert, submit, cancel, deleteHandler } = usePageDetails(
+  OrderTemplateService,
+  () => props.id,
+  { emit }
+)
 </script>
 <style></style>

@@ -6,7 +6,7 @@
         <app-city-form
           v-else
           :city="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('city:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('city:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -15,23 +15,24 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import AppCityForm from '@/modules/profile/components/cityForm/index.vue'
 import { LoadSpinner } from '@/shared/ui'
 import { CityService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 
-export default {
-  name: 'RegionDetails',
-  components: {
-    AppCityForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
-  data() {
-    return {
-      service: CityService,
-    }
-  },
-}
+defineOptions({ name: 'RegionDetails' })
+
+const props = defineProps({
+  id: String,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { item, loading, submit, cancel, deleteHandler } = usePageDetails(
+  CityService,
+  () => props.id,
+  { emit }
+)
 </script>
+<style></style>

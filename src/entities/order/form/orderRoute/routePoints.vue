@@ -144,7 +144,6 @@ function deleteHandler(ind) {
 </script>
 <style scoped>
 .route-wrapper {
-  padding: 15px;
   border-radius: 5px;
 }
 .invalid {

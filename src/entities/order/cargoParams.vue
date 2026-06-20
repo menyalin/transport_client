@@ -1,6 +1,6 @@
 <template>
-  <div class="ma-2">
-    <div class="mb-2">
+  <div>
+    <div>
       <BlockTitle>{{ title }}</BlockTitle>
     </div>
     <v-text-field

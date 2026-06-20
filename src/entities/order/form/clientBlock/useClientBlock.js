@@ -33,15 +33,12 @@ export const useClientBlock = (model, props, emits) => {
   }
 
   async function getAllowedAgreements() {
-    console.log('getting agreements (model)-1: ', model.value)
-    console.log('getting agreements (props)-1: ', props)
     if (!props.routeDate || !model.value.client) {
       loading.value = false
       return
     }
     try {
       loading.value = true
-      console.log('getting agreements (model)-2: ', model.value)
       allowedAgreements.value = await AgreementService.getForClient({
         client: model.value.client,
         date: new Date(props.routeDate).toISOString(),

@@ -9,7 +9,7 @@
         <ScheduleNoteForm
           v-else
           :scheduleNote="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('scheduleNote:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('scheduleNote:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -18,36 +18,33 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import { LoadSpinner } from '@/shared/ui'
 import { ScheduleNoteService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 import { ScheduleNoteForm } from '@/entities/scheduleNote'
 
-export default {
-  name: 'ScheduleNoteDetails',
-  components: {
-    ScheduleNoteForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
-  props: {
-    truckId: String,
-    startDate: String,
-  },
-  data() {
-    return {
-      service: ScheduleNoteService,
-    }
-  },
-  created() {
-    if (this.startDate) {
-      this.item = {
-        startPositionDate: this.startDate,
-        truck: this.truckId,
-      }
-    }
-  },
+defineOptions({ name: 'ScheduleNoteDetails' })
+
+const props = defineProps({
+  id: String,
+  truckId: String,
+  startDate: String,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { item, loading, error, toggleAlert, submit, cancel, deleteHandler } = usePageDetails(
+  ScheduleNoteService,
+  () => props.id,
+  { emit }
+)
+
+if (props.startDate) {
+  item.value = {
+    startPositionDate: props.startDate,
+    truck: props.truckId,
+  }
 }
 </script>
 <style></style>

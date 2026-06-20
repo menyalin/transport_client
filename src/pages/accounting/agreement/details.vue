@@ -9,7 +9,7 @@
         <agreement-form
           v-else
           :agreement="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('agreement:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('agreement:delete')"
           :carrierItems="carrierItems"
           @cancel="cancel"
           @submit="submit"
@@ -19,30 +19,30 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import { AgreementForm } from '@/entities/agreement'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { AgreementService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 import { LoadSpinner } from '@/shared/ui'
 
-export default {
-  name: 'AgreementDetails',
-  components: {
-    AgreementForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
-  setup() {
-    const carrierStore = useCarrierStore()
-    return { carrierItems: computed(() => carrierStore.carriers) }
-  },
-  data() {
-    return {
-      service: AgreementService,
-    }
-  },
-}
+defineOptions({ name: 'AgreementDetails' })
+
+const props = defineProps({
+  id: String,
+  openInModal: { type: Boolean, default: false },
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const carrierStore = useCarrierStore()
+const carrierItems = computed(() => carrierStore.carriers)
+
+const { item, loading, error, toggleAlert, submit, cancel, deleteHandler } = usePageDetails(
+  AgreementService,
+  () => props.id,
+  { emit, openInModal: props.openInModal }
+)
 </script>
 <style></style>

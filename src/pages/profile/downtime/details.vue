@@ -5,11 +5,11 @@
         <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <app-load-spinner v-if="loading" />
+        <load-spinner v-if="loading" />
         <DowntimeForm
           v-else
           :downtime="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('downtime:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('downtime:delete')"
           :addressActions="addressActions"
           :partnerActions="partnerActions"
           @cancel="cancel"
@@ -20,47 +20,38 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import { LoadSpinner } from '@/shared/ui'
 import { DowntimeService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 import { DowntimeForm } from '@/entities/downtime'
 import { useAddress } from '@/entities/address'
 import { usePartners } from '@/entities/partner'
 
-export default {
-  name: 'DowntimeDetails',
-  components: {
-    DowntimeForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
+defineOptions({ name: 'DowntimeDetails' })
 
-  props: {
-    truckId: String,
-    startDate: String,
-  },
-  setup() {
-    const { actions: addressActions } = useAddress()
-    const { actions: partnerActions } = usePartners()
-    return {
-      addressActions,
-      partnerActions,
-    }
-  },
-  data() {
-    return {
-      service: DowntimeService,
-    }
-  },
-  created() {
-    if (this.startDate) {
-      this.item = {
-        startPositionDate: this.startDate,
-        truck: this.truckId,
-      }
-    }
-  },
+const props = defineProps({
+  id: String,
+  truckId: String,
+  startDate: String,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { actions: addressActions } = useAddress()
+const { actions: partnerActions } = usePartners()
+
+const { item, loading, error, toggleAlert, submit, cancel, deleteHandler } = usePageDetails(
+  DowntimeService,
+  () => props.id,
+  { emit }
+)
+
+if (props.startDate) {
+  item.value = {
+    startPositionDate: props.startDate,
+    truck: props.truckId,
+  }
 }
 </script>
 <style></style>

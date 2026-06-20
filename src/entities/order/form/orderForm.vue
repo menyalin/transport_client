@@ -58,40 +58,54 @@
   </div>
 
   <div class="wrapper">
-    <app-route-state
-      v-model="state"
-      :enableConfirm="enableConfirmOrder"
-      :routeCompleted="routeCompleted"
-      :enableRefuse="enableRefuseOrder"
-      :isExistFirstArrivalDate="isExistFirstArrivalDate"
-      :isValidGrade="isValidGrade"
-      :readonly="disabledSubmitForm"
-      title="Статус рейса"
-      class="route-state"
-    />
-    <ClientBlock
-      v-model="client"
-      title="Информация о клиенте"
-      class="client"
-      :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
-      :isValidNum="isValidClientNum(agreement, client, state)"
-      :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
-      :orderConfirmed="orderConfirmed"
-      :routeDate="routeDate"
-      :agreementDisabled="hasPaymentInvoices"
-      @updateAgreement="updateAgreement"
-    />
-    <CargoParams v-model="cargoParams" title="Параметры груза" class="cargo-params" />
+    <div class="left-panel">
+      <app-route-state
+        v-model="state"
+        :enableConfirm="enableConfirmOrder"
+        :routeCompleted="routeCompleted"
+        :enableRefuse="enableRefuseOrder"
+        :isExistFirstArrivalDate="isExistFirstArrivalDate"
+        :isValidGrade="isValidGrade"
+        :readonly="disabledSubmitForm"
+        title="Статус рейса"
+      />
 
-    <ReqTransport v-model="reqTransport" title="Требования к транспорту" class="req-transport" />
+      <app-grade-block
+        v-if="showGradeBlock"
+        v-model="grade"
+        :disabled="state.status === 'completed'"
+        title="Оценка водителя"
+      />
+    </div>
 
-    <app-grade-block
-      v-if="showGradeBlock"
-      v-model="grade"
-      :disabled="state.status === 'completed'"
-      title="Оценка водителя"
-      class="grade"
-    />
+    <div class="main-panel">
+      <ClientBlock
+        v-model="client"
+        title="Информация о клиенте"
+        class="client"
+        :carrier="confirmedCrew.tkName || confirmedCrew.carrier"
+        :isValidNum="isValidClientNum(agreement, client, state)"
+        :isValidAuctionNum="isValidAuctionNum(agreement, client, state)"
+        :orderConfirmed="orderConfirmed"
+        :routeDate="routeDate"
+        :agreementDisabled="hasPaymentInvoices"
+        @updateAgreement="updateAgreement"
+      />
+      <ReqTransport v-model="reqTransport" title="Требования к транспорту" />
+      <CargoParams v-model="cargoParams" title="Параметры груза" />
+
+      <ConfirmedCrew
+        v-model="confirmedCrew"
+        title="Экипаж"
+        :date="dateForCrew"
+        :confirmed="orderConfirmed"
+        :hasIncomingInvoice="hasIncomingInvoice"
+        :executorIdInClientAgreement="agreement ? agreement.executor : null"
+        :carriersMap="carrierItemsMap"
+        @update:model-value="changeCrewHandler"
+        class="crew"
+      />
+    </div>
     <OrderRoute
       v-model="preparedRoute"
       :driverId="confirmedCrew.driver"
@@ -103,20 +117,7 @@
       :isValid="isValidRoute"
       class="route-points"
     />
-
-    <ConfirmedCrew
-      v-model="confirmedCrew"
-      title="Экипаж"
-      :date="dateForCrew"
-      :confirmed="orderConfirmed"
-      :hasIncomingInvoice="hasIncomingInvoice"
-      :executorIdInClientAgreement="agreement ? agreement.executor : null"
-      :carriersMap="carrierItemsMap"
-      @update:model-value="changeCrewHandler"
-      class="crew"
-    />
-
-    <div id="price">
+    <div class="price">
       <app-analytic-block
         v-model="analytics"
         :isValidRoute="isValidRoute"
@@ -124,11 +125,7 @@
         title="Аналитика"
       />
 
-      <app-payment-to-driver
-        v-if="showPaymentToDriver"
-        id="payment-to-driver"
-        v-model="paymentToDriver"
-      />
+      <app-payment-to-driver v-if="showPaymentToDriver || true" v-model="paymentToDriver" />
 
       <PriceBlock
         :isValidPrices="isValidPrices(agreement, prices, state)"
@@ -159,22 +156,26 @@
       />
     </div>
 
-    <div id="note">
+    <div class="note">
       <v-text-field v-model="form.note" label="Примечание" />
       <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
     </div>
-    <EntityFiles id="order-files" v-if="order && order._id" :itemId="order._id" docType="order" />
+    <EntityFiles
+      v-if="order && order._id"
+      :itemId="order._id"
+      docType="order"
+      class="order-files"
+    />
     <order-docs-list-form
       v-if="isShowDocs"
-      id="docs"
+      class="docs"
       v-model="docs"
-      title="Документы"
       :isValid="isValidDocs(docs)"
       :readonly="isReadonlyDocs"
     >
       <docs-registry-link :docsRegistry="form.docsRegistry" />
     </order-docs-list-form>
-    <div id="transport-waybills">
+    <div class="transport-waybills">
       <slot name="transport_waybills" />
     </div>
   </div>
@@ -478,66 +479,51 @@ watch(
   display: grid;
   align-content: start;
   justify-content: flex-start;
-  grid-template-columns: auto 1fr auto;
-  gap: 15px;
-  align-content: stretch;
+  grid-template-columns: auto 2fr auto;
+  gap: 10px;
 }
-.route-state {
-  grid-column: 1/1;
-  grid-row: 1/6;
+.left-panel {
+  grid-column: 1/2;
+  grid-row: 1/8;
 }
 
-.grade {
-  grid-column: 1/2;
-  grid-row: 6;
-}
-.client {
+.main-panel {
   grid-column: 2/3;
-  grid-row: 1/2;
-}
-.req-transport {
-  grid-column: 2/3;
-  grid-row: 2/3;
-}
-.cargo-params {
-  grid-column: 2/3;
-  grid-row: 3/4;
-}
-.route-points {
-  grid-column: 2/3;
-  grid-row: 5/8;
-}
-.crew {
-  grid-column: 2/4;
-  grid-row: 4/5;
-}
-#analytic {
-  grid-column: 3/4;
-  grid-row: 1/2;
-}
-#price {
+  grid-row: 1/4;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.route-points {
+  grid-column: 2/4;
+  grid-row: 4/8;
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   grid-column: 3/4;
   grid-row: 1/4;
 }
-#note {
+.note {
   grid-column: 2/3;
-  grid-row: 8/8;
+  grid-row: 8/9;
   margin-top: 10px;
 }
-#docs {
+.docs {
   grid-column: 2/3;
-  grid-row: 9/9;
+  grid-row: 9/10;
 }
 
-#order-files {
+.order-files {
   grid-column: 2/3;
-  grid-row: 10/10;
+  grid-row: 10/11;
 }
-#transport-waybills {
+.transport-waybills {
   grid-column: 2/3;
-  grid-row: 11/11;
+  grid-row: 11/12;
 }
 </style>

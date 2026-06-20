@@ -20,8 +20,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn text color="primary" @click="item._menuOpen = false">Отмена</v-btn>
-            <v-btn text color="primary" variant="text" @click="saveNote(item)">OK</v-btn>
+            <v-btn @click="item._menuOpen = false">Отмена</v-btn>
+            <v-btn @click="saveNote(item)">OK</v-btn>
           </v-card-actions>
         </v-card>
       </v-menu>

@@ -6,7 +6,7 @@
         <app-document-form
           v-else
           :document="item"
-          :displayDeleteBtn="!!id && $store.getters.hasPermission('document:delete')"
+          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('document:delete')"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -15,24 +15,24 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import AppDocumentForm from '@/modules/profile/components/documentForm/index.vue'
 import { LoadSpinner } from '@/shared/ui'
 import { DocumentService } from '@/shared/services'
-import pageDetailsMixin from '@/modules/common/mixins/pageDetailsMixin'
+import { usePageDetails } from '@/shared/hooks'
 
-export default {
-  name: 'DocumentDetails',
-  components: {
-    AppDocumentForm,
-    LoadSpinner,
-  },
-  mixins: [pageDetailsMixin],
-  data() {
-    return {
-      service: DocumentService,
-    }
-  },
-}
+defineOptions({ name: 'DocumentDetails' })
+
+const props = defineProps({
+  id: String,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { item, loading, submit, cancel, deleteHandler } = usePageDetails(
+  DocumentService,
+  () => props.id,
+  { emit }
+)
 </script>
 <style></style>

@@ -1,11 +1,12 @@
-import { computed, ref, getCurrentInstance, watch } from 'vue'
+import { computed, ref, watch, nextTick } from 'vue'
 import { CrewService, CarrierAgreementService } from '@/shared/services'
 import putCrewDataToClipboard from './putCrewDataToClipboard'
 import { carrierAgreementSelector } from './utils/carrierAgreementSelector'
-import { nextTick } from 'vue'
+import { useStore } from 'vuex'
 
-export const useConfirmedCrew = (props, ctx) => {
-  const { proxy } = getCurrentInstance()
+export const useConfirmedCrew = (model, props, emits) => {
+  const vuexStore = useStore()
+
   const initialState = {
     truck: null,
     trailer: null,
@@ -14,7 +15,7 @@ export const useConfirmedCrew = (props, ctx) => {
     tkName: null,
     directiveAgreement: false,
   }
-  const state = ref(props.crew ? { directiveAgreement: true, ...props.crew } : initialState)
+
   const loading = ref(false)
   const crewEmptyError = ref(false)
   const allowedAgreements = ref([])
@@ -24,13 +25,13 @@ export const useConfirmedCrew = (props, ctx) => {
 
   const outsourceAgreementName = computed(() => outsourceAgreement.value?.name)
   const trucks = computed(() =>
-    proxy.$store.getters.trucks
+    vuexStore.getters.trucks
       .filter((item) => item.type === 'truck')
       .map((item) => ({ value: item._id, text: item.regNum }))
   )
 
   const drivers = computed(() =>
-    proxy.$store.getters.drivers.map((item) => ({
+    vuexStore.getters.drivers.map((item) => ({
       value: item._id,
       text: item.fullName,
     }))
@@ -40,14 +41,12 @@ export const useConfirmedCrew = (props, ctx) => {
     return props.executorIdInClientAgreement !== outsourceAgreement.value.customer
   })
   const trailers = computed(() =>
-    proxy.$store.getters.trucks
+    vuexStore.getters.trucks
       .filter((item) => item.type === 'trailer')
       .map((item) => ({ value: item._id, text: item.regNum }))
   )
 
-  const hasTruck = computed(() => Boolean(state.value.truck))
-
-  const isNeedUpdateCrew = computed(() => props.date && state.value.truck && !props.confirmed)
+  const isNeedUpdateCrew = computed(() => props.date && model.value.truck && !props.confirmed)
 
   const truckReadOnly = computed(
     () => props.confirmed
@@ -56,7 +55,7 @@ export const useConfirmedCrew = (props, ctx) => {
   // #endregion
 
   function setState(val) {
-    ctx.emit('change', { ...val })
+    emits('update:model-value', { ...val })
   }
 
   function resetState() {
@@ -67,18 +66,18 @@ export const useConfirmedCrew = (props, ctx) => {
   }
 
   async function getCrew() {
-    if (!state.value.truck) {
+    if (!model.value.truck) {
       allowedAgreements.value = []
       return
     }
     let crew = null
 
-    if (isNeedUpdateCrew.value || !props.crew?.driver) {
+    if (isNeedUpdateCrew.value || !model.value?.driver) {
       try {
         loading.value = true
 
         crew = await CrewService.getCrewByTruckAndDate({
-          truck: state.value.truck,
+          truck: model.value.truck,
           date: props.date,
         })
 
@@ -88,28 +87,28 @@ export const useConfirmedCrew = (props, ctx) => {
       }
     }
 
-    const carrierId = crew?.tkName || state.value.tkName || null
+    const carrierId = crew?.tkName || model.value.tkName || null
 
     if (carrierId) {
       allowedAgreements.value = await CarrierAgreementService.getAllowedAgreements({
-        company: proxy.$store.getters.directoriesProfile,
+        company: vuexStore.getters.directoriesProfile,
         date: props.date,
         carrierId: carrierId,
-        agreementId: state.value.outsourceAgreement,
+        agreementId: model.value.outsourceAgreement,
       })
 
       outsourceAgreement.value = carrierAgreementSelector({
-        crewState: state.value,
+        crewState: model.value,
         allowedAgreements: allowedAgreements.value,
         executorInCLientAgreement: props.executorInCLientAgreement,
       })
     }
 
     setState({
-      truck: state.value.truck,
-      directiveAgreement: state.value.directiveAgreement,
-      trailer: crew?.transport?.trailer || state.value.trailer,
-      driver: crew?.driver || state.value.driver,
+      truck: model.value.truck,
+      directiveAgreement: model.value.directiveAgreement,
+      trailer: crew?.transport?.trailer || null,
+      driver: crew?.driver || null,
       tkName: carrierId,
       outsourceAgreement: outsourceAgreement.value?._id || null,
     })
@@ -120,7 +119,7 @@ export const useConfirmedCrew = (props, ctx) => {
       resetState()
       return
     }
-    setState({ ...state.value, truck: val })
+    setState({ ...model.value, truck: val })
     nextTick(async () => {
       await getCrew()
     })
@@ -134,43 +133,33 @@ export const useConfirmedCrew = (props, ctx) => {
     if (!allowChangeOutsourceAgreement.value) return
 
     const idx = allowedAgreements.value.findIndex(
-      (item) => item._id === state.value.outsourceAgreement
+      (item) => item._id === model.value.outsourceAgreement
     )
 
     outsourceAgreement.value = allowedAgreements.value[(idx + 1) % allowedAgreements.value.length]
 
     setState({
-      ...state.value,
+      ...model.value,
       directiveAgreement: true,
       outsourceAgreement: outsourceAgreement.value._id,
     })
   }
 
   function copyHandler() {
-    if (!state.value.truck || !state.value.driver) return null
-    const truck = proxy.$store.getters.trucksMap.get(state.value.truck)
-    const driver = proxy.$store.getters.driversMap.get(state.value.driver)
-    const trailer = state.value.trailer
-      ? proxy.$store.getters.trucksMap.get(state.value.trailer)
-      : {}
+    if (!model.value.truck || !model.value.driver) return null
+    const truck = vuexStore.getters.trucksMap.get(model.value.truck)
+    const driver = vuexStore.getters.driversMap.get(model.value.driver)
+    const trailer = model.value.trailer ? vuexStore.getters.trucksMap.get(model.value.trailer) : {}
     putCrewDataToClipboard({ truck, driver, trailer })
   }
 
   watch(crewEmptyError, (val) => {
     if (val) {
       outsourceAgreement.value = null
-      state.value.outsourceAgreement = null
-      state.value.tkName = null
+      model.value.outsourceAgreement = null
+      model.value.tkName = null
     }
   })
-
-  watch(
-    () => props.crew,
-    (val) => {
-      state.value = { ...val }
-    },
-    { deep: true, immediate: true }
-  )
 
   watch(
     () => props.date,
@@ -179,15 +168,12 @@ export const useConfirmedCrew = (props, ctx) => {
   )
 
   return {
-    state,
     loading,
-    outsourceAgreement,
     showOutsourceAgreementRow,
     outsourceAgreementName,
     trucks,
     drivers,
     trailers,
-    hasTruck,
     changeTruckHandler,
     copyHandler,
     truckReadOnly,

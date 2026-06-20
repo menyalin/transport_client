@@ -12,21 +12,21 @@
         :messages="agreementNameSring"
         :error="!loading && !currentAgreement"
         @update:model-value="changeClientHandler"
-        :style="{ maxWidth: '400px' }"
         :disabled="agreementDisabled"
+        :style="{ maxWidth: '350px' }"
       />
 
       <v-text-field
         v-model.trim="model.num"
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
-        :style="{ maxWidth: '250px' }"
+        :style="{ maxWidth: '150px' }"
       />
       <v-text-field
         v-model.trim="model.auctionNum"
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
-        :style="{ maxWidth: '250px' }"
+        :style="{ maxWidth: '150px' }"
       />
     </div>
 
@@ -83,9 +83,9 @@ const auctionNumErrorMessages = computed(() =>
 .client-block {
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  align-items: baseline;
-  margin: 10px;
+  align-items: flex-start;
   gap: 10px;
 }
 </style>

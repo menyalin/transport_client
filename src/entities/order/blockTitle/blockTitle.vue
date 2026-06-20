@@ -1,10 +1,8 @@
 <template>
-  <h5>
+  <div class="text-title-small pb-2 pt-2">
     <slot />
-  </h5>
+  </div>
 </template>
-<script>
-export default {
-  name: 'OrderBlockTitle',
-}
+<script setup>
+defineOptions({ name: 'OrderBlockTitle' })
 </script>

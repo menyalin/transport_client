@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/html-indent -->
 <template>
   <div>
     <div>
@@ -6,7 +5,7 @@
     </div>
     <div class="confirmed-crew-block">
       <v-autocomplete
-        :model-value="state.truck"
+        :model-value="model.truck"
         label="Грузовик"
         :loading="loading"
         :clearable="!confirmed"
@@ -17,21 +16,19 @@
       />
       <v-autocomplete
         label="Водитель"
-        :model-value="state.driver"
+        :model-value="model.driver"
         :items="drivers"
         readonly
         hide-details
       />
       <v-autocomplete
         label="Прицеп"
-        :model-value="state.trailer"
+        :model-value="model.trailer"
         :items="trailers"
         readonly
         hide-details
       />
-      <v-btn variant="text" size="small" color="primary" @click="copyHandler">
-        Скопировать данные
-      </v-btn>
+      <v-btn @click="copyHandler"> Скопировать данные </v-btn>
     </div>
     <v-alert v-if="crewEmptyError" type="error" :style="{ maxWidth: '400px' }">
       Экипаж не задан
@@ -44,96 +41,60 @@
         }"
       >
         Соглашение: {{ outsourceAgreementName }}
-        {{ state.directiveAgreement ? '(Установлено вручную)' : '' }}
+        {{ model.directiveAgreement ? '(Установлено вручную)' : '' }}
       </small>
-      <v-btn
-        v-if="allowChangeOutsourceAgreement"
-        size="small"
-        color="primary"
-        @click="changeOutsourceAgreementHandler"
-        variant="text"
-      >
+      <v-btn v-if="allowChangeOutsourceAgreement" @click="changeOutsourceAgreementHandler">
         Изменить соглашение
       </v-btn>
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import { BlockTitle } from '@/entities/order'
 import { useConfirmedCrew } from './useConfirmedCrew'
 
-export default {
-  name: 'ConfirmedCrew',
-  components: {
-    BlockTitle,
-  },
-  model: {
-    prop: 'crew',
-    event: 'change',
-  },
-  props: {
-    confirmed: Boolean,
-    crew: Object,
-    hasIncomingInvoice: Boolean,
-    title: String,
-    date: String,
-    executorIdInClientAgreement: String,
-    carriersMap: {
-      type: Map,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const {
-      state,
-      loading,
-      outsourceAgreement,
-      showOutsourceAgreementRow,
-      outsourceAgreementName,
-      trucks,
-      drivers,
-      trailers,
-      hasTruck,
-      allowChangeOutsourceAgreement,
-      changeOutsourceAgreementHandler,
-      changeTruckHandler,
-      copyHandler,
-      truckReadOnly,
-      crewEmptyError,
-      executorAndCustomerMissmatch,
-    } = useConfirmedCrew(props, ctx)
+defineOptions({ name: 'ConfirmedCrew' })
+const model = defineModel()
 
-    const carrierName = computed(() => props.carriersMap.get(state.value.tkName)?.name || ' - ')
-
-    return {
-      state,
-      loading,
-      outsourceAgreement,
-      showOutsourceAgreementRow,
-      outsourceAgreementName,
-      trucks,
-      drivers,
-      trailers,
-      hasTruck,
-      allowChangeOutsourceAgreement,
-      changeOutsourceAgreementHandler,
-      changeTruckHandler,
-      copyHandler,
-      truckReadOnly,
-      crewEmptyError,
-      executorAndCustomerMissmatch,
-      carrierName,
-    }
+const props = defineProps({
+  confirmed: Boolean,
+  hasIncomingInvoice: Boolean,
+  title: String,
+  date: String,
+  executorIdInClientAgreement: String,
+  carriersMap: {
+    type: Map,
+    required: true,
   },
-}
+})
+const emits = defineEmits(['update:model-value'])
+
+const {
+  loading,
+  showOutsourceAgreementRow,
+  outsourceAgreementName,
+  trucks,
+  drivers,
+  trailers,
+  allowChangeOutsourceAgreement,
+  changeOutsourceAgreementHandler,
+  changeTruckHandler,
+  copyHandler,
+  truckReadOnly,
+  crewEmptyError,
+  executorAndCustomerMissmatch,
+} = useConfirmedCrew(model, props, emits)
+
+const carrierName = computed(() => props.carriersMap.get(model.value.tkName)?.name || ' - ')
 </script>
 <style scoped>
 .confirmed-crew-block {
-  display: grid;
-  grid-template-columns: 300px 300px 300px 250px;
-  margin: 10px;
-  gap: 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
   align-items: center;
 }
 .outsource-agreement-row {

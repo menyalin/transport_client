@@ -2,24 +2,23 @@
   <div>
     <div class="title-row">
       <BlockTitle>Доплата водителю</BlockTitle>
-      <v-btn v-if="!showDataRow && hasWritePermission" size="small" color="primary" @click="add">
-        Добавить
-      </v-btn>
+      <v-spacer />
+      <v-btn v-if="!showDataRow && hasWritePermission" @click="add"> Добавить </v-btn>
     </div>
     <div v-if="showDataRow" class="data-row">
       <div><i>Сумма:</i> {{ new Intl.NumberFormat().format(value.sum) }}</div>
       <div :style="{ maxWidth: '340px' }"><i>Примечание:</i> {{ value.note }}</div>
       <div>
         <i>Отв:</i>
-        <app-worker-autocomplete labelOnly v-model="value.worker" />
+        <WorkerAutocomplete labelOnly v-model="value.worker" />
       </div>
       <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment">
         <v-icon color="red" size="small">mdi-delete</v-icon>
       </v-btn>
     </div>
-    <v-dialog :model-value="dialog" @update:model-value="showDialog = $event" max-width="800px">
+    <v-dialog v-model="dialog" max-width="800px">
       <v-card>
-        <v-card-title>Доплата водителю </v-card-title>
+        <v-card-title>Доплата водителю</v-card-title>
         <v-card-text>
           <v-text-field
             type="number"
@@ -28,6 +27,7 @@
             :style="{ maxWidth: '200px' }"
           />
           <v-text-field v-model.trim="tmpVal.note" label="Примечание" />
+          {{ tmpVal }}
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -38,81 +38,60 @@
     </v-dialog>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { BlockTitle } from '@/entities/order'
-import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
-import { reactive, ref, computed } from 'vue'
-import store from '@/store'
+import WorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
-export default {
-  name: 'PaymentToDriver',
-  components: {
-    BlockTitle,
-    AppWorkerAutocomplete,
-  },
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    value: Object,
-  },
-  setup(props, ctx) {
-    const hasWritePermission = computed(() => {
-      return store.getters.hasPermission('order:writePaymentToDriver')
-    })
-    const tmpVal = reactive({
-      sum: 0,
-      note: null,
-      worker: null,
-    })
+defineOptions({ name: 'PaymentToDriver' })
 
-    const dialog = ref(false)
-    function add() {
-      dialog.value = true
-    }
+const value = defineModel()
 
-    function closeDialog() {
-      dialog.value = false
-    }
+const store = useStore()
 
-    function setPayment() {
-      if (isValidForm.value) ctx.emit('change', tmpVal)
-      dialog.value = false
-    }
+const hasWritePermission = computed(() => store.getters.hasPermission('order:writePaymentToDriver'))
 
-    function deletePayment() {
-      ctx.emit('change', {})
-    }
+const initialState = { sum: 0, note: null, worker: null }
+const tmpVal = ref(initialState)
+const dialog = ref(false)
 
-    const showDataRow = computed(() => {
-      return !!props.value?.sum && props.value.sum > 0
-    })
-
-    const isValidForm = computed(() => {
-      const keys = Object.keys({ ...tmpVal })
-      return !keys.map((key) => !!tmpVal[key]).includes(false)
-    })
-
-    return {
-      add,
-      tmpVal,
-      dialog,
-      setPayment,
-      closeDialog,
-      isValidForm,
-      deletePayment,
-      showDataRow,
-      hasWritePermission,
-    }
-  },
+function add() {
+  Object.assign(initialState)
+  dialog.value = true
 }
+
+function closeDialog() {
+  dialog.value = false
+}
+
+const rules = computed(() => ({
+  sum: { required },
+  note: { required },
+}))
+const v$ = useVuelidate(rules, tmpVal)
+
+const isValidForm = computed(() => !v$.value.$invalid)
+
+function setPayment() {
+  if (isValidForm.value) {
+    value.value = { ...tmpVal.value }
+  }
+  dialog.value = false
+}
+
+function deletePayment() {
+  value.value = {}
+}
+
+const showDataRow = computed(() => !!value.value?.sum && value.value.sum > 0)
 </script>
 <style scoped>
 .title-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
 }
 .data-row {
   display: flex;

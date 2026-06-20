@@ -5,7 +5,7 @@
     </div>
     <div class="analytic-block-wrapper">
       <v-select
-        v-model="params.type"
+        v-model="item.type"
         label="Тип рейса"
         :items="$store.getters.orderAnalyticTypes"
         clearable
@@ -14,7 +14,7 @@
         :style="{ 'max-width': '150px' }"
       />
       <v-text-field
-        v-model.number="params.distanceRoad"
+        v-model.number="item.distanceRoad"
         label="Расстояние по дорогам, км"
         :loading="distanceLoading"
         hideDetails
@@ -22,7 +22,7 @@
         @click:append="getRoadDistance"
       />
       <v-text-field
-        v-model.number="params.distanceDirect"
+        v-model.number="item.distanceDirect"
         label="Расстояние прямое, км"
         hideDetails
         append-icon="mdi-autorenew"
@@ -42,86 +42,53 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { BlockTitle } from '@/entities/order'
 import { OrderService } from '@/shared/services'
 
-export default {
-  name: 'AnalyticBlock',
-  components: {
-    BlockTitle,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    item: Object,
-    title: String,
-    isValidRoute: Boolean,
-    route: Array,
-    coords: Array,
-  },
-  data() {
-    return {
-      distanceLoading: false,
-      params: {
-        type: null,
-        distanceRoad: null,
-        distanceDirect: null,
-      },
+const props = defineProps({
+  title: String,
+  isValidRoute: Boolean,
+  route: Array,
+  coords: Array,
+})
+
+const item = defineModel()
+
+const store = useStore()
+
+const distanceLoading = ref(false)
+
+const showDebugInfo = computed(() => store.getters.hasPermission('fullAccess'))
+
+const loadingZones = computed(
+  () => item.value?.loadingZones?.map((i) => store.getters.zonesMap.get(i)?.name) || null
+)
+
+const unloadingZones = computed(
+  () => item.value?.unloadingZones?.map((i) => store.getters.zonesMap.get(i)?.name) || null
+)
+
+async function getRoadDistance() {
+  if (props.isValidRoute) {
+    try {
+      distanceLoading.value = true
+      const res = await OrderService.getDistance(props.coords)
+      item.value.distanceRoad = res.distanceRoad
+      distanceLoading.value = false
+    } catch (e) {
+      distanceLoading.value = false
+      store.commit('setError', e.message)
     }
-  },
-  watch: {
-    item: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        if (val) {
-          this.params.type = val.type
-          this.params.distanceRoad = val.distanceRoad
-          this.params.distanceDirect = val.distanceDirect
-        }
-      },
-    },
-    params: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
-      },
-    },
-  },
-  computed: {
-    showDebugInfo() {
-      return this.$store.getters.hasPermission('fullAccess')
-    },
-    loadingZones() {
-      return this.item.loadingZones?.map((i) => this.$store.getters.zonesMap.get(i)?.name) || null
-    },
-    unloadingZones() {
-      return this.item.unloadingZones?.map((i) => this.$store.getters.zonesMap.get(i)?.name) || null
-    },
-  },
-  methods: {
-    async getRoadDistance() {
-      if (this.isValidRoute) {
-        try {
-          this.distanceLoading = true
-          const res = await OrderService.getDistance(this.coords)
-          this.params.distanceRoad = res.distanceRoad
-          this.distanceLoading = false
-        } catch (e) {
-          this.distanceLoading = false
-          this.$store.commit('setError', e.message)
-        }
-      }
-    },
-    async getDirectDistance() {
-      if (this.isValidRoute) {
-        this.params.distanceDirect = OrderService.getDirectDistance(this.coords)
-      }
-    },
-  },
+  }
+}
+
+function getDirectDistance() {
+  if (props.isValidRoute) {
+    item.value.distanceDirect = OrderService.getDirectDistance(props.coords)
+  }
 }
 </script>
 <style scoped>
@@ -131,10 +98,9 @@ export default {
   align-items: center;
   justify-content: flex-start;
   min-width: 600px;
+  gap: 10px;
 }
-.analytic-block-wrapper > * {
-  margin: 10px;
-}
+
 .zones-wrapper {
   display: flex;
   flex-direction: column;

@@ -99,6 +99,7 @@ export function useOrderForm(props) {
   })
 
   const showPaymentToDriver = computed(() => {
+    console.log('confirmedCrew.value: ', confirmedCrew.value)
     return (
       store.getters.hasPermission('order:readPaymentToDriver') &&
       !confirmedCrew.value.outsourceAgreement
@@ -213,7 +214,7 @@ export function useOrderForm(props) {
   }
 
   async function changeCrewHandler(newValue) {
-    if (newValue.outsourceAgreement && props?.getCarrierAgreementById)
+    if (newValue.outsourceAgreement && props.getCarrierAgreementById)
       updateCarrierAgreement(await props.getCarrierAgreementById(newValue.outsourceAgreement))
   }
 
@@ -227,6 +228,7 @@ export function useOrderForm(props) {
       state,
       cargoParams,
       reqTransport,
+      route,
       analytics,
       docs,
       paymentToDriver,
@@ -234,7 +236,7 @@ export function useOrderForm(props) {
 
     // Обновляем поля через map
     Object.entries(fieldMap).forEach(([key, ref]) => {
-      if (val[key]) ref.value = val[key]
+      if (val[key] !== undefined) ref.value = val[key]
     })
 
     // Цены через специальный метод
@@ -324,7 +326,6 @@ export function useOrderForm(props) {
     orderConfirmed,
     orderInProgress,
     showGradeBlock,
-    addressMap,
     coords,
 
     // Methods
