@@ -21,17 +21,16 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'OrderListFooterDetails',
-  props: {
-    total: Number,
-    accepted: Number,
-    needFix: Number,
-    onCheck: Number,
-    missing: Number,
-  },
-}
+<script setup>
+defineOptions({ name: 'OrderListFooterDetails' })
+
+defineProps({
+  total: Number,
+  accepted: Number,
+  needFix: Number,
+  onCheck: Number,
+  missing: Number,
+})
 </script>
 <style scoped>
 .wrapper {

@@ -8,20 +8,21 @@
     </v-btn>
   </v-card-actions>
 </template>
-<script>
-export default {
-  name: 'CardActionButtons',
-  props: {
-    submitDisabled: { type: Boolean, default: false },
-    submitBtnLabel: { type: String, default: 'Создать' },
-  },
-  methods: {
-    cancelHandler() {
-      this.$emit('cancel')
-    },
-    saveHandler() {
-      this.$emit('submit')
-    },
-  },
+<script setup>
+defineOptions({ name: 'CardActionButtons' })
+
+defineProps({
+  submitDisabled: { type: Boolean, default: false },
+  submitBtnLabel: { type: String, default: 'Создать' },
+})
+
+const emit = defineEmits(['cancel', 'submit'])
+
+function cancelHandler() {
+  emit('cancel')
+}
+
+function saveHandler() {
+  emit('submit')
 }
 </script>

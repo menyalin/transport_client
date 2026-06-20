@@ -3,20 +3,22 @@
     Рейс: <b>{{ orderTypeStr }}</b> , тариф за: <b>{{ waitingTariffBy }}</b>
   </span>
 </template>
-<script>
-export default {
-  name: 'WaitingColumn',
-  props: {
-    item: Object,
-  },
-  computed: {
-    orderTypeStr() {
-      return this.$store.getters.orderAnalyticTypesMap.get(this.item.orderType)
-    },
-    waitingTariffBy() {
-      return this.$store.getters.waitingTariffByItemsMap.get(this.item.tariffBy)
-    },
-  },
-}
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'WaitingColumn' })
+
+const props = defineProps({
+  item: Object,
+})
+
+const store = useStore()
+
+const orderTypeStr = computed(() => store.getters.orderAnalyticTypesMap.get(props.item.orderType))
+
+const waitingTariffBy = computed(() =>
+  store.getters.waitingTariffByItemsMap.get(props.item.tariffBy)
+)
 </script>
 <style></style>

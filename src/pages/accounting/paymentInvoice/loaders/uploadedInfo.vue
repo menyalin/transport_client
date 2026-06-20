@@ -16,33 +16,31 @@
     </div>
   </v-alert>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
 import { moneyFormatter } from '@/shared/utils'
 
-export default {
-  name: 'UploadedInformation',
-  props: {
-    items: Array,
-    errors: Array,
-    totalPickedSum: Number,
-  },
-  computed: {
-    ordersTotalSum() {
-      if (this.items.length === 0) return 0
-      return this.items.reduce((sum, item) => (sum += item.price), 0)
-    },
-    formattedSum() {
-      return moneyFormatter(this.ordersTotalSum)
-    },
-    formattedPickedSum() {
-      return moneyFormatter(this.totalPickedSum)
-    },
-    hasTotalSumDiff() {
-      const roundedTotal = Math.round(this.ordersTotalSum * 100) / 100
-      const roundedPicked = Math.round(this.totalPickedSum * 100) / 100
-      return roundedTotal !== roundedPicked
-    },
-  },
-}
+defineOptions({ name: 'UploadedInformation' })
+
+const props = defineProps({
+  items: Array,
+  errors: Array,
+  totalPickedSum: Number,
+})
+
+const ordersTotalSum = computed(() => {
+  if (props.items.length === 0) return 0
+  return props.items.reduce((sum, item) => (sum += item.price), 0)
+})
+
+const formattedSum = computed(() => moneyFormatter(ordersTotalSum.value))
+
+const formattedPickedSum = computed(() => moneyFormatter(props.totalPickedSum))
+
+const hasTotalSumDiff = computed(() => {
+  const roundedTotal = Math.round(ordersTotalSum.value * 100) / 100
+  const roundedPicked = Math.round(props.totalPickedSum * 100) / 100
+  return roundedTotal !== roundedPicked
+})
 </script>
 <style scoped />

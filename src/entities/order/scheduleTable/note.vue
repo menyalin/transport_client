@@ -3,24 +3,26 @@
     {{ note.text }}
   </span>
 </template>
-<script>
-export default {
-  name: 'Note',
-  props: {
-    styles: {
-      type: Object,
-      required: true,
-    },
-    note: {
-      type: Object,
-      required: true,
-    },
+<script setup>
+import { useRouter } from 'vue-router'
+
+defineOptions({ name: 'Note' })
+
+const props = defineProps({
+  styles: {
+    type: Object,
+    required: true,
   },
-  methods: {
-    dblCLickHandler() {
-      this.$router.push('/profile/schedule_notes/' + this.note._id)
-    },
+  note: {
+    type: Object,
+    required: true,
   },
+})
+
+const router = useRouter()
+
+function dblCLickHandler() {
+  router.push('/profile/schedule_notes/' + props.note._id)
 }
 </script>
 <style scoped>

@@ -60,7 +60,7 @@
 <script>
 import dayjs from 'dayjs'
 import { mapGetters } from 'vuex'
-import AppBlockTitle from './blockTitle.vue'
+import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
 export default {

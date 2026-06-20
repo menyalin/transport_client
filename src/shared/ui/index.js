@@ -24,6 +24,7 @@ import EntityFiles from './entityFiles/index.vue'
 import AllowedAgreements from './allowedAgreements/index.vue'
 import PageLayout from './PageLayout.vue'
 import ErrorPage from './ErrorPage.vue'
+import BlockTitle from './BlockTitle.vue'
 
 export {
   AppTableColumnSetting,
@@ -52,4 +53,5 @@ export {
   AllowedAgreements,
   PageLayout,
   ErrorPage,
+  BlockTitle,
 }

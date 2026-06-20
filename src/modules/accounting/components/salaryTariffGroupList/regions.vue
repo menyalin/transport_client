@@ -5,16 +5,17 @@
     <b>{{ regionsMap.get(item.unloadingRegion).name }} </b>
   </span>
 </template>
-<script>
-export default {
-  name: 'RegionColumn',
-  props: {
-    item: Object,
-  },
-  computed: {
-    regionsMap() {
-      return this.$store.getters.regionsMap
-    },
-  },
-}
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'RegionColumn' })
+
+defineProps({
+  item: Object,
+})
+
+const store = useStore()
+
+const regionsMap = computed(() => store.getters.regionsMap)
 </script>

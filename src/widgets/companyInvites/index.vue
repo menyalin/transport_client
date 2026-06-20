@@ -4,21 +4,17 @@
     <app-invites-table :invites="invites" />
   </div>
 </template>
-<script>
+<script setup>
 import AppInvitesTable from './invitesTable.vue'
 
-export default {
-  name: 'CompanyInvites',
-  components: {
-    AppInvitesTable,
+defineOptions({ name: 'CompanyInvites' })
+
+defineProps({
+  invites: {
+    type: Array,
+    required: true,
   },
-  props: {
-    invites: {
-      type: Array,
-      required: true,
-    },
-  },
-}
+})
 </script>
 <style scoped>
 .invite-wrapper {

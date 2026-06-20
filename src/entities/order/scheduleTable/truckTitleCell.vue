@@ -8,24 +8,22 @@
     </router-link>
   </div>
 </template>
-<script>
-export default {
-  name: 'TruckTitleCell',
-  props: {
-    idx: Number,
-    title: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
+<script setup>
+defineOptions({ name: 'TruckTitleCell' })
+
+defineProps({
+  idx: Number,
+  title: {
+    type: String,
+    required: true,
   },
-  data: () => ({
-    baseUrl: '/profile/trucks/',
-  }),
-}
+  id: {
+    type: String,
+    required: true,
+  },
+})
+
+const baseUrl = '/profile/trucks/'
 </script>
 <style scoped>
 .title-wrapper {

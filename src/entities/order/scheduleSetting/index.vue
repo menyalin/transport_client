@@ -9,39 +9,35 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 import { PermissionService } from '@/shared/services'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
-  name: 'ScheduleSettings',
-  components: {
-    DateTimeInput,
-  },
-  computed: {
-    date() {
-      return this.$store.getters.scheduleDate
-    },
-    minDate() {
-      return PermissionService.minAllowedDate({
-        operation: 'order:daysForRead',
-      })
-    },
-    isMinDate() {
-      return dayjs(this.date).isSameOrBefore(this.minDate, 'day')
-    },
-  },
-  methods: {
-    incDate(count) {
-      this.$store.commit('incScheduleDate', count)
-    },
-    setDate(date) {
-      if (!date || dayjs(date).isBefore(this.minDate))
-        this.$store.commit('setScheduleDate', dayjs().format('YYYY-MM-DD'))
-      else this.$store.commit('setScheduleDate', date)
-    },
-  },
+defineOptions({ name: 'ScheduleSettings' })
+
+const store = useStore()
+
+const date = computed(() => store.getters.scheduleDate)
+
+const minDate = computed(() =>
+  PermissionService.minAllowedDate({
+    operation: 'order:daysForRead',
+  })
+)
+
+const isMinDate = computed(() => dayjs(date.value).isSameOrBefore(minDate.value, 'day'))
+
+function incDate(count) {
+  store.commit('incScheduleDate', count)
+}
+
+function setDate(val) {
+  if (!val || dayjs(val).isBefore(minDate.value))
+    store.commit('setScheduleDate', dayjs().format('YYYY-MM-DD'))
+  else store.commit('setScheduleDate', val)
 }
 </script>
 <style scoped>

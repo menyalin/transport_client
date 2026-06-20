@@ -23,19 +23,13 @@
     </template>
   </v-table>
 </template>
-<script>
+<script setup>
 import CompareItemsTableRow from './compareItemsTableRow.vue'
-export default {
-  name: 'CompareItemsTable',
-  components: { CompareItemsTableRow },
-  props: {
-    items: Array,
-  },
-  methods: {
-    rowDblClickHandler(e) {
-      console.log('dbl', e)
-    },
-  },
-}
+
+defineOptions({ name: 'CompareItemsTable' })
+
+defineProps({
+  items: Array,
+})
 </script>
 <style></style>

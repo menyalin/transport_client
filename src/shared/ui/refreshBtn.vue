@@ -4,10 +4,8 @@
   </v-btn>
 </template>
 
-<script>
-export default {
-  name: 'refreshBtn',
-}
+<script setup>
+defineOptions({ name: 'RefreshBtn' })
 </script>
 
 <style></style>

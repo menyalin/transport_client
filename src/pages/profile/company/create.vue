@@ -10,25 +10,23 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
 import { CompanyForm } from '@/entities/company'
-import { mapActions } from 'vuex'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'CreateCompany',
-  components: {
-    CompanyForm,
-  },
-  methods: {
-    ...mapActions(['createCompany']),
-    cancel() {
-      this.$router.push({ name: 'companyList' })
-    },
-    submitForm(newCompany) {
-      this.createCompany(newCompany).then(() => {
-        this.$router.push({ name: 'companyList' })
-      })
-    },
-  },
+defineOptions({ name: 'CreateCompany' })
+
+const store = useStore()
+const router = useRouter()
+
+function cancel() {
+  router.push({ name: 'companyList' })
+}
+
+function submitForm(newCompany) {
+  store.dispatch('createCompany', newCompany).then(() => {
+    router.push({ name: 'companyList' })
+  })
 }
 </script>

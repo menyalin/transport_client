@@ -5,17 +5,18 @@
     >, Кол-во точек: <b> {{ item.includedPoints }}</b>
   </span>
 </template>
-<script>
-export default {
-  name: 'AdditionalPointsColumn',
-  props: {
-    item: Object,
-  },
-  computed: {
-    orderTypeStr() {
-      return this.$store.getters.orderAnalyticTypesMap.get(this.item.orderType)
-    },
-  },
-}
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'AdditionalPointsColumn' })
+
+const props = defineProps({
+  item: Object,
+})
+
+const store = useStore()
+
+const orderTypeStr = computed(() => store.getters.orderAnalyticTypesMap.get(props.item.orderType))
 </script>
 <style />

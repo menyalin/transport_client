@@ -38,7 +38,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import BlockTitle from './blockTitle/blockTitle.vue'
+import { BlockTitle } from '@/shared/ui'
 
 const vuexStore = useStore()
 

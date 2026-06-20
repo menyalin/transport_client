@@ -7,9 +7,7 @@
     </v-row>
   </v-container>
 </template>
-<script>
-export default {
-  name: 'EntityListWrapper',
-}
+<script setup>
+defineOptions({ name: 'EntityListWrapper' })
 </script>
 <style></style>

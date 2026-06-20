@@ -1,25 +1,24 @@
 <template>
-  <div id="block">
-    <span id="title">{{ title }}</span>
+  <div class="block">
+    <span class="text-h6">{{ title }}</span>
     <slot />
   </div>
 </template>
-<script>
-export default {
-  name: 'BorderedBlock',
-  props: {
-    title: String,
-  },
-}
+<script setup>
+defineOptions({ name: 'BorderedBlock' })
+
+defineProps({
+  title: String,
+})
 </script>
 <style scoped>
-#block {
+.block {
   border: 1px solid gray;
   padding: 8px;
   position: relative;
   border-radius: 5px;
 }
-#title {
+.title {
   position: absolute;
   font-size: small;
   color: #666666;

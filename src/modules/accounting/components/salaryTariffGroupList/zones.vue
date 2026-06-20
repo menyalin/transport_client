@@ -5,16 +5,17 @@
     <b>{{ zonesMap.get(item.unloadingZone).name }} </b>
   </span>
 </template>
-<script>
-export default {
-  name: 'ZonesColumn',
-  props: {
-    item: Object,
-  },
-  computed: {
-    zonesMap() {
-      return this.$store.getters.zonesMap
-    },
-  },
-}
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'ZonesColumn' })
+
+defineProps({
+  item: Object,
+})
+
+const store = useStore()
+
+const zonesMap = computed(() => store.getters.zonesMap)
 </script>

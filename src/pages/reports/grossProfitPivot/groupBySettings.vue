@@ -3,10 +3,10 @@
     <span>Группировка:</span>
     <v-radio-group
       class="mt-0 pt-0"
-      :model-value="value"
+      :model-value="modelValue"
       hide-details
       inline
-      @update:model-value="change"
+      @update:model-value="modelValue = $event"
     >
       <v-radio
         v-for="item in items"
@@ -19,23 +19,13 @@
     </v-radio-group>
   </div>
 </template>
-<script>
-export default {
-  name: 'GroupBySettings',
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    value: String,
-    items: { type: Array, required: true },
-  },
+<script setup>
+defineOptions({ name: 'GroupBySettings' })
 
-  methods: {
-    change(e) {
-      this.$emit('change', e)
-    },
-  },
-}
+const modelValue = defineModel()
+
+defineProps({
+  items: { type: Array, required: true },
+})
 </script>
 <style></style>

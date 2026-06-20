@@ -11,30 +11,29 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import socket from '@/socket'
-export default {
-  data() {
-    return {
-      activeConnection: [],
-      headers: [
-        { value: 'socketId', text: 'socketId', width: '150px' },
-        { value: 'user._id', text: 'userId', width: '150px' },
-        { value: 'user.email', text: 'email' },
-        { value: 'user.name', text: 'name' },
-      ],
-    }
-  },
-  created() {
-    socket.on('activeUsers', (data) => {
-      this.activeConnection = data
-    })
-    socket.emit('getActiveUsers')
-  },
 
-  beforeDestroy() {
-    socket.off('activeUsers')
-  },
-}
+defineOptions({ name: 'AdminUsers' })
+
+const activeConnection = ref([])
+const headers = [
+  { value: 'socketId', text: 'socketId', width: '150px' },
+  { value: 'user._id', text: 'userId', width: '150px' },
+  { value: 'user.email', text: 'email' },
+  { value: 'user.name', text: 'name' },
+]
+
+onMounted(() => {
+  socket.on('activeUsers', (data) => {
+    activeConnection.value = data
+  })
+  socket.emit('getActiveUsers')
+})
+
+onBeforeUnmount(() => {
+  socket.off('activeUsers')
+})
 </script>
 <style></style>

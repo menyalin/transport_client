@@ -12,26 +12,28 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 
-export default {
-  name: 'ResultCell',
-  props: {
-    date: {
-      type: String,
-      required: true,
-    },
+defineOptions({ name: 'ResultCell' })
+
+const props = defineProps({
+  date: {
+    type: String,
+    required: true,
   },
-  computed: {
-    ordersCount() {
-      if (!this.date) return null
-      const dateStr = dayjs(this.date).format('YYYY-MM-DD')
-      if (!this.$store.getters.orderCountByDates.has(dateStr)) return null
-      return this.$store.getters.orderCountByDates.get(dateStr)
-    },
-  },
-}
+})
+
+const store = useStore()
+
+const ordersCount = computed(() => {
+  if (!props.date) return null
+  const dateStr = dayjs(props.date).format('YYYY-MM-DD')
+  if (!store.getters.orderCountByDates.has(dateStr)) return null
+  return store.getters.orderCountByDates.get(dateStr)
+})
 </script>
 <style scoped>
 .first-row {
