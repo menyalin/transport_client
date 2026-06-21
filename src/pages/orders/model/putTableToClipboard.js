@@ -1,4 +1,6 @@
+import { useAddressStore } from '@/entities/address'
 import store from '@/store/index.js'
+const getAddressStore = () => useAddressStore()
 
 const getOrderNotes = (item) => {
   const pointNotes = item.route.map((i) => i.note).filter((i) => !!i)
@@ -64,13 +66,13 @@ const _getPoints = ({ route, type }) => route.filter((p) => p.type === type && !
 
 const _getPartnersName = ({ route, type }) =>
   _getPoints({ route, type })
-    .map((p) => store.getters.addressMap.get(p.address)?.partner)
+    .map((p) => getAddressStore().addressMap.get(p.address)?.partner)
     .map((p) => store.getters.partnersMap.get(p)?.name)
     .join(';')
 
 const _getAddressesName = ({ route, type }) =>
   _getPoints({ route, type })
-    .map((p) => store.getters.addressMap.get(p.address).name)
+    .map((p) => getAddressStore().addressMap.get(p.address).name)
     .join(';')
 
 const _getBasePrice = (prices, agreement) => {

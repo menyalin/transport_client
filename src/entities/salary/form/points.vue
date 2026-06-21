@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useAddressStore } from '@/entities/address'
 
 export default {
   name: 'TariffPointsType',
@@ -36,15 +37,14 @@ export default {
   emits: ['change'],
   setup(props, ctx) {
     const loadingEl = ref(null)
-    const instance = getCurrentInstance()
-    const store = instance?.proxy.$store
+    const addressStore = useAddressStore()
 
     const loadingAddressItems = computed(
-      () => store?.getters.addressesForAutocomplete?.filter((i) => i.loading) || []
+      () => addressStore.addressesForAutocomplete?.filter((i) => i.loading) || []
     )
 
     const unloadingAddressItems = computed(
-      () => store?.getters.addressesForAutocomplete?.filter((i) => i.unloading) || []
+      () => addressStore.addressesForAutocomplete?.filter((i) => i.unloading) || []
     )
 
     function changeHandler(value, field) {

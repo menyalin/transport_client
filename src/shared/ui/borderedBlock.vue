@@ -1,6 +1,6 @@
 <template>
   <div class="block">
-    <span class="text-h6">{{ title }}</span>
+    <div class="text-title-small mb-2">{{ title }}</div>
     <slot />
   </div>
 </template>
@@ -14,7 +14,7 @@ defineProps({
 <style scoped>
 .block {
   border: 1px solid gray;
-  padding: 8px;
+  padding: 5px;
   position: relative;
   border-radius: 5px;
 }

@@ -1,13 +1,14 @@
 import z from 'zod'
-import store from '@/store'
+import { useAddressStore } from '@/entities/address'
 
 const getddressPropSchema = z.string().array().nonempty()
 
 const getAddresses = (addresses = []) => {
+  const addressStore = useAddressStore()
   getddressPropSchema.parse(addresses)
   const res = []
   addresses.forEach((address) => {
-    res.push(store.getters.addressMap.get(address)?.shortName)
+    res.push(addressStore.addressMap.get(address)?.shortName)
   })
   return res.filter(Boolean).join(', ')
 }

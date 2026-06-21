@@ -35,6 +35,7 @@ import AppTableColumnSettings from '@/modules/common/components/tableColumnSetti
 import useHistorySettings from '@/shared/hooks/useHistorySettings'
 import { ReportService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
+import { useAddressStore } from '@/entities/address'
 
 export default {
   name: 'OrdersTable',
@@ -47,9 +48,11 @@ export default {
   },
   setup() {
     const carrierStore = useCarrierStore()
+    const addressStore = useAddressStore()
     const listOptions = useHistorySettings({}, 'orders_table_list_options')
     return {
       carrierStore,
+      addressStore,
       listOptions,
     }
   },
@@ -82,10 +85,10 @@ export default {
         carrierId: this.carrierStore.carriersMap.get(i.carrierId)?.name || '-',
         orderType: this.$store.getters.orderAnalyticTypesMap.get(i.orderType),
         addressesLoading: i.loadingAddressIds
-          ?.map((a) => this.$store.getters.addressMap.get(a)?.shortName)
+          ?.map((a) => this.addressStore.addressMap.get(a)?.shortName)
           .join(', '),
         addressesUnloading: i.unloadingAddressIds
-          ?.map((a) => this.$store.getters.addressMap.get(a)?.shortName)
+          ?.map((a) => this.addressStore.addressMap.get(a)?.shortName)
           .join(', '),
         regionsLoading: i.loadingRegions
           ?.map((r) => this.$store.getters.regionsMap.get(r)?.name)

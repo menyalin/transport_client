@@ -113,7 +113,9 @@ import { computed } from 'vue'
 import { OrderService } from '@/shared/services'
 import { OrderListFooterDetails } from '@/shared/ui'
 import { useStore } from 'vuex'
+import { useAddressStore } from '@/entities/address'
 import { useRouter } from 'vue-router'
+const addressStore = useAddressStore()
 
 defineOptions({ name: 'OrdersTable' })
 const selected = defineModel()
@@ -195,11 +197,11 @@ const preparedItems = computed(() => {
     loadingPoints:
       order.route
         .filter((p) => p.type === 'loading')
-        .map((p) => vuexStore.getters.addressMap.get(p.address)?.shortName) || null,
+        .map((p) => addressStore.addressMap.get(p.address)?.shortName) || null,
     unloadingPoints:
       order.route
         .filter((p) => p.type === 'unloading')
-        .map((p) => vuexStore.getters.addressMap.get(p.address)?.shortName) || null,
+        .map((p) => addressStore.addressMap.get(p.address)?.shortName) || null,
   }))
 })
 </script>

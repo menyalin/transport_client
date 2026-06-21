@@ -93,6 +93,7 @@
 <script>
 import { ButtonsPanel } from '@/shared/ui'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import { useAddressStore } from '@/entities/address'
 
 import { mapGetters } from 'vuex'
 export default {
@@ -149,7 +150,10 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters(['addresses', 'loading', 'directoriesProfile']),
+    ...mapGetters(['loading', 'directoriesProfile']),
+    addresses() {
+      return useAddressStore().filteredAddresses
+    },
     prepareAddresses() {
       return this.addresses.map((i) => ({
         ...i,
@@ -169,7 +173,7 @@ export default {
 
     if (this.$store.getters.formSettingsMap.has(this.formName))
       this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-    this.$store.dispatch('getAddresses')
+    useAddressStore().getAddresses()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit('setFormSettings', {
@@ -183,7 +187,7 @@ export default {
       this.$router.push({ name: 'AddressCreate' })
     },
     refresh() {
-      this.$store.dispatch('getAddresses', true)
+      useAddressStore().getAddresses(true)
     },
     dblClickRow(_, { item }) {
       this.$router.push(`address/${item._id}`)

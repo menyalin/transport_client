@@ -1,17 +1,10 @@
 <template>
-  <v-dialog
-    :model-value="dialog"
-    @update:model-value="showDialog = $event"
-    max-width="800"
-    persistent
-  >
+  <v-dialog :model-value="dialog" @update:model-value="dialog = $event" max-width="800" persistent>
     <v-card>
-      <v-card-title>
-        {{ 'Редактировать сумму' }}
-      </v-card-title>
+      <v-card-title>Редактировать сумму</v-card-title>
       <v-card-text>
-        <div clas s="form-wrapper">
-          <v-alert :type="vatRateInfoDescription.type">
+        <div class="form-wrapper">
+          <v-alert :type="vatRateInfoDescription.type" class="mb-4">
             {{ vatRateInfoDescription.message }}
           </v-alert>
           <div class="fields-row">
@@ -48,118 +41,97 @@
   </v-dialog>
 </template>
 
-<script>
-import { computed, getCurrentInstance, ref, watch } from 'vue'
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required, decimal } from '@vuelidate/validators'
 
-export default {
-  name: 'DialogForm',
-  model: {
-    prop: 'item',
-    event: 'change',
+defineOptions({ name: 'DialogForm' })
+
+const dialog = defineModel('dialog')
+
+const props = defineProps({
+  item: Object,
+  vatRateInfo: {
+    type: Object,
   },
-  props: {
-    item: Object,
-    dialog: Boolean,
-    vatRateInfo: {
-      type: Object,
-    },
-    availibleTypes: {
-      type: Array,
-    },
+  availibleTypes: {
+    type: Array,
   },
-  setup(props, { emit }) {
-    const { proxy } = getCurrentInstance()
-    const state = ref({
-      price: 0,
-      type: '',
-      note: '',
-    })
+})
 
-    const rules = {
-      price: { required, decimal },
-      type: { required },
-      note: {},
-    }
+const emit = defineEmits(['save'])
 
-    const v$ = useVuelidate(rules, state)
+const store = useStore()
 
-    const availablePriceTypes = computed(() => {
-      return props.availibleTypes
-        ? proxy.$store.getters.orderPriceTypes
-            .slice()
-            .filter((t) => props.availibleTypes.includes(t.value))
-        : []
-    })
+const state = ref({
+  price: 0,
+  type: '',
+  note: '',
+})
 
-    const disabledVatRateCheckbox = computed(() => false)
+const rules = {
+  price: { required, decimal },
+  type: { required },
+  note: {},
+}
 
-    const isInvalidForm = computed(
-      () => v$.value.$invalid || props.vatRateInfo?.vatRate === undefined
-    )
+const v$ = useVuelidate(rules, state)
 
-    const priceErrorMessages = computed(() => {
-      const errors = []
-      if (v$.value.price.$dirty && v$.value.price.$invalid)
-        errors.push('Сумма обязательна к заполнению')
-      return errors
-    })
+const availablePriceTypes = computed(() => {
+  return props.availibleTypes
+    ? store.getters.orderPriceTypes.slice().filter((t) => props.availibleTypes.includes(t.value))
+    : []
+})
 
-    const typeErrorMessages = computed(() => {
-      const errors = []
-      if (v$.value.type.$dirty && v$.value.type.$invalid) errors.push('Укажите тип тарифа')
-      return errors
-    })
+const isInvalidForm = computed(() => v$.value.$invalid || props.vatRateInfo?.vatRate === undefined)
 
-    const priceWithVat = computed(() => {
-      return props.vatRateInfo?.usePriceWithVat && props.vatRateInfo?.vatRate > 0
-    })
+const priceErrorMessages = computed(() => {
+  const errors = []
+  if (v$.value.price.$dirty && v$.value.price.$invalid)
+    errors.push('Сумма обязательна к заполнению')
+  return errors
+})
 
-    const vatRateInfoDescription = computed(() => {
-      if (!props.vatRateInfo?.vatRate === undefined)
-        return {
-          type: 'error',
-          message: 'Ставка НДС не определена!',
-        }
-      return {
-        type: 'info',
-        message: `Ставка НДС: ${props.vatRateInfo?.vatRate}%`,
-      }
-    })
+const typeErrorMessages = computed(() => {
+  const errors = []
+  if (v$.value.type.$dirty && v$.value.type.$invalid) errors.push('Укажите тип тарифа')
+  return errors
+})
 
-    watch(
-      () => props.item,
-      (val) => {
-        state.value = { ...val }
-      },
-      { immediate: true }
-    )
+const priceWithVat = computed(() => {
+  return props.vatRateInfo?.usePriceWithVat && props.vatRateInfo?.vatRate > 0
+})
 
-    const submit = () => {
-      emit('save', state.value)
-      cancel()
-    }
-
-    const cancel = () => {
-      emit('update:dialog', false)
-      v$.value.$reset()
-    }
-
+const vatRateInfoDescription = computed(() => {
+  if (props.vatRateInfo?.vatRate === undefined)
     return {
-      state,
-      v$,
-      availablePriceTypes,
-      disabledVatRateCheckbox,
-      isInvalidForm,
-      priceErrorMessages,
-      typeErrorMessages,
-      priceWithVat,
-      submit,
-      cancel,
-      vatRateInfoDescription,
+      type: 'error',
+      message: 'Ставка НДС не определена!',
     }
+  return {
+    type: 'info',
+    message: `Ставка НДС: ${props.vatRateInfo?.vatRate}%`,
+  }
+})
+
+watch(
+  () => props.item,
+  (val) => {
+    state.value = { ...val }
   },
+  { immediate: true }
+)
+
+function submit() {
+  emit('save', state.value)
+  cancel()
+}
+
+function cancel() {
+  dialog.value = false
+  v$.value.$reset()
 }
 </script>
 
@@ -169,6 +141,6 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 </style>

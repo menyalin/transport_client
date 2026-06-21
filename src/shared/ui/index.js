@@ -14,7 +14,6 @@ import AdditionalNotifications from './additionalNotifications/index.vue'
 import ReportTitle from './reportTitle.vue'
 import RefreshBtn from './refreshBtn.vue'
 import OrderDocStatusSelector from './orderDocStatusSelector.vue'
-import AutoCompleteWithActions from './AutoCompleteWithActions.vue'
 import BankAccountInfoForm from './bankAccountInfo/bankAccountInfoForm.vue'
 import CompanyInfoForm from './companyInfo/companyInfoForm.vue'
 import ContactsInfo from './contactsInfo/contactsInfo.vue'
@@ -25,6 +24,7 @@ import AllowedAgreements from './allowedAgreements/index.vue'
 import PageLayout from './PageLayout.vue'
 import ErrorPage from './ErrorPage.vue'
 import BlockTitle from './BlockTitle.vue'
+import CardSection from './CardSection.vue'
 
 export {
   AppTableColumnSetting,
@@ -43,7 +43,6 @@ export {
   ReportTitle,
   RefreshBtn,
   OrderDocStatusSelector,
-  AutoCompleteWithActions,
   BankAccountInfoForm,
   CompanyInfoForm,
   ContactsInfo,
@@ -54,4 +53,5 @@ export {
   PageLayout,
   ErrorPage,
   BlockTitle,
+  CardSection,
 }

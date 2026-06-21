@@ -94,6 +94,7 @@ import AppReturnCell from '@/modules/accounting/components/salaryTariffGroupList
 
 import { SalaryTariffService } from '@/shared/services'
 import { useListColumnSetting, usePersistedRef } from '@/shared/hooks'
+import { useAddressStore } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 
@@ -113,6 +114,7 @@ export default {
   setup() {
     const { proxy } = getCurrentInstance()
     const carrierStore = useCarrierStore()
+    const addressStore = useAddressStore()
 
     // Настройки колонок таблицы
     const { listSettingsName, activeHeaders, allHeaders, headers } = useListColumnSetting({
@@ -148,7 +150,7 @@ export default {
     const salaryTariffTypes = computed(() => proxy.$store.getters.salaryTariffTypes)
     const salaryTariffTypesMap = computed(() => proxy.$store.getters.salaryTariffTypesMap)
     const liftCapacityTypes = computed(() => proxy.$store.getters.liftCapacityTypes)
-    const addressMap = computed(() => proxy.$store.getters.addressMap)
+    const addressMap = computed(() => addressStore.addressMap)
     const partnersMap = computed(() => proxy.$store.getters.partnersMap)
     const partnerGroupsMap = computed(() => proxy.$store.getters.partnerGroupsMap)
     const carriers = computed(() => carrierStore.carriers)

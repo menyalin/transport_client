@@ -156,10 +156,10 @@
       />
     </div>
 
-    <div class="note">
+    <CardSection title="Примечания" class="note">
       <v-text-field v-model="form.note" label="Примечание" />
       <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
-    </div>
+    </CardSection>
     <EntityFiles
       v-if="order && order._id"
       :itemId="order._id"
@@ -189,8 +189,10 @@
 <script setup>
 import { computed, watch, provide, nextTick } from 'vue'
 import { useStore } from 'vuex'
+import { useAddressStore } from '@/entities/address'
+const addressStore = useAddressStore()
 import { OrderService, OrderTemplateService } from '@/shared/services'
-import { ButtonsPanel, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
+import { ButtonsPanel, CardSection, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
 import ConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
@@ -231,10 +233,6 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false,
-  },
-  addressActions: {
-    type: Object,
-    default: () => ({}),
   },
   getCarrierAgreementById: {
     type: Function,
@@ -306,7 +304,6 @@ const {
 } = useOrderForm(props)
 
 // Provide
-provide('addressActions', props.addressActions)
 provide('updateFinalPrices', (val) => {
   finalPrices.length = 0
   finalPrices.push(...val)
@@ -360,7 +357,7 @@ const formState = computed(() => ({
 // Methods
 function updateOrderType() {
   const regions = route.value
-    .map((i) => (i.address ? vuexStore.getters.addressMap.get(i.address)?.region : null))
+    .map((i) => (i.address ? addressStore.addressMap.get(i.address)?.region : null))
     .filter((i) => !!i)
   nextTick(() => {
     analytics.value.type = new Set(regions).size >= 2 ? 'region' : 'city'
@@ -509,21 +506,21 @@ watch(
   grid-row: 1/4;
 }
 .note {
-  grid-column: 2/3;
+  grid-column: 2/4;
   grid-row: 8/9;
   margin-top: 10px;
 }
 .docs {
-  grid-column: 2/3;
+  grid-column: 2/4;
   grid-row: 9/10;
 }
 
 .order-files {
-  grid-column: 2/3;
+  grid-column: 2/4;
   grid-row: 10/11;
 }
 .transport-waybills {
-  grid-column: 2/3;
+  grid-column: 2/4;
   grid-row: 11/12;
 }
 </style>

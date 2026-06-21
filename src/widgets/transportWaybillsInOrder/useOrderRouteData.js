@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useAddressStore } from '@/entities/address'
 
-export const useOrderRouteData = (props, _ctx) => {
+export const useOrderRouteData = (props) => {
   const addressStore = useAddressStore()
 
   const shipperPointCondition = (routePoint) => {

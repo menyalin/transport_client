@@ -1,10 +1,10 @@
 <template>
-  <div class="route-wrapper" :class="{ invalid: !isValid }">
-    <BlockTitle>{{ title }}</BlockTitle>
-
-    <div v-for="(point, ind) of model" :key="ind" class="point-wrapper-outer">
+  <CardSection :title="title" :valid="isValid">
+    <table class="route-table">
       <app-point-detail
-        :point="point"
+        v-for="(point, ind) of model"
+        :key="ind"
+        v-model="model[ind]"
         :ind="ind"
         :readonly="readonly"
         :confirmed="confirmed"
@@ -14,10 +14,10 @@
         :showMainLoadingPointSelector="showMainLoadingPointSelector"
         :showDeleteBtn="model.length > 2"
         :isTemplate="isTemplate"
-        @changePoint="change($event, ind)"
+        @changePoint="change(ind)"
         @delete="deleteHandler"
       />
-    </div>
+    </table>
 
     <div v-if="!readonly" class="row py-3">
       <v-btn color="primary" size="small" class="ma-2" @click="addPoint"> Добавить адрес </v-btn>
@@ -40,12 +40,12 @@
         Маршрут для водителя
       </v-btn>
     </div>
-  </div>
+  </CardSection>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import AppPointDetail from './pointDetail'
-import { BlockTitle } from '@/entities/order'
+import { CardSection } from '@/shared/ui'
 import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
 import { useStore } from 'vuex'
 const vuexStore = useStore()
@@ -67,7 +67,6 @@ const props = defineProps({
     default: false,
   },
 })
-const emits = defineEmits(['update:model-value'])
 
 //#region computed
 // const activePointInd = computed(() => {
@@ -95,31 +94,24 @@ const showReturnBtn = computed(() => {
 })
 //#endregion
 
-function setDefaultMainLoadingPoint() {
-  const tmpPoints = [...model.value]
-  tmpPoints[0].isMainLoadingPoint = true
-  emits('update:model-value', tmpPoints)
+function change(ind) {
+  if (hasMainLoadingPoint.value && model.value[ind]?.isMainLoadingPoint) {
+    const cleared = model.value.map((p, i) => (i !== ind ? { ...p, isMainLoadingPoint: false } : p))
+    model.value = cleared
+  }
 }
 
-function clearedMainLoadingPointRoute(route) {
-  return route.map((p) => ({
-    ...p,
-    isMainLoadingPoint: false,
-  }))
-}
-
-function change(val, ind) {
-  let tmpPoints
-  if (hasMainLoadingPoint.value && val.isMainLoadingPoint)
-    tmpPoints = clearedMainLoadingPointRoute([...model.value])
-  else tmpPoints = [...model.value]
-
-  tmpPoints.splice(ind, 1, val)
-
-  if (!hasMainLoadingPoint.value) setDefaultMainLoadingPoint()
-
-  emits('update:model-value', tmpPoints)
-}
+watch(
+  model,
+  () => {
+    if (model.value.length && !hasMainLoadingPoint.value) {
+      const tmp = [...model.value]
+      tmp[0].isMainLoadingPoint = true
+      model.value = tmp
+    }
+  },
+  { deep: true }
+)
 
 async function getDriverRouteHandler() {
   await putRouteForDriverToClipboard(
@@ -131,31 +123,21 @@ async function getDriverRouteHandler() {
 }
 
 function addPoint() {
-  emits('update:model-value', [...model.value, { type: 'unloading' }])
+  model.value = [...model.value, { type: 'unloading' }]
 }
 
 function addReturn() {
-  emits('update:model-value', [...model.value, { type: 'unloading', isReturn: true }])
+  model.value = [...model.value, { type: 'unloading', isReturn: true }]
 }
 
 function deleteHandler(ind) {
-  emits('update:model-value', [...model.value.slice(0, ind), ...model.value.slice(ind + 1)])
+  model.value = [...model.value.slice(0, ind), ...model.value.slice(ind + 1)]
 }
 </script>
 <style scoped>
-.route-wrapper {
-  border-radius: 5px;
-}
-.invalid {
-  border: tomato 2px solid;
-  border-radius: 5px;
-}
-.point-wrapper-outer {
-  border: 2px dotted gray;
-  border-radius: 5px;
-  margin: 2px;
-}
-.route-move {
-  transition: transform 0.5s;
+.route-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 </style>

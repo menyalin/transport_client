@@ -10,8 +10,6 @@
           v-else
           :downtime="item"
           :displayDeleteBtn="!!props.id && $store.getters.hasPermission('downtime:delete')"
-          :addressActions="addressActions"
-          :partnerActions="partnerActions"
           @cancel="cancel"
           @submit="submit"
           @delete="deleteHandler"
@@ -25,8 +23,6 @@ import { LoadSpinner } from '@/shared/ui'
 import { DowntimeService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
 import { DowntimeForm } from '@/entities/downtime'
-import { useAddress } from '@/entities/address'
-import { usePartners } from '@/entities/partner'
 
 defineOptions({ name: 'DowntimeDetails' })
 
@@ -37,9 +33,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['submit', 'cancel'])
-
-const { actions: addressActions } = useAddress()
-const { actions: partnerActions } = usePartners()
 
 const { item, loading, error, toggleAlert, submit, cancel, deleteHandler } = usePageDetails(
   DowntimeService,

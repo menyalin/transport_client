@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import store from '@/store'
+import { useAddressStore } from '@/entities/address'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { computed, ref, watch } from 'vue'
@@ -64,6 +64,7 @@ export default {
     partnerId: { type: String, required: true },
   },
   setup(props, ctx) {
+    const addressStore = useAddressStore()
     const state = ref({})
     const disabledResctrictAddresses = computed(() =>
       Boolean(state.value.address || state.value.allowedLoadingPoints?.length)
@@ -121,7 +122,7 @@ export default {
 
     const addressItems = computed(() => {
       if (!props.partnerId) return []
-      return store.getters.addressesForAutocomplete.filter((i) => {
+      return addressStore.addressesForAutocomplete.filter((i) => {
         if (state.value.resctrictAddresses) return i.partner === props.partnerId
         else return true
       })

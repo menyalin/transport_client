@@ -11,24 +11,20 @@
     <v-select v-model="state.type" label="Тип простоя" :items="downtimeTypes" itemTitle="text" />
     <v-text-field v-model.trim="state.title" label="Заголовок" />
 
-    <AutoCompleteWithActions
+    <v-autocomplete
       v-if="state.type === 'repair'"
       v-model="state.partner"
       :items="serviceItems"
       label="Партнер"
       :hint="partnerContactsHint"
       :persistentHint="!!partnerContactsHint"
-      @create="createPartnerHandler"
-      @edit="updatePartnerHandler"
     />
 
-    <AutoCompleteWithActions
+    <v-autocomplete
       v-if="state.type === 'repair'"
       :items="serviceAdressItems"
       v-model="state.address"
       label="Адрес сервиса"
-      @create="createAddressHandler"
-      @edit="updateAddressHandler"
     />
 
     <div class="row-input my-4">
@@ -55,7 +51,7 @@
   </div>
 </template>
 <script>
-import { ButtonsPanel, DateTimeInput, AutoCompleteWithActions } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
 
 import { useForm } from './useForm'
 
@@ -64,19 +60,10 @@ export default {
   components: {
     ButtonsPanel,
     DateTimeInput,
-    AutoCompleteWithActions,
   },
   props: {
     downtime: { type: Object },
     displayDeleteBtn: { type: Boolean, default: false },
-    addressActions: {
-      type: Object,
-      required: true,
-    },
-    partnerActions: {
-      type: Object,
-      required: true,
-    },
   },
   setup(props, ctx) {
     const {
@@ -89,10 +76,6 @@ export default {
       serviceAdressItems,
       serviceItems,
       downtimeTypes,
-      createAddressHandler,
-      updateAddressHandler,
-      createPartnerHandler,
-      updatePartnerHandler,
       partnerContactsHint,
     } = useForm(props, ctx)
     return {
@@ -105,10 +88,6 @@ export default {
       serviceAdressItems,
       serviceItems,
       downtimeTypes,
-      createAddressHandler,
-      updateAddressHandler,
-      createPartnerHandler,
-      updatePartnerHandler,
       partnerContactsHint,
     }
   },

@@ -1,7 +1,6 @@
 <template>
-  <div class="wrapper" :class="{ invalid: !isValid }">
-    <div class="button-panel">
-      <BlockTitle>{{ title }}</BlockTitle>
+  <CardSection :title="title" :valid="valid">
+    <template #header>
       <v-btn
         size="small"
         :disabled="readonly || !availibleTypes.length"
@@ -10,150 +9,124 @@
       >
         Добавить сумму
       </v-btn>
-    </div>
+    </template>
     <app-costs-table
-      :value="items"
+      :items="modelValue"
       :readonly="readonly"
-      @editPrice="editPrice"
-      @deletePrice="deletePrice"
       :basePrePrice="basePrePrice"
       :hidePrePrice="hidePrePrice"
       :usePriceWithVat="agreement.usePriceWithVAT ?? false"
+      @editPrice="editPrice"
+      @deletePrice="deletePrice"
     />
     <app-dialog-form
+      v-model:dialog="dialog"
       :item="editedItem"
-      :dialog.sync="dialog"
       :vatRateInfo="vatRateInfo"
       :availibleTypes="availibleTypes"
       @save="saveItem"
     />
-  </div>
+  </CardSection>
 </template>
-<script>
-import { BlockTitle } from '@/entities/order'
+<script setup>
+import { ref, computed, nextTick } from 'vue'
+import { useStore } from 'vuex'
+import { CardSection } from '@/shared/ui'
 import AppCostsTable from './costsTable.vue'
 import AppDialogForm from './dialogForm.vue'
 import { Price } from './Price.class'
 
-export default {
-  name: 'PriceWrapper',
-  components: {
-    BlockTitle,
-    AppCostsTable,
-    AppDialogForm,
+defineOptions({ name: 'PriceWrapper' })
+
+const modelValue = defineModel()
+
+const props = defineProps({
+  title: String,
+  valid: { type: Boolean, default: true },
+  agreement: Object,
+  readonly: { type: Boolean, default: false },
+  prePrices: Array,
+  vatRateInfo: {
+    type: Object,
   },
-  model: {
-    prop: 'items',
-    event: 'change',
+  hidePrePrice: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    title: String,
-    items: Array,
-    isValid: { type: Boolean, default: true },
-    agreement: Object,
-    readonly: { type: Boolean, default: false },
-    prePrices: Array,
-    vatRateInfo: {
-      type: Object,
-    },
-    hidePrePrice: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      dialog: false,
-      editedItem: {
-        type: null,
-        price: 0,
-      },
-    }
-  },
-  computed: {
-    availibleTypes() {
-      if (this.editedItem.type) return [this.editedItem.type]
-      const usedTypes = this.items.map((i) => i.type)
-      return this.$store.getters.orderPriceTypes
-        .map((t) => t.value)
-        .filter((t) => !usedTypes.includes(t))
-    },
-    basePrePrice() {
-      return this.prePrices?.find((i) => i.type === 'base') || null
-    },
-  },
+})
 
-  methods: {
-    clearEditedItem() {
-      this.editedItem = Object.assign({}, {})
-    },
+const store = useStore()
 
-    saveItem(val) {
-      if (!this.vatRateInfo) return
-      const priceItem = new Price(val, this.vatRateInfo)
+const dialog = ref(false)
+const editedItem = ref({
+  type: null,
+  price: 0,
+})
 
-      const idx = this.items.findIndex((i) => i.type === priceItem.type)
-      const tmpArr = this.items.slice()
+const availibleTypes = computed(() => {
+  if (editedItem.value.type) return [editedItem.value.type]
+  const usedTypes = modelValue.value.map((i) => i.type)
+  return store.getters.orderPriceTypes.map((t) => t.value).filter((t) => !usedTypes.includes(t))
+})
 
-      if (idx === -1) tmpArr.push(priceItem)
-      else tmpArr.splice(idx, 1, priceItem)
+const basePrePrice = computed(() => {
+  return props.prePrices?.find((i) => i.type === 'base') || null
+})
 
-      this.$emit('change', tmpArr)
-      this.$nextTick(() => {
-        this.clearEditedItem()
-      })
-    },
+function clearEditedItem() {
+  editedItem.value = { type: null, price: 0 }
+}
 
-    addNewItem() {
-      this.editedItem = {
-        type: '',
-        price: 0,
-      }
+function saveItem(val) {
+  if (!props.vatRateInfo) return
+  const priceItem = new Price(val, props.vatRateInfo)
 
-      this.$nextTick(() => {
-        this.dialog = true
-      })
-    },
+  const idx = modelValue.value.findIndex((i) => i.type === priceItem.type)
+  const tmpArr = modelValue.value.slice()
 
-    async editPrice(type) {
-      const item = this.items.find((i) => i.type === type)
-      if (!item) return null
+  if (idx === -1) tmpArr.push(priceItem)
+  else tmpArr.splice(idx, 1, priceItem)
 
-      this.editedItem = {
-        ...item,
-        withVat: Boolean(this.agreement.usePriceWithVAT),
-        price: +(this.agreement.usePriceWithVAT ? item.price : item.priceWOVat).toFixed(2),
-      }
+  modelValue.value = tmpArr
+  nextTick(() => {
+    clearEditedItem()
+  })
+}
 
-      this.$nextTick(() => {
-        this.dialog = true
-      })
-    },
+function addNewItem() {
+  editedItem.value = {
+    type: '',
+    price: 0,
+  }
 
-    async deletePrice(type) {
-      const idx = this.items.findIndex((i) => i.type === type)
-      if (idx === -1) return null
-      const res = confirm('Вы уверены?')
-      if (res) {
-        const tmpArr = this.items.slice()
-        tmpArr.splice(idx, 1)
-        this.$emit('change', tmpArr)
-      }
-    },
-  },
+  nextTick(() => {
+    dialog.value = true
+  })
+}
+
+function editPrice(type) {
+  const item = modelValue.value.find((i) => i.type === type)
+  if (!item) return
+
+  editedItem.value = {
+    ...item,
+    withVat: Boolean(props.agreement.usePriceWithVAT),
+    price: +(props.agreement.usePriceWithVAT ? item.price : item.priceWOVat).toFixed(2),
+  }
+
+  nextTick(() => {
+    dialog.value = true
+  })
+}
+
+function deletePrice(type) {
+  const idx = modelValue.value.findIndex((i) => i.type === type)
+  if (idx === -1) return
+  const res = confirm('Вы уверены?')
+  if (res) {
+    const tmpArr = modelValue.value.slice()
+    tmpArr.splice(idx, 1)
+    modelValue.value = tmpArr
+  }
 }
 </script>
-<style scoped>
-.button-panel {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.invalid {
-  padding: 15px;
-  border: tomato 1px solid;
-  border-radius: 5px;
-  box-shadow: inset 0 2px 8px rgba(255, 99, 71, 1);
-}
-</style>

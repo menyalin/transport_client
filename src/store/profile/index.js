@@ -1,4 +1,3 @@
-import AddressModule from './address'
 import CrewModule from './crew'
 import TruckModule from './truck'
 import DriverModule from './driver'
@@ -11,6 +10,7 @@ import ZoneModule from './zone'
 import RegionModule from './region'
 import CityModule from './city'
 import { UserService, CompanyService } from '@/shared/services'
+import { useAddressStore } from '@/entities/address'
 
 export default {
   state: {
@@ -139,7 +139,7 @@ export default {
     ) {
       if (companies?.length) commit('setMyCompanies', companies)
 
-      if (addresses?.length) commit('setAddresses', addresses)
+      if (addresses?.length) useAddressStore().setAddresses(addresses)
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
 
@@ -224,7 +224,6 @@ export default {
   },
 
   modules: {
-    AddressModule,
     CrewModule,
     DriverModule,
     TruckModule,

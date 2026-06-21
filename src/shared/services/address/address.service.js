@@ -1,6 +1,6 @@
 import api from '@/api'
 import socket from '@/socket'
-import store from '@/store'
+import { useAddressStore } from '@/entities/address'
 const BASE_PATH = '/addresses'
 
 class AddressService {
@@ -16,14 +16,14 @@ class AddressService {
 
   constructor() {
     socket.on('address:created', (data) => {
-      store.commit('addAddress', this._prepareData(data))
+      useAddressStore().addAddress(this._prepareData(data))
     })
 
     socket.on('address:updated', (data) => {
-      store.commit('updateAddress', this._prepareData(data))
+      useAddressStore().updateAddress(this._prepareData(data))
     })
     socket.on('address:deleted', (id) => {
-      store.commit('deleteAddress', id)
+      useAddressStore().deleteAddress(id)
     })
   }
 

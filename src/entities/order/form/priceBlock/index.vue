@@ -2,121 +2,90 @@
   <div v-if="!!clientVatRateInfo">
     <app-price-wrapper
       v-if="showPriceBlock"
-      :items="prices"
-      @change="changePricesHandler"
-      :isValid="isValidPrices"
+      v-model="prices"
+      title="Стоимость рейса"
+      :valid="isValidPrices"
       :readonly="readonlyPrice || disabledInPaymentInvoice"
       :agreement="agreement"
-      title="Стоимость рейса"
       :prePrices="prePrices"
       :vatRateInfo="clientVatRateInfo"
     />
-    <v-divider class="my-5" />
     <app-price-wrapper
       v-if="showOutsourceBlock"
-      :items="outsourceCosts"
-      @change="changeOutsourceCostsHandler"
+      v-model="outsourceCosts"
+      title="Затраты на привлеченного перевозчика"
       :readonly="readonlyCosts || hasIncomingInvoice"
       :agreement="carrierAgreement"
-      title="Затраты на привлеченного перевозчика"
       :hidePrePrice="true"
       :vatRateInfo="carrierVatRateInfo"
+      class="mt-2"
     />
     <slot v-if="showOutsourceBlock" />
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import AppPriceWrapper from './priceWrapper.vue'
 
-export default {
-  name: 'PriceBlock',
-  components: {
-    AppPriceWrapper,
+defineOptions({ name: 'PriceBlock' })
+
+const props = defineProps({
+  hasIncomingInvoice: Boolean,
+  disabledInPaymentInvoice: Boolean,
+  prePrices: Array,
+  route: Array,
+  isValidPrices: {
+    type: Boolean,
+    default: true,
   },
-  props: {
-    hasIncomingInvoice: Boolean,
-    disabledInPaymentInvoice: Boolean,
-    prePrices: Array,
-    route: Array,
-    isValidPrices: {
-      type: Boolean,
-      default: true,
-    },
-    prices: Array,
-    outsourceCosts: Array,
-    clientVatRateInfo: { type: Object },
-    carrierVatRateInfo: { type: Object },
-    agreement: Object,
-    carrierAgreement: Object,
-  },
-  data() {
-    return {
-      tmpCosts: [],
-    }
-  },
-  computed: {
-    lastDepartureDate() {
-      return this.route[this.route.length - 1].departureDate
-    },
-    showPriceBlock() {
-      const lastDepartureDate = this.route[this.route.length - 1].departureDate
-      if (!lastDepartureDate)
-        return (
-          this.agreement?.useCustomPrices &&
-          this.$store.getters.hasPermission('order:daysForReadPrice')
-        )
-      const hasReadPermission = this.$store.getters.allowedPeriodForPermission({
-        date: lastDepartureDate,
-        permission: 'order:daysForReadPrice',
-      })
-      return this.agreement?.useCustomPrices && hasReadPermission
-    },
-    showOutsourceBlock() {
-      return (
-        !!this.carrierAgreement?._id &&
-        this.$store.getters.allowedPeriodForPermission({
-          permission: 'order:daysForReadOutsourceCosts',
-          date: this.lastDepartureDate,
-        })
-      )
-    },
-    readonlyPrice() {
-      const lastDepartureDate = this.route[this.route.length - 1].departureDate
-      if (!lastDepartureDate) return !this.$store.getters.hasPermission('order:daysForWritePrice')
-      else
-        return !this.$store.getters.allowedPeriodForPermission({
-          permission: 'order:daysForWritePrice',
-          date: lastDepartureDate,
-        })
-    },
-    readonlyCosts() {
-      return !this.$store.getters.allowedPeriodForPermission({
-        permission: 'order:daysForWriteOutsourceCosts',
-        date: this.lastDepartureDate,
-      })
-    },
-  },
-  watch: {
-    outsourceCosts: {
-      immediate: true,
-      handler: function (val) {
-        if (val) this.tmpCosts = val
-      },
-    },
-    tmpCosts: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('outsource-costs:update', val)
-      },
-    },
-  },
-  methods: {
-    changePricesHandler(prices) {
-      this.$emit('update:prices', prices)
-    },
-    changeOutsourceCostsHandler(costs) {
-      this.$emit('update:outsourceCosts', costs)
-    },
-  },
-}
+  clientVatRateInfo: { type: Object },
+  carrierVatRateInfo: { type: Object },
+  agreement: Object,
+  carrierAgreement: Object,
+})
+
+const prices = defineModel('prices')
+const outsourceCosts = defineModel('outsourceCosts')
+
+const store = useStore()
+
+const lastDepartureDate = computed(() => {
+  return props.route[props.route.length - 1].departureDate
+})
+
+const showPriceBlock = computed(() => {
+  if (!lastDepartureDate.value)
+    return props.agreement?.useCustomPrices && store.getters.hasPermission('order:daysForReadPrice')
+  const hasReadPermission = store.getters.allowedPeriodForPermission({
+    date: lastDepartureDate.value,
+    permission: 'order:daysForReadPrice',
+  })
+  return props.agreement?.useCustomPrices && hasReadPermission
+})
+
+const showOutsourceBlock = computed(() => {
+  return (
+    !!props.carrierAgreement?._id &&
+    store.getters.allowedPeriodForPermission({
+      permission: 'order:daysForReadOutsourceCosts',
+      date: lastDepartureDate.value,
+    })
+  )
+})
+
+const readonlyPrice = computed(() => {
+  if (!lastDepartureDate.value) return !store.getters.hasPermission('order:daysForWritePrice')
+  return !store.getters.allowedPeriodForPermission({
+    permission: 'order:daysForWritePrice',
+    date: lastDepartureDate.value,
+  })
+})
+
+const readonlyCosts = computed(() => {
+  return !store.getters.allowedPeriodForPermission({
+    permission: 'order:daysForWriteOutsourceCosts',
+    date: lastDepartureDate.value,
+  })
+})
 </script>

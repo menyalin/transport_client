@@ -43,10 +43,15 @@
 
 <script>
 import dayjs from 'dayjs'
+import { useAddressStore } from '@/entities/address'
 
 import { roundingHours } from './helpers'
 export default {
   name: 'OrderCell',
+  setup() {
+    const addressStore = useAddressStore()
+    return { addressStore }
+  },
   props: {
     orderId: {
       type: String,
@@ -85,7 +90,7 @@ export default {
     firstRow() {
       const addressId = this.order.route[0].address
       const hours = dayjs(this.order.route[0].plannedDate).format('HH')
-      const addressName = this.$store.getters.addressMap.get(addressId)?.shortName || ' - '
+      const addressName = this.addressStore.addressMap.get(addressId)?.shortName || ' - '
       return `${addressName} - ${hours}`
     },
     waitAtPoint() {
@@ -142,7 +147,7 @@ export default {
     getPointTitle(idx) {
       if (idx === null || undefined) return null
       let res = []
-      const address = this.$store.getters.addressMap.get(this.order.route[idx].address)?.shortName
+      const address = this.addressStore.addressMap.get(this.order.route[idx].address)?.shortName
       res.push(address)
       let plannedTime = null
       if (this.order.route[idx]?.plannedDate) {

@@ -19,12 +19,10 @@
   </v-container>
 </template>
 <script setup>
-import { provide } from 'vue'
 import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm/index.vue'
 import { LoadSpinner } from '@/shared/ui'
 import { OrderTemplateService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
-import { useAddress } from '@/entities/address'
 
 defineOptions({ name: 'OrderTemplateDetails' })
 
@@ -33,9 +31,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['submit', 'cancel'])
-
-const { actions: addressActions } = useAddress()
-provide('addressActions', addressActions)
 
 const { item, loading, error, toggleAlert, submit, cancel, deleteHandler } = usePageDetails(
   OrderTemplateService,

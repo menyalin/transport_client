@@ -42,9 +42,9 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
 import { UserService } from '@/shared/services'
 
-// const props = defineProps({
-//   dialog: Boolean,
-// })
+defineProps({
+  dialog: Boolean,
+})
 
 const emit = defineEmits(['cancel'])
 

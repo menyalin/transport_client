@@ -1,5 +1,5 @@
 <template>
-  <v-table>
+  <v-table density="compact">
     <template #default>
       <thead>
         <tr>
@@ -27,8 +27,8 @@
         <tr v-for="(item, idx) in sortedItems" :key="idx">
           <td class="text-start">
             {{
-              $store.getters.orderPriceTypesMap.has(item.type)
-                ? $store.getters.orderPriceTypesMap.get(item.type)
+              store.getters.orderPriceTypesMap.has(item.type)
+                ? store.getters.orderPriceTypesMap.get(item.type)
                 : '-'
             }}
           </td>
@@ -45,10 +45,10 @@
             {{ item.note }}
           </td>
           <td v-if="!readonly" class="text-right">
-            <v-btn icon @click="$emit('editPrice', item.type)">
+            <v-btn icon @click="emit('editPrice', item.type)" variant="text">
               <v-icon color="green" size="small"> mdi-pencil </v-icon>
             </v-btn>
-            <v-btn icon @click="$emit('deletePrice', item.type)">
+            <v-btn icon @click="emit('deletePrice', item.type)" variant="text">
               <v-icon color="red" size="small"> mdi-delete </v-icon>
             </v-btn>
           </td>
@@ -57,43 +57,42 @@
     </template>
   </v-table>
 </template>
-<script>
-export default {
-  name: 'CostsTable',
-  model: {
-    prop: 'items',
-    event: 'change',
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'CostsTable' })
+
+const props = defineProps({
+  items: Array,
+  readonly: Boolean,
+  basePrePrice: Object,
+  hidePrePrice: Boolean,
+  usePriceWithVat: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    items: Array,
-    readonly: Boolean,
-    basePrePrice: Object,
-    hidePrePrice: Boolean,
-    usePriceWithVat: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  computed: {
-    moneyFormatter() {
-      return new Intl.NumberFormat('ru-RU', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      })
-    },
-    sortedItems() {
-      const typesOrder = this.$store.getters.orderPriceTypes.map((i) => i.value)
-      return this.items
-        ?.slice()
-        ?.sort(
-          (a, b) =>
-            typesOrder.findIndex((t) => t === a.type) - typesOrder.findIndex((t) => t === b.type)
-        )
-    },
-    showPrePrice() {
-      return !this.hidePrePrice
-    },
-  },
-}
+})
+
+const emit = defineEmits(['editPrice', 'deletePrice'])
+
+const store = useStore()
+
+const moneyFormatter = new Intl.NumberFormat('ru-RU', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+})
+
+const sortedItems = computed(() => {
+  const typesOrder = store.getters.orderPriceTypes.map((i) => i.value)
+  return props.items
+    ?.slice()
+    ?.sort(
+      (a, b) =>
+        typesOrder.findIndex((t) => t === a.type) - typesOrder.findIndex((t) => t === b.type)
+    )
+})
+
+const showPrePrice = computed(() => !props.hidePrePrice)
 </script>
 <style></style>

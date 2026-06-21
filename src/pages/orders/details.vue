@@ -11,7 +11,6 @@
           :order="item"
           :displayDeleteBtn="showDeleteBtn"
           :loading="loading"
-          :addressActions="addressActions"
           :carrierItemsMap="carrierStore.carriersMap"
           :getCarrierAgreementById="carrierAgreementStore.getById"
           @cancel="cancel"
@@ -33,7 +32,6 @@ import socket from '@/socket'
 import { OrderService } from '@/shared/services'
 import { LoadSpinner } from '@/shared/ui'
 import { OrderForm, useOrderValidations } from '@/entities/order'
-import { useAddress } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useCarrierAgreementStore } from '@/entities/carrierAgreement'
 import { TransportWaybillsInOrderWidget } from '@/widgets/transportWaybillsInOrder'
@@ -55,14 +53,12 @@ export default {
   setup(props) {
     const carrierAgreementStore = useCarrierAgreementStore()
     const carrierStore = useCarrierStore()
-    const { actions: addressActions } = useAddress()
     const { beforeSubmitOrderValidation } = useOrderValidations()
 
     const isVisibleTransportWaybillsWidget = computed(() => Boolean(props.id))
 
     return {
       beforeSubmitOrderValidation,
-      addressActions,
       carrierStore,
       carrierAgreementStore,
       isVisibleTransportWaybillsWidget,

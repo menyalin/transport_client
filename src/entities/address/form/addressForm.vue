@@ -11,7 +11,7 @@
     <v-text-field v-model.trim="v$.name.$model" label="Наименование" :errorMessages="nameErrors" />
 
     <v-text-field v-model="v$.shortName.$model" label="Сокращенное наименование адреса" />
-    <AutoCompleteWithActions
+    <v-autocomplete
       :items="partnerItems"
       v-model="v$.partner.$model"
       item-value="_id"
@@ -19,8 +19,6 @@
       auto-select-first
       clearable
       label="Партнер"
-      @create="createPartnerHandler"
-      @edit="updatePartnerHandler"
     />
     <v-autocomplete
       v-model="v$.region.$model"
@@ -56,7 +54,7 @@
 
 <script>
 import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion/index.vue'
-import { ButtonsPanel, AutoCompleteWithActions } from '@/shared/ui'
+import { ButtonsPanel } from '@/shared/ui'
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
 
 import { useForm } from './useForm'
@@ -68,7 +66,6 @@ export default {
     ButtonsPanel,
 
     AppZoneAutocomplete,
-    AutoCompleteWithActions,
   },
   props: {
     address: Object,
@@ -78,29 +75,16 @@ export default {
     },
     formName: String,
     partnerItems: Array,
-    partnerActions: Object,
   },
   setup(props, ctx) {
-    const {
-      state,
-      v$,
-      resetForm,
-      nameErrors,
-      geoErrors,
-      submit,
-      cancel,
-      getParsedAddress,
-      createPartnerHandler,
-      updatePartnerHandler,
-    } = useForm(props, ctx)
+    const { state, v$, resetForm, nameErrors, geoErrors, submit, cancel, getParsedAddress } =
+      useForm(props, ctx)
 
     return {
       state,
       v$,
       nameErrors,
       geoErrors,
-      createPartnerHandler,
-      updatePartnerHandler,
       submit,
       cancel,
       resetForm,

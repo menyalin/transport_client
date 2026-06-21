@@ -2,11 +2,12 @@ import { computed } from 'vue'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { PartnerService } from '@/shared/services'
 import { useAgreements } from '@/entities/agreement'
-import store from '@/store'
+import { useAddressStore } from '@/entities/address'
 
 export const useListData = (props, { emit }) => {
+  const addressStore = useAddressStore()
   const { allAgreementMap } = useAgreements()
-  const addressesMap = computed(() => store.getters.addressMap)
+  const addressesMap = computed(() => addressStore.addressMap)
   const isActiveComparatorItems = [
     { value: 'all', text: 'Все' },
     { value: 'active', text: 'Активные' },

@@ -1,9 +1,10 @@
-import store from '@/store'
+import { useAddressStore } from '@/entities/address'
 import { computed, watch, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
 export const useFormState = (props, { emit }) => {
+  const addressStore = useAddressStore()
   function validateEmails(value) {
     const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     const emails = value
@@ -103,7 +104,7 @@ export const useFormState = (props, { emit }) => {
   })
 
   const addressItems = computed(() => {
-    return store.getters.addressesForAutocomplete.filter((i) => i.loading)
+    return addressStore.addressesForAutocomplete.filter((i) => i.loading)
   })
 
   watch(

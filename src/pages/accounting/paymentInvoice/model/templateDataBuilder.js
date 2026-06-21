@@ -1,5 +1,6 @@
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 import dayjs from 'dayjs'
+import { useAddressStore } from '@/entities/address'
 import store from '@/store'
 const DATE_FORMAT = 'DD.MM.YYYY'
 
@@ -30,7 +31,7 @@ const getAddressesByType = (route, pointType) => {
   const points = route
     .filter((i) => i.type === pointType)
     .reduce((res, i) => (res.includes(i.address) ? res : res.concat([i.address])), [])
-    .map((i) => store.getters.addressMap.get(i))
+    .map((i) => useAddressStore().addressMap.get(i))
     .map((address) => ({
       ...address,
       _partner: store.getters.partnersMap.get(address.partner),

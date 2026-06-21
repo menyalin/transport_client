@@ -1,314 +1,304 @@
 <template>
-  <div class="pa-2 point-wrapper">
-    <div class="main-column-wrapper">
-      <div class="settings_row">
-        <v-select
-          :model-value="state.type"
-          :items="pointTypes"
+  <tr class="point-row">
+    <td class="col-main">
+      <div class="main-column">
+        <div class="settings_row">
+          <v-select
+            :model-value="state.type"
+            :items="pointTypes"
+            :readonly="readonly"
+            hide-details
+            itemTitle="text"
+            :style="{ 'max-width': '150px' }"
+            @update:model-value="setField($event, 'type')"
+          />
+          <v-checkbox
+            v-if="showMainLoadingPointSelector && state.type === 'loading'"
+            v-model="state.isMainLoadingPoint"
+            label="Основной пункт погрузки"
+            hide-details
+            color="primary"
+            class="ml-4"
+            @update:model-value="setField($event, 'isMainLoadingPoint')"
+          />
+          <v-checkbox
+            v-model="state.useInterval"
+            label="Временнное окно"
+            hide-details
+            color="primary"
+            class="ml-4"
+            @update:model-value="setField($event, 'useInterval')"
+          />
+          <v-checkbox
+            v-if="state.isReturn || (showReturnBtn && state.type === 'unloading')"
+            v-model="state.isReturn"
+            label="Возврат"
+            :readonly="!showReturnBtn || state.isPltReturn"
+            hide-details
+            color="red"
+            class="ml-4"
+            @update:model-value="setField($event, 'isReturn')"
+          />
+          <v-checkbox
+            v-if="state.isReturn || state.isPltReturn"
+            v-model="state.isPltReturn"
+            label="Возврат паллет"
+            hide-details
+            color="primary"
+            class="ml-4"
+            @update:model-value="setField($event, 'isPltReturn')"
+          />
+          <v-checkbox
+            v-if="state.isAutofilled"
+            v-model="state.isAutofilled"
+            label="Автозаполнение"
+            hide-details
+            disabled
+            color="grey"
+            class="ml-4"
+          />
+          <v-spacer />
+          <v-checkbox
+            v-if="!!state.arrivalDate && !state.departureDate"
+            v-model="state.waitsForWaybills"
+            label="Ожидает документы"
+            hide-details
+            color="primary"
+            class="mx-4"
+            @update:model-value="setField($event, 'waitsForWaybills')"
+          />
+        </div>
+        <v-autocomplete
+          auto-select-first
+          :model-value="state.address"
+          :items="addressItems"
+          :pointType="!state.isReturn ? state.type : null"
+          :disabled="!state.type"
+          label="Адрес"
+          :readonly="readonly"
+          :style="{ 'min-width': '550px' }"
+          :hint="addressContactsHint"
+          :persistentHint="!!addressContactsHint"
+          :hideDetails="!addressContactsHint"
+          @update:model-value="setField($event, 'address')"
+        />
+        <v-text-field
+          v-if="state.type === 'unloading'"
+          :model-value="state.waybills"
+          label="Накладные"
+          hide-details
+          :readonly="readonly"
+          :style="{ 'min-width': '550px' }"
+          @update:model-value="setField($event, 'waybills')"
+        />
+        <v-text-field
+          :model-value="state.note"
+          label="Примечание"
           :readonly="readonly"
           hide-details
-          itemTitle="text"
-          :style="{ 'max-width': '150px' }"
-          @update:model-value="setField($event, 'type')"
-        />
-        <v-checkbox
-          v-if="showMainLoadingPointSelector && state.type === 'loading'"
-          v-model="state.isMainLoadingPoint"
-          label="Основной пункт погрузки"
-          hide-details
-          color="primary"
-          class="ml-4"
-          @update:model-value="setField($event, 'isMainLoadingPoint')"
-        />
-        <v-checkbox
-          v-model="state.useInterval"
-          label="Временнное окно"
-          hide-details
-          color="primary"
-          class="ml-4"
-          @update:model-value="setField($event, 'useInterval')"
-        />
-        <v-checkbox
-          v-if="state.isReturn || (showReturnBtn && state.type === 'unloading')"
-          v-model="state.isReturn"
-          label="Возврат"
-          :readonly="!showReturnBtn || state.isPltReturn"
-          hide-details
-          color="red"
-          class="ml-4"
-          @update:model-value="setField($event, 'isReturn')"
-        />
-        <v-checkbox
-          v-if="state.isReturn || state.isPltReturn"
-          v-model="state.isPltReturn"
-          label="Возврат паллет"
-          hide-details
-          color="primary"
-          class="ml-4"
-          @update:model-value="setField($event, 'isPltReturn')"
-        />
-        <v-checkbox
-          v-if="state.isAutofilled"
-          v-model="state.isAutofilled"
-          label="Автозаполнение"
-          hide-details
-          disabled
-          color="grey"
-          class="ml-4"
-        />
-        <v-spacer />
-        <v-checkbox
-          v-if="!!state.arrivalDate && !state.departureDate"
-          v-model="state.waitsForWaybills"
-          label="Ожидает документы"
-          hide-details
-          color="primary"
-          class="mx-4"
-          @update:model-value="setField($event, 'waitsForWaybills')"
+          :style="{ 'min-width': '550px' }"
+          @update:model-value="setField($event, 'note')"
         />
       </div>
-      <AutoCompleteWithActions
-        auto-select-first
-        :value="state.address"
-        :items="addressItems"
-        :pointType="!state.isReturn ? state.type : null"
-        :disabled="!state.type"
-        label="Адрес"
-        :readonly="readonly"
-        :style="{ 'min-width': '550px' }"
-        :hint="addressContactsHint"
-        :persistentHint="!!addressContactsHint"
-        :hideDetails="!addressContactsHint"
-        @update="setField($event, 'address')"
-        @edit="editAddressHandler"
-        @create="createAddressHandler"
-      />
-
-      <v-spacer />
-      <v-text-field
-        v-if="state.type === 'unloading'"
-        :model-value="state.waybills"
-        label="Накладные"
-        hide-details
-        :readonly="readonly"
-        :style="{ 'min-width': '550px' }"
-        @update:model-value="setField($event, 'waybills')"
-      />
-      <v-text-field
-        :model-value="state.note"
-        label="Примечание"
-        :readonly="readonly"
-        :style="{ 'min-width': '550px' }"
-        @update:model-value="setField($event, 'note')"
-      />
-    </div>
-    <div v-if="!isTemplate" class="dates-column">
-      <BorderedBlock title="Временное окно" v-if="state.useInterval">
+    </td>
+    <td class="col-dates">
+      <div class="dates-column">
+        <template v-if="!isTemplate">
+          <BorderedBlock
+            title="Временное окно"
+            v-if="state.useInterval"
+            :style="{ display: 'flex', gap: '7px', 'flex-direction': 'column' }"
+          >
+            <DateTimeInput
+              label="Начало периода"
+              :model-value="state.plannedDate"
+              type="datetime-local"
+              hide-details
+              :readonly="readonly"
+              @update:model-value="setField($event, 'plannedDate')"
+            />
+            <DateTimeInput
+              :model-value="state.intervalEndDate"
+              type="datetime-local"
+              label="Конец периода"
+              hide-details
+              :readonly="readonly"
+              @update:model-value="setField($event, 'intervalEndDate')"
+            />
+          </BorderedBlock>
+          <DateTimeInput
+            v-else
+            :model-value="state.plannedDate"
+            type="datetime-local"
+            label="Плановая дата"
+            hide-details
+            :readonly="readonly"
+            @update:model-value="setField($event, 'plannedDate')"
+          />
+          <DateTimeInput
+            :model-value="state.arrivalDate"
+            type="datetime-local"
+            label="Факт прибытия"
+            showPrependIcon
+            hide-details
+            :disabled="!confirmed || point.arrivalDateDisabled"
+            @update:model-value="setField($event, 'arrivalDate')"
+          />
+          <DateTimeInput
+            :model-value="state.departureDate"
+            type="datetime-local"
+            label="Факт убытия"
+            showPrependIcon
+            hide-details
+            :disabled="!confirmed || point.departureDateDisabled"
+            :minDate="state.arrivalDate"
+            :errorMessages="departureDateErrors"
+            @update:model-value="setField($event, 'departureDate')"
+          />
+        </template>
+        <template v-if="isTemplate && fixedTimeSlots">
+          <div class="time-row">
+            <v-text-field
+              :model-value="state.fixedTime"
+              label="Время"
+              type="time"
+              hide-details
+              :style="{ 'max-width': '100px' }"
+              @update:model-value="setField($event, 'fixedTime')"
+            />
+            <v-text-field
+              v-if="state.useInterval"
+              :model-value="state.hoursInterval"
+              label="Окно, часов"
+              type="number"
+              min="0"
+              hide-details
+              :style="{ 'max-width': '130px' }"
+              @update:model-value="setField($event, 'hoursInterval')"
+            />
+          </div>
+          <v-text-field
+            v-if="ind !== 0"
+            v-model.number="state.offsetDays"
+            :style="{ 'max-width': '240px' }"
+            label="Смещение в днях"
+            persistent-hint
+            hint="Смещение в днях относительно даты начала рейса"
+            type="number"
+            min="0"
+            @update:model-value="setField($event, 'offsetDays')"
+          />
+        </template>
+      </div>
+    </td>
+    <td v-if="!isTemplate && isShowDocDates" class="col-dates">
+      <div class="dates-column">
+        <BorderedBlock
+          title="Временное окно (Док)"
+          v-if="state.useInterval"
+          :style="{ display: 'flex', gap: '7px', 'flex-direction': 'column' }"
+        >
+          <DateTimeInput
+            label="Начало периода"
+            :model-value="state.plannedDateDoc"
+            type="datetime-local"
+            hide-details
+            :readonly="readonly"
+            @update:model-value="setField($event, 'plannedDateDoc')"
+          />
+          <DateTimeInput
+            :model-value="state.intervalEndDateDoc"
+            type="datetime-local"
+            label="Конец периода"
+            hide-details
+            :readonly="readonly"
+            @update:model-value="setField($event, 'intervalEndDateDoc')"
+          />
+        </BorderedBlock>
         <DateTimeInput
-          label="Начало периода"
-          :model-value="state.plannedDate"
-          type="datetime-local"
-          class="mt-1"
-          hide-details
-          :readonly="readonly"
-          @update:model-value="setField($event, 'plannedDate')"
-        />
-        <DateTimeInput
-          :model-value="state.intervalEndDate"
-          type="datetime-local"
-          label="Конец периода"
-          hide-details
-          :readonly="readonly"
-          class="mt-2"
-          @update:model-value="setField($event, 'intervalEndDate')"
-        />
-      </BorderedBlock>
-      <DateTimeInput
-        v-else
-        :model-value="state.plannedDate"
-        type="datetime-local"
-        label="Плановая дата"
-        class="mt-1"
-        hide-details
-        :readonly="readonly"
-        @update:model-value="setField($event, 'plannedDate')"
-      />
-      <DateTimeInput
-        :model-value="state.arrivalDate"
-        type="datetime-local"
-        label="Факт прибытия"
-        showPrependIcon
-        hide-details
-        :disabled="!confirmed || point.arrivalDateDisabled"
-        @update:model-value="setField($event, 'arrivalDate')"
-      />
-      <DateTimeInput
-        :model-value="state.departureDate"
-        type="datetime-local"
-        label="Факт убытия"
-        showPrependIcon
-        hide-details
-        :disabled="!confirmed || point.departureDateDisabled"
-        :minDate="state.arrivalDate"
-        :errorMessages="departureDateErrors"
-        @update:model-value="setField($event, 'departureDate')"
-      />
-    </div>
-    <div v-if="!isTemplate && isShowDocDates" class="dates-column">
-      <BorderedBlock title="Временное окно (Док)" v-if="state.useInterval">
-        <DateTimeInput
+          v-else
           :model-value="state.plannedDateDoc"
           type="datetime-local"
-          label="Начало периода"
-          class="mt-1"
+          label="Плановая дата (док)"
           hide-details
           :readonly="readonly"
           @update:model-value="setField($event, 'plannedDateDoc')"
         />
         <DateTimeInput
-          :model-value="state.intervalEndDateDoc"
+          :model-value="state.arrivalDateDoc"
           type="datetime-local"
-          label="Конец периода"
+          label="Факт прибытия (док)"
+          :readonly="readonlyDocDates"
           hide-details
-          :readonly="readonly"
-          class="mt-2"
-          @update:model-value="setField($event, 'intervalEndDateDoc')"
+          @update:model-value="setField($event, 'arrivalDateDoc')"
         />
-      </BorderedBlock>
-      <DateTimeInput
-        v-else
-        :model-value="state.plannedDateDoc"
-        type="datetime-local"
-        label="Плановая дата (док)"
-        class="mt-1"
-        hide-details
-        :readonly="readonly"
-        @update:model-value="setField($event, 'plannedDateDoc')"
-      />
-      <DateTimeInput
-        :model-value="state.arrivalDateDoc"
-        type="datetime-local"
-        label="Факт прибытия (док)"
-        :readonly="readonlyDocDates"
-        hide-details
-        @update:model-value="setField($event, 'arrivalDateDoc')"
-      />
-      <DateTimeInput
-        :model-value="state.departureDateDoc"
-        type="datetime-local"
-        label="Факт убытия (док)"
-        :readonly="readonlyDocDates"
-        hide-details
-        @update:model-value="setField($event, 'departureDateDoc')"
-      />
-    </div>
-    <div v-if="isTemplate && fixedTimeSlots" id="fixedTimeBlock">
-      <div class="time-row">
-        <v-text-field
-          :model-value="state.fixedTime"
-          label="Время"
-          type="time"
+        <DateTimeInput
+          :model-value="state.departureDateDoc"
+          type="datetime-local"
+          label="Факт убытия (док)"
+          :readonly="readonlyDocDates"
           hide-details
-          :style="{ 'max-width': '100px' }"
-          @update:model-value="setField($event, 'fixedTime')"
-        />
-        <v-text-field
-          v-if="state.useInterval"
-          :model-value="state.hoursInterval"
-          label="Окно, часов"
-          type="number"
-          min="0"
-          hide-details
-          :style="{ 'max-width': '130px' }"
-          @update:model-value="setField($event, 'hoursInterval')"
+          @update:model-value="setField($event, 'departureDateDoc')"
         />
       </div>
-
-      <v-text-field
-        v-if="ind !== 0"
-        v-model.number="state.offsetDays"
-        :style="{ 'max-width': '240px' }"
-        label="Смещение в днях"
-        persistent-hint
-        hint="Смещение в днях относительно даты начала рейса"
-        type="number"
-        min="0"
-        @update:model-value="setField($event, 'offsetDays')"
-      />
-    </div>
-    <div v-if="showDeleteBtn && !readonly" class="remove-btn-wrapper">
-      <v-btn icon color="error" @click="$emit('delete', ind)">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </div>
-  </div>
+    </td>
+    <td v-if="showDeleteBtn && !readonly" class="col-remove">
+      <div class="remove-btn-column">
+        <v-btn icon color="error" @click="$emit('delete', ind)" variant="text">
+          <v-icon size="small">mdi-delete</v-icon>
+        </v-btn>
+      </div>
+    </td>
+  </tr>
 </template>
-<script>
-import { inject } from 'vue'
-
-import { BorderedBlock, DateTimeInput, AutoCompleteWithActions } from '@/shared/ui'
+<script setup>
+import { BorderedBlock, DateTimeInput } from '@/shared/ui'
 import { usePointDetail } from './usePointDetail'
 
-export default {
-  name: 'PointDetail',
-  components: {
-    AutoCompleteWithActions,
-    DateTimeInput,
-    BorderedBlock,
+defineOptions({ name: 'PointDetail' })
+
+const pointModel = defineModel()
+
+const props = defineProps({
+  confirmed: Boolean,
+  isActive: Boolean,
+  ind: Number,
+  fixedTimeSlots: { type: Boolean, default: false },
+  showDeleteBtn: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    addressActions: Object,
-    point: Object,
-    confirmed: Boolean,
-    isActive: Boolean,
-    ind: Number,
-    fixedTimeSlots: { type: Boolean, default: false },
-    showDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    readonly: {
-      type: Boolean,
-      default: false,
-    },
-    showReturnBtn: {
-      type: Boolean,
-      default: true,
-    },
-    showMainLoadingPointSelector: Boolean,
-    isTemplate: {
-      type: Boolean,
-      default: false,
-    },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
-  setup(props, ctx) {
-    const addressActions = inject('addressActions')
-    const {
-      state,
-      departureDateErrors,
-      isShowDocDates,
-      readonlyDocDates,
-      pointTypes,
-      setField,
-      addressItems,
-      createAddressHandler,
-      editAddressHandler,
-      addressContactsHint,
-    } = usePointDetail(props, ctx, addressActions)
-    return {
-      state,
-      departureDateErrors,
-      isShowDocDates,
-      readonlyDocDates,
-      pointTypes,
-      setField,
-      addressItems,
-      createAddressHandler,
-      editAddressHandler,
-      addressContactsHint,
-    }
+  showReturnBtn: {
+    type: Boolean,
+    default: true,
   },
-}
+  showMainLoadingPointSelector: Boolean,
+  isTemplate: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(['delete', 'changePoint'])
+
+const {
+  state,
+  departureDateErrors,
+  isShowDocDates,
+  readonlyDocDates,
+  pointTypes,
+  setField,
+  addressItems,
+  addressContactsHint,
+} = usePointDetail({
+  modelRef: pointModel,
+  emit,
+  ind: props.ind,
+})
 </script>
 <style scoped>
 .settings_row {
@@ -316,32 +306,41 @@ export default {
   flex-direction: row;
   width: 100%;
 }
-.point-wrapper {
+
+.point-row > td {
+  vertical-align: middle;
+  padding: 10px 4px;
+  border-bottom: 2px solid #b8b8b8;
+}
+.col-main {
+  width: 100%;
+}
+.col-dates {
+  width: 250px;
+}
+.col-remove {
+  width: 50px;
+}
+
+.main-column {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-direction: column;
   gap: 10px;
 }
-.point-wrapper > div > * {
-  margin: 7px;
-}
-.main-column-wrapper {
-  flex-grow: 1;
-}
 .dates-column {
-  flex-basis: 220px;
-}
-.remove-btn-wrapper {
-  min-width: 20px;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
-#fixedTimeBlock {
-  border: 1px solid;
-  min-width: 250px;
+.remove-btn-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
+
 .time-row {
   display: flex;
   flex-direction: row;

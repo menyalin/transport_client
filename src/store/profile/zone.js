@@ -5,23 +5,8 @@ export default {
     zones: [],
   },
   mutations: {
-    clearDirectories(state) {
-      state.zones = []
-    },
     setZones(state, payload) {
       state.zones = payload
-    },
-    addZone(state, payload) {
-      if (state.zones.findIndex((item) => item._id === payload._id) === -1) {
-        state.zones.push(payload)
-      }
-    },
-    updateZone(state, payload) {
-      const ind = state.zones.findIndex((item) => item._id === payload._id)
-      if (ind !== -1) state.zones.splice(ind, 1, payload)
-    },
-    deleteZone(state, id) {
-      state.zones = state.zones.filter((item) => item._id !== id)
     },
   },
   actions: {
@@ -29,9 +14,8 @@ export default {
       try {
         commit('setLoading', true)
         if (directiveUpdate || (getters.zones.length === 0 && getters.directoriesProfile)) {
-          commit('setZones', [])
-          const data = await ZoneService.getByDirectoriesProfile(getters.directoriesProfile)
-          commit('setZones', data)
+          const zoneList = await ZoneService.getByDirectoriesProfile(getters.directoriesProfile)
+          commit('setZones', zoneList)
         }
         commit('setLoading', false)
       } catch (e) {
@@ -41,20 +25,9 @@ export default {
     },
   },
   getters: {
-    zonesMap: ({ zones }) => new Map(zones.map((item) => [item._id, item])),
+    zones: ({ zones }) => zones,
     zonesForAutocomplete: ({ zones }) =>
-      zones
-        .map((i) => ({ text: i.name, value: i._id }))
-        .sort((a, b) => {
-          if (a.text.toLowerCase() < b.text.toLowerCase()) return -1
-          if (a.text.toLowerCase() > b.text.toLowerCase()) return 1
-        }),
-    zones: ({ zones }, { directoriesProfile }) =>
-      zones
-        .filter((item) => item.company === directoriesProfile)
-        .sort((a, b) => {
-          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
-          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
-        }),
+      zones.map((i) => ({ value: i._id, text: i.name, name: i.name })),
+    zonesMap: ({ zones }) => new Map(zones.map((item) => [item._id, item])),
   },
 }

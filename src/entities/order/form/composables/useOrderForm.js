@@ -1,11 +1,13 @@
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useAddressStore } from '@/entities/address'
 import { useOrderRoute } from './useOrderRoute'
 import { useOrderPricing } from './useOrderPricing'
 import { useOrderClient } from './useOrderClient'
 
 export function useOrderForm(props) {
   const store = useStore()
+  const addressStore = useAddressStore()
 
   // Используем созданные composables
   const {
@@ -168,7 +170,7 @@ export function useOrderForm(props) {
   })
 
   const addressMap = computed(() => {
-    return store.getters.addressMap
+    return addressStore.addressMap
   })
 
   const coords = computed(() => {

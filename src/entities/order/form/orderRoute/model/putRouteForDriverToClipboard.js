@@ -1,3 +1,4 @@
+import { useAddressStore } from '@/entities/address'
 import store from '@/store'
 
 const getCargoParams = (params) => {
@@ -8,7 +9,7 @@ const getCargoParams = (params) => {
 }
 
 const getPointStr = (point) => {
-  const address = store.getters.addressMap.get(point.address)
+  const address = useAddressStore().addressMap.get(point.address)
   let res = `**${point.type === 'loading' ? 'Погрузка' : 'Разгрузка'}:**${
     point.isReturn ? ' (возврат)' : ''
   }\n`

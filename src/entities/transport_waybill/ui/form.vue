@@ -180,10 +180,12 @@ export default {
 .form-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 .inputs-row {
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-direction: row;
   gap: 10px;
 }

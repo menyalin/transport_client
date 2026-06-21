@@ -26,17 +26,17 @@
 </template>
 <script>
 import { computed } from 'vue'
-import store from '@/store'
-
+import { useAddressStore } from '@/entities/address'
 export default {
   name: 'PlaceTransferDocsItem',
   props: {
     value: Object,
   },
   setup(props, ctx) {
-    const address = computed(() => store.getters.addressMap.get(props.value.address))
+    const addressStore = useAddressStore()
+    const address = computed(() => addressStore.addressMap.get(props.value.address))
     const allowedLoadingPoints = computed(() =>
-      props.value.allowedLoadingPoints.map((i) => store.getters.addressMap.get(i))
+      props.value.allowedLoadingPoints.map((i) => addressStore.addressMap.get(i))
     )
 
     function deleteHandler() {

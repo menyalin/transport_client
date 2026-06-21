@@ -10,7 +10,6 @@
           v-else
           :address="item"
           :partnerItems="partnerApi.allPartners"
-          :partnerActions="partnerApi.actions"
           :displayDeleteBtn="!!id && $store.getters.hasPermission('address:delete')"
           @cancel="cancel"
           @submit="submit"
@@ -26,7 +25,6 @@ import { AddressService } from '@/shared/services'
 import { LoadSpinner } from '@/shared/ui'
 import { AddressForm } from '@/entities/address'
 import { usePartners } from '@/entities/partner'
-import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'
 
 export default {
   name: 'AddressDetailsPage',
@@ -39,9 +37,8 @@ export default {
     openInModal: { type: Boolean, default: false },
   },
   setup(props, ctx) {
-    const { updatePrevFormValue } = usePersistedFormState()
     const { proxy } = getCurrentInstance()
-    const { $router, $store, $route } = proxy
+    const { $router, $store } = proxy
 
     const item = ref(null)
     const tmpVal = ref(null)
@@ -67,7 +64,6 @@ export default {
           item.value = await AddressService.updateOne(props.id, val)
         } else item.value = await AddressService.create(val)
         tmpVal.value = null
-        updatePrevFormValue($route, item.value._id)
         if (props.openInModal) ctx.emit('submit', item.value._id)
         else $router.go(-1)
       } catch (e) {

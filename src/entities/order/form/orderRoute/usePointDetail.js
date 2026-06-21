@@ -1,12 +1,11 @@
 import { ref, computed, watch } from 'vue'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { useVuelidate } from '@vuelidate/core'
+import { useAddressStore } from '@/entities/address'
 import store from '@/store'
-import { usePersistedFormState } from '@/shared/hooks/usePersistedFormState'
 
-export const usePointDetail = (props, ctx, addressActions) => {
-  const formScope = 'route_point_' + props.ind
-  const { savedForm, saveForm, formId } = usePersistedFormState()
+export const usePointDetail = ({ modelRef, emit, ind: _ind }) => {
+  const addressStore = useAddressStore()
 
   const initialState = {
     type: null,
@@ -30,12 +29,7 @@ export const usePointDetail = (props, ctx, addressActions) => {
     isMainLoadingPoint: false,
   }
 
-  const getState = (point, initialState) => {
-    if (savedForm(formScope)) return JSON.parse(savedForm(formScope))
-    else return point ? point : initialState
-  }
-
-  const state = ref(getState(props.point, initialState))
+  const state = ref(modelRef.value ? { ...modelRef.value } : { ...initialState })
 
   const rules = {
     departureDate: {
@@ -50,11 +44,11 @@ export const usePointDetail = (props, ctx, addressActions) => {
   // #region computeds
   const addressContactsHint = computed(() => {
     if (!state.value.address) return null
-    const contacts = store.getters.addressMap.get(state.value.address)?.contacts
+    const contacts = addressStore.addressMap.get(state.value.address)?.contacts
     return contacts ? `Контакты: ${contacts}` : null
   })
   const pointTypes = computed(() => store.getters.pointTypes)
-  const addressItems = computed(() => store.getters.addressesForAutocomplete.filter(addressFilter))
+  const addressItems = computed(() => addressStore.addressesForAutocomplete.filter(addressFilter))
   const departureDateErrors = computed(() => {
     let errors = []
     if (v$.value.departureDate.isLaterThan.$invalid) errors.push('Дата не корректна')
@@ -68,39 +62,15 @@ export const usePointDetail = (props, ctx, addressActions) => {
   })
   // #endregion
 
-  watch(
-    () => props.point,
-    (val) => (state.value = val),
-    { deep: true }
-  )
+  watch(modelRef, (val) => (state.value = val), { deep: true })
   function setField(val, field) {
     const DATE_FIELDS = ['plannedDate', 'arrivalDate', 'departureDate', 'intervalEndDate']
     state.value[field] = val
     if (DATE_FIELDS.includes(field)) state.value[field + 'Doc'] = val
     if (['arrivalDate', 'departureDate'].includes(field)) state.value.isAutofilled = false
 
-    ctx.emit('changePoint', { ...state.value })
-  }
-  function editAddressHandler(val) {
-    saveForm(formId.value, formScope, JSON.stringify(state.value))
-    addressActions.update({
-      id: val.value,
-      query: {
-        prevFormId: formId.value,
-        scope: formScope,
-        field: 'address',
-      },
-    })
-  }
-  function createAddressHandler() {
-    saveForm(formId.value, formScope, JSON.stringify(state.value))
-    addressActions.create({
-      query: {
-        prevFormId: formId.value,
-        scope: formScope,
-        field: 'address',
-      },
-    })
+    modelRef.value = { ...state.value }
+    if (field === 'isMainLoadingPoint') emit('changePoint', { ...state.value })
   }
   return {
     state,
@@ -110,8 +80,6 @@ export const usePointDetail = (props, ctx, addressActions) => {
     pointTypes,
     addressItems,
     setField,
-    createAddressHandler,
-    editAddressHandler,
     addressContactsHint,
   }
 }

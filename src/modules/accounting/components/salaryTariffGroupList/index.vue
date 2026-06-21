@@ -59,9 +59,14 @@ import AppReturnCell from './return.vue'
 import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones.vue'
 import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions.vue'
 import AppDirectDistanceZones from './directDistanceZones.vue'
+import { useAddressStore } from '@/entities/address'
 
 export default {
   name: 'SalaryTariffGroupList',
+  setup() {
+    const addressStore = useAddressStore()
+    return { addressStore }
+  },
   components: {
     AppAdditionalPointsCell,
     AppWaitingCell,
@@ -79,7 +84,7 @@ export default {
   },
   computed: {
     addressMap() {
-      return this.$store.getters.addressMap
+      return this.addressStore.addressMap
     },
     truckKindMap() {
       return this.$store.getters.truckKindsMap

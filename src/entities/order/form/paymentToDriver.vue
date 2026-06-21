@@ -12,7 +12,7 @@
         <i>Отв:</i>
         <WorkerAutocomplete labelOnly v-model="value.worker" />
       </div>
-      <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment">
+      <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment" variant="text">
         <v-icon color="red" size="small">mdi-delete</v-icon>
       </v-btn>
     </div>

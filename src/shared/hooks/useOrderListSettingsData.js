@@ -2,9 +2,11 @@ import { computed, onMounted, ref } from 'vue'
 
 import { AgreementService } from '@/shared/services'
 import { useStore } from 'vuex'
+import { useAddressStore } from '@/entities/address'
 
 export default (settings) => {
   const vuexStore = useStore()
+  const addressStore = useAddressStore()
   const agreements = ref([])
   async function getAgreements() {
     const res = await AgreementService.getActiveAgreements()
@@ -70,7 +72,7 @@ export default (settings) => {
   )
   const clientItems = computed(() => vuexStore.getters.partners.filter((i) => i.isClient))
 
-  const addressItems = computed(() => vuexStore.getters.addressesForAutocomplete)
+  const addressItems = computed(() => addressStore.addressesForAutocomplete)
 
   const loadingZoneItems = computed(() => vuexStore.getters.zones)
 
