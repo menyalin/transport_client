@@ -1,172 +1,128 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <ReportTitle title="Статус транспорта на дату" />
-        <div id="report-settings">
-          <v-btn icon @click.stop="getData">
-            <v-icon> mdi-cached </v-icon>
-          </v-btn>
-          <DateTimeInput
-            v-model="settings.date"
-            label="Отчет на дату"
-            hideDetails
-            type="datetime-local"
-            :style="{ 'max-width': '200px' }"
-          />
-          <v-select
-            v-model="settings.tkName"
-            :items="carrierStore.carriers"
-            item-title="name"
-            item-value="_id"
-            label="ТК"
-            hide-details
-            clearable
-            :style="{ 'max-width': '260px' }"
-          />
-        </div>
-        <v-data-table
-          :headers="headers"
-          :items="filteredRows"
-          :loading="loading"
-          :search="settings.search"
-          fixed-header
-          height="78vh"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          @dblclick:row="dblClickRow"
-        >
-          <template #[`item.tkName`]="{ item }">
-            {{
-              carrierStore.carriersMap.has(item.tkName)
-                ? carrierStore.carriersMap.get(item.tkName)?.name
-                : ''
-            }}
-          </template>
-          <template #[`item.truckNum`]="{ item }">
-            {{ trucksMap.has(item._id) ? trucksMap.get(item._id).regNum : '' }}
-          </template>
-          <template #[`item.trailerNum`]="{ item }">
-            {{
-              !!item.crew && trucksMap.has(item.crew.transport.trailer)
-                ? trucksMap.get(item.crew.transport.trailer).regNum
-                : ''
-            }}
-          </template>
-          <template #[`item.driverName`]="{ item }">
-            {{
-              !!item.crew && driversMap.has(item.crew.driver)
-                ? driversMap.get(item.crew.driver).fullName
-                : ''
-            }}
-          </template>
-          <template #[`item.downtime`]="{ item }">
-            {{ !!item.downtime ? item.downtime.title : '' }}
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
+    <ReportTitle title="Статус транспорта на дату" />
+    <div class="report-settings">
+      <v-btn icon @click.stop="getData" variant="text">
+        <v-icon> mdi-cached </v-icon>
+      </v-btn>
+      <DateTimeInput
+        v-model="settings.date"
+        label="Отчет на дату"
+        hideDetails
+        type="datetime-local"
+        :style="{ maxWidth: '250px' }"
+      />
+      <v-select
+        v-model="settings.tkName"
+        :items="carrierStore.carriers"
+        item-title="name"
+        item-value="_id"
+        label="ТК"
+        hide-details
+        clearable
+        :style="{ maxWidth: '350px' }"
+      />
+    </div>
+    <v-data-table
+      :headers="headers"
+      :items="filteredRows"
+      :loading="loading"
+      :search="settings.search"
+      fixed-header
+      height="78vh"
+    >
+      <template #[`item.tkName`]="{ item }">
+        {{
+          carrierStore.carriersMap.has(item.tkName)
+            ? carrierStore.carriersMap.get(item.tkName)?.name
+            : ''
+        }}
+      </template>
+      <template #[`item.truckNum`]="{ item }">
+        {{ trucksMap.has(item._id) ? trucksMap.get(item._id).regNum : '' }}
+      </template>
+      <template #[`item.trailerNum`]="{ item }">
+        {{
+          !!item.crew && trucksMap.has(item.crew.transport.trailer)
+            ? trucksMap.get(item.crew.transport.trailer).regNum
+            : ''
+        }}
+      </template>
+      <template #[`item.driverName`]="{ item }">
+        {{
+          !!item.crew && driversMap.has(item.crew.driver)
+            ? driversMap.get(item.crew.driver).fullName
+            : ''
+        }}
+      </template>
+      <template #[`item.downtime`]="{ item }">
+        {{ !!item.downtime ? item.downtime.title : '' }}
+      </template>
+    </v-data-table>
   </v-container>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
 import { ReportService } from '@/shared/services'
 import { DateTimeInput, ReportTitle } from '@/shared/ui'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
+import { usePersistedRef } from '@/shared/hooks'
 
-export default {
-  name: 'TruckStateOnDate',
-  components: {
-    DateTimeInput,
-    ReportTitle,
+defineOptions({ name: 'TruckStateOnDate' })
+
+const carrierStore = useCarrierStore()
+const store = useStore()
+
+const loading = ref(false)
+const settings = usePersistedRef(
+  {
+    date: new Date().toISOString(),
+    search: null,
+    tkName: null,
+    truckType: 'truck',
   },
-  setup() {
-    const carrierStore = useCarrierStore()
-    return {
-      carrierStore,
-    }
-  },
-  data() {
-    return {
-      formName: 'TruckStateOnDateReport',
-      loading: false,
-      settings: {
-        date: null,
-        search: null,
-        tkName: null,
-        truckType: 'truck',
-      },
-      rows: [],
-    }
-  },
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-    headers() {
-      return [
-        { value: 'tkName', text: 'ТК' },
-        { value: 'truckNum', text: 'Грузовик' },
-        { value: 'trailerNum', text: 'Прицеп' },
-        { value: 'driverName', text: 'Водитель' },
-        { value: 'downtime', text: 'Примечание' },
-      ]
-    },
-    filteredRows() {
-      return this.rows
-    },
-    trucksMap() {
-      return this.$store.getters.trucksMap
-    },
-    driversMap() {
-      return this.$store.getters.driversMap
-    },
-  },
-  watch: {
-    settings: {
-      deep: true,
-      handler: function () {
-        this.getData()
-      },
-    },
-  },
-  async created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-    } else {
-      this.settings.date = new Date().toISOString()
-    }
-    await this.getData()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: this.settings,
+  'truckStateOnDate:settings'
+)
+const rows = ref([])
+
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
+const headers = [
+  { value: 'tkName', title: 'ТК' },
+  { value: 'truckNum', title: 'Грузовик' },
+  { value: 'trailerNum', title: 'Прицеп' },
+  { value: 'driverName', title: 'Водитель' },
+  { value: 'downtime', title: 'Примечание' },
+]
+
+const filteredRows = computed(() => rows.value)
+const trucksMap = computed(() => store.getters.trucksMap)
+const driversMap = computed(() => store.getters.driversMap)
+
+watch(settings, getData, { deep: true, immediate: true })
+
+async function getData() {
+  try {
+    loading.value = true
+    rows.value = await ReportService.truckStateOnDate({
+      company: directoriesProfile.value,
+      date: settings.value.date,
+      truckType: settings.value.truckType,
+      tkName: settings.value.tkName,
     })
-    next()
-  },
-  methods: {
-    dblClickRow(_, { _item }) {},
-    async getData() {
-      this.loading = true
-      this.rows = await ReportService.truckStateOnDate({
-        company: this.directoriesProfile,
-        date: new Date(this.settings.date).toISOString(),
-        truckType: this.settings.truckType,
-        tkName: this.settings.tkName,
-      })
-      this.loading = false
-    },
-  },
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 <style scoped>
-#report-settings {
+.report-settings {
   display: flex;
   flex-direction: row;
-  align-items: start;
-  margin-top: 20px;
-}
-#report-settings > * {
-  margin: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 15px;
+  gap: 10px;
 }
 </style>

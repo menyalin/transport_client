@@ -1,5 +1,5 @@
 <template>
-  <h3>{{ title }}</h3>
+  <div class="text-title-medium mb-4">{{ title }}</div>
 </template>
 
 <script setup>

@@ -36,7 +36,13 @@ export default createVuetify({
       itemsPerPage: 50,
       itemsPerPageOptions: [25, 50, 100, 200],
     },
-    VDataTable: { density: 'compact', color: 'primary', itemValue: '_id' },
+    VDataTable: {
+      density: 'compact',
+      color: 'primary',
+      itemValue: '_id',
+      itemsPerPage: 50,
+      itemsPerPageOptions: [25, 50, 100, 200],
+    },
   },
   theme: {
     defaultTheme: 'githubLight',
