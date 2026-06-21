@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="settings-wrapper">
-      <v-btn icon @click.stop="getData">
+      <v-btn icon @click="getData" variant="text">
         <v-icon> mdi-cached </v-icon>
       </v-btn>
       <DateRangeInput v-model="settings.period" />
@@ -23,225 +23,244 @@
         clearable
       />
     </div>
-    <div v-if="!filteredCrews.length" class="text-center">
-      <load-spinner v-if="false" />
-      <h4 v-else>Нет данных для отображния</h4>
+    <div v-if="loading" class="text-center ma-6">
+      <v-progress-circular indeterminate color="primary" />
+    </div>
+    <div v-else-if="!filteredCrews.length" class="text-center">
+      <h4>Нет данных для отображения</h4>
     </div>
     <div v-else class="table-wrapper">
-      <table ref="tableBody" class="background-table">
-        <thead>
-          <tr>
-            <th ref="titleCell" />
-            <th v-for="day in tableColumns" :key="day.title" :class="{ todayHeader: day.isToday }">
-              {{ day.title }}
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-body">
-          <tr v-for="row in tableRows" :key="row._id">
-            <td>
-              <div class="px-2 row-title-text">
-                <router-link :to="getUrlForRowTitle(row._id)">
-                  {{ row.title }}
-                </router-link>
-              </div>
-            </td>
-            <td v-for="day in tableColumns" :key="day.title" class="data-cell" />
-          </tr>
-          <div v-for="block in blocks" :key="block._id" class="block" :style="block.styles">
-            <div>
-              <router-link :to="'/profile/crews/' + block.crewId">
-                {{ block.title }}
-              </router-link>
-            </div>
-          </div>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table ref="tableBody" class="background-table">
+          <thead>
+            <tr>
+              <th ref="titleCell" />
+              <th
+                v-for="day in tableColumns"
+                :key="day.title"
+                :class="{ todayHeader: day.isToday }"
+              >
+                {{ day.title }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr v-for="row in tableRows" :key="row._id">
+              <td>
+                <div class="px-2 row-title-text">
+                  <router-link :to="getUrlForRowTitle(row._id)">
+                    {{ row.title }}
+                  </router-link>
+                </div>
+              </td>
+              <td v-for="day in tableColumns" :key="day.title" class="data-cell" />
+            </tr>
+          </tbody>
+        </table>
+        <div v-for="block in blocks" :key="block._id" class="block" :style="block.styles">
+          <router-link :to="'/profile/crews/' + block.crewId">
+            {{ block.title }}
+          </router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 import { CrewService } from '@/shared/services'
-
-import { DateRangeInput, LoadSpinner } from '@/shared/ui'
+import { DateRangeInput } from '@/shared/ui'
+import { debounce } from '@/shared/utils'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
 import getRowsFromCrews from './utils/getRowsFromCrews'
 import getBlocksFromCrews from './utils/getBlocksFromCrews'
-
-import { mapGetters } from 'vuex'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'CrewsReport',
-  components: {
-    DateRangeInput,
-    LoadSpinner,
-  },
-  setup() {
-    const carrierStore = useCarrierStore()
-    return {
-      carrierStore,
-    }
-  },
-  data() {
-    return {
-      formName: 'crewDiagramReport',
-      settings: {
-        tkNameFilter: null,
-        group: 'truck',
-        analitic: 'driver',
-        period: this.initDateRange(),
-      },
-      tableWidth: 0,
-      secInPx: 0,
-      groupItems: [
-        { value: 'truck', text: 'Грузовик' },
-        { value: 'driver', text: 'Водитель' },
-        { value: 'trailer', text: 'Прицеп' },
-      ],
+defineOptions({ name: 'CrewsReport' })
 
-      titleCellWidth: 0,
+const carrierStore = useCarrierStore()
+const store = useStore()
 
-      crews: [],
-      blocks: [],
-      tableColumns: [],
-      tableRows: [],
-      loading: false,
-    }
-  },
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-    analiticItems() {
-      return this.groupItems.filter((item) => item.value !== this.settings.group)
-    },
-    filteredCrews() {
-      return this.crews.filter((item) =>
-        this.settings.tkNameFilter ? this.settings.tkNameFilter === item.tkNameId : true
-      )
-    },
-  },
-  watch: {
-    ['settings.group']: async function (val) {
-      await this.getData()
-      if (val === 'driver' || val === 'trailer') this.settings.analitic = 'truck'
-      if (val === 'truck') this.settings.analitic = 'driver'
-      this.resizeHandler()
-    },
-    ['settings.period']: async function () {
-      await this.getData()
-      this.resizeHandler()
-    },
-    ['settings.analitic']: function () {
-      this.resizeHandler()
-    },
-    ['settings.tkNameFilter']: function () {
-      this.resizeHandler()
-    },
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resizeHandler)
-  },
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-    }
-  },
-  async mounted() {
-    await this.getData()
-    window.addEventListener('resize', this.resizeHandler)
-    this.resizeHandler()
-  },
-  methods: {
-    getUrlForRowTitle(id) {
-      if (this.settings.group === 'truck' || this.settings.group === 'trailer')
-        return '/profile/trucks/' + id
-      else return '/profile/drivers/' + id
-    },
-    async getData() {
-      this.loading = true
-      this.crews = await CrewService.diagramReport({
-        profile: this.directoriesProfile,
-        period: this.settings.period.join(','),
-      })
-      this.loading = false
-    },
-    getBlocksWithStyles() {
-      if (!this.filteredCrews) return null
-      let blocks = getBlocksFromCrews({
-        crews: this.filteredCrews,
-        group: this.settings.group,
-        analitic: this.settings.analitic,
-        displayPeriod: this.settings.period,
-      })
-      return blocks.map((item) => ({
-        ...item,
-        styles: {
-          width: this.getWidthInPxForBlock(item),
-          height: '25px',
-          top: this.getTopShiftInPxForBlock(item, item.type),
-          left: this.getLeftShiftInPxForBlock(item),
-          'z-index': 1,
-        },
-      }))
-    },
-    resizeHandler() {
-      this.tableColumns = getDaysFromPeriod(this.settings.period)
-      this.tableRows = getRowsFromCrews(this.filteredCrews, this.settings.group)
-      this.$nextTick(() => {
-        this.tableWidth = this.$refs.tableBody?.offsetWidth - this.$refs.titleCell?.offsetWidth
-        const dSec =
-          dayjs(this.settings.period[1]).add(24, 'hour').unix() -
-          dayjs(this.settings.period[0]).unix()
-        this.secInPx = dSec / this.tableWidth
+const initDateRange = () => {
+  const dateFormat = 'YYYY-MM-DD'
+  const today = dayjs()
+  return [today.add(-7, 'd').format(dateFormat), today.add(5, 'd').format(dateFormat)]
+}
 
-        this.$nextTick(() => {
-          this.blocks = this.getBlocksWithStyles()
-        })
-      })
-      this.$store.commit('setFormSettings', {
-        formName: this.formName,
-        settings: this.settings,
-      })
-    },
-    getWidthInPxForBlock(block) {
-      if (!this.secInPx) return null
-      let endM = null
-      let startM = dayjs(block.startDate).unix()
-      if (dayjs(this.settings.period[0]).isSameOrAfter(block.startDate))
-        startM = dayjs(this.settings.period[0]).unix()
-      if (
-        !block.endDate ||
-        dayjs(this.settings.period[1]).add('24', 'hour').isSameOrBefore(block.endDate)
-      )
-        endM = dayjs(this.settings.period[1]).add(24, 'hour').unix()
-      else endM = dayjs(block.endDate).unix()
-      const widthPx = (endM - startM) / this.secInPx
-      return widthPx > 10 ? widthPx + 'px' : '10px'
-    },
-
-    getLeftShiftInPxForBlock(crew) {
-      if (!this.$refs?.titleCell) return null
-      let leftShift = null
-      const startPeriod = dayjs(this.settings.period[0]).unix()
-      const startCrew = dayjs(crew.startDate).unix()
-      if (startCrew <= startPeriod) leftShift = 0
-      else leftShift = startCrew - startPeriod
-      return leftShift / this.secInPx + this.$refs.titleCell.offsetWidth + 'px'
-    },
-
-    getTopShiftInPxForBlock(block) {
-      const ROW_HEIGTH = 25
-      const rowIndex = this.tableRows.findIndex((item) => item._id === block.rowId)
-      return rowIndex * ROW_HEIGTH + 'px'
-    },
-
-    initDateRange() {
-      const dateFormat = 'YYYY-MM-DD'
-      const today = dayjs()
-      return [today.add(-7, 'd').format(dateFormat), today.add(5, 'd').format(dateFormat)]
-    },
+const settings = usePersistedRef(
+  {
+    tkNameFilter: null,
+    group: 'truck',
+    analitic: 'driver',
+    period: initDateRange(),
   },
+  'crewDiagramReport:settings'
+)
+
+const secInPx = ref(0)
+const crews = ref([])
+const blocks = ref([])
+const tableColumns = ref([])
+const tableRows = ref([])
+const loading = ref(false)
+const tableBody = ref(null)
+const titleCell = ref(null)
+
+const groupItems = [
+  { value: 'truck', title: 'Грузовик' },
+  { value: 'driver', title: 'Водитель' },
+  { value: 'trailer', title: 'Прицеп' },
+]
+
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
+const analiticItems = computed(() =>
+  groupItems.filter((item) => item.value !== settings.value.group)
+)
+
+const filteredCrews = computed(() =>
+  crews.value.filter((item) =>
+    settings.value.tkNameFilter ? settings.value.tkNameFilter === item.tkNameId : true
+  )
+)
+
+watch(
+  () => settings.value.group,
+  async (val) => {
+    await getData()
+    if (val === 'driver' || val === 'trailer') settings.value.analitic = 'truck'
+    if (val === 'truck') settings.value.analitic = 'driver'
+    resizeHandler()
+  }
+)
+
+watch(
+  () => settings.value.period,
+  async () => {
+    await getData()
+    resizeHandler()
+  }
+)
+
+watch(
+  () => settings.value.analitic,
+  () => {
+    resizeHandler()
+  }
+)
+
+watch(
+  () => settings.value.tkNameFilter,
+  () => {
+    resizeHandler()
+  }
+)
+
+const onResize = debounce(resizeHandler, 300)
+
+onMounted(async () => {
+  await getData()
+  window.addEventListener('resize', onResize)
+  resizeHandler()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+})
+
+function getUrlForRowTitle(id) {
+  if (settings.value.group === 'truck' || settings.value.group === 'trailer')
+    return '/profile/trucks/' + id
+  return '/profile/drivers/' + id
+}
+
+async function getData() {
+  loading.value = true
+  try {
+    crews.value = await CrewService.diagramReport({
+      profile: directoriesProfile.value,
+      period: settings.value.period.join(','),
+    })
+  } catch (e) {
+    crews.value = []
+    store.commit('setError', e?.message || 'Ошибка загрузки отчёта')
+  } finally {
+    loading.value = false
+  }
+}
+
+function getHeaderHeight() {
+  return tableBody.value?.querySelector('thead')?.offsetHeight || 0
+}
+
+function getBlocksWithStyles() {
+  const items = getBlocksFromCrews({
+    crews: filteredCrews.value,
+    group: settings.value.group,
+    analitic: settings.value.analitic,
+    displayPeriod: settings.value.period,
+  })
+  return items.map((item) => ({
+    ...item,
+    styles: {
+      width: getWidthInPxForBlock(item),
+      height: '25px',
+      top: getTopShiftInPxForBlock(item),
+      left: getLeftShiftInPxForBlock(item),
+      'z-index': 1,
+    },
+  }))
+}
+
+function resizeHandler() {
+  tableColumns.value = getDaysFromPeriod(settings.value.period)
+  tableRows.value = getRowsFromCrews(filteredCrews.value, settings.value.group)
+  nextTick(() => {
+    const bodyWidth = tableBody.value?.offsetWidth || 0
+    const titleWidth = titleCell.value?.offsetWidth || 0
+    const dSec =
+      dayjs(settings.value.period[1]).add(24, 'hour').unix() -
+      dayjs(settings.value.period[0]).unix()
+    secInPx.value = dSec / (bodyWidth - titleWidth)
+
+    nextTick(() => {
+      blocks.value = getBlocksWithStyles()
+    })
+  })
+}
+
+function getWidthInPxForBlock(block) {
+  if (!secInPx.value) return null
+  let endM = null
+  let startM = dayjs(block.startDate).unix()
+  if (dayjs(settings.value.period[0]).isSameOrAfter(block.startDate))
+    startM = dayjs(settings.value.period[0]).unix()
+  if (
+    !block.endDate ||
+    dayjs(settings.value.period[1]).add(24, 'hour').isSameOrBefore(block.endDate)
+  )
+    endM = dayjs(settings.value.period[1]).add(24, 'hour').unix()
+  else endM = dayjs(block.endDate).unix()
+  const widthPx = (endM - startM) / secInPx.value
+  return widthPx > 10 ? widthPx + 'px' : '10px'
+}
+
+function getLeftShiftInPxForBlock(crew) {
+  if (!titleCell.value) return null
+  const startPeriod = dayjs(settings.value.period[0]).unix()
+  const startCrew = dayjs(crew.startDate).unix()
+  let leftShift = startCrew <= startPeriod ? 0 : startCrew - startPeriod
+  return leftShift / secInPx.value + titleCell.value.offsetWidth + 'px'
+}
+
+function getTopShiftInPxForBlock(block) {
+  const ROW_HEIGHT = 25
+  const rowIndex = tableRows.value.findIndex((item) => item._id === block.rowId)
+  const headerHeight = getHeaderHeight()
+  return rowIndex * ROW_HEIGHT + headerHeight + 'px'
 }
 </script>
 <style scoped>
@@ -260,15 +279,16 @@ export default {
   width: 98vw;
   height: 80vh;
   overflow: auto;
-  padding: 0px;
   margin: 0 auto;
   z-index: 5;
+}
+.table-scroll {
+  position: relative;
 }
 .background-table {
   border-collapse: collapse;
   user-select: none;
   z-index: 3;
-  /* table-layout: fixed; */
 }
 
 .data-cell {
@@ -339,4 +359,3 @@ table thead th:first-child {
   font-size: 0.95rem;
 }
 </style>
-../../../modules/common/helpers/getDaysFromPeriod
