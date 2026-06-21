@@ -1,187 +1,140 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <ReportTitle title="Простой транспорта" />
-        <div id="report-settings">
-          <v-btn icon @click.stop="getData">
-            <v-icon> mdi-cached </v-icon>
-          </v-btn>
-          <v-text-field
-            v-model.trim="settings.search"
-            label="Поиск"
-            hideDetails
-            :style="{ 'max-width': '300px' }"
-          />
-          <v-checkbox
-            v-model="settings.selectedOnly"
-            label="Только выделенные"
-            hideDetails
-            class="py-0 my-0"
-          />
-          <v-spacer />
-          <v-btn
-            v-if="showCopyButton"
-            variant="text"
-            color="primary"
-            size="small"
-            @click="copyHandler"
-          >
-            скопировать в буфер
-          </v-btn>
-        </div>
-        <v-data-table
-          v-model="settings.selected"
-          :itemKey="'_id'"
-          :singleSelect="false"
-          :headers="headers"
-          :items="filteredRows"
-          :loading="loading"
-          :search="settings.search"
-          fixed-header
-          height="76vh"
-          show-select
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          @dblclick:row="dblClickRow"
-        />
-      </v-col>
-    </v-row>
+    <ReportTitle title="Простой транспорта" />
+    <div class="report-settings">
+      <v-btn icon @click="getData" variant="text">
+        <v-icon> mdi-cached </v-icon>
+      </v-btn>
+      <v-text-field
+        v-model.trim="settings.search"
+        label="Поиск"
+        hideDetails
+        :style="{ 'max-width': '300px' }"
+      />
+      <v-checkbox
+        v-model="settings.selectedOnly"
+        label="Только выделенные"
+        hideDetails
+        class="py-0 my-0"
+      />
+      <v-spacer />
+      <v-btn
+        v-if="showCopyButton"
+        variant="text"
+        :disabled="!filteredRows.length"
+        @click="copyHandler"
+      >
+        скопировать в буфер
+      </v-btn>
+    </div>
+    <v-data-table
+      v-model="settings.selected"
+      item-value="_id"
+      :singleSelect="false"
+      :headers="headers"
+      :items="filteredRows"
+      :loading="loading"
+      :search="settings.search"
+      fixed-header
+      height="76vh"
+      show-select
+      :footer-props="{
+        'items-per-page-options': [50, 100, 200],
+      }"
+      @dblclick:row="dblClickRow"
+    />
   </v-container>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import { ReportService } from '@/shared/services'
 import { ReportTitle } from '@/shared/ui'
-export default {
-  name: 'OrdersInProgress',
-  components: {
-    ReportTitle,
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
+import { copyToClipboard } from './copyToClipboard'
+
+defineOptions({ name: 'OrdersInProgress' })
+
+const store = useStore()
+const router = useRouter()
+
+const loading = ref(false)
+const rows = ref([])
+
+const settings = usePersistedRef(
+  {
+    search: null,
+    selected: [],
+    selectedOnly: false,
   },
-  data() {
-    return {
-      formName: 'OrdersInProgressReport',
-      loading: false,
-      settings: {
-        search: null,
-        selected: [],
-        selectedOnly: false,
-      },
-      rows: [],
-      headers: [
-        { value: 'clientName', text: 'Заказчик' },
-        { value: 'date', text: 'Дата рейса' },
-        { value: 'loadingPoints', text: 'Погрузка' },
-        { value: 'unloadingPoints', text: 'Разгрузка' },
-        { value: 'truckNum', text: 'Грузовик' },
-        { value: 'trailerNum', text: 'Прицеп' },
-        { value: 'driverName', text: 'Водитель' },
-        { value: 'driverPhone', text: 'Телефон' },
-        { value: 'state', text: 'Статус' },
-        { value: 'address', text: 'Адрес' },
-      ],
-    }
-  },
-  computed: {
-    ...mapGetters(['directoriesProfile']),
-    filteredRows() {
-      return this.rows
-        .filter((item) => {
-          if (!this.settings.selectedOnly) return true
-          return this.settings.selected.map((s) => s._id).includes(item._id)
-        })
-        .map((item) => ({
-          ...item,
-          date: new Date(item.plannedDate).toLocaleDateString(),
-          state: item.state === 'loading' ? 'На погрузке' : 'На выгрузке',
-          address: item.currentPoint.name,
-        }))
-    },
-    showCopyButton() {
-      return !!window.ClipboardItem
-    },
-  },
-  watch: {
-    ['settings.dayCount']: {
-      deep: true,
-      handler: function () {
-        this.getData()
-      },
-    },
-  },
-  async mounted() {
-    await this.getData()
-  },
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName)) {
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: this.settings,
+  'OrdersInProgressReport:settings'
+)
+
+const headers = [
+  { value: 'clientName', title: 'Заказчик' },
+  { value: 'date', title: 'Дата рейса' },
+  { value: 'loadingPoints', title: 'Погрузка' },
+  { value: 'unloadingPoints', title: 'Разгрузка' },
+  { value: 'truckNum', title: 'Грузовик' },
+  { value: 'trailerNum', title: 'Прицеп' },
+  { value: 'driverName', title: 'Водитель' },
+  { value: 'driverPhone', title: 'Телефон' },
+  { value: 'state', title: 'Статус' },
+  { value: 'address', title: 'Адрес' },
+]
+
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
+const filteredRows = computed(() =>
+  rows.value
+    .filter((item) => {
+      if (!settings.value.selectedOnly) return true
+      return settings.value.selected.includes(item._id)
     })
-    next()
-  },
-  methods: {
-    getTableForClipboard() {
-      // if (this.filteredRows.length === 0) return null
+    .map((item) => ({
+      ...item,
+      date: new Date(item.plannedDate).toLocaleDateString(),
+      state: item.state === 'loading' ? 'На погрузке' : 'На выгрузке',
+      address: item.currentPoint?.name || item.currentPoint?.address || '',
+    }))
+)
 
-      let resStr = '<html><body><table style="border-collapse: collapse;">'
-      resStr +=
-        '<tr>' +
-        this.headers.reduce((accum, item) => {
-          return (accum += `<th style="border: 1px solid gray; font-size: 12px; padding: 3px;">${item.text}</th>`)
-        }, '') +
-        '</tr>'
+const showCopyButton = computed(() => !!window.ClipboardItem)
 
-      for (let i = 0; i < this.filteredRows.length; i++) {
-        resStr +=
-          '<tr>' +
-          this.headers.reduce((accum, item) => {
-            return (accum += `<td style="border: 1px solid gray; font-size: 12px; padding: 3px;">
-            ${this.filteredRows[i][item.value]}
-            </td>`)
-          }, '') +
-          '</tr>'
-      }
-
-      return resStr + '</table></body></html>'
-    },
-    dblClickRow(_, { item }) {
-      this.$router.push(`/orders/${item._id}`)
-    },
-    async getData() {
-      this.loading = true
-      this.rows = await ReportService.ordersInProgress({
-        profile: this.directoriesProfile,
-      })
-      this.loading = false
-    },
-    copyHandler() {
-      const text = this.getTableForClipboard()
-      var data = [
-        // eslint-disable-next-line no-undef
-        new ClipboardItem({
-          'text/html': new Blob([text], { type: 'text/html' }),
-        }),
-      ]
-      navigator.clipboard.write(data).then()
-    },
-  },
+async function getData() {
+  loading.value = true
+  try {
+    rows.value = await ReportService.ordersInProgress({
+      profile: directoriesProfile.value,
+    })
+  } catch (e) {
+    store.commit('setError', e?.message || 'Ошибка загрузки')
+  } finally {
+    loading.value = false
+  }
 }
+
+function dblClickRow(_, { item }) {
+  router.push(`/orders/${item._id}`)
+}
+
+async function copyHandler() {
+  const ok = await copyToClipboard(headers, filteredRows.value)
+  if (!ok) store.commit('setError', 'Не удалось скопировать в буфер')
+}
+
+getData()
 </script>
 <style scoped>
-#report-settings {
+.report-settings {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
-#report-settings > * {
-  margin: 10px;
-}
+
 .v-data-table {
   white-space: nowrap;
 }
