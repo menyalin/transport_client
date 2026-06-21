@@ -1,7 +1,7 @@
 export const ALL_HEADERS = [
   {
     value: 'orderDate',
-    text: 'Дата рейса',
+    title: 'Дата рейса',
     sortable: false,
     width: '12rem',
     default: true,
@@ -9,7 +9,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'orderTypeStr',
-    text: 'Тип рейса',
+    title: 'Тип рейса',
     sortable: true,
     width: '7rem',
     default: true,
@@ -17,7 +17,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'tkNameStr',
-    text: 'TK',
+    title: 'TK',
     sortable: false,
     width: '9rem',
     default: true,
@@ -26,7 +26,7 @@ export const ALL_HEADERS = [
 
   {
     value: 'truckNumStr',
-    text: 'Грузовик',
+    title: 'Грузовик',
     sortable: false,
     align: 'center',
     width: '9rem',
@@ -35,7 +35,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'trailerNumStr',
-    text: 'Прицеп',
+    title: 'Прицеп',
     sortable: false,
     align: 'center',
     width: '9rem',
@@ -44,7 +44,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'driverFullName',
-    text: 'Водитель',
+    title: 'Водитель',
     sortable: true,
     align: 'left',
     default: true,
@@ -52,42 +52,42 @@ export const ALL_HEADERS = [
   },
   {
     value: 'clientName',
-    text: 'Клиент',
+    title: 'Клиент',
     sortable: true,
     default: true,
     groupable: true,
   },
   {
     value: 'client.num',
-    text: '№ Заказа',
+    title: '№ Заказа',
     sortable: false,
     default: true,
     groupable: false,
   },
   {
     value: 'client.auctionNum',
-    text: '№ Аукциона',
+    title: '№ Аукциона',
     sortable: false,
     default: true,
     groupable: false,
   },
   {
     value: 'loadingPoints',
-    text: 'Погрузка',
+    title: 'Погрузка',
     sortable: false,
     default: true,
     groupable: false,
   },
   {
     value: 'unloadingPoints',
-    text: 'Разгрузка',
+    title: 'Разгрузка',
     sortable: false,
     default: true,
     groupable: false,
   },
   {
     value: 'docsState.date',
-    text: 'Дата получения',
+    title: 'Дата получения',
     sortable: true,
     default: false,
     groupable: false,
@@ -95,7 +95,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'reviewDate',
-    text: 'Дата проверки',
+    title: 'Дата проверки',
     sortable: true,
     default: false,
     groupable: false,
@@ -103,7 +103,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'getDocsDays',
-    text: 'Сдача документов, дней',
+    title: 'Сдача документов, дней',
     sortable: true,
     default: false,
     groupable: false,
@@ -111,7 +111,7 @@ export const ALL_HEADERS = [
   },
   {
     value: 'reviewDocsDays',
-    text: 'Проверка документов, дней',
+    title: 'Проверка документов, дней',
     sortable: true,
     default: false,
     groupable: false,
@@ -119,7 +119,7 @@ export const ALL_HEADERS = [
   },
   {
     value: '_docsStatusObj.text',
-    text: 'Документы',
+    title: 'Документы',
     sortable: true,
     default: true,
   },
@@ -129,14 +129,14 @@ export const ALL_HEADERS = [
 
   {
     value: 'loadingZones',
-    text: 'Зоны погрузки',
+    title: 'Зоны погрузки',
     sortable: false,
     default: false,
   },
-  
+
   {
     value: 'agreement.name',
-    text: 'Соглашение',
+    title: 'Соглашение',
     sortable: false,
     forAccountingMode: true,
     default: true,
@@ -144,7 +144,7 @@ export const ALL_HEADERS = [
 
   {
     value: 'actions',
-    // text: 'Действия',
+    // title: 'Действия',
     sortable: false,
     forAccountingMode: true,
     width: '3rem',

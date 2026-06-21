@@ -34,36 +34,28 @@
     </template>
   </v-data-table>
 </template>
-
-<script>
+<script setup>
 import { computed } from 'vue'
-import router from '@/router'
+import { useRouter } from 'vue-router'
 import { OrderListFooterDetails } from '@/shared/ui'
 
-export default {
-  name: 'ReportDataTable',
-  components: {
-    OrderListFooterDetails,
-  },
-  props: {
-    items: Array,
-    headers: Array,
-    loading: Boolean,
-    statisticData: Object,
-  },
-  setup(props) {
-    const preparedItems = computed(() => props.items.map((i) => ({ ...i })))
-    function dblClickRow(_, { item }) {
-      if (item) router.push(`/orders/${item._id}`)
-    }
-    return {
-      preparedItems,
-      dblClickRow,
-    }
-  },
+defineOptions({ name: 'ReportDataTable' })
+
+const router = useRouter()
+
+const props = defineProps({
+  items: Array,
+  headers: Array,
+  loading: Boolean,
+  statisticData: Object,
+})
+
+const preparedItems = computed(() => props.items.map((i) => ({ ...i })))
+
+function dblClickRow(_, { item }) {
+  if (item) router.push(`/orders/${item._id}`)
 }
 </script>
-
 <style scoped>
 .v-data-table {
   white-space: nowrap;

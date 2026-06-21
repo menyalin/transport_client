@@ -5,30 +5,21 @@
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click.native="$emit('refresh')" />
-    <v-text-field
-      :model-value="settings.date"
-      type="date"
-      label="Дата (конец периода)"
-      clearable
-      hide-details
-      :style="{ maxWidth: '230px' }"
-      @change="updateSettings($event, 'date')"
-    />
+    <refresh-btn @click="$emit('refresh')" />
+    <date-time-input v-model="settings.date" label="Дата (конец периода)" hide-details />
 
     <v-select
-      :model-value="settings.state"
+      v-model="settings.state"
       label="Документы"
       clearable
       multiple
       :items="stateItems"
       hide-details
-      :style="{ maxWidth: '230px' }"
-      @update:model-value="updateSettings($event, 'state')"
+      :style="{ minWidth: '230px' }"
     />
 
     <v-select
-      :model-value="settings.tks"
+      v-model="settings.tks"
       item-title="name"
       item-value="_id"
       label="ТК"
@@ -36,12 +27,11 @@
       multiple
       :items="tkNameItems"
       hide-details
-      :style="{ maxWidth: '230px' }"
-      @update:model-value="updateSettings($event, 'tks')"
+      :style="{ minWidth: '230px' }"
     />
 
     <v-autocomplete
-      :model-value="settings.clients"
+      v-model="settings.clients"
       item-title="name"
       item-value="_id"
       label="Клиенты"
@@ -50,12 +40,11 @@
       multiple
       :items="clientItems"
       hide-details
-      :style="{ maxWidth: '280px' }"
-      @update:model-value="updateSettings($event, 'clients')"
+      :style="{ minWidth: '280px' }"
     />
 
     <v-autocomplete
-      :model-value="settings.driver"
+      v-model="settings.driver"
       item-title="fullName"
       item-value="_id"
       label="Водитель"
@@ -63,11 +52,10 @@
       auto-select-first
       :items="driverItems"
       hide-details
-      :style="{ maxWidth: '320px' }"
-      @update:model-value="updateSettings($event, 'driver')"
+      :style="{ minWidth: '300px' }"
     />
     <v-autocomplete
-      :model-value="settings.truck"
+      v-model="settings.truck"
       item-title="regNum"
       item-value="_id"
       label="Грузовик"
@@ -75,128 +63,87 @@
       clearable
       :items="truckItems"
       hide-details
-      :style="{ maxWidth: '320px' }"
-      @update:model-value="updateSettings($event, 'truck')"
+      :style="{ minWidth: '300px' }"
     />
     <v-select
-      :model-value="settings.getDocsDays"
+      v-model="settings.getDocsDays"
       label="Сдача документов, дней"
       clearable
       multiple
       :items="daysIntervalItems"
       hide-details
-      :style="{ maxWidth: '200px' }"
-      @update:model-value="updateSettings($event, 'getDocsDays')"
+      :style="{ minWidth: '300px' }"
     />
     <v-select
-      :model-value="settings.reviewDocsDays"
+      v-model="settings.reviewDocsDays"
       label="Проверка документов, дней"
       clearable
       multiple
       :items="daysIntervalItems"
       hide-details
-      :style="{ maxWidth: '200px' }"
-      @update:model-value="updateSettings($event, 'reviewDocsDays')"
+      :style="{ minWidth: '300px' }"
     />
   </div>
 </template>
-
-<script>
-import store from '@/store'
-import { watch, ref, computed } from 'vue'
-import { RefreshBtn } from '@/shared/ui'
-import { AppTableColumnSetting } from '@/shared/ui'
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import { RefreshBtn, AppTableColumnSetting, DateTimeInput } from '@/shared/ui'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'ReportSettings',
-  components: {
-    RefreshBtn,
-    AppTableColumnSetting,
+defineOptions({ name: 'ReportSettings' })
+
+const settings = defineModel()
+
+defineProps({
+  allHeaders: {
+    type: Array,
+    required: true,
   },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-    allHeaders: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const listSettingsName = 'orderDocsReportPage'
-    const carrierStore = useCarrierStore()
-    const allHeaders = props.allHeaders
-    const activeHeaders = ref([])
+})
 
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+const emit = defineEmits(['changeHeaders', 'refresh'])
 
-    function updateActiveHeaders(value) {
-      ctx.emit('changeHeaders', value)
-    }
+const store = useStore()
+const carrierStore = useCarrierStore()
 
-    const stateItems = [
-      { text: 'Не получены', value: 'notGetted' },
-      { text: 'На проверке', value: 'review' },
-      { text: 'На исправлении', value: 'correction' },
-    ]
-    const groupByItems = [
-      { text: 'Месяцам', value: 'month' },
-      { text: 'Водителям', value: 'driver' },
-    ]
+const listSettingsName = 'orderDocsReportPage'
 
-    const daysIntervalItems = [
-      { text: '< 5', value: 1 },
-      { text: '5 - 10', value: 2 },
-      { text: '10 - 20', value: 3 },
-      { text: '20 - 30', value: 4 },
-      { text: ' > 30 ', value: 5 },
-    ]
-
-    const tkNameItems = computed(() => {
-      return carrierStore.carriers
-    })
-
-    const driverItems = computed(() => {
-      return store.getters.drivers
-    })
-
-    const truckItems = computed(() => store.getters.trucks.filter((i) => i.type === 'truck'))
-
-    const clientItems = computed(() => {
-      return store.getters.partners.filter((i) => i.isClient)
-    })
-
-    watch([activeHeaders], () => {
-      ctx.emit('changeHeaders', activeHeaders.value)
-    })
-    return {
-      groupByItems,
-      updateActiveHeaders,
-      updateSettings,
-      listSettingsName,
-      allHeaders,
-      activeHeaders,
-      tkNameItems,
-      clientItems,
-      stateItems,
-      driverItems,
-      truckItems,
-      daysIntervalItems,
-    }
-  },
+function updateActiveHeaders(value) {
+  emit('changeHeaders', value)
 }
-</script>
 
+const stateItems = [
+  { title: 'Не получены', value: 'notGetted' },
+  { title: 'На проверке', value: 'review' },
+  { title: 'На исправлении', value: 'correction' },
+]
+const daysIntervalItems = [
+  { title: '< 5', value: 1 },
+  { title: '5 - 10', value: 2 },
+  { title: '10 - 20', value: 3 },
+  { title: '20 - 30', value: 4 },
+  { title: ' > 30 ', value: 5 },
+]
+
+const tkNameItems = computed(() => carrierStore.carriers)
+
+const driverItems = computed(() => store.getters.drivers)
+
+const truckItems = computed(() => store.getters.trucks.filter((i) => i.type === 'truck'))
+
+const clientItems = computed(() => store.getters.partners.filter((i) => i.isClient))
+</script>
 <style scoped>
 .settings-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 20px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+.settings-wrapper > * {
+  flex: none;
 }
 </style>

@@ -33,7 +33,9 @@ export default function () {
         reviewCount,
       } = await ReportService.orderDocs({
         ...settings.value,
-        date: dayjs(settings.value.date).endOf('day').toISOString(),
+        date: dayjs(settings.value?.date || undefined)
+          .endOf('day')
+          .toISOString(),
       })
       items.value = itemsData || []
       statisticData.value = {
@@ -42,20 +44,14 @@ export default function () {
         notGettedCount,
         reviewCount,
       }
-      loading.value = false
     } catch (e) {
-      loading.value = false
       console.log('Ошибка !', e)
+    } finally {
+      loading.value = false
     }
   }
 
-  watch(
-    settings,
-    async () => {
-      await getData()
-    },
-    { immediate: true }
-  )
+  watch(settings, getData, { immediate: true, deep: true })
 
   return {
     settings,

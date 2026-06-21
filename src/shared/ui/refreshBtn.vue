@@ -1,5 +1,5 @@
 <template>
-  <v-btn>
+  <v-btn icon variant="text">
     <v-icon> mdi-cached </v-icon>
   </v-btn>
 </template>

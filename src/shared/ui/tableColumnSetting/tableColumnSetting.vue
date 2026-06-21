@@ -56,7 +56,7 @@ watch(
 <template>
   <v-menu :close-on-content-click="false">
     <template #activator="{ props }">
-      <v-btn v-bind="props" icon size="small">
+      <v-btn v-bind="props" icon size="small" variant="text">
         <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>

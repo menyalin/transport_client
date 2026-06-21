@@ -15,44 +15,23 @@
     />
   </div>
 </template>
-
-<script>
+<script setup>
 import { ref } from 'vue'
 import { ReportTitle } from '@/shared/ui'
-
 import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
 
-export default {
-  name: 'OrderDocsReport',
-  components: {
-    ReportSettings,
-    ReportTitle,
-    ReportDataTable,
-  },
-  setup() {
-    const headers = ref([])
+defineOptions({ name: 'OrderDocsReport' })
 
-    const { settings, items, refresh, loading, statisticData } = useReportData()
+const allHeaders = ALL_HEADERS
+const headers = ref([])
 
-    function changeHeaders(value) {
-      headers.value = value
-    }
+const { settings, items, refresh, loading, statisticData } = useReportData()
 
-    return {
-      items,
-      refresh,
-      settings,
-      headers,
-      changeHeaders,
-      loading,
-      statisticData,
-      allHeaders: ALL_HEADERS,
-    }
-  },
+function changeHeaders(value) {
+  headers.value = value
 }
 </script>
-
 <style scoped>
 .page-wrapper {
   display: flex;
