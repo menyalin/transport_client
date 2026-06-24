@@ -29,183 +29,180 @@
     </v-data-table-server>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
-import useHistorySettings from '@/shared/hooks/useHistorySettings'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ReportService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useAddressStore } from '@/entities/address'
+import { sortingAdapterForOldApi } from '@/shared/utils/migrationUtils.js'
 
-export default {
-  name: 'OrdersTable',
-  components: { AppTableColumnSettings },
-  props: {
-    mainFilters: Object,
-    additionalFilters: Object,
-    dateRange: { type: Array, required: true },
-    priceWithVat: Boolean,
-  },
-  setup() {
-    const carrierStore = useCarrierStore()
-    const addressStore = useAddressStore()
-    const listOptions = useHistorySettings({}, 'orders_table_list_options')
-    return {
-      carrierStore,
-      addressStore,
-      listOptions,
-    }
-  },
-  data() {
-    return {
-      loading: false,
-      items: [],
-      totalCount: 0,
-      formName: 'ordersDetailReport',
-      listSettingsName: 'ordersDetailReportFields',
-      settings: {},
-      activeHeaders: [],
-      allHeaders: ALL_ORDER_TABLE_HEADERS,
-      defaultHeaders: DEFAULT_HEADERS,
-    }
-  },
-  computed: {
-    filteredHeaders() {
-      return this.allHeaders.filter((i) => this.activeHeaders.includes(i.value))
-    },
-    preparedItems() {
-      if (!Array.isArray(this.items)) return []
-      return this.items.map((i) => ({
-        ...i,
-        status: this.$store.getters.orderStatusesMap.get(i.status),
-        orderDate: new Date(i.orderDate).toLocaleString(),
-        client: this.$store.getters.partnersMap.get(i.client)?.name || '-',
-        truck: this.$store.getters.trucksMap.get(i.truckId)?.regNum || '-',
-        driver: this.$store.getters.driversMap.get(i.driverId)?.fullName || '-',
-        carrierId: this.carrierStore.carriersMap.get(i.carrierId)?.name || '-',
-        orderType: this.$store.getters.orderAnalyticTypesMap.get(i.orderType),
-        addressesLoading: i.loadingAddressIds
-          ?.map((a) => this.addressStore.addressMap.get(a)?.shortName)
-          .join(', '),
-        addressesUnloading: i.unloadingAddressIds
-          ?.map((a) => this.addressStore.addressMap.get(a)?.shortName)
-          .join(', '),
-        regionsLoading: i.loadingRegions
-          ?.map((r) => this.$store.getters.regionsMap.get(r)?.name)
-          .join(', '),
-        regionsUnloading: i.unloadingRegions
-          ?.map((r) => this.$store.getters.regionsMap.get(r)?.name)
-          .join(', '),
-        zonesLoading: i.loadingZones
-          ?.map((r) => this.$store.getters.zonesMap.get(r)?.name)
-          .join(', '),
-        zonesUnloading: i.unloadingZones
-          ?.map((r) => this.$store.getters.zonesMap.get(r)?.name)
-          .join(', '),
-        citiesLoading: i.loadingCities
-          ?.map((r) => this.$store.getters.citiesMap.get(r)?.name)
-          .join(', '),
-        citiesUnloading: i.unloadingCities
-          ?.map((r) => this.$store.getters.citiesMap.get(r)?.name)
-          .join(', '),
-        capacityType: i.capacityType,
-        truckKind: this.$store.getters.truckKindsMap.get(i.truckKind),
-        outsourceCostsWithVat: Intl.NumberFormat().format(i.outsourceCostsWithVat),
-        outsourceCostsWOVat: Intl.NumberFormat().format(i.outsourceCostsWOVat),
-        basePrePrice: this.getBasePrice(i, 'prePrices', this.priceWithVat),
-        basePrice: this.getBasePrice(i, 'prices', this.priceWithVat),
-        price: Intl.NumberFormat().format(
-          Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
-        ),
-        kPrice: Intl.NumberFormat().format(
-          Math.round(i[this.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000)
-        ),
-      }))
-    },
-  },
-  watch: {
-    dateRange: {
-      deep: true,
-      handler: function () {
-        this.clearItems()
-        this.getData()
-      },
-    },
-    mainFilters: {
-      deep: true,
-      handler: async function () {
-        this.clearItems()
-        await this.getData()
-      },
-    },
-    additionalFilters: {
-      deep: true,
-      handler: function () {
-        this.listOptions.page = 1
-        this.getData()
-      },
-    },
-    listOptions: {
-      handler: function () {
-        this.getData()
-      },
-    },
-  },
-  created() {
-    const fields = JSON.parse(localStorage.getItem(this.listSettingsName))
-    if (!fields || fields.length === 0) this.activeHeaders = this.defaultHeaders
-    else this.activeHeaders = fields
+defineOptions({ name: 'OrdersTable' })
 
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+const props = defineProps({
+  mainFilters: Object,
+  additionalFilters: Object,
+  dateRange: { type: Array, required: true },
+  priceWithVat: Boolean,
+})
+
+const store = useStore()
+const router = useRouter()
+const carrierStore = useCarrierStore()
+const addressStore = useAddressStore()
+
+const listOptions = usePersistedRef({}, 'orders_table_list_options')
+
+const loading = ref(false)
+const items = ref([])
+const totalCount = ref(0)
+const formName = 'ordersDetailReport'
+const listSettingsName = 'ordersDetailReportFields'
+const settings = ref({})
+const activeHeaders = ref([])
+const allHeaders = ALL_ORDER_TABLE_HEADERS
+const defaultHeaders = DEFAULT_HEADERS
+
+function getBasePrice(order, type, withVat) {
+  if (!['prices', 'prePrices'].includes(type))
+    throw new Error('ordersTable : getBasePrice : price type error!!!')
+
+  const price = order[type]
+  if (!price?.base) return 0
+
+  return Intl.NumberFormat().format(Math.round(price.base[withVat ? 'price' : 'priceWOVat']))
+}
+
+const filteredHeaders = computed(() =>
+  allHeaders.filter((i) => activeHeaders.value.includes(i.value))
+)
+
+const preparedItems = computed(() => {
+  if (!Array.isArray(items.value)) return []
+  return items.value.map((i) => ({
+    ...i,
+    status: store.getters.orderStatusesMap.get(i.status),
+    orderDate: new Date(i.orderDate).toLocaleString(),
+    client: store.getters.partnersMap.get(i.client)?.name || '-',
+    truck: store.getters.trucksMap.get(i.truckId)?.regNum || '-',
+    driver: store.getters.driversMap.get(i.driverId)?.fullName || '-',
+    carrierId: carrierStore.carriersMap.get(i.carrierId)?.name || '-',
+    orderType: store.getters.orderAnalyticTypesMap.get(i.orderType),
+    addressesLoading: i.loadingAddressIds
+      ?.map((a) => addressStore.addressMap.get(a)?.shortName)
+      .join(', '),
+    addressesUnloading: i.unloadingAddressIds
+      ?.map((a) => addressStore.addressMap.get(a)?.shortName)
+      .join(', '),
+    regionsLoading: i.loadingRegions?.map((r) => store.getters.regionsMap.get(r)?.name).join(', '),
+    regionsUnloading: i.unloadingRegions
+      ?.map((r) => store.getters.regionsMap.get(r)?.name)
+      .join(', '),
+    zonesLoading: i.loadingZones?.map((r) => store.getters.zonesMap.get(r)?.name).join(', '),
+    zonesUnloading: i.unloadingZones?.map((r) => store.getters.zonesMap.get(r)?.name).join(', '),
+    citiesLoading: i.loadingCities?.map((r) => store.getters.citiesMap.get(r)?.name).join(', '),
+    citiesUnloading: i.unloadingCities?.map((r) => store.getters.citiesMap.get(r)?.name).join(', '),
+    capacityType: i.capacityType,
+    truckKind: store.getters.truckKindsMap.get(i.truckKind),
+    outsourceCostsWithVat: Intl.NumberFormat().format(i.outsourceCostsWithVat),
+    outsourceCostsWOVat: Intl.NumberFormat().format(i.outsourceCostsWOVat),
+    basePrePrice: getBasePrice(i, 'prePrices', props.priceWithVat),
+    basePrice: getBasePrice(i, 'prices', props.priceWithVat),
+    price: Intl.NumberFormat().format(
+      Math.round(i[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'])
+    ),
+    kPrice: Intl.NumberFormat().format(
+      Math.round(i[props.priceWithVat ? 'totalWithVat' : 'totalWOVat'] / 1000)
+    ),
+  }))
+})
+
+watch(
+  () => props.dateRange,
+  () => {
+    clearItems()
+    getData()
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
+  { deep: true }
+)
+
+watch(
+  () => props.mainFilters,
+  () => {
+    clearItems()
+    getData()
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.additionalFilters,
+  () => {
+    listOptions.value = { ...listOptions.value, page: 1 }
+  },
+  { deep: true }
+)
+
+watch(
+  listOptions,
+  () => {
+    getData()
+  },
+  { deep: true }
+)
+
+onMounted(() => {
+  const fields = JSON.parse(localStorage.getItem(listSettingsName))
+  if (!fields || fields.length === 0) activeHeaders.value = [...defaultHeaders]
+  else activeHeaders.value = fields
+
+  if (store.getters.formSettingsMap.has(formName))
+    settings.value = store.getters.formSettingsMap.get(formName)
+})
+
+onBeforeRouteLeave((to, from, next) => {
+  store.commit('setFormSettings', {
+    formName,
+    settings: { ...settings.value },
+  })
+  next()
+})
+
+function clearItems() {
+  items.value = []
+  totalCount.value = 0
+}
+
+async function getData() {
+  try {
+    loading.value = true
+    const result = await ReportService.grossProfitDetailsData({
+      company: store.getters.directoriesProfile,
+      dateRange: props.dateRange,
+      mainFilters: props.mainFilters,
+      additionalFilters: props.additionalFilters,
+      listOptions: {
+        ...listOptions.value,
+        priceWithVat: props.priceWithVat,
+        sortBy: sortingAdapterForOldApi(listOptions.value.sortBy).sortBy,
+        sortDesc: sortingAdapterForOldApi(listOptions.value.sortBy).sortDesc,
+      },
     })
-    next()
-  },
-  methods: {
-    getBasePrice(order, type, withVat) {
-      if (!['prices', 'prePrices'].includes(type))
-        throw new Error('ordersTable : getBasePrice : price type error!!!')
+    items.value = result.items || []
+    totalCount.value = result.count || 0
+    loading.value = false
+  } catch (e) {
+    loading.value = false
+    store.commit('setError', e.message)
+  }
+}
 
-      const price = order[type]
-      if (!price?.base) return 0
-
-      return Intl.NumberFormat().format(Math.round(price.base[withVat ? 'price' : 'priceWOVat']))
-    },
-
-    clearItems() {
-      this.items = []
-      this.totalCount = 0
-    },
-    async getData() {
-      try {
-        this.loading = true
-        const { items, count } = await ReportService.grossProfitDetailsData({
-          company: this.$store.getters.directoriesProfile,
-          dateRange: this.dateRange,
-          mainFilters: this.mainFilters,
-          additionalFilters: this.additionalFilters,
-          listOptions: {
-            ...this.listOptions,
-            priceWithVat: this.priceWithVat,
-          },
-        })
-        this.items = items || []
-        this.totalCount = count || 0
-        this.loading = false
-      } catch (e) {
-        this.loading = false
-        this.$store.commit('setError', e.message)
-      }
-    },
-    dblClickRow(_, { item }) {
-      this.$router.push(`/orders/${item._id}`)
-    },
-  },
+function dblClickRow(_, { item }) {
+  router.push(`/orders/${item._id}`)
 }
 </script>
 <style scoped>

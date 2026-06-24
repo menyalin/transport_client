@@ -1,5 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
-import store from '@/store'
+import { useStore } from 'vuex'
 import { AgreementService, ReportService } from '@/shared/services'
 
 import { ADDITIONAL_FILTER_LIST, MAIN_FILTER_LIST, GROUP_BY_ITEMS } from './constants.js'
@@ -7,6 +7,7 @@ import initDateRange from './initDateRange.js'
 import usePersistedRef from '@/shared/hooks/usePersistedRef.js'
 
 export const useReportSettings = () => {
+  const store = useStore()
   const mainFilters = usePersistedRef(MAIN_FILTER_LIST, 'main_filters')
   const selectedGroups = usePersistedRef([], 'selected_groups')
   const additionalFilters = usePersistedRef(
@@ -41,15 +42,8 @@ export const useReportSettings = () => {
       company: store.getters.directoriesProfile,
       clientsOnly: true,
     })
-    agreements.value = Object.assign(
-      [],
-      items
-        .map((i) => ({
-          value: i._id,
-          text: i.name,
-        }))
-        .sort((a, b) => (a.name > b.name ? -1 : 1))
-    )
+    const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name))
+    agreements.value = sorted.map((i) => ({ value: i._id, title: i.name }))
   }
 
   function updateSelected(val) {

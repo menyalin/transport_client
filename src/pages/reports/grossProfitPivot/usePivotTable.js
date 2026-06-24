@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import store from '@/store'
+import { useStore } from 'vuex'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 function formatNumber(value) {
@@ -13,8 +13,8 @@ const percentFormatter = new Intl.NumberFormat('ru-RU', {
 })
 
 export const usePivotTable = (props) => {
+  const store = useStore()
   const carrierStore = useCarrierStore()
-  const showOutsourceCosts = computed(() => props.showOutsourceCosts)
 
   const groupName = computed(() => {
     return props.groupItems.find((i) => i.value === props.groupBy)?.text || '-'
@@ -22,43 +22,24 @@ export const usePivotTable = (props) => {
 
   const headers = computed(() => {
     const defaultFields = [
-      { text: 'Кол-во', value: 'count', align: 'right' },
-      { text: 'Сумма', value: 'sum', align: 'right' },
-      { text: 'Сред.сумма', value: 'avg', align: 'right' },
+      { title: 'Кол-во', value: 'count', align: 'right' },
+      { title: 'Сумма', value: 'sum', align: 'right' },
+      { title: 'Сред.сумма', value: 'avg', align: 'right' },
     ]
     const outsourceFields = [
-      {
-        text: 'Наемники',
-        value: 'outsourceCosts',
-        align: 'right',
-      },
-      {
-        text: 'Прибыль',
-        value: 'totalProfit',
-        align: 'right',
-      },
-      {
-        text: 'Средний тариф',
-        value: 'avgOutsourceCosts',
-        align: 'right',
-      },
-      {
-        text: 'Средняя прибыль',
-        value: 'avgProfit',
-        align: 'right',
-      },
-      {
-        text: 'Доходность %',
-        value: 'avgProfitWOVatPercent',
-        align: 'right',
-      },
+      { title: 'Наемники', value: 'outsourceCosts', align: 'right' },
+      { title: 'Прибыль', value: 'totalProfit', align: 'right' },
+      { title: 'Средний тариф', value: 'avgOutsourceCosts', align: 'right' },
+      { title: 'Средняя прибыль', value: 'avgProfit', align: 'right' },
+      { title: 'Доходность %', value: 'avgProfitWOVatPercent', align: 'right' },
     ]
-    const res = [{ text: groupName.value, value: 'titleColumn' }, ...defaultFields]
-    if (showOutsourceCosts.value) {
+    const res = [{ title: groupName.value, value: 'titleColumn' }, ...defaultFields]
+    if (props.showOutsourceCosts) {
       res.push(...outsourceFields)
     }
     return res
   })
+
   const roundBy = computed(() => (props.withRound ? 1000 : 1))
 
   const totalData = computed(() => props.pivotData?.total)
@@ -106,7 +87,7 @@ export const usePivotTable = (props) => {
         break
       case 'agreement':
         props.agreements.forEach((p) => {
-          res.set(p.value, p.text)
+          res.set(p.value, p.title)
         })
     }
     return res
