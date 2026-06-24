@@ -49,66 +49,48 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, watch } from 'vue'
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
-  name: 'Insurance',
-  components: {
-    AppBlockTitle,
-    DateTimeInput,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    item: Object,
-    title: String,
-    truckType: String,
-  },
-  data() {
-    return {
-      params: {
-        osagoNum: null,
-        osagoExpDate: null,
-        osagoCompany: null,
-        kaskoNum: null,
-        kaskoExpDate: null,
-        kaskoCompany: null,
-        leasingСompany: null,
-      },
+defineOptions({ name: 'Insurance' })
+
+const item = defineModel({ type: Object })
+
+defineProps({
+  title: String,
+  truckType: String,
+})
+
+const initialParams = {
+  osagoNum: null,
+  osagoExpDate: null,
+  osagoCompany: null,
+  kaskoNum: null,
+  kaskoExpDate: null,
+  kaskoCompany: null,
+  leasingСompany: null,
+}
+
+const params = ref({ ...initialParams })
+
+watch(
+  item,
+  (val) => {
+    if (val) {
+      const fields = Object.keys(initialParams)
+      fields.forEach((f) => {
+        params.value[f] = val[f]
+      })
     }
   },
-  computed: {
-    fields() {
-      return Object.keys(this.params)
-    },
-  },
-  watch: {
-    item: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          this.fields.forEach((f) => {
-            this.params[f] = val[f]
-          })
-        }
-      },
-    },
-  },
-  methods: {
-    change(val, field) {
-      this.params[field] = val
-      this.$emit('change', this.params)
-    },
-    chipColor(days) {
-      if (days < 14) return 'error'
-      if (days < 30) return 'warning'
-      return 'light-green'
-    },
-  },
+  { immediate: true }
+)
+
+function change(val, field) {
+  params.value[field] = val
+  item.value = { ...params.value }
 }
 </script>
 <style scoped>

@@ -16,33 +16,27 @@
     </tbody>
   </table>
 </template>
-<script>
-import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+<script setup>
 import { computed } from 'vue'
-export default {
-  name: 'ReportStatisticData',
-  components: {},
-  props: {
-    data: {
-      type: Object,
-    },
-  },
-  setup(props) {
-    const totalWOVat = computed(() => {
-      if (!props.data?.total?.woVat) return 0
-      return moneyFormatter(props.data.total.woVat, 0)
-    })
+import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 
-    const totalWithVat = computed(() => {
-      if (!props.data?.total?.withVat) return 0
-      return moneyFormatter(props.data.total.withVat, 0)
-    })
-    return {
-      totalWOVat,
-      totalWithVat,
-    }
+defineOptions({ name: 'ReportStatisticData' })
+
+const props = defineProps({
+  data: {
+    type: Object,
   },
-}
+})
+
+const totalWOVat = computed(() => {
+  if (!props.data?.total?.woVat) return 0
+  return moneyFormatter(props.data.total.woVat, 0)
+})
+
+const totalWithVat = computed(() => {
+  if (!props.data?.total?.withVat) return 0
+  return moneyFormatter(props.data.total.withVat, 0)
+})
 </script>
 <style scoped>
 tr td:nth-child(2) {

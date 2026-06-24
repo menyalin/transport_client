@@ -155,28 +155,29 @@
         v-model:dialog="priceDialog"
       />
     </div>
-
-    <CardSection title="Примечания" class="note">
-      <v-text-field v-model="form.note" label="Примечание" />
-      <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
-    </CardSection>
-    <EntityFiles
-      v-if="order && order._id"
-      :itemId="order._id"
-      docType="order"
-      class="order-files"
-    />
-    <order-docs-list-form
-      v-if="isShowDocs"
-      class="docs"
-      v-model="docs"
-      :isValid="isValidDocs(docs)"
-      :readonly="isReadonlyDocs"
-    >
-      <docs-registry-link :docsRegistry="form.docsRegistry" />
-    </order-docs-list-form>
-    <div class="transport-waybills">
-      <slot name="transport_waybills" />
+    <div class="additional-info">
+      <CardSection title="Примечания" class="note">
+        <v-text-field v-model="form.note" label="Примечание" />
+        <v-text-field v-model="form.noteAccountant" label="Примечание для бухгалтера" />
+      </CardSection>
+      <EntityFiles
+        v-if="order && order._id"
+        :itemId="order._id"
+        docType="order"
+        class="order-files"
+      />
+      <order-docs-list-form
+        v-if="isShowDocs"
+        class="docs"
+        v-model="docs"
+        :isValid="isValidDocs(docs)"
+        :readonly="isReadonlyDocs"
+      >
+        <docs-registry-link :docsRegistry="form.docsRegistry" />
+      </order-docs-list-form>
+      <div class="transport-waybills">
+        <slot name="transport_waybills" />
+      </div>
     </div>
   </div>
 
@@ -492,10 +493,18 @@ watch(
   flex-wrap: wrap;
   justify-content: flex-start;
 }
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
+  gap: 10px;
+  grid-column: 2/4;
+  grid-row: 5/6;
+}
 .route-points {
   grid-column: 2/4;
-  grid-row: 4/8;
+  grid-row: 4/5;
 }
 
 .price {
@@ -504,23 +513,5 @@ watch(
   gap: 10px;
   grid-column: 3/4;
   grid-row: 1/4;
-}
-.note {
-  grid-column: 2/4;
-  grid-row: 8/9;
-  margin-top: 10px;
-}
-.docs {
-  grid-column: 2/4;
-  grid-row: 9/10;
-}
-
-.order-files {
-  grid-column: 2/4;
-  grid-row: 10/11;
-}
-.transport-waybills {
-  grid-column: 2/4;
-  grid-row: 11/12;
 }
 </style>

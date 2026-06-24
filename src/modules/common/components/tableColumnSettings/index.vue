@@ -17,61 +17,52 @@
     </v-list>
   </v-menu>
 </template>
-<script>
-export default {
-  name: 'TableColumnSettings',
-  props: {
-    modelValue: {
-      type: Array,
-      default: () => [],
-    },
-    allHeaders: {
-      type: Array,
-      required: true,
-    },
-    defaultHeaders: Array,
-    listSettingsName: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      tmpHeaders: [],
-    }
-  },
-  watch: {
-    modelValue: {
-      immediate: true,
-      deep: true,
-      handler: function (val) {
-        if (Array.isArray(val)) this.tmpHeaders = [...val]
-      },
-    },
-  },
-  mounted() {
-    if (!this.modelValue || this.modelValue.length === 0) {
-      const savedHeaders = JSON.parse(localStorage.getItem(this.listSettingsName))
-      if (savedHeaders) this.tmpHeaders = savedHeaders
-      else this.tmpHeaders = this.defaultHeaders || []
-      this.emitActiveHeaders()
-    }
-  },
-  methods: {
-    emitActiveHeaders() {
-      this.$emit('update:modelValue', this.tmpHeaders)
-    },
+<script setup>
+import { ref, watch, onMounted } from 'vue'
 
-    toggleHeader(field) {
-      if (this.tmpHeaders.includes(field)) {
-        this.tmpHeaders = this.tmpHeaders.filter((i) => i !== field)
-      } else {
-        this.tmpHeaders.push(field)
-      }
-      localStorage.setItem(this.listSettingsName, JSON.stringify(this.tmpHeaders))
-      this.emitActiveHeaders()
-    },
+defineOptions({ name: 'TableColumnSettings' })
+
+const model = defineModel({ type: Array, default: () => [] })
+
+const props = defineProps({
+  allHeaders: {
+    type: Array,
+    required: true,
   },
+  defaultHeaders: Array,
+  listSettingsName: {
+    type: String,
+    required: true,
+  },
+})
+
+const tmpHeaders = ref([])
+
+watch(
+  model,
+  (val) => {
+    if (Array.isArray(val)) tmpHeaders.value = [...val]
+  },
+  { immediate: true }
+)
+
+onMounted(() => {
+  if (!model.value || model.value.length === 0) {
+    const savedHeaders = JSON.parse(localStorage.getItem(props.listSettingsName))
+    if (savedHeaders) tmpHeaders.value = savedHeaders
+    else tmpHeaders.value = props.defaultHeaders || []
+    model.value = tmpHeaders.value
+  }
+})
+
+function toggleHeader(field) {
+  if (tmpHeaders.value.includes(field)) {
+    tmpHeaders.value = tmpHeaders.value.filter((i) => i !== field)
+  } else {
+    tmpHeaders.value = [...tmpHeaders.value, field]
+  }
+  localStorage.setItem(props.listSettingsName, JSON.stringify(tmpHeaders.value))
+  model.value = tmpHeaders.value
 }
 </script>
 <style scoped></style>

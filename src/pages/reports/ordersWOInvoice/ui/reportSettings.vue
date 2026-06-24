@@ -6,25 +6,21 @@
       @change="updateActiveHeaders"
     />
     <refresh-btn @click="$emit('refresh')" />
-    <DateRangeInput
-      :model-value="settings.period"
-      @update:model-value="updateSettings($event, 'period')"
-    />
+    <DateRangeInput v-model="settings.period" />
 
     <v-autocomplete
-      :model-value="settings.carriers"
+      v-model="settings.carriers"
       item-title="name"
       item-value="_id"
       label="ТК"
       multiple
       :items="carrierStore.carriers"
       hide-details
-      :style="{ maxWidth: '300px' }"
-      @update:model-value="updateSettings($event, 'carriers')"
+      :style="{ minWidth: '300px' }"
     />
 
     <v-autocomplete
-      :model-value="settings.agreements"
+      v-model="settings.agreements"
       item-title="name"
       item-value="_id"
       label="Соглашения"
@@ -32,70 +28,44 @@
       multiple
       :items="agreementItems"
       hide-details
-      :style="{ maxWidth: '500px' }"
-      @update:model-value="updateSettings($event, 'agreements')"
+      :style="{ minWidth: '500px' }"
     />
   </div>
 </template>
-
-<script>
-import { watch, ref } from 'vue'
+<script setup>
 import { AppTableColumnSetting, DateRangeInput, RefreshBtn } from '@/shared/ui'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'ReportSettings',
-  components: {
-    RefreshBtn,
-    AppTableColumnSetting,
-    DateRangeInput,
-  },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    agreementItems: Array,
-    settings: Object,
-    allHeaders: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const listSettingsName = 'orderDocsReportPage'
-    const allHeaders = props.allHeaders
-    const activeHeaders = ref([])
-    const carrierStore = useCarrierStore()
+defineOptions({ name: 'ReportSettings' })
 
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+const settings = defineModel()
 
-    function updateActiveHeaders(value) {
-      ctx.emit('changeHeaders', value)
-    }
-
-    watch([activeHeaders], () => {
-      ctx.emit('changeHeaders', activeHeaders.value)
-    })
-    return {
-      updateActiveHeaders,
-      updateSettings,
-      listSettingsName,
-      allHeaders,
-      activeHeaders,
-      carrierStore,
-    }
+defineProps({
+  agreementItems: Array,
+  allHeaders: {
+    type: Array,
+    required: true,
   },
+})
+
+const emit = defineEmits(['changeHeaders', 'refresh'])
+
+const carrierStore = useCarrierStore()
+
+const listSettingsName = 'orderDocsReportPage'
+
+function updateActiveHeaders(value) {
+  emit('changeHeaders', value)
 }
 </script>
-
 <style scoped>
 .settings-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
+}
+.settings-wrapper > * {
+  flex: none;
 }
 </style>

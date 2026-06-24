@@ -12,46 +12,40 @@
     @dblclick:row="dblClickRow"
   >
     <template #[`footer.prepend`]>
-      <ReportStatisticData :data="statisticData" />
+      <ReportStatisticData :data="statisticData" class="mr-auto" />
     </template>
   </v-data-table-server>
 </template>
-
-<script>
+<script setup>
 import { computed } from 'vue'
-import router from '@/router'
+import { useRouter } from 'vue-router'
 import { DataTableRow } from './index'
 import ReportStatisticData from './reportStatisticData.vue'
 
-export default {
-  name: 'ReportDataTable',
-  components: {
-    ReportStatisticData,
-  },
-  props: {
-    items: Array,
-    headers: Array,
-    loading: Boolean,
-    statisticData: Object,
-    listOptions: Object,
-  },
-  setup(props, ctx) {
-    const preparedItems = computed(() => props.items.map((i) => new DataTableRow(i)))
-    function dblClickRow(_, { item }) {
-      if (item) router.push(`/orders/${item.orderId}`)
-    }
-    function updateListOptions(val) {
-      ctx.emit('update:listOptions', val)
-    }
-    return {
-      preparedItems,
-      dblClickRow,
-      updateListOptions,
-    }
-  },
+defineOptions({ name: 'ReportDataTable' })
+
+const props = defineProps({
+  items: Array,
+  headers: Array,
+  loading: Boolean,
+  statisticData: Object,
+  listOptions: Object,
+})
+
+const emit = defineEmits(['update:listOptions'])
+
+const router = useRouter()
+
+const preparedItems = computed(() => props.items.map((i) => new DataTableRow(i)))
+
+function dblClickRow(_, { item }) {
+  if (item) router.push(`/orders/${item.orderId}`)
+}
+
+function updateListOptions(val) {
+  emit('update:listOptions', val)
 }
 </script>
-
 <style scoped>
 .v-data-table {
   white-space: nowrap;

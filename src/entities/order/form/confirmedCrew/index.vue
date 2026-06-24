@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div>
-      <BlockTitle>{{ title }}</BlockTitle>
-    </div>
+    <BlockTitle class="mt-2">{{ title }}</BlockTitle>
     <div class="confirmed-crew-block">
       <v-autocomplete
         :model-value="model.truck"
@@ -13,6 +11,7 @@
         :items="trucks"
         hide-details
         @update:model-value="changeTruckHandler"
+        :style="{ minWidth: '200px' }"
       />
       <v-autocomplete
         label="Водитель"
@@ -20,6 +19,7 @@
         :items="drivers"
         readonly
         hide-details
+        :style="{ minWidth: '300px' }"
       />
       <v-autocomplete
         label="Прицеп"
@@ -27,6 +27,7 @@
         :items="trailers"
         readonly
         hide-details
+        :style="{ minWidth: '200px' }"
       />
       <v-btn @click="copyHandler"> Скопировать данные </v-btn>
     </div>
@@ -96,6 +97,9 @@ const carrierName = computed(() => props.carriersMap.get(model.value.tkName)?.na
   justify-content: flex-start;
   gap: 10px;
   align-items: center;
+}
+.confirmed-crew-block > * {
+  flex: none;
 }
 .outsource-agreement-row {
   display: flex;

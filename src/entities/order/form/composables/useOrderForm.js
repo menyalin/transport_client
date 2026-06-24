@@ -101,7 +101,6 @@ export function useOrderForm(props) {
   })
 
   const showPaymentToDriver = computed(() => {
-    console.log('confirmedCrew.value: ', confirmedCrew.value)
     return (
       store.getters.hasPermission('order:readPaymentToDriver') &&
       !confirmedCrew.value.outsourceAgreement

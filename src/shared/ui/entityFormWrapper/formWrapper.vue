@@ -19,38 +19,35 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
 import { LoadSpinner } from '@/shared/ui'
 
-export default {
-  name: 'EntityFormWrapper',
-  components: {
-    LoadSpinner,
+defineOptions({ name: 'EntityFormWrapper' })
+
+defineProps({
+  itemIsMissing: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    itemIsMissing: {
-      type: Boolean,
-      default: false,
-    },
-    showError: Boolean,
-    errorMessage: Boolean,
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
+  showError: Boolean,
+  errorMessage: Boolean,
+  loading: {
+    type: Boolean,
+    default: false,
   },
-  methods: {
-    async deleteHandler() {
-      const res = confirm('Вы действительно хотите удалить запись? ')
-      if (res) {
-        this.$emit('delete')
-      }
-    },
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
   },
+})
+
+const emit = defineEmits(['delete'])
+
+async function deleteHandler() {
+  const res = confirm('Вы действительно хотите удалить запись? ')
+  if (res) {
+    emit('delete')
+  }
 }
 </script>
 

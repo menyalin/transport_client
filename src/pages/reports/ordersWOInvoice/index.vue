@@ -13,49 +13,29 @@
       :headers="headers"
       :loading="loading"
       :carrierItemsMap="carrierStore.carriersMap"
-      :listOptions.sync="listOptions"
+      v-model:listOptions="listOptions"
       :statisticData="statisticData"
     />
   </div>
 </template>
-<script>
+<script setup>
 import { ref } from 'vue'
 import { ReportTitle } from '@/shared/ui'
-
 import { ReportSettings, ReportDataTable } from './ui'
 import { useReportData, ALL_HEADERS } from './model'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
-export default {
-  name: 'OrdersWOInvoice',
-  components: {
-    ReportSettings,
-    ReportTitle,
-    ReportDataTable,
-  },
-  setup() {
-    const headers = ref([])
-    const carrierStore = useCarrierStore()
-    const { settings, items, refresh, loading, statisticData, agreementItems, listOptions } =
-      useReportData()
 
-    function changeHeaders(value) {
-      headers.value = value
-    }
+defineOptions({ name: 'OrdersWOInvoice' })
 
-    return {
-      items,
-      refresh,
-      settings,
-      listOptions,
-      headers,
-      changeHeaders,
-      loading,
-      statisticData,
-      agreementItems,
-      carrierStore,
-      allHeaders: ALL_HEADERS,
-    }
-  },
+const carrierStore = useCarrierStore()
+const headers = ref([])
+const allHeaders = ALL_HEADERS
+
+const { settings, items, refresh, loading, statisticData, agreementItems, listOptions } =
+  useReportData()
+
+function changeHeaders(value) {
+  headers.value = value
 }
 </script>
 <style scoped>
@@ -63,6 +43,6 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 30px;
+  padding: 15px;
 }
 </style>

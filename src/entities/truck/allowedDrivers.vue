@@ -36,71 +36,58 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'AllowedDrivers',
-  model: {
-    prop: 'driverList',
-    event: 'change',
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'AllowedDrivers' })
+
+const driverList = defineModel({ type: Array })
+
+const props = defineProps({
+  tkName: {
+    type: [String, Object],
+    required: true,
   },
-  props: {
-    driverList: {
-      type: Array,
-    },
-    tkName: {
-      type: [String, Object],
-      required: true,
-    },
-  },
-  data() {
-    return {
-      selectedDrivers: [],
-      isVisibleBtn: true,
-    }
-  },
-  computed: {
-    driversMap() {
-      return this.$store.getters.driversMap
-    },
-    tkNameId() {
-      if (!!this.tkName && typeof this.tkName === 'string') return this.tkName
-      else return this.tkName._id
-    },
-    driversForSelect() {
-      return this.$store.getters.driversForSelect(this.tkNameId)
-    },
-  },
-  watch: {
-    driverList: {
-      immediate: true,
-      handler: function (val) {
-        if (!!val && val.length) this.selectedDrivers = val
-      },
-    },
-  },
-  methods: {
-    addDriver() {
-      this.isVisibleBtn = false
-    },
-    changeDriverState(driver) {
-      const res = confirm('Вы уверены? ')
-      if (res) driver.isPermanent = !driver.isPermanent
-    },
-    changeDriver(val) {
-      if (val && this.selectedDrivers.findIndex((i) => i.driver === val) === -1) {
-        this.selectedDrivers.push({ driver: val, isPermanent: false })
-        this.$emit('change', this.selectedDrivers)
-      }
-      this.isVisibleBtn = true
-    },
-    deleteDriver(id) {
-      if (!id) return null
-      const res = confirm('Вы уверены? ')
-      if (!res) return null
-      this.selectedDrivers = this.selectedDrivers.filter((item) => item.driver !== id)
-      this.$emit('change', this.selectedDrivers)
-    },
-  },
+})
+
+const store = useStore()
+
+const isVisibleBtn = ref(true)
+
+const driversMap = computed(() => store.getters.driversMap)
+
+const tkNameId = computed(() => {
+  if (!!props.tkName && typeof props.tkName === 'string') return props.tkName
+  else return props.tkName._id
+})
+
+const driversForSelect = computed(() => store.getters.driversForSelect(tkNameId.value))
+
+function addDriver() {
+  isVisibleBtn.value = false
+}
+
+function changeDriverState(driver) {
+  const res = confirm('Вы уверены? ')
+  if (!res) return
+  driverList.value = driverList.value.map((item) =>
+    item.driver === driver.driver ? { ...item, isPermanent: !item.isPermanent } : item
+  )
+}
+
+function changeDriver(val) {
+  if (val && !driverList.value.some((i) => i.driver === val)) {
+    driverList.value = [...driverList.value, { driver: val, isPermanent: false }]
+  }
+  isVisibleBtn.value = true
+}
+
+function deleteDriver(id) {
+  if (!id) return
+  const res = confirm('Вы уверены? ')
+  if (!res) return
+  driverList.value = driverList.value.filter((item) => item.driver !== id)
 }
 </script>
 <style></style>
