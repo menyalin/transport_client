@@ -1,9 +1,5 @@
 <template>
   <page-layout :title="title">
-    <template #toolbar>
-      <schedule-settings v-if="$route.fullPath === '/schedule/'" />
-    </template>
-
     <router-view />
   </page-layout>
 </template>
@@ -12,7 +8,6 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { PageLayout } from '@/shared/ui'
-import { ScheduleSettings } from '@/entities/order'
 
 const route = useRoute()
 

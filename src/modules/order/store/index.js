@@ -31,6 +31,41 @@ const _getLastPositionDate = (order) => {
   return routeDates.sort((a, b) => new Date(b) - new Date(a))[0]
 }
 
+function _computeOrdersForSchedule(orders, period, onlyPlannedDates) {
+  const schedulePeriod =
+    period.length === 2 ? [period[0], dayjs(period[1]).add(1, 'd').format('YYYY-MM-DD')] : null
+
+  return orders
+    .map((item) => ({
+      _id: item._id,
+      company: item.company,
+      needRoundTime: !item.route[0]?.arrivalDate || onlyPlannedDates || !item.confirmedCrew?.truck,
+      isCompleted: !!item.route[item.route.length - 1]?.departureDate,
+      startPositionDate: onlyPlannedDates ? item.startPositionDate : _getStartPositionDate(item),
+      endPositionDate: onlyPlannedDates ? item.startPositionDate : _getLastPositionDate(item),
+      lastPlannedDate: _getLastPlannedDate(item),
+      truckId: item.confirmedCrew?.truck,
+      isDisabled: item.isDisabled,
+      state: item.state,
+      route: item.route,
+    }))
+    .filter((order) => {
+      if (period.length !== 2) return true
+      const sP = dayjs(schedulePeriod[0])
+      const eP = dayjs(schedulePeriod[1])
+      return eP.isAfter(order.startPositionDate) && sP.isSameOrBefore(order.endPositionDate)
+    })
+    .sort((a, b) => new Date(a.startPositionDate) - new Date(b.startPositionDate))
+}
+
+function _updateCache(state) {
+  state._ordersForScheduleCache = _computeOrdersForSchedule(
+    state.orders,
+    state.period,
+    state.onlyPlannedDates
+  )
+}
+
 export default {
   state: {
     orders: [],
@@ -45,6 +80,7 @@ export default {
     orderAnalyticTypes: [],
     orderPriceTypes: [],
     onlyTrucksWithRoutes: localStorage.getItem('orders:onlyTrucksWithRoutes') === 'true' ?? false,
+    _ordersForScheduleCache: [],
   },
   mutations: {
     changeOnlyTrucksWithRoutes(state) {
@@ -56,30 +92,39 @@ export default {
       state.onlyPlannedDates = !state.onlyPlannedDates
       if (!state.onlyPlannedDates) localStorage.removeItem('orders:onlyPlannedDates')
       else localStorage.setItem('orders:onlyPlannedDates', true)
+      _updateCache(state)
     },
     setPeriod(state, payload) {
       state.period = payload
+      _updateCache(state)
     },
     clearDirectories(state) {
       state.orders = []
+      _updateCache(state)
     },
     setOrders(state, payload) {
       state.orders = payload
+      _updateCache(state)
     },
-    addOrder({ orders }, payload) {
-      if (orders.findIndex((item) => item._id === payload._id) === -1) orders.push(payload)
+    addOrder(state, payload) {
+      if (state.orders.findIndex((item) => item._id === payload._id) === -1)
+        state.orders.push(payload)
+      _updateCache(state)
     },
     addOrdersToSchedule(state, payload) {
       state.orders = state.orders.concat(
         payload.filter((i) => !state.orders.some((order) => order._id === i._id))
       )
+      _updateCache(state)
     },
     updateOrder(state, payload) {
       const ind = state.orders.findIndex((item) => item._id === payload._id)
       if (ind !== -1) state.orders.splice(ind, 1, payload)
+      _updateCache(state)
     },
     deleteOrder(state, id) {
       state.orders = state.orders.filter((item) => item._id !== id)
+      _updateCache(state)
     },
 
     setOrderStatuses(state, payload) {
@@ -111,34 +156,7 @@ export default {
   getters: {
     onlyTrucksWithRoutes: ({ onlyTrucksWithRoutes }) => onlyTrucksWithRoutes,
     pointTypes: ({ pointTypes }) => pointTypes,
-    ordersForSchedule: ({ orders, period }, { schedulePeriod, onlyPlannedDates }) =>
-      orders
-        .map((item) => ({
-          _id: item._id,
-          company: item.company,
-          needRoundTime:
-            !item.route[0].arrivalDate || onlyPlannedDates || !item.confirmedCrew?.truck,
-          isCompleted: !!item.route[item.route.length - 1]?.departureDate,
-          startPositionDate: onlyPlannedDates
-            ? item.startPositionDate
-            : _getStartPositionDate(item),
-          endPositionDate: onlyPlannedDates ? item.startPositionDate : _getLastPositionDate(item), // для определения длины блока
-          lastPlannedDate: _getLastPlannedDate(item), // для проверки при перемещении
-          truckId: item.confirmedCrew?.truck,
-          isDisabled: item.isDisabled,
-          state: item.state,
-          route: item.route,
-        }))
-        .filter((order) => {
-          if (period.length !== 2) return true
-          const sP = dayjs(schedulePeriod[0])
-          const eP = dayjs(schedulePeriod[1])
-          return (
-            eP.isAfter(order.startPositionDate) && sP.isSameOrBefore(order.endPositionDate)
-            // &&            !order.truckId
-          )
-        })
-        .sort((a, b) => new Date(a.startPositionDate) - new Date(b.startPositionDate)),
+    ordersForSchedule: (state) => state._ordersForScheduleCache,
     schedulePeriod: ({ period }) => {
       if (period.length !== 2) return null
       return [period[0], dayjs(period[1]).add(1, 'd').format('YYYY-MM-DD')]
@@ -163,11 +181,11 @@ export default {
       filteredOrders.forEach((order) => {
         const dayStr = dayjs(order.startPositionDate).format('YYYY-MM-DD')
         const zone = _getZoneName(order.startPositionDate)
+        const existing = tmpRes.get(dayStr)
         const newDay = {
-          ...tmpRes.get(dayStr),
-          totalInDay: tmpRes.has(dayStr) ? tmpRes.get(dayStr).totalInDay + 1 : 1,
-          [zone]:
-            tmpRes.has(dayStr) && !!tmpRes.get(dayStr)[zone] ? tmpRes.get(dayStr)[zone] + 1 : 1,
+          ...existing,
+          totalInDay: existing ? existing.totalInDay + 1 : 1,
+          [zone]: existing?.[zone] ? existing[zone] + 1 : 1,
         }
         tmpRes.set(dayStr, newDay)
       })

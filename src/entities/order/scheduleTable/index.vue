@@ -63,7 +63,7 @@
             tag="div"
             class="block"
             :draggable="item.itemType === 'order' && draggableMode ? isDraggableOrder(item) : false"
-            :style="getStylesForOrder(item)"
+            :style="stylesByItemId[item._id]"
             @dragstart="dragStartHandler($event, item._id)"
             @dragend="dragEndHandler($event, item._id)"
             @dragover.prevent.stop="disabledZone"
@@ -130,7 +130,7 @@
               tag="div"
               class="block"
               :draggable="draggableMode && isDraggableOrder(order)"
-              :style="getStylesForOrder(order)"
+              :style="stylesByItemId[order._id]"
               @dragstart="dragStartHandler($event, order._id)"
               @dragend="dragEndHandler($event, order._id)"
               @dragover="disabledZone"
@@ -167,6 +167,7 @@ import appNote from './note.vue'
 import appResultCell from './resultCell.vue'
 import AppSettingsCell from './settingsCell.vue'
 import { PermissionService } from '@/shared/services'
+import { debounce } from '@/shared/utils'
 
 export default {
   name: 'ScheduleTable',
@@ -293,23 +294,16 @@ export default {
     },
 
     lineForUndistributedOrdersMap() {
-      let tmpMap = new Map()
-      // группируем рейсы по дате начала и определяем кол-во строк для отображения буферной зоны
-      for (let order of this.unDistributedOrders) {
+      const linesMap = new Map()
+      for (const order of this.unDistributedOrders) {
         const group = Math.floor(this.getLeftShiftForOrder(order))
-        if (tmpMap.has(group)) {
-          const arr = tmpMap.get(group)
-          arr.push(order._id)
-          tmpMap.set(group, arr)
-        } else tmpMap.set(group, [order._id])
+        if (!linesMap.has(group)) linesMap.set(group, [])
+        linesMap.get(group).push(order._id)
       }
       const orderLinesMap = new Map()
-      for (let group of tmpMap) {
-        group[1].forEach((orderId) => {
-          orderLinesMap.set(
-            orderId,
-            group[1].findIndex((i) => i === orderId)
-          )
+      for (const [, ids] of linesMap) {
+        ids.forEach((orderId, idx) => {
+          orderLinesMap.set(orderId, idx)
         })
       }
       return orderLinesMap
@@ -321,6 +315,17 @@ export default {
       this.lineForUndistributedOrdersMap.forEach((val) => arr.push(val))
       return ((Math.max(...arr) + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
     },
+
+    stylesByItemId() {
+      const map = {}
+      for (const item of this.allItems) {
+        map[item._id] = this.getStylesForOrder(item)
+      }
+      for (const order of this.unDistributedOrders) {
+        map[order._id] = this.getStylesForOrder(order)
+      }
+      return map
+    },
   },
   watch: {
     period: {
@@ -331,10 +336,11 @@ export default {
     },
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.resizeScreen)
+    window.removeEventListener('resize', this._debouncedResize)
   },
   mounted() {
-    window.addEventListener('resize', this.resizeScreen)
+    this._debouncedResize = debounce(this.resizeScreen, 150)
+    window.addEventListener('resize', this._debouncedResize)
     this.resizeScreen()
   },
   setup() {},

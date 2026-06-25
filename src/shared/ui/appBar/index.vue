@@ -12,6 +12,7 @@
       {{ title || 's4log' }}
     </v-toolbar-title>
     <slot name="toolbar" />
+    <ScheduleSettings v-if="$route.name === 'Schedule'" />
     <v-spacer />
     <v-btn v-if="isLoggedIn && directoriesProfile" :to="{ name: 'Schedule' }" variant="text">
       <v-icon start> mdi-pac-man </v-icon>
@@ -43,10 +44,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import AppReportsMenu from './reportsMenu.vue'
+import ScheduleSettings from '@/entities/order/scheduleSetting/index.vue'
 
 export default {
   components: {
     AppReportsMenu,
+    ScheduleSettings,
   },
   props: {
     title: {
