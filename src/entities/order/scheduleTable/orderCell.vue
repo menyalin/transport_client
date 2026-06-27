@@ -1,7 +1,7 @@
 <template>
   <v-tooltip location="bottom" open-delay="700" close-delay="50" transition="fade-transition">
-    <template #activator="{ props }">
-      <div v-bind="props" :class="orderClasses" @dblclick.stop="dblclickHandler">
+    <template #activator="{ props: tooltipProps }">
+      <div v-bind="tooltipProps" :class="orderClasses" @dblclick.stop="dblclickHandler">
         <div class="row-text">
           <span v-for="point of loadingPoints" :key="point.idx" :class="getPointStyles(point)">
             {{ point.title }}
@@ -25,128 +25,129 @@
   </v-tooltip>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 import { useAddressStore } from '@/entities/address'
-
 import { roundingHours } from './helpers'
-export default {
-  name: 'OrderCell',
-  setup() {
-    const addressStore = useAddressStore()
-    return { addressStore }
-  },
-  props: {
-    orderId: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    breakingSchedule() {
-      if (this.order.route[0].arrivalDate) return false
-      let roundedPlannedDate = dayjs(this.order?.route[0]?.plannedDate)
-      roundedPlannedDate = roundedPlannedDate.hour(roundingHours(roundedPlannedDate.hour()))
-      let roundedStartPositionDate = dayjs(this.order.startPositionDate)
-      roundedStartPositionDate = roundedStartPositionDate.hour(
-        roundingHours(roundedStartPositionDate.hour())
-      )
-      return !roundedPlannedDate.isSame(roundedStartPositionDate, 'hour')
-    },
-    orderClasses() {
-      let classes = ['order-wrapper']
-      if (this.order.state.driverNotified) classes.push('driver-notified')
-      if (this.order.state.status === 'needGet') classes.push('need-get')
-      if (this.order.state.status === 'notСonfirmedByClient')
-        classes.push('not-confirmed-by-client')
-      if (this.order.state.status === 'weRefused') classes.push('we-refused')
-      if (this.order.state.clientNotified) classes.push('client-notified')
-      if (this.order.state.warning) classes.push('warning-state')
-      classes.push(this.order.state.status)
-      if (this.breakingSchedule) classes.push('breaking-schedule')
-      return classes
-    },
 
-    order() {
-      return this.$store.getters.ordersMap.get(this.orderId)
-    },
+defineOptions({ name: 'OrderCell' })
 
-    firstRow() {
-      const addressId = this.order.route[0].address
-      const hours = dayjs(this.order.route[0].plannedDate).format('HH')
-      const addressName = this.addressStore.addressMap.get(addressId)?.shortName || ' - '
-      return `${addressName} - ${hours}`
-    },
-    waitAtPoint() {
-      return this.order.route.findIndex((p) => !!p.arrivalDate && !p.departureDate)
-    },
-    nextPointIndex() {
-      if (this.order.state.status !== 'inProgress') return null
-      //if (this.waitAtPoint !== -1) return null
-      return this.order.route.findIndex((p) => !p.departureDate)
-    },
-    points() {
-      let res = []
-      for (let i = 0; i < this.order.route.length; i++) {
-        res.push(this.createPoint(i))
-      }
-      return res
-    },
-    loadingPoints() {
-      return this.points.filter((p) => p.type === 'loading')
-    },
-    unloadingPoints() {
-      return this.points.filter((p) => p.type === 'unloading')
-    },
-    delayToPointInd() {
-      if (
-        ['notСonfirmedByClient', 'weRefused', 'clientRefused', 'needGet'].includes(
-          this.order.state.status
-        )
-      )
-        return -1
-      const idx = this.order.route.findIndex(
-        (p) => !!p.plannedDate && new Date(p.plannedDate) < new Date() && !p.arrivalDate
-      )
-      return idx
-    },
+const props = defineProps({
+  orderId: {
+    type: String,
+    required: true,
   },
-  methods: {
-    getPointStyles(point) {
-      return {
-        'next-point': point.isNextPoint,
-        'wait-at-point': point.isWait,
-        delay: point.isDelayed,
-        'completed-point': point.isCompleted,
-      }
-    },
-    createPoint(idx) {
-      return {
-        idx: idx,
-        type: this.order.route[idx].type,
-        title: this.getPointTitle(idx),
-        isNextPoint: this.nextPointIndex === idx,
-        isWait: this.waitAtPoint === idx,
-        isDelayed: this.delayToPointInd === idx,
-        isCompleted: !!this.order.route[idx].departureDate,
-      }
-    },
-    dblclickHandler() {
-      this.$router.push('/orders/' + this.orderId)
-    },
-    getPointTitle(idx) {
-      if (idx === null || undefined) return null
-      let res = []
-      const address = this.addressStore.addressMap.get(this.order.route[idx].address)?.shortName
-      res.push(address)
-      let plannedTime = null
-      if (this.order.route[idx]?.plannedDate) {
-        plannedTime = dayjs(this.order.route[idx].plannedDate).format('HH')
-        res.push(plannedTime)
-      }
-      return res.join(' ')
-    },
-  },
+})
+
+const store = useStore()
+const router = useRouter()
+const addressStore = useAddressStore()
+
+const order = computed(() => {
+  return store.getters.ordersMap.get(props.orderId)
+})
+
+const breakingSchedule = computed(() => {
+  if (order.value.route[0].arrivalDate) return false
+  let roundedPlannedDate = dayjs(order.value?.route[0]?.plannedDate)
+  roundedPlannedDate = roundedPlannedDate.hour(roundingHours(roundedPlannedDate.hour()))
+  let roundedStartPositionDate = dayjs(order.value.startPositionDate)
+  roundedStartPositionDate = roundedStartPositionDate.hour(
+    roundingHours(roundedStartPositionDate.hour())
+  )
+  return !roundedPlannedDate.isSame(roundedStartPositionDate, 'hour')
+})
+
+const orderClasses = computed(() => {
+  let classes = ['order-wrapper']
+  if (order.value.state.driverNotified) classes.push('driver-notified')
+  if (order.value.state.status === 'needGet') classes.push('need-get')
+  if (order.value.state.status === 'notСonfirmedByClient') classes.push('not-confirmed-by-client')
+  if (order.value.state.status === 'weRefused') classes.push('we-refused')
+  if (order.value.state.clientNotified) classes.push('client-notified')
+  if (order.value.state.warning) classes.push('warning-state')
+  classes.push(order.value.state.status)
+  if (breakingSchedule.value) classes.push('breaking-schedule')
+  return classes
+})
+
+const waitAtPoint = computed(() => {
+  return order.value.route.findIndex((p) => !!p.arrivalDate && !p.departureDate)
+})
+
+const nextPointIndex = computed(() => {
+  if (order.value.state.status !== 'inProgress') return null
+  return order.value.route.findIndex((p) => !p.departureDate)
+})
+
+const delayToPointInd = computed(() => {
+  if (
+    ['notСonfirmedByClient', 'weRefused', 'clientRefused', 'needGet'].includes(
+      order.value.state.status
+    )
+  )
+    return -1
+  const idx = order.value.route.findIndex(
+    (p) => !!p.plannedDate && new Date(p.plannedDate) < new Date() && !p.arrivalDate
+  )
+  return idx
+})
+
+function getPointTitle(idx) {
+  if (idx === null || undefined) return null
+  let res = []
+  const address = addressStore.addressMap.get(order.value.route[idx].address)?.shortName
+  res.push(address)
+  let plannedTime = null
+  if (order.value.route[idx]?.plannedDate) {
+    plannedTime = dayjs(order.value.route[idx].plannedDate).format('HH')
+    res.push(plannedTime)
+  }
+  return res.join(' ')
+}
+
+function createPoint(idx) {
+  return {
+    idx: idx,
+    type: order.value.route[idx].type,
+    title: getPointTitle(idx),
+    isNextPoint: nextPointIndex.value === idx,
+    isWait: waitAtPoint.value === idx,
+    isDelayed: delayToPointInd.value === idx,
+    isCompleted: !!order.value.route[idx].departureDate,
+  }
+}
+
+const points = computed(() => {
+  let res = []
+  for (let i = 0; i < order.value.route.length; i++) {
+    res.push(createPoint(i))
+  }
+  return res
+})
+
+const loadingPoints = computed(() => {
+  return points.value.filter((p) => p.type === 'loading')
+})
+
+const unloadingPoints = computed(() => {
+  return points.value.filter((p) => p.type === 'unloading')
+})
+
+function getPointStyles(point) {
+  return {
+    'next-point': point.isNextPoint,
+    'wait-at-point': point.isWait,
+    delay: point.isDelayed,
+    'completed-point': point.isCompleted,
+  }
+}
+
+function dblclickHandler() {
+  router.push('/orders/' + props.orderId)
 }
 </script>
 <style scoped>
@@ -167,6 +168,7 @@ export default {
   white-space: nowrap;
   font-weight: 300;
   overflow: hidden;
+  text-overflow: ellipsis;
   user-select: none;
 }
 .next-point {

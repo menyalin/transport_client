@@ -11,6 +11,7 @@
       top: 0,
       left: 0,
       zIndex: -1,
+      pointerEvents: 'none',
     }"
   >
     <line x1="0" y1="0" x2="100%" y2="0" stroke="black" opacity="1" />
@@ -59,29 +60,28 @@
     </g>
   </svg>
 </template>
-<script>
-export default {
-  name: 'SvgGrid',
-  props: {
-    leftShift: {
-      // Отступ равный ширине столбца
-      type: Number,
-      required: true,
-    },
-    days: {
-      type: Array,
-      required: true,
-    },
-    tableWidth: {
-      type: Number,
-      required: true,
-    },
+<script setup>
+import { computed } from 'vue'
+
+defineOptions({ name: 'SvgGrid' })
+
+const props = defineProps({
+  leftShift: {
+    type: Number,
+    required: true,
   },
-  computed: {
-    dayWidth() {
-      return (this.tableWidth - this.leftShift) / this.days.length
-    },
+  days: {
+    type: Array,
+    required: true,
   },
-}
+  tableWidth: {
+    type: Number,
+    required: true,
+  },
+})
+
+const dayWidth = computed(() => {
+  return (props.tableWidth - props.leftShift) / props.days.length
+})
 </script>
 <style scoped></style>

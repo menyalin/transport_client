@@ -6,96 +6,99 @@
     @updateOrder="updateOrderHandler"
   />
 </template>
-<script>
+<script setup>
+import { computed, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { ScheduleTable } from '@/entities/order'
 import { OrderService as service } from '@/shared/services'
 import periodDifferernce from '@/modules/order/utils/periodDifference'
 
-export default {
-  name: 'Schedule',
-  components: {
-    ScheduleTable,
-  },
-  computed: {
-    scheduleRows() {
-      const trucksInOrdersSet = new Set(
-        this.$store.getters.ordersForSchedule.map((i) => i.truckId).filter((i) => !!i)
-      )
+defineOptions({ name: 'Schedule' })
 
-      this.$store.getters.downtimesForSchedule.forEach((i) => trucksInOrdersSet.add(i.truck))
+const store = useStore()
+const router = useRouter()
 
-      const showTrucksFilter = (truck) => {
-        if (truck.type !== 'truck') return false
+const scheduleRows = computed(() => {
+  const trucksInOrdersSet = new Set(
+    store.getters.ordersForSchedule.map((i) => i.truckId).filter((i) => !!i)
+  )
 
-        if (
-          trucksInOrdersSet.has(truck._id) ||
-          this.$store.getters.fixedInScheduleTrucksIds.includes(truck._id)
-        )
-          return true
+  store.getters.downtimesForSchedule.forEach((i) => trucksInOrdersSet.add(i.truck))
 
-        if (this.$store.getters.onlyTrucksWithRoutes || truck.endServiceDate) return false
-        return true
-      }
+  const showTrucksFilter = (truck) => {
+    if (truck.type !== 'truck') return false
 
-      return this.$store.getters.trucks.filter(showTrucksFilter).sort((a, b) => a.order - b.order)
-    },
-  },
+    if (
+      trucksInOrdersSet.has(truck._id) ||
+      store.getters.fixedInScheduleTrucksIds.includes(truck._id)
+    )
+      return true
 
-  watch: {
-    '$store.getters.schedulePeriod': function (newPeriod, oldPeriod) {
-      if (!newPeriod) return null
-      if (!oldPeriod) this.getData()
-      else {
-        const { added } = periodDifferernce(newPeriod, oldPeriod)
-        this.getData(added)
-      }
-    },
-  },
-  mounted() {
-    if (this.$store.getters.ordersForSchedule.length === 0) {
-      this.getData()
-    }
-  },
-  methods: {
-    getData(period) {
-      if (!this.$store.getters.directoriesProfile) {
-        this.$router.push('/profile')
-        return null
-      }
-      if (period) service.getListForSchedule(period[0], period[1])
-      else service.getListForSchedule()
-      this.$store.dispatch('getDowntimesForSchedule')
-      this.$store.dispatch('getNotesForSchedule')
-    },
-    async startDragOrder(orderId) {
-      try {
-        await service.disable({ orderId, state: true })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e)
-      }
-    },
-    async endDragOrder(orderId) {
-      try {
-        await service.disable({ orderId, state: false })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e)
-      }
-    },
-    async updateOrderHandler({ orderId, truckId, startDate }) {
-      try {
-        await service.moveOrderInSchedule({
-          orderId,
-          truck: truckId,
-          startPositionDate: startDate,
-        })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e)
-      }
-    },
-  },
+    if (store.getters.onlyTrucksWithRoutes || truck.endServiceDate) return false
+    return true
+  }
+
+  return store.getters.trucks.filter(showTrucksFilter).sort((a, b) => a.order - b.order)
+})
+
+function getData(period) {
+  if (!store.getters.directoriesProfile) {
+    router.push('/profile')
+    return null
+  }
+  if (period) service.getListForSchedule(period[0], period[1])
+  else service.getListForSchedule()
+  store.dispatch('getDowntimesForSchedule')
+  store.dispatch('getNotesForSchedule')
+}
+
+const schedulePeriod = computed(() => store.getters.schedulePeriod)
+
+watch(schedulePeriod, (newPeriod, oldPeriod) => {
+  if (!newPeriod) return
+  if (!oldPeriod) getData()
+  else {
+    const { added } = periodDifferernce(newPeriod, oldPeriod)
+    getData(added)
+  }
+})
+
+onMounted(() => {
+  if (store.getters.ordersForSchedule.length === 0) {
+    getData()
+  }
+})
+
+async function startDragOrder(orderId) {
+  try {
+    await service.disable({ orderId, state: true })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+  }
+}
+
+async function endDragOrder(orderId) {
+  try {
+    await service.disable({ orderId, state: false })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+  }
+}
+
+async function updateOrderHandler({ orderId, truckId, startDate }) {
+  try {
+    await service.moveOrderInSchedule({
+      orderId,
+      truck: truckId,
+      startPositionDate: startDate,
+    })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+  }
 }
 </script>
 <style scoped></style>

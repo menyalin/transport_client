@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menuOpen" :close-on-content-click="false">
     <template #activator="{ props }">
-      <v-btn color="primary" v-bind="props" icon>
+      <v-btn v-bind="props" icon variant="text">
         <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
@@ -29,73 +29,57 @@
     </v-list>
   </v-menu>
 </template>
-<script>
-import { ref, getCurrentInstance, onMounted } from 'vue'
-export default {
-  name: 'SettingsCell',
-  props: {
-    modelValue: {
-      type: Object,
-    },
-  },
-  setup() {
-    const { proxy } = getCurrentInstance()
-    const onlyTrucksWithRoutes = ref(true)
-    const onlyPlannedDates = ref(false)
-    const menuOpen = ref(false)
+<script setup>
+import { ref, reactive, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
 
-    const changeOnlyTrucksWithRoutes = () => {
-      proxy.$store.commit('changeOnlyTrucksWithRoutes')
-    }
-    const changeOnlyPlannedDates = () => {
-      proxy.$store.commit('changeOnlyPlannedDates')
-    }
+defineOptions({ name: 'SettingsCell' })
 
-    onMounted(() => {
-      onlyTrucksWithRoutes.value = proxy.$store.getters.onlyTrucksWithRoutes
-      onlyPlannedDates.value = proxy.$store.getters.onlyPlannedDates
-    })
+const settingsModel = defineModel({ type: Object })
 
-    return {
-      onlyTrucksWithRoutes,
-      onlyPlannedDates,
-      menuOpen,
-      changeOnlyTrucksWithRoutes,
-      changeOnlyPlannedDates,
-    }
-  },
-  data() {
-    return {
-      settingsName: 'ScheduleSettingsCell',
-      tmpSettings: {
-        controlOnly: false,
-        showNotes: true,
-        showBufferZone: false,
-        showDowntimes: true,
-      },
-    }
-  },
-  watch: {
-    tmpSettings: {
-      deep: true,
-      handler: function (val) {
-        localStorage.setItem(this.settingsName, JSON.stringify(val))
-        this.$emit('update:modelValue', val)
-      },
-    },
-  },
-  created() {
-    const settings = JSON.parse(localStorage.getItem(this.settingsName))
-    if (settings) {
-      this.tmpSettings = settings
-    } else
-      this.tmpSettings = {
-        controlOnly: false,
-        showNotes: true,
-        showBufferZone: false,
-        showDowntimes: true,
-      }
-  },
+const settingsName = 'ScheduleSettingsCell'
+const store = useStore()
+
+const onlyTrucksWithRoutes = ref(true)
+const onlyPlannedDates = ref(false)
+const menuOpen = ref(false)
+
+const defaultSettings = {
+  controlOnly: false,
+  showNotes: true,
+  showBufferZone: false,
+  showDowntimes: true,
 }
+
+const saved = JSON.parse(localStorage.getItem(settingsName))
+const tmpSettings = reactive(saved || { ...defaultSettings })
+
+if (settingsModel.value) {
+  Object.assign(settingsModel.value, tmpSettings)
+} else {
+  settingsModel.value = { ...tmpSettings }
+}
+
+watch(
+  tmpSettings,
+  (val) => {
+    localStorage.setItem(settingsName, JSON.stringify(val))
+    settingsModel.value = val
+  },
+  { deep: true }
+)
+
+function changeOnlyTrucksWithRoutes() {
+  store.commit('changeOnlyTrucksWithRoutes')
+}
+
+function changeOnlyPlannedDates() {
+  store.commit('changeOnlyPlannedDates')
+}
+
+onMounted(() => {
+  onlyTrucksWithRoutes.value = store.getters.onlyTrucksWithRoutes
+  onlyPlannedDates.value = store.getters.onlyPlannedDates
+})
 </script>
 <style scoped></style>

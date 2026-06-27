@@ -9,37 +9,44 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 
-export default {
-  name: 'DowntimeCell',
-  props: {
-    itemId: String,
-  },
-  computed: {
-    classes() {
-      return ['downtime-wrapper', this.downtime.type]
-    },
-    downtimeStartTime() {
-      return dayjs(this.downtime.startPositionDate).format('HH:mm')
-    },
-    downtime() {
-      return this.$store.getters.downtimesMap.get(this.itemId)
-    },
-    partner() {
-      if (!this.downtime.partner) return null
-      return this.$store.getters.partnersMap.get(this.downtime.partner)
-    },
-    downtimeUrl() {
-      return '/profile/downtimes/' + this.itemId
-    },
-  },
-  methods: {
-    dblclickHandler() {
-      this.$router.push(this.downtimeUrl)
-    },
-  },
+defineOptions({ name: 'DowntimeCell' })
+
+const props = defineProps({
+  itemId: String,
+})
+
+const store = useStore()
+const router = useRouter()
+
+const downtime = computed(() => {
+  return store.getters.downtimesMap.get(props.itemId)
+})
+
+const classes = computed(() => {
+  return ['downtime-wrapper', downtime.value.type]
+})
+
+const downtimeStartTime = computed(() => {
+  return dayjs(downtime.value.startPositionDate).format('HH:mm')
+})
+
+const partner = computed(() => {
+  if (!downtime.value.partner) return null
+  return store.getters.partnersMap.get(downtime.value.partner)
+})
+
+const downtimeUrl = computed(() => {
+  return '/profile/downtimes/' + props.itemId
+})
+
+function dblclickHandler() {
+  router.push(downtimeUrl.value)
 }
 </script>
 <style scoped>

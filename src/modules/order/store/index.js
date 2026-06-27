@@ -105,7 +105,7 @@ export default {
     onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') === 'true' ?? false,
     orderAnalyticTypes: [],
     orderPriceTypes: [],
-    onlyTrucksWithRoutes: localStorage.getItem('orders:onlyTrucksWithRoutes') === 'true' ?? false,
+    onlyTrucksWithRoutes: localStorage.getItem('orders:onlyTrucksWithRoutes') !== 'false',
     _ordersForScheduleCache: [],
     _ordersMapCache: new Map(),
     _orderCountByDatesCache: new Map(),
