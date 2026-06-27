@@ -66,6 +66,32 @@ function _updateCache(state) {
   )
 }
 
+function _updateOrdersDerived(state) {
+  state._ordersMapCache = new Map(state.orders.map((item) => [item._id, item]))
+
+  const tmpRes = new Map()
+  if (state.orders.length) {
+    const filteredOrders = state.orders.filter((o) => o.confirmedCrew?.truck)
+    filteredOrders.forEach((order) => {
+      const dayStr = dayjs(order.startPositionDate).format('YYYY-MM-DD')
+      const zone = _getZoneName(order.startPositionDate)
+      const existing = tmpRes.get(dayStr)
+      const newDay = {
+        ...existing,
+        totalInDay: existing ? existing.totalInDay + 1 : 1,
+        [zone]: existing?.[zone] ? existing[zone] + 1 : 1,
+      }
+      tmpRes.set(dayStr, newDay)
+    })
+  }
+  state._orderCountByDatesCache = tmpRes
+}
+
+function _updateAllCaches(state) {
+  _updateCache(state)
+  _updateOrdersDerived(state)
+}
+
 export default {
   state: {
     orders: [],
@@ -81,6 +107,8 @@ export default {
     orderPriceTypes: [],
     onlyTrucksWithRoutes: localStorage.getItem('orders:onlyTrucksWithRoutes') === 'true' ?? false,
     _ordersForScheduleCache: [],
+    _ordersMapCache: new Map(),
+    _orderCountByDatesCache: new Map(),
   },
   mutations: {
     changeOnlyTrucksWithRoutes(state) {
@@ -100,31 +128,31 @@ export default {
     },
     clearDirectories(state) {
       state.orders = []
-      _updateCache(state)
+      _updateAllCaches(state)
     },
     setOrders(state, payload) {
       state.orders = payload
-      _updateCache(state)
+      _updateAllCaches(state)
     },
     addOrder(state, payload) {
       if (state.orders.findIndex((item) => item._id === payload._id) === -1)
         state.orders.push(payload)
-      _updateCache(state)
+      _updateAllCaches(state)
     },
     addOrdersToSchedule(state, payload) {
       state.orders = state.orders.concat(
         payload.filter((i) => !state.orders.some((order) => order._id === i._id))
       )
-      _updateCache(state)
+      _updateAllCaches(state)
     },
     updateOrder(state, payload) {
       const ind = state.orders.findIndex((item) => item._id === payload._id)
       if (ind !== -1) state.orders.splice(ind, 1, payload)
-      _updateCache(state)
+      _updateAllCaches(state)
     },
     deleteOrder(state, id) {
       state.orders = state.orders.filter((item) => item._id !== id)
-      _updateCache(state)
+      _updateAllCaches(state)
     },
 
     setOrderStatuses(state, payload) {
@@ -169,28 +197,11 @@ export default {
     orderAnalyticTypesMap: ({ orderAnalyticTypes }) =>
       new Map(orderAnalyticTypes.map((item) => [item.value, item.text])),
 
-    ordersMap: ({ orders }) => new Map(orders.map((item) => [item._id, item])),
+    ordersMap: (state) => state._ordersMapCache,
     onlyPlannedDates: ({ onlyPlannedDates }) => onlyPlannedDates,
     orderPriceTypes: ({ orderPriceTypes }) => orderPriceTypes,
 
-    orderCountByDates: ({ orders }) => {
-      const tmpRes = new Map()
-      if (!orders.length) return tmpRes
-      const filteredOrders = orders.filter((o) => o.confirmedCrew?.truck)
-
-      filteredOrders.forEach((order) => {
-        const dayStr = dayjs(order.startPositionDate).format('YYYY-MM-DD')
-        const zone = _getZoneName(order.startPositionDate)
-        const existing = tmpRes.get(dayStr)
-        const newDay = {
-          ...existing,
-          totalInDay: existing ? existing.totalInDay + 1 : 1,
-          [zone]: existing?.[zone] ? existing[zone] + 1 : 1,
-        }
-        tmpRes.set(dayStr, newDay)
-      })
-      return tmpRes
-    },
+    orderCountByDates: (state) => state._orderCountByDatesCache,
 
     orderPriceTypesMap: ({ orderPriceTypes }) =>
       new Map(orderPriceTypes.map((t) => [t.value, t.text])),

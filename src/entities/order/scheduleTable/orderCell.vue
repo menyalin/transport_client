@@ -3,38 +3,22 @@
     <template #activator="{ props }">
       <div v-bind="props" :class="orderClasses" @dblclick.stop="dblclickHandler">
         <div class="row-text">
-          <span
-            v-for="point of points.filter((p) => p.type === 'loading')"
-            :key="point.idx"
-            :class="getPointStyles(point)"
-          >
+          <span v-for="point of loadingPoints" :key="point.idx" :class="getPointStyles(point)">
             {{ point.title }}
           </span>
         </div>
         <div class="row-text">
-          <span
-            v-for="point of points.filter((p) => p.type === 'unloading')"
-            :key="point.idx"
-            :class="getPointStyles(point)"
-          >
+          <span v-for="point of unloadingPoints" :key="point.idx" :class="getPointStyles(point)">
             {{ point.title }}
           </span>
         </div>
       </div>
     </template>
     <div>
-      <div
-        v-for="point in points.filter((p) => p.type === 'loading')"
-        :key="point.idx"
-        class="title-row-text"
-      >
+      <div v-for="point in loadingPoints" :key="point.idx" class="title-row-text">
         {{ point.title }}
       </div>
-      <div
-        v-for="point in points.filter((p) => p.type === 'unloading')"
-        :key="point.idx"
-        class="title-row-text"
-      >
+      <div v-for="point in unloadingPoints" :key="point.idx" class="title-row-text">
         {{ point.title }}
       </div>
     </div>
@@ -107,6 +91,12 @@ export default {
         res.push(this.createPoint(i))
       }
       return res
+    },
+    loadingPoints() {
+      return this.points.filter((p) => p.type === 'loading')
+    },
+    unloadingPoints() {
+      return this.points.filter((p) => p.type === 'unloading')
     },
     delayToPointInd() {
       if (

@@ -62,13 +62,15 @@
             :key="item._id"
             tag="div"
             class="block"
-            :draggable="item.itemType === 'order' && draggableMode ? isDraggableOrder(item) : false"
+            :draggable="
+              itemTypeMap[item._id] === 'order' && draggableMode ? isDraggableOrder(item) : false
+            "
             :style="stylesByItemId[item._id]"
             @dragstart="dragStartHandler($event, item._id)"
             @dragend="dragEndHandler($event, item._id)"
             @dragover.prevent.stop="disabledZone"
           >
-            <app-order-cell v-if="item.itemType === 'order'" :orderId="item._id" />
+            <app-order-cell v-if="itemTypeMap[item._id] === 'order'" :orderId="item._id" />
             <app-downtime-cell v-else :itemId="item._id" />
           </div>
 
@@ -81,7 +83,7 @@
         </tbody>
       </table>
       <div>
-        <v-menu v-model="showMenu" absolute>
+        <v-menu v-model="showMenu">
           <v-list>
             <v-list-item
               :disabled="!$store.getters.hasPermission('order:create')"
@@ -207,21 +209,6 @@ export default {
       return this.$store.getters.scheduleDate
     },
 
-    notesStyle() {
-      const styles = {}
-      this.filteredNotes.forEach((note) => {
-        styles[note._id] = {
-          left:
-            this.getLeftShiftForOrder({
-              startPositionDate: note.startPositionDate,
-              needRoundTime: true,
-            }) + 'px',
-          top: this.getTopShiftForOrder({ truckId: note.truck }) + (LINE_HEIGHT - 3) / 2 + 'px',
-        }
-      })
-      return styles
-    },
-
     secInPx() {
       return getSecInPx({
         lengthInPx: this.tableWidth,
@@ -255,42 +242,65 @@ export default {
     },
 
     filteredOrders() {
-      return (
-        this.$store.getters.ordersForSchedule
-          // Только требующие контроля
-          .filter((i) => (this.settings.controlOnly ? i.state.warning : true))
-      )
+      const orders = this.$store.getters.ordersForSchedule
+      if (!this.settings.controlOnly) return orders
+      return orders.filter((i) => i.state.warning)
     },
 
-    allItems() {
-      // Объединяем в один массив заказы и простою, сортируем по дате отображения
-      return (
-        this.distributedOrders
-          .map((o) => ({
-            ...o,
-            itemType: 'order',
-          }))
-          .concat(this.filteredDountimes.map((d) => ({ ...d, itemType: 'downtime' })))
-          .sort((a, b) => new Date(a.startPositionDate) - new Date(b.startPositionDate)) || []
-      )
-    },
     distributedOrders() {
       return this.filteredOrders.filter((i) => !!i?.truckId)
     },
     unDistributedOrders() {
       return this.filteredOrders.filter((i) => !i?.truckId)
     },
+
     filteredNotes() {
       if (this.settings.showNotes) return this.$store.getters.notesForSchedule
-      else return []
+      return []
+    },
+
+    downtimeTruckIdMap() {
+      if (!this.settings.showDowntimes) return {}
+      const map = {}
+      for (const d of this.$store.getters.downtimesForSchedule) {
+        map[d._id] = d.truck
+      }
+      return map
     },
     filteredDountimes() {
-      if (this.settings.showDowntimes)
-        return this.$store.getters.downtimesForSchedule.map((item) => ({
-          ...item,
-          truckId: item.truck,
-        }))
-      else return []
+      if (!this.settings.showDowntimes) return []
+      return this.$store.getters.downtimesForSchedule
+    },
+
+    itemTypeMap() {
+      const map = {}
+      for (const o of this.distributedOrders) map[o._id] = 'order'
+      for (const d of this.filteredDountimes) map[d._id] = 'downtime'
+      return map
+    },
+
+    allItems() {
+      const items = [...this.distributedOrders, ...this.filteredDountimes]
+      return items.sort((a, b) => new Date(a.startPositionDate) - new Date(b.startPositionDate))
+    },
+
+    notesStyle() {
+      if (!this.filteredNotes.length) return {}
+      const styles = {}
+      for (const note of this.filteredNotes) {
+        styles[note._id] = {
+          left:
+            this.getLeftShiftForOrder({
+              startPositionDate: note.startPositionDate,
+              needRoundTime: true,
+            }) + 'px',
+          top:
+            this.getTopShiftForOrder({ _id: note._id }, { truckId: note.truck }) +
+            (LINE_HEIGHT - 3) / 2 +
+            'px',
+        }
+      }
+      return styles
     },
 
     lineForUndistributedOrdersMap() {
@@ -310,10 +320,13 @@ export default {
     },
 
     bufferHeight() {
-      let arr = []
-      if (this.lineForUndistributedOrdersMap.size === 0) return LINE_HEIGHT * 2 + 'px'
-      this.lineForUndistributedOrdersMap.forEach((val) => arr.push(val))
-      return ((Math.max(...arr) + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
+      const size = this.lineForUndistributedOrdersMap.size
+      if (size === 0) return LINE_HEIGHT * 2 + 'px'
+      let max = 0
+      this.lineForUndistributedOrdersMap.forEach((val) => {
+        if (val > max) max = val
+      })
+      return ((max + 1) * LINE_HEIGHT + LINE_HEIGHT).toString() + 'px'
     },
 
     stylesByItemId() {
@@ -438,10 +451,11 @@ export default {
       return leftShift / this.secInPx + this.titleColumnWidth
     },
 
-    getTopShiftForOrder({ truckId, _id }) {
-      if (!truckId) return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
+    getTopShiftForOrder({ _id, truckId }, truckOverrides) {
+      const id = truckId || truckOverrides?.truckId || this.downtimeTruckIdMap[_id]
+      if (!id) return this.lineForUndistributedOrdersMap.get(_id) * LINE_HEIGHT
 
-      const rowIdx = this.rows.findIndex((item) => item._id === truckId)
+      const rowIdx = this.rows.findIndex((item) => item._id === id)
       if (rowIdx === -1) return null
       return rowIdx * LINE_HEIGHT + this.titleRowHeight
     },
@@ -486,7 +500,7 @@ export default {
         left: this.getLeftShiftForOrder(order) + 'px',
         top: this.getTopShiftForOrder(order) + 'px',
         opacity: order.isDisabled ? 0.5 : 0.92,
-        'z-index': order.itemType === 'order' ? 4 : 3,
+        'z-index': this.itemTypeMap[order._id] === 'order' ? 4 : 3,
       }
     },
 
@@ -514,10 +528,13 @@ export default {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
         return true
-      } else {
-        e.dataTransfer.dropEffect = 'move'
-        this.overRowInd = Math.floor((y - this.titleRowHeight) / LINE_HEIGHT)
       }
+      e.dataTransfer.dropEffect = 'move'
+      if (this._dragRAF) return
+      this._dragRAF = requestAnimationFrame(() => {
+        this._dragRAF = null
+        this.overRowInd = Math.max(0, Math.floor((y - this.titleRowHeight) / LINE_HEIGHT))
+      })
     },
 
     dropOnBufferHandler(e) {

@@ -8,11 +8,11 @@
       :style="{ margin: '0px 15px' }"
     />
     <slot name="prepend" />
+    <ScheduleSettings v-if="$route.name === 'Schedule'" />
     <v-toolbar-title class="app-title">
       {{ title || 's4log' }}
     </v-toolbar-title>
     <slot name="toolbar" />
-    <ScheduleSettings v-if="$route.name === 'Schedule'" />
     <v-spacer />
     <v-btn v-if="isLoggedIn && directoriesProfile" :to="{ name: 'Schedule' }" variant="text">
       <v-icon start> mdi-pac-man </v-icon>

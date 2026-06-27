@@ -44,7 +44,7 @@ function setDate(val) {
 .date-settings {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   margin-left: 20px;
   gap: 12px;
 }
