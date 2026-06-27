@@ -13,7 +13,10 @@ export default [
     path: 'create',
     name: 'CreateOrder',
     component: DetailsOrder,
-    props: true,
+    props: (route) => ({
+      truckId: route.query.truckId || undefined,
+      startDate: route.query.startDate || undefined,
+    }),
     meta: {
       permission: 'order:daysForWrite',
       title: 'Новый рейс',

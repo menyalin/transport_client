@@ -32,6 +32,7 @@
           <tr
             v-for="(truck, idx) of rows"
             :key="truck._id"
+            :data-truck-id="truck._id"
             class="truck-row"
             :class="{ 'drag-over-row': idx === overRowInd }"
           >
@@ -60,7 +61,6 @@
           <div
             v-for="item of allItems"
             :key="item._id"
-            tag="div"
             class="block"
             :draggable="
               itemTypeMap[item._id] === 'order' && draggableMode ? isDraggableOrder(item) : false
@@ -83,7 +83,7 @@
         </tbody>
       </table>
       <div>
-        <v-menu v-model="showMenu">
+        <v-menu v-model="showMenu" :target="[menuX, menuY]">
           <v-list>
             <v-list-item
               :disabled="!$store.getters.hasPermission('order:create')"
@@ -129,7 +129,6 @@
             <div
               v-for="order of unDistributedOrders"
               :key="order._id"
-              tag="div"
               class="block"
               :draggable="draggableMode && isDraggableOrder(order)"
               :style="stylesByItemId[order._id]"
@@ -348,7 +347,7 @@ export default {
       },
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this._debouncedResize)
   },
   mounted() {
@@ -356,25 +355,35 @@ export default {
     window.addEventListener('resize', this._debouncedResize)
     this.resizeScreen()
   },
-  setup() {},
   methods: {
     dblclickHandler(e, isBuffer) {
       e.preventDefault()
       this.truckId = null
-      let offsetY
-      if (isBuffer) offsetY = e.layerY
-      else offsetY = e.layerY - this.titleRowHeight
-      const offsetX = e.layerX - this.titleColumnWidth
-      if (offsetX < 0 || offsetY < 0) return null
 
-      let startDateM = dayjs(this.period[0]).add(this.secInPx * offsetX, 's')
-      startDateM = startDateM.hour(roundingHours(startDateM.hour()))
-      this.tmpStartDate = startDateM.format('YYYY-MM-DD HH:00')
+      const td = e.target.closest('td')
+      if (!td) return null
+
+      const cellIndex = td.cellIndex
+      if (cellIndex < 1) return null
+
+      const columnIndex = cellIndex - 1
+      if (columnIndex >= this.columns.length) return null
+
+      const column = this.columns[columnIndex]
+      const cellRect = td.getBoundingClientRect()
+      const xInCell = e.clientX - cellRect.left
+      const slotIndex = Math.min(3, Math.floor((xInCell / cellRect.width) * 4))
+      const hour = slotIndex * 6
+
+      this.tmpStartDate = dayjs(column.date).hour(hour).format('YYYY-MM-DD HH:00')
 
       if (isBuffer && this.$store.getters.hasPermission('order:create')) this.createOrder()
       else if (!isBuffer) {
-        const rowInd = Math.floor(offsetY / LINE_HEIGHT)
-        this.truckId = this.rows[rowInd]._id
+        const tr = td.closest('tr.truck-row')
+        if (!tr) return null
+
+        this.truckId = tr.dataset.truckId
+        if (!this.truckId) return null
 
         this.menuX = e.clientX
         this.menuY = e.clientY
@@ -385,7 +394,7 @@ export default {
     createDowntime() {
       this.$router.push({
         name: 'DowntimeCreate',
-        params: {
+        query: {
           truckId: this.truckId,
           startDate: this.tmpStartDate,
         },
@@ -395,7 +404,7 @@ export default {
     createOrder() {
       this.$router.push({
         name: 'CreateOrder',
-        params: {
+        query: {
           truckId: this.truckId,
           startDate: this.tmpStartDate,
         },
@@ -405,22 +414,11 @@ export default {
     createScheduleNote() {
       this.$router.push({
         name: 'ScheduleNoteCreate',
-        params: {
+        query: {
           truckId: this.truckId,
           startDate: this.tmpStartDate,
         },
       })
-    },
-
-    notesFilterByPeriod(item) {
-      return (
-        dayjs(item.startPositionDate).isBefore(this.period[0]) &&
-        dayjs(this.period[1]).add('24', 'h').isAfter(item.startPositionDate)
-      )
-    },
-
-    ordersFilterByDraggedOrder(item) {
-      return this.draggedOrderId ? item._id !== this.draggedOrderId : true
     },
 
     resizeScreen() {
@@ -515,15 +513,15 @@ export default {
 
     dragEndHandler(e, orderId) {
       e.target.style.opacity = 1
-      if (e.dataTransfer.dropEffect === 'none' || e.dataTransfer.mozUserCancelled)
-        this.$emit('endDragOrder', orderId)
+      if (e.dataTransfer.dropEffect === 'none') this.$emit('endDragOrder', orderId)
       this.overRowInd = null
       this.draggedOrderId = null
     },
 
     dragOverHandler(e) {
-      const y = e.layerY
-      const x = e.layerX - this.titleColumnWidth
+      const tableRect = e.currentTarget.getBoundingClientRect()
+      const y = e.clientY - tableRect.top
+      const x = e.clientX - tableRect.left - this.titleColumnWidth
       if (x < 0 || y < 0 || e.dataTransfer.effectAllowed === 'none') {
         e.dataTransfer.dropEffect = 'none'
         this.overRowInd = null
@@ -539,7 +537,8 @@ export default {
 
     dropOnBufferHandler(e) {
       this.draggedOrderId = null
-      const x = e.layerX - this.titleColumnWidth
+      const tableRect = e.currentTarget.getBoundingClientRect()
+      const x = e.clientX - tableRect.left - this.titleColumnWidth
       let startDate = dayjs.unix(dayjs(this.period[0]).unix() + x * this.secInPx)
       startDate = startDate.hour(roundingHours(startDate.hour()))
       this.$emit('updateOrder', {
@@ -554,7 +553,8 @@ export default {
       if (this.overRowInd === null || this.overRowInd < 0 || this.overRowInd > this.rows.length - 1)
         return null
 
-      const x = e.layerX - this.titleColumnWidth
+      const tableRect = e.currentTarget.getBoundingClientRect()
+      const x = e.clientX - tableRect.left - this.titleColumnWidth
       let startDate = dayjs.unix(dayjs(this.period[0]).unix() + x * this.secInPx)
       startDate = startDate.hour(roundingHours(startDate.hour()))
 

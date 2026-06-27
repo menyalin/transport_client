@@ -16,7 +16,10 @@ export default [
     path: BASE_PATH + '/create',
     name: 'DowntimeCreate',
     component: Details,
-    props: true,
+    props: (route) => ({
+      truckId: route.query.truckId || undefined,
+      startDate: route.query.startDate || undefined,
+    }),
     meta: {
       permission: 'downtime:readItem',
     },

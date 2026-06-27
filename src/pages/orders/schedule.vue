@@ -9,23 +9,14 @@
 <script>
 import { ScheduleTable } from '@/entities/order'
 import { OrderService as service } from '@/shared/services'
-import periodDifferernce from '../../modules/order/utils/periodDifference'
+import periodDifferernce from '@/modules/order/utils/periodDifference'
 
 export default {
   name: 'Schedule',
   components: {
     ScheduleTable,
   },
-  data() {
-    return {
-      titleColumnWidth: null,
-    }
-  },
   computed: {
-    date() {
-      return this.$store.getters.scheduleDate
-    },
-
     scheduleRows() {
       const trucksInOrdersSet = new Set(
         this.$store.getters.ordersForSchedule.map((i) => i.truckId).filter((i) => !!i)
@@ -73,22 +64,36 @@ export default {
       }
       if (period) service.getListForSchedule(period[0], period[1])
       else service.getListForSchedule()
-      // this.$store.dispatch('getOrdersForSchedule')
       this.$store.dispatch('getDowntimesForSchedule')
       this.$store.dispatch('getNotesForSchedule')
     },
     async startDragOrder(orderId) {
-      service.disable({ orderId, state: true })
+      try {
+        await service.disable({ orderId, state: true })
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+      }
     },
     async endDragOrder(orderId) {
-      service.disable({ orderId, state: false })
+      try {
+        await service.disable({ orderId, state: false })
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+      }
     },
     async updateOrderHandler({ orderId, truckId, startDate }) {
-      service.moveOrderInSchedule({
-        orderId,
-        truck: truckId,
-        startPositionDate: startDate,
-      })
+      try {
+        await service.moveOrderInSchedule({
+          orderId,
+          truck: truckId,
+          startPositionDate: startDate,
+        })
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+      }
     },
   },
 }
