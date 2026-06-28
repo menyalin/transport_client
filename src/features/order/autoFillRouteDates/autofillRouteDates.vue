@@ -7,6 +7,7 @@
     </v-alert>
 
     <DateRangeInput v-model="settings.period" />
+
     <v-text-field
       type="number"
       min="10"
@@ -24,7 +25,6 @@
     />
     <v-autocomplete
       multiple
-      multi-line
       chips
       auto-select-first
       closable-chips
@@ -42,46 +42,20 @@
     </v-alert>
   </div>
 </template>
-<script>
+<script setup>
 import { DateRangeInput } from '@/shared/ui'
 import { useFeatureModel } from './model/model.js'
 import TopButtonsPanel from './topButtonsPanel.vue'
 
-export default {
-  name: 'AutofillRouteDatesFeature',
-  components: {
-    DateRangeInput,
-    TopButtonsPanel,
-  },
-  setup() {
-    const {
-      infoText,
-      settings,
-      operationToken,
-      truckItems,
-      disabledSubmit,
-      autoFillDatesHandler,
-      messages,
-      selectAllTrucks,
-    } = useFeatureModel()
+defineOptions({ name: 'AutofillRouteDatesFeature' })
 
-    return {
-      settings,
-      infoText,
-      operationToken,
-      truckItems,
-      disabledSubmit,
-      autoFillDatesHandler,
-      messages,
-      selectAllTrucks,
-    }
-  },
-}
+const {
+  infoText,
+  settings,
+  truckItems,
+  disabledSubmit,
+  autoFillDatesHandler,
+  messages,
+  selectAllTrucks,
+} = useFeatureModel()
 </script>
-<style scoped>
-#settings {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-</style>

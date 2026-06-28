@@ -72,7 +72,7 @@ function setPeriod(value) {
   emits('period-selected')
 }
 function setCustomDateRange(value, position) {
-  const newPeriod = [...props.modelValue]
+  const newPeriod = [...tmpPeriod.value]
   newPeriod[position] = value
   tmpPeriod.value = newPeriod
 }
@@ -81,7 +81,11 @@ function cancelHandler() {
   emits('period-selected')
 }
 function saveHandler() {
-  emits('update:model-value', tmpPeriod.value)
+  const period = [...tmpPeriod.value]
+  if (period[1]) {
+    period[1] = dayjs(period[1]).endOf('day').toISOString()
+  }
+  emits('update:model-value', period)
   emits('period-selected')
 }
 

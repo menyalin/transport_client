@@ -1,13 +1,13 @@
 import dayjs from 'dayjs'
 import socket from '@/socket'
 import store from '@/store'
-import { ref, watch, computed, onBeforeUnmount } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
+import { ref, computed, onBeforeUnmount } from 'vue'
+import { usePersistedRef } from '@/shared/hooks'
 import { OrderService } from '@/shared/services'
 
 const _initPeriod = () => {
   const todayM = dayjs()
-  return [todayM.add(-3, 'd').startOf('day').format(), todayM.add(-1, 'd').endOf('day').format()]
+  return [todayM.add(-3, 'd').startOf('day').format(), todayM.endOf('day').format()]
 }
 
 export function useFeatureModel() {
@@ -22,10 +22,9 @@ export function useFeatureModel() {
     settings.value.truckIds = truckItems.value.map((i) => i.value)
   }
 
-  const operationToken = uuidv4()
+  const operationToken = crypto.randomUUID()
   const loading = ref(false)
   const messages = ref([])
-  const historyState = window.history.state
   const initialState = {
     period: _initPeriod(),
     tripDurationInMinutes: 30,
@@ -35,7 +34,7 @@ export function useFeatureModel() {
   const infoText =
     'Для автозаполнения доступны рейсы в статусе "в работе". Плановые даты выгрузки не учитываются. При пересечении по времени, рейсы не обновляются.'
 
-  const settings = ref(historyState.settings || initialState)
+  const settings = usePersistedRef(initialState, 'autofillRouteDates:settings')
 
   async function autoFillDatesHandler() {
     messages.value = []
@@ -57,13 +56,6 @@ export function useFeatureModel() {
       !!settings.value.unloadingDurationInMinutes && settings.value.unloadingDurationInMinutes >= 10
     return trucks || !tripDurationInMinutes || !unloadingDurationInMinutes
   })
-  watch(
-    settings,
-    () => {
-      window.history.pushState({ settings: settings.value }, '')
-    },
-    { deep: true }
-  )
 
   function autoFillDatesSuccessfulHandler(event) {
     if (event.token === operationToken)
@@ -91,6 +83,10 @@ export function useFeatureModel() {
     }
   }
 
+  socket.off('order:autoFillDatesSuccessful', autoFillDatesSuccessfulHandler)
+  socket.off('order:autoFillDatesCompleted', autoFillDatesCompletedHandler)
+  socket.off('order:autoFillDatesError', autoFillDatesErrorHandler)
+
   socket.on('order:autoFillDatesSuccessful', autoFillDatesSuccessfulHandler)
   socket.on('order:autoFillDatesCompleted', autoFillDatesCompletedHandler)
   socket.on('order:autoFillDatesError', autoFillDatesErrorHandler)
@@ -105,7 +101,6 @@ export function useFeatureModel() {
     loading,
     settings,
     infoText,
-    operationToken,
     truckItems,
     autoFillDatesHandler,
     disabledSubmit,
