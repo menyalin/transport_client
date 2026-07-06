@@ -1,5 +1,5 @@
 export const LEGAL_ENTITY_TYPES = [
-  { value: 'legalEntity', text: 'Юр.лицо' },
-  { value: 'soleProprietor', text: 'ИП' },
-  { value: 'privatePerson', text: 'Частное лицо' },
+  { value: 'legalEntity', title: 'Юр.лицо' },
+  { value: 'soleProprietor', title: 'ИП' },
+  { value: 'privatePerson', title: 'Частное лицо' },
 ]

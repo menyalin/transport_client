@@ -17,7 +17,7 @@
     </div>
 
     <AllowedAgreements v-model="state.agreements" :agreementItems="agreementItems" />
-    <v-divider />
+
     <VatRatesInfo showTitle v-model="state.vatRates" />
     <CompanyInfoForm v-model="state.companyInfo" />
     <BankAccountInfoForm v-model="state.bankAccountInfo" />
@@ -29,7 +29,7 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script setup>
 import {
   ButtonsPanel,
   BankAccountInfoForm,
@@ -37,49 +37,27 @@ import {
   ContactsInfo,
   EntityFiles,
   VatRatesInfo,
+  AllowedAgreements,
 } from '@/shared/ui'
 import { useForm } from './useForm'
-import { AllowedAgreements } from '@/shared/ui'
 
-export default {
-  name: 'CarrierForm',
-  components: {
-    EntityFiles,
-    ButtonsPanel,
-    BankAccountInfoForm,
-    CompanyInfoForm,
-    ContactsInfo,
-    AllowedAgreements,
-    VatRatesInfo,
-  },
+defineOptions({ name: 'CarrierForm' })
 
-  props: {
-    loading: Boolean,
-    agreementItems: Array,
-    item: {
-      type: Object,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
+const props = defineProps({
+  loading: Boolean,
+  agreementItems: Array,
+  item: {
+    type: Object,
   },
-  setup(props, ctx) {
-    const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm, v$ } = useForm(
-      props,
-      ctx
-    )
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
+  },
+})
 
-    return {
-      state,
-      deleteHandler,
-      submitHandler,
-      cancelHandler,
-      v$,
-      isInvalidForm,
-    }
-  },
-}
+const emit = defineEmits(['delete', 'submit', 'cancel'])
+
+const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm } = useForm(props, emit)
 </script>
 <style>
 .row-input {

@@ -1,8 +1,10 @@
-import { ref, computed, watch, getCurrentInstance } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
+import { useStore } from 'vuex'
 
-export const useForm = (props, ctx) => {
-  const { proxy } = getCurrentInstance()
+export const useForm = (props, emit) => {
+  const store = useStore()
+
   const getState = (item) => {
     return item !== null
       ? item
@@ -30,19 +32,19 @@ export const useForm = (props, ctx) => {
   }
 
   function deleteHandler() {
-    ctx.emit('delete')
+    emit('delete')
   }
 
   function submitHandler() {
-    ctx.emit('submit', {
+    emit('submit', {
       ...state.value,
-      company: proxy.$store.getters.directoriesProfile,
+      company: store.getters.directoriesProfile,
     })
     resetForm()
   }
 
   function cancelHandler() {
-    ctx.emit('cancel')
+    emit('cancel')
     resetForm()
   }
 

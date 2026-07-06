@@ -7,62 +7,53 @@
     <v-text-field label="Корр.счет" v-model="state.correspondentAccount" />
   </div>
 </template>
-<script>
+<script setup>
 import { useVuelidate } from '@vuelidate/core'
 import { computed, ref, watch } from 'vue'
 
-export default {
-  name: 'BankAccountInfoForm',
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    value: {
-      type: Object,
-    },
-    showTitle: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup(props, ctx) {
-    const initialState = () => ({
-      accountNumber: '',
-      bankName: '',
-      bankCode: '',
-      correspondentAccount: '',
-    })
-    const state = ref(initialState())
-    const rules = computed(() => {
-      return {
-        bankName: {},
-        accountNumber: {},
-        bankCode: {},
-        correspondentAccount: {},
-      }
-    })
-    const v$ = useVuelidate(rules, state)
+defineOptions({ name: 'BankAccountInfoForm' })
 
-    watch(
-      () => props.value,
-      (newVal, oldVal) => {
-        if (!newVal) state.value = initialState()
-        else if (newVal !== oldVal) state.value = newVal
-      },
-      { deep: true, immediate: true }
-    )
-    watch(
-      state,
-      (val) => {
-        ctx.emit('change', val)
-      },
-      { deep: true }
-    )
+const modelValue = defineModel({ type: Object })
 
-    return { v$, state }
+defineProps({
+  showTitle: {
+    type: Boolean,
+    default: true,
   },
-}
+})
+
+const initialState = () => ({
+  accountNumber: '',
+  bankName: '',
+  bankCode: '',
+  correspondentAccount: '',
+})
+const state = ref(initialState())
+const rules = computed(() => {
+  return {
+    bankName: {},
+    accountNumber: {},
+    bankCode: {},
+    correspondentAccount: {},
+  }
+})
+useVuelidate(rules, state)
+
+watch(
+  () => modelValue.value,
+  (newVal, oldVal) => {
+    if (!newVal) state.value = initialState()
+    else if (newVal !== oldVal) state.value = newVal
+  },
+  { deep: true, immediate: true }
+)
+watch(
+  state,
+  (val) => {
+    modelValue.value = val
+  },
+  { deep: true }
+)
 </script>
 <style scoped>
 .wrapper {

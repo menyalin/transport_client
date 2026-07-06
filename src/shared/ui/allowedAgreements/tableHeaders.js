@@ -1,22 +1,22 @@
 export const HEADERS = [
   {
-    text: 'Соглашение',
+    title: 'Соглашение',
     value: 'agreementName',
     sortable: false,
     width: '450px',
   },
   {
-    text: 'Дата начала',
+    title: 'Дата начала',
     value: 'startDateStr',
     sortable: false,
   },
   {
-    text: 'Дата окончания',
+    title: 'Дата окончания',
     value: 'endDateStr',
     sortable: false,
   },
   {
-    text: 'Примечание',
+    title: 'Примечание',
     value: 'note',
     sortable: false,
   },

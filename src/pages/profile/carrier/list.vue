@@ -9,7 +9,6 @@
           @refresh="refreshHandler"
         />
         <CarrierListSettings v-model="settings" />
-        {{ settings }}
         <v-data-table
           :headers="headers"
           :items="carriers"
@@ -37,42 +36,29 @@
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ButtonsPanel } from '@/shared/ui'
 import { useListData } from './useListData'
 import { CarrierListSettings, CarrierListAgreementsCell } from '@/entities/carrier'
-import { onMounted } from 'vue'
 
-export default {
-  name: 'CarrierList',
-  components: {
-    ButtonsPanel,
-    CarrierListSettings,
-    CarrierListAgreementsCell,
-  },
-  setup() {
-    const { carriers, loading, refreshHandler, headers, settings } = useListData()
-    onMounted(() => {
-      refreshHandler()
-    })
-    return {
-      carriers,
-      loading,
-      refreshHandler,
-      headers,
-      settings,
-    }
-  },
+defineOptions({ name: 'CarrierList' })
 
-  methods: {
-    create() {
-      this.$router.push({ name: 'CarrierCreate' })
-    },
+const router = useRouter()
 
-    dblClickRow(_, { item }) {
-      this.$router.push(`carriers/${item._id}`)
-    },
-  },
+const { carriers, loading, refreshHandler, headers, settings } = useListData()
+
+onMounted(() => {
+  refreshHandler()
+})
+
+function create() {
+  router.push({ name: 'CarrierCreate' })
+}
+
+function dblClickRow(_, { item }) {
+  router.push(`carriers/${item._id}`)
 }
 </script>
 <style></style>

@@ -6,9 +6,9 @@ export const useListData = () => {
   const carrierStore = useCarrierStore()
 
   const headers = computed(() => [
-    { value: 'name', text: 'Название ТК' },
-    { value: 'outsource', text: 'Привлеченный', width: 150, align: 'center' },
-    { value: 'agreements', text: 'Соглашения' },
+    { value: 'name', title: 'Название ТК' },
+    { value: 'outsource', title: 'Привлеченный', width: 150, align: 'center' },
+    { value: 'agreements', title: 'Соглашения' },
   ])
 
   const settings = usePersistedRef({ search: null, type: 'all' }, 'CarrierListSettings')

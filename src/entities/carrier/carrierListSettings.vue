@@ -18,38 +18,25 @@
     />
   </div>
 </template>
-<script>
-export default {
-  name: 'CarrierListSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: {
-      type: Object,
-      default: () => ({
-        type: 'all',
-        search: '',
-      }),
-    },
-  },
+<script setup>
+defineOptions({ name: 'CarrierListSettings' })
 
-  setup(props, ctx) {
-    const carrierTypes = [
-      { title: 'Все', value: 'all' },
-      { title: 'Свой', value: 'own' },
-      { title: 'Привлеченный', value: 'outsource' },
-    ]
-    function updateSettings(val, field) {
-      console.log('props.settings: ', props.settings)
-      ctx.emit('update:model-value', { ...props.settings, [field]: val })
-    }
-    return {
-      carrierTypes,
-      updateSettings,
-    }
-  },
+const settings = defineModel({
+  type: Object,
+  default: () => ({
+    type: 'all',
+    search: '',
+  }),
+})
+
+const carrierTypes = [
+  { title: 'Все', value: 'all' },
+  { title: 'Свой', value: 'own' },
+  { title: 'Привлеченный', value: 'outsource' },
+]
+
+function updateSettings(val, field) {
+  settings.value = { ...settings.value, [field]: val }
 }
 </script>
 <style scoped>

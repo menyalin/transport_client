@@ -1,78 +1,61 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <div v-if="loading">Загружаю...</div>
-        <CarrierForm
-          v-else
-          :item="carrier"
-          :loading="loading || agreementsLoading"
-          :displayDeleteBtn="$store.getters.hasPermission('carrier:delete')"
-          :agreementItems="agreementItems"
-          @cancel="cancelHandler"
-          @submit="submitHandler"
-          @delete="deleteHandler"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <FormWrapper>
+    <CarrierForm
+      :item="carrier"
+      :loading="loading || agreementsLoading"
+      :displayDeleteBtn="$store.getters.hasPermission('carrier:delete')"
+      :agreementItems="agreementItems"
+      @cancel="cancelHandler"
+      @submit="submitHandler"
+      @delete="deleteHandler"
+    />
+  </FormWrapper>
 </template>
-<script>
-import { computed, getCurrentInstance, onMounted, ref } from 'vue'
+<script setup>
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { CarrierForm } from '@/entities/carrier'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
+import { FormWrapper } from '@/shared/ui'
 
-export default {
-  name: 'CarrierPage',
-  components: {
-    CarrierForm,
+defineOptions({ name: 'CarrierPage' })
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { proxy } = getCurrentInstance()
-    const carrierStore = useCarrierStore()
-    const carrier = ref(null)
-    const { items: agreementItems, loading: agreementsLoading } = useCarrierAgreements()
+})
 
-    async function submitHandler(val) {
-      carrier.value = await carrierStore.updateOne(props.id, val)
-      proxy.$router.go(-1)
-    }
+const router = useRouter()
+const carrierStore = useCarrierStore()
+const carrier = ref(null)
+const { items: agreementItems, loading: agreementsLoading } = useCarrierAgreements()
 
-    async function cancelHandler() {
-      proxy.$router.push({ name: 'CarrierList' })
-    }
+const loading = computed(() => carrierStore.loading)
 
-    async function deleteHandler() {
-      if (!props.id) return
-      const res = confirm('Вы действительно хотите удалить запись? ')
-      if (!res) return
-      await carrierStore.deleteOne(props.id)
-      proxy.$router.push({ name: 'CarrierList' })
-    }
-
-    onMounted(async () => {
-      if (props.id) {
-        carrier.value = await carrierStore.getById(props.id)
-      }
-    })
-
-    return {
-      agreementsLoading,
-      agreementItems,
-      carrier,
-      loading: computed(() => carrierStore.loading),
-      submitHandler,
-      cancelHandler,
-      deleteHandler,
-    }
-  },
+async function submitHandler(val) {
+  carrier.value = await carrierStore.updateOne(props.id, val)
+  router.back()
 }
+
+async function cancelHandler() {
+  router.push({ name: 'CarrierList' })
+}
+
+async function deleteHandler() {
+  if (!props.id) return
+  const res = confirm('Вы действительно хотите удалить запись? ')
+  if (!res) return
+  await carrierStore.deleteOne(props.id)
+  router.push({ name: 'CarrierList' })
+}
+
+onMounted(async () => {
+  if (props.id) {
+    carrier.value = await carrierStore.getById(props.id)
+  }
+})
 </script>
 <style></style>

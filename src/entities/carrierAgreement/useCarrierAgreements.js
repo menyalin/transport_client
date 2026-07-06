@@ -1,15 +1,16 @@
-import { ref, computed, getCurrentInstance, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { CarrierAgreementService } from '@/shared/services'
+import { useStore } from 'vuex'
 
 export const useCarrierAgreements = (settings) => {
-  const { proxy } = getCurrentInstance()
+  const store = useStore()
   const loading = ref(false)
   const items = ref([])
   const count = ref(0)
 
   const queryParams = computed(() => {
     return {
-      company: proxy.$store.getters.directoriesProfile,
+      company: store.getters.directoriesProfile,
       limit: 50,
       skip: 0,
       ...settings?.value,
@@ -27,7 +28,7 @@ export const useCarrierAgreements = (settings) => {
       items.value = res.items ?? []
       count.value = res.total ?? 0
     } catch (e) {
-      proxy.$store.commit('setError', e.message)
+      store.commit('setError', e.message)
     } finally {
       loading.value = false
     }

@@ -20,69 +20,44 @@
     </v-dialog>
   </div>
 </template>
-<script>
+<script setup>
 import { computed, ref } from 'vue'
 import ItemCard from './card.vue'
 import ContactForm from './form.vue'
-export default {
-  name: 'ContactsInfo',
-  components: {
-    ItemCard,
-    ContactForm,
-  },
-  model: {
-    prop: 'items',
-    event: 'change',
-  },
 
-  props: {
-    items: Array,
-  },
-  setup(props, ctx) {
-    const dialog = ref(false)
-    const editedItem = ref(null)
-    const emptyContacts = computed(() => !props.items || props.items?.length === 0)
-    function addItem() {
-      dialog.value = true
-    }
-    function removeItem(idx) {
-      emitChange(props.items.filter((i, index) => index !== idx))
-    }
+defineOptions({ name: 'ContactsInfo' })
 
-    function editHandler(idx) {
-      editedItem.value = { ...props.items[idx] }
-      dialog.value = true
-    }
+const items = defineModel({ type: Array, default: () => [] })
 
-    function emitChange(value) {
-      ctx.emit('change', value)
-    }
+const dialog = ref(false)
+const editedItem = ref(null)
+const emptyContacts = computed(() => !items.value || items.value?.length === 0)
 
-    function cancelHandler() {
-      dialog.value = false
-      editedItem.value = null
-    }
+function addItem() {
+  dialog.value = true
+}
 
-    function submitHandler(formState) {
-      const tmpItems = [...(props.items || [])]
-      if (editedItem.value) tmpItems.splice(editedItem.value.idx, 1, formState)
-      else tmpItems.push(formState)
-      emitChange(tmpItems)
-      dialog.value = false
-      editedItem.value = null
-    }
+function removeItem(idx) {
+  items.value = items.value.filter((i, index) => index !== idx)
+}
 
-    return {
-      emptyContacts,
-      removeItem,
-      addItem,
-      dialog,
-      cancelHandler,
-      submitHandler,
-      editHandler,
-      editedItem,
-    }
-  },
+function editHandler(idx) {
+  editedItem.value = { ...items.value[idx] }
+  dialog.value = true
+}
+
+function cancelHandler() {
+  dialog.value = false
+  editedItem.value = null
+}
+
+function submitHandler(formState) {
+  const tmpItems = [...(items.value || [])]
+  if (editedItem.value) tmpItems.splice(editedItem.value.idx, 1, formState)
+  else tmpItems.push(formState)
+  items.value = tmpItems
+  dialog.value = false
+  editedItem.value = null
 }
 </script>
 <style scoped>

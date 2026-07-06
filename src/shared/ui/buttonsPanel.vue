@@ -29,22 +29,24 @@
     </v-col>
   </v-row>
 </template>
-<script>
-export default {
-  props: {
-    submitTitle: { type: String },
-    disabledSubmit: { type: Boolean, default: false },
-    disabledRefresh: { type: Boolean, default: false },
-    showSaveBtn: { type: Boolean, default: false },
-    panelType: {
-      type: String,
-      require: true,
-      validator: function (value) {
-        return ['form', 'list'].indexOf(value) !== -1
-      },
+<script setup>
+defineOptions({ name: 'ButtonsPanel' })
+
+defineProps({
+  submitTitle: { type: String },
+  disabledSubmit: { type: Boolean, default: false },
+  disabledRefresh: { type: Boolean, default: false },
+  showSaveBtn: { type: Boolean, default: false },
+  panelType: {
+    type: String,
+    required: true,
+    validator: function (value) {
+      return ['form', 'list'].indexOf(value) !== -1
     },
   },
-}
+})
+
+defineEmits(['cancel', 'submit', 'save', 'refresh'])
 </script>
 <style>
 .slot-wrapper {

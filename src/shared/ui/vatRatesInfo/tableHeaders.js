@@ -1,16 +1,16 @@
 export const HEADERS = [
   {
-    text: 'Ставка НДС',
+    title: 'Ставка НДС',
     value: 'vatRateDisplay',
     sortable: false,
   },
   {
-    text: 'Период',
+    title: 'Период',
     value: 'periodDisplay',
     sortable: false,
   },
   {
-    text: 'Примечание',
+    title: 'Примечание',
     value: 'noteDisplay',
     sortable: false,
   },

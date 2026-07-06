@@ -1,48 +1,33 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <CarrierForm
-          :loading="carrierStore.loading"
-          @submit="submitHandler"
-          @cancel="cancelHandler"
-          :agreementItems="carrierAgreements"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <FormWrapper>
+    <CarrierForm
+      :loading="carrierStore.loading"
+      @submit="submitHandler"
+      @cancel="cancelHandler"
+      :agreementItems="carrierAgreements"
+    />
+  </FormWrapper>
 </template>
-<script>
+<script setup>
+import { useRouter } from 'vue-router'
 import { CarrierForm } from '@/entities/carrier'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
-import { getCurrentInstance } from 'vue'
+import { FormWrapper } from '@/shared/ui'
 
-export default {
-  name: 'CarrierCreatePage',
-  components: {
-    CarrierForm,
-  },
-  setup() {
-    const { proxy } = getCurrentInstance()
-    const carrierStore = useCarrierStore()
-    const { items } = useCarrierAgreements()
+defineOptions({ name: 'CarrierCreatePage' })
 
-    async function submitHandler(carrier) {
-      await carrierStore.create(carrier)
-      proxy.$router.push({ name: 'CarrierList' })
-    }
+const router = useRouter()
+const carrierStore = useCarrierStore()
+const { items: carrierAgreements } = useCarrierAgreements()
 
-    async function cancelHandler() {
-      proxy.$router.push({ name: 'CarrierList' })
-    }
-    return {
-      carrierAgreements: items,
-      carrierStore,
-      submitHandler,
-      cancelHandler,
-    }
-  },
+async function submitHandler(carrier) {
+  await carrierStore.create(carrier)
+  router.push({ name: 'CarrierList' })
+}
+
+async function cancelHandler() {
+  router.push({ name: 'CarrierList' })
 }
 </script>
 <style></style>

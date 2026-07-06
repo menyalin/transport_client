@@ -33,156 +33,137 @@
     <SignatoryForm v-if="showSignatory" class="signatory-wrapper" v-model="state.signatory" />
   </div>
 </template>
-<script>
+<script setup>
 import { LEGAL_ENTITY_TYPES } from '@/shared/constants/legalEntityTypes'
 import { useVuelidate } from '@vuelidate/core'
 import { computed, ref, watch } from 'vue'
-import { DateTimeInput } from '@/shared/ui'
 import SignatoryForm from './signatoryForm.vue'
 
-export default {
-  name: 'CompanyInfoForm',
-  components: { DateTimeInput, SignatoryForm },
-  model: {
-    prop: 'value',
-    event: 'change',
+defineOptions({ name: 'CompanyInfoForm' })
+
+const modelValue = defineModel({ type: Object })
+
+defineProps({
+  showTitle: {
+    type: Boolean,
+    default: true,
   },
-  props: {
-    value: {
-      type: Object,
-    },
-    showTitle: {
-      type: Boolean,
-      default: true,
-    },
-  },
+})
 
-  setup(props, ctx) {
-    const accountantName = computed({
-      get: () => props.value?.accountant?.name || '',
-      set: (val) => {
-        state.value = {
-          ...state.value,
-          accountant: { ...state.value.accountant, name: val },
-        }
-      },
-    })
-
-    const directorName = computed({
-      get: () => props.value.director?.name || '',
-      set: (val) => {
-        state.value.director = { ...state.value.director, name: val }
-      },
-    })
-    const defaultSignatoryState = () => ({
-      position: '',
-      fullName: '',
-      number: '',
-      date: '',
-    })
-    const directorDefaultState = () => ({
-      isMainSignatory: true,
-      position: '',
-      name: '',
-    })
-    const accountantDefaultState = () => ({
-      isMainSignatory: false,
-      position: 'Бухгалтер',
-      name: '',
-    })
-
-    const initialState = () => ({
-      legalForm: null,
-      fullName: null,
-      postalAddress: null,
-      legalAddress: null,
-      inn: null,
-      ogrn: null,
-      ogrnip: null,
-      okpo: null,
-      kpp: null,
-      director: directorDefaultState(),
-      signatory: defaultSignatoryState(),
-      accountant: accountantDefaultState(),
-    })
-    const state = ref(initialState())
-
-    const rules = computed(() => {
-      return {
-        legalForm: {},
-        fullName: {},
-        postalAddress: {},
-        legalAddress: {},
-        inn: {},
-        ogrn: {},
-        okpo: {},
-        ogrnip: {},
-        kpp: {},
-        director: {
-          isMainSignatory: {},
-          position: {},
-          name: {},
-        },
-        accountant: {
-          name: {},
-          position: {},
-        },
-        signatory: {
-          position: {},
-          fullName: {},
-          number: {},
-          date: {},
-        },
-      }
-    })
-    const v$ = useVuelidate(rules, state)
-
-    const directorPosition = computed(() => {
-      if (state.value?.legalForm === 'legalEntity') return 'Генеральный директор'
-      else if (state.value?.legalForm === 'soleProprietor') return 'Индивидуальный предприниматель'
-      else if (state.value?.legalForm === 'privatePerson') return 'Частное лицо'
-      else return null
-    })
-
-    const showSignatory = computed(() => {
-      if (!!state.value?.legalForm && state.value.director?.isMainSignatory === false) return true
-      else return false
-    })
-
-    function isMainSignatoryChangedHandler(val) {
-      if (!val && !state.value.signatory?.position)
-        state.value = { ...state.value, signatory: defaultSignatoryState() }
-    }
-
-    watch(
-      () => props.value,
-      (newVal, oldVal) => {
-        if (!newVal) state.value = initialState()
-        else if (newVal !== oldVal) state.value = newVal
-      },
-      { deep: true, immediate: true }
-    )
-
-    watch(
-      state,
-      (val) => {
-        ctx.emit('change', val)
-      },
-      { deep: true }
-    )
-
-    return {
-      v$,
-      accountantName,
-      directorName,
-      state,
-      legalFormItems: LEGAL_ENTITY_TYPES,
-      directorPosition,
-      showSignatory,
-      isMainSignatoryChangedHandler,
+const accountantName = computed({
+  get: () => modelValue.value?.accountant?.name || '',
+  set: (val) => {
+    state.value = {
+      ...state.value,
+      accountant: { ...state.value.accountant, name: val },
     }
   },
+})
+
+const directorName = computed({
+  get: () => modelValue.value?.director?.name || '',
+  set: (val) => {
+    state.value.director = { ...state.value.director, name: val }
+  },
+})
+const defaultSignatoryState = () => ({
+  position: '',
+  fullName: '',
+  number: '',
+  date: '',
+})
+const directorDefaultState = () => ({
+  isMainSignatory: true,
+  position: '',
+  name: '',
+})
+const accountantDefaultState = () => ({
+  isMainSignatory: false,
+  position: 'Бухгалтер',
+  name: '',
+})
+
+const initialState = () => ({
+  legalForm: null,
+  fullName: null,
+  postalAddress: null,
+  legalAddress: null,
+  inn: null,
+  ogrn: null,
+  ogrnip: null,
+  okpo: null,
+  kpp: null,
+  director: directorDefaultState(),
+  signatory: defaultSignatoryState(),
+  accountant: accountantDefaultState(),
+})
+const state = ref(initialState())
+
+const rules = computed(() => {
+  return {
+    legalForm: {},
+    fullName: {},
+    postalAddress: {},
+    legalAddress: {},
+    inn: {},
+    ogrn: {},
+    okpo: {},
+    ogrnip: {},
+    kpp: {},
+    director: {
+      isMainSignatory: {},
+      position: {},
+      name: {},
+    },
+    accountant: {
+      name: {},
+      position: {},
+    },
+    signatory: {
+      position: {},
+      fullName: {},
+      number: {},
+      date: {},
+    },
+  }
+})
+useVuelidate(rules, state)
+
+const legalFormItems = LEGAL_ENTITY_TYPES
+
+const directorPosition = computed(() => {
+  if (state.value?.legalForm === 'legalEntity') return 'Генеральный директор'
+  else if (state.value?.legalForm === 'soleProprietor') return 'Индивидуальный предприниматель'
+  else if (state.value?.legalForm === 'privatePerson') return 'Частное лицо'
+  else return null
+})
+
+const showSignatory = computed(() => {
+  if (!!state.value?.legalForm && state.value.director?.isMainSignatory === false) return true
+  else return false
+})
+
+function isMainSignatoryChangedHandler(val) {
+  if (!val && !state.value.signatory?.position)
+    state.value = { ...state.value, signatory: defaultSignatoryState() }
 }
+
+watch(
+  () => modelValue.value,
+  (newVal, oldVal) => {
+    if (!newVal) state.value = initialState()
+    else if (newVal !== oldVal) state.value = newVal
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  state,
+  (val) => {
+    modelValue.value = val
+  },
+  { deep: true }
+)
 </script>
 <style scoped>
 .wrapper {

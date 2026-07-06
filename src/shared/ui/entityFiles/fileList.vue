@@ -80,10 +80,10 @@ export default {
     }
     const headers = ref([
       { value: 'icon', width: '2rem', align: 'center' },
-      { text: 'Имя файла', value: 'originalName' },
-      { text: 'Описание', value: 'note' },
-      { text: 'Размер', value: 'size', align: 'right' },
-      { text: 'Дата загрузки', value: 'uploadDate' },
+      { title: 'Имя файла', value: 'originalName' },
+      { title: 'Описание', value: 'note' },
+      { title: 'Размер', value: 'size', align: 'right' },
+      { title: 'Дата загрузки', value: 'uploadDate' },
       { value: 'actions', align: 'center', sortable: false, width: '75px' },
     ])
 
