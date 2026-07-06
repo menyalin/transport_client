@@ -1,13 +1,17 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <slot />
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="list-wrapper">
+    <slot />
+  </div>
 </template>
 <script setup>
 defineOptions({ name: 'EntityListWrapper' })
 </script>
-<style></style>
+<style scoped>
+.list-wrapper {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 15px;
+}
+</style>

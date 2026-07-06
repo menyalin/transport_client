@@ -1,117 +1,98 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!$store.getters.directoriesProfile"
-          :disabledSubmit="!$store.getters.hasPermission('worker:write')"
-          @submit="create"
-          @refresh="refresh"
-        />
-        <div id="settings-wrapper">
-          <v-text-field
-            v-model="settings.search"
-            label="Поиск"
-            hide-details
-            clearable
-            :style="{ 'max-width': '400px' }"
-          />
-        </div>
-        <v-data-table
-          :headers="headers"
-          :items="prepareDocuments"
-          :loading="loading"
-          fixed-header
-          :search="settings.search"
-          height="73vh"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="settings.listOptions"
-          @dblclick:row="dblClickRow"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <EntityListWrapper>
+    <buttons-panel
+      panel-type="list"
+      :disabled-refresh="!directoriesProfile"
+      :disabledSubmit="!hasWritePermission"
+      @submit="create"
+      @refresh="refresh"
+    />
+    <div id="settings-wrapper">
+      <v-text-field
+        v-model="settings.search"
+        label="Поиск"
+        hide-details
+        clearable
+        :style="{ 'max-width': '400px' }"
+      />
+    </div>
+    <v-data-table
+      :headers="headers"
+      :items="prepareDocuments"
+      :loading="loading"
+      fixed-header
+      :search="settings.search"
+      height="73vh"
+      :row-props="rowProps"
+    />
+  </EntityListWrapper>
 </template>
-<script>
-import store from '@/store'
-import { ButtonsPanel } from '@/shared/ui'
-import { WorkerService } from '@/shared/services'
-import { computed, ref } from 'vue'
 
-export default {
-  name: 'WorkerList',
-  components: {
-    ButtonsPanel,
-  },
-  data: () => ({
-    formName: 'WorkerList',
-    settings: {
-      search: null,
-      listOptions: {},
-    },
-    headers: [
-      { value: 'name', text: 'Имя' },
-      { value: 'fullName', text: 'Полное имя' },
-      { value: 'position', text: 'Должность' },
-      { value: 'roles', text: 'Роли' },
-      { value: 'note', text: 'Примечание' },
-    ],
-  }),
-  setup() {
-    const workers = ref([])
-    const loading = ref(false)
-    const getWorkers = async () => {
-      try {
-        loading.value = true
-        workers.value = await WorkerService.getByDirectoriesProfile()
-        loading.value = false
-      } catch (e) {
-        loading.value = false
-        store.commit('setError', e.message)
-      }
-    }
-    const prepareDocuments = computed(() =>
-      workers.value
-        .map((i) => ({
-          ...i,
-          roles: i.roles
-            ? i.roles.map((role) => store.getters.staffRolesMap.get(role)).join(', ')
-            : null,
-        }))
-        .sort((a, b) => {
-          if (a.name < b.name) return -1
-          else return 1
-        })
-    )
-    getWorkers()
-    return { prepareDocuments, loading, refetchWorkers: getWorkers }
-  },
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
-  methods: {
-    create() {
-      this.$router.push({ name: 'WorkerCreate' })
-    },
-    refresh() {
-      this.refetchWorkers()
-    },
-    dblClickRow(_, { item }) {
-      this.$router.push(`workers/${item._id}`)
-    },
-  },
+<script setup>
+import { computed, ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
+import { WorkerService } from '@/shared/services'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
+
+const router = useRouter()
+const store = useStore()
+
+const settings = usePersistedRef({ search: null }, 'WorkerList:settings')
+
+const headers = [
+  { value: 'name', title: 'Имя' },
+  { value: 'fullName', title: 'Полное имя' },
+  { value: 'position', title: 'Должность' },
+  { value: 'roles', title: 'Роли' },
+  { value: 'note', title: 'Примечание' },
+]
+
+const workers = ref([])
+const loading = ref(false)
+
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+const hasWritePermission = computed(() => store.getters.hasPermission('worker:write'))
+
+const getWorkers = async () => {
+  try {
+    loading.value = true
+    workers.value = await WorkerService.getByDirectoriesProfile()
+    loading.value = false
+  } catch (e) {
+    loading.value = false
+    store.commit('setError', e.message)
+  }
 }
+
+const prepareDocuments = computed(() =>
+  workers.value
+    .map((i) => ({
+      ...i,
+      roles: i.roles
+        ? i.roles.map((role) => store.getters.staffRolesMap.get(role)).join(', ')
+        : null,
+    }))
+    .sort((a, b) => (a.name < b.name ? -1 : 1))
+)
+
+const rowProps = ({ item }) => ({
+  style: { cursor: 'pointer' },
+  onDblclick: () => router.push(`workers/${item._id}`),
+})
+
+function create() {
+  router.push({ name: 'WorkerCreate' })
+}
+
+function refresh() {
+  getWorkers()
+}
+
+onMounted(() => {
+  getWorkers()
+})
 </script>
 <style scoped>
 #settings-wrapper {

@@ -1,10 +1,10 @@
 <template>
   <div class="user-info-wrapper ml-5 my-3">
     <div>
-      <v-icon v-if="isBlockedUser" color="red"> mdi-account-cancel </v-icon>
-      <v-icon v-else-if="isPending" color="blue"> mdi-account-clock </v-icon>
-      <v-icon v-else-if="isAccepted" color="green"> mdi-account-check </v-icon>
-      <v-icon v-else-if="isCanceled" color="grey"> mdi-account-cancel </v-icon>
+      <v-icon v-if="isBlockedUser" color="red" icon="mdi-account-cancel" />
+      <v-icon v-else-if="isPending" color="blue" icon="mdi-account-clock" />
+      <v-icon v-else-if="isAccepted" color="green" icon="mdi-account-check" />
+      <v-icon v-else-if="isCanceled" color="grey" icon="mdi-account-cancel" />
     </div>
     <div class="text-h6">
       {{ worker.user.name }}

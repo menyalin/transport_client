@@ -10,7 +10,7 @@
         <div v-else>
           <slot />
           <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler" class="ma-3">
-            <v-icon start> mdi-delete </v-icon>
+            <v-icon start icon="mdi-delete" />
             Удалить
           </v-btn>
         </div>
@@ -30,7 +30,7 @@ defineProps({
     default: false,
   },
   showError: Boolean,
-  errorMessage: Boolean,
+  errorMessage: String,
   loading: {
     type: Boolean,
     default: false,

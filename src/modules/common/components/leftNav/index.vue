@@ -81,4 +81,8 @@ export default {
 .v-navigation-drawer :deep(.v-list-item-title) {
   transition: opacity 0.2s;
 }
+
+.v-navigation-drawer :deep(.v-badge) {
+  display: block;
+}
 </style>

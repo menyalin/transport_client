@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-snackbar :model-value="localError" vertical :timeout="timeout">
+    <v-snackbar v-model="showSnackbar" vertical :timeout="timeout">
       <div class="text-body-1">
-        {{ error }}
+        {{ errorMessage }}
       </div>
       <template #actions="{ attrs }">
         <v-btn color="accent" variant="text" v-bind="attrs" @click="closeFn"> Закрыть </v-btn>
@@ -19,7 +19,8 @@ defineOptions({ name: 'AppSnackbar' })
 const store = useStore()
 
 const timeout = 3000
-const localError = ref(null)
+const showSnackbar = ref(false)
+const errorMessage = ref('')
 const timeoutInstance = ref(null)
 
 const error = computed(() => store.getters.error)
@@ -28,12 +29,14 @@ watch(
   error,
   (val) => {
     if (val) {
-      localError.value = val
+      errorMessage.value = val
+      showSnackbar.value = true
       timeoutInstance.value = setTimeout(() => {
         store.commit('clearError')
       }, timeout)
     } else {
-      localError.value = null
+      showSnackbar.value = false
+      errorMessage.value = ''
       timeoutInstance.value = null
     }
   },
@@ -41,6 +44,7 @@ watch(
 )
 
 function closeFn() {
+  clearTimeout(timeoutInstance.value)
   timeoutInstance.value = null
   store.commit('clearError')
 }

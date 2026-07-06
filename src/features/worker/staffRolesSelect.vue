@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-caption text--secondary mb-2">Роли пользователя</div>
+    <div class="text-caption text-secondary mb-2">Роли пользователя</div>
     <v-checkbox
       v-for="role in allRoles"
       :key="role.value"
@@ -13,44 +13,30 @@
     />
   </div>
 </template>
-<script>
-import { computed, getCurrentInstance } from 'vue'
-export default {
-  name: 'StaffRolesSelect',
-  model: {
-    prop: 'roles',
-    event: 'change',
+
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineProps({
+  disabled: {
+    type: Boolean,
+    default: true,
   },
-  props: {
-    roles: {
-      type: Array,
-    },
-    disabled: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup(props, ctx) {
-    const { proxy } = getCurrentInstance()
+})
 
-    function toggleRole(roleValue) {
-      const currentUserRoles = props.roles || []
-      let newVal = []
-      if (currentUserRoles.includes(roleValue))
-        newVal = currentUserRoles.filter((r) => r !== roleValue)
-      else newVal = [...currentUserRoles, roleValue]
+const roles = defineModel({ type: Array })
 
-      ctx.emit('change', newVal)
-    }
+const store = useStore()
 
-    const allRoles = computed(() => {
-      return proxy.$store.getters.staffRoles
-    })
+const allRoles = computed(() => store.getters.staffRoles)
 
-    return {
-      toggleRole,
-      allRoles,
-    }
-  },
+function toggleRole(roleValue) {
+  const current = roles.value || []
+  if (current.includes(roleValue)) {
+    roles.value = current.filter((r) => r !== roleValue)
+  } else {
+    roles.value = [...current, roleValue]
+  }
 }
 </script>
