@@ -18,53 +18,35 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue'
 import { useAddressStore } from '@/entities/address'
 
-export default {
-  name: 'TariffPointsType',
-  model: {
-    prop: 'points',
-    event: 'change',
-  },
-  props: {
-    points: {
-      type: Object,
-      default: () => ({ loading: null, unloading: null }),
-    },
-  },
-  emits: ['change'],
-  setup(props, ctx) {
-    const loadingEl = ref(null)
-    const addressStore = useAddressStore()
+const points = defineModel({
+  type: Object,
+  default: () => ({ loading: null, unloading: null }),
+})
 
-    const loadingAddressItems = computed(
-      () => addressStore.addressesForAutocomplete?.filter((i) => i.loading) || []
-    )
+const loadingEl = ref(null)
+const addressStore = useAddressStore()
 
-    const unloadingAddressItems = computed(
-      () => addressStore.addressesForAutocomplete?.filter((i) => i.unloading) || []
-    )
+const loadingAddressItems = computed(
+  () => addressStore.addressesForAutocomplete?.filter((i) => i.loading) || []
+)
 
-    function changeHandler(value, field) {
-      console.log('props.points', props.points)
-      ctx.emit('change', { ...props.points, [field]: value })
-    }
+const unloadingAddressItems = computed(
+  () => addressStore.addressesForAutocomplete?.filter((i) => i.unloading) || []
+)
 
-    const focus = () => {
-      loadingEl.value?.focus()
-    }
-
-    return {
-      changeHandler,
-      loadingAddressItems,
-      unloadingAddressItems,
-      loadingEl,
-      focus,
-    }
-  },
+function changeHandler(value, field) {
+  points.value = { ...points.value, [field]: value }
 }
+
+const focus = () => {
+  loadingEl.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 <style scoped>
 #points-wrapper {

@@ -57,78 +57,61 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { reactive, watch, computed } from 'vue'
 import dayjs from 'dayjs'
-import { mapGetters } from 'vuex'
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
-  name: 'MedBook',
-  components: {
-    AppBlockTitle,
-    DateTimeInput,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    item: Object,
-    title: String,
-  },
-  data() {
-    return {
-      params: {
-        number: null,
-        issueDate: null,
-        certifiedBeforeDate: null,
-        annualCommisionDate: null,
-        note: null,
-      },
+defineOptions({ name: 'MedBook' })
+
+const modelValue = defineModel({ type: Object })
+defineProps({ title: String })
+
+const fields = ['number', 'issueDate', 'certifiedBeforeDate', 'annualCommisionDate', 'note']
+const params = reactive({
+  number: null,
+  issueDate: null,
+  certifiedBeforeDate: null,
+  annualCommisionDate: null,
+  note: null,
+})
+
+const certificateValidityPeriod = computed(() => {
+  if (!params.certifiedBeforeDate) return null
+  const todaySec = dayjs().unix()
+  const certDateSec = dayjs(params.certifiedBeforeDate).unix()
+  return Math.floor((certDateSec - todaySec) / (60 * 60 * 24))
+})
+
+const daysBeforeMedExamination = computed(() => {
+  if (!params.annualCommisionDate) return null
+  const lastDate = dayjs(params.annualCommisionDate).add(1, 'year').unix()
+  const todaySec = dayjs().unix()
+  return Math.floor((lastDate - todaySec) / (60 * 60 * 24))
+})
+
+watch(
+  () => modelValue.value,
+  (val) => {
+    if (val) {
+      fields.forEach((f) => {
+        params[f] = val[f]
+      })
     }
   },
-  computed: {
-    ...mapGetters([]),
-    fields() {
-      return Object.keys(this.params)
-    },
-    certificateValidityPeriod() {
-      if (!this.params.certifiedBeforeDate) return null
-      const todaySec = dayjs().unix()
-      const certDateSec = dayjs(this.params.certifiedBeforeDate).unix()
-      return Math.floor((certDateSec - todaySec) / (60 * 60 * 24))
-    },
-    daysBeforeMedExamination() {
-      if (!this.params.annualCommisionDate) return null
-      const lastDate = dayjs(this.params.annualCommisionDate).add(1, 'year').unix()
-      const todaySec = dayjs().unix()
-      return Math.floor((lastDate - todaySec) / (60 * 60 * 24))
-    },
-  },
-  watch: {
-    item: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          this.fields.forEach((f) => {
-            this.params[f] = val[f]
-          })
-        }
-      },
-    },
-  },
-  methods: {
-    change(val, field) {
-      this.params[field] = val
-      this.$emit('change', this.params)
-    },
-    chipColor(days) {
-      if (days < 14) return 'error'
-      if (days < 30) return 'warning'
-      return 'light-green'
-    },
-  },
+  { immediate: true }
+)
+
+function change(val, field) {
+  params[field] = val
+  modelValue.value = { ...params }
+}
+
+function chipColor(days) {
+  if (days < 14) return 'error'
+  if (days < 30) return 'warning'
+  return 'light-green'
 }
 </script>
 <style scoped>

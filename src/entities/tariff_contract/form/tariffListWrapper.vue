@@ -27,99 +27,74 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, watch, nextTick } from 'vue'
-export default {
-  name: 'TariffListWrapper',
-  model: {
-    prop: 'items',
-    event: 'change',
+<script setup>
+import { ref, computed, nextTick } from 'vue'
+
+const items = defineModel({ type: Array, default: () => [] })
+
+defineProps({
+  formTitle: String,
+  title: String,
+  disabled: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    items: { type: Array, default: () => [] },
-    formTitle: String,
-    title: String,
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    tariffFormComponent: {
-      type: [Object, Function],
-      required: true,
-    },
-    tariffListComponent: {
-      type: [Object, Function],
-      required: true,
-    },
+  tariffFormComponent: {
+    type: [Object, Function],
+    required: true,
   },
-  setup(props, ctx) {
-    const item = ref(null)
-    const items = ref([])
-    const dialog = ref(false)
-    function addHandler() {
-      dialog.value = true
-    }
-    function cancelHandler() {
-      dialog.value = false
-      item.value = null
-    }
-    function saveHandler(val) {
-      if (item.value) {
-        items.value.splice(item.value.idx, 1, { ...val })
-        item.value = null
-      } else {
-        items.value.push({ ...val })
-      }
-      ctx.emit('change', items.value)
-      dialog.value = false
-    }
-
-    const itemsWithIdx = computed(() => {
-      return props.items.map((i, idx) => ({ ...i, idx }))
-    })
-
-    function addTariffHandler(val) {
-      ctx.emit('change', [...props.items, { ...val }])
-    }
-
-    function updateHandler(idx) {
-      item.value = { ...props.items[idx], idx }
-      nextTick(() => {
-        dialog.value = true
-      })
-    }
-
-    function removeByIdx(idx) {
-      items.value.splice(idx, 1)
-      ctx.emit('change', items.value)
-    }
-
-    watch(
-      () => props.items,
-      (val) => (items.value = val),
-      { immediate: true }
-    )
-
-    return {
-      addHandler,
-      dialog,
-      cancelHandler,
-      saveHandler,
-      item,
-      itemsWithIdx,
-      addTariffHandler,
-      removeByIdx,
-      updateHandler,
-    }
+  tariffListComponent: {
+    type: [Object, Function],
+    required: true,
   },
-  methods: {
-    removeHandler(idx) {
-      const res = confirm('Вы действительно хотите удалить запись? ')
-      if (res) {
-        this.removeByIdx(idx)
-      }
-    },
-  },
+})
+
+const item = ref(null)
+const dialog = ref(false)
+
+function addHandler() {
+  dialog.value = true
+}
+function cancelHandler() {
+  dialog.value = false
+  item.value = null
+}
+function saveHandler(val) {
+  if (item.value) {
+    const newItems = [...items.value]
+    newItems.splice(item.value.idx, 1, { ...val })
+    items.value = newItems
+    item.value = null
+  } else {
+    items.value = [...items.value, { ...val }]
+  }
+  dialog.value = false
+}
+
+const itemsWithIdx = computed(() => {
+  return items.value.map((i, idx) => ({ ...i, idx }))
+})
+
+function addTariffHandler(val) {
+  items.value = [...items.value, { ...val }]
+}
+
+function updateHandler(idx) {
+  item.value = { ...items.value[idx], idx }
+  nextTick(() => {
+    dialog.value = true
+  })
+}
+
+function removeByIdx(idx) {
+  items.value = [...items.value.slice(0, idx), ...items.value.slice(idx + 1)]
+}
+
+function removeHandler(idx) {
+  const res = confirm('Вы действительно хотите удалить запись? ')
+  if (res) {
+    removeByIdx(idx)
+  }
 }
 </script>
 <style scoped>

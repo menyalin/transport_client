@@ -16,29 +16,20 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
-export default {
-  name: 'ContactCard',
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    item: Object,
-  },
-  setup(_props, ctx) {
-    return {
-      editHandler: () => {
-        ctx.emit('edit')
-      },
-      removeHandler: async () => {
-        const res = confirm('Удалить контакт?')
-        if (res) {
-          ctx.emit('remove')
-        }
-      },
-    }
-  },
+<script setup>
+defineModel({ type: Object })
+
+const emit = defineEmits(['edit', 'remove'])
+
+function editHandler() {
+  emit('edit')
+}
+
+async function removeHandler() {
+  const res = confirm('Удалить контакт?')
+  if (res) {
+    emit('remove')
+  }
 }
 </script>
 <style lang=""></style>

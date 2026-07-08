@@ -1,7 +1,7 @@
 <template>
   <v-menu :close-on-content-click="false">
     <template #activator="{ props }">
-      <v-btn color="primary" v-bind="props" icon>
+      <v-btn color="primary" v-bind="props" icon variant="text">
         <v-icon size="small"> mdi-cog </v-icon>
       </v-btn>
     </template>
@@ -10,7 +10,7 @@
         v-for="field of allHeaders"
         :key="field.value"
         :model-value="tmpHeaders.includes(field.value)"
-        :label="field.text"
+        :label="field.title"
         hide-details
         @update:model-value="toggleHeader(field.value)"
       />

@@ -28,112 +28,99 @@
     />
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
 import { AgreementService } from '@/shared/services/index'
 import PaymentPartFormDialog from './formDialog.vue'
 import PaymentPartsTable from './paymentPartsTable.vue'
 
-export default {
-  name: 'OrderPaymentParts',
-  components: {
-    PaymentPartFormDialog,
-    PaymentPartsTable,
-  },
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    value: {
-      type: Array,
-    },
-    routeDate: { type: String },
-    readonly: {
-      type: Boolean,
-    },
-  },
-  data() {
+defineOptions({ name: 'OrderPaymentParts' })
+
+const modelValue = defineModel({ type: Array })
+
+const props = defineProps({
+  routeDate: { type: String },
+  readonly: { type: Boolean },
+})
+
+const store = useStore()
+
+const loading = ref(false)
+const agreements = ref([])
+const parts = ref([])
+const dialog = ref(false)
+
+const clientsInParts = computed(() => parts.value.map((i) => i.client))
+
+const preparedItems = computed(() =>
+  parts.value.map((part) => {
+    const agreement = agreements.value.find((agreement) => agreement._id === part.agreement)
     return {
-      loading: false,
-      agreements: [],
-      parts: [],
-      dialog: false,
+      ...part,
+      agreementName: agreement?.name || '__no name__',
     }
-  },
-  computed: {
-    clientsInParts() {
-      return this.parts.map((i) => i.client)
-    },
-    preparedItems() {
-      return this.parts.map((part) => {
-        const agreement = this.agreements.find((agreement) => agreement._id === part.agreement)
-        return {
-          ...part,
-          agreementName: agreement?.name || '__no name__',
-        }
-      })
-    },
-  },
+  })
+)
 
-  watch: {
-    value: {
-      deep: true,
-      immediate: true,
-      handler: function (val, oldVal) {
-        if (JSON.stringify(val) === JSON.stringify(oldVal)) return null
-        this.parts = val
-      },
-    },
-    parts: {
-      deep: true,
-      handler: function (val) {
-        this.$emit('change', val)
-      },
-    },
-    clientsInParts: {
-      deep: true,
-      immediate: true,
-      handler: async function (newVal, oldVal) {
-        if (
-          Array.isArray(newVal) &&
-          newVal.some((i) => !Array.isArray(oldVal) || !oldVal.includes(i))
-        )
-          await this.getAgreements()
-      },
-    },
+watch(
+  modelValue,
+  (val, oldVal) => {
+    if (JSON.stringify(val) === JSON.stringify(oldVal)) return
+    parts.value = val
   },
-  methods: {
-    submitHandler(formState) {
-      if (this.readonly) return
-      this.parts.push(formState)
-      this.closeDialog()
-    },
-    openDialog() {
-      this.dialog = true
-    },
-    closeDialog() {
-      this.dialog = false
-    },
-    deleteRowHandler(idx) {
-      this.parts.splice(idx, 1)
-    },
+  { deep: true, immediate: true }
+)
 
-    async getAgreements() {
-      try {
-        this.loading = true
-        const res = await AgreementService.getForClient({
-          company: this.$store.getters.directoriesProfile,
-          date: this.routeDate,
-          clients: this.clientsInParts,
-        })
-        this.agreements = Object.assign([], res)
-      } catch (e) {
-        console.log('Ошибка получения соглашений для частей рейса: ', e)
-      } finally {
-        this.loading = false
-      }
-    },
+watch(
+  parts,
+  (val) => {
+    modelValue.value = val
   },
+  { deep: true }
+)
+
+watch(
+  clientsInParts,
+  async (newVal, oldVal) => {
+    if (Array.isArray(newVal) && newVal.some((i) => !Array.isArray(oldVal) || !oldVal.includes(i)))
+      await getAgreements()
+  },
+  { deep: true, immediate: true }
+)
+
+function submitHandler(formState) {
+  if (props.readonly) return
+  parts.value.push(formState)
+  closeDialog()
+}
+
+function openDialog() {
+  dialog.value = true
+}
+
+function closeDialog() {
+  dialog.value = false
+}
+
+function deleteRowHandler(idx) {
+  parts.value.splice(idx, 1)
+}
+
+async function getAgreements() {
+  try {
+    loading.value = true
+    const res = await AgreementService.getForClient({
+      company: store.getters.directoriesProfile,
+      date: props.routeDate,
+      clients: clientsInParts.value,
+    })
+    agreements.value = Object.assign([], res)
+  } catch (e) {
+    console.log('Ошибка получения соглашений для частей рейса: ', e)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 <style scoped>

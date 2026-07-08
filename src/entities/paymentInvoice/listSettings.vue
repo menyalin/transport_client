@@ -63,69 +63,53 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, ref, onMounted } from 'vue'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { PAYMENT_INVOICE_TABLE_HEADERS, paymentInvoiceStatuses } from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
-export default {
-  name: 'PymentInvoiceListSettingsWidget',
-  components: { AppTableColumnSetting, DateRangeInput },
-  model: {
-    prop: 'settings',
-    event: 'change',
+defineOptions({ name: 'PymentInvoiceListSettingsWidget' })
+
+const settings = defineModel({ type: Object, required: true })
+
+defineProps({
+  clientItems: {
+    type: Array,
+    required: true,
+    default: () => [],
   },
-  props: {
-    settings: Object,
-    clientItems: {
-      type: Array,
-      required: true,
-      default: () => [],
-    },
-  },
+})
 
-  setup(props, ctx) {
-    const agreements = ref([])
-    const agreementItems = computed(() =>
-      agreements.value
-        .filter((i) => i.isOutsourceAgreement !== true)
-        .sort((a, b) => (a.name < b.name ? -1 : 1))
-    )
+const agreements = ref([])
+const agreementItems = computed(() =>
+  agreements.value
+    .filter((i) => i.isOutsourceAgreement !== true)
+    .sort((a, b) => (a.name < b.name ? -1 : 1))
+)
 
-    const statusItems = computed(() => {
-      return paymentInvoiceStatuses
-    })
+const statusItems = computed(() => paymentInvoiceStatuses)
 
-    const periodByItems = [
-      { value: 'date', text: 'Дата акта' },
-      { value: 'sendDate', text: 'Дата отправки' },
-      { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
-      { value: 'payDate', text: 'Дата оплаты' },
-    ]
+const periodByItems = [
+  { value: 'date', text: 'Дата акта' },
+  { value: 'sendDate', text: 'Дата отправки' },
+  { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
+  { value: 'payDate', text: 'Дата оплаты' },
+]
 
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
-
-    function updateHeadersHandler(val) {
-      ctx.emit('updateHeaders', val)
-    }
-
-    onMounted(async () => {
-      agreements.value = await AgreementService.getActiveAgreements()
-    })
-
-    return {
-      agreementItems,
-      statusItems,
-      updateHeadersHandler,
-      updateSettings,
-      PAYMENT_INVOICE_TABLE_HEADERS,
-      periodByItems,
-    }
-  },
+function updateSettings(value, field) {
+  settings.value = { ...settings.value, [field]: value }
 }
+
+function updateHeadersHandler(val) {
+  emit('updateHeaders', val)
+}
+
+const emit = defineEmits(['updateHeaders'])
+
+onMounted(async () => {
+  agreements.value = await AgreementService.getActiveAgreements()
+})
 </script>
 <style scoped>
 .settings-wrapper {

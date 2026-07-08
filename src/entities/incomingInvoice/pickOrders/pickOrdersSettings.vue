@@ -18,28 +18,17 @@
     />
   </div>
 </template>
-<script>
+<script setup>
 import { DateRangeInput, OrderDocStatusSelector } from '@/shared/ui'
 
-export default {
-  name: 'PickOrdersForIncomingInvoiceSettings',
-  components: { DateRangeInput, OrderDocStatusSelector },
+defineOptions({ name: 'PickOrdersForIncomingInvoiceSettings' })
 
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-  },
-  setup(_props, ctx) {
-    function refreshHandler() {
-      ctx.emit('refresh')
-    }
-    return {
-      refreshHandler,
-    }
-  },
+const settings = defineModel({ type: Object })
+
+const emit = defineEmits(['refresh'])
+
+function refreshHandler() {
+  emit('refresh')
 }
 </script>
 <style scoped>

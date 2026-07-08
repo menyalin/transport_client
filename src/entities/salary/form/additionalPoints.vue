@@ -28,44 +28,29 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, getCurrentInstance } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'TariffPointsType',
-  props: {
-    additionalPoints: Object,
-  },
-  model: {
-    prop: 'additionalPoints',
-    event: 'change',
-  },
-  setup(props, ctx) {
-    const instance = getCurrentInstance()
-    const store = instance?.proxy.$store
+const additionalPoints = defineModel({ type: Object })
 
-    const clients = computed(() => store?.getters.partners?.filter((i) => i.isClient) || [])
+const store = useStore()
 
-    const orderAnalyticTypes = computed(() => store?.getters.orderAnalyticTypes || [])
+const clients = computed(() => store.getters.partners?.filter((i) => i.isClient) || [])
 
-    const routeTypeEl = ref(null)
+const orderAnalyticTypes = computed(() => store.getters.orderAnalyticTypes || [])
 
-    const focus = () => {
-      routeTypeEl.value?.focus()
-    }
+const routeTypeEl = ref(null)
 
-    function changeHandler(val, field) {
-      ctx.emit('change', { ...props.additionalPoints, [field]: val })
-    }
-    return {
-      clients,
-      orderAnalyticTypes,
-      routeTypeEl,
-      focus,
-      changeHandler,
-    }
-  },
+const focus = () => {
+  routeTypeEl.value?.focus()
 }
+
+function changeHandler(val, field) {
+  additionalPoints.value = { ...additionalPoints.value, [field]: val }
+}
+
+defineExpose({ focus })
 </script>
 <style scoped>
 #points-wrapper {

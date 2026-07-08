@@ -6,38 +6,41 @@ import * as directives from 'vuetify/directives'
 import { ru } from 'vuetify/locale'
 import { md3 } from 'vuetify/blueprints'
 
+const density = 'comfortable'
+
 export default createVuetify({
   defaults: {
-    VTextField: { density: 'compact', color: 'primary', autocomplete: 'off' },
-    VSelect: { density: 'compact', color: 'primary' },
+    VTextField: { density, color: 'primary', autocomplete: 'off', variant: 'solo' },
+    VSelect: { density, color: 'primary', variant: 'solo' },
     VAutocomplete: {
-      density: 'compact',
+      density,
       itemTitle: 'text',
       clearable: true,
       color: 'primary',
       autoSelectFirst: true,
       autocomplete: 'off',
+      variant: 'solo',
     },
     VSwitch: {
       color: 'primary',
-      density: 'compact',
+      density,
       class: 'ma-2',
     },
     VBtn: {
       variant: 'outlined',
     },
-    VTextarea: { density: 'compact', autocomplete: 'off' },
-    VCheckbox: { density: 'compact', color: 'primary' },
-    VRadioGroup: { density: 'compact', color: 'primary' },
+    VTextarea: { density, autocomplete: 'off', variant: 'solo' },
+    VCheckbox: { density, color: 'primary' },
+    VRadioGroup: { density, color: 'primary' },
     VDataTableServer: {
       itemValue: '_id',
-      density: 'compact',
+      density,
       color: 'primary',
       itemsPerPage: 50,
       itemsPerPageOptions: [25, 50, 100, 200],
     },
     VDataTable: {
-      density: 'compact',
+      density,
       color: 'primary',
       itemValue: '_id',
       itemsPerPage: 50,

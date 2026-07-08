@@ -21,47 +21,19 @@
   </v-data-table-server>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
 import router from '@/router'
 
-export default {
-  name: 'DocsRegistryDataTable',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    items: Array,
-    totalCount: Number,
-    settings: Object,
-    headers: Array,
-    loading: Boolean,
-  },
-  setup(props, _ctx) {
-    const listOptions = ref(props.settings?.listOptions || {})
+const settings = defineModel({ type: Object })
 
-    function dblClickRow(_event, { item }) {
-      router.push(`docsRegistry/${item._id}`)
-    }
+defineProps({
+  items: Array,
+  totalCount: Number,
+  headers: Array,
+  loading: Boolean,
+})
 
-    // watch(
-    //   listOptions,
-    //   () => {
-    //     ctx.emit(
-    //       'change',
-    //       Object.assign({}, props?.settings, {
-    //         listOptions: listOptions?.value,
-    //       })
-    //     )
-    //   }
-    //   // { immediate: true }
-    // )
-
-    return {
-      dblClickRow,
-      listOptions,
-    }
-  },
+function dblClickRow(_event, { item }) {
+  router.push(`docsRegistry/${item._id}`)
 }
 </script>

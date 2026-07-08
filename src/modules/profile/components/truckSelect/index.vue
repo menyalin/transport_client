@@ -1,58 +1,50 @@
 <template>
   <v-select
     :hide-details="hideDetails"
-    :model-value="value"
+    v-model="modelValue"
     :label="label"
     :items="trucksForSelect"
     item-title="regNum"
     item-value="_id"
     :disabled="disabled"
-    @update:model-value="change"
   />
 </template>
-<script>
-export default {
-  name: 'TruckSelect',
-  model: {
-    prop: 'value',
-    event: 'change',
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'TruckSelect' })
+
+const modelValue = defineModel({ type: String })
+
+const props = defineProps({
+  label: {
+    type: String,
+    default: 'Транспортное средство',
   },
-  props: {
-    value: {
-      type: String,
-    },
-    label: {
-      type: String,
-      default: 'Транспортное средство',
-    },
-    type: {
-      type: String,
-    },
-    tkName: {
-      type: String,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    hideDetails: {
-      type: Boolean,
-      default: false,
-    },
+  type: {
+    type: String,
   },
-  computed: {
-    trucksForSelect() {
-      return this.$store.getters.trucksForSelect({
-        type: this.type,
-        tkName: this.tkName,
-      })
-    },
+  tkName: {
+    type: String,
   },
-  methods: {
-    change(val) {
-      this.$emit('change', val)
-    },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
-}
+  hideDetails: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const store = useStore()
+
+const trucksForSelect = computed(() =>
+  store.getters.trucksForSelect({
+    type: props.type,
+    tkName: props.tkName,
+  })
+)
 </script>
 <style></style>

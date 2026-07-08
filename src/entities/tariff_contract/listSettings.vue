@@ -23,26 +23,17 @@
     />
   </div>
 </template>
-<script>
-export default {
-  name: 'TariffContractListSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-    agreementItems: Array,
-  },
-  setup(props, ctx) {
-    const changeFieldHandler = (field, value) => {
-      ctx.emit('change', { ...props.settings, [field]: value })
-    }
+<script setup>
+defineOptions({ name: 'TariffContractListSettings' })
 
-    return {
-      changeFieldHandler,
-    }
-  },
+const settings = defineModel({ type: Object })
+
+defineProps({
+  agreementItems: Array,
+})
+
+function changeFieldHandler(field, value) {
+  settings.value = { ...settings.value, [field]: value }
 }
 </script>
 <style scoped>

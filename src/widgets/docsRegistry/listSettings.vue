@@ -30,47 +30,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import store from '@/store'
 import { computed } from 'vue'
 import { AppTableColumnSetting } from '@/shared/ui'
 import { DOCS_REGISTRY_TABLE_HEADERS } from '@/shared/constants'
 
-export default {
-  name: 'DocsRegistryListSettingsWidget',
-  components: { AppTableColumnSetting },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: Object,
-  },
+const settings = defineModel({ type: Object })
+const emit = defineEmits(['updateHeaders'])
 
-  setup(props, ctx) {
-    const clientItems = computed(() => {
-      return store.getters.partners.filter((i) => i.isClient)
-    })
+const clientItems = computed(() => {
+  return store.getters.partners.filter((i) => i.isClient)
+})
 
-    const statusItems = computed(() => {
-      return store.getters.docsRegistryStatuses
-    })
+const statusItems = computed(() => {
+  return store.getters.docsRegistryStatuses
+})
 
-    function updateSettings(value, field) {
-      ctx.emit('change', Object.assign({}, props.settings, { [field]: value }))
-    }
+function updateSettings(value, field) {
+  settings.value = Object.assign({}, settings.value, { [field]: value })
+}
 
-    function updateHeadersHandler(val) {
-      ctx.emit('updateHeaders', val)
-    }
-    return {
-      clientItems,
-      statusItems,
-      updateHeadersHandler,
-      updateSettings,
-      DOCS_REGISTRY_TABLE_HEADERS,
-    }
-  },
+function updateHeadersHandler(val) {
+  emit('updateHeaders', val)
 }
 </script>
 <style scoped>

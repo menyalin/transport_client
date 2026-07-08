@@ -46,65 +46,52 @@
     />
   </div>
 </template>
-<script>
+<script setup>
+import { ref, watch } from 'vue'
+import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 
-export default {
-  name: 'SalaryTariffCommonSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    settings: {
-      type: Object,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    carriers: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      tmpSettings: {
-        date: null,
-        tks: [],
-        type: null,
-        liftCapacity: [],
-        consigneeTypes: [],
-      },
-    }
-  },
+const settings = defineModel({ type: Object })
 
-  watch: {
-    tmpSettings: {
-      deep: true,
-      immediate: true,
-      handler: function (val) {
-        this.$emit('change', {
-          ...val,
-          date: val.date ? new Date(val.date).toISOString() : null,
-        })
-      },
-    },
+defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
   },
-  created() {
-    if (this.settings?.group) this.tmpSettings = { ...this.settings }
-    else {
-      // default values
-      this.tmpSettings.truckKind = this.$store.getters.companySettings?.defaultTruckKind || null
-      this.tmpSettings.liftCapacity.push(
-        this.$store.getters.companySettings?.defaultLiftCapacity || null
-      )
+  carriers: {
+    type: Array,
+    required: true,
+  },
+})
 
-      this.tmpSettings.date = dayjs().format('YYYY-MM-DD')
-    }
-  },
+const store = useStore()
+
+const tmpSettings = ref({
+  date: null,
+  tks: [],
+  type: null,
+  liftCapacity: [],
+  consigneeTypes: [],
+})
+
+if (settings.value?.group) {
+  tmpSettings.value = { ...settings.value }
+} else {
+  tmpSettings.value.truckKind = store.getters.companySettings?.defaultTruckKind || null
+  tmpSettings.value.liftCapacity.push(store.getters.companySettings?.defaultLiftCapacity || null)
+  tmpSettings.value.date = dayjs().format('YYYY-MM-DD')
 }
+
+watch(
+  tmpSettings,
+  (val) => {
+    settings.value = {
+      ...val,
+      date: val.date ? new Date(val.date).toISOString() : null,
+    }
+  },
+  { deep: true, immediate: true }
+)
 </script>
 <style scoped>
 #settings-wrapper {

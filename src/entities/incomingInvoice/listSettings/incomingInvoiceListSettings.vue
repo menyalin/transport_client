@@ -63,55 +63,43 @@
     />
   </div>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
 import allHeaders from './allHeaders.js'
 import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 
-export default {
-  name: 'IncomingInvoiceListSettings',
-  components: { AppTableColumnSetting, DateRangeInput },
-  model: {
-    prop: 'settings',
-    event: 'change',
+defineOptions({ name: 'IncomingInvoiceListSettings' })
+
+const settings = defineModel({ type: Object })
+
+defineProps({
+  agreementItems: Array,
+  outsourceCarriers: {
+    type: Array,
+    required: true,
   },
-  props: {
-    settings: Object,
-    agreementItems: Array,
-    outsourceCarriers: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const statusItems = computed(() => {
-      return incomingInvoiceStatuses
-    })
+})
 
-    const periodByItems = [
-      { value: 'date', text: 'Дата акта' },
-      { value: 'receiptDate', text: 'Дата получения' },
-      { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
-      { value: 'payDate', text: 'Дата оплаты' },
-    ]
+const emit = defineEmits(['updateHeaders'])
 
-    function updateSettings(value, field) {
-      ctx.emit('change', { ...props.settings, [field]: value })
-    }
+const statusItems = computed(() => {
+  return incomingInvoiceStatuses
+})
 
-    function updateHeadersHandler(val) {
-      ctx.emit('updateHeaders', val)
-    }
-    return {
-      statusItems,
-      updateHeadersHandler,
-      updateSettings,
+const periodByItems = [
+  { value: 'date', text: 'Дата акта' },
+  { value: 'receiptDate', text: 'Дата получения' },
+  { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
+  { value: 'payDate', text: 'Дата оплаты' },
+]
 
-      allHeaders,
-      periodByItems,
-    }
-  },
+function updateSettings(value, field) {
+  settings.value = { ...settings.value, [field]: value }
+}
+
+function updateHeadersHandler(val) {
+  emit('updateHeaders', val)
 }
 </script>
 <style scoped>

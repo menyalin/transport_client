@@ -36,91 +36,70 @@
   </div>
 </template>
 
-<script>
-import store from '@/store'
+<script setup>
 import { ref } from 'vue'
+import store from '@/store'
 import PlaceItem from './placeItem.vue'
 import PlaceForTransferDocsForm from './placeForTransferDocsForm.vue'
 import { PartnerService } from '@/shared/services'
 
-export default {
-  components: { PlaceItem, PlaceForTransferDocsForm },
-  name: 'PlacesForTransferDocs',
-  model: {
-    prop: 'places',
-    event: 'change',
-  },
-  props: {
-    partnerId: String,
-    places: Array,
-  },
-  setup(props, ctx) {
-    const placeForm = ref(null) // ref на компонент формы
-    const showDialog = ref(false)
-    const editableItem = ref({})
+defineOptions({ name: 'PlacesForTransferDocs' })
 
-    function addPlaceHandler() {
-      showDialog.value = true
+const places = defineModel({ type: Array, default: () => [] })
+
+const props = defineProps({
+  partnerId: String,
+})
+
+const placeForm = ref(null)
+const showDialog = ref(false)
+const editableItem = ref({})
+
+function addPlaceHandler() {
+  showDialog.value = true
+}
+
+async function formSubmitHandler(formState) {
+  if (!props.partnerId || !formState) return null
+  try {
+    let updatedPartner
+    if (formState._id) {
+      updatedPartner = await PartnerService.updatePlaceForTransferDocs(
+        props.partnerId,
+        formState._id,
+        formState
+      )
+    } else {
+      updatedPartner = await PartnerService.addPlaceForTransferDocs(props.partnerId, formState)
     }
+    places.value = updatedPartner.placesForTransferDocs
+    placeForm.value.clear()
+    showDialog.value = false
+  } catch (e) {
+    store.commit('setError', e)
+  }
+}
 
-    async function formSubmitHandler(formState) {
-      let updatedPartner
-      if (!props.partnerId || !formState) return null
-      try {
-        if (formState._id) {
-          updatedPartner = await PartnerService.updatePlaceForTransferDocs(
-            props.partnerId,
-            formState._id,
-            formState
-          )
-        } else {
-          updatedPartner = await PartnerService.addPlaceForTransferDocs(props.partnerId, formState)
-        }
-        ctx.emit('change', updatedPartner.placesForTransferDocs)
-        placeForm.value.clear()
-        showDialog.value = false
-      } catch (e) {
-        store.commit('setError', e)
-      }
-    }
+function formCancelHandler() {
+  showDialog.value = false
+  editableItem.value = {}
+}
 
-    function formCancelHandler() {
-      showDialog.value = false
-      editableItem.value = {}
-    }
+async function editPlaceHandler(placeId) {
+  const editablePlace = places.value.find((i) => placeId === i._id)
+  if (!editablePlace) return null
+  editableItem.value = { ...editablePlace }
+  showDialog.value = true
+}
 
-    async function editPlaceHandler(placeId) {
-      const editablePlace = props.places.find((i) => placeId === i._id)
-      if (!editablePlace) return null
-      editableItem.value = { ...editablePlace }
-      showDialog.value = true
-    }
-
-    async function deletePlaceHandler(placeId) {
-      if (!props.partnerId || !placeId) return null
-
-      try {
-        const updatedPartner = await PartnerService.deletePlaceForTransferDocs(
-          props.partnerId,
-          placeId
-        )
-        ctx.emit('change', updatedPartner.placesForTransferDocs)
-      } catch (e) {
-        store.commit('setError', e)
-      }
-    }
-
-    return {
-      showDialog,
-      editableItem,
-      addPlaceHandler,
-      formSubmitHandler,
-      formCancelHandler,
-      editPlaceHandler,
-      deletePlaceHandler,
-      placeForm,
-    }
-  },
+async function deletePlaceHandler(placeId) {
+  if (!props.partnerId || !placeId) return null
+  try {
+    const updatedPartner = await PartnerService.deletePlaceForTransferDocs(props.partnerId, placeId)
+    places.value = updatedPartner.placesForTransferDocs
+  } catch (e) {
+    store.commit('setError', e)
+  }
 }
 </script>
 

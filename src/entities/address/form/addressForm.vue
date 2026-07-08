@@ -27,12 +27,7 @@
       label="Регион"
     />
 
-    <v-autocomplete
-      v-model="v$.city.$model"
-      :items="$store.getters.citiesForAutocomplete"
-      auto-select-first
-      label="Город"
-    />
+    <v-autocomplete v-model="v$.city.$model" :items="cityItems" label="Город" item-title="title" />
 
     <v-text-field v-model="v$.note.$model" label="Примечание к адресу" />
 
@@ -52,48 +47,25 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion/index.vue'
 import { ButtonsPanel } from '@/shared/ui'
-import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
-
 import { useForm } from './useForm'
 
-export default {
-  name: 'AddressForm',
-  components: {
-    AppAddressSuggestion,
-    ButtonsPanel,
+defineOptions({ name: 'AddressForm' })
 
-    AppZoneAutocomplete,
+const props = defineProps({
+  address: Object,
+  cityItems: { type: Array, required: true },
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    address: Object,
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    formName: String,
-    partnerItems: Array,
-  },
-  setup(props, ctx) {
-    const { state, v$, resetForm, nameErrors, geoErrors, submit, cancel, getParsedAddress } =
-      useForm(props, ctx)
+  formName: String,
+  partnerItems: Array,
+})
 
-    return {
-      state,
-      v$,
-      nameErrors,
-      geoErrors,
-      submit,
-      cancel,
-      resetForm,
-      getParsedAddress,
-    }
-  },
-}
+const emit = defineEmits(['delete', 'submit', 'cancel'])
+
+const { v$, nameErrors, geoErrors, submit, cancel, getParsedAddress } = useForm(props, emit)
 </script>
-
-<style>
-/* Добавьте стили, если необходимо */
-</style>

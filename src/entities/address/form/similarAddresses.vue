@@ -42,22 +42,25 @@
     </template>
   </v-table>
 </template>
-<script>
-export default {
-  name: 'SimilarAddresses',
-  props: {
-    addresses: {
-      type: Array,
-    },
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'SimilarAddresses' })
+
+const props = defineProps({
+  addresses: {
+    type: Array,
   },
-  computed: {
-    preparedAddresses() {
-      return this.addresses.map((a) => ({
-        ...a,
-        partnerName: this.$store.getters.partnersMap.get(a.partner)?.name,
-      }))
-    },
-  },
-}
+})
+
+const store = useStore()
+
+const preparedAddresses = computed(() => {
+  return props.addresses.map((a) => ({
+    ...a,
+    partnerName: store.getters.partnersMap.get(a.partner)?.name,
+  }))
+})
 </script>
 <style></style>

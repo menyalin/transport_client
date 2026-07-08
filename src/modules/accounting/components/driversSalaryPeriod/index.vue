@@ -11,45 +11,31 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script setup>
 import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
-export default {
-  name: 'DriversSalaryPeriod',
-  model: {
-    prop: 'value', // period
-    event: 'change',
-  },
-  // eslint-disable-next-line vue/require-prop-types
-  props: {
-    value: String,
-  },
-  setup(props, ctx) {
-    const baseDate = ref(dayjs(props.value))
-    function changePeriod(val) {
-      baseDate.value = baseDate.value.add(val, 'month')
-      ctx.emit('change', baseDate.value.toISOString())
-    }
 
-    const periodTitle = computed(() => {
-      return baseDate.value.format('MMMM, YYYY').toUpperCase()
-    })
+const modelValue = defineModel({ type: String })
 
-    watch(
-      () => props.value,
-      (newVal, oldVal) => {
-        if (newVal !== oldVal) {
-          baseDate.value = dayjs(newVal)
-        }
-      }
-    )
+const baseDate = ref(dayjs(modelValue.value))
 
-    return {
-      periodTitle,
-      changePeriod,
-    }
-  },
+function changePeriod(val) {
+  baseDate.value = baseDate.value.add(val, 'month')
+  modelValue.value = baseDate.value.toISOString()
 }
+
+const periodTitle = computed(() => {
+  return baseDate.value.format('MMMM, YYYY').toUpperCase()
+})
+
+watch(
+  () => modelValue.value,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      baseDate.value = dayjs(newVal)
+    }
+  }
+)
 </script>
 <style scoped>
 .period-wrapper {

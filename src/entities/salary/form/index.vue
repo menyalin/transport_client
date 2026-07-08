@@ -99,7 +99,18 @@
     </v-dialog>
   </div>
 </template>
-<script>
+<script setup>
+import {
+  ref,
+  reactive,
+  computed,
+  watch,
+  nextTick,
+  onMounted,
+  onBeforeUnmount,
+  getCurrentInstance,
+} from 'vue'
+import { useStore } from 'vuex'
 import AppPoints from './points.vue'
 import AppZones from './zones.vue'
 import AppRegions from './regions.vue'
@@ -108,140 +119,146 @@ import AppWaiting from './waiting.vue'
 import AppReturn from './return.vue'
 import { SalaryTariffDTO } from './salaryTariff.dto'
 
-export default {
-  name: 'TariffForm',
-  components: {
-    AppPoints,
-    AppAdditionalPoints,
-    AppWaiting,
-    AppReturn,
-    AppZones,
-    AppRegions,
+const item = defineModel({ type: Object })
+const props = defineProps({
+  dialog: Boolean,
+  carrierItems: {
+    type: Array,
+    required: true,
   },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    item: Object,
-    dialog: Boolean,
-    carrierItems: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      tks: [],
-      tmpDialog: false,
-      points: {
-        loading: '',
-        unloading: '',
-      },
-      zones: {
-        loadingZone: '',
-        unloadingZone: '',
-      },
-      regions: {
-        loadingRegion: '',
-        unloadingRegion: '',
-      },
-      additionalPoints: {
-        includedPoints: 2,
-        orderType: '',
-        clients: [],
-      },
-      tmpItem: {
-        liftCapacity: [],
-        consigneeTypes: [],
-      },
+})
+const emit = defineEmits(['push', 'update', 'deletedItem', 'cancel'])
 
-      waiting: {
-        includeHours: '',
-        roundByHours: '',
-        orderType: '',
-        tariffBy: '',
-        clients: [],
-      },
-      returnTariff: {
-        clients: [],
-        isPltReturn: false,
-        orderType: '',
-      },
+const store = useStore()
+const { proxy } = getCurrentInstance()
+
+const tmpDialog = ref(false)
+
+const points = reactive({
+  loading: '',
+  unloading: '',
+})
+const zones = reactive({
+  loadingZone: '',
+  unloadingZone: '',
+})
+const regions = reactive({
+  loadingRegion: '',
+  unloadingRegion: '',
+})
+const additionalPoints = reactive({
+  includedPoints: 2,
+  orderType: '',
+  clients: [],
+})
+const tmpItem = reactive({
+  liftCapacity: [],
+  consigneeTypes: [],
+})
+const waiting = reactive({
+  includeHours: '',
+  roundByHours: '',
+  orderType: '',
+  tariffBy: '',
+  clients: [],
+})
+const returnTariff = reactive({
+  clients: [],
+  isPltReturn: false,
+  orderType: '',
+})
+
+const typeSpecific = {
+  points,
+  zones,
+  regions,
+  additionalPoints,
+  waiting,
+  return: returnTariff,
+}
+
+const invalidItem = computed(() => {
+  return SalaryTariffDTO.invalidItem({
+    ...tmpItem,
+    ...(tmpItem.type ? typeSpecific[tmpItem.type] : {}),
+    ...(tmpItem.type === 'return' ? returnTariff : {}),
+  })
+})
+
+const showDeleteBtn = computed(() => {
+  return item.value?._id && store.getters.hasPermission('salaryTariff:delete')
+})
+
+const formState = computed(() => {
+  if (!tmpItem.type) return {}
+  return new SalaryTariffDTO({
+    ...tmpItem,
+    ...(tmpItem.type ? typeSpecific[tmpItem.type] : {}),
+    ...(tmpItem.type === 'return' ? returnTariff : {}),
+  })
+})
+
+watch(
+  () => props.dialog,
+  (val) => {
+    tmpDialog.value = val
+  }
+)
+
+watch(tmpDialog, (val) => {
+  if (!val) cancel()
+})
+
+watch(
+  item,
+  (val) => {
+    if (val) {
+      const dtoItem = SalaryTariffDTO.tariffFromDBItem(val)
+      Object.assign(tmpItem, dtoItem.tmpItem)
+      Object.assign(points, dtoItem.points)
+      Object.assign(zones, dtoItem.zones)
+      Object.assign(regions, dtoItem.regions)
+      Object.assign(additionalPoints, dtoItem.additionalPoints)
+      Object.assign(waiting, dtoItem.waiting)
+      Object.assign(returnTariff, dtoItem.return)
     }
   },
-  computed: {
-    invalidItem() {
-      return SalaryTariffDTO.invalidItem({
-        ...this.tmpItem,
-        ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
-        ...(this.tmpItem.type && this.tmpItem.type === 'return' ? this.returnTariff : {}),
-      })
-    },
-    showDeleteBtn() {
-      return this.item._id && this.$store.getters.hasPermission('salaryTariff:delete')
-    },
-    formState() {
-      if (!this.tmpItem.type) return {}
-      return new SalaryTariffDTO({
-        ...this.tmpItem,
-        ...(this.tmpItem.type ? this[this.tmpItem.type] : {}),
-        ...(this.tmpItem.type && this.tmpItem.type === 'return' ? this.returnTariff : {}),
-      })
-    },
-  },
-  watch: {
-    dialog: function (val) {
-      this.tmpDialog = val
-    },
-    tmpDialog: function (val) {
-      if (!val) this.cancel()
-    },
-    item: {
-      deep: true,
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          const item = SalaryTariffDTO.tariffFromDBItem(val)
-          const itemKeys = Object.keys(item)
-          itemKeys.forEach((key) => (this[key] = { ...item[key] }))
-          if (val.type === 'return') this.returnTariff = item.return
-        }
-      },
-    },
-  },
-  created() {
-    document.addEventListener('keyup', this.keypressEventHandler)
-  },
-  beforeDestroy() {
-    document.removeEventListener('keyup', this.keypressEventHandler)
-  },
-  methods: {
-    keypressEventHandler(e) {
-      if (e.altKey && e.key === 'Enter') this.pushItem()
-    },
+  { deep: true, immediate: true }
+)
 
-    cancel() {
-      this.$emit('cancel')
-    },
-    pushItem() {
-      if (!this.invalidItem) {
-        this.$emit('push', this.formState)
-        this.$nextTick(() => {
-          this.$refs[this.tmpItem.type].focus()
-        })
-      }
-    },
-    update() {
-      this.$emit('update', this.formState)
-      this.tmpDialog = false
-    },
-    deleteItem() {
-      const res = confirm('Вы уверены? Запись будет удалена')
-      if (!res) return null
-      else this.$emit('deletedItem', this.item._id)
-    },
-  },
+function keypressEventHandler(e) {
+  if (e.altKey && e.key === 'Enter') pushItem()
+}
+
+onMounted(() => {
+  document.addEventListener('keyup', keypressEventHandler)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('keyup', keypressEventHandler)
+})
+
+function cancel() {
+  emit('cancel')
+}
+
+function pushItem() {
+  if (!invalidItem.value) {
+    emit('push', formState.value)
+    nextTick(() => {
+      proxy.$refs[tmpItem.type]?.focus()
+    })
+  }
+}
+
+function update() {
+  emit('update', formState.value)
+  tmpDialog.value = false
+}
+
+function deleteItem() {
+  const res = confirm('Вы уверены? Запись будет удалена')
+  if (!res) return null
+  else emit('deletedItem', item.value._id)
 }
 </script>
 <style scoped>

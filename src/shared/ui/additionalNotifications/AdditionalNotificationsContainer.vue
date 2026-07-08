@@ -21,118 +21,80 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive } from 'vue'
 import AdditionalNotificationsTable from './AdditionalNotificationsTable.vue'
 import AdditionalNotificationForm from './AdditionalNotificationForm.vue'
 
-export default {
-  name: 'AdditionalNotificationsContainer',
+const items = defineModel({ type: Array, default: () => [] })
 
-  components: {
-    AdditionalNotificationsTable,
-    AdditionalNotificationForm,
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
   },
+})
 
-  model: {
-    prop: 'items',
-    event: 'change',
-  },
+const dialog = ref(false)
+const isEdit = ref(false)
+const currentEditIndex = ref(null)
 
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const editableItem = reactive({
+  title: null,
+  expDate: null,
+  daysBeforeRemind: null,
+  note: null,
+})
 
-  setup(props, { emit }) {
-    // Состояние диалога
-    const dialog = ref(false)
-    const isEdit = ref(false)
-    const currentEditIndex = ref(null)
+const handleAdd = () => {
+  resetEditableItem()
+  isEdit.value = false
+  currentEditIndex.value = null
+  dialog.value = true
+}
 
-    // Редактируемый элемент
-    const editableItem = reactive({
-      title: null,
-      expDate: null,
-      daysBeforeRemind: null,
-      note: null,
-    })
+const handleEdit = (index) => {
+  if (index !== null && index !== undefined && items.value[index]) {
+    Object.assign(editableItem, { ...items.value[index] })
+    isEdit.value = true
+    currentEditIndex.value = index
+    dialog.value = true
+  }
+}
 
-    // Обработчики событий
-    const handleAdd = () => {
-      resetEditableItem()
-      isEdit.value = false
-      currentEditIndex.value = null
-      dialog.value = true
-    }
+const handleSave = (itemData) => {
+  const newItems = [...items.value]
 
-    const handleEdit = (index) => {
-      if (index !== null && index !== undefined && props.items[index]) {
-        // Создаем копию элемента во избежание прямого мутации
-        Object.assign(editableItem, { ...props.items[index] })
-        isEdit.value = true
-        currentEditIndex.value = index
-        dialog.value = true
-      }
-    }
+  if (isEdit.value && currentEditIndex.value !== null) {
+    newItems.splice(currentEditIndex.value, 1, { ...itemData })
+  } else {
+    newItems.push({ ...itemData })
+  }
 
-    const handleSave = (itemData) => {
-      const newItems = [...props.items]
+  items.value = newItems
+  dialog.value = false
+  resetEditableItem()
+}
 
-      if (isEdit.value && currentEditIndex.value !== null) {
-        // Редактирование существующего элемента
-        newItems.splice(currentEditIndex.value, 1, { ...itemData })
-      } else {
-        // Добавление нового элемента
-        newItems.push({ ...itemData })
-      }
+function handleDelete(index) {
+  if (index === null || index === undefined) return
+  const result = confirmDelete()
+  if (result) {
+    items.value = [...items.value.slice(0, index), ...items.value.slice(index + 1)]
+  }
+}
 
-      emit('change', newItems)
-      dialog.value = false
-      resetEditableItem()
-    }
+const resetEditableItem = () => {
+  Object.assign(editableItem, {
+    title: null,
+    expDate: null,
+    daysBeforeRemind: null,
+    note: null,
+  })
+}
 
-    function handleDelete(index) {
-      if (index === null || index === undefined) return
-      const result = confirmDelete()
-      if (result) {
-        const newItems = [...props.items]
-        newItems.splice(index, 1)
-
-        emit('change', newItems)
-      }
-    }
-
-    // Вспомогательные функции
-    const resetEditableItem = () => {
-      Object.assign(editableItem, {
-        title: null,
-        expDate: null,
-        daysBeforeRemind: null,
-        note: null,
-      })
-    }
-
-    const confirmDelete = () => {
-      return confirm('Уверены, что хотите удалить это напоминание?')
-    }
-
-    return {
-      dialog,
-      isEdit,
-      editableItem,
-      handleAdd,
-      handleEdit,
-      handleSave,
-      handleDelete,
-    }
-  },
+const confirmDelete = () => {
+  return confirm('Уверены, что хотите удалить это напоминание?')
 }
 </script>
 

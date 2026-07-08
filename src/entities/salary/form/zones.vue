@@ -16,41 +16,23 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
 
-export default {
-  name: 'TariffPointsType',
-  components: {
-    AppZoneAutocomplete,
-  },
-  model: {
-    prop: 'zones',
-    event: 'change',
-  },
-  props: {
-    zones: Object,
-  },
+const zones = defineModel({ type: Object })
 
-  setup(props, ctx) {
-    const loadingEl = ref(null)
+const loadingEl = ref(null)
 
-    const focus = () => {
-      loadingEl.value?.focus()
-    }
-
-    function changeHandler(val, field) {
-      ctx.emit('change', { ...props.zones, [field]: val })
-    }
-
-    return {
-      loadingEl,
-      focus,
-      changeHandler,
-    }
-  },
+const focus = () => {
+  loadingEl.value?.focus()
 }
+
+function changeHandler(val, field) {
+  zones.value = { ...zones.value, [field]: val }
+}
+
+defineExpose({ focus })
 </script>
 <style scoped>
 #zones-wrapper {

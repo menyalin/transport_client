@@ -22,42 +22,27 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, getCurrentInstance } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'SalaryTariffRegionType',
-  props: {
-    regions: Object,
-  },
-  model: {
-    prop: 'regions',
-    event: 'change',
-  },
+const regions = defineModel({ type: Object })
 
-  setup(props, ctx) {
-    const instance = getCurrentInstance()
-    const store = instance?.proxy.$store
+const store = useStore()
 
-    const regionItems = computed(() => store?.getters.regions || [])
+const regionItems = computed(() => store.getters.regions || [])
 
-    const loadingEl = ref(null)
+const loadingEl = ref(null)
 
-    const focus = () => {
-      loadingEl.value?.focus()
-    }
-    function changeHandler(val, field) {
-      ctx.emit('change', { ...props.regions, [field]: val })
-    }
-
-    return {
-      regionItems,
-      loadingEl,
-      focus,
-      changeHandler,
-    }
-  },
+const focus = () => {
+  loadingEl.value?.focus()
 }
+
+function changeHandler(val, field) {
+  regions.value = { ...regions.value, [field]: val }
+}
+
+defineExpose({ focus })
 </script>
 <style scoped>
 #zones-wrapper {

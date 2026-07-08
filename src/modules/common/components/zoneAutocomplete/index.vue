@@ -2,7 +2,7 @@
   <div>
     <v-autocomplete
       ref="input"
-      :model-value="value"
+      v-model="modelValue"
       :hide-details="hideDetails"
       hide-no-data
       :items="items"
@@ -14,17 +14,11 @@
       :label="label"
       :append-icon="hideAppendIcon || multiple ? null : appendIcon"
       @click:append="appendClick"
-      @update:model-value="changeValue"
     />
-    <v-dialog
-      :model-value="dialog"
-      @update:model-value="showDialog = $event"
-      max-width="700"
-      persistent
-    >
+    <v-dialog v-model="dialog" max-width="700" persistent>
       <v-card>
         <app-details-zone
-          :id="value"
+          :id="modelValue"
           openInModal
           @cancel="cancelDialog"
           @submit="submit"
@@ -34,60 +28,54 @@
     </v-dialog>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import AppDetailsZone from '@/pages/profile/zone/details.vue'
 
-export default {
-  name: 'ZoneAutocomplete',
-  components: {
-    AppDetailsZone,
-  },
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    label: String,
-    hideDetails: { type: Boolean, default: false },
-    value: [String, Array],
-    disabled: { type: Boolean, default: false },
-    hideAppendIcon: { type: Boolean, default: false },
-    multiple: { type: Boolean, default: false },
-  },
-  data() {
-    return {
-      dialog: false,
-    }
-  },
-  computed: {
-    appendIcon() {
-      return this.value ? 'mdi-pencil' : 'mdi-plus-circle'
-    },
-    items() {
-      return this.$store.getters.zonesForAutocomplete
-    },
-  },
-  methods: {
-    focus() {
-      this.$refs.input.focus()
-    },
-    appendClick() {
-      this.dialog = true
-    },
-    cancelDialog() {
-      this.dialog = false
-    },
-    submit(val) {
-      this.$emit('change', val)
-      this.dialog = false
-    },
-    changeValue(val) {
-      this.$emit('change', val)
-    },
-    deleteHandler() {
-      this.$emit('change', null)
-    },
-  },
+const modelValue = defineModel({ type: [String, Array] })
+
+defineProps({
+  label: String,
+  hideDetails: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  hideAppendIcon: { type: Boolean, default: false },
+  multiple: { type: Boolean, default: false },
+})
+
+const store = useStore()
+const input = ref(null)
+const dialog = ref(false)
+
+const appendIcon = computed(() => {
+  return modelValue.value ? 'mdi-pencil' : 'mdi-plus-circle'
+})
+
+const items = computed(() => {
+  return store.getters.zonesForAutocomplete
+})
+
+function focus() {
+  input.value?.focus()
 }
+
+function appendClick() {
+  dialog.value = true
+}
+
+function cancelDialog() {
+  dialog.value = false
+}
+
+function submit(val) {
+  modelValue.value = val
+  dialog.value = false
+}
+
+function deleteHandler() {
+  modelValue.value = null
+}
+
+defineExpose({ focus })
 </script>
 <style scoped></style>

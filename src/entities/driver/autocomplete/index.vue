@@ -1,13 +1,11 @@
 <template>
   <v-autocomplete
-    clearable
-    auto-select-first
     return-object
     :model-value="model"
     :items="[...items, ...tmpItems]"
     hide-no-data
     :loading="isLoading"
-    :search.sync="search"
+    v-model:search="search"
     :customFilter="() => true"
     :label="label"
     placeholder="Введите текст для поиска"
@@ -18,104 +16,92 @@
     @click:clear="clear"
   />
 </template>
-<script>
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import { DriverService } from '@/shared/services'
+
+defineOptions({ name: 'DriverAutocomplete' })
+
+const driverId = defineModel({ type: String })
+defineProps({
+  label: { type: String, required: true },
+  disabled: { type: Boolean, default: false },
+})
+
+const store = useStore()
 
 const _getDriverNameString = (driver) => {
   return driver?.surname + ' ' + driver?.name
 }
 
-export default {
-  name: 'DriverAutocomplete',
-  model: {
-    prop: 'driverId',
-    event: 'change',
-  },
-  props: {
-    driverId: {
-      type: String,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const model = ref(null)
+const search = ref(null)
+const isLoading = ref(false)
+const items = ref([])
+const tmpItems = ref([])
+const timeout = ref(null)
 
-  data() {
-    return {
-      model: null,
-      search: null,
-      isLoading: false,
-      items: [],
-      tmpItems: [],
-      timeout: null,
+watch(search, async (val, oldVal) => {
+  if (!val || !val?.trim() || oldVal === val) {
+    return
+  }
+  if (isLoading.value) return
+  if (timeout.value) clearTimeout(timeout.value)
+  timeout.value = setTimeout(async () => {
+    try {
+      isLoading.value = true
+      items.value = await getItems(val)
+      isLoading.value = false
+    } catch (e) {
+      isLoading.value = false
+      store.commit('setError', e.message)
     }
-  },
+  }, 500)
+})
 
-  watch: {
-    async search(val, oldVal) {
-      if (!val || !val?.trim() || oldVal === val) {
-        return
-      }
-      if (this.isLoading) return
-      if (this.timeout) clearTimeout(this.timeout)
-      this.timeout = setTimeout(async () => {
-        try {
-          this.isLoading = true
-          this.items = await this.getItems(val)
-          this.isLoading = false
-        } catch (e) {
-          this.isLoading = false
-          this.$store.commit('setError', e.message)
-        }
-      }, 500)
-    },
-  },
-  created() {
-    if (this.driverId) {
-      this.getById()
-    }
-  },
-  methods: {
-    async getItems(str) {
-      const res = await DriverService.search(str, this.$store.getters.directoriesProfile)
-      return res.map((item) => ({
-        ...item,
-        text: _getDriverNameString(item),
-      }))
-    },
-    async getById() {
-      try {
-        this.isLoading = true
-        let res = await DriverService.getById(this.driverId)
-        res = { ...res, text: _getDriverNameString(res) }
-        this.tmpItems.push(res)
-        this.model = res
-        this.isLoading = false
-      } catch (e) {
-        this.$store.commit('setError', e.message)
-        this.isLoading = false
-      }
-    },
-    change(val) {
-      if (val) {
-        this.tmpItems = []
-        this.tmpItems.push(val)
-        this.model = val
-        this.$emit('change', val._id)
-      }
-    },
-    clear() {
-      this.model = null
-      this.items = []
-      this.tmpItems = []
-      this.$emit('change', null)
-    },
-  },
+onMounted(() => {
+  if (driverId.value) {
+    getById()
+  }
+})
+
+async function getItems(str) {
+  const res = await DriverService.search(str, store.getters.directoriesProfile)
+  return res.map((item) => ({
+    ...item,
+    text: _getDriverNameString(item),
+  }))
+}
+
+async function getById() {
+  try {
+    isLoading.value = true
+    let res = await DriverService.getById(driverId.value)
+    res = { ...res, text: _getDriverNameString(res) }
+    tmpItems.value.push(res)
+    model.value = res
+    isLoading.value = false
+  } catch (e) {
+    store.commit('setError', e.message)
+    isLoading.value = false
+  }
+}
+
+function change(val) {
+  if (val) {
+    tmpItems.value = []
+    tmpItems.value.push(val)
+    model.value = val
+    driverId.value = val._id
+  }
+}
+
+function clear() {
+  model.value = null
+  items.value = []
+  tmpItems.value = []
+  driverId.value = null
 }
 </script>
 <style></style>

@@ -52,7 +52,9 @@
     </v-table>
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import AppWaitingCell from './waiting.vue'
 import AppAdditionalPointsCell from './additionalPoints.vue'
 import AppReturnCell from './return.vue'
@@ -61,46 +63,23 @@ import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupLis
 import AppDirectDistanceZones from './directDistanceZones.vue'
 import { useAddressStore } from '@/entities/address'
 
-export default {
-  name: 'SalaryTariffGroupList',
-  setup() {
-    const addressStore = useAddressStore()
-    return { addressStore }
-  },
-  components: {
-    AppAdditionalPointsCell,
-    AppWaitingCell,
-    AppReturnCell,
-    AppDirectDistanceZones,
-    AppZonesCell,
-    AppRegionsCell,
-  },
-  model: {
-    prop: 'items',
-    event: 'change',
-  },
-  props: {
-    items: Array,
-  },
-  computed: {
-    addressMap() {
-      return this.addressStore.addressMap
-    },
-    truckKindMap() {
-      return this.$store.getters.truckKindsMap
-    },
-    tariffTypesMap() {
-      return this.$store.getters.salaryTariffTypesMap
-    },
-    orderAnalyticTypesMap() {
-      return this.$store.getters.orderAnalyticTypesMap
-    },
-  },
-  methods: {
-    removeHandler(ind) {
-      this.$emit('removeItem', ind)
-    },
-  },
+const items = defineModel({ type: Array, default: () => [] })
+
+const emit = defineEmits(['removeItem'])
+
+const store = useStore()
+const addressStore = useAddressStore()
+
+const addressMap = computed(() => {
+  return addressStore.addressMap
+})
+
+const tariffTypesMap = computed(() => {
+  return store.getters.salaryTariffTypesMap
+})
+
+function removeHandler(ind) {
+  emit('removeItem', ind)
 }
 </script>
 <style scoped></style>

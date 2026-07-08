@@ -1,11 +1,5 @@
 <template>
-  <v-dialog
-    :model-value="dialog"
-    @update:model-value="showDialog = $event"
-    max-width="800px"
-    persistent
-    scrollable
-  >
+  <v-dialog v-model="dialog" max-width="800px" persistent scrollable>
     <v-card>
       <v-card-title class="bg-primary text-white">
         <span class="text-h5">
@@ -60,168 +54,120 @@
   </v-dialog>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, numeric, between } from '@vuelidate/validators'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
-  name: 'AdditionalNotificationForm',
+const dialog = defineModel({ type: Boolean, default: false })
+const emit = defineEmits(['save'])
 
-  components: {
-    DateTimeInput,
+const props = defineProps({
+  item: Object,
+  isEdit: {
+    type: Boolean,
+    default: false,
   },
-
-  model: {
-    prop: 'value',
-    event: 'input',
+  loading: {
+    type: Boolean,
+    default: false,
   },
+})
 
-  props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
-    item: Object,
-    isEdit: {
-      type: Boolean,
-      default: false,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
+const initialData = {
+  title: null,
+  expDate: null,
+  daysBeforeRemind: null,
+  note: null,
+}
+
+const state = ref(initialData)
+
+const rules = computed(() => ({
+  title: { required },
+  expDate: { required },
+  daysBeforeRemind: {
+    required,
+    numeric,
+    between: between(0, 365),
   },
+  note: {},
+}))
 
-  emits: ['input', 'save'],
+const v$ = useVuelidate(rules, state)
 
-  setup(props, { emit }) {
-    const initialData = {
-      title: null,
-      expDate: null,
-      daysBeforeRemind: null,
-      note: null,
+watch(dialog, (isOpen) => {
+  if (isOpen) {
+    state.value = { ...initialData, ...props.item }
+    v$.value.$reset()
+  }
+})
+
+const titleErrors = computed(() => {
+  const errors = []
+  if (!v$.value.title.$dirty) return errors
+  if (!v$.value.title.required) {
+    errors.push('Заголовок не может быть пустым')
+  }
+  return errors
+})
+
+const expDateErrors = computed(() => {
+  const errors = []
+  if (!v$.value.expDate.$dirty) return errors
+  if (!v$.value.expDate.required) {
+    errors.push('Укажите дату')
+  }
+  if (v$.value.expDate.$model && !isValidDate(v$.value.expDate.$model)) {
+    errors.push('Некорректная дата')
+  }
+  return errors
+})
+
+const daysBeforeRemindErrors = computed(() => {
+  const errors = []
+  if (!v$.value.daysBeforeRemind.$dirty) return errors
+  if (!v$.value.daysBeforeRemind.required) {
+    errors.push('Не должно быть пустым')
+  }
+  if (!v$.value.daysBeforeRemind.numeric) {
+    errors.push('Введите число')
+  }
+  if (!v$.value.daysBeforeRemind.between) {
+    errors.push('Значение должно быть от 0 до 365 дней')
+  }
+  return errors
+})
+
+const isInvalidForm = computed(() => {
+  return v$.value.$invalid || props.loading
+})
+
+const handleCancel = () => {
+  state.value = { ...initialData }
+  dialog.value = false
+}
+
+const handleSubmit = async () => {
+  try {
+    v$.value.$touch()
+    if (isInvalidForm.value) {
+      return
     }
+    emit('save', { ...state.value })
+  } catch (error) {
+    console.error('Ошибка при сохранении формы:', error)
+  }
+}
 
-    const state = ref(initialData)
-
-    // Правила валидации
-    const rules = computed(() => ({
-      title: { required },
-      expDate: { required },
-      daysBeforeRemind: {
-        required,
-        numeric,
-        between: between(0, 365),
-      },
-      note: {},
-    }))
-
-    // Инициализация Vuelidate
-    const v$ = useVuelidate(rules, state)
-
-    // Синхронизация v-model
-    const dialog = computed({
-      get: () => props.value,
-      set: (value) => emit('input', value),
-    })
-
-    // Следим за открытием диалога для сброса данных и валидации
-    watch(dialog, (isOpen) => {
-      if (isOpen) {
-        // При открытии диалога создаем свежую копию данных
-        state.value = { ...initialData, ...props.item }
-        // Сбрасываем состояние валидации Vuelidate
-        v$.value.$reset()
-      }
-    })
-
-    // Вычисляемые свойства для валидации
-    const titleErrors = computed(() => {
-      const errors = []
-      if (!v$.value.title.$dirty) return errors
-      if (!v$.value.title.required) {
-        errors.push('Заголовок не может быть пустым')
-      }
-      return errors
-    })
-
-    const expDateErrors = computed(() => {
-      const errors = []
-      if (!v$.value.expDate.$dirty) return errors
-      if (!v$.value.expDate.required) {
-        errors.push('Укажите дату')
-      }
-      if (v$.value.expDate.$model && !isValidDate(v$.value.expDate.$model)) {
-        errors.push('Некорректная дата')
-      }
-      return errors
-    })
-
-    const daysBeforeRemindErrors = computed(() => {
-      const errors = []
-      if (!v$.value.daysBeforeRemind.$dirty) return errors
-      if (!v$.value.daysBeforeRemind.required) {
-        errors.push('Не должно быть пустым')
-      }
-      if (!v$.value.daysBeforeRemind.numeric) {
-        errors.push('Введите число')
-      }
-      if (!v$.value.daysBeforeRemind.between) {
-        errors.push('Значение должно быть от 0 до 365 дней')
-      }
-      return errors
-    })
-
-    // Проверка валидности всей формы
-    const isInvalidForm = computed(() => {
-      return v$.value.$invalid || props.loading
-    })
-
-    // Обработчики событий
-    const handleCancel = () => {
-      // Сбрасываем состояние в исходные значения
-      state.value = { ...initialData }
-      dialog.value = false
-    }
-
-    const handleSubmit = async () => {
-      try {
-        // Валидация формы
-        v$.value.$touch()
-        if (isInvalidForm.value) {
-          return
-        }
-        // Эмитируем сохранение с копией данных
-        emit('save', { ...state.value })
-      } catch (error) {
-        console.error('Ошибка при сохранении формы:', error)
-      }
-    }
-
-    // Вспомогательные функции
-    const isValidDate = (dateString) => {
-      try {
-        const date = new Date(dateString)
-        return !isNaN(date.getTime())
-      } catch {
-        return false
-      }
-    }
-
-    return {
-      dialog,
-      state,
-      v$,
-      titleErrors,
-      expDateErrors,
-      daysBeforeRemindErrors,
-      isInvalidForm,
-      handleCancel,
-      handleSubmit,
-    }
-  },
+const isValidDate = (dateString) => {
+  try {
+    const date = new Date(dateString)
+    return !isNaN(date.getTime())
+  } catch {
+    return false
+  }
 }
 </script>
 

@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 
-export const useForm = (props, ctx) => {
+export const useForm = (props, emit) => {
   const validCoordinates = (val) => {
     if (!val) return true
     const arr = val.split(',')
@@ -66,16 +66,17 @@ export const useForm = (props, ctx) => {
       ...state.value,
       company: store.getters.directoriesProfile,
     }
-    ctx.emit('submit', address)
+    emit('submit', address)
     resetForm()
   }
 
   function cancel() {
-    ctx.emit('cancel')
+    emit('cancel')
     resetForm()
   }
 
   function getParsedAddress(val) {
+    console.log('parsed value: ', val)
     if (!val) return
     state.value.name = val.value
     if (val.geo) {

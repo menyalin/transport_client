@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { PartnerService } from '@/shared/services'
 
-export const useWidgetModel = (props, { emit }) => {
+export const useWidgetModel = (props, idleTruckNotificationsModel) => {
   let editableItem = ref({})
   const dialog = ref(false)
   const loading = ref(false)
@@ -17,7 +17,8 @@ export const useWidgetModel = (props, { emit }) => {
     dialog.value = false
   }
   function editNotifyHandler(id) {
-    const item = props.partner.idleTruckNotifications.find((notify) => notify._id === id)
+    const items = idleTruckNotificationsModel.value || props.partner?.idleTruckNotifications || []
+    const item = items.find((notify) => notify._id === id)
     editableItem.value = Object.assign({}, item)
     dialog.value = true
   }
@@ -35,7 +36,7 @@ export const useWidgetModel = (props, { emit }) => {
       )
     else updatedPartner = await PartnerService.addIdleTruckNotify(props.partner._id, formState)
 
-    emit('change', updatedPartner.idleTruckNotifications)
+    idleTruckNotificationsModel.value = updatedPartner.idleTruckNotifications
     cancelHandler()
   }
 

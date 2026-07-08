@@ -50,68 +50,60 @@
   </v-data-table-server>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue'
 import router from '@/router'
 import { moneyFormatter } from '@/shared/utils'
 import IncomingInvoiceListAnalytics from './listAnalytics.vue'
 import { usePersistedRef } from '@/shared/hooks'
-export default {
-  name: 'PaymentInvoicesDataTable',
-  components: {
-    IncomingInvoiceListAnalytics,
-  },
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  props: {
-    items: Array,
-    totalCount: Number,
-    listOptions: Object,
-    analyticsData: Object,
-    routesCount: {
-      type: Number,
-      default: 0,
-    },
-    total: Object,
-    settings: Object,
-    headers: Array,
-    loading: Boolean,
-  },
-  setup(props, ctx) {
-    const selected = usePersistedRef([], 'selectedInvoicesInList')
-    const analytics = computed(() => {
-      if (selected.value.length)
-        return selected.value.reduce(
-          (res, item) => ({
-            count: res.count + 1,
-            routesCount: res.routesCount + item.ordersCount,
-            totalSumWOVat: res.totalSumWOVat + item.priceWOVat,
-            totalSum: res.totalSum + item.priceWithVat,
-          }),
-          { count: 0, routesCount: 0, totalSumWOVat: 0, totalSum: 0 }
-        )
-      else return props.analyticsData
-    })
-    function dblClickRow(_event, { item }) {
-      router.push(`incomingInvoice/${item._id}`)
-    }
-    function updateListOptionsHandler(options) {
-      ctx.emit('update:listOptions', { ...options })
-    }
-    function onSelectedChange(value) {
-      selected.value = value
-    }
 
-    return {
-      selected,
-      dblClickRow,
-      updateListOptionsHandler,
-      onSelectedChange,
-      moneyFormatter,
-      analytics,
-    }
+defineOptions({ name: 'PaymentInvoicesDataTable' })
+
+// eslint-disable-next-line no-unused-vars
+const _settings = defineModel({ type: Object })
+
+const props = defineProps({
+  items: Array,
+  totalCount: Number,
+  listOptions: Object,
+  analyticsData: Object,
+  routesCount: {
+    type: Number,
+    default: 0,
   },
+  total: Object,
+  headers: Array,
+  loading: Boolean,
+})
+
+const emit = defineEmits(['update:listOptions'])
+
+const selected = usePersistedRef([], 'selectedInvoicesInList')
+
+const analytics = computed(() => {
+  if (selected.value.length)
+    return selected.value.reduce(
+      (res, item) => ({
+        count: res.count + 1,
+        routesCount: res.routesCount + item.ordersCount,
+        totalSumWOVat: res.totalSumWOVat + item.priceWOVat,
+        totalSum: res.totalSum + item.priceWithVat,
+      }),
+      { count: 0, routesCount: 0, totalSumWOVat: 0, totalSum: 0 }
+    )
+  else return props.analyticsData
+})
+
+function dblClickRow(_event, { item }) {
+  router.push(`incomingInvoice/${item._id}`)
+}
+
+// eslint-disable-next-line no-unused-vars
+function updateListOptionsHandler(options) {
+  emit('update:listOptions', { ...options })
+}
+
+function onSelectedChange(value) {
+  selected.value = value
 }
 </script>

@@ -28,45 +28,29 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, getCurrentInstance } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'ReturnTariffType',
-  props: {
-    item: Object,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  setup(props, ctx) {
-    const instance = getCurrentInstance()
-    const store = instance?.proxy.$store
+const item = defineModel({ type: Object })
 
-    const clientItems = computed(() => store?.getters.partners?.filter((i) => i.isClient) || [])
+const store = useStore()
 
-    const orderAnalyticTypes = computed(() => store?.getters.orderAnalyticTypes || [])
+const clientItems = computed(() => store.getters.partners?.filter((i) => i.isClient) || [])
 
-    const firstField = ref(null)
+const orderAnalyticTypes = computed(() => store.getters.orderAnalyticTypes || [])
 
-    const focus = () => {
-      firstField.value?.focus()
-    }
+const firstField = ref(null)
 
-    function changeHandler(val, field) {
-      ctx.emit('change', { ...props.item, [field]: val })
-    }
-
-    return {
-      clientItems,
-      orderAnalyticTypes,
-      firstField,
-      focus,
-      changeHandler,
-    }
-  },
+const focus = () => {
+  firstField.value?.focus()
 }
+
+function changeHandler(val, field) {
+  item.value = { ...item.value, [field]: val }
+}
+
+defineExpose({ focus })
 </script>
 <style scoped>
 #wrapper {

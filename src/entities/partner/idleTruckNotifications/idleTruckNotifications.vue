@@ -31,59 +31,43 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue'
 import { useWidgetModel } from './model.js'
 import IdleTruckNotificationForm from './notificationForm/idleTruckNotificationForm'
 import NotificationList from './notificationList/notificationList'
 
-export default {
-  name: 'IdleTruckNotifications',
-  components: { NotificationList, IdleTruckNotificationForm },
-  model: {
-    props: 'items',
-    event: 'change',
-  },
-  props: {
-    partner: Object,
-    clientAgreements: Array,
-  },
-  setup(props, ctx) {
-    const updateNotificationsHandler = (items) => {
-      ctx.emit('change', items)
-    }
-    const agreemenstByClient = computed(() => {
-      const res = props.clientAgreements
-        ?.filter((agreement) => agreement.clients.includes(props.partner?._id))
-        .map((i) => ({
-          value: i._id,
-          text: i.name,
-        }))
+defineOptions({ name: 'IdleTruckNotifications' })
 
-      return res || []
-    })
+const idleTruckNotifications = defineModel({ type: Array, default: () => [] })
 
-    const {
-      editNotifyHandler,
-      addNotificationHandler,
-      cancelHandler,
-      submitHandler,
-      dialog,
-      loading,
-      editableItem,
-    } = useWidgetModel(props, ctx)
-    return {
-      editNotifyHandler,
-      addNotificationHandler,
-      cancelHandler,
-      submitHandler,
-      dialog,
-      loading,
-      editableItem,
-      agreemenstByClient,
-      updateNotificationsHandler,
-    }
-  },
+const props = defineProps({
+  partner: Object,
+  clientAgreements: Array,
+})
+
+const agreemenstByClient = computed(() => {
+  const res = props.clientAgreements
+    ?.filter((agreement) => agreement.clients.includes(props.partner?._id))
+    .map((i) => ({
+      value: i._id,
+      text: i.name,
+    }))
+  return res || []
+})
+
+const {
+  editNotifyHandler,
+  addNotificationHandler,
+  cancelHandler,
+  submitHandler,
+  dialog,
+  loading,
+  editableItem,
+} = useWidgetModel(props, idleTruckNotifications)
+
+function updateNotificationsHandler(items) {
+  idleTruckNotifications.value = items
 }
 </script>
 

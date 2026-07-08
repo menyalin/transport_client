@@ -74,66 +74,52 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { reactive, computed, watch } from 'vue'
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
-  name: 'AdditionalDetails',
-  components: {
-    AppBlockTitle,
-    DateTimeInput,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
-  props: {
-    item: Object,
-    title: String,
-    truckType: String,
-  },
-  data() {
-    return {
-      params: {
-        diagnosticCardExpDate: null,
-        diagnosticCardNote: null,
-        platonNumber: null,
-        platonDate: null,
-        tachographNumber: null,
-        tachographExpDate: null,
-        tachographNote: null,
-        transponderNumber: null,
-        transponderDate: null,
-        fuelCardNumber: null,
-        fuelCardDate: null,
-        fuelCardNote: null,
-      },
+defineOptions({ name: 'AdditionalDetails' })
+
+const modelValue = defineModel({ type: Object })
+
+defineProps({
+  title: String,
+  truckType: String,
+})
+
+const params = reactive({
+  diagnosticCardExpDate: null,
+  diagnosticCardNote: null,
+  platonNumber: null,
+  platonDate: null,
+  tachographNumber: null,
+  tachographExpDate: null,
+  tachographNote: null,
+  transponderNumber: null,
+  transponderDate: null,
+  fuelCardNumber: null,
+  fuelCardDate: null,
+  fuelCardNote: null,
+})
+
+const fields = computed(() => Object.keys(params))
+
+watch(
+  modelValue,
+  (val) => {
+    if (val) {
+      fields.value.forEach((f) => {
+        params[f] = val[f]
+      })
     }
   },
-  computed: {
-    fields() {
-      return Object.keys(this.params)
-    },
-  },
-  watch: {
-    item: {
-      immediate: true,
-      handler: function (val) {
-        if (val) {
-          this.fields.forEach((f) => {
-            this.params[f] = val[f]
-          })
-        }
-      },
-    },
-  },
-  methods: {
-    change(val, field) {
-      this.params[field] = val
-      this.$emit('change', this.params)
-    },
-  },
+  { immediate: true }
+)
+
+function change(val, field) {
+  params[field] = val
+  modelValue.value = { ...params }
 }
 </script>
 <style scoped>

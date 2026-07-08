@@ -56,54 +56,35 @@
     />
   </div>
 </template>
-<script>
+<script setup>
 import { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
-export default {
-  name: 'PickOrdersForPaymentInvoiceSettings',
-  model: {
-    prop: 'settings',
-    event: 'change',
-  },
-  components: { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector },
-  props: {
-    settings: Object,
-    allHeaders: Array,
-  },
-  setup(props, { emit }) {
-    const { orderStatuses, trailers, trucks, drivers, loadingZoneItems } =
-      useOrderListSettingsData()
-    const refreshHandler = () => {
-      emit('refresh')
-    }
 
-    function updateHeadersHandler(val) {
-      emit('updateHeaders', val)
-    }
+defineOptions({ name: 'PickOrdersForPaymentInvoiceSettings' })
 
-    // function updateSettings(value, field) {
-    //   emit('change', Object.assign({}, props.settings, { [field]: value }))
-    // }
+const settings = defineModel({ type: Object })
 
-    function changeHandler(val, field) {
-      emit('change', {
-        ...props.settings,
-        [field]: val,
-      })
-    }
+defineProps({
+  allHeaders: Array,
+})
 
-    return {
-      refreshHandler,
-      updateHeadersHandler,
-      changeHandler,
-      // updateSettings,
-      orderStatuses,
-      trailers,
-      trucks,
-      drivers,
-      loadingZoneItems,
-    }
-  },
+const emit = defineEmits(['refresh', 'updateHeaders'])
+
+const { trucks, loadingZoneItems } = useOrderListSettingsData()
+
+function refreshHandler() {
+  emit('refresh')
+}
+
+function updateHeadersHandler(val) {
+  emit('updateHeaders', val)
+}
+
+function changeHandler(val, field) {
+  settings.value = {
+    ...settings.value,
+    [field]: val,
+  }
 }
 </script>
 <style scoped>

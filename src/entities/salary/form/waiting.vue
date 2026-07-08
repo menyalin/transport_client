@@ -42,48 +42,30 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, getCurrentInstance } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'WaitingTariffType',
-  props: {
-    item: Object,
-  },
-  model: {
-    prop: 'item',
-    event: 'change',
-  },
+const item = defineModel({ type: Object })
 
-  setup(props, ctx) {
-    const firstField = ref(null)
-    const instance = getCurrentInstance()
-    const store = instance?.proxy.$store
+const firstField = ref(null)
+const store = useStore()
 
-    const clientItems = computed(() => store?.getters.partners?.filter((i) => i.isClient) || [])
+const clientItems = computed(() => store.getters.partners?.filter((i) => i.isClient) || [])
 
-    const orderAnalyticTypes = computed(() => store?.getters.orderAnalyticTypes || [])
-    const roundingWaitingByHours = computed(() => store?.getters.roundingWaitingByHours || [])
-    const waitingTariffByItems = computed(() => store?.getters.waitingTariffByItems || [])
+const orderAnalyticTypes = computed(() => store.getters.orderAnalyticTypes || [])
+const roundingWaitingByHours = computed(() => store.getters.roundingWaitingByHours || [])
+const waitingTariffByItems = computed(() => store.getters.waitingTariffByItems || [])
 
-    const focus = () => {
-      firstField.value?.focus()
-    }
-
-    function changeHandler(val, field) {
-      ctx.emit('change', { ...props.item, [field]: val })
-    }
-    return {
-      clientItems,
-      orderAnalyticTypes,
-      roundingWaitingByHours,
-      waitingTariffByItems,
-      firstField,
-      focus,
-      changeHandler,
-    }
-  },
+const focus = () => {
+  firstField.value?.focus()
 }
+
+function changeHandler(val, field) {
+  item.value = { ...item.value, [field]: val }
+}
+
+defineExpose({ focus })
 </script>
 <style scoped>
 #wrapper {

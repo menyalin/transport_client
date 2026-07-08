@@ -2,40 +2,19 @@
   <AdditionalNotificationsContainer :items="items" :loading="loading" @change="handleChange" />
 </template>
 
-<script>
+<script setup>
 import AdditionalNotificationsContainer from './AdditionalNotificationsContainer.vue'
 
-export default {
-  name: 'AdditionalNotifications',
+const items = defineModel({ type: Array, default: () => [] })
 
-  components: {
-    AdditionalNotificationsContainer,
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
   },
+})
 
-  model: {
-    prop: 'items',
-    event: 'change',
-  },
-
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  setup(_props, { emit }) {
-    const handleChange = (newItems) => {
-      emit('change', newItems)
-    }
-
-    return {
-      handleChange,
-    }
-  },
+function handleChange(newItems) {
+  items.value = newItems
 }
 </script>

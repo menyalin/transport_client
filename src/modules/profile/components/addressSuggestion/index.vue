@@ -6,9 +6,9 @@
     :model-value="model"
     :items="items"
     :loading="isLoading"
-    :search.sync="search"
+    v-model:search="search"
+    no-filter
     hide-no-data
-    :customFilter="() => true"
     item-title="value"
     placeholder="Начните вводить адрес для поиска"
     prepend-icon="mdi-database-search"
@@ -16,49 +16,45 @@
     @update:model-value="change"
   />
 </template>
-<script>
+
+<script setup>
+import { ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import { debounce } from '@/shared/utils'
 import { AddressService } from '@/shared/services'
 
-export default {
-  name: 'AddressSuggestion',
-  data() {
-    return {
-      model: null,
-      search: null,
-      isLoading: false,
-      items: [],
-      timeout: null,
-    }
-  },
-  watch: {
-    async search(val) {
-      if (!val || !val?.trim()) {
-        this.model = null
-        this.items = []
-        return
-      }
-      if (this.isLoading) return
-      if (this.timeout) clearTimeout(this.timeout)
-      this.timeout = setTimeout(async () => {
-        try {
-          this.isLoading = true
-          this.items = await AddressService.getSuggestions(val)
-          this.isLoading = false
-        } catch (e) {
-          this.isLoading = false
-          this.$store.commit('setError', e.message)
-        }
-      }, 500)
-    },
-  },
-  methods: {
-    addressCompare() {
-      return true
-    },
-    change(val) {
-      this.$emit('change', val)
-    },
-  },
+defineOptions({ name: 'AddressSuggestion' })
+
+const emit = defineEmits(['change'])
+const store = useStore()
+
+const model = ref(null)
+const search = ref(null)
+const isLoading = ref(false)
+const items = ref([])
+
+const fetchSuggestions = debounce(async (val) => {
+  try {
+    isLoading.value = true
+    items.value = await AddressService.getSuggestions(val)
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    isLoading.value = false
+  }
+}, 500)
+
+watch(search, (val) => {
+  if (!val || !val?.trim()) {
+    model.value = null
+    items.value = []
+    return
+  }
+  if (isLoading.value) return
+  fetchSuggestions(val)
+})
+
+function change(val) {
+  emit('change', val)
 }
 </script>
-<style></style>
