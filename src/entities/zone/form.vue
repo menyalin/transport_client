@@ -5,6 +5,7 @@
       :disabledSubmit="!store.getters.hasPermission('zone:write') || isInvalidForm || !formChanged"
       @cancel="cancel"
       @submit="submit"
+      class="mb-5"
     />
     <v-text-field v-model.trim="form.name" :error-messages="nameErrors" label="Название" />
 
@@ -27,10 +28,6 @@ const props = defineProps({
     type: Object,
   },
   displayDeleteBtn: {
-    type: Boolean,
-    default: false,
-  },
-  openInModal: {
     type: Boolean,
     default: false,
   },

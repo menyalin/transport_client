@@ -1,27 +1,23 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <load-spinner v-if="loading" />
-        <app-zone-form
-          v-else
-          :zone="item"
-          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('zone:delete')"
-          @cancel="cancel"
-          @submit="submit"
-          @delete="deleteHandler"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <FormWrapper>
+    <load-spinner v-if="loading" />
+    <zone-form
+      v-else
+      :zone="item"
+      :displayDeleteBtn="!!props.id && $store.getters.hasPermission('zone:delete')"
+      @cancel="cancel"
+      @submit="submit"
+      @delete="deleteHandler"
+    />
+  </FormWrapper>
 </template>
 <script setup>
-import AppZoneForm from '@/modules/profile/components/zoneForm/index.vue'
-import { LoadSpinner } from '@/shared/ui'
+import { ZoneForm } from '@/entities/zone'
+import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { ZoneService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
 
-defineOptions({ name: 'PartnerDetails' })
+defineOptions({ name: 'ZoneDetails' })
 
 const props = defineProps({
   id: String,
