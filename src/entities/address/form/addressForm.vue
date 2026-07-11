@@ -6,7 +6,7 @@
       @cancel="cancel"
       @submit="submit"
     />
-    <app-address-suggestion class="mt-3" @change="getParsedAddress" />
+    <address-suggestion class="mt-3" @change="getParsedAddress" />
 
     <v-text-field v-model.trim="v$.name.$model" label="Наименование" :errorMessages="nameErrors" />
 
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import AppAddressSuggestion from '@/modules/profile/components/addressSuggestion/index.vue'
+import AddressSuggestion from '@/entities/address/addressSuggestion.vue'
 import { ButtonsPanel } from '@/shared/ui'
 import { useForm } from './useForm'
 

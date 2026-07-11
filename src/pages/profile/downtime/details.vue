@@ -1,25 +1,21 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
-          {{ error.message }}
-        </v-alert>
-        <load-spinner v-if="loading" />
-        <DowntimeForm
-          v-else
-          :downtime="item"
-          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('downtime:delete')"
-          @cancel="cancel"
-          @submit="submit"
-          @delete="deleteHandler"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <FormWrapper>
+    <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
+      {{ error.message }}
+    </v-alert>
+    <load-spinner v-if="loading" />
+    <DowntimeForm
+      v-else
+      :downtime="item"
+      :displayDeleteBtn="!!props.id && $store.getters.hasPermission('downtime:delete')"
+      @cancel="cancel"
+      @submit="submit"
+      @delete="deleteHandler"
+    />
+  </FormWrapper>
 </template>
 <script setup>
-import { LoadSpinner } from '@/shared/ui'
+import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { DowntimeService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
 import { DowntimeForm } from '@/entities/downtime'

@@ -1,17 +1,2 @@
-pages:
-  [+] agreement:
-  [+] carrier agreement
-  [+] docsRegistry
-    [+] list
-    [+] form
-    [+] pick orders list
-  [-] orders:
-    [+] список рейсов
-    [-] форма рейса
-
-
- ui:
-  [-] mixins: [pageDetailsMixin] - вырезать
-
-
-
+- профиль:
+  - [+] cписок простоев - не работает сортировка

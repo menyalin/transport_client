@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="panelType === 'form'" class="mb-2">
+  <v-row v-if="panelType === 'form'" class="pb-4">
     <v-col cols="auto">
       <v-btn @click="$emit('cancel')"> Отмена </v-btn>
     </v-col>
@@ -17,7 +17,7 @@
       <slot />
     </v-col>
   </v-row>
-  <v-row v-else-if="panelType === 'list'" class="mb-2">
+  <v-row v-else-if="panelType === 'list'" class="pb-4">
     <v-col cols="auto">
       <v-btn :disabled="disabledRefresh" @click="$emit('refresh')"> Обновить </v-btn>
     </v-col>

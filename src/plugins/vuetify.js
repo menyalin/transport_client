@@ -7,11 +7,12 @@ import { ru } from 'vuetify/locale'
 import { md3 } from 'vuetify/blueprints'
 
 const density = 'comfortable'
+const variant = 'outlined'
 
 export default createVuetify({
   defaults: {
-    VTextField: { density, color: 'primary', autocomplete: 'off', variant: 'solo' },
-    VSelect: { density, color: 'primary', variant: 'solo' },
+    VTextField: { density, color: 'primary', autocomplete: 'off', variant },
+    VSelect: { density, color: 'primary', variant },
     VAutocomplete: {
       density,
       itemTitle: 'text',
@@ -19,7 +20,7 @@ export default createVuetify({
       color: 'primary',
       autoSelectFirst: true,
       autocomplete: 'off',
-      variant: 'solo',
+      variant,
     },
     VSwitch: {
       color: 'primary',
@@ -27,11 +28,11 @@ export default createVuetify({
       class: 'ma-2',
     },
     VBtn: {
-      variant: 'outlined',
+      variant: 'elevated',
     },
-    VTextarea: { density, autocomplete: 'off', variant: 'solo' },
-    VCheckbox: { density, color: 'primary' },
-    VRadioGroup: { density, color: 'primary' },
+    VTextarea: { density, autocomplete: 'off', variant },
+    VCheckbox: { density, color: 'primary', variant },
+    VRadioGroup: { density, color: 'primary', variant },
     VDataTableServer: {
       itemValue: '_id',
       density,
@@ -53,14 +54,14 @@ export default createVuetify({
       githubLight: {
         dark: false,
         colors: {
-          primary: '#18559be0', // GitHub's accent blue for primary elements
+          primary: '#0b3769e0', // GitHub's accent blue for primary elements
           secondary: '#b1b2b3', // Neutral gray for secondary elements
-          accent: '#4574ff', // Accent color
+          accent: '#52dafc', // Accent color
           error: '#d1242f', // Danger red
           warning: '#ff9361', // Attention yellow/orange
           info: '#2581eb', // Info blue
           success: '#24aa4a', // Success green
-          background: '#f8f6f6', // Main background
+          background: '#f9f9f9', // Main background
           surface: '#ffffff', // Subtle surfaces like cards or panels
           'on-primary': '#ffffff', // Text on primary
           'on-secondary': '#ffffff', // Text on secondary

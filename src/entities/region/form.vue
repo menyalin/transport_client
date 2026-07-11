@@ -2,9 +2,12 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="!store.getters.hasPermission('city:write') || isInvalidForm || !formChanged"
+      :disabledSubmit="
+        !store.getters.hasPermission('region:write') || isInvalidForm || !formChanged
+      "
       @cancel="cancel"
       @submit="submit"
+      class="mb-5"
     />
     <v-text-field v-model.trim="form.name" :error-messages="nameErrors" label="Название" />
 
@@ -23,7 +26,7 @@ import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 
 const props = defineProps({
-  city: {
+  region: {
     type: Object,
   },
   displayDeleteBtn: {
@@ -60,6 +63,11 @@ const isInvalidForm = computed(() => {
   if (!directoriesProfile.value) return true
   return v.value.$invalid
 })
+
+// const directoriesProfileName = computed(() => {
+//   if (!directoriesProfile.value) return null
+//   return myCompanies.value.find((item) => item._id === directoriesProfile.value)?.name
+// })
 
 const nameErrors = computed(() => {
   const errors = []
@@ -102,7 +110,7 @@ const resetForm = () => {
 }
 
 watch(
-  () => props.city,
+  () => props.region,
   (val) => {
     if (val) setFormFields(val)
   },

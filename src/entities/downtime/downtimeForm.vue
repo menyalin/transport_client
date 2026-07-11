@@ -50,48 +50,30 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script setup>
 import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
-
 import { useForm } from './useForm'
 
-export default {
-  name: 'DowntimeForm',
-  components: {
-    ButtonsPanel,
-    DateTimeInput,
-  },
-  props: {
-    downtime: { type: Object },
-    displayDeleteBtn: { type: Boolean, default: false },
-  },
-  setup(props, ctx) {
-    const {
-      state,
-      isInvalidForm,
-      resetForm,
-      submit,
-      cancel,
-      truckItems,
-      serviceAdressItems,
-      serviceItems,
-      downtimeTypes,
-      partnerContactsHint,
-    } = useForm(props, ctx)
-    return {
-      state,
-      isInvalidForm,
-      resetForm,
-      submit,
-      cancel,
-      truckItems,
-      serviceAdressItems,
-      serviceItems,
-      downtimeTypes,
-      partnerContactsHint,
-    }
-  },
-}
+defineOptions({ name: 'DowntimeForm' })
+
+const props = defineProps({
+  downtime: { type: Object },
+  displayDeleteBtn: { type: Boolean, default: false },
+})
+
+const emit = defineEmits(['submit', 'cancel', 'delete'])
+
+const {
+  state,
+  isInvalidForm,
+  cancel,
+  truckItems,
+  serviceAdressItems,
+  serviceItems,
+  downtimeTypes,
+  partnerContactsHint,
+  submit,
+} = useForm(props, emit)
 </script>
 <style>
 .row-input {

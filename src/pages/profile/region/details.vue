@@ -1,25 +1,21 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <load-spinner v-if="loading" />
-        <app-region-form
-          v-else
-          :region="item"
-          :displayDeleteBtn="!!props.id && $store.getters.hasPermission('region:delete')"
-          @cancel="cancel"
-          @submit="submit"
-          @delete="deleteHandler"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <FormWrapper>
+    <load-spinner v-if="loading" />
+    <region-form
+      v-else
+      :region="item"
+      :displayDeleteBtn="!!props.id && $store.getters.hasPermission('region:delete')"
+      @cancel="cancel"
+      @submit="submit"
+      @delete="deleteHandler"
+    />
+  </FormWrapper>
 </template>
 <script setup>
-import AppRegionForm from '@/modules/profile/components/regionForm/index.vue'
-import { LoadSpinner } from '@/shared/ui'
+import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { RegionService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
+import { RegionForm } from '@/entities/region'
 
 defineOptions({ name: 'RegionDetails' })
 

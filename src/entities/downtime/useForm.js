@@ -5,7 +5,7 @@ import { required } from '@vuelidate/validators'
 import { useAddressStore } from '@/entities/address'
 import store from '@/store'
 
-export const useForm = (props, ctx) => {
+export const useForm = (props, emit) => {
   const addressStore = useAddressStore()
 
   const initialState = {
@@ -36,7 +36,6 @@ export const useForm = (props, ctx) => {
 
   const v$ = useVuelidate(rules, state)
 
-  //#region computed
   const isInvalidForm = computed(() => v$.value.$invalid)
 
   const truckItems = computed(() =>
@@ -59,14 +58,13 @@ export const useForm = (props, ctx) => {
   const serviceItems = computed(() =>
     store.getters.partners.filter((i) => i.isService).map((i) => ({ value: i._id, text: i.name }))
   )
-  //#endregion
 
   function resetForm() {
     state.value = { ...initialState }
   }
 
   function submit() {
-    ctx.emit('submit', {
+    emit('submit', {
       ...state.value,
       company: store.getters.directoriesProfile,
     })
@@ -75,7 +73,7 @@ export const useForm = (props, ctx) => {
 
   function cancel() {
     resetForm()
-    ctx.emit('cancel')
+    emit('cancel')
   }
 
   return {
