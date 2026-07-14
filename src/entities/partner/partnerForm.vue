@@ -79,7 +79,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
 
-    <EntityFiles v-if="item && item._id" :itemId="item._id" docType="partner" />
+    <EntityFiles v-if="item && item._id" :itemId="item._id" docType="partner" class="mt-3" />
   </div>
 </template>
 <script>

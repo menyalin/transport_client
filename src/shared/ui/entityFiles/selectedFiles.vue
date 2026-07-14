@@ -11,7 +11,7 @@
       <v-text-field
         :model-value="item.note"
         hide-details
-        @change="changeNoteHandler(item.name, $event)"
+        @update:modelValue="changeNoteHandler(item.name, $event)"
       />
     </template>
     <template #[`item.size`]="{ item }">
@@ -38,11 +38,11 @@ const props = defineProps({
 const { formatSize } = useEntityFileHelpers()
 
 const headers = [
-  { value: 'name', text: 'Имя файла', sortable: false },
-  { value: 'size', text: 'Размер файла', sortable: false, align: 'right' },
-  { value: 'note', text: 'Описание', sortable: false },
+  { key: 'name', title: 'Имя файла', sortable: false },
+  { key: 'size', title: 'Размер файла', sortable: false, align: 'right' },
+  { key: 'note', title: 'Описание', sortable: false },
   {
-    value: 'actions',
+    key: 'actions',
     sortable: false,
     width: '7rem',
     align: 'right',

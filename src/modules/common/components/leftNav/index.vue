@@ -83,6 +83,11 @@ export default {
 }
 
 .v-navigation-drawer :deep(.v-badge) {
-  display: block;
+  display: flex;
+  width: 100%;
+}
+
+.v-navigation-drawer :deep(.v-badge > .v-list-item) {
+  width: 100%;
 }
 </style>

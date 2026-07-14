@@ -7,7 +7,7 @@
         </v-alert>
         <v-alert type="error" v-if="itemIsMissing && !loading"> Запись не найдена </v-alert>
         <load-spinner v-if="loading" />
-        <div v-else>
+        <div v-else class="slot-wrapper">
           <slot />
           <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler" class="ma-3">
             <v-icon start icon="mdi-delete" />
@@ -51,4 +51,15 @@ async function deleteHandler() {
 }
 </script>
 
-<style></style>
+<style scoped>
+.slot-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 15px;
+}
+.slot-wrapper div {
+  flex: 0 1 auto;
+}
+</style>

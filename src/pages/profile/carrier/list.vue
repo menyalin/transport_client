@@ -1,45 +1,38 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabledSubmit="!$store.getters.hasPermission('carrier:write')"
-          @submit="create"
-          @refresh="refreshHandler"
-        />
-        <CarrierListSettings v-model="settings" />
-        <v-data-table
-          :headers="headers"
-          :items="carriers"
-          :loading="loading"
-          :search="settings.search"
-          fixed-header
-          height="72vh"
-          :itemsPerPage="100"
-          :footerProps="{
-            'items-per-page-options': [100, 200, -1],
-          }"
-          @dblclick:row="dblClickRow"
-        >
-          <template #[`item.outsource`]="{ item }">
-            <v-icon>{{ item.outsource ? 'mdi-check' : 'mdi-minus' }}</v-icon>
-          </template>
-          <template #[`item.agreements`]="{ item }">
-            <CarrierListAgreementsCell
-              :items="item.agreements"
-              :agreementsData="item.agreementsData"
-            />
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
-  </v-container>
+  <EntityListWrapper>
+    <buttons-panel
+      panel-type="list"
+      :disabledSubmit="!$store.getters.hasPermission('carrier:write')"
+      @submit="create"
+      @refresh="refreshHandler"
+    />
+    <CarrierListSettings v-model="settings" />
+    <v-data-table
+      :headers="headers"
+      :items="carriers"
+      :loading="loading"
+      :search="settings.search"
+      fixed-header
+      height="72vh"
+      :itemsPerPage="100"
+      :footerProps="{
+        'items-per-page-options': [100, 200, -1],
+      }"
+      @dblclick:row="dblClickRow"
+    >
+      <template #[`item.outsource`]="{ item }">
+        <v-icon>{{ item.outsource ? 'mdi-check' : 'mdi-minus' }}</v-icon>
+      </template>
+      <template #[`item.agreements`]="{ item }">
+        <CarrierListAgreementsCell :items="item.agreements" :agreementsData="item.agreementsData" />
+      </template>
+    </v-data-table>
+  </EntityListWrapper>
 </template>
 <script setup>
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
 import { useListData } from './useListData'
 import { CarrierListSettings, CarrierListAgreementsCell } from '@/entities/carrier'
 

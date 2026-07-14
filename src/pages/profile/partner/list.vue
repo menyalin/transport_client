@@ -5,7 +5,7 @@
         <buttons-panel
           panel-type="list"
           :disabled-refresh="!directoriesProfile"
-          :disabledSubmit="!$store.getters.hasPermission('partner:write')"
+          :disabledSubmit="!canWrite"
           @submit="create"
           @refresh="refresh"
         />
@@ -13,6 +13,8 @@
           <v-select
             v-model="settings.partnerType"
             :items="partnerTypeItems"
+            item-title="text"
+            item-value="value"
             hide-details
             :style="{ 'max-width': '400px' }"
           />
@@ -25,10 +27,8 @@
           fixed-header
           :search="settings.search"
           height="73vh"
-          :footer-props="{
-            'items-per-page-options': [50, 100, 200],
-          }"
-          :options.sync="listOptions"
+          :items-per-page-options="[50, 100, 200]"
+          v-model:options="listOptions"
           @dblclick:row="dblClickRow"
         >
           <template #[`item.isClient`]="{ item }">
@@ -37,7 +37,6 @@
           <template #[`item.created`]="{ item }">
             {{ new Date(item.createdAt).toLocaleString() }}
           </template>
-
           <template #[`item.updated`]="{ item }">
             {{ new Date(item.updatedAt).toLocaleString() }}
           </template>
@@ -46,79 +45,74 @@
     </v-row>
   </v-container>
 </template>
-<script>
+
+<script setup>
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ButtonsPanel } from '@/shared/ui'
-import { getCurrentInstance, computed } from 'vue'
-import { mapGetters } from 'vuex'
-export default {
-  name: 'PartnerList',
-  components: {
-    ButtonsPanel,
-  },
-  setup() {
-    const { proxy } = getCurrentInstance()
-    const settings = usePersistedRef({ search: null, partnerType: 'all' }, 'PartnerList:settings')
 
-    const listOptions = usePersistedRef(
-      { page: 1, itemsPerPage: 50, sortBy: [], sortDesc: [] },
-      'PartnerList:listOptions'
-    )
-    const partnerTypeItems = [
-      { value: 'all', text: 'Все' },
-      { value: 'client', text: 'Заказчик' },
-      { value: 'service', text: 'Сервис' },
-    ]
-    const partnerTypeCondition = (partner) => {
-      if (settings.value.partnerType === 'client') return partner.isClient
-      if (settings.value.partnerType === 'service') return partner.isService
-      return true
-    }
+defineOptions({ name: 'PartnerList' })
 
-    const filteredPartners = computed(() => {
-      return proxy.$store.getters.partners.filter(partnerTypeCondition).map((i) => ({
-        ...i,
-        group: proxy.$store.getters.partnerGroupsMap.get(i.group),
-        created: new Date(i.createdAt),
-        updated: new Date(i.updatedAt),
-      }))
-    })
-    return {
-      listOptions,
-      settings,
-      partnerTypeItems,
-      filteredPartners,
-    }
-  },
-  data: () => ({
-    headers: [
-      { value: 'name', text: 'Наименование' },
-      { value: 'group', text: 'Группа' },
-      { value: 'inn', text: 'ИНН' },
-      { value: 'isClient', text: 'Заказчик' },
-      { value: 'created', text: 'Дата создания', sortable: true },
-      { value: 'updated', text: 'Дата изменения', sortable: true },
-    ],
-  }),
-  computed: {
-    ...mapGetters(['loading', 'directoriesProfile']),
-  },
-  created() {
-    this.$store.dispatch('getPartners')
-  },
+const router = useRouter()
+const store = useStore()
 
-  methods: {
-    create() {
-      this.$router.push({ name: 'PartnerCreate' })
-    },
-    refresh() {
-      this.$store.dispatch('getPartners', true)
-    },
-    dblClickRow(_, { item }) {
-      this.$router.push(`partners/${item._id}`)
-    },
-  },
+const settings = usePersistedRef({ search: null, partnerType: 'all' }, 'PartnerList:settings')
+const listOptions = usePersistedRef(
+  { page: 1, itemsPerPage: 50, sortBy: [], sortDesc: [] },
+  'PartnerList:listOptions'
+)
+
+const partnerTypeItems = [
+  { value: 'all', text: 'Все' },
+  { value: 'client', text: 'Заказчик' },
+  { value: 'service', text: 'Сервис' },
+]
+
+const headers = [
+  { key: 'name', title: 'Наименование' },
+  { key: 'group', title: 'Группа' },
+  { key: 'inn', title: 'ИНН' },
+  { key: 'isClient', title: 'Заказчик' },
+  { key: 'created', title: 'Дата создания', sortable: true },
+  { key: 'updated', title: 'Дата изменения', sortable: true },
+]
+
+const loading = computed(() => store.getters.loading)
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+const canWrite = computed(() => store.getters.hasPermission('partner:write'))
+
+const partnerTypeCondition = (partner) => {
+  if (settings.value.partnerType === 'client') return partner.isClient
+  if (settings.value.partnerType === 'service') return partner.isService
+  return true
 }
+
+const filteredPartners = computed(() => {
+  return store.getters.partners.filter(partnerTypeCondition).map((i) => ({
+    ...i,
+    group: store.getters.partnerGroupsMap.get(i.group),
+    created: new Date(i.createdAt),
+    updated: new Date(i.updatedAt),
+  }))
+})
+
+function create() {
+  router.push({ name: 'PartnerCreate' })
+}
+
+function refresh() {
+  store.dispatch('getPartners', true)
+}
+
+function dblClickRow(_, { item }) {
+  router.push(`partners/${item._id}`)
+}
+
+onMounted(() => {
+  store.dispatch('getPartners')
+})
 </script>
 <style scoped>
 .settings-wrapper {

@@ -10,100 +10,83 @@
     />
   </form-wrapper>
 </template>
-<script>
-import { computed, getCurrentInstance } from 'vue'
+
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { PartnerService as service } from '@/shared/services'
 import { FormWrapper } from '@/shared/ui'
 import { PartnerForm } from '@/entities/partner'
 import { useAgreements } from '@/entities/agreement/useAgreements'
 
-export default {
-  name: 'PartnerDetails',
-  components: {
-    PartnerForm,
-    FormWrapper,
-  },
-  props: {
-    id: String,
-  },
+defineOptions({ name: 'PartnerDetails' })
 
-  setup(props) {
-    const { allClientAgreements } = useAgreements()
-    const { proxy } = getCurrentInstance()
-    const showDeleteBtn = computed(
-      () => !!props?.id && proxy.$store.getters.hasPermission('partner:delete')
-    )
-    return { allClientAgreements, showDeleteBtn }
-  },
-  data() {
-    return {
-      service: service,
-      item: null,
-      loading: false,
+const props = defineProps({
+  id: String,
+})
 
-      error: {
-        message: null,
-        show: false,
-      },
+const router = useRouter()
+const store = useStore()
+
+const { allClientAgreements } = useAgreements()
+
+const item = ref(null)
+const loading = ref(false)
+const error = ref({ message: null, show: false })
+
+const showDeleteBtn = computed(() => !!props?.id && store.getters.hasPermission('partner:delete'))
+
+async function submit(val, saveOnly) {
+  try {
+    loading.value = true
+    if (props.id) item.value = await service.updateOne(props.id, val)
+    else item.value = await service.create(val)
+
+    if (saveOnly && !props.id) router.replace(`/profile/partners/${item.value._id}`)
+    else if (!saveOnly) router.go(-1)
+  } catch (e) {
+    if (e.response?.status === 400 || e.response?.status === 403) {
+      error.value = { message: e.response.data, show: true }
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+function cancel() {
+  router.go(-1)
+}
+
+function changeNotificationsHandler(items) {
+  item.value = {
+    ...item.value,
+    idleTruckNotifications: [...items],
+  }
+}
+
+async function deleteHandler() {
+  try {
+    loading.value = true
+    await service.deleteById(props.id)
+    loading.value = false
+    router.push('/profile/partners')
+  } catch (e) {
+    loading.value = false
+    store.commit('setError', e.message)
+  }
+}
+
+watch(
+  () => props.id,
+  async (newVal, oldVal) => {
+    if (newVal && newVal !== oldVal) {
+      loading.value = true
+      item.value = await service.getById(newVal)
+      loading.value = false
     }
   },
-  methods: {
-    toggleAlert() {
-      this.error = {
-        show: false,
-        message: null,
-      }
-    },
-    async submit(val, saveOnly) {
-      try {
-        this.loading = true
-        if (this.id) this.item = await this.service.updateOne(this.id, val)
-        else this.item = await this.service.create(val)
-
-        if (saveOnly && !this.id) this.$router.replace(`/profile/partners/${this.item._id}`)
-        else if (!saveOnly) this.$router.go(-1)
-      } catch (e) {
-        if (e.response.status === 400 || e.response.status === 403) {
-          this.error.message = e.response.data
-          this.error.show = true
-        }
-      } finally {
-        this.loading = false
-      }
-    },
-    cancel() {
-      this.$router.go(-1)
-    },
-    changeNotificationsHandler(items) {
-      this.item = {
-        ...this.item,
-        idleTruckNotifications: [...items],
-      }
-    },
-    async deleteHandler() {
-      try {
-        this.loading = true
-        await this.service.deleteById(this.id)
-        this.loading = false
-        this.$router.push('/profile/partners')
-      } catch (e) {
-        this.loading = false
-        this.$store.commit('setError', e.message)
-      }
-    },
-  },
-  watch: {
-    id: {
-      immediate: true,
-      handler: async function (newVal, oldVal) {
-        if (newVal && newVal !== oldVal) {
-          this.loading = true
-          this.item = await this.service.getById(newVal)
-          this.loading = false
-        }
-      },
-    },
-  },
-}
+  { immediate: true }
+)
 </script>
 <style></style>

@@ -11,12 +11,18 @@
     </template>
     <template #[`item.note`]="{ item }">
       <v-menu v-model="item._menuOpen" :close-on-content-click="false">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <span v-bind="props" class="cursor-pointer">{{ item.note }}</span>
         </template>
         <v-card>
           <v-card-text>
-            <v-text-field v-model="item.note" single-line label="Описание" autofocus />
+            <v-text-field
+              v-model="item.note"
+              label="Описание"
+              autofocus
+              :density="'compact'"
+              :variant="'underlined'"
+            />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -48,65 +54,54 @@
   </v-data-table>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import { useEntityFileHelpers } from './utils/useEntityFileHelpers'
-export default {
-  name: 'FileList',
-  props: {
-    items: {
-      type: Array,
-      required: true,
-      validator: function (value) {
-        return value.every(
-          (file) =>
-            '_id' in file &&
-            'docId' in file &&
-            'key' in file &&
-            'originalName' in file &&
-            'status' in file
-        )
-      },
+
+defineOptions({ name: 'FileList' })
+
+defineProps({
+  items: {
+    type: Array,
+    required: true,
+    validator: function (value) {
+      return value.every(
+        (file) =>
+          '_id' in file &&
+          'docId' in file &&
+          'key' in file &&
+          'originalName' in file &&
+          'status' in file
+      )
     },
   },
-  setup(_props, ctx) {
-    const { formatSize, formatDate, mimeTypeToIcon } = useEntityFileHelpers()
-    const updateNoteHandler = (item) => {
-      ctx.emit('updateNote', item)
-    }
-    const saveNote = (item) => {
-      item._menuOpen = false
-      ctx.emit('updateNote', item)
-    }
-    const headers = ref([
-      { value: 'icon', width: '2rem', align: 'center' },
-      { title: 'Имя файла', value: 'originalName' },
-      { title: 'Описание', value: 'note' },
-      { title: 'Размер', value: 'size', align: 'right' },
-      { title: 'Дата загрузки', value: 'uploadDate' },
-      { value: 'actions', align: 'center', sortable: false, width: '75px' },
-    ])
+})
 
-    const removeItemHandler = async (item) => {
-      const res = confirm(`<b>Удалить?</b> <br/> файл: ${item.originalName}`)
-      if (res) ctx.emit('remove', item.key)
-    }
+const emit = defineEmits(['updateNote', 'remove', 'download'])
 
-    const downloadItemHandler = (item) => {
-      ctx.emit('download', item)
-    }
+const { formatSize, formatDate, mimeTypeToIcon } = useEntityFileHelpers()
 
-    return {
-      headers,
-      formatSize,
-      formatDate,
-      mimeTypeToIcon,
-      removeItemHandler,
-      downloadItemHandler,
-      updateNoteHandler,
-      saveNote,
-    }
-  },
+const headers = ref([
+  { key: 'icon', width: '2rem', align: 'center' },
+  { title: 'Имя файла', key: 'originalName' },
+  { title: 'Описание', key: 'note' },
+  { title: 'Размер', key: 'size', align: 'right' },
+  { title: 'Дата загрузки', key: 'uploadDate' },
+  { key: 'actions', align: 'center', sortable: false, width: '75px' },
+])
+
+const saveNote = (item) => {
+  item._menuOpen = false
+  emit('updateNote', item)
+}
+
+const removeItemHandler = async (item) => {
+  const res = confirm(`<b>Удалить?</b> <br/> файл: ${item.originalName}`)
+  if (res) emit('remove', item.key)
+}
+
+const downloadItemHandler = (item) => {
+  emit('download', item)
 }
 </script>
 <style scoped>

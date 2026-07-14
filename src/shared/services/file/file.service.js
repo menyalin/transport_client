@@ -12,13 +12,14 @@ class FileService {
     return data
   }
 
-  async uploadFile(url, file, key, uploadProgressHandler) {
+  async uploadFile(url, file, key, uploadProgressHandler, signal) {
     try {
       socket.emit('s3storage:uploadStarted', key)
-      await axios.put(url, file, { onUploadProgress: uploadProgressHandler })
+      await axios.put(url, file, { onUploadProgress: uploadProgressHandler, signal })
       socket.emit('s3storage:uploadCompleted', key)
     } catch (e) {
       socket.emit('s3storage:uploadFailed', key)
+      throw e
     }
   }
 
@@ -30,7 +31,7 @@ class FileService {
     await api.delete(BASE_PATH + '/delete_object', { params: { key } })
   }
 
-  async getUploadUrl(data) {
+  async getUploadUrl(data, signal) {
     try {
       const paramsSchema = z.object({
         docId: z.string(),
@@ -42,10 +43,13 @@ class FileService {
       })
       const parsedData = paramsSchema.parse(data)
 
-      const { data: url } = await api.put(BASE_PATH + '/generate_upload_url', parsedData)
+      const { data: url } = await api.put(BASE_PATH + '/generate_upload_url', parsedData, {
+        signal,
+      })
       return url
     } catch (e) {
       console.error('getUploadUrl : error ', e)
+      throw e
     }
   }
 

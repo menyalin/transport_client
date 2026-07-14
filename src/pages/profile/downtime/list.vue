@@ -7,7 +7,7 @@
       @submit="create"
       @refresh="refresh"
     />
-    <div class="filter-wrapper">
+    <ListSettingsWrapper>
       <DateRangeInput v-model="settings.period" />
       <v-autocomplete
         v-model="settings.truckFilter"
@@ -30,7 +30,7 @@
         clearable
         :style="{ maxWidth: '350px' }"
       />
-    </div>
+    </ListSettingsWrapper>
     <v-data-table-server
       :headers="headers"
       :items="list"
@@ -70,7 +70,7 @@ import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { DowntimeService } from '@/shared/services'
-import { ButtonsPanel, DateRangeInput, EntityListWrapper } from '@/shared/ui'
+import { ButtonsPanel, DateRangeInput, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 import { usePersistedRef } from '@/shared/hooks'
 import { sortingAdapterForOldApi } from '@/shared/utils/migrationUtils'
 
@@ -127,9 +127,7 @@ async function getData() {
   }
   try {
     loading.value = true
-    console.log('queryParams.value: ', queryParams.value)
     const data = await DowntimeService.getList(queryParams.value)
-    console.log('data', data)
     list.value = data?.items || []
     count.value = data?.count || 0
   } catch (e) {
@@ -160,12 +158,4 @@ function dblClickRow(_, { item }) {
   router.push(`downtimes/${item._id}`)
 }
 </script>
-<style scoped>
-.filter-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-</style>
+<style scoped></style>

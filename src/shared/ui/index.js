@@ -25,6 +25,7 @@ import PageLayout from './PageLayout.vue'
 import ErrorPage from './ErrorPage.vue'
 import BlockTitle from './BlockTitle.vue'
 import CardSection from './CardSection.vue'
+import ListSettingsWrapper from './ListSettingsWrapper.vue'
 
 export {
   AppTableColumnSetting,
@@ -54,4 +55,5 @@ export {
   ErrorPage,
   BlockTitle,
   CardSection,
+  ListSettingsWrapper,
 }

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
+        <v-alert v-model="error.show" closable type="error" @update:model-value="toggleAlert">
           {{ error.message }}
         </v-alert>
         <load-spinner v-if="loading" />

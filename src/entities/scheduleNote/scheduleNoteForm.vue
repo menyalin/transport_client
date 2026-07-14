@@ -1,17 +1,14 @@
 <template>
-  <div>
+  <FormWrapper>
     <buttons-panel
       panel-type="form"
       :disabledSubmit="!store.getters.hasPermission('scheduleNote:write') || isInvalidForm"
       @cancel="cancel"
       @submit="submit"
     />
-    <v-alert v-if="!directoriesProfile" class="ma-3 mb-5" type="error">
-      Профиль справочников не выбран, сохранение не возможно
-    </v-alert>
 
     <v-autocomplete v-model="form.truck" label="Грузовик" :items="trucks" />
-    <v-text-field v-model.trim="form.text" label="Текст" />
+    <v-text-field v-model.trim="form.text" label="Текст" :style="{ minWidth: '300px' }" />
     <v-select v-model="form.priority" label="Приоритет" :items="priorityItems" />
 
     <DateTimeInput
@@ -24,7 +21,7 @@
       <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
-  </div>
+  </FormWrapper>
 </template>
 
 <script setup>
@@ -32,17 +29,13 @@ import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, FormWrapper } from '@/shared/ui'
 
 const props = defineProps({
   scheduleNote: {
     type: Object,
   },
   displayDeleteBtn: {
-    type: Boolean,
-    default: false,
-  },
-  openInModal: {
     type: Boolean,
     default: false,
   },
@@ -53,9 +46,9 @@ const emit = defineEmits(['submit', 'cancel', 'delete'])
 const store = useStore()
 
 const priorityItems = [
-  { value: 'low', text: 'Обычный' },
-  { value: 'middle', text: 'Средний' },
-  { value: 'high', text: 'Высокий' },
+  { value: 'low', title: 'Обычный' },
+  { value: 'middle', title: 'Средний' },
+  { value: 'high', title: 'Высокий' },
 ]
 
 const form = ref({
@@ -93,7 +86,7 @@ const formState = computed(() => ({ ...form.value, company: directoriesProfile.v
 const trucks = computed(() => {
   return store.getters.trucks
     .filter((item) => item.type === 'truck')
-    .map((item) => ({ value: item._id, text: item.regNum }))
+    .map((item) => ({ value: item._id, title: item.regNum }))
 })
 
 const submit = () => {

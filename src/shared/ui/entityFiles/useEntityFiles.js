@@ -6,7 +6,10 @@ export const useEntityFiles = (props) => {
   const selectedFiles = ref([])
   const dialog = ref(false)
   const loading = ref(false)
+  const uploading = ref(false)
   const uploadProgress = ref({})
+  const uploadErrors = ref([])
+  let abortController = null
 
   const uploadProgressHandler = (filename) => (progressEvent) => {
     if (progressEvent.lengthComputable) {
@@ -17,25 +20,95 @@ export const useEntityFiles = (props) => {
 
   const uploadFilesHandler = async () => {
     if (!selectedFiles.value?.length || !props.itemId || !props.docType) return
-    loading.value = true
-    const uploadPromises = Array.from(selectedFiles.value).map(async (file) => {
-      const { url: uploadUrl, key } = await getFileUploadUrl(file)
-      await FileService.uploadFile(uploadUrl, file, key, uploadProgressHandler(file.name))
-    })
 
-    await Promise.all(uploadPromises)
-    cancelDialogHandler()
+    uploading.value = true
+    uploadErrors.value = []
+    uploadProgress.value = {}
+    abortController = new AbortController()
+
+    const files = Array.from(selectedFiles.value)
+
+    try {
+      const results = await Promise.all(
+        files.map(async (file) => {
+          if (abortController.signal.aborted) return { name: file.name, cancelled: true }
+
+          let key = null
+          try {
+            const uploadInfo = await getFileUploadUrl(file, abortController.signal)
+            if (!uploadInfo || abortController.signal.aborted)
+              return { name: file.name, cancelled: true }
+
+            key = uploadInfo.key
+            await FileService.uploadFile(
+              uploadInfo.url,
+              file,
+              key,
+              uploadProgressHandler(file.name),
+              abortController.signal
+            )
+
+            return { name: file.name, key, ok: true }
+          } catch (e) {
+            if (key) {
+              try {
+                await FileService.deleteObject(key)
+              } catch (cleanupErr) {
+                console.log('Ошибка очистки записи после провала загрузки:', cleanupErr)
+              }
+            }
+
+            const message =
+              e?.name === 'CanceledError' || e?.code === 'ERR_CANCELED'
+                ? 'Загрузка отменена'
+                : e?.response?.data?.message || e?.message || 'Ошибка загрузки'
+
+            return { name: file.name, key, error: message }
+          }
+        })
+      )
+
+      uploadErrors.value = results.filter((r) => r?.error)
+
+      if (uploadErrors.value.length === 0) {
+        closeUploadDialog()
+      }
+    } catch (e) {
+      console.log('Ошибка при загрузке файлов:', e)
+    } finally {
+      uploading.value = false
+      abortController = null
+    }
   }
 
-  const getFileUploadUrl = async (file) => {
-    return await FileService.getUploadUrl({
-      docType: props.docType,
-      docId: props.itemId,
-      originalName: file.name,
-      contentType: file.type,
-      size: file.size,
-      note: file.note,
-    })
+  const cancelOrAbortHandler = () => {
+    if (uploading.value && abortController) {
+      abortController.abort()
+    }
+    closeUploadDialog()
+  }
+
+  const closeUploadDialog = async () => {
+    selectedFiles.value = []
+    uploadProgress.value = {}
+    uploadErrors.value = []
+    dialog.value = false
+    uploading.value = false
+    await getFiles()
+  }
+
+  const getFileUploadUrl = async (file, signal) => {
+    return await FileService.getUploadUrl(
+      {
+        docType: props.docType,
+        docId: props.itemId,
+        originalName: file.name,
+        contentType: file.type,
+        size: file.size,
+        note: file.note,
+      },
+      signal
+    )
   }
 
   async function getFiles() {
@@ -53,12 +126,8 @@ export const useEntityFiles = (props) => {
     dialog.value = true
   }
 
-  const cancelDialogHandler = async () => {
-    selectedFiles.value = []
-    dialog.value = false
-    loading.value = false
-    uploadProgress.value = {}
-    await getFiles()
+  const cancelDialogHandler = () => {
+    cancelOrAbortHandler()
   }
 
   const downloadItemHandler = async (item) => {
@@ -111,13 +180,17 @@ export const useEntityFiles = (props) => {
   return {
     uploadFilesHandler,
     loading,
+    uploading,
     items,
     getFilesHandler: getFiles,
     openDialogHandler,
     cancelDialogHandler,
+    cancelOrAbortHandler,
+    closeUploadDialog,
     dialog,
     selectedFiles,
     uploadProgress,
+    uploadErrors,
     removeItemHandler,
     downloadItemHandler,
     updateNoteHandler,

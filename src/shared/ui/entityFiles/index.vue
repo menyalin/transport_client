@@ -1,8 +1,6 @@
 <template>
   <v-card elevation="1" :loading="loading">
-    <v-card-title>
-      <h5>Файлы</h5>
-    </v-card-title>
+    <v-card-title><BlockTitle>Файлы</BlockTitle></v-card-title>
     <v-card-text>
       <FileList
         :items="items"
@@ -12,14 +10,12 @@
       />
     </v-card-text>
     <v-card-actions>
-      <v-btn icon @click="getFilesHandler">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <v-btn icon="mdi-refresh" @click="getFilesHandler" />
       <v-btn size="small" color="primary" @click="openDialogHandler"> Добавить файлы </v-btn>
     </v-card-actions>
     <v-dialog
       :model-value="dialog"
-      @update:model-value="showDialog = $event"
+      @update:model-value="dialog = $event"
       max-width="1200"
       persistent
     >
@@ -32,16 +28,25 @@
             placeholder="Укажите файлы для загрузки"
             multiple
             truncate-length="30"
+            :disabled="uploading"
           />
           <SelectedFiles v-model="selectedFiles" :uploadProgress="uploadProgress" />
+          <div v-if="uploadErrors.length" class="mt-4">
+            <div class="text-error text-subtitle-2 mb-1">Ошибки загрузки:</div>
+            <div v-for="err in uploadErrors" :key="err.name" class="text-error text-caption">
+              {{ err.name }} — {{ err.error }}
+            </div>
+          </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="cancelDialogHandler" :disabled="loading"> Отменить загрузку файлов</v-btn>
+          <v-btn @click="cancelOrAbortHandler" :disabled="loading && !uploading">
+            {{ uploading ? 'Отменить загрузку' : 'Отмена' }}
+          </v-btn>
           <v-spacer />
           <v-btn
             color="primary"
             @click="uploadFilesHandler"
-            :disabled="!selectedFiles.length || loading"
+            :disabled="!selectedFiles.length || uploading"
           >
             Прикрепить файлы
           </v-btn>
@@ -50,53 +55,35 @@
     </v-dialog>
   </v-card>
 </template>
-<script>
+<script setup>
 import { useEntityFiles } from './useEntityFiles'
 import FileList from './fileList.vue'
+import { BlockTitle } from '@/shared/ui'
 import SelectedFiles from './selectedFiles.vue'
 
-export default {
-  name: 'EntityFiles',
-  components: { FileList, SelectedFiles },
-  props: {
-    itemId: { type: String, required: true },
-    docType: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const {
-      items,
-      dialog,
-      loading,
-      uploadFilesHandler,
-      getFilesHandler,
-      openDialogHandler,
-      cancelDialogHandler,
-      selectedFiles,
-      uploadProgress,
-      downloadItemHandler,
-      removeItemHandler,
-      updateNoteHandler,
-    } = useEntityFiles(props)
+defineOptions({ name: 'EntityFiles' })
 
-    return {
-      uploadFilesHandler,
-      getFilesHandler,
-      items,
-      loading,
-      openDialogHandler,
-      cancelDialogHandler,
-      dialog,
-      selectedFiles,
-      uploadProgress,
-      downloadItemHandler,
-      removeItemHandler,
-      updateNoteHandler,
-    }
-  },
-}
+const props = defineProps({
+  itemId: { type: String, required: true },
+  docType: { type: String, required: true },
+})
+
+const {
+  items,
+  dialog,
+  loading,
+  uploading,
+  uploadFilesHandler,
+  getFilesHandler,
+  openDialogHandler,
+  cancelOrAbortHandler,
+  selectedFiles,
+  uploadProgress,
+  uploadErrors,
+  downloadItemHandler,
+  removeItemHandler,
+  updateNoteHandler,
+} = useEntityFiles(props)
 </script>
 <style scoped>
 .files-wrapper {

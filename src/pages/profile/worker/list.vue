@@ -7,7 +7,7 @@
       @submit="create"
       @refresh="refresh"
     />
-    <div id="settings-wrapper">
+    <ListSettingsWrapper>
       <v-text-field
         v-model="settings.search"
         label="Поиск"
@@ -15,7 +15,7 @@
         clearable
         :style="{ 'max-width': '400px' }"
       />
-    </div>
+    </ListSettingsWrapper>
     <v-data-table
       :headers="headers"
       :items="prepareDocuments"
@@ -32,7 +32,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 import { WorkerService } from '@/shared/services'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 
@@ -94,10 +94,3 @@ onMounted(() => {
   getWorkers()
 })
 </script>
-<style scoped>
-#settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-</style>
