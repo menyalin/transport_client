@@ -1,14 +1,14 @@
 import dayjs from 'dayjs'
-import { getCurrentInstance, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { CrewService } from '@/shared/services/index'
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength } from '@vuelidate/validators'
 
-export const useCrewForm = (props, ctx) => {
+export const useCrewForm = (props, emit) => {
+  const store = useStore()
   const loading = ref(false)
-
-  const { proxy } = getCurrentInstance()
   const actualDriverCrew = ref(null)
   const crewId = props.crew?._id ?? null
 
@@ -43,16 +43,16 @@ export const useCrewForm = (props, ctx) => {
     if (!state.value.driver) return []
 
     if (state.value.onlyCarrierItems)
-      return proxy.$store.getters.trucks
+      return store.getters.trucks
         .filter((t) => t.type === 'truck')
         .filter((truck) =>
           truck.allowedDrivers?.some(({ driver }) => driver === state.value.driver)
         )
-    else return proxy.$store.getters.trucks.filter((t) => t.type === 'truck')
+    else return store.getters.trucks.filter((t) => t.type === 'truck')
   })
 
   const trailerItems = computed(() =>
-    proxy.$store.getters.trucks
+    store.getters.trucks
       .filter((t) => t.type === 'trailer')
       .filter((trailer) =>
         state.value.onlyCarrierItems ? trailer.tkName._id === state.value.tkName : true
@@ -123,16 +123,12 @@ export const useCrewForm = (props, ctx) => {
     return errors
   })
 
-  const allowUseTrailers = computed(() =>
-    proxy.$store.getters.allowedToUseTrailersTrucksSet.has(state.value.truck)
-  )
-
   const resetForm = () => {
     state.value = { ...initialState }
   }
 
   const driverItems = computed(() => {
-    return proxy.$store.getters.drivers
+    return store.getters.drivers
       .filter((driver) =>
         state.value.onlyCarrierItems ? driver.tkName._id === state.value.tkName : true
       )
@@ -141,13 +137,13 @@ export const useCrewForm = (props, ctx) => {
 
   const cancelHandler = () => {
     resetForm()
-    ctx.emit('cancel')
+    emit('cancel')
   }
 
   const submitHandler = () => {
-    ctx.emit('submit', {
+    emit('submit', {
       ...state.value,
-      company: proxy.$store.getters.directoriesProfile,
+      company: store.getters.directoriesProfile,
     })
     resetForm()
   }
@@ -173,7 +169,7 @@ export const useCrewForm = (props, ctx) => {
   const deleteCrewHandler = () => {
     const res = confirm('Вы уверены?')
     if (res) {
-      ctx.emit('delete')
+      emit('delete')
     }
   }
 
@@ -220,9 +216,7 @@ export const useCrewForm = (props, ctx) => {
 
   const disabledSubmitForm = computed(() => {
     return (
-      !proxy.$store.getters.hasPermission('crew:write') ||
-      !hasUnsavedChanges.value ||
-      v$.value.$invalid
+      !store.getters.hasPermission('crew:write') || !hasUnsavedChanges.value || v$.value.$invalid
     )
   })
   const disabledEndDateField = computed(() => {
@@ -242,7 +236,6 @@ export const useCrewForm = (props, ctx) => {
     disabledSubmitForm,
     disabledEndDateField,
     startDateError,
-    allowUseTrailers,
     minValueForStartDate,
     showTransportTable,
     cancelHandler,

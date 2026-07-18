@@ -32,78 +32,76 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { CrewService } from '@/shared/services'
 
-export default {
-  name: 'CrewMessage',
-  props: {
-    crew: Object,
-    date: {
-      // дата которой будет закрываться смена
-      type: String,
-    },
-    type: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    lastDateInCrew() {
-      const date = this.crew.transport.endDate || this.crew.transport.startDate
-      return new Date(date)
-    },
-    crewLastDateStr() {
-      return this.lastDateInCrew.toLocaleString()
-    },
-    isClosedCrew() {
-      return !!this.crew.transport.endDate
-    },
-    isValidNewDate() {
-      return !!this.date && +new Date(this.date) > +this.lastDateInCrew
-    },
-    driversMap() {
-      return this.$store.getters.driversMap
-    },
-    trucksMap() {
-      return this.$store.getters.trucksMap
-    },
-    crewDateStr() {
-      const dateValue = this.type == 'crew' ? this.crew.startDate : this.crew.transport.startDate
-      return new Date(dateValue).toLocaleString()
-    },
-    text() {
-      switch (true) {
-        case this.type === 'crew' && !this.crew.endDate:
-          return 'У водителя есть открытая смена от '
-        case this.type === 'crew' && !!this.crew.endDate:
-          return 'У водителя есть пересечение со сменой от '
-        case this.type === 'truck':
-          return 'Грузовик используется в экипаже от '
-        case this.type === 'trailer':
-          return 'Прицеп используется в экипаже от '
-        default:
-          return 'какой-то другой вариант от '
-      }
-    },
-  },
-  methods: {
-    async goto() {
-      const res = await confirm('Вы уверены? информация на странице будет потеряна')
-      if (res)
-        this.$router.push({
-          name: 'CrewDetails',
-          params: { id: this.crew._id },
-        })
-    },
+defineOptions({ name: 'CrewMessage' })
 
-    async closeCrewHandler() {
-      if (!this.crew._id || !this.date || !this.isValidNewDate) return null
-
-      const res = await CrewService.closeCrew(this.crew._id, this.date)
-      if (res) this.$emit('clearCrew')
-    },
+const props = defineProps({
+  crew: Object,
+  date: {
+    type: String,
+    default: null,
   },
+  type: {
+    type: String,
+    required: true,
+  },
+})
+
+const emit = defineEmits(['clearCrew'])
+
+const router = useRouter()
+const store = useStore()
+
+const lastDateInCrew = computed(() => {
+  const date = props.crew.transport.endDate || props.crew.transport.startDate
+  return new Date(date)
+})
+const crewLastDateStr = computed(() => lastDateInCrew.value.toLocaleString())
+const isClosedCrew = computed(() => !!props.crew.transport.endDate)
+const isValidNewDate = computed(() => !!props.date && +new Date(props.date) > +lastDateInCrew.value)
+const driversMap = computed(() => store.getters.driversMap)
+const trucksMap = computed(() => store.getters.trucksMap)
+
+const crewDateStr = computed(() => {
+  const dateValue = props.type === 'crew' ? props.crew.startDate : props.crew.transport.startDate
+  return new Date(dateValue).toLocaleString()
+})
+
+const text = computed(() => {
+  switch (true) {
+    case props.type === 'crew' && !props.crew.endDate:
+      return 'У водителя есть открытая смена от '
+    case props.type === 'crew' && !!props.crew.endDate:
+      return 'У водителя есть пересечение со сменой от '
+    case props.type === 'truck':
+      return 'Грузовик используется в экипаже от '
+    case props.type === 'trailer':
+      return 'Прицеп используется в экипаже от '
+    default:
+      return 'какой-то другой вариант от '
+  }
+})
+
+async function goto() {
+  const res = await confirm('Вы уверены? информация на странице будет потеряна')
+  if (res) {
+    router.push({
+      name: 'CrewDetails',
+      params: { id: props.crew._id },
+    })
+  }
+}
+
+async function closeCrewHandler() {
+  if (!props.crew._id || !props.date || !isValidNewDate.value) return null
+
+  const res = await CrewService.closeCrew(props.crew._id, props.date)
+  if (res) emit('clearCrew')
 }
 </script>
 <style>

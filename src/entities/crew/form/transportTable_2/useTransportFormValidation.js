@@ -1,11 +1,12 @@
-import { computed, getCurrentInstance, ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { required, requiredIf } from '@vuelidate/validators'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
 import { CrewService } from '@/shared/services/index'
 
 export const useTransportFormValidation = (state, props) => {
-  const { proxy } = getCurrentInstance()
+  const store = useStore()
   const loading = ref(false)
   const existedTruckCrew = ref(null)
   const existedTrailerCrew = ref(null)
@@ -18,7 +19,7 @@ export const useTransportFormValidation = (state, props) => {
 
   const allowUseTrailer = computed(() => {
     if (!state.value.truck) return false
-    return proxy.$store.getters.allowedToUseTrailersTrucksSet.has(state.value.truck)
+    return store.getters.allowedToUseTrailersTrucksSet.has(state.value.truck)
   })
 
   const hasActiveCrews = computed(
@@ -45,7 +46,7 @@ export const useTransportFormValidation = (state, props) => {
       if (type === 'truck') existedTruckCrew.value = existedCrew
       else if (type === 'trailer') existedTrailerCrew.value = existedCrew
     } catch (e) {
-      proxy.$store.commit('setError', e?.message || e)
+      store.commit('setError', e?.message || e)
     } finally {
       loading.value = false
     }

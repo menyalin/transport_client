@@ -12,7 +12,6 @@
         v-model="state.tkName"
         :items="carrierItems"
         item-title="name"
-        auto-select-first
         item-value="_id"
         label="ТК"
         :disabled="!!crewId"
@@ -28,8 +27,6 @@
 
     <v-autocomplete
       v-model="state.driver"
-      clearable
-      auto-select-first
       label="Водитель"
       class="mb-2"
       :items="driverItems"
@@ -58,13 +55,7 @@
         type="datetime-local"
         :style="{ maxWidth: '300px' }"
       />
-      <v-btn
-        v-if="isReturnToWorkAllowed"
-        @click="returnToWorkHandler"
-        class="mx-2"
-        color="primary"
-        variant="text"
-      >
+      <v-btn v-if="isReturnToWorkAllowed" @click="returnToWorkHandler" class="mx-2">
         Вернуть экипаж в работу
       </v-btn>
     </div>
@@ -76,16 +67,18 @@
       type="crew"
       @clearCrew="clearActualCrewHandler"
     />
-
-    <TransportTable2
-      v-if="showTransportTable"
-      :items.sync="state.transport"
-      :crewId="crewId"
-      :crewEditable="crewEditable || isNewCrew"
-      :trucks="truckItems"
-      :trailers="trailerItems"
-      :crewStartDate="state.startDate"
-    />
+    <CardSection title="Транспорт" class="ma-3" :style="{ maxWidth: '1200px' }">
+      <TransportTable2
+        v-if="showTransportTable"
+        :items="state.transport"
+        @update:items="state.transport = $event"
+        :crewId="crewId"
+        :crewEditable="crewEditable || isNewCrew"
+        :trucks="truckItems"
+        :trailers="trailerItems"
+        :crewStartDate="state.startDate"
+      />
+    </CardSection>
 
     <v-text-field v-model="state.note" label="Примечание" class="mt-6" />
     <div v-if="crew && crew.manager" class="pb-4 text-caption">
@@ -101,100 +94,57 @@
     </v-btn>
   </div>
 </template>
-<script>
+<script setup>
+import { computed } from 'vue'
 import { useCrewForm } from './useForm'
-import { ButtonsPanel, DateTimeInput } from '@/shared/ui'
+import { ButtonsPanel, DateTimeInput, CardSection } from '@/shared/ui'
 
 import TransportTable2 from './transportTable_2'
 import AppCrewMessage from './crewMessage'
 
-export default {
-  name: 'CrewForm',
-  components: {
-    ButtonsPanel,
-    DateTimeInput,
-    AppCrewMessage,
-    TransportTable2,
-  },
-  props: {
-    crew: {
-      type: Object,
-    },
-    carrierItems: {
-      type: Array,
-      required: true,
-    },
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props, ctx) {
-    const {
-      v$,
-      state,
-      crewId,
-      crewEditable,
-      actualDriverCrew,
-      changeDriverHandler,
-      changeStartDateHandler,
+defineOptions({ name: 'CrewForm' })
 
-      driverItems,
-      truckItems,
-      trailerItems,
-      disabledSubmitForm,
-      disabledEndDateField,
-      startDateError,
-      allowUseTrailers,
-      minValueForStartDate,
-      showTransportTable,
-      cancelHandler,
-      submitHandler,
-      addTransportItemHandler,
-      deleteLastItemInTransportHandler,
-      clearActualCrewHandler,
-      endDateError,
-      deleteCrewHandler,
-      changeOnlyCarrierItemsHandler,
-      returnToWorkHandler,
-      isReturnToWorkAllowed,
-      hasUnsavedChanges,
-    } = useCrewForm(props, ctx)
-
-    const isNewCrew = !crewId
-    return {
-      v$,
-      isNewCrew,
-      state,
-      crewId,
-      crewEditable,
-      actualDriverCrew,
-      changeDriverHandler,
-      changeStartDateHandler,
-
-      truckItems,
-      trailerItems,
-      driverItems,
-      disabledSubmitForm,
-      disabledEndDateField,
-      startDateError,
-      allowUseTrailers,
-      minValueForStartDate,
-      showTransportTable,
-      cancelHandler,
-      submitHandler,
-      addTransportItemHandler,
-      changeOnlyCarrierItemsHandler,
-      deleteLastItemInTransportHandler,
-      clearActualCrewHandler,
-      endDateError,
-      deleteCrewHandler,
-      returnToWorkHandler,
-      isReturnToWorkAllowed,
-      hasUnsavedChanges,
-    }
+const props = defineProps({
+  crew: {
+    type: Object,
   },
-}
+  carrierItems: {
+    type: Array,
+    required: true,
+  },
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(['cancel', 'submit', 'delete'])
+
+const {
+  v$,
+  state,
+  crewId,
+  crewEditable,
+  actualDriverCrew,
+  changeStartDateHandler,
+
+  driverItems,
+  truckItems,
+  trailerItems,
+  disabledSubmitForm,
+  disabledEndDateField,
+  startDateError,
+  showTransportTable,
+  cancelHandler,
+  submitHandler,
+  changeOnlyCarrierItemsHandler,
+  clearActualCrewHandler,
+  endDateError,
+  returnToWorkHandler,
+  isReturnToWorkAllowed,
+} = useCrewForm(props, emit)
+
+const isNewCrew = computed(() => !crewId)
 </script>
 <style>
 .row-input {

@@ -25,7 +25,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:model-value'])
 
-const { readonly, hideDetails } = useAttrs()
+const { readonly } = useAttrs()
 
 const { pasteDate } = usePasteDateInput()
 
@@ -62,8 +62,8 @@ function emitValue(dateStr) {
 }
 
 const setCurrentDate = () => {
-  if (readonly?.value) return
-  emitValue(dayjs()) // Эмит текущей даты
+  if (readonly) return
+  emitValue(dayjs())
 }
 
 // const validateAndEmit = (dateStr) => {
@@ -104,10 +104,8 @@ const setCurrentDate = () => {
     v-bind="$attrs"
     class="d-inline-flex px-0"
     :type
-    :hide-details="!errors.length && (hideDetails?.value ?? $attrs.hideDetails)"
-    :prependInnerIcon="showPrependIcon && false ? 'mdi-chevron-right' : null"
+    :prependInnerIcon="showPrependIcon ? 'mdi-chevron-right' : null"
     :model-value="tmpDate"
-    :error="!!errors.length"
     :error-messages="errors"
     @paste="pasteDate"
     @update:model-value="emitValue"

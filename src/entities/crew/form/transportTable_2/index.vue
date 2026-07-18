@@ -49,7 +49,7 @@
     </v-btn>
     <v-dialog
       :model-value="dialog"
-      @update:model-value="showDialog = $event"
+      @update:model-value="dialog = $event"
       max-width="600px"
       persistent
     >
@@ -65,51 +65,35 @@
     </v-dialog>
   </div>
 </template>
-<script>
+<script setup>
 import TransportForm from './transportForm.vue'
 import { useTransportTableData } from './useTransportTableData'
 
-export default {
-  name: 'TransportTable',
-  components: { TransportForm },
-  props: {
-    items: Array,
-    trucks: Array,
-    trailers: Array,
-    crewEditable: Boolean,
-    hideAddButton: Boolean,
-    crewStartDate: String,
-  },
-  setup(props, ctx) {
-    const {
-      tableData,
-      editLastItem,
-      popItem,
-      dialog,
-      editedItem,
-      closeDialog,
-      addItemHandler,
-      pushItem,
-      editableItemMinDate,
-      readonlyStartDate,
-      allowAddTransportItems,
-    } = useTransportTableData(props, ctx)
+defineOptions({ name: 'TransportTable' })
 
-    return {
-      tableData,
-      editLastItem,
-      popItem,
-      dialog,
-      editedItem,
-      closeDialog,
+const props = defineProps({
+  items: Array,
+  trucks: Array,
+  trailers: Array,
+  crewEditable: Boolean,
+  hideAddButton: Boolean,
+  crewStartDate: String,
+})
 
-      addItemHandler,
-      pushItem,
-      editableItemMinDate,
-      readonlyStartDate,
-      allowAddTransportItems,
-    }
-  },
-}
+const emit = defineEmits(['update:items'])
+
+const {
+  tableData,
+  editLastItem,
+  popItem,
+  dialog,
+  editedItem,
+  closeDialog,
+  addItemHandler,
+  pushItem,
+  editableItemMinDate,
+  readonlyStartDate,
+  allowAddTransportItems,
+} = useTransportTableData(props, emit)
 </script>
 <style scoped></style>

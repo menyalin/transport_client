@@ -1,11 +1,12 @@
-import { computed, getCurrentInstance, ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 
 const dateFormatter = (date) => (date ? new Date(date).toLocaleString() : null)
 
 const truckFormatter = (store, id) => store.getters.trucksMap.get(id)?.regNum ?? null
 
-export const useTransportTableData = (props, ctx) => {
-  const { proxy } = getCurrentInstance()
+export const useTransportTableData = (props, emit) => {
+  const store = useStore()
   const dialog = ref(false)
   const startDateFieldDisabled = ref(true)
   const editMode = ref(null)
@@ -17,8 +18,8 @@ export const useTransportTableData = (props, ctx) => {
       ...i,
       startDateStr: dateFormatter(i?.startDate),
       endDateStr: dateFormatter(i?.endDate),
-      truck: truckFormatter(proxy.$store, i?.truck),
-      trailer: truckFormatter(proxy.$store, i?.trailer),
+      truck: truckFormatter(store, i?.truck),
+      trailer: truckFormatter(store, i?.trailer),
       allowEdit: props.crewEditable && idx === props.items.length - 1,
       allowDelete: props.crewEditable && idx === arr.length - 1 && idx > 0,
     }))
@@ -75,7 +76,7 @@ export const useTransportTableData = (props, ctx) => {
 
     updatedItems.push(newItem)
     closeDialog()
-    ctx.emit('update:items', updatedItems.filter(Boolean))
+    emit('update:items', updatedItems.filter(Boolean))
   }
 
   const popItem = () => {
@@ -84,7 +85,7 @@ export const useTransportTableData = (props, ctx) => {
 
     const updatedItems = [...props.items]
     updatedItems.pop()
-    ctx.emit('update:items', [...updatedItems])
+    emit('update:items', [...updatedItems])
   }
 
   const closeDialog = () => {

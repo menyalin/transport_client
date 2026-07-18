@@ -1,59 +1,57 @@
 <template>
   <v-card>
     <v-card-title>Транспорт</v-card-title>
-    <v-card-text>
-      <div class="form-wrapper">
-        <DateTimeInput
-          label="Дата начала"
-          v-model="state.startDate"
-          type="datetime-local"
-          :disabled="readonlyStartDate"
-          :errorMessages="startDateErrors"
-        />
+    <v-card-text class="wrapper">
+      <DateTimeInput
+        label="Дата начала"
+        v-model="state.startDate"
+        type="datetime-local"
+        :disabled="readonlyStartDate"
+        :errorMessages="startDateErrors"
+      />
 
-        <DateTimeInput
-          label="Дата завершения"
-          v-model="state.endDate"
-          type="datetime-local"
-          :errorMessages="endDateErrors"
-        />
-        <v-autocomplete
-          label="Грузовик"
-          v-model="state.truck"
-          :items="trucks"
-          item-value="_id"
-          item-title="regNum"
-          clearable
-          @update:model-value="changeTruckHandler($event, 'truck')"
-        />
-        <CrewMessage
-          v-if="!!existedTruckCrew"
-          :date="state.startDate"
-          :crew="existedTruckCrew"
-          type="truck"
-          class="pb-2"
-          @clearCrew="clearExistedCrews"
-        />
-        <v-autocomplete
-          label="Прицеп"
-          v-model="state.trailer"
-          :items="trailers"
-          item-value="_id"
-          item-title="regNum"
-          clearable
-          :disabled="trailerInputDisabled"
-          @update:model-value="changeTruckHandler($event, 'trailer')"
-        />
-        <CrewMessage
-          v-if="!!existedTrailerCrew"
-          :date="state.startDate"
-          :crew="existedTrailerCrew"
-          type="trailer"
-          class="pb-2"
-          @clearCrew="clearExistedCrews"
-        />
-        <v-text-field label="Примечание" v-model="state.note" />
-      </div>
+      <DateTimeInput
+        label="Дата завершения"
+        v-model="state.endDate"
+        type="datetime-local"
+        :errorMessages="endDateErrors"
+      />
+      <v-autocomplete
+        label="Грузовик"
+        v-model="state.truck"
+        :items="trucks"
+        item-value="_id"
+        item-title="regNum"
+        hide-details
+        @update:model-value="changeTruckHandler($event, 'truck')"
+      />
+      <CrewMessage
+        v-if="!!existedTruckCrew"
+        :date="state.startDate"
+        :crew="existedTruckCrew"
+        type="truck"
+        class="pb-2"
+        @clearCrew="clearExistedCrews"
+      />
+      <v-autocomplete
+        label="Прицеп"
+        v-model="state.trailer"
+        :items="trailers"
+        item-value="_id"
+        item-title="regNum"
+        hide-details
+        :disabled="trailerInputDisabled"
+        @update:model-value="changeTruckHandler($event, 'trailer')"
+      />
+      <CrewMessage
+        v-if="!!existedTrailerCrew"
+        :date="state.startDate"
+        :crew="existedTrailerCrew"
+        type="trailer"
+        class="pb-2"
+        @clearCrew="clearExistedCrews"
+      />
+      <v-text-field label="Примечание" v-model="state.note" />
     </v-card-text>
     <v-card-actions>
       <v-spacer />
@@ -64,75 +62,67 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
+<script setup>
 import { ref, watch, computed } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
 import { useTransportFormValidation } from './useTransportFormValidation'
 import CrewMessage from '../crewMessage.vue'
-export default {
-  name: 'CrewTransportForm',
-  components: { DateTimeInput, CrewMessage },
-  props: {
-    item: Object,
-    trucks: Array,
-    trailers: Array,
-    minDateValue: String,
-    readonlyStartDate: Boolean,
-  },
-  setup(props, ctx) {
-    const initialState = {
-      startDate: null,
-      endDate: null,
-      truck: null,
-      trailer: null,
-      note: null,
-    }
-    const state = ref(props.item ?? initialState)
 
-    const {
-      loading,
-      changeTruckHandler,
-      invalidForm,
-      startDateErrors,
-      endDateErrors,
-      trailerInputDisabled,
-      existedTrailerCrew,
-      existedTruckCrew,
-      clearExistedCrews,
-    } = useTransportFormValidation(state, props)
+defineOptions({ name: 'CrewTransportForm' })
 
-    const cancelHandler = () => {
-      clearExistedCrews()
-      ctx.emit('cancel')
-    }
-    const saveHandler = () => {
-      ctx.emit('save', state.value)
-    }
+const props = defineProps({
+  item: Object,
+  trucks: Array,
+  trailers: Array,
+  minDateValue: String,
+  readonlyStartDate: Boolean,
+})
 
-    const disabledSubmitBtn = computed(() => invalidForm.value)
+const emit = defineEmits(['cancel', 'save'])
 
-    watch(
-      () => props.item,
-      () => {
-        state.value = Object.assign({}, props.item)
-      },
-      { deep: true }
-    )
-    return {
-      loading,
-      state,
-      cancelHandler,
-      saveHandler,
-      startDateErrors,
-      endDateErrors,
-      invalidForm,
-      disabledSubmitBtn,
-      changeTruckHandler,
-      trailerInputDisabled,
-      existedTrailerCrew,
-      existedTruckCrew,
-      clearExistedCrews,
-    }
-  },
+const initialState = {
+  startDate: null,
+  endDate: null,
+  truck: null,
+  trailer: null,
+  note: null,
 }
+const state = ref(props.item ?? initialState)
+
+const {
+  loading,
+  changeTruckHandler,
+  invalidForm,
+  startDateErrors,
+  endDateErrors,
+  trailerInputDisabled,
+  existedTrailerCrew,
+  existedTruckCrew,
+  clearExistedCrews,
+} = useTransportFormValidation(state, props)
+
+const cancelHandler = () => {
+  clearExistedCrews()
+  emit('cancel')
+}
+const saveHandler = () => {
+  emit('save', state.value)
+}
+
+const disabledSubmitBtn = computed(() => invalidForm.value)
+
+watch(
+  () => props.item,
+  () => {
+    state.value = Object.assign({}, props.item)
+  },
+  { deep: true }
+)
 </script>
+<style scoped>
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+</style>
