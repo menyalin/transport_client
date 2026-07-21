@@ -1,8 +1,5 @@
 <template>
-  <div class="mb-4">
-    <h3 class="mb-4">Контроль дополнительных событий</h3>
-
-    <!-- Таблица для отображения списка -->
+  <CardSection title="Контроль дополнительных событий">
     <AdditionalNotificationsTable
       :items="items"
       :loading="loading"
@@ -11,18 +8,18 @@
       @add="handleAdd"
     />
 
-    <!-- Форма добавления/редактирования -->
     <AdditionalNotificationForm
       v-model="dialog"
       :item="editableItem"
       :isEdit="isEdit"
       @save="handleSave"
     />
-  </div>
+  </CardSection>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { CardSection } from '@/shared/ui'
 import AdditionalNotificationsTable from './AdditionalNotificationsTable.vue'
 import AdditionalNotificationForm from './AdditionalNotificationForm.vue'
 

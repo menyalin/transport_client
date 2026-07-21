@@ -2,48 +2,47 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <truck-form @submit="submit" @cancel="cancel" :carrierItems="carrierStore.carriers" />
+        <truck-form
+          :loading="loading"
+          :carrierItems="carrierStore.carriers"
+          @submit="submit"
+          @cancel="cancel"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { TruckForm } from '@/entities/truck'
-export default {
-  name: 'TruckCreate',
-  components: {
-    TruckForm,
-  },
-  setup() {
-    const carrierStore = useCarrierStore()
-    return {
-      carrierStore,
-    }
-  },
-  data() {
-    return {
-      loading: false,
-    }
-  },
-  methods: {
-    submit(truck) {
-      this.loading = true
-      this.$store
-        .dispatch('truckCreate', truck)
-        .then(() => {
-          this.loading = false
-          this.$router.push({ name: 'TruckList' })
-        })
-        .catch((e) => {
-          this.loading = false
-          this.$store.commit('setError', e)
-        })
-    },
-    cancel() {
-      this.$router.go(-1)
-    },
-  },
+
+defineOptions({ name: 'TruckCreate' })
+
+const router = useRouter()
+const store = useStore()
+const carrierStore = useCarrierStore()
+
+const loading = ref(false)
+
+function submit(truck) {
+  loading.value = true
+  store
+    .dispatch('truckCreate', truck)
+    .then(() => {
+      loading.value = false
+      router.push({ name: 'TruckList' })
+    })
+    .catch((e) => {
+      loading.value = false
+      store.commit('setError', e)
+    })
+}
+
+function cancel() {
+  router.go(-1)
 }
 </script>
 <style></style>

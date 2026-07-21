@@ -1,94 +1,51 @@
 <template>
   <div>
     <app-block-title>{{ title }}</app-block-title>
-    <div class="fields-wrapper">
-      <div id="platon">
-        <v-text-field
-          label="Платон №"
-          :model-value="params.platonNumber"
-          hide-details
-          @change="change($event, 'platonNumber')"
-        />
-        <DateTimeInput
-          label="Дата замены"
-          :model-value="params.platonDate"
-          @update:model-value="change($event, 'platonDate')"
-          hide-details
-        />
-      </div>
-      <div id="tachograph">
-        <v-text-field
-          label="Тахограф №"
-          :model-value="params.tachographNumber"
-          hide-details
-          @change="change($event, 'tachographNumber')"
-        />
-        <DateTimeInput
-          label="Дата сделующей калибровки"
-          :model-value="params.tachographExpDate"
-          @update:model-value="change($event, 'tachographExpDate')"
-          hide-details
-        />
-        <v-text-field
-          label="Примечание (тахограф)"
-          :model-value="params.tachographNote"
-          hide-details
-          @change="change($event, 'tachographNote')"
-        />
-      </div>
+    <div class="fields-row">
+      <v-text-field v-model="item.platonNumber" label="Платон №" class="field-md" />
+      <DateTimeInput v-model="item.platonDate" label="Дата замены" class="field-date" />
+    </div>
+    <div class="fields-row">
+      <v-text-field v-model="item.tachographNumber" label="Тахограф №" class="field-md" />
+      <DateTimeInput
+        v-model="item.tachographExpDate"
+        label="Дата сделующей калибровки"
+        hide-details
+        class="field-date"
+      />
+      <v-text-field v-model="item.tachographNote" label="Примечание (тахограф)" class="field-lg" />
+    </div>
 
-      <div id="transponder">
-        <v-text-field
-          label="Транспондер, №"
-          :model-value="params.transponderNumber"
-          hide-details
-          @change="change($event, 'transponderNumber')"
-        />
-        <DateTimeInput
-          label="Дата выдачи"
-          :model-value="params.transponderDate"
-          @update:model-value="change($event, 'transponderDate')"
-          hide-details
-        />
-      </div>
-      <div id="fuel-card">
-        <v-text-field
-          label="Топливная карта"
-          :model-value="params.fuelCardNumber"
-          hide-details
-          @change="change($event, 'fuelCardNumber')"
-        />
-        <DateTimeInput
-          label="Дата выдачи карты"
-          :model-value="params.fuelCardDate"
-          @update:model-value="change($event, 'fuelCardDate')"
-          hide-details
-        />
-        <v-text-field
-          label="Примечание (Топливная карта)"
-          :model-value="params.fuelCardNote"
-          hide-details
-          @change="change($event, 'fuelCardNote')"
-        />
-      </div>
+    <div class="fields-row">
+      <v-text-field v-model="item.transponderNumber" label="Транспондер, №" class="field-md" />
+      <DateTimeInput v-model="item.transponderDate" label="Дата выдачи" class="field-date" />
+    </div>
+    <div class="fields-row">
+      <v-text-field v-model="item.fuelCardNumber" label="Топливная карта" class="field-md" />
+      <DateTimeInput v-model="item.fuelCardDate" label="Дата выдачи карты" class="field-date" />
+      <v-text-field
+        v-model="item.fuelCardNote"
+        label="Примечание (Топливная карта)"
+        class="field-lg"
+      />
     </div>
   </div>
 </template>
 <script setup>
-import { reactive, computed, watch } from 'vue'
+import { watch } from 'vue'
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
 defineOptions({ name: 'AdditionalDetails' })
 
-const modelValue = defineModel({ type: Object })
+const item = defineModel({ type: Object, default: () => ({}) })
 
 defineProps({
   title: String,
   truckType: String,
 })
 
-const params = reactive({
+const defaults = {
   diagnosticCardExpDate: null,
   diagnosticCardNote: null,
   platonNumber: null,
@@ -101,62 +58,46 @@ const params = reactive({
   fuelCardNumber: null,
   fuelCardDate: null,
   fuelCardNote: null,
-})
-
-const fields = computed(() => Object.keys(params))
+}
 
 watch(
-  modelValue,
+  item,
   (val) => {
-    if (val) {
-      fields.value.forEach((f) => {
-        params[f] = val[f]
-      })
-    }
+    if (!val) item.value = {}
+    Object.keys(defaults).forEach((key) => {
+      if (!(key in item.value)) item.value[key] = defaults[key]
+    })
   },
   { immediate: true }
 )
-
-function change(val, field) {
-  params[field] = val
-  modelValue.value = { ...params }
-}
 </script>
 <style scoped>
-.fields-wrapper {
+.fields-row {
   display: flex;
-  flex-direction: row;
-
   flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.fields-wrapper > * {
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-#platon {
-  display: grid;
-  grid-template-columns: 220px 190px;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 15px;
 }
 
-#tachograph {
-  display: grid;
-  grid-template-columns: 190px 190px 350px;
-  gap: 10px;
+.fields-row + .fields-row {
+  margin-top: 15px;
 }
 
-#transponder {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+.field-md {
+  flex: 1 1 220px;
+  min-width: 220px;
+  max-width: 320px;
 }
-#transponder > * {
-  margin-right: 5px;
+
+.field-lg {
+  flex: 1 1 320px;
+  min-width: 320px;
+  max-width: 450px;
 }
-#fuel-card {
-  display: grid;
-  grid-template-columns: 190px 190px 350px;
-  gap: 10px;
+
+.field-date {
+  flex: 0 0 220px;
+  min-width: 220px;
+  max-width: 220px;
 }
 </style>

@@ -8,6 +8,7 @@ const props = defineProps({
     type: [String, Date],
     default: null,
   },
+  hideDetails: Boolean,
   type: {
     type: String,
     validator: (value) => ['date', 'datetime-local'].includes(value),
@@ -102,10 +103,12 @@ const setCurrentDate = () => {
 <template>
   <v-text-field
     v-bind="$attrs"
-    class="d-inline-flex px-0"
+    class="d-inline-flex align-self-start px-0"
     :type
-    :prependInnerIcon="showPrependIcon ? 'mdi-chevron-right' : null"
+    :hide-details="!errors.length && $attrs['hide-details']"
+    :prependInnerIcon="showPrependIcon && false ? 'mdi-chevron-right' : null"
     :model-value="tmpDate"
+    :error="!!errors.length"
     :error-messages="errors"
     @paste="pasteDate"
     @update:model-value="emitValue"

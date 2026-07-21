@@ -1,44 +1,40 @@
 <template>
-  <div class="mb-6">
-    <div class="text-subtitle">
-      Водители:
-      <div v-if="!driverList || !driverList.length" class="text-caption pl-6 my-2">нет данных</div>
-      <v-list v-else>
-        <v-list-item v-for="item in driverList" :key="item.driver">
-          <template #prepend>
-            <v-avatar :style="{ cursor: 'pointer' }" @click="changeDriverState(item)">
-              <v-icon v-if="item.isPermanent" color="green"> mdi-account-lock-outline </v-icon>
-              <v-icon v-else color="orange"> mdi-account-clock-outline </v-icon>
-            </v-avatar>
-          </template>
-          <v-list-item-title>
-            {{
-              driversMap.has(item.driver) ? driversMap.get(item.driver).fullName : 'запись удалена'
-            }}
-          </v-list-item-title>
-          <template #append>
-            <v-icon size="small" color="error" @click="deleteDriver(item.driver)">
-              mdi-delete
-            </v-icon>
-          </template>
-        </v-list-item>
-      </v-list>
-      <v-autocomplete
-        v-if="!isVisibleBtn"
-        :items="driversForSelect"
-        item-title="fullName"
-        item-value="_id"
-        @update:model-value="changeDriver"
-      />
-      <v-btn v-else size="small" variant="text" color="primary" @click="addDriver">
-        Добавить водителя
-      </v-btn>
-    </div>
-  </div>
+  <CardSection title="Водители" :style="{ maxWidth: '800px' }">
+    <div v-if="!driverList || !driverList.length" class="text-caption pl-6 my-2">нет данных</div>
+    <v-list v-else>
+      <v-list-item v-for="item in driverList" :key="item.driver">
+        <template #prepend>
+          <v-avatar :style="{ cursor: 'pointer' }" @click="changeDriverState(item)">
+            <v-icon v-if="item.isPermanent" color="green"> mdi-account-lock-outline </v-icon>
+            <v-icon v-else color="orange"> mdi-account-clock-outline </v-icon>
+          </v-avatar>
+        </template>
+        <v-list-item-title>
+          {{
+            driversMap.has(item.driver) ? driversMap.get(item.driver).fullName : 'запись удалена'
+          }}
+        </v-list-item-title>
+        <template #append>
+          <v-icon size="small" color="error" @click="deleteDriver(item.driver)">
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-list-item>
+    </v-list>
+    <v-autocomplete
+      v-if="!isVisibleBtn"
+      :items="driversForSelect"
+      item-title="fullName"
+      item-value="_id"
+      @update:model-value="changeDriver"
+    />
+    <v-btn v-else @click="addDriver" size="small"> Добавить водителя </v-btn>
+  </CardSection>
 </template>
 <script setup>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { CardSection } from '@/shared/ui'
 
 defineOptions({ name: 'AllowedDrivers' })
 

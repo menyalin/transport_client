@@ -1,103 +1,77 @@
 <template>
   <div>
     <app-block-title>{{ title }}</app-block-title>
-    <div class="fields-wrapper">
+    <div class="fields-row">
       <template v-if="truckType === 'truck'">
-        <v-text-field
-          label="Осаго №"
-          :model-value="params.osagoNum"
-          hide-details
-          @change="change($event, 'osagoNum')"
-        />
-        <DateTimeInput
-          label="Дата окончания"
-          :model-value="params.osagoExpDate"
-          @update:model-value="change($event, 'osagoExpDate')"
-          hide-details
-        />
-        <v-text-field
-          label="Страховая компания"
-          :model-value="params.osagoCompany"
-          hide-details
-          @update:model-value="change($event, 'osagoCompany')"
-        />
+        <v-text-field v-model="item.osagoNum" label="Осаго №" class="field-md" />
+        <DateTimeInput v-model="item.osagoExpDate" label="Дата окончания" class="field-date" />
+        <v-text-field v-model="item.osagoCompany" label="Страховая компания" class="field-lg" />
       </template>
-      <v-text-field
-        label="Каско №"
-        :model-value="params.kaskoNum"
-        hide-details
-        @update:model-value="change($event, 'kaskoNum')"
-      />
-      <DateTimeInput
-        label="Дата окончания"
-        :model-value="params.kaskoExpDate"
-        @update:model-value="change($event, 'kaskoExpDate')"
-        hide-details
-      />
-      <v-text-field
-        label="Страховая компания"
-        :model-value="params.kaskoCompany"
-        hide-details
-        @update:model-value="change($event, 'kaskoCompany')"
-      />
-      <v-text-field
-        label="Лизинговая компания"
-        :model-value="params.leasingСompany"
-        hide-details
-        @update:model-value="change($event, 'leasingСompany')"
-      />
+      <v-text-field v-model="item.kaskoNum" label="Каско №" class="field-md" />
+      <DateTimeInput v-model="item.kaskoExpDate" label="Дата окончания" class="field-date" />
+      <v-text-field v-model="item.kaskoCompany" label="Страховая компания" class="field-lg" />
+      <v-text-field v-model="item.leasingСompany" label="Лизинговая компания" class="field-lg" />
     </div>
   </div>
 </template>
 <script setup>
-import { ref, watch } from 'vue'
+// import { watch } from 'vue'
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
 defineOptions({ name: 'Insurance' })
 
-const item = defineModel({ type: Object })
+const item = defineModel({ type: Object, default: () => ({}) })
 
 defineProps({
   title: String,
   truckType: String,
 })
 
-const initialParams = {
-  osagoNum: null,
-  osagoExpDate: null,
-  osagoCompany: null,
-  kaskoNum: null,
-  kaskoExpDate: null,
-  kaskoCompany: null,
-  leasingСompany: null,
-}
+// const defaults = {
+//   osagoNum: null,
+//   osagoExpDate: null,
+//   osagoCompany: null,
+//   kaskoNum: null,
+//   kaskoExpDate: null,
+//   kaskoCompany: null,
+//   leasingСompany: null,
+// }
 
-const params = ref({ ...initialParams })
-
-watch(
-  item,
-  (val) => {
-    if (val) {
-      const fields = Object.keys(initialParams)
-      fields.forEach((f) => {
-        params.value[f] = val[f]
-      })
-    }
-  },
-  { immediate: true }
-)
-
-function change(val, field) {
-  params.value[field] = val
-  item.value = { ...params.value }
-}
+// watch(
+//   item,
+//   (val) => {
+//     if (!val) item.value = {}
+//     Object.keys(defaults).forEach((key) => {
+//       if (!(key in item.value)) item.value[key] = defaults[key]
+//     })
+//   },
+//   { immediate: true }
+// )
 </script>
 <style scoped>
-.fields-wrapper {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 220px 200px 220px 220px 200px 220px 220px;
-  margin-bottom: 20px;
+.fields-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.field-md {
+  flex: 1 1 220px;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.field-lg {
+  flex: 1 1 320px;
+  min-width: 320px;
+  max-width: 450px;
+}
+
+.field-date {
+  flex: 0 0 220px;
+  min-width: 220px;
+  max-width: 220px;
 }
 </style>

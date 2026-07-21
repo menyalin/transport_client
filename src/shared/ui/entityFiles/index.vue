@@ -11,7 +11,7 @@
     </v-card-text>
     <v-card-actions>
       <v-btn icon="mdi-refresh" @click="getFilesHandler" />
-      <v-btn size="small" color="primary" @click="openDialogHandler"> Добавить файлы </v-btn>
+      <v-btn size="small" @click="openDialogHandler"> Добавить файлы </v-btn>
     </v-card-actions>
     <v-dialog
       :model-value="dialog"

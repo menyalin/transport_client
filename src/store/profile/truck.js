@@ -119,7 +119,11 @@ export default {
 
     allLoadDirection: ({ allTruckParams }) => allTruckParams.loadDirection,
 
-    truckTypes: ({ allTruckParams }) => allTruckParams.truckTypes,
+    truckTypes: ({ allTruckParams }) =>
+      allTruckParams.truckTypes.map((i) => ({
+        ...i,
+        title: i.text,
+      })),
 
     truckKinds: ({ allTruckParams }, { companySettings }) => {
       return allTruckParams.truckKinds.filter((i) =>
