@@ -1,26 +1,29 @@
-import store from '@/store'
 import { computed } from 'vue'
+import { useStore } from 'vuex'
+
 function templatesSorting(a, b) {
   return a.name > b.name ? 1 : -1
 }
 
 export const useListData = () => {
+  const store = useStore()
+
   const items = computed(() => {
-    return store.getters.orderTemplates.sort(templatesSorting).map((item) => ({
+    return [...store.getters.orderTemplates].sort(templatesSorting).map((item) => ({
       ...item,
       clientName: store.getters.partnersMap.get(item.client)?.name || '(__не найден__)',
       routeType: store.getters.orderAnalyticTypesMap.get(item?.analytics?.type),
-      truckKind: store.getters.truckKindsMap.get(item?.reqTransport.kind) || ' - ',
+      truckKind: store.getters.truckKindsMap.get(item?.reqTransport?.kind) || ' - ',
     }))
   })
   const headers = [
-    { value: 'name', text: 'Название', sortable: true },
-    { value: 'clientName', text: 'Заказчик', sortable: true },
-    { value: 'routeType', text: 'Тип рейса', sortable: true },
-    { value: 'truckKind', text: 'Вид ТС', sortable: true },
+    { value: 'name', title: 'Название', sortable: true },
+    { value: 'clientName', title: 'Заказчик', sortable: true },
+    { value: 'routeType', title: 'Тип рейса', sortable: true },
+    { value: 'truckKind', title: 'Вид ТС', sortable: true },
     {
       value: 'reqTransport.liftCapacity',
-      text: 'Грузоподъемность',
+      title: 'Грузоподъемность',
       sortable: true,
     },
   ]

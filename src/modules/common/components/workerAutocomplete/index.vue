@@ -7,6 +7,8 @@
     :loading="loading"
     no-filter
     :items="items"
+    item-title="text"
+    item-value="value"
     :customFilter="() => true"
     :search="searchString"
     @update:search="handleSearchInputUpdate"
@@ -15,7 +17,7 @@
   <span v-else> {{ title }} </span>
 </template>
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { WorkerService } from '@/shared/services'
 
 defineOptions({ name: 'WorkerAutocomplete' })
@@ -27,10 +29,14 @@ defineProps({
 
 const value = defineModel()
 
-let itemSelected = !!value.value
+const itemSelected = ref(!!value.value)
 const loading = ref(false)
 const items = ref([])
 const searchString = ref('')
+
+watch(value, (val) => {
+  itemSelected.value = !!val
+})
 
 onMounted(async () => {
   if (value.value) {
@@ -45,21 +51,21 @@ onMounted(async () => {
       })
       .finally(() => {
         loading.value = false
-        itemSelected = true
+        itemSelected.value = true
       })
   }
 })
 
 function handleChange(val) {
-  itemSelected = true
+  itemSelected.value = true
   value.value = val
 }
 
 async function handleSearchInputUpdate(val) {
   searchString.value = val
   loading.value = true
-  if (itemSelected) {
-    itemSelected = false
+  if (itemSelected.value) {
+    itemSelected.value = false
   } else {
     items.value = ((await WorkerService.getForAutocomplete({ searchStr: val })) || []).map((i) => ({
       value: i._id,

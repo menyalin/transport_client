@@ -7,6 +7,20 @@
       @submit="createAddress"
       @refresh="refresh"
     />
+    <ListSettingsWrapper>
+      <app-table-column-settings
+        v-model="activeHeaders"
+        :allHeaders="allHeaders"
+        :listSettingsName="listSettingsName"
+      />
+      <v-text-field
+        v-model="settings.search"
+        hide-details
+        clearable
+        label="Быстрый поиск"
+        :style="{ 'max-width': '500px' }"
+      />
+    </ListSettingsWrapper>
     <v-data-table
       :search="settings.search"
       :headers="filteredHeaders"
@@ -64,33 +78,17 @@
       <template #[`item.updated`]="{ item }">
         {{ new Date(item.updatedAt).toLocaleString() }}
       </template>
-
-      <template #top>
-        <div class="settings-wrapper">
-          <app-table-column-settings
-            v-model="activeHeaders"
-            :allHeaders="allHeaders"
-            :listSettingsName="listSettingsName"
-          />
-          <v-text-field
-            v-model="settings.search"
-            hide-details
-            clearable
-            label="Быстрый поиск"
-            :style="{ 'max-width': '500px' }"
-          />
-        </div>
-      </template>
     </v-data-table>
   </entity-list-wrapper>
 </template>
 <script setup>
-import { computed, ref, reactive, onMounted } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
 import { useAddressStore } from '@/entities/address'
+import { usePersistedRef } from '@/shared/hooks'
 
 defineOptions({ name: 'AddressList' })
 
@@ -98,39 +96,33 @@ const router = useRouter()
 const store = useStore()
 const addressStore = useAddressStore()
 
-const formName = 'AddressList'
-const listSettingsName = 'addressListFields'
-
-const settings = reactive({
-  search: null,
-  listOptions: {},
-})
+const settings = usePersistedRef({ search: null }, 'AddressList:settings')
 
 const activeHeaders = ref([])
-const defaultHeaders = [
-  'shortName',
-  'partnerName',
-  'name',
-  'region',
-  'city',
-  'zones',
-  'note',
-  'isShipmentPlace',
-  'isDeliveryPlace',
-]
+// const defaultHeaders = [
+//   'shortName',
+//   'partnerName',
+//   'name',
+//   'region',
+//   'city',
+//   'zones',
+//   'note',
+//   'isShipmentPlace',
+//   'isDeliveryPlace',
+// ]
 
 const allHeaders = [
-  { value: 'shortName', title: 'Сокращенный адрес' },
-  { value: 'partnerName', title: 'Партнер' },
-  { value: 'name', title: 'Адрес' },
-  { value: 'region', title: 'Регион' },
+  { value: 'shortName', title: 'Сокращенный адрес', default: true },
+  { value: 'partnerName', title: 'Партнер', default: true },
+  { value: 'name', title: 'Адрес', default: true },
+  { value: 'region', title: 'Регион', default: true },
   { value: 'city', title: 'Город' },
   { value: 'zones', title: 'Зоны', sortable: false },
-  { value: 'note', title: 'Примечание' },
-  { value: 'label', title: 'Метки' },
-  { value: 'isShipmentPlace', title: 'Погрузка', align: 'center', sortable: false },
-  { value: 'isDeliveryPlace', title: 'Разгрузка', align: 'center', sortable: false },
-  { value: 'created', title: 'Дата создания', sortable: true },
+  { value: 'note', title: 'Примечание', default: true },
+  // { value: 'label', title: 'Метки' },
+  { value: 'isShipmentPlace', title: 'Погрузка', align: 'center', sortable: false, default: true },
+  { value: 'isDeliveryPlace', title: 'Разгрузка', align: 'center', sortable: false, default: true },
+  { value: 'created', title: 'Дата создания', sortable: true, default: false },
   { value: 'updated', title: 'Дата изменения', sortable: true },
   { value: 'isService', title: 'Сервис', align: 'center', sortable: false },
   { value: 'geo', title: 'Координаты' },
@@ -153,25 +145,6 @@ const filteredHeaders = computed(() => {
   return allHeaders.filter((i) => activeHeaders.value.includes(i.value))
 })
 
-onMounted(() => {
-  const fields = JSON.parse(localStorage.getItem(listSettingsName))
-  if (!fields || fields.length === 0) activeHeaders.value = defaultHeaders
-  else activeHeaders.value = fields
-
-  if (store.getters.formSettingsMap.has(formName))
-    Object.assign(settings, store.getters.formSettingsMap.get(formName))
-
-  addressStore.getAddresses()
-})
-
-onBeforeRouteLeave((_to, _from, next) => {
-  store.commit('setFormSettings', {
-    formName: formName,
-    settings: { ...settings },
-  })
-  next()
-})
-
 function createAddress() {
   router.push({ name: 'AddressCreate' })
 }
@@ -184,13 +157,3 @@ function dblClickRow(_, { item }) {
   router.push(`address/${item._id}`)
 }
 </script>
-<style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 15px;
-}
-</style>

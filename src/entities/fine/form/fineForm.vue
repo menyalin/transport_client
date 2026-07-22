@@ -21,13 +21,13 @@
         v-model.trim="form.number"
         label="Номер постановления"
         :style="{ maxWidth: '350px' }"
-        @blur="$emit('fineNumberUpdated', $event)"
+        @blur="emit('fineNumberUpdated', $event)"
       />
       <v-select
-        v-model.trim="form.category"
+        v-model="form.category"
         :items="store.getters.fineCategories"
         label="Категория"
-        itemTitle="text"
+        item-value="value"
         clearable
         :style="{ maxWidth: '450px' }"
       />
@@ -71,6 +71,8 @@
         v-model="form.truck"
         label="Грузовик / Прицеп"
         :items="trucks"
+        item-title="text"
+        item-value="value"
         auto-select-first
         :style="{ maxWidth: '250px' }"
       />
@@ -78,6 +80,8 @@
         v-model="form.driver"
         label="Водитель"
         :items="drivers"
+        item-title="text"
+        item-value="value"
         auto-select-first
         :style="{ maxWidth: '350px' }"
         :append-inner-icon="form.truck && form.violationDate ? 'mdi-crosshairs' : null"
@@ -121,7 +125,6 @@
         v-if="isNeedWithheldFromDriver"
         v-model="form.kX"
         :items="[1, 2, 4]"
-        itemTitle="text"
         label="kX"
         :style="{ maxWidth: '80px' }"
       />
@@ -142,7 +145,7 @@
     </div>
     <v-text-field v-model="form.note" label="Примечание" />
 
-    <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
+    <v-btn v-if="displayDeleteBtn" color="error" @click="emit('delete')">
       <v-icon start> mdi-delete </v-icon>
       Удалить
     </v-btn>
@@ -160,11 +163,14 @@ import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplet
 import { CrewService } from '@/shared/services'
 import { usePasteDateInput } from '@/shared/ui/DateInputs/usePasteDateInput'
 
-const props = defineProps({
-  item: { type: Object },
+defineOptions({ name: 'FineForm' })
+
+defineProps({
   displayDeleteBtn: { type: Boolean, default: false },
   openInModal: { type: Boolean, default: false },
 })
+
+const item = defineModel({ type: Object })
 
 const emit = defineEmits(['submit', 'cancel', 'delete', 'fineNumberUpdated'])
 
@@ -173,7 +179,8 @@ const store = useStore()
 
 const dateFields = ['date', 'paymentDate', 'expiryDateOfDiscount']
 const dateTimeFields = ['violationDate']
-const form = ref({
+
+const defaultFine = {
   date: null,
   number: null,
   category: null,
@@ -194,7 +201,9 @@ const form = ref({
   withheldSum: 0,
   isWithheld: false,
   note: null,
-})
+}
+
+const form = ref({ ...defaultFine })
 
 const rules = {
   form: {
@@ -223,7 +232,6 @@ const rules = {
 
 const v = useVuelidate(rules, form)
 
-// const myCompanies = computed(() => store.getters.myCompanies)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
 
 const showIsWithheldField = computed(() => {
@@ -250,11 +258,6 @@ const isNeedWithheldFromDriver = computed(() => {
 const showPaymentBlock = computed(() => {
   return !form.value.isPaydByDriver
 })
-
-// const directoriesProfileName = computed(() => {
-//   if (!directoriesProfile.value) return null
-//   return myCompanies.value.find((item) => item._id === directoriesProfile.value)?.name
-// })
 
 const formState = computed(() => {
   const dates = {}
@@ -325,14 +328,11 @@ const setFormFields = (val) => {
 }
 
 const resetForm = () => {
-  const keys = Object.keys(form.value)
-  keys.forEach((key) => {
-    form.value[key] = null
-  })
+  form.value = { ...defaultFine }
 }
 
 watch(
-  () => props.item,
+  item,
   (val) => {
     if (val) setFormFields(val)
   },
@@ -359,10 +359,15 @@ watch(
 watch(
   () => form.value.kX,
   () => {
-    form.value.withheldSum = form.value.kX * form.value.paymentSum
+    if (!form.value.paymentSum || !isNeedWithheldFromDriver.value) {
+      form.value.withheldSum = 0
+    } else {
+      form.value.withheldSum = form.value.kX * form.value.paymentSum
+    }
   }
 )
 </script>
+
 <style>
 .row-input {
   display: flex;

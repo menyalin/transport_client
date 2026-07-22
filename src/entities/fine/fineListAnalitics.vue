@@ -24,53 +24,31 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
-import store from '@/store'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'FineListAnalitics',
-  props: {
-    data: Object,
-  },
-  setup(props) {
-    function formatSum(sum) {
-      if (!sum) return '-'
-      if (!isFinite(sum)) return '__invalid number__'
-      return Intl.NumberFormat().format(sum)
-    }
+defineOptions({ name: 'FineListAnalitics' })
 
-    const showIsWithheld = computed(() => {
-      return store.getters.hasPermission('isWithheldRead')
-    })
-    const totalSum = computed(() => {
-      return formatSum(props.data.totalSum)
-    })
-    const totalSumWithDiscount = computed(() => {
-      return formatSum(props.data.totalSumWithDiscount)
-    })
-    const totalPayed = computed(() => {
-      return formatSum(props.data.totalPayed)
-    })
-    const needWithheld = computed(() => {
-      return formatSum(props.data.needWithheld)
-    })
+const props = defineProps({
+  data: Object,
+})
 
-    const isWithheld = computed(() => {
-      return formatSum(props.data.isWithheld)
-    })
+const store = useStore()
 
-    return {
-      showIsWithheld,
-      totalSum,
-      totalSumWithDiscount,
-      totalPayed,
-      needWithheld,
-      isWithheld,
-    }
-  },
+function formatSum(sum) {
+  if (!sum) return '-'
+  if (!isFinite(sum)) return '__invalid number__'
+  return Intl.NumberFormat().format(sum)
 }
-// Итого штраф, итого штраф со скидкой, итого удержать
+
+const showIsWithheld = computed(() => store.getters.hasPermission('fine:isWithheldRead'))
+
+const totalSum = computed(() => formatSum(props.data?.totalSum))
+const totalSumWithDiscount = computed(() => formatSum(props.data?.totalSumWithDiscount))
+const totalPayed = computed(() => formatSum(props.data?.totalPayed))
+const needWithheld = computed(() => formatSum(props.data?.needWithheld))
+const isWithheld = computed(() => formatSum(props.data?.isWithheld))
 </script>
 <style scoped>
 .wrapper {

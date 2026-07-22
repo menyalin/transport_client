@@ -218,7 +218,8 @@ export default {
 
     formSettingsMap: ({ formSettings }) => formSettings,
     permissionsMap: ({ permissionsMap }) => permissionsMap,
-    fineCategories: ({ fineCategories }) => fineCategories,
+    fineCategories: ({ fineCategories }) =>
+      fineCategories.map((i) => ({ value: i.value, title: i.text })),
     fineCategoriesMap: ({ fineCategories }) =>
       new Map(fineCategories.map((i) => [i.value, i.text])),
   },

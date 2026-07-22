@@ -23,6 +23,8 @@
           v-model="analytics.type"
           label="Тип рейса"
           :items="store.getters.orderAnalyticTypes"
+          item-title="text"
+          item-value="value"
           clearable
           hide-details
           :style="{ 'max-width': '180px' }"
@@ -62,10 +64,9 @@ import { ButtonsPanel } from '@/shared/ui'
 import { OrderRoute } from '@/entities/order'
 import { ReqTransport, CargoParams } from '@/entities/order'
 
-const props = defineProps({
-  orderTemplate: {
-    type: Object,
-  },
+defineOptions({ name: 'OrderTemplateForm' })
+
+defineProps({
   displayDeleteBtn: {
     type: Boolean,
     default: false,
@@ -78,14 +79,17 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'cancel', 'delete'])
 
+const model = defineModel({
+  type: Object,
+  default: () => ({}),
+})
+
 const store = useStore()
 
-const route = ref([{ type: 'loading' }, { type: 'unloading' }])
+const route = ref([{ type: 'loading', isMainLoadingPoint: true }, { type: 'unloading' }])
 const cargoParams = ref({})
 const reqTransport = ref({})
-const analytics = ref({
-  type: null,
-})
+const analytics = ref({ type: null })
 const form = ref({
   name: null,
   client: null,
@@ -101,7 +105,6 @@ const rules = {
 
 const v = useVuelidate(rules, form)
 
-// const myCompanies = computed(() => store.getters.myCompanies)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
 const clientItems = computed(() => store.getters.partners.filter((partner) => partner.isClient))
 
@@ -110,17 +113,12 @@ const isInvalidForm = computed(() => {
   return v.value.$invalid || !isValidRoute.value
 })
 
-// const directoriesProfileName = computed(() => {
-//   if (!directoriesProfile.value) return null
-//   return myCompanies.value.find((item) => item._id === directoriesProfile.value)?.name
-// })
-
 const isValidRoute = computed(() => {
   if (!route.value || route.value.length === 0) return false
   const length = route.value.length >= 2
   const firstPoint = route.value[0]?.type === 'loading'
-  const lastPoint = route.value[route.value.length - 1].type === 'unloading'
-  const hasAddresses = route.value.filter((item) => !!item.address).length === route.value.length
+  const lastPoint = route.value[route.value.length - 1]?.type === 'unloading'
+  const hasAddresses = route.value.every((item) => !!item.address)
   return length && firstPoint && lastPoint && hasAddresses
 })
 
@@ -133,46 +131,52 @@ const formState = computed(() => ({
   analytics: analytics.value,
 }))
 
-const submit = () => {
+function submit() {
   emit('submit', formState.value)
   resetForm()
 }
 
-const cancel = () => {
+function cancel() {
   resetForm()
   emit('cancel')
 }
 
-const setFormFields = (val) => {
-  if (val.cargoParams) cargoParams.value = val.cargoParams
-  if (val.reqTransport) reqTransport.value = val.reqTransport
-  if (val.route?.length) route.value = val.route
-  if (val.analytics) analytics.value = val.analytics
+function setFormFields(val) {
+  cargoParams.value = val.cargoParams || {}
+  reqTransport.value = val.reqTransport || {}
+  route.value = val.route?.length
+    ? val.route
+    : [{ type: 'loading', isMainLoadingPoint: true }, { type: 'unloading' }]
+  analytics.value = val.analytics || { type: null }
+
   const keys = Object.keys(form.value)
   keys.forEach((key) => {
-    form.value[key] = val[key]
+    form.value[key] = val[key] ?? null
   })
 }
 
-const resetForm = () => {
+function resetForm() {
   reqTransport.value = {}
-  route.value = []
   cargoParams.value = {}
-  analytics.value = {}
-  const keys = Object.keys(form.value)
-  keys.forEach((key) => {
-    form.value[key] = null
-  })
+  route.value = [{ type: 'loading', isMainLoadingPoint: true }, { type: 'unloading' }]
+  analytics.value = { type: null }
+  form.value = {
+    name: null,
+    client: null,
+    fixedTimeSlots: false,
+  }
+  v.value.$reset()
 }
 
 watch(
-  () => props.orderTemplate,
+  model,
   (val) => {
-    if (val) setFormFields(val)
+    setFormFields(val || {})
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 </script>
+
 <style scoped>
 .body-wrapper {
   margin-bottom: 20px;

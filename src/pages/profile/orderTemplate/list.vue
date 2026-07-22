@@ -2,7 +2,7 @@
   <entity-list-wrapper>
     <buttons-panel
       panel-type="list"
-      :disabledSubmit="!$store.getters.hasPermission('orderTemplate:write')"
+      :disabled-submit="!store.getters.hasPermission('orderTemplate:write')"
       @submit="create"
       @refresh="refresh"
     />
@@ -16,75 +16,65 @@
       height="73vh"
       :search="settings.search"
       fixed-header
-      :footer-props="{
-        'items-per-page-options': [50, 100, -1],
-      }"
-      :options.sync="settings.listOptions"
+      :items-per-page-options="[50, 100, -1]"
+      v-model:options="settings.listOptions"
       @dblclick:row="dblClickRow"
     />
   </entity-list-wrapper>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
-import { EntityListWrapper } from '@/shared/ui/index'
+
+<script setup>
+import { reactive, ref } from 'vue'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useStore } from 'vuex'
+import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
 import { useListData } from './model'
 
-export default {
-  name: 'OrderTemplateList',
-  components: {
-    ButtonsPanel,
-    EntityListWrapper,
-  },
-  data: () => ({
-    formName: 'OrderTemplateList',
-    loading: false,
-    settings: {
-      search: null,
-      listOptions: {
-        page: 1,
-        itemsPerPage: 50,
-      },
-    },
-  }),
-  setup() {
-    const { items, headers } = useListData()
-    return {
-      items,
-      headers,
-    }
-  },
+defineOptions({ name: 'OrderTemplateList' })
 
-  created() {
-    if (this.$store.getters.formSettingsMap.has(this.formName))
-      this.settings = this.$store.getters.formSettingsMap.get(this.formName)
+const store = useStore()
+const router = useRouter()
+const { items, headers } = useListData()
+const loading = ref(false)
+const formName = 'OrderTemplateList'
+
+const settings = reactive({
+  search: null,
+  listOptions: {
+    page: 1,
+    itemsPerPage: 50,
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('setFormSettings', {
-      formName: this.formName,
-      settings: { ...this.settings },
-    })
-    next()
-  },
-  methods: {
-    create() {
-      this.$router.push({ name: 'OrderTemplateCreate' })
-    },
-    refresh() {
-      this.getData()
-    },
-    dblClickRow(_, { item }) {
-      this.$router.push(`order_templates/${item._id}`)
-    },
-    getData() {
-      this.$store.dispatch('getOrderTemplates')
-    },
-  },
+})
+
+const saved = store.getters.formSettingsMap.get(formName)
+if (saved) {
+  Object.assign(settings, saved)
+}
+
+onBeforeRouteLeave(() => {
+  store.commit('setFormSettings', {
+    formName,
+    settings: { ...settings },
+  })
+})
+
+function create() {
+  router.push({ name: 'OrderTemplateCreate' })
+}
+
+function refresh() {
+  store.dispatch('getOrderTemplates')
+}
+
+function dblClickRow(_, { item }) {
+  router.push(`order_templates/${item._id}`)
 }
 </script>
+
 <style scoped>
 .filter-wrapper {
-  display: grid;
-  grid-template-columns: 300px 280px;
+  display: flex;
   align-items: center;
+  gap: 15px;
 }
 </style>

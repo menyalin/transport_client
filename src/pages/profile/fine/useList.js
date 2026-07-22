@@ -1,10 +1,13 @@
 import dayjs from 'dayjs'
-import store from '@/store'
 import { computed, watch, ref } from 'vue'
+import { useStore } from 'vuex'
 import { FineService } from '@/shared/services'
 import { usePersistedRef } from '@/shared/hooks'
+import { sortingAdapterForOldApi } from '@/shared/utils/migrationUtils'
 
 export const useFineList = () => {
+  const store = useStore()
+
   const initialSettings = {
     period: [
       dayjs().add(-120, 'd').format('YYYY-MM-DD'),
@@ -24,40 +27,42 @@ export const useFineList = () => {
   const count = ref(0)
   const serverAnalyticData = ref({})
   const periodSettingItems = [
-    { text: 'Дата постановления', value: 'date' },
-    { text: 'Дата нарушения', value: 'violationDate' },
-    { text: 'Дата оплаты', value: 'paymentDate' },
+    { title: 'Дата постановления', value: 'date' },
+    { title: 'Дата нарушения', value: 'violationDate' },
+    { title: 'Дата оплаты', value: 'paymentDate' },
   ]
   const fineStatuses = [
-    { text: 'Не оплачен', value: 'notPaid' },
-    { text: 'Оплачен', value: 'paid' },
-    { text: 'Все', value: 'all' },
+    { title: 'Не оплачен', value: 'notPaid' },
+    { title: 'Оплачен', value: 'paid' },
+    { title: 'Все', value: 'all' },
   ]
   const headers = [
-    { value: 'date', title: 'Дата постановления', sortable: true },
-    { value: 'number', title: 'Номер постановления', sortable: false },
-    { value: 'violationDate', title: 'Дата нарушения', sortable: true },
-    { value: 'truck', title: 'Грузовик / Прицеп', sortable: false },
-    { value: 'driver', title: 'Водитель', sortable: false },
+    { value: 'date', title: 'Дата постановления', sortable: true, default: true },
+    { value: 'number', title: 'Номер постановления', sortable: false, default: true },
+    { value: 'violationDate', title: 'Дата нарушения', sortable: true, default: true },
+    { value: 'truck', title: 'Грузовик / Прицеп', sortable: false, default: true },
+    { value: 'driver', title: 'Водитель', sortable: false, default: true },
     {
       value: 'totalSum',
       title: 'Общая сумма штрафа',
       sortable: true,
       align: 'right',
+      default: true,
     },
     {
       value: 'discountedSum',
       title: 'Сумма, с учетом скидки',
       sortable: true,
       align: 'right',
+      default: true,
     },
-    { value: 'expiryDateOfDiscount', title: 'Скидка до', sortable: true },
-    { value: 'isPayment', title: 'Оплачен', sortable: false },
-    { value: 'withheldSum', title: 'Удержать', sortable: false, align: 'right' },
-    { value: 'paymentDate', title: 'Дата оплаты', sortable: false },
-    { value: '_worker.name', title: 'Оплатил', sortable: false },
-    { value: 'category', title: 'Категория', sortable: false },
-    { value: 'note', title: 'Примечание', sortable: false },
+    { value: 'expiryDateOfDiscount', title: 'Скидка до', sortable: true, default: true },
+    { value: 'isPayment', title: 'Оплачен', sortable: false, default: true },
+    { value: 'withheldSum', title: 'Удержать', sortable: false, align: 'right', default: true },
+    { value: 'paymentDate', title: 'Дата оплаты', sortable: false, default: false },
+    { value: '_worker.name', title: 'Оплатил', sortable: false, default: false },
+    { value: 'category', title: 'Категория', sortable: false, default: true },
+    { value: 'note', title: 'Примечание', sortable: false, default: true },
   ]
   const loading = ref(false)
   const selected = ref([])
@@ -65,6 +70,8 @@ export const useFineList = () => {
 
   const settings = usePersistedRef(initialSettings, 'fineList:settings')
   const listOptions = usePersistedRef({ page: 1, itemsPerPage: 100 }, 'fineList:listOptions')
+
+  // const activeSort = computed(() => listOptions.value.sortBy?.[0])
 
   const queryParams = computed(() => ({
     company: store.getters.directoriesProfile,
@@ -75,8 +82,7 @@ export const useFineList = () => {
     truck: settings.value.truck,
     driver: settings.value.driver,
     categories: settings.value.categories,
-    sortBy: listOptions.value.sortBy,
-    sortDesc: listOptions.value.sortDesc,
+    ...sortingAdapterForOldApi(listOptions.value.sortBy),
     searchStr: settings.value.searchStr,
     payingByWorker: settings.value.payingByWorker,
     needToWithheld: settings.value.needToWithheld,
@@ -131,7 +137,7 @@ export const useFineList = () => {
     return list.value
       .filter((i) => {
         if (!showOnlySelected.value) return true
-        else return selected.value.map((s) => s._id).includes(i._id)
+        return selected.value.map((s) => s._id).includes(i._id)
       })
       .map((i) => ({
         ...i,
@@ -164,7 +170,7 @@ export const useFineList = () => {
     { deep: true }
   )
 
-  const headersComputed = computed(() => {
+  const allHeaders = computed(() => {
     if (store.getters.hasPermission('fine:isWithheldRead'))
       return [
         ...headers,
@@ -175,27 +181,22 @@ export const useFineList = () => {
           align: 'center',
         },
       ]
-    else return headers
+    return headers
   })
-  const onSelectedChange = (value) => {
-    selected.value = value
-  }
 
   return {
     selected,
     showOnlySelected,
     fineStatuses,
     periodSettingItems,
-
     settings,
     refetch,
-    headers: headersComputed,
+    allHeaders,
     loading,
     list,
     count,
     analyticData,
     preparedList,
     listOptions,
-    onSelectedChange,
   }
 }
