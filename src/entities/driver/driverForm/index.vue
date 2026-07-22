@@ -2,84 +2,132 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="disabledSubmitForm"
+      :disabledSubmit="disabledSubmitForm"
       @cancel="cancel"
       @submit="submit"
     />
 
-    <div>
-      <div class="row-wrapper tk-name">
+    <div id="form">
+      <div class="fields-row">
         <v-select
-          v-model.trim="form.tkName"
+          v-model="form.tkName"
           :items="carrierItems"
           item-title="name"
           item-value="_id"
           label="ТК"
+          class="field-select"
         />
       </div>
 
-      <div class="row-wrapper driver-name">
-        <v-text-field v-model.trim="form.surname" label="Фамилия" :error-messages="surnameErrors" />
-        <v-text-field v-model.trim="form.name" label="Имя" :error-messages="nameErrors" />
+      <div class="fields-row">
+        <v-text-field
+          v-model.trim="form.surname"
+          label="Фамилия"
+          :error-messages="surnameErrors"
+          class="field-md"
+        />
+        <v-text-field
+          v-model.trim="form.name"
+          label="Имя"
+          :error-messages="nameErrors"
+          class="field-md"
+        />
         <v-text-field
           v-model.trim="form.patronymic"
           label="Отчество"
           :error-messages="nameErrors"
+          class="field-md"
         />
-        <DateTimeInput v-model="form.birthday" label="Дата рождения" />
+        <DateTimeInput v-model="form.birthday" label="Дата рождения" class="field-date" />
       </div>
 
-      <div class="row-wrapper">
-        <div class="passport">
-          <div>
-            <v-text-field
-              v-model.trim="form.passportId"
-              hide-details
-              label="Номер паспорта"
-              class="pb-3"
-            />
-            <DateTimeInput v-model="form.passportDate" label="Дата выдачи паспорта" />
-          </div>
-          <v-textarea v-model.trim="form.passportIssued" label="Паспорт выдан" :rows="4" />
-        </div>
-        <div class="driver-license">
-          <v-text-field v-model.trim="form.licenseId" hide-details label="Номер ВУ" />
-          <v-text-field v-model.trim="form.licenseCategory" label="Категории ВУ" hide-details />
-        </div>
-        <div class="driver-cards">
-          <v-text-field v-model.trim="form.inn" hide-details label="ИНН" />
-          <v-text-field v-model.trim="form.driverCardId" hide-details label="Карта водителя" />
-          <DateTimeInput v-model="form.driverCardPeriod" label="КВ действительна до" />
-        </div>
-      </div>
-      <div class="row-wrapper phones">
-        <v-text-field v-model.trim="form.phone" label="Телефон" hide-details />
-        <v-text-field v-model.trim="form.phone2" label="Телефон 2" hide-details />
+      <div class="fields-row">
+        <v-text-field
+          v-model.trim="form.passportId"
+          label="Номер паспорта"
+          hide-details
+          class="field-md"
+        />
+        <DateTimeInput
+          v-model="form.passportDate"
+          label="Дата выдачи паспорта"
+          class="field-date"
+        />
+        <v-textarea
+          v-model.trim="form.passportIssued"
+          label="Паспорт выдан"
+          :rows="4"
+          class="field-lg"
+        />
       </div>
 
-      <app-med-book v-model="medBook" title="Мед.книжка" class="mb-5" />
-      <div class="work-status">
-        <div>
-          <v-checkbox v-model="form.isBrigadier" label="Бригадир" hide-details />
-          <v-checkbox v-model="form.isMechanic" label="Механик" hide-details />
-        </div>
-        <DateTimeInput v-model="form.employmentDate" label="Дата приема на работу" />
-
-        <DateTimeInput v-model="form.dismissalDate" label="Дата увольнения" />
-        <v-text-field v-model.trim="form.recommender" label="Кто рекомедовал" hide-details />
+      <div class="fields-row">
+        <v-text-field
+          v-model.trim="form.licenseId"
+          label="Номер ВУ"
+          hide-details
+          class="field-md"
+        />
+        <v-text-field
+          v-model.trim="form.licenseCategory"
+          label="Категории ВУ"
+          hide-details
+          class="field-md"
+        />
       </div>
-      <AdditionalNotifications v-model="additionalNotifications" />
-      <v-checkbox v-model="form.hasScans" label="Есть сканы документов" />
-      <v-checkbox v-model="form.hideInFines" label="Не показывать в штрафах" />
 
-      <v-checkbox v-model="form.isCalcSalary" label="Расчет ЗП" />
+      <div class="fields-row">
+        <v-text-field v-model.trim="form.inn" label="ИНН" hide-details class="field-md" />
+        <v-text-field
+          v-model.trim="form.driverCardId"
+          label="Карта водителя"
+          hide-details
+          class="field-md"
+        />
+        <DateTimeInput
+          v-model="form.driverCardPeriod"
+          label="КВ действительна до"
+          class="field-date"
+        />
+      </div>
+
+      <div class="fields-row">
+        <v-text-field v-model.trim="form.phone" label="Телефон" hide-details class="field-md" />
+        <v-text-field v-model.trim="form.phone2" label="Телефон 2" hide-details class="field-md" />
+      </div>
+
+      <app-med-book v-model="form.medBook" title="Мед.книжка" class="mb-5" />
+
+      <div class="fields-row">
+        <v-checkbox v-model="form.isBrigadier" label="Бригадир" hide-details />
+        <v-checkbox v-model="form.isMechanic" label="Механик" hide-details />
+        <DateTimeInput
+          v-model="form.employmentDate"
+          label="Дата приема на работу"
+          class="field-date"
+        />
+        <DateTimeInput v-model="form.dismissalDate" label="Дата увольнения" class="field-date" />
+        <v-text-field
+          v-model.trim="form.recommender"
+          label="Кто рекомедовал"
+          hide-details
+          class="field-md"
+        />
+      </div>
+
+      <additional-notifications v-model="form.additionalNotifications" />
+
+      <div class="fields-row">
+        <v-checkbox v-model="form.hasScans" label="Есть сканы документов" />
+        <v-checkbox v-model="form.hideInFines" label="Не показывать в штрафах" />
+        <v-checkbox v-model="form.isCalcSalary" label="Расчет ЗП" />
+      </div>
     </div>
-    <EntityFiles v-if="driver && driver._id" :itemId="driver._id" docType="driver" />
+
+    <EntityFiles v-if="driver?._id" :itemId="driver._id" docType="driver" />
+
     <div v-if="displayDeleteBtn" class="delete-btn-row mt-3">
-      <v-btn color="error" @click="$emit('delete')">
-        <v-icon start> mdi-delete </v-icon>
-        Удалить
-      </v-btn>
+      <v-btn color="error" prepend-icon="mdi-delete" @click="emit('delete')">Удалить</v-btn>
     </div>
   </div>
 </template>
@@ -93,9 +141,6 @@ import AppMedBook from './medBook.vue'
 import { ButtonsPanel, DateTimeInput, AdditionalNotifications, EntityFiles } from '@/shared/ui'
 
 const props = defineProps({
-  driver: {
-    type: Object,
-  },
   displayDeleteBtn: {
     type: Boolean,
     default: false,
@@ -104,17 +149,19 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const driver = defineModel({ type: Object })
 
 const emit = defineEmits(['submit', 'cancel', 'delete'])
 
 const store = useStore()
 
-const loading = ref(false)
-const medBook = ref({})
-const additionalNotifications = ref([])
-const initialFormState = ref(null)
-const form = ref({
+const defaultDriver = {
   tkName: null,
   surname: null,
   name: null,
@@ -139,7 +186,34 @@ const form = ref({
   hideInFines: false,
   isCalcSalary: true,
   inn: null,
-})
+  medBook: {},
+  additionalNotifications: [],
+}
+
+const form = ref({ ...defaultDriver })
+
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
+const formState = computed(() => ({
+  ...form.value,
+  company: directoriesProfile.value,
+}))
+
+const initialFormState = ref(null)
+
+watch(
+  driver,
+  (val) => {
+    if (!val) return
+    const keys = Object.keys(defaultDriver)
+    keys.forEach((key) => {
+      form.value[key] = val[key] ?? defaultDriver[key]
+    })
+    if (val.tkName?._id) form.value.tkName = val.tkName._id
+    if (!initialFormState.value) initialFormState.value = JSON.stringify(formState.value)
+  },
+  { immediate: true }
+)
 
 const rules = {
   form: {
@@ -163,6 +237,8 @@ const rules = {
     recommender: {},
     birthday: {},
     inn: {},
+    medBook: {},
+    additionalNotifications: {},
   },
 }
 
@@ -173,7 +249,7 @@ const disabledSubmitForm = computed(() => {
     !store.getters.hasPermission('driver:write') ||
     v.value.$invalid ||
     !formChanged.value ||
-    loading.value
+    props.loading
   )
 })
 
@@ -187,20 +263,13 @@ const nameErrors = computed(() => {
 const surnameErrors = computed(() => {
   const errors = []
   if (v.value.form.surname.$dirty && v.value.form.surname.$invalid)
-    errors.push('Имя не может быть пустым')
+    errors.push('Фамилия не может быть пустой')
   return errors
 })
 
 const formChanged = computed(() => {
   return initialFormState.value !== JSON.stringify(formState.value)
 })
-
-const formState = computed(() => ({
-  ...form.value,
-  medBook: medBook.value,
-  company: store.getters.directoriesProfile,
-  additionalNotifications: additionalNotifications.value,
-}))
 
 const submit = () => {
   emit('submit', formState.value)
@@ -211,86 +280,72 @@ const cancel = () => {
   emit('cancel')
 }
 
-const setFormFields = (val) => {
-  const keys = Object.keys(form.value)
-  medBook.value = val.medBook
-  if (val.additionalNotifications) additionalNotifications.value = val.additionalNotifications
-  keys.forEach((key) => {
-    form.value[key] = val[key]
-    if (val.tkName?._id) form.value.tkName = val.tkName._id
-  })
-}
-
 const resetForm = () => {
-  const keys = Object.keys(form.value)
-  medBook.value = {}
-  additionalNotifications.value = []
-  keys.forEach((key) => {
-    form.value[key] = null
-  })
+  form.value = { ...defaultDriver }
 }
-
-watch(
-  () => props.driver,
-  (val) => {
-    if (val) setFormFields(val)
-  },
-  { immediate: true }
-)
 
 onMounted(() => {
-  initialFormState.value = JSON.stringify(formState.value)
+  if (!initialFormState.value) initialFormState.value = JSON.stringify(formState.value)
 })
 </script>
+
 <style scoped>
-.row-wrapper {
+#form {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-.row-wrapper > * {
-  padding: 2px 10px;
-  width: 100%;
-}
-.tk-name > * {
-  max-width: 30rem;
-}
-.driver-name {
-  display: grid;
-  grid-template-columns: 2fr 2fr 2fr 1fr;
-}
-.passport {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-.passport > * {
-  margin-right: 10px;
-}
-.driver-license {
-  max-width: 230px;
-}
-.driver-license > * {
-  margin-bottom: 8px;
-}
-.phones > * {
-  margin-bottom: 8px;
-  max-width: 300px;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1400px;
 }
 
-.driver-cards {
-  max-width: 230px;
-}
-.driver-cards > * {
-  margin-bottom: 8px;
-}
-.work-status {
-  display: grid;
-  grid-template-columns: 150px 200px 200px auto;
+.fields-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 15px;
-  align-items: center;
-  margin-bottom: 30px;
 }
+
+.field-xs {
+  flex: 0 0 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.field-sm {
+  flex: 0 0 160px;
+  min-width: 160px;
+  max-width: 160px;
+}
+
+.field-md {
+  flex: 1 1 220px;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.field-lg {
+  flex: 1 1 320px;
+  min-width: 320px;
+  max-width: 450px;
+}
+
+.field-select {
+  flex: 1 1 260px;
+  min-width: 260px;
+  max-width: 320px;
+}
+
+.field-date {
+  flex: 0 0 220px;
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.field-fluid {
+  flex: 1 1 100%;
+  min-width: 100%;
+  max-width: none;
+}
+
 .delete-btn-row {
   display: flex;
   flex-direction: row;

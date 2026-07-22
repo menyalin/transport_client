@@ -2,48 +2,49 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <DriverForm @submit="submit" @cancel="cancel" :carrierItems="carrierStore.carriers" />
+        <driver-form
+          v-model="driver"
+          :carrierItems="carrierStore.carriers"
+          :loading="loading"
+          @submit="submit"
+          @cancel="cancel"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import { DriverForm } from '@/entities/driver/index.js'
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { DriverForm } from '@/entities/driver'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'DriverCreate',
-  components: { DriverForm },
-  setup() {
-    const carrierStore = useCarrierStore()
-    return {
-      carrierStore,
-    }
-  },
+defineOptions({ name: 'DriverCreate' })
 
-  data() {
-    return {
-      loading: false,
-    }
-  },
-  methods: {
-    submit(driver) {
-      this.loading = true
-      this.$store
-        .dispatch('driverCreate', driver)
-        .then(() => {
-          this.loading = false
-          this.$router.push({ name: 'DriverList' })
-        })
-        .catch((e) => {
-          this.loading = false
-          this.$store.commit('setError', e)
-        })
-    },
-    cancel() {
-      this.$router.go(-1)
-    },
-  },
+const router = useRouter()
+const store = useStore()
+const carrierStore = useCarrierStore()
+
+const loading = ref(false)
+const driver = ref(null)
+
+function submit(driver) {
+  loading.value = true
+  store
+    .dispatch('driverCreate', driver)
+    .then(() => {
+      loading.value = false
+      router.push({ name: 'DriverList' })
+    })
+    .catch((e) => {
+      loading.value = false
+      store.commit('setError', e)
+    })
+}
+
+function cancel() {
+  router.go(-1)
 }
 </script>
 <style></style>

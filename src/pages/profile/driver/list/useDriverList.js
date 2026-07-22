@@ -1,40 +1,36 @@
 import { usePersistedRef } from '@/shared/hooks'
 import { CrewService } from '@/shared/services'
 import { ref, computed, onMounted } from 'vue'
-import store from '@/store'
+import { useStore } from 'vuex'
 import { headers } from './headers'
-import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 export const useDriverList = () => {
-  const carrierStore = useCarrierStore()
+  const store = useStore()
 
   function stateFilterHandler(driver) {
     if (listSettings.value.workState === 'all') return true
     if (listSettings.value.workState === 'holiday') return !crewsMapByDriver.value.has(driver._id)
-    else return crewsMapByDriver.value.has(driver._id)
+    return crewsMapByDriver.value.has(driver._id)
   }
 
   function stuffStatusFilterHandler(driver) {
     if (listSettings.value.stuffStatus === 'all') return true
     if (listSettings.value.stuffStatus === 'employee') return !driver.dismissalDate
     if (listSettings.value.stuffStatus === 'fired') return driver.dismissalDate
+    return true
   }
 
   function getDaysInWork(driverId) {
     if (!crewsMapByDriver.value.has(driverId)) return null
-    else {
-      const startDate = new Date(crewsMapByDriver.value.get(driverId).startDate)
-      const today = new Date()
-      return Math.floor((today - startDate) / (1000 * 60 * 60 * 24))
-    }
+    const startDate = new Date(crewsMapByDriver.value.get(driverId).startDate)
+    const today = new Date()
+    return Math.floor((today - startDate) / (1000 * 60 * 60 * 24))
   }
 
   function getTruckNumber(driverId) {
     if (!crewsMapByDriver.value.has(driverId)) return null
-    else {
-      const truckId = crewsMapByDriver.value.get(driverId)?.transport?.truck
-      return store.getters.trucksMap.get(truckId)?.regNum || null
-    }
+    const truckId = crewsMapByDriver.value.get(driverId)?.transport?.truck
+    return store.getters.trucksMap.get(truckId)?.regNum || null
   }
 
   async function getData() {
@@ -44,12 +40,11 @@ export const useDriverList = () => {
     })
     loading.value = false
   }
+
   async function refresh() {
     store.dispatch('getDrivers', true)
     await getData()
   }
-
-  const tkNameItems = computed(() => carrierStore.carriers)
 
   const crews = ref([])
   const loading = ref(false)
@@ -65,19 +60,19 @@ export const useDriverList = () => {
   )
 
   const stuffStatusItems = [
-    { value: 'all', text: 'Все' },
-    { value: 'employee', text: 'Действующие' },
-    { value: 'fired', text: 'Уволены' },
+    { value: 'all', title: 'Все' },
+    { value: 'employee', title: 'Действующие' },
+    { value: 'fired', title: 'Уволены' },
   ]
 
   const workStateItems = [
-    { value: 'all', text: 'Все' },
-    { value: 'active', text: 'В работе' },
-    { value: 'holiday', text: 'Выходной' },
+    { value: 'all', title: 'Все' },
+    { value: 'active', title: 'В работе' },
+    { value: 'holiday', title: 'Выходной' },
   ]
 
   const crewsMapByDriver = computed(() => {
-    let tmpMap = new Map()
+    const tmpMap = new Map()
     crews.value.forEach((cr) => {
       tmpMap.set(cr.driver, { ...cr })
     })
@@ -100,6 +95,9 @@ export const useDriverList = () => {
         truckNumber: getTruckNumber(d._id),
       }))
   )
+
+  const directoriesProfile = computed(() => store.getters.directoriesProfile)
+
   onMounted(async () => {
     await getData()
     store.dispatch('getDrivers')
@@ -111,8 +109,8 @@ export const useDriverList = () => {
     listSettings,
     loading,
     filteredDrivers,
-    tkNameItems,
     allHeaders: headers,
     refresh,
+    directoriesProfile,
   }
 }

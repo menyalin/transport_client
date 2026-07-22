@@ -1,57 +1,60 @@
 <template>
   <div>
-    <div>
-      <app-block-title>{{ title }}</app-block-title>
+    <app-block-title>{{ title }}</app-block-title>
+    <div class="fields-row">
+      <v-text-field
+        label="Номер"
+        :model-value="params.number"
+        hide-details
+        class="field-md"
+        @update:model-value="change($event, 'number')"
+      />
+      <DateTimeInput
+        label="Дата выдачи"
+        :model-value="params.issueDate"
+        hideDetails
+        class="field-date"
+        @update:model-value="change($event, 'issueDate')"
+      />
     </div>
-    <div class="med-book-wrapper">
-      <div class="first-column">
-        <v-text-field
-          label="Номер"
-          :model-value="params.number"
-          hide-details
-          @update:model-value="change($event, 'number')"
-        />
-        <DateTimeInput
-          label="Дата выдачи"
-          :model-value="params.issueDate"
-          hideDetails
-          @update:model-value="change($event, 'issueDate')"
-        />
-        <div class="date-input-row">
-          <DateTimeInput
-            label="Аттестация до"
-            :model-value="params.certifiedBeforeDate"
-            hideDetails
-            @update:model-value="change($event, 'certifiedBeforeDate')"
-          />
-          <v-chip
-            v-if="certificateValidityPeriod !== null"
-            class="my-1 mx-4"
-            :color="chipColor(certificateValidityPeriod)"
-          >
-            {{ certificateValidityPeriod }}
-          </v-chip>
-        </div>
-        <div class="date-input-row">
-          <DateTimeInput
-            label="Ежегодная комиссия от"
-            :model-value="params.annualCommisionDate"
-            hideDetails
-            @update:model-value="change($event, 'annualCommisionDate')"
-          />
-          <v-chip
-            v-if="daysBeforeMedExamination !== null"
-            class="my-1 mx-4"
-            :color="chipColor(daysBeforeMedExamination)"
-          >
-            {{ daysBeforeMedExamination }}
-          </v-chip>
-        </div>
-      </div>
+    <div class="fields-row">
+      <DateTimeInput
+        label="Аттестация до"
+        :model-value="params.certifiedBeforeDate"
+        hideDetails
+        class="field-date"
+        @update:model-value="change($event, 'certifiedBeforeDate')"
+      />
+      <v-chip
+        v-if="certificateValidityPeriod !== null"
+        class="my-1 mx-4"
+        :color="chipColor(certificateValidityPeriod)"
+      >
+        {{ certificateValidityPeriod }}
+      </v-chip>
+    </div>
+    <div class="fields-row">
+      <DateTimeInput
+        label="Ежегодная комиссия от"
+        :model-value="params.annualCommisionDate"
+        hideDetails
+        class="field-date"
+        @update:model-value="change($event, 'annualCommisionDate')"
+      />
+      <v-chip
+        v-if="daysBeforeMedExamination !== null"
+        class="my-1 mx-4"
+        :color="chipColor(daysBeforeMedExamination)"
+      >
+        {{ daysBeforeMedExamination }}
+      </v-chip>
+    </div>
+    <div class="fields-row">
       <v-textarea
         label="Примечание"
         :model-value="params.note"
         hide-details
+        class="field-fluid"
         @update:model-value="change($event, 'note')"
       />
     </div>
@@ -115,20 +118,32 @@ function chipColor(days) {
 }
 </script>
 <style scoped>
-.med-book-wrapper {
-  display: grid;
-  grid-template-columns: 300px auto;
-  margin: 10px;
-  grid-gap: 15px;
+.fields-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 15px;
 }
-.first-column {
-  display: grid;
-  grid-gap: 10px;
+
+.fields-row + .fields-row {
+  margin-top: 15px;
 }
-.date-input-row {
-  display: grid;
-  grid-template-columns: 3fr auto;
-  justify-content: space-between;
-  align-items: center;
+
+.field-md {
+  flex: 1 1 220px;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.field-date {
+  flex: 0 0 220px;
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.field-fluid {
+  flex: 1 1 100%;
+  min-width: 100%;
+  max-width: none;
 }
 </style>

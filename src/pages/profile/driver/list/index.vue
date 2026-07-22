@@ -2,48 +2,52 @@
   <EntityListWrapper>
     <buttons-panel
       panel-type="list"
-      :disabledSubmit="!$store.getters.hasPermission('driver:write')"
+      :disabled-refresh="!directoriesProfile"
+      :disabled-submit="!store.getters.hasPermission('driver:write')"
       @submit="createDriver"
       @refresh="refresh"
     />
+    <ListSettingsWrapper>
+      <app-table-column-settings
+        v-model="activeHeaders"
+        :allHeaders="allHeaders"
+        :defaultHeaders="defaultHeaders"
+        listSettingsName="driversTableColumns"
+      />
+      <v-select
+        v-model="listSettings.tkNameFilter"
+        hide-details
+        label="ТК"
+        clearable
+        :items="carrierStore.carriers"
+        item-value="_id"
+        item-title="name"
+      />
+      <v-select
+        v-model="listSettings.workState"
+        hide-details
+        label="Статус"
+        :items="workStateItems"
+      />
+      <v-select
+        v-model="listSettings.stuffStatus"
+        hide-details
+        label="Сотрудники"
+        :items="stuffStatusItems"
+      />
+      <v-text-field v-model="listSettings.search" hide-details label="Быстрый поиск" />
+    </ListSettingsWrapper>
     <v-data-table
-      :headers="headers"
-      :items="filteredDrivers"
       :search="listSettings.search"
-      :loading="loading"
+      :headers="filteredHeaders"
+      :items="filteredDrivers"
       fixed-header
       height="71vh"
-      :footer-props="{
-        'items-per-page-options': [50, 100, 200],
-      }"
-      :options.sync="listSettings.listOptions"
+      :items-per-page-options="[50, 100, 200]"
+      v-model:options="listSettings.listOptions"
+      :loading="loading"
       @dblclick:row="dblClickRow"
     >
-      <template #top>
-        <div class="filter-wrapper">
-          <AppTableColumnSetting
-            :allHeaders="allHeaders"
-            listSettingsName="driversTableColumns"
-            @change="updateHeadersHandler"
-          />
-          <v-select
-            v-model="listSettings.tkNameFilter"
-            hide-details
-            label="ТК"
-            clearable
-            :items="carrierStore.carriers"
-            item-value="_id"
-            item-title="name"
-          />
-          <v-select v-model="listSettings.workState" label="Статус" :items="workStateItems" />
-          <v-select
-            v-model="listSettings.stuffStatus"
-            label="Сотрудники"
-            :items="stuffStatusItems"
-          />
-          <v-text-field v-model="listSettings.search" hide-details label="Быстрый поиск" />
-        </div>
-      </template>
       <template #[`item.hasScans`]="{ item }">
         <v-icon v-if="item.hasScans" size="small" color="green"> mdi-check </v-icon>
         <v-icon v-else size="small" color="red"> mdi-minus </v-icon>
@@ -55,68 +59,57 @@
     </v-data-table>
   </EntityListWrapper>
 </template>
-<script>
-import { ref } from 'vue'
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { useDriverList } from './useDriverList'
-import { ButtonsPanel, EntityListWrapper, AppTableColumnSetting } from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
+import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'DriverList',
-  components: {
-    ButtonsPanel,
-    EntityListWrapper,
-    AppTableColumnSetting,
-  },
+defineOptions({ name: 'DriverList' })
 
-  setup() {
-    const headers = ref([])
-    const carrierStore = useCarrierStore()
-    function updateHeadersHandler(val) {
-      headers.value = val
-    }
+const router = useRouter()
+const store = useStore()
+const carrierStore = useCarrierStore()
 
-    const {
-      allHeaders,
-      stuffStatusItems,
-      workStateItems,
-      listSettings,
-      loading,
-      tkNameItems,
-      refresh,
-      filteredDrivers,
-    } = useDriverList()
+const {
+  allHeaders,
+  stuffStatusItems,
+  workStateItems,
+  listSettings,
+  loading,
+  filteredDrivers,
+  refresh,
+  directoriesProfile,
+} = useDriverList()
 
-    return {
-      carrierStore,
-      headers,
-      allHeaders,
-      stuffStatusItems,
-      workStateItems,
-      listSettings,
-      loading,
-      tkNameItems,
-      filteredDrivers,
-      refresh,
-      updateHeadersHandler,
-    }
-  },
+const activeHeaders = ref([])
 
-  methods: {
-    createDriver() {
-      this.$router.push({ name: 'DriverCreate' })
-    },
+const defaultHeaders = allHeaders.filter((i) => i.default).map((i) => i.value)
 
-    dblClickRow(_, { item }) {
-      this.$router.push(`drivers/${item._id}`)
-    },
-  },
+const filteredHeaders = computed(() => {
+  return allHeaders.filter((i) => activeHeaders.value.includes(i.value))
+})
+
+onMounted(() => {
+  const savedFields = JSON.parse(localStorage.getItem('driversTableColumns'))
+  if (savedFields && savedFields.length > 0) {
+    activeHeaders.value = savedFields
+  } else {
+    activeHeaders.value = defaultHeaders
+  }
+})
+
+function createDriver() {
+  router.push({ name: 'DriverCreate' })
+}
+
+function dblClickRow(_, { item }) {
+  router.push(`drivers/${item._id}`)
 }
 </script>
-<style scoped>
-.filter-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-}
-</style>
+
+<style scoped></style>
