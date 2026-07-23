@@ -1,11 +1,6 @@
 <template>
   <div>
-    <v-dialog
-      :model-value="tmpDialog"
-      @update:model-value="showDialog = $event"
-      max-width="800px"
-      persistent
-    >
+    <v-dialog v-model="tmpDialog" max-width="800px" persistent>
       <v-card>
         <v-card-title>
           {{ tmpItem._id ? 'Редактировать тариф' : 'Добавить тариф' }}
@@ -14,7 +9,9 @@
           <v-select
             v-model="tmpItem.type"
             label="Тип"
-            :items="$store.getters.salaryTariffTypes"
+            :items="store.getters.salaryTariffTypes"
+            item-title="text"
+            item-value="value"
             hide-details
           />
 
@@ -32,14 +29,18 @@
 
           <v-select
             v-model="tmpItem.liftCapacity"
-            :items="$store.getters.liftCapacityTypes"
+            :items="store.getters.liftCapacityTypes"
+            item-title="text"
+            item-value="value"
             label="Грузоподъемность ТС"
             multiple
             hide-details
           />
           <v-select
             label="Типы грузополучателей"
-            :items="$store.getters.partnerGroups"
+            :items="store.getters.partnerGroups"
+            item-title="text"
+            item-value="value"
             multiple
             hide-details
             v-model="tmpItem.consigneeTypes"

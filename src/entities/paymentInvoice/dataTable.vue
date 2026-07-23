@@ -3,18 +3,15 @@
     v-model="selected"
     :headers="headers"
     checkbox-color="primary"
-    item-key="_id"
+    item-value="_id"
     show-select
     :items="items"
     :loading="loading"
     height="70vh"
-    :server-items-length="totalCount"
+    :items-length="totalCount"
     fixed-header
-    :footer-props="{
-      'items-per-page-options': [20, 50, 100],
-    }"
-    :options="listOptions"
-    @update:options="updateListOptionsHandler"
+    :items-per-page-options="[20, 50, 100]"
+    v-model:options="options"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.createdAt`]="{ item }">
@@ -57,96 +54,85 @@
   </v-data-table-server>
 </template>
 
-<script>
+<script setup>
 import { computed, watch } from 'vue'
-import router from '@/router'
+import { useRouter } from 'vue-router'
 import { moneyFormatter } from '@/shared/utils'
 import PaymentInvoiceListAnalitics from './listAnalitics.vue'
-import usePersistedRef from '@/shared/hooks/usePersistedRef'
-export default {
-  name: 'PaymentInvoicesDataTable',
-  components: { PaymentInvoiceListAnalitics },
-  model: {
-    prop: 'settings',
-    event: 'change',
+import { usePersistedRef } from '@/shared/hooks'
+
+defineOptions({ name: 'PaymentInvoicesDataTable' })
+
+defineModel({ type: Object })
+
+const props = defineProps({
+  items: Array,
+  totalCount: Number,
+  routesCount: {
+    type: Number,
+    default: 0,
   },
-  props: {
-    items: Array,
-    totalCount: Number,
-    listOptions: Object,
-    routesCount: {
-      type: Number,
-      default: 0,
-    },
-    total: Object,
-    settings: Object,
-    headers: Array,
-    loading: Boolean,
-  },
-  setup(props, ctx) {
-    const selected = usePersistedRef([], 'selectedInvoicesInList')
+  total: Object,
+  headers: Array,
+  loading: Boolean,
+})
 
-    function dblClickRow(_event, { item }) {
-      router.push(`paymentInvoice/${item._id}`)
-    }
-    function updateListOptionsHandler(options) {
-      ctx.emit('update:listOptions', { ...options })
-    }
-    const selectedIds = computed(() => {
-      return selected.value.map((i) => i._id)
-    })
+const options = defineModel('options', {
+  type: Object,
+  default: () => ({}),
+})
 
-    const existedIds = computed(() => {
-      if (!Array.isArray(props.items)) return []
-      return props.items.map((i) => i._id)
-    })
+const router = useRouter()
 
-    const selectedStatictics = computed(() => {
-      const selectedData = props.items
-        .filter((i) => selectedIds.value.includes(i._id))
-        .reduce(
-          (res, item) => ({
-            routesCount: res.routesCount + item.count || 0,
-            sum: res.sum + item.priceWithVat || 0,
-            sumWOVat: res.sumWOVat + item.priceWOVat || 0,
-          }),
-          { routesCount: 0, sum: 0, sumWOVat: 0 }
-        )
-      return {
-        count: selectedIds.value.length || 0,
-        routesCount: selectedData.routesCount,
-        totalSum: selectedData.sum,
-        totalSumWOVat: selectedData.sumWOVat,
-      }
-    })
+const selected = usePersistedRef([], 'selectedInvoicesInList')
 
-    const analiticsData = computed(() => {
-      if (selectedIds.value.length > 0) return selectedStatictics.value
-      else
-        return {
-          count: props.totalCount || 0,
-          routesCount: props.routesCount || 0,
-          totalSum: props.total?.sum || 0,
-          totalSumWOVat: props.total?.sumWOVat || 0,
-        }
-    })
-
-    watch(
-      () => props.items,
-      (val) => {
-        if (!val || !val.length) selected.value = []
-        else if (!selected.value.length) return
-        else selected.value = selected.value.filter((i) => existedIds.value.includes(i._id))
-      }
-    )
-    return {
-      selected,
-      dblClickRow,
-      updateListOptionsHandler,
-      moneyFormatter,
-      analiticsData,
-      selectedIds,
-    }
-  },
+function dblClickRow(_event, { item }) {
+  router.push(`paymentInvoice/${item._id}`)
 }
+
+const selectedIds = computed(() => selected.value)
+
+const existedIds = computed(() => {
+  if (!Array.isArray(props.items)) return []
+  return props.items.map((i) => i._id)
+})
+
+const selectedStatictics = computed(() => {
+  const selectedData = props.items
+    .filter((i) => selectedIds.value.includes(i._id))
+    .reduce(
+      (res, item) => ({
+        routesCount: res.routesCount + item.count || 0,
+        sum: res.sum + item.priceWithVat || 0,
+        sumWOVat: res.sumWOVat + item.priceWOVat || 0,
+      }),
+      { routesCount: 0, sum: 0, sumWOVat: 0 }
+    )
+  return {
+    count: selectedIds.value.length || 0,
+    routesCount: selectedData.routesCount,
+    totalSum: selectedData.sum,
+    totalSumWOVat: selectedData.sumWOVat,
+  }
+})
+
+const analiticsData = computed(() => {
+  if (selectedIds.value.length > 0) return selectedStatictics.value
+  else
+    return {
+      count: props.totalCount || 0,
+      routesCount: props.routesCount || 0,
+      totalSum: props.total?.sum || 0,
+      totalSumWOVat: props.total?.sumWOVat || 0,
+    }
+})
+
+watch(
+  () => props.items,
+  (val) => {
+    if (!val || !val.length) selected.value = []
+    else if (!selected.value.length) return
+    else selected.value = selected.value.filter((i) => existedIds.value.includes(i))
+  }
+)
 </script>

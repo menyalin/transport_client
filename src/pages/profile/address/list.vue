@@ -27,11 +27,9 @@
       :items="prepareAddresses"
       :loading="loading"
       fixed-header
-      @update:options="settings.listOptions = $event"
       height="72vh"
-      :footer-props="{
-        'items-per-page-options': [50, 100, 200],
-      }"
+      :items-per-page-options="[50, 100, 200]"
+      v-model:options="settings.listOptions"
       @dblclick:row="dblClickRow"
     >
       <template #[`item.isShipmentPlace`]="{ item }">
@@ -95,8 +93,8 @@ defineOptions({ name: 'AddressList' })
 const router = useRouter()
 const store = useStore()
 const addressStore = useAddressStore()
-
-const settings = usePersistedRef({ search: null }, 'AddressList:settings')
+const listSettingsName = 'AddressList:settings'
+const settings = usePersistedRef({ search: null }, listSettingsName)
 
 const activeHeaders = ref([])
 // const defaultHeaders = [
@@ -117,15 +115,15 @@ const allHeaders = [
   { value: 'name', title: 'Адрес', default: true },
   { value: 'region', title: 'Регион', default: true },
   { value: 'city', title: 'Город' },
-  { value: 'zones', title: 'Зоны', sortable: false },
+  { value: 'zones', title: 'Зоны', sortable: false, default: false },
   { value: 'note', title: 'Примечание', default: true },
   // { value: 'label', title: 'Метки' },
   { value: 'isShipmentPlace', title: 'Погрузка', align: 'center', sortable: false, default: true },
   { value: 'isDeliveryPlace', title: 'Разгрузка', align: 'center', sortable: false, default: true },
   { value: 'created', title: 'Дата создания', sortable: true, default: false },
-  { value: 'updated', title: 'Дата изменения', sortable: true },
-  { value: 'isService', title: 'Сервис', align: 'center', sortable: false },
-  { value: 'geo', title: 'Координаты' },
+  { value: 'updated', title: 'Дата изменения', sortable: true, default: false },
+  { value: 'isService', title: 'Сервис', align: 'center', sortable: false, default: false },
+  { value: 'geo', title: 'Координаты', default: false },
 ]
 
 const loading = computed(() => store.getters.loading)

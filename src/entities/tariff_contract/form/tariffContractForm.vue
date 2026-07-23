@@ -1,8 +1,8 @@
 <template>
   <div>
     <ButtonsPanel
-      panelType="form"
-      :disabledSubmit="disableSubmitBtn"
+      panel-type="form"
+      :disabled-submit="disableSubmitBtn"
       @submit="submitHandler"
       @cancel="cancelHandler"
     />
@@ -40,8 +40,8 @@
       title="Базовые тарифы по зонам"
       formTitle="Базовый тариф по зонам"
       v-model="state.zonesTariffs"
-      :tariffListComponent="zoneBaseTariffList"
-      :tariffFormComponent="zoneBaseTariffForm"
+      :tariffListComponent="ZoneBaseTariffList"
+      :tariffFormComponent="ZoneBaseTariffForm"
       class="mb-6"
     />
     <v-divider />
@@ -49,8 +49,8 @@
       title="Базовые тарифы по линейке от зоны погрузки"
       formTitle="Базовый тариф по линейке"
       v-model="state.directDistanceZonesTariffs"
-      :tariffListComponent="directDistanceZonesTariffList"
-      :tariffFormComponent="directDistanceZonesTariffForm"
+      :tariffListComponent="DirectDistanceZonesTariffList"
+      :tariffFormComponent="DirectDistanceZonesTariffForm"
     />
     <v-divider />
 
@@ -58,23 +58,24 @@
       title="Простой по типу рейса"
       formTitle="Тариф для расчета простоя ТС"
       v-model="state.idleTimeTariffs"
-      :tariffListComponent="idleTimeTariffList"
-      :tariffFormComponent="idleTimeTariffForm"
+      :tariffListComponent="IdleTimeTariffList"
+      :tariffFormComponent="IdleTimeTariffForm"
     />
     <v-divider />
     <TariffListWrapper
       title="Возврат: % от базового тарифа"
       formTitle="Тариф на возврат"
       v-model="state.returnPercentTariffs"
-      :tariffListComponent="returnPercentTariffList"
-      :tariffFormComponent="returnPercentTariffForm"
+      :tariffListComponent="ReturnPercentTariffList"
+      :tariffFormComponent="ReturnPercentTariffForm"
     />
     <v-divider />
     <v-text-field label="Примечание" v-model="state.note" />
-    <EntityFiles v-if="item && item._id" :itemId="item._id" docType="tariffContract" />
+    <EntityFiles v-if="item && item._id" :item-id="item._id" docType="tariffContract" />
   </div>
 </template>
-<script>
+
+<script setup>
 import { ButtonsPanel, EntityFiles } from '@/shared/ui'
 import { useTariffContractForm } from './useTariffContractForm'
 import TariffListWrapper from './tariffListWrapper'
@@ -87,52 +88,19 @@ import IdleTimeTariffList from './idleTimeTariffList.vue'
 import ReturnPercentTariffForm from './returnPercentTariffForm.vue'
 import ReturnPercentTariffList from './returnPercentTariffList.vue'
 
-export default {
-  name: 'TariffContractForm',
-  components: {
-    ButtonsPanel,
-    TariffListWrapper,
-    EntityFiles,
-  },
-  props: {
-    agreements: Array,
-    item: Object,
-  },
-  data() {
-    return {
-      zoneBaseTariffList: ZoneBaseTariffList,
-      zoneBaseTariffForm: ZoneBaseTariffForm,
-      directDistanceZonesTariffList: DirectDistanceZonesTariffList,
-      directDistanceZonesTariffForm: DirectDistanceZonesTariffForm,
-      idleTimeTariffForm: IdleTimeTariffForm,
-      idleTimeTariffList: IdleTimeTariffList,
-      returnPercentTariffForm: ReturnPercentTariffForm,
-      returnPercentTariffList: ReturnPercentTariffList,
-    }
-  },
-  setup(props, ctx) {
-    const {
-      state,
-      orderTypeItems,
-      disableSubmitBtn,
-      submitHandler,
-      cancelHandler,
-      mainFormV$,
-      agreementReadonly,
-    } = useTariffContractForm(props, ctx)
+defineOptions({ name: 'TariffContractForm' })
 
-    return {
-      state,
-      mainFormV$,
-      disableSubmitBtn,
-      orderTypeItems,
-      submitHandler,
-      cancelHandler,
-      agreementReadonly,
-    }
-  },
-}
+const props = defineProps({
+  agreements: Array,
+  item: Object,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const { state, disableSubmitBtn, submitHandler, cancelHandler, agreementReadonly } =
+  useTariffContractForm(props, { emit })
 </script>
+
 <style scoped>
 .main-block {
   display: flex;

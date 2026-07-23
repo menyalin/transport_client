@@ -4,7 +4,14 @@
       <v-card-title>{{ formTitle }}</v-card-title>
       <v-card-text>
         <div class="input-fields-row">
-          <v-select label="Тип ТС" :items="truckKindItems" multiple v-model="form.truckKinds" />
+          <v-select
+            label="Тип ТС"
+            :items="truckKindItems"
+            multiple
+            item-title="text"
+            item-value="value"
+            v-model="form.truckKinds"
+          />
           <v-select
             multiple
             label="Грузоподъемность"
@@ -56,7 +63,7 @@
     </v-card>
   </form>
 </template>
-<script>
+<script setup>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, numeric } from '@vuelidate/validators'
@@ -73,83 +80,67 @@ const defaultFormState = () => ({
   pointPrice: 0,
 })
 
-export default {
-  name: 'ZonesBaseTariffForm',
-  components: {
-    CardActionButtons,
-  },
-  props: {
-    editableMode: Boolean,
-    formTitle: String,
-    initialFormState: Object,
-  },
-  setup(props, ctx) {
-    const { focusableNodeRef, truckKindItems, liftCapacityItems, zoneItems, commonRules } =
-      useFormHelpers()
+defineOptions({ name: 'ZonesBaseTariffForm' })
 
-    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
+const props = defineProps({
+  editableMode: Boolean,
+  formTitle: String,
+  initialFormState: Object,
+})
 
-    const rules = computed(() => ({
-      ...commonRules,
-      loadingZone: { required },
-      unloadingZones: { required },
-      price: { required, numeric },
-      includedPoints: { required, numeric },
-      pointPrice: { required, numeric },
-    }))
-    const v$ = useVuelidate(rules, form, { $stopPropagation: true })
+const emit = defineEmits(['submit', 'add', 'cancel'])
 
-    watch(
-      () => props.initialFormState,
-      (newState) => {
-        if (newState) {
-          form.value = { ...newState }
-          v$.value.$reset()
-        }
-      },
-      { deep: true }
-    )
+const { focusableNodeRef, truckKindItems, liftCapacityItems, zoneItems, commonRules } =
+  useFormHelpers()
 
-    function submitHandler() {
-      ctx.emit('submit', { ...form.value })
-      clearForm()
-    }
-    function clearForm() {
-      form.value = defaultFormState()
+const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
+
+const rules = computed(() => ({
+  ...commonRules,
+  loadingZone: { required },
+  unloadingZones: { required },
+  price: { required, numeric },
+  includedPoints: { required, numeric },
+  pointPrice: { required, numeric },
+}))
+const v$ = useVuelidate(rules, form, { $stopPropagation: true })
+
+watch(
+  () => props.initialFormState,
+  (newState) => {
+    if (newState) {
+      form.value = { ...newState }
       v$.value.$reset()
     }
-
-    function submitFormHandler() {
-      ctx.emit('add', { ...form.value })
-      form.value.price = null
-      form.value.unloadingZone = null
-      focusableNodeRef.value.focus()
-    }
-
-    function cancelHandler() {
-      ctx.emit('cancel')
-      clearForm()
-      v$.value.$reset()
-    }
-
-    const isInvalidForm = computed(() => {
-      return v$.value.$invalid
-    })
-
-    return {
-      truckKindItems,
-      liftCapacityItems,
-      zoneItems,
-      submitHandler,
-      submitFormHandler,
-      cancelHandler,
-      form,
-      isInvalidForm,
-      v$,
-      focusableNodeRef,
-    }
   },
+  { deep: true }
+)
+
+function submitHandler() {
+  emit('submit', { ...form.value })
+  clearForm()
 }
+function clearForm() {
+  form.value = defaultFormState()
+  v$.value.$reset()
+}
+
+function submitFormHandler() {
+  emit('add', { ...form.value })
+  form.value.price = null
+  form.value.unloadingZone = null
+  focusableNodeRef.value.focus()
+}
+
+function cancelHandler() {
+  emit('cancel')
+  clearForm()
+  v$.value.$reset()
+}
+
+const isInvalidForm = computed(() => {
+  return v$.value.$invalid
+})
 </script>
 <style scoped>
 .input-fields-row {

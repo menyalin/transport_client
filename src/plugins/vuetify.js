@@ -34,14 +34,15 @@ export default createVuetify({
     VCheckbox: { density, color: 'primary', variant },
     VRadioGroup: { density, color: 'primary', variant },
     VDataTableServer: {
+      density: 'compact',
       itemValue: '_id',
-      density,
+
       color: 'primary',
       itemsPerPage: 50,
       itemsPerPageOptions: [25, 50, 100, 200],
     },
     VDataTable: {
-      density,
+      density: 'compact',
       color: 'primary',
       itemValue: '_id',
       itemsPerPage: 50,

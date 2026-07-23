@@ -26,73 +26,63 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import store from '@/store'
 import { moneyFormatter } from '@/shared/utils'
 
-export default {
-  props: {
-    items: Array,
-  },
-  setup(props, ctx) {
-    const headers = [
-      { text: 'Тип ТС', value: 'truckKinds', sortable: false },
-      { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
-      { text: 'Зона погрузки', value: 'loadingZone', sortable: true },
-      {
-        text: 'Включено точек',
-        value: 'includedPoints',
-        align: 'right',
-        sortable: true,
-      },
-      {
-        text: 'Стоимость доп.точки',
-        value: 'pointPrice',
-        align: 'right',
-        sortable: true,
-      },
-      { text: 'Зоны', value: 'zones', sortable: false },
-      { value: 'actions', align: 'right', sortable: false },
-    ]
-    function formatPrice(price) {
-      return moneyFormatter(price)
-    }
-    function formatTruckKinds(kinds) {
-      return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
-    }
-    function formatLiftCapacities(items) {
-      return items?.join('; ') || ''
-    }
-    function formatZone(zoneId) {
-      return store.getters.zonesMap.get(zoneId)?.name || '-'
-    }
-    function deleteHandler(item) {
-      ctx.emit('deleteByIdx', item.idx)
-    }
-    function updateHandler(item) {
-      ctx.emit('updateByIdx', item.idx)
-    }
+defineOptions({ name: 'DirectDistanceZonesTariffList' })
 
-    const preparedItems = computed(() => {
-      return props.items.map((i) => ({
-        ...i,
-        loadingZone: formatZone(i.loadingZone),
-      }))
-    })
+const props = defineProps({
+  items: Array,
+})
 
-    return {
-      headers,
-      formatPrice,
-      formatTruckKinds,
-      formatLiftCapacities,
-      formatZone,
-      deleteHandler,
-      updateHandler,
-      preparedItems,
-    }
+const emit = defineEmits(['deleteByIdx', 'updateByIdx'])
+
+const headers = [
+  { title: 'Тип ТС', key: 'truckKinds', sortable: false },
+  { title: 'Грузоподъемность ', key: 'liftCapacities', sortable: false },
+  { title: 'Зона погрузки', key: 'loadingZone', sortable: true },
+  {
+    title: 'Включено точек',
+    key: 'includedPoints',
+    align: 'end',
+    sortable: true,
   },
+  {
+    title: 'Стоимость доп.точки',
+    key: 'pointPrice',
+    align: 'end',
+    sortable: true,
+  },
+  { title: 'Зоны', key: 'zones', sortable: false },
+  { key: 'actions', align: 'end', sortable: false },
+]
+function formatPrice(price) {
+  return moneyFormatter(price)
 }
+function formatTruckKinds(kinds) {
+  return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
+}
+function formatLiftCapacities(items) {
+  return items?.join('; ') || ''
+}
+function formatZone(zoneId) {
+  return store.getters.zonesMap.get(zoneId)?.name || '-'
+}
+function deleteHandler(item) {
+  emit('deleteByIdx', item.idx)
+}
+function updateHandler(item) {
+  emit('updateByIdx', item.idx)
+}
+
+const preparedItems = computed(() => {
+  return props.items.map((i) => ({
+    ...i,
+    loadingZone: formatZone(i.loadingZone),
+  }))
+})
 </script>
 <style scoped>
 .zone-row {

@@ -17,6 +17,6 @@ defineOptions({ name: 'ListSettingsWrapper' })
   gap: 15px;
 }
 .wrapper > div {
-  flex: 0 1;
+  flex: 0 1 1;
 }
 </style>

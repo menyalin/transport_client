@@ -4,8 +4,8 @@
       <v-col>
         <buttons-panel
           panel-type="list"
-          :disabledRefresh="!user || !user.emailConfirmed"
-          :disabledSubmit="!user || !user.emailConfirmed"
+          :disabled-refresh="!user || !user.emailConfirmed"
+          :disabled-submit="!user || !user.emailConfirmed"
           @refresh="refresh"
           @submit="create"
         />
@@ -30,34 +30,30 @@
     </v-row>
   </v-container>
 </template>
-<script>
-import { ButtonsPanel } from '@/shared/ui'
-import { mapActions, mapGetters } from 'vuex'
 
-export default {
-  name: 'CompanyList',
-  components: {
-    ButtonsPanel,
-  },
-  data() {
-    return {
-      selectedItem: 0,
-    }
-  },
-  computed: {
-    ...mapGetters(['myCompanies', 'user']),
-  },
-  methods: {
-    ...mapActions(['getMyCompanies']),
-    refresh() {
-      this.getMyCompanies()
-    },
-    create() {
-      this.$router.push({ name: 'createNewCompany' })
-    },
-  },
+<script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { ButtonsPanel } from '@/shared/ui'
+
+defineOptions({ name: 'CompanyList' })
+
+const store = useStore()
+const router = useRouter()
+
+const myCompanies = computed(() => store.getters.myCompanies)
+const user = computed(() => store.getters.user)
+
+function refresh() {
+  store.dispatch('getMyCompanies')
+}
+
+function create() {
+  router.push({ name: 'createNewCompany' })
 }
 </script>
+
 <style scoped>
 .current {
   background-color: rgb(222, 245, 253);

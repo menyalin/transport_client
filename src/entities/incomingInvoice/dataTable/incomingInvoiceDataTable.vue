@@ -3,14 +3,15 @@
     :headers="headers"
     checkbox-color="primary"
     v-model="selected"
-    item-key="_id"
+    item-value="_id"
     :items="items"
-    showSelect
+    show-select
     :loading="loading"
     height="70vh"
     :items-length="totalCount"
     fixed-header
     :items-per-page-options="[50, 100, 200]"
+    v-model:options="options"
     @update:model-value="onSelectedChange"
     @dblclick:row="dblClickRow"
   >
@@ -52,20 +53,18 @@
 
 <script setup>
 import { computed } from 'vue'
-import router from '@/router'
+import { useRouter } from 'vue-router'
 import { moneyFormatter } from '@/shared/utils'
 import IncomingInvoiceListAnalytics from './listAnalytics.vue'
 import { usePersistedRef } from '@/shared/hooks'
 
 defineOptions({ name: 'PaymentInvoicesDataTable' })
 
-// eslint-disable-next-line no-unused-vars
-const _settings = defineModel({ type: Object })
+defineModel({ type: Object })
 
 const props = defineProps({
   items: Array,
   totalCount: Number,
-  listOptions: Object,
   analyticsData: Object,
   routesCount: {
     type: Number,
@@ -76,7 +75,12 @@ const props = defineProps({
   loading: Boolean,
 })
 
-const emit = defineEmits(['update:listOptions'])
+const options = defineModel('options', {
+  type: Object,
+  default: () => ({}),
+})
+
+const router = useRouter()
 
 const selected = usePersistedRef([], 'selectedInvoicesInList')
 
@@ -96,11 +100,6 @@ const analytics = computed(() => {
 
 function dblClickRow(_event, { item }) {
   router.push(`incomingInvoice/${item._id}`)
-}
-
-// eslint-disable-next-line no-unused-vars
-function updateListOptionsHandler(options) {
-  emit('update:listOptions', { ...options })
 }
 
 function onSelectedChange(value) {

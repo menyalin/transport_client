@@ -30,7 +30,7 @@
             <td class="text-right price-column">
               <input
                 v-show="priceType.value === editableRowType"
-                :ref="priceType.value"
+                :ref="(el) => (inputRefs[priceType.value] = el)"
                 :value="
                   finalPricesMap.has(priceType.value)
                     ? finalPricesMap.get(priceType.value)[priceField]
@@ -91,69 +91,74 @@
     </v-table>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+
+<script setup>
+import { ref, computed, inject, nextTick, reactive } from 'vue'
+import { useStore } from 'vuex'
 import { Price } from '../priceBlock/Price.class'
-export default {
-  name: 'FinalPriceTable',
-  inject: ['updateFinalPrices'],
-  props: {
-    readonly: { type: Boolean, default: false },
-    priceWithVat: { type: Boolean, default: true, required: true },
-    prePrices: { type: Array },
-    prices: { type: Array },
-    finalPrices: { type: Array },
-    agreementVatRate: { type: Number, required: true },
-  },
-  data() {
-    return {
-      editableRowType: null,
-    }
-  },
-  computed: {
-    ...mapGetters(['orderPriceTypes']),
-    prePricesMap() {
-      if (!this.prePrices) return new Map()
-      return new Map(this.prePrices.map((item) => [item.type, item]))
-    },
-    pricesMap() {
-      if (!this.prices) return new Map()
-      return new Map(this.prices.map((item) => [item.type, item]))
-    },
-    finalPricesMap() {
-      if (this.finalPrices.length === 0) return new Map()
-      return new Map(this.finalPrices.map((item) => [item.type, item]))
-    },
-    priceField() {
-      if (this.priceWithVat) return 'price'
-      return 'priceWOVat'
-    },
-  },
-  methods: {
-    editFinalPrice(type) {
-      if (this.readonly) return
-      this.editableRowType = type
-      this.$nextTick(() => {
-        this.$refs[this.editableRowType][0].focus()
-      })
-    },
-    blurHandler() {
-      this.editableRowType = null
-    },
-    changeFinalPrice(e, type) {
-      const newFinalPrices = this.finalPrices.slice().filter((i) => i.type !== type)
-      newFinalPrices.push({
-        ...new Price(
-          { price: e.target.value || 0, type },
-          { vatRate: this.agreementVatRate, usePriceWithVat: this.priceWithVat }
-        ),
-      })
-      this.updateFinalPrices(newFinalPrices)
-      if (e.key === 'Enter') this.blurHandler()
-    },
-  },
+
+defineOptions({ name: 'FinalPriceTable' })
+
+const updateFinalPrices = inject('updateFinalPrices')
+
+const props = defineProps({
+  readonly: { type: Boolean, default: false },
+  priceWithVat: { type: Boolean, default: true, required: true },
+  prePrices: { type: Array },
+  prices: { type: Array },
+  finalPrices: { type: Array },
+  agreementVatRate: { type: Number, required: true },
+})
+
+const store = useStore()
+
+const editableRowType = ref(null)
+const inputRefs = reactive({})
+
+const orderPriceTypes = computed(() => store.getters.orderPriceTypes)
+
+const prePricesMap = computed(() => {
+  if (!props.prePrices) return new Map()
+  return new Map(props.prePrices.map((item) => [item.type, item]))
+})
+
+const pricesMap = computed(() => {
+  if (!props.prices) return new Map()
+  return new Map(props.prices.map((item) => [item.type, item]))
+})
+
+const finalPricesMap = computed(() => {
+  if (!props.finalPrices || props.finalPrices.length === 0) return new Map()
+  return new Map(props.finalPrices.map((item) => [item.type, item]))
+})
+
+const priceField = computed(() => (props.priceWithVat ? 'price' : 'priceWOVat'))
+
+function editFinalPrice(type) {
+  if (props.readonly) return
+  editableRowType.value = type
+  nextTick(() => {
+    inputRefs[type]?.focus()
+  })
+}
+
+function blurHandler() {
+  editableRowType.value = null
+}
+
+function changeFinalPrice(e, type) {
+  const newFinalPrices = props.finalPrices.slice().filter((i) => i.type !== type)
+  newFinalPrices.push({
+    ...new Price(
+      { price: e.target.value || 0, type },
+      { vatRate: props.agreementVatRate, usePriceWithVat: props.priceWithVat }
+    ),
+  })
+  updateFinalPrices(newFinalPrices)
+  if (e.key === 'Enter') blurHandler()
 }
 </script>
+
 <style scoped>
 .input {
   width: 100%;

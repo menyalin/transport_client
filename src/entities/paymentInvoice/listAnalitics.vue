@@ -18,32 +18,29 @@
     </tr>
   </table>
 </template>
-<script>
+
+<script setup>
 import { moneyFormatter } from '@/shared/utils'
-export default {
-  name: 'PaymentInvoiceListAnalitics',
-  props: {
-    data: {
-      type: Object,
-      required: true,
-      validator: function (value) {
-        return (
-          value &&
-          typeof value.count === 'number' &&
-          typeof value.routesCount === 'number' &&
-          typeof value.totalSum === 'number' &&
-          typeof value.totalSumWOVat === 'number'
-        )
-      },
+
+defineOptions({ name: 'PaymentInvoiceListAnalitics' })
+
+defineProps({
+  data: {
+    type: Object,
+    required: true,
+    validator: function (value) {
+      return (
+        value &&
+        typeof value.count === 'number' &&
+        typeof value.routesCount === 'number' &&
+        typeof value.totalSum === 'number' &&
+        typeof value.totalSumWOVat === 'number'
+      )
     },
   },
-  setup() {
-    return {
-      moneyFormatter,
-    }
-  },
-}
+})
 </script>
+
 <style scoped>
 tr .row-title {
   text-align: right;

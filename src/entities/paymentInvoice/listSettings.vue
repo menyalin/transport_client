@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-wrapper">
+  <ListSettingsWrapper>
     <app-table-column-setting
       :allHeaders="PAYMENT_INVOICE_TABLE_HEADERS"
       listSettingsName="paymentInvoiceListSettings"
@@ -25,7 +25,6 @@
       clearable
       multiple
       :items="clientItems"
-      hide-details
       :style="{ maxWidth: '400px' }"
       @update:model-value="updateSettings($event, 'clients')"
     />
@@ -38,7 +37,6 @@
       clearable
       multiple
       :items="agreementItems"
-      hide-details
       :style="{ maxWidth: '400px' }"
       @update:model-value="updateSettings($event, 'agreements')"
     />
@@ -60,12 +58,12 @@
       :style="{ maxWidth: '200px' }"
       @change="updateSettings($event, 'search')"
     />
-  </div>
+  </ListSettingsWrapper>
 </template>
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput, ListSettingsWrapper } from '@/shared/ui'
 import { PAYMENT_INVOICE_TABLE_HEADERS, paymentInvoiceStatuses } from '@/shared/constants'
 import { AgreementService } from '@/shared/services/index'
 
@@ -111,11 +109,3 @@ onMounted(async () => {
   agreements.value = await AgreementService.getActiveAgreements()
 })
 </script>
-<style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  gap: 15px;
-}
-</style>

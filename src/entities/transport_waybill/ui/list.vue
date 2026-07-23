@@ -2,7 +2,7 @@
   <v-data-table
     :items="preparedItems"
     :headers="headers"
-    :itemsPerPage="-1"
+    :items-per-page="-1"
     hide-default-footer
     @dblclick:row="dblClickRowHandler"
   >
@@ -14,64 +14,57 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
-export default {
-  name: 'TransportWaybillList',
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    getAddressNameById: Function,
-    getPartnerNameByAddressId: Function,
+
+defineOptions({ name: 'TransportWaybillList' })
+
+const props = defineProps({
+  items: {
+    type: Array,
+    default: () => [],
   },
-  setup(props, ctx) {
-    const headers = [
-      { value: 'download' },
-      { value: 'number', text: 'Номер' },
-      { value: 'date', text: 'Дата' },
-      { value: 'shipperName', text: 'Грузоотправитель' },
-      { value: 'shipperAddress', text: 'Погрузка' },
-      { value: 'consigneeName', text: 'Грузополучатель' },
-      { value: 'consigneeAddress', text: 'Разгрузка' },
-      { value: 'docsDescription', text: 'Накладные' },
-      { value: 'note', text: 'Примечание' },
-      { value: 'actions', sortable: false },
-    ]
+  getAddressNameById: Function,
+  getPartnerNameByAddressId: Function,
+})
 
-    const preparedItems = computed(() => {
-      return props.items.map((i) => ({
-        ...i,
-        date: new Date(i.date).toLocaleDateString(),
-        shipperAddress: props.getAddressNameById(i.shipperAddressId),
-        consigneeAddress: props.getAddressNameById(i.consigneeAddressId),
-        shipperName: props.getPartnerNameByAddressId(i.shipperAddressId),
-        consigneeName: props.getPartnerNameByAddressId(i.consigneeAddressId),
-      }))
-    })
+const emit = defineEmits(['edit', 'download', 'remove'])
 
-    function dblClickRowHandler(_, { item }) {
-      const invoiceId = item._id
-      ctx.emit('edit', invoiceId)
-    }
-    function downloadHandler(itemId) {
-      ctx.emit('download', itemId)
-    }
+const headers = [
+  { value: 'download' },
+  { value: 'number', text: 'Номер' },
+  { value: 'date', text: 'Дата' },
+  { value: 'shipperName', text: 'Грузоотправитель' },
+  { value: 'shipperAddress', text: 'Погрузка' },
+  { value: 'consigneeName', text: 'Грузополучатель' },
+  { value: 'consigneeAddress', text: 'Разгрузка' },
+  { value: 'docsDescription', text: 'Накладные' },
+  { value: 'note', text: 'Примечание' },
+  { value: 'actions', sortable: false },
+]
 
-    function removeItemHandler(itemId) {
-      const res = confirm('Уверены?')
-      if (res) ctx.emit('remove', itemId)
-    }
+const preparedItems = computed(() => {
+  return props.items.map((i) => ({
+    ...i,
+    date: new Date(i.date).toLocaleDateString(),
+    shipperAddress: props.getAddressNameById(i.shipperAddressId),
+    consigneeAddress: props.getAddressNameById(i.consigneeAddressId),
+    shipperName: props.getPartnerNameByAddressId(i.shipperAddressId),
+    consigneeName: props.getPartnerNameByAddressId(i.consigneeAddressId),
+  }))
+})
 
-    return {
-      dblClickRowHandler,
-      downloadHandler,
-      removeItemHandler,
-      headers,
-      preparedItems,
-    }
-  },
+function dblClickRowHandler(_, { item }) {
+  emit('edit', item._id)
+}
+
+function downloadHandler(itemId) {
+  emit('download', itemId)
+}
+
+function removeItemHandler(itemId) {
+  const res = confirm('Уверены?')
+  if (res) emit('remove', itemId)
 }
 </script>
 <style lang=""></style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <ListSettingsWrapper>
     <v-select
       v-model="settings.state"
       :items="stateItems"
@@ -37,11 +37,11 @@
       :style="{ maxWidth: '200px' }"
     /> -->
     <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
-  </div>
+  </ListSettingsWrapper>
 </template>
 
 <script setup>
-// import { VatRateSelect } from '@/shared/ui'
+import { ListSettingsWrapper } from '@/shared/ui'
 
 const settings = defineModel('settings')
 
@@ -62,12 +62,3 @@ const stateItems = [
   { value: 'closed', title: 'Закрытые' },
 ]
 </script>
-
-<style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  padding: 10px;
-}
-</style>

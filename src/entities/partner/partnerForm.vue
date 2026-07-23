@@ -2,7 +2,7 @@
   <div class="pb-4">
     <buttons-panel
       panel-type="form"
-      :disabledSubmit="!$store.getters.hasPermission('partner:write') || isInvalidForm"
+      :disabledSubmit="!store.getters.hasPermission('partner:write') || isInvalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
       @save="saveHandler"
@@ -17,8 +17,8 @@
     <v-select
       v-model="state.group"
       label="Группа"
-      :items="$store.getters.partnerGroups"
-      itemTitle="text"
+      :items="store.getters.partnerGroups"
+      item-title="text"
       clearable
     />
     <v-text-field v-model="state.contacts" clearable label="Контакты" />
@@ -73,7 +73,7 @@
           <IdleTruckNotifications
             :partner="item"
             :clientAgreements="clientAgreements"
-            @change="changeNotificationsHandler"
+            @change="emit('changeNotifications', $event)"
           />
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -82,7 +82,7 @@
     <EntityFiles v-if="item && item._id" :itemId="item._id" docType="partner" class="mt-3" />
   </div>
 </template>
-<script>
+<script setup>
 import {
   ButtonsPanel,
   EntityFiles,
@@ -90,57 +90,31 @@ import {
   BankAccountInfoForm,
   AllowedAgreements,
 } from '@/shared/ui'
+import store from '@/store'
 import PlacesForTransferDocs from './placesForTransferDocs.vue'
 import IdleTruckNotifications from './idleTruckNotifications/idleTruckNotifications'
 import { usePartnerForm } from './usePartnerForm'
 
-export default {
-  name: 'PartnerForm',
-  components: {
-    ButtonsPanel,
-    PlacesForTransferDocs,
-    EntityFiles,
-    CompanyInfoForm,
-    IdleTruckNotifications,
-    BankAccountInfoForm,
-    AllowedAgreements,
-  },
-  props: {
-    item: {
-      type: Object,
-    },
-    clientAgreements: Array,
-  },
-  setup(props, ctx) {
-    const changeNotificationsHandler = (items) => {
-      ctx.emit('changeNotifications', items)
-    }
+defineOptions({ name: 'PartnerForm' })
 
-    const {
-      state,
-      v$,
-      isAdmin,
-      nameFieldErrors,
-      isInvalidForm,
-      submitHandler,
-      saveHandler,
-      cancelHandler,
-      bankAccountInfoChangedHandler,
-      companyInfoChangedHandler,
-    } = usePartnerForm(props, ctx)
-    return {
-      state,
-      v$,
-      isAdmin,
-      nameFieldErrors,
-      isInvalidForm,
-      submitHandler,
-      saveHandler,
-      cancelHandler,
-      changeNotificationsHandler,
-      bankAccountInfoChangedHandler,
-      companyInfoChangedHandler,
-    }
+const props = defineProps({
+  item: {
+    type: Object,
   },
-}
+  clientAgreements: Array,
+})
+
+const emit = defineEmits(['submit', 'save', 'cancel', 'changeNotifications'])
+
+const {
+  state,
+  isAdmin,
+  nameFieldErrors,
+  isInvalidForm,
+  submitHandler,
+  saveHandler,
+  cancelHandler,
+  bankAccountInfoChangedHandler,
+  companyInfoChangedHandler,
+} = usePartnerForm(props, { emit })
 </script>

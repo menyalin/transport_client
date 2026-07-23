@@ -1,13 +1,13 @@
 export default [
   {
-    text: '№',
+    title: '№',
     value: 'idx',
     align: 'right',
     width: '2rem',
     sortable: false,
   },
   {
-    text: '№ Рейса',
+    title: '№ Рейса',
     value: 'client.num',
     sortable: false,
     align: 'center',
@@ -16,7 +16,7 @@ export default [
   },
   {
     value: 'plannedDate',
-    text: 'Дата',
+    title: 'Дата',
     sortable: false,
     align: 'center',
     width: '10rem',
@@ -24,7 +24,7 @@ export default [
   },
   {
     value: 'driverName',
-    text: 'Водитель',
+    title: 'Водитель',
     sortable: false,
     align: 'left',
     default: true,
@@ -32,23 +32,15 @@ export default [
   },
   {
     value: 'savedTotal.priceWOVat',
-    text: 'Сумма без НДС',
+    title: 'Сумма без НДС',
     sortable: false,
     align: 'right',
     default: true,
     width: '7rem',
   },
-  // {
-  //   value: 'vatSum',
-  //   text: 'Сумма НДС',
-  //   sortable: false,
-  //   align: 'right',
-  //   default: true,
-  //   width: '7rem',
-  // },
   {
     value: 'savedTotal.price',
-    text: 'Сумма',
+    title: 'Сумма',
     sortable: false,
     align: 'right',
     default: true,
@@ -56,14 +48,14 @@ export default [
   },
   {
     value: 'needUpdate',
+    title: '',
     sortable: false,
     align: 'center',
     default: true,
     width: '2rem',
   },
-
   {
-    text: 'Примечание',
+    title: 'Примечание',
     value: 'note',
     sortable: false,
     align: 'left',

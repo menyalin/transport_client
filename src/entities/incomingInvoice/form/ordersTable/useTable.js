@@ -5,9 +5,7 @@ import { moneyFormatter } from '@/shared/utils'
 
 export const useTable = (props, _ctx) => {
   const selected = ref([])
-  const selectedIds = computed(() => {
-    return selected.value.map((i) => i.orderId)
-  })
+  const selectedIds = computed(() => selected.value)
   const { proxy } = getCurrentInstance()
   const listOptions = ref({})
   const loading = ref(false)

@@ -29,13 +29,17 @@
         v-model="clients"
         :items="clientItems"
         label="Клиент"
+        item-title="text"
+        item-value="value"
         hide-details
         multiple
         :style="{ 'max-width': '250px' }"
       />
       <v-select
         v-model="consigneeType"
-        :items="$store.getters.partnerGroups"
+        :items="store.getters.partnerGroups"
+        item-title="text"
+        item-value="value"
         label="Тип грузополучателя"
         clearable
         hide-details
@@ -43,7 +47,9 @@
       />
       <v-select
         v-model="orderType"
-        :items="$store.getters.orderAnalyticTypes"
+        :items="store.getters.orderAnalyticTypes"
+        item-title="text"
+        item-value="value"
         label="Тип рейса"
         clearable
         hide-details
@@ -56,15 +62,16 @@
       :items="items"
       :loading="isLoading"
       :driver="driver"
-      :setListSettings="setListSettings"
+      :set-list-settings="setListSettings"
       @chooseDriver="setDriver"
     />
   </div>
 </template>
-<script>
+
+<script setup>
 import dayjs from 'dayjs'
-import { computed, ref, watch } from 'vue'
-import store from '@/store'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useStore } from 'vuex'
 import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalaryPeriod/index.vue'
 
 import { useDebouncedRef } from '@/modules/common/helpers/utils'
@@ -72,100 +79,85 @@ import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-const getInitialPeriod = (historyState) => {
-  if (historyState.period) return historyState.period
-  else return new Date().toISOString()
+defineOptions({ name: 'DriversSalary' })
+
+const store = useStore()
+const carrierStore = useCarrierStore()
+
+const historyState = window.history.state || {}
+
+const tks = ref(historyState.tks || [])
+const driver = ref(historyState.driver)
+const clients = ref(historyState.clients || [])
+const consigneeType = ref(historyState.consigneeType)
+const orderType = ref(historyState.orderType)
+const period = useDebouncedRef(historyState.period || new Date().toISOString(), 500)
+
+const { items, isLoading, setListSettings, downloadReportHandler } = useDriversSalaryData({
+  period,
+  driver,
+  clients,
+  orderType,
+  consigneeType,
+  tks,
+})
+
+const drivers = computed(() => {
+  const startPeriod = dayjs(period.value).startOf('month')
+  const endPeriod = dayjs(period.value).endOf('month')
+  return store.getters.drivers
+    .filter((i) => !!i?.isCalcSalary)
+    .filter(
+      (i) =>
+        (!i.dismissalDate || startPeriod.isBefore(i.dismissalDate)) &&
+        (!i.employmentDate || endPeriod.isAfter(i.employmentDate))
+    )
+})
+
+const clientItems = computed(() => {
+  return store.getters.partners
+    .filter((i) => i.isClient)
+    .map((i) => ({ value: i._id, text: i.name }))
+})
+
+function setDriver(driverId) {
+  driver.value = driverId
 }
 
-export default {
-  name: 'DriversSalary',
-  components: {
-    AppDriversSalaryPeriod,
-    DriverSalaryTable,
-  },
-  setup() {
-    const carrierStore = useCarrierStore()
-    const historyState = window.history.state
-    const tks = ref(historyState.tks || [])
-    const driver = ref(historyState.driver)
-    const clients = ref(historyState.clients || [])
-    const consigneeType = ref(historyState.consigneeType)
-    const orderType = ref(historyState.orderType)
-    const period = useDebouncedRef(getInitialPeriod(historyState), 500)
-
-    const { items, isLoading, setListSettings, downloadReportHandler } = useDriversSalaryData({
-      period,
-      driver,
-      clients,
-      orderType,
-      consigneeType,
-      tks,
-    })
-
-    const drivers = computed(() => {
-      const startPeriod = dayjs(period.value).startOf('month')
-      const endPeriod = dayjs(period.value).endOf('month')
-      return store.getters.drivers
-        .filter((i) => !!i?.isCalcSalary)
-        .filter(
-          (i) =>
-            (!i.dismissalDate || startPeriod.isBefore(i.dismissalDate)) &&
-            (!i.employmentDate || endPeriod.isAfter(i.employmentDate))
-        )
-    })
-
-    const clientItems = computed(() => {
-      return store.getters.partners
-        .filter((i) => i.isClient)
-        .map((i) => ({ value: i._id, text: i.name }))
-    })
-
-    watch([period, driver, clients, consigneeType, orderType, tks], () => {
-      window.history.pushState(
-        {
-          period: period.value,
-          driver: driver.value,
-          clients: clients.value,
-          consigneeType: consigneeType.value,
-          orderType: orderType.value,
-          tks: tks.value,
-        },
-        ''
-      )
-    })
-
-    addEventListener('popstate', (e) => {
-      period.value = e.state.period
-      driver.value = e.state.driver
-      clients.value = e.state.clients
-      orderType.value = e.state.orderType
-      consigneeType.value = e.state.consigneeType
-      tks.value = e.state.tks
-    })
-
-    function setDriver(driverId) {
-      driver.value = driverId
-    }
-
-    return {
-      carrierStore,
-      period,
-      items,
-      isLoading,
-      driver,
-      clients,
-      orderType,
-      drivers,
-      clientItems,
-      setDriver,
-      setListSettings,
-      consigneeType,
-      tks,
-      downloadReportHandler,
-    }
-  },
+function pushState() {
+  window.history.pushState(
+    {
+      period: period.value,
+      driver: driver.value,
+      clients: clients.value,
+      consigneeType: consigneeType.value,
+      orderType: orderType.value,
+      tks: tks.value,
+    },
+    ''
+  )
 }
+
+function popStateHandler(e) {
+  period.value = e.state?.period
+  driver.value = e.state?.driver
+  clients.value = e.state?.clients || []
+  orderType.value = e.state?.orderType
+  consigneeType.value = e.state?.consigneeType
+  tks.value = e.state?.tks || []
+}
+
+watch([period, driver, clients, consigneeType, orderType, tks], pushState)
+
+onMounted(() => {
+  window.addEventListener('popstate', popStateHandler)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('popstate', popStateHandler)
+})
 </script>
+
 <style scoped>
 .page-wrapper {
   display: flex;

@@ -16,6 +16,8 @@
           v-model="state.address"
           label="Адрес площадки"
           :items="addressItems"
+          item-title="text"
+          item-value="value"
           auto-select-first
           clearable
           @blur="v$.address.$touch"
@@ -25,6 +27,8 @@
           v-model="state.allowedLoadingPoints"
           label="Разрешенные пункты погрузки"
           :items="addressItems"
+          item-title="text"
+          item-value="value"
           multiple
           auto-select-first
           clearable
@@ -51,115 +55,104 @@
   </v-card>
 </template>
 
-<script>
+<script setup>
 import { useAddressStore } from '@/entities/address'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { computed, ref, watch } from 'vue'
 
-export default {
-  name: 'PlaceForTransferDocsForm',
-  props: {
-    item: Object,
-    partnerId: { type: String, required: true },
-  },
-  setup(props, ctx) {
-    const addressStore = useAddressStore()
-    const state = ref({})
-    const disabledResctrictAddresses = computed(() =>
-      Boolean(state.value.address || state.value.allowedLoadingPoints?.length)
-    )
-    const initialState = {
-      title: null,
-      address: null,
-      allowedLoadingPoints: [],
-      contacts: null,
-      note: null,
-      resctrictAddresses: true,
-    }
+defineOptions({ name: 'PlaceForTransferDocsForm' })
 
-    function setState(state) {
-      return state ? state : initialState
-    }
+const props = defineProps({
+  item: Object,
+  partnerId: { type: String, required: true },
+})
 
-    watch(
-      () => props.item,
-      (value) => {
-        state.value = setState(value)
-      },
-      { immediate: true, deep: true }
-    )
+const emit = defineEmits(['submit', 'cancel'])
 
-    const rules = {
-      title: { required },
-      address: { required },
-      allowedLoadingPoints: {},
-      contacts: {},
-      note: {},
-    }
-
-    const v$ = useVuelidate(rules, state)
-
-    const titleErrorMessages = computed(() => {
-      const err = []
-      const titleField = v$.value.title
-      if (!titleField.$invalid) return err
-
-      titleField.$dirty && titleField.required.$invalid && err.push('Название не может быть пустым')
-      return err
-    })
-
-    const addressErrorMessages = computed(() => {
-      const err = []
-      const field = v$.value.address
-      if (!field.$invalid) return err
-
-      field.$dirty && field.required.$invalid && err.push('Адрес площадки не может быть пустым')
-      return err
-    })
-
-    const invalidForm = computed(() => v$.value.$invalid)
-
-    const addressItems = computed(() => {
-      if (!props.partnerId) return []
-      return addressStore.addressesForAutocomplete.filter((i) => {
-        if (state.value.resctrictAddresses) return i.partner === props.partnerId
-        else return true
-      })
-    })
-
-    function clear() {
-      resetForm()
-    }
-
-    function resetForm() {
-      v$.value.$reset()
-      state.value = setState()
-    }
-
-    function submit() {
-      ctx.emit('submit', state.value)
-    }
-
-    function cancel() {
-      resetForm()
-      ctx.emit('cancel')
-    }
-
-    return {
-      v$,
-      addressErrorMessages,
-      titleErrorMessages,
-      invalidForm,
-      submit,
-      cancel,
-      state,
-      clear,
-      disabledResctrictAddresses,
-      addressItems,
-    }
-  },
+const addressStore = useAddressStore()
+const state = ref({})
+const disabledResctrictAddresses = computed(() =>
+  Boolean(state.value.address || state.value.allowedLoadingPoints?.length)
+)
+const initialState = {
+  title: null,
+  address: null,
+  allowedLoadingPoints: [],
+  contacts: null,
+  note: null,
+  resctrictAddresses: true,
 }
+
+function setState(val) {
+  return val ? val : initialState
+}
+
+watch(
+  () => props.item,
+  (value) => {
+    state.value = setState(value)
+  },
+  { immediate: true, deep: true }
+)
+
+const rules = {
+  title: { required },
+  address: { required },
+  allowedLoadingPoints: {},
+  contacts: {},
+  note: {},
+}
+
+const v$ = useVuelidate(rules, state)
+
+const titleErrorMessages = computed(() => {
+  const err = []
+  const titleField = v$.value.title
+  if (!titleField.$invalid) return err
+
+  titleField.$dirty && titleField.required.$invalid && err.push('Название не может быть пустым')
+  return err
+})
+
+const addressErrorMessages = computed(() => {
+  const err = []
+  const field = v$.value.address
+  if (!field.$invalid) return err
+
+  field.$dirty && field.required.$invalid && err.push('Адрес площадки не может быть пустым')
+  return err
+})
+
+const invalidForm = computed(() => v$.value.$invalid)
+
+const addressItems = computed(() => {
+  if (!props.partnerId) return []
+  return addressStore.addressesForAutocomplete.filter((i) => {
+    if (state.value.resctrictAddresses) return i.partner === props.partnerId
+    else return true
+  })
+})
+
+function clear() {
+  resetForm()
+}
+
+function resetForm() {
+  v$.value.$reset()
+  state.value = setState()
+}
+
+function submit() {
+  emit('submit', state.value)
+}
+
+function cancel() {
+  resetForm()
+  emit('cancel')
+}
+
+defineExpose({ clear })
 </script>
 
 <style scoped>

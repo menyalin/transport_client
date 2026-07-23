@@ -2,31 +2,30 @@
   <small v-if="!docsRegistry">Рейс не включен в опись</small>
   <router-link v-else :to="url">{{ linkText }}</router-link>
 </template>
-<script>
+
+<script setup>
 import { computed } from 'vue'
-import store from '@/store'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'OrderFormDocsRegistryLink',
-  props: {
-    docsRegistry: Object,
-  },
-  setup({ docsRegistry }) {
-    const url = computed(() => '/accounting/docsRegistry/' + docsRegistry._id)
+defineOptions({ name: 'OrderFormDocsRegistryLink' })
 
-    const dateStr = computed(() => new Date(docsRegistry.createdAt).toLocaleDateString())
+const props = defineProps({
+  docsRegistry: Object,
+})
 
-    const statusStr = computed(() => store.getters.docsRegistryStatusesMap.get(docsRegistry.status))
+const store = useStore()
 
-    const linkText = computed(
-      () => `Опись №${docsRegistry.number} от ${dateStr.value} (${statusStr.value})`
-    )
+const url = computed(() => '/accounting/docsRegistry/' + props.docsRegistry._id)
 
-    return {
-      linkText,
-      url,
-    }
-  },
-}
+const dateStr = computed(() => new Date(props.docsRegistry.createdAt).toLocaleDateString())
+
+const statusStr = computed(() =>
+  store.getters.docsRegistryStatusesMap.get(props.docsRegistry.status)
+)
+
+const linkText = computed(
+  () => `Опись №${props.docsRegistry.number} от ${dateStr.value} (${statusStr.value})`
+)
 </script>
+
 <style scoped></style>

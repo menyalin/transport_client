@@ -20,8 +20,8 @@
         >
           <td>
             {{
-              $store.getters.partnersMap.has(item.client)
-                ? $store.getters.partnersMap.get(item.client).name
+              store.getters.partnersMap.has(item.client)
+                ? store.getters.partnersMap.get(item.client).name
                 : '????'
             }}
           </td>
@@ -48,24 +48,26 @@
     </template>
   </v-table>
 </template>
-<script>
-export default {
-  name: 'OrderPaymentPartsTable',
-  props: {
-    items: Array,
-    readonly: Boolean,
-    hideDelete: Boolean,
-  },
-  setup(props, { emit }) {
-    function deleteRow(idx) {
-      if (props.readonly) return
-      emit('deleteRow', idx)
-    }
 
-    return {
-      deleteRow,
-    }
-  },
+<script setup>
+import { useStore } from 'vuex'
+
+defineOptions({ name: 'OrderPaymentPartsTable' })
+
+const props = defineProps({
+  items: Array,
+  readonly: Boolean,
+  hideDelete: Boolean,
+})
+
+const emit = defineEmits(['deleteRow'])
+
+const store = useStore()
+
+function deleteRow(idx) {
+  if (props.readonly) return
+  emit('deleteRow', idx)
 }
 </script>
+
 <style scoped></style>

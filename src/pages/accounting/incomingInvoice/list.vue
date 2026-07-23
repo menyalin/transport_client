@@ -2,8 +2,8 @@
   <entity-list-wrapper>
     <buttons-panel
       panel-type="list"
-      :disabled-refresh="!$store.getters.directoriesProfile"
-      :disabledSubmit="!$store.getters.hasPermission('incomingInvoice:write')"
+      :disabled-refresh="!store.getters.directoriesProfile"
+      :disabled-submit="!store.getters.hasPermission('incomingInvoice:write')"
       @submit="create"
       @refresh="refresh"
     />
@@ -19,12 +19,14 @@
       :totalCount="totalCount"
       :headers="headers"
       :analyticsData="analyticsData"
-      :listOptions.sync="listOptions"
+      v-model:options="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>
 </template>
-<script>
+
+<script setup>
+import { useStore } from 'vuex'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import { IncomingInvoiceListSettings, IncomingInvoiceDataTable } from '@/entities/incomingInvoice'
 
@@ -32,49 +34,23 @@ import { useListData } from './model/useListData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement/useCarrierAgreements.js'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'PaymentInvoiceList',
-  components: {
-    ButtonsPanel,
-    EntityListWrapper,
-    IncomingInvoiceListSettings,
-    IncomingInvoiceDataTable,
-  },
-  setup() {
-    const { items: allCarrierAgreements } = useCarrierAgreements()
-    const carrierStore = useCarrierStore()
-    const {
-      create,
-      refresh,
-      settings,
-      items,
-      totalCount,
-      loading,
-      listOptions,
-      total,
-      downloadHandler,
-      headers,
-      changeHeaders,
-      analyticsData,
-    } = useListData()
+defineOptions({ name: 'PaymentInvoiceList' })
 
-    return {
-      create,
-      refresh,
-      settings,
-      items,
-      totalCount,
-      headers,
-      changeHeaders,
-      total,
-      loading,
-      listOptions,
-      downloadHandler,
-      analyticsData,
-      allCarrierAgreements,
-      carrierStore,
-    }
-  },
-}
+const store = useStore()
+const { items: allCarrierAgreements } = useCarrierAgreements()
+const carrierStore = useCarrierStore()
+const {
+  create,
+  refresh,
+  settings,
+  items,
+  totalCount,
+  loading,
+  listOptions,
+  headers,
+  changeHeaders,
+  analyticsData,
+} = useListData()
 </script>
+
 <style></style>

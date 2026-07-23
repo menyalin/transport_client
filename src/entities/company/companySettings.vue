@@ -8,20 +8,20 @@
           <v-select
             v-model="settings.truckKinds"
             label="Используемые виды транспорта"
-            :items="$store.getters.allTruckKinds"
+            :items="store.getters.allTruckKinds"
             clearable
             multiple
-            itemTitle="text"
+            item-title="text"
             :style="{ 'max-width': '400px' }"
           />
           <v-select
             v-model="settings.defaultTruckKind"
             label="Вид транспорта по умолчанию"
             :items="
-              $store.getters.allTruckKinds.filter((i) => settings.truckKinds.includes(i.value))
+              store.getters.allTruckKinds.filter((i) => settings.truckKinds.includes(i.value))
             "
             :style="{ 'max-width': '220px' }"
-            itemTitle="text"
+            item-title="text"
             clearable
           />
         </div>
@@ -29,8 +29,8 @@
           <v-select
             v-model="settings.liftCapacityTypes"
             label="Типы грузоподъемности"
-            :items="$store.getters.allLiftCapacityTypes"
-            itemTitle="text"
+            :items="store.getters.allLiftCapacityTypes"
+            item-title="text"
             multiple
             clearable
             :style="{ 'max-width': '400px' }"
@@ -39,12 +39,12 @@
             v-model="settings.defaultLiftCapacity"
             label="Грузоподъемность по умолчанию"
             :items="
-              $store.getters.allLiftCapacityTypes.filter((i) =>
+              store.getters.allLiftCapacityTypes.filter((i) =>
                 settings.liftCapacityTypes.includes(i)
               )
             "
             clearable
-            itemTitle="text"
+            item-title="text"
             :style="{ 'max-width': '220px' }"
           />
         </div>
@@ -52,8 +52,8 @@
           <v-select
             v-model="settings.loadDirections"
             label="Варианты загрузки"
-            itemTitle="text"
-            :items="$store.getters.allLoadDirection"
+            item-title="text"
+            :items="store.getters.allLoadDirection"
             multiple
             clearable
             :style="{ 'max-width': '400px' }"
@@ -62,11 +62,11 @@
             v-model="settings.defaultLoadDirection"
             label="Вариант загрузки по умолчанию"
             :items="
-              $store.getters.allLoadDirection.filter((i) =>
+              store.getters.allLoadDirection.filter((i) =>
                 settings.loadDirections.includes(i.value)
               )
             "
-            itemTitle="text"
+            item-title="text"
             clearable
             :style="{ 'max-width': '220px' }"
           />
@@ -84,100 +84,105 @@
     </v-card>
   </div>
 </template>
-<script>
+
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import { CompanyService } from '@/shared/services'
 
-export default {
-  name: 'CompanySettings',
-  props: {
-    companyId: { type: String, required: true },
-  },
-  data() {
-    return {
-      loading: false,
-      settings: {
-        truckKinds: [],
-        defaultTruckKind: null,
-        liftCapacityTypes: [],
-        defaultLiftCapacity: null,
-        loadDirections: [],
-        defaultLoadDirection: null,
-        commonOrderContractNote: null,
-      },
-    }
-  },
-  computed: {
-    disabledSettings() {
-      return (
-        !this.$store.getters.hasPermission('fullAccess') ||
-        this.$store.getters.directoriesProfile !== this.companyId
-      )
-    },
-    showLoadDirectionSettings() {
-      if (this.settings.truckKinds.includes('tent')) return true
-      return false
-    },
-    storedSettings() {
-      return this.$store.getters.companySettings
-    },
-    changed() {
-      if (!this.storedSettings) return null
-      const keys = Object.keys(this.settings)
-      for (let i = 0; i < keys.length; i++) {
-        if (this.settings[keys[i]]?.toString() !== this.storedSettings[keys[i]]?.toString())
-          return true
-      }
-      return false
-    },
-  },
-  watch: {
-    ['settings.truckKinds']: {
-      handler: function (val) {
-        if (!val || val.length === 0) {
-          this.settings.loadDirections = []
-          this.settings.defaultLoadDirection = null
-          return null
-        }
-        if (!val.includes('tent')) {
-          this.settings.loadDirections = ['rear']
-          this.settings.defaultLoadDirection = 'rear'
-        }
-        if (!val.includes(this.settings.defaultTruckKind)) this.settings.defaultTruckKind = null
-        if (val.length === 1) this.settings.defaultTruckKind = val[0]
-      },
+defineOptions({ name: 'CompanySettings' })
 
-      ['settings.liftCapacityTypes']: {
-        handler: function (val) {
-          if (!val.includes(this.settings.defaultLiftCapacity))
-            this.settings.defaultLiftCapacity = null
-          if (val.length === 1) this.settings.defaultLiftCapacity = val[0]
-        },
-      },
-    },
-  },
-  created() {
-    this.setSettings()
-  },
-  methods: {
-    async submit() {
-      await CompanyService.updateSettings({
-        settings: this.settings,
-      })
-    },
-    cancel() {
-      this.setSettings()
-    },
-    setSettings() {
-      if (this.storedSettings) {
-        const keys = Object.keys(this.settings)
-        keys.forEach((key) => {
-          this.settings[key] = this.storedSettings[key]
-        })
-      }
-    },
-  },
+const props = defineProps({
+  companyId: { type: String, required: true },
+})
+
+const store = useStore()
+
+const loading = ref(false)
+const settings = ref({
+  truckKinds: [],
+  defaultTruckKind: null,
+  liftCapacityTypes: [],
+  defaultLiftCapacity: null,
+  loadDirections: [],
+  defaultLoadDirection: null,
+  commonOrderContractNote: null,
+})
+
+const disabledSettings = computed(
+  () =>
+    !store.getters.hasPermission('fullAccess') ||
+    store.getters.directoriesProfile !== props.companyId
+)
+
+const showLoadDirectionSettings = computed(() => settings.value.truckKinds.includes('tent'))
+
+const storedSettings = computed(() => store.getters.companySettings)
+
+const changed = computed(() => {
+  if (!storedSettings.value) return false
+  const keys = Object.keys(settings.value)
+  return keys.some(
+    (key) => settings.value[key]?.toString() !== storedSettings.value[key]?.toString()
+  )
+})
+
+function setSettings() {
+  if (storedSettings.value) {
+    const keys = Object.keys(settings.value)
+    keys.forEach((key) => {
+      settings.value[key] = storedSettings.value[key]
+    })
+  }
 }
+
+watch(
+  () => settings.value.truckKinds,
+  (val) => {
+    if (!val || val.length === 0) {
+      settings.value.loadDirections = []
+      settings.value.defaultLoadDirection = null
+      return
+    }
+    if (!val.includes('tent')) {
+      settings.value.loadDirections = ['rear']
+      settings.value.defaultLoadDirection = 'rear'
+    }
+    if (!val.includes(settings.value.defaultTruckKind)) settings.value.defaultTruckKind = null
+    if (val.length === 1) settings.value.defaultTruckKind = val[0]
+  }
+)
+
+watch(
+  () => settings.value.liftCapacityTypes,
+  (val) => {
+    if (!val.includes(settings.value.defaultLiftCapacity)) settings.value.defaultLiftCapacity = null
+    if (val.length === 1) settings.value.defaultLiftCapacity = val[0]
+  }
+)
+
+async function submit() {
+  loading.value = true
+  try {
+    await CompanyService.updateSettings({
+      settings: settings.value,
+    })
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+function cancel() {
+  setSettings()
+}
+
+onMounted(() => {
+  setSettings()
+})
 </script>
+
 <style scoped>
 #truck-kinds,
 #lift-capacity-types,

@@ -1,12 +1,12 @@
 export default [
-  { value: 'name', text: 'Имя' },
-  { value: 'agreementsName', text: 'Соглашения' },
-  { value: 'startDate', text: 'Дата начала' },
-  { value: 'endDate', text: 'Дата завершения' },
-  { value: 'createdAt', text: 'Дата/время создания' },
+  { value: 'name', title: 'Имя' },
+  { value: 'agreementsName', title: 'Соглашения' },
+  { value: 'startDate', title: 'Дата начала' },
+  { value: 'endDate', title: 'Дата завершения' },
+  { value: 'createdAt', title: 'Дата/время создания' },
   {
     value: 'nestedFiles',
-    text: 'Вложенные файлы',
+    title: 'Вложенные файлы',
     align: 'right',
   },
 ]

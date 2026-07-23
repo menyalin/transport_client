@@ -1,49 +1,45 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-refresh="!directoriesProfile"
-          :disabledSubmit="!canWrite"
-          @submit="create"
-          @refresh="refresh"
-        />
-        <div class="settings-wrapper">
-          <v-select
-            v-model="settings.partnerType"
-            :items="partnerTypeItems"
-            item-title="text"
-            item-value="value"
-            hide-details
-            :style="{ 'max-width': '400px' }"
-          />
-          <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
-        </div>
-        <v-data-table
-          :headers="headers"
-          :items="filteredPartners"
-          :loading="loading"
-          fixed-header
-          :search="settings.search"
-          height="73vh"
-          :items-per-page-options="[50, 100, 200]"
-          v-model:options="listOptions"
-          @dblclick:row="dblClickRow"
-        >
-          <template #[`item.isClient`]="{ item }">
-            <div>{{ item.isClient ? 'Да' : 'Нет' }}</div>
-          </template>
-          <template #[`item.created`]="{ item }">
-            {{ new Date(item.createdAt).toLocaleString() }}
-          </template>
-          <template #[`item.updated`]="{ item }">
-            {{ new Date(item.updatedAt).toLocaleString() }}
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
-  </v-container>
+  <EntityListWrapper>
+    <buttons-panel
+      panel-type="list"
+      :disabled-refresh="!directoriesProfile"
+      :disabledSubmit="!canWrite"
+      @submit="create"
+      @refresh="refresh"
+    />
+    <ListSettingsWrapper>
+      <v-select
+        v-model="settings.partnerType"
+        :items="partnerTypeItems"
+        item-title="text"
+        item-value="value"
+        hide-details
+        :style="{ 'max-width': '400px' }"
+      />
+      <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
+    </ListSettingsWrapper>
+    <v-data-table
+      :headers="headers"
+      :items="filteredPartners"
+      :loading="loading"
+      fixed-header
+      :search="settings.search"
+      height="73vh"
+      :items-per-page-options="[50, 100, 200]"
+      v-model:options="listOptions"
+      @dblclick:row="dblClickRow"
+    >
+      <template #[`item.isClient`]="{ item }">
+        <div>{{ item.isClient ? 'Да' : 'Нет' }}</div>
+      </template>
+      <template #[`item.created`]="{ item }">
+        {{ new Date(item.createdAt).toLocaleString() }}
+      </template>
+      <template #[`item.updated`]="{ item }">
+        {{ new Date(item.updatedAt).toLocaleString() }}
+      </template>
+    </v-data-table>
+  </EntityListWrapper>
 </template>
 
 <script setup>
@@ -51,7 +47,7 @@ import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
-import { ButtonsPanel } from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 
 defineOptions({ name: 'PartnerList' })
 

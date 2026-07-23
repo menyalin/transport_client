@@ -7,6 +7,9 @@
       @submit="create"
       @refresh="refresh"
     />
+    <ListSettingsWrapper>
+      <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
+    </ListSettingsWrapper>
     <v-data-table
       :headers="headers"
       :items="cities"
@@ -14,25 +17,17 @@
       :search="settings.search"
       fixed-header
       height="73vh"
-      :footer-props="{
-        'items-per-page-options': [50, 100, 200],
-      }"
-      @update:options="settings.listOptions = $event"
+      :items-per-page-options="[50, 100, 200]"
+      v-model:options="settings.listOptions"
       @dblclick:row="dblClickRow"
-    >
-      <template #top>
-        <div id="settings-wrapper">
-          <v-text-field v-model="settings.search" label="Поиск" hide-details clearable />
-        </div>
-      </template>
-    </v-data-table>
+    />
   </entity-list-wrapper>
 </template>
 <script setup>
 import { computed, reactive, onMounted } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from 'vuex'
-import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
+import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 
 defineOptions({ name: 'CityList' })
 

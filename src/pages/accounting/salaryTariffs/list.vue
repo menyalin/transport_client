@@ -4,7 +4,7 @@
       <v-col>
         <buttons-panel
           panel-type="list"
-          :disabledSubmit="!hasPermission"
+          :disabled-submit="!hasPermission"
           @submit="create"
           @refresh="refresh"
         />
@@ -34,6 +34,8 @@
           <v-select
             v-model="settings.type"
             :items="salaryTariffTypes"
+            item-title="text"
+            item-value="value"
             clearable
             hide-details
             label="Тип тарифа"
@@ -42,6 +44,8 @@
           <v-select
             v-model="settings.liftCapacity"
             :items="liftCapacityTypes"
+            item-title="text"
+            item-value="value"
             clearable
             hide-details
             label="Грузоподъемность"
@@ -81,8 +85,10 @@
   </v-container>
 </template>
 
-<script>
-import { ref, computed, watch, getCurrentInstance } from 'vue'
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 import { ButtonsPanel } from '@/shared/ui'
 import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
@@ -98,209 +104,159 @@ import { useAddressStore } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
 
-export default {
-  name: 'SalaryTariffList',
+defineOptions({ name: 'SalaryTariffList' })
 
-  components: {
-    ButtonsPanel,
-    AppTableColumnSettings,
-    SalaryTariffForm,
-    AppZonesCell,
-    AppRegionsCell,
-    AppWaitingCell,
-    AppReturnCell,
+const router = useRouter()
+const store = useStore()
+const carrierStore = useCarrierStore()
+const addressStore = useAddressStore()
+
+const { listSettingsName, activeHeaders, allHeaders, headers } = useListColumnSetting({
+  listSettingsName: 'salaryTariffList:columns',
+  defaultHeaders: DEFAULT_HEADERS,
+  allHeaders: ALL_LIST_HEADERS,
+})
+
+const loading = ref(false)
+const dialog = ref(false)
+const editableItem = ref({})
+const list = ref([])
+const count = ref(0)
+
+const settings = usePersistedRef(
+  {
+    type: null,
+    date: null,
+    tk: null,
+    liftCapacity: null,
+    listOptions: {
+      page: 1,
+      itemsPerPage: 50,
+      sortBy: [],
+      sortDesc: [],
+    },
   },
+  'salaryTariffList:settings'
+)
 
-  setup() {
-    const { proxy } = getCurrentInstance()
-    const carrierStore = useCarrierStore()
-    const addressStore = useAddressStore()
+const hasPermission = computed(() => store.getters.hasPermission('salaryTariff:write'))
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+const salaryTariffTypes = computed(() => store.getters.salaryTariffTypes)
+const salaryTariffTypesMap = computed(() => store.getters.salaryTariffTypesMap)
+const liftCapacityTypes = computed(() => store.getters.liftCapacityTypes)
+const addressMap = computed(() => addressStore.addressMap)
+const partnersMap = computed(() => store.getters.partnersMap)
+const partnerGroupsMap = computed(() => store.getters.partnerGroupsMap)
+const carriers = computed(() => carrierStore.carriers)
+const carriersMap = computed(() => carrierStore.carriersMap)
 
-    // Настройки колонок таблицы
-    const { listSettingsName, activeHeaders, allHeaders, headers } = useListColumnSetting({
-      listSettingsName: 'salaryTariffList:columns',
-      defaultHeaders: DEFAULT_HEADERS,
-      allHeaders: ALL_LIST_HEADERS,
-    })
-
-    // Состояние
-    const loading = ref(false)
-    const dialog = ref(false)
-    const editableItem = ref({})
-    const list = ref([])
-    const count = ref(0)
-
-    const settings = usePersistedRef(
-      {
-        type: null,
-        date: null,
-        tk: null,
-        liftCapacity: null,
-        listOptions: {
-          page: 1,
-          itemsPerPage: 50,
-        },
-      },
-      'salaryTariffList:settings'
-    )
-
-    // Getters
-    const hasPermission = computed(() => proxy.$store.getters.hasPermission('salaryTariff:write'))
-    const directoriesProfile = computed(() => proxy.$store.getters.directoriesProfile)
-    const salaryTariffTypes = computed(() => proxy.$store.getters.salaryTariffTypes)
-    const salaryTariffTypesMap = computed(() => proxy.$store.getters.salaryTariffTypesMap)
-    const liftCapacityTypes = computed(() => proxy.$store.getters.liftCapacityTypes)
-    const addressMap = computed(() => addressStore.addressMap)
-    const partnersMap = computed(() => proxy.$store.getters.partnersMap)
-    const partnerGroupsMap = computed(() => proxy.$store.getters.partnerGroupsMap)
-    const carriers = computed(() => carrierStore.carriers)
-    const carriersMap = computed(() => carrierStore.carriersMap)
-
-    // Получение строки результата по типу тарифа
-    const getResultStrByType = (item) => {
-      switch (item.type) {
-        case 'points': {
-          const loadingAddr = addressMap.value.get(item.loading)
-          const unloadingAddr = addressMap.value.get(item.unloading)
-          const loadingStr = loadingAddr?.shortName || loadingAddr?.name
-          const unloadingStr = unloadingAddr?.shortName || unloadingAddr?.name
-          return loadingStr + '  >>>  ' + unloadingStr
-        }
-        case 'directDistanceZones':
-          return `Погрузка: ${addressMap.value.get(item.loading).shortName}, до ${
-            item.maxDistance
-          }км`
-        default:
-          return '-'
-      }
+function getResultStrByType(item) {
+  switch (item.type) {
+    case 'points': {
+      const loadingAddr = addressMap.value.get(item.loading)
+      const unloadingAddr = addressMap.value.get(item.unloading)
+      const loadingStr = loadingAddr?.shortName || loadingAddr?.name
+      const unloadingStr = unloadingAddr?.shortName || unloadingAddr?.name
+      return loadingStr + '  >>>  ' + unloadingStr
     }
-
-    // Трансформация данных для таблицы
-    const filteredList = computed(() => {
-      return list.value.map((item) => ({
-        ...item,
-        _type: salaryTariffTypesMap.value.get(item.type),
-        _date: new Date(item.date).toLocaleDateString(),
-        _result: getResultStrByType(item),
-        _tks: item.tks.map((tkId) => carriersMap.value?.get(tkId)?.name).join(', '),
-        _sum: Intl.NumberFormat().format(item.sum),
-        _clients: item.clients?.map((client) => partnersMap.value.get(client)?.name).join(', '),
-        _consigneeTypes: item.consigneeTypes
-          ?.map((type) => partnerGroupsMap.value.get(type))
-          .join(', '),
-        _liftCapacity: item.liftCapacity.join(', '),
-      }))
-    })
-
-    // Загрузка данных
-    const getData = async () => {
-      try {
-        loading.value = true
-        const { items, count: totalCount } = await SalaryTariffService.getList({
-          company: directoriesProfile.value,
-          date: settings.value.date,
-          type: settings.value.type,
-          tk: settings.value.tk,
-          liftCapacity: settings.value.liftCapacity,
-          skip: settings.value.listOptions.itemsPerPage * (settings.value.listOptions.page - 1),
-          limit: settings.value.listOptions.itemsPerPage,
-          sortBy: settings.value.listOptions.sortBy[0] || null,
-          sortDesc: settings.value.listOptions.sortDesc[0] || null,
-        })
-
-        list.value = items || []
-        count.value = totalCount || 0
-      } catch (e) {
-        console.log(e)
-        proxy.$store.commit('setError', e.message)
-      } finally {
-        loading.value = false
-      }
-    }
-
-    // Действия
-    const create = () => {
-      proxy.$router.push({ name: 'SalaryTariffCreate' })
-    }
-
-    const refresh = async () => {
-      await getData()
-    }
-
-    const dblClickRow = (_, { item }) => {
-      const cleanItem = list.value.find((i) => i._id === item._id)
-      editableItem.value = { ...cleanItem }
-      dialog.value = true
-    }
-
-    const cancelDialog = () => {
-      dialog.value = false
-    }
-
-    const deletedItem = async (id) => {
-      try {
-        loading.value = true
-        await SalaryTariffService.deleteById(id)
-        list.value = list.value.filter((i) => i._id !== id)
-        dialog.value = false
-      } catch (e) {
-        this.$store.commit('setError', e.message)
-      } finally {
-        loading.value = false
-      }
-    }
-
-    const updateItem = async (item) => {
-      try {
-        loading.value = true
-        const updatedItem = await SalaryTariffService.updateOne({
-          _id: item._id,
-          body: item,
-        })
-
-        const idx = list.value.findIndex((i) => i._id === item._id)
-        if (idx !== -1) list.value.splice(idx, 1, updatedItem)
-        dialog.value = false
-      } catch (e) {
-        proxy.$store.commit('setError', e.message)
-      } finally {
-        loading.value = false
-      }
-    }
-
-    watch(settings, getData, { deep: true })
-
-    return {
-      // Настройки таблицы
-      listSettingsName,
-      activeHeaders,
-      allHeaders,
-      headers,
-
-      // Состояние
-      loading,
-      dialog,
-      editableItem,
-      filteredList,
-      count,
-      settings,
-
-      // Getters
-      hasPermission,
-      carriers,
-      salaryTariffTypes,
-      liftCapacityTypes,
-
-      // Методы
-      create,
-      refresh,
-      dblClickRow,
-      cancelDialog,
-      deletedItem,
-      updateItem,
-    }
-  },
+    case 'directDistanceZones':
+      return `Погрузка: ${addressMap.value.get(item.loading).shortName}, до ${item.maxDistance}км`
+    default:
+      return '-'
+  }
 }
+
+const filteredList = computed(() => {
+  return list.value.map((item) => ({
+    ...item,
+    _type: salaryTariffTypesMap.value.get(item.type),
+    _date: new Date(item.date).toLocaleDateString(),
+    _result: getResultStrByType(item),
+    _tks: item.tks.map((tkId) => carriersMap.value?.get(tkId)?.name).join(', '),
+    _sum: Intl.NumberFormat().format(item.sum),
+    _clients: item.clients?.map((client) => partnersMap.value.get(client)?.name).join(', '),
+    _consigneeTypes: item.consigneeTypes
+      ?.map((type) => partnerGroupsMap.value.get(type))
+      .join(', '),
+    _liftCapacity: item.liftCapacity.join(', '),
+  }))
+})
+
+async function getData() {
+  try {
+    loading.value = true
+    const { items, count: totalCount } = await SalaryTariffService.getList({
+      company: directoriesProfile.value,
+      date: settings.value.date,
+      type: settings.value.type,
+      tk: settings.value.tk,
+      liftCapacity: settings.value.liftCapacity,
+      skip: settings.value.listOptions.itemsPerPage * (settings.value.listOptions.page - 1),
+      limit: settings.value.listOptions.itemsPerPage,
+      sortBy: settings.value.listOptions.sortBy?.[0] || null,
+      sortDesc: settings.value.listOptions.sortDesc?.[0] || null,
+    })
+
+    list.value = items || []
+    count.value = totalCount || 0
+  } catch (e) {
+    console.log(e)
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+function create() {
+  router.push({ name: 'SalaryTariffCreate' })
+}
+
+async function refresh() {
+  await getData()
+}
+
+function dblClickRow(_, { item }) {
+  const cleanItem = list.value.find((i) => i._id === item._id)
+  editableItem.value = { ...cleanItem }
+  dialog.value = true
+}
+
+function cancelDialog() {
+  dialog.value = false
+}
+
+async function deletedItem(id) {
+  try {
+    loading.value = true
+    await SalaryTariffService.deleteById(id)
+    list.value = list.value.filter((i) => i._id !== id)
+    dialog.value = false
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function updateItem(item) {
+  try {
+    loading.value = true
+    const updatedItem = await SalaryTariffService.updateOne({
+      _id: item._id,
+      body: item,
+    })
+
+    const idx = list.value.findIndex((i) => i._id === item._id)
+    if (idx !== -1) list.value.splice(idx, 1, updatedItem)
+    dialog.value = false
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+watch(settings, getData, { deep: true })
 </script>
 
 <style scoped>

@@ -20,64 +20,54 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import store from '@/store'
 import { moneyFormatter } from '@/shared/utils'
 
-export default {
-  props: {
-    items: Array,
-  },
-  setup(props, ctx) {
-    const headers = [
-      { text: 'Тип ТС', value: 'truckKinds', sortable: false },
-      { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
-      { text: 'Тип рейса', value: 'orderTypes', sortable: true },
-      { text: 'Включено часов', value: 'includeHours', sortable: true },
-      { text: 'Округлять до', value: 'roundingInterval', sortable: true },
-      { text: 'Тариф за', value: 'tariffBy', sortable: true },
-      { text: 'Тариф', value: 'price', sortable: true, align: 'right' },
-      { value: 'actions', align: 'right', sortable: false },
-    ]
-    function formatPrice(price) {
-      return moneyFormatter(price)
-    }
-    function formatTruckKinds(kinds) {
-      return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
-    }
-    function formatLiftCapacities(items) {
-      return items?.join('; ') || ''
-    }
+defineOptions({ name: 'IdleTimeTariffList' })
 
-    function deleteHandler(item) {
-      ctx.emit('deleteByIdx', item.idx)
-    }
-    function updateHandler(item) {
-      ctx.emit('updateByIdx', item.idx)
-    }
+const props = defineProps({
+  items: Array,
+})
 
-    const preparedItems = computed(() => {
-      return props.items.map((i) => ({
-        ...i,
-        orderTypes: i.orderTypes.map((j) => (j === 'region' ? 'Регион' : 'Город')).join(', '),
-        roundingInterval: store.getters.idleTimeRoundingIntervalsMap.get(i.roundingInterval) ?? '-',
-        tariffBy: store.getters.waitingTariffByItemsMap.get(i.tariffBy) ?? '-',
-      }))
-    })
+const emit = defineEmits(['deleteByIdx', 'updateByIdx'])
 
-    return {
-      headers,
-      formatPrice,
-      formatTruckKinds,
-      formatLiftCapacities,
-
-      deleteHandler,
-      updateHandler,
-      preparedItems,
-    }
-  },
+const headers = [
+  { title: 'Тип ТС', key: 'truckKinds', sortable: false },
+  { title: 'Грузоподъемность ', key: 'liftCapacities', sortable: false },
+  { title: 'Тип рейса', key: 'orderTypes', sortable: true },
+  { title: 'Включено часов', key: 'includeHours', sortable: true },
+  { title: 'Округлять до', key: 'roundingInterval', sortable: true },
+  { title: 'Тариф за', key: 'tariffBy', sortable: true },
+  { title: 'Тариф', key: 'price', sortable: true, align: 'end' },
+  { key: 'actions', align: 'end', sortable: false },
+]
+function formatPrice(price) {
+  return moneyFormatter(price)
 }
+function formatTruckKinds(kinds) {
+  return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
+}
+function formatLiftCapacities(items) {
+  return items?.join('; ') || ''
+}
+
+function deleteHandler(item) {
+  emit('deleteByIdx', item.idx)
+}
+function updateHandler(item) {
+  emit('updateByIdx', item.idx)
+}
+
+const preparedItems = computed(() => {
+  return props.items.map((i) => ({
+    ...i,
+    orderTypes: i.orderTypes.map((j) => (j === 'region' ? 'Регион' : 'Город')).join(', '),
+    roundingInterval: store.getters.idleTimeRoundingIntervalsMap.get(i.roundingInterval) ?? '-',
+    tariffBy: store.getters.waitingTariffByItemsMap.get(i.tariffBy) ?? '-',
+  }))
+})
 </script>
 <style scoped>
 .zone-row {

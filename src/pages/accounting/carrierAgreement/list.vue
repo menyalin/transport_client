@@ -2,7 +2,7 @@
   <EntityListWrapper>
     <buttons-panel
       panel-type="list"
-      :disabledSubmit="!$store.getters.hasPermission('carrierAgreement:write')"
+      :disabled-submit="!store.getters.hasPermission('carrierAgreement:write')"
       @submit="createHandler"
       @refresh="refreshHandler"
     />
@@ -18,7 +18,10 @@
     />
   </EntityListWrapper>
 </template>
-<script>
+
+<script setup>
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { ButtonsPanel } from '@/shared/ui'
 import { useListData } from './useList'
 import { EntityListWrapper } from '@/shared/ui/index'
@@ -27,49 +30,28 @@ import {
   CarrierAgreementListDataTable,
 } from '@/entities/carrierAgreement'
 
-export default {
-  name: 'CarrierAgreementList',
-  components: {
-    ButtonsPanel,
-    EntityListWrapper,
-    CarrierAgreementListSettings,
-    CarrierAgreementListDataTable,
-  },
-  setup() {
-    const {
-      refreshHandler,
-      createHandler,
-      settings,
-      listOptions,
-      items,
-      loading,
-      onDeleteHandler,
-      totalCount,
-      changeHeaders,
-      headers,
-    } = useListData()
+defineOptions({ name: 'CarrierAgreementList' })
 
-    return {
-      refreshHandler,
-      createHandler,
-      settings,
-      listOptions,
-      items,
-      loading,
-      onDeleteHandler,
-      totalCount,
-      changeHeaders,
-      headers,
-    }
-  },
+const store = useStore()
+const router = useRouter()
 
-  methods: {
-    dblClickRow(item) {
-      this.$router.push(`carrierAgreements/${item._id}`)
-    },
-  },
+const {
+  refreshHandler,
+  createHandler,
+  settings,
+  listOptions,
+  items,
+  loading,
+  totalCount,
+  changeHeaders,
+  headers,
+} = useListData()
+
+function dblClickRow(item) {
+  router.push(`carrierAgreements/${item._id}`)
 }
 </script>
+
 <style scoped>
 .filter-wrapper {
   display: grid;

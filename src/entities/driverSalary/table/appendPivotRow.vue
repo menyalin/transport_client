@@ -8,18 +8,16 @@
   </tr>
 </template>
 
-<script>
-export default {
-  props: {
-    headers: Array,
-    items: Array,
-  },
-  setup(props) {
-    function getSum(field) {
-      return props.items.reduce((res, item) => parseFloat(item[field] || 0) + res, 0)
-    }
-    return { getSum }
-  },
+<script setup>
+defineOptions({ name: 'AppAppendPivorRow' })
+
+const props = defineProps({
+  headers: Array,
+  items: Array,
+})
+
+function getSum(field) {
+  return props.items.reduce((res, item) => parseFloat(item[field] || 0) + res, 0)
 }
 </script>
 
@@ -30,4 +28,3 @@ export default {
   background-color: aliceblue;
 }
 </style>
->

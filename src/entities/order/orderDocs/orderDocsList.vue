@@ -20,41 +20,34 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
+
+<script setup>
 import { ref, watch } from 'vue'
 import { OrderDocsListForm, useOrderDocs } from '@/entities/order'
 
-export default {
-  name: 'DocListForm',
-  components: {
-    OrderDocsListForm,
-  },
-  props: {
-    docs: Array,
-  },
-  setup(props, ctx) {
-    const tmpDocs = ref([])
-    const { isValidDocs, isReadonlyDocs } = useOrderDocs()
+defineOptions({ name: 'DocListForm' })
 
-    async function saveHandler() {
-      ctx.emit('save', tmpDocs.value)
-    }
+const props = defineProps({
+  docs: Array,
+})
 
-    watch(
-      () => props.docs,
-      (docs = []) => {
-        if (!docs) tmpDocs.value = []
-        else tmpDocs.value = [...docs]
-      },
-      { immediate: true, deep: true }
-    )
-    return {
-      isValidDocs,
-      isReadonlyDocs,
-      saveHandler,
-      tmpDocs,
-    }
-  },
+const emit = defineEmits(['save', 'cancel'])
+
+const tmpDocs = ref([])
+const { isValidDocs, isReadonlyDocs } = useOrderDocs()
+
+function saveHandler() {
+  emit('save', tmpDocs.value)
 }
+
+watch(
+  () => props.docs,
+  (docs = []) => {
+    if (!docs) tmpDocs.value = []
+    else tmpDocs.value = [...docs]
+  },
+  { immediate: true, deep: true }
+)
 </script>
+
 <style scoped></style>

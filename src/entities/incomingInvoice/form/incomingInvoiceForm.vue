@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
     <buttons-panel
-      panelType="form"
-      showSaveBtn
+      panel-type="form"
+      show-save-btn
       @cancel="cancelHandler"
-      :disabledSubmit="invalidForm"
+      :disabled-submit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
     >
@@ -44,7 +44,8 @@
           label="Статус"
           v-model="state.status"
           :items="statusItems"
-          itemTitle="text"
+          item-title="text"
+          item-value="value"
           :disabled="!allowToChangeStatus"
           @update:model-value="statusChangeHandler"
           :style="{ maxWidth: '200px' }"
@@ -69,12 +70,7 @@
           Счет оплачен
         </v-btn>
       </div>
-      <v-dialog
-        :model-value="payDateDialog"
-        @update:model-value="showDialog = $event"
-        persistent
-        max-width="400"
-      >
+      <v-dialog v-model="payDateDialog" persistent max-width="400">
         <v-card>
           <v-card-title>Дата оплаты</v-card-title>
           <v-card-text>
@@ -103,7 +99,8 @@
     </div>
   </div>
 </template>
-<script>
+
+<script setup>
 import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
 import OrdersTable from './ordersTable/ordersTable.vue'
@@ -113,125 +110,90 @@ import { ButtonsPanel, DownloadDocTemplateMenu, DateTimeInput } from '@/shared/u
 
 import { usePrintForms } from './usePrintForms.js'
 
-export default {
-  name: 'IncomingInvoiceForm',
-  components: {
-    DateTimeInput,
-    ButtonsPanel,
-    DownloadDocTemplateMenu,
-    OrdersTable,
+defineOptions({ name: 'IncomingInvoiceForm' })
+
+const props = defineProps({
+  disabledPickOrders: Boolean,
+  agreementItems: Array,
+  readonly: Boolean,
+  item: Object,
+  outsourceCarriers: {
+    type: Array,
+    required: true,
   },
-  props: {
-    disabledPickOrders: Boolean,
-    agreementItems: Array,
-    readonly: Boolean,
-    item: Object,
-    outsourceCarriers: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const { downloadDisabled, docTemplateIsVisible, templates, downloadTemplateHandler } =
-      usePrintForms(props)
+})
 
-    const statusItems = computed(() => {
-      return incomingInvoiceStatuses.map((i) => ({
-        ...i,
-        disabled: i.value === 'paid',
-      }))
-    })
+const emit = defineEmits(['submit', 'save', 'cancel', 'pickOrders', 'savePayDate'])
 
-    const hasOrders = computed(() => {
-      return props.item?.orders?.length > 0
-    })
+const { downloadDisabled, docTemplateIsVisible, templates, downloadTemplateHandler } =
+  usePrintForms(props)
 
-    const {
-      state,
-      v$,
-      submitHandler,
-      cancelHandler,
-      saveHandler,
-      payInvoiceHandler,
-      invalidForm,
-      isVisiblePayDateField,
-      allowedToChangeOrders,
-      isVisiblePayInvoiceBtn,
-      payDateDialog,
-      savePayDateHandler,
-      payDateFieldData,
-      allowToChangeStatus,
-      statusChangeHandler,
-    } = useForm(props, ctx, hasOrders)
+const statusItems = computed(() =>
+  incomingInvoiceStatuses.map((i) => ({
+    ...i,
+    disabled: i.value === 'paid',
+  }))
+)
 
-    const needSave = computed(() => false) // TODO: fix it
+const hasOrders = computed(() => {
+  return props.item?.orders?.length > 0
+})
 
-    const disabledCarriers = computed(() => {
-      return props.item?.orders?.length > 0 && !!state.value.carrier
-    })
-    const disabledAgreement = computed(() => {
-      return !state.value.carrier // TODO: add logic
-    })
-    const carrierAgreementIds = computed(() => {
-      if (!state.value.carrier) return []
-      const currentCarier = props.outsourceCarriers?.find(
-        (carrier) => carrier._id === state.value.carrier
-      )
-      if (!currentCarier || !currentCarier.agreements) return []
-      return currentCarier.agreements?.map((i) => i.agreement) ?? []
-    })
+const {
+  state,
+  v$,
+  submitHandler,
+  cancelHandler,
+  saveHandler,
+  payInvoiceHandler,
+  invalidForm,
+  isVisiblePayDateField,
+  allowedToChangeOrders,
+  isVisiblePayInvoiceBtn,
+  payDateDialog,
+  savePayDateHandler,
+  payDateFieldData,
+  allowToChangeStatus,
+  statusChangeHandler,
+} = useForm(props, { emit }, hasOrders)
 
-    const carrierAgreements = computed(() => {
-      if (!state.value.carrier) return []
-      return props.agreementItems.filter((agreement) =>
-        carrierAgreementIds.value.includes(agreement._id)
-      )
-    })
+const needSave = computed(() => false) // TODO: fix it
 
-    function pickOrdersHandler() {
-      ctx.emit('pickOrders')
-    }
-    const carrierChangeHandler = (val) => {
-      if (!val || carrierAgreements.value.length === 0) state.value.agreement = null
-      else if (carrierAgreements.value.length === 1)
-        state.value.agreement = carrierAgreements.value[0]._id
+const disabledCarriers = computed(() => {
+  return props.item?.orders?.length > 0 && !!state.value.carrier
+})
+const disabledAgreement = computed(() => {
+  return !state.value.carrier // TODO: add logic
+})
+const carrierAgreementIds = computed(() => {
+  if (!state.value.carrier) return []
+  const currentCarier = props.outsourceCarriers?.find(
+    (carrier) => carrier._id === state.value.carrier
+  )
+  if (!currentCarier || !currentCarier.agreements) return []
+  return currentCarier.agreements?.map((i) => i.agreement) ?? []
+})
 
-      if (!carrierAgreementIds.value.includes(state.value.agreement)) state.value.agreement = null
-    }
+const carrierAgreements = computed(() => {
+  if (!state.value.carrier) return []
+  return props.agreementItems.filter((agreement) =>
+    carrierAgreementIds.value.includes(agreement._id)
+  )
+})
 
-    return {
-      state,
-      v$,
-      submitHandler,
-      cancelHandler,
-      saveHandler,
-      payInvoiceHandler,
-      isVisiblePayDateField,
-      invalidForm,
-      needSave,
-      pickOrdersHandler,
-      allowedToChangeOrders,
-      disabledAgreement,
-      carrierAgreements,
-      hasOrders,
+function pickOrdersHandler() {
+  emit('pickOrders')
+}
 
-      disabledCarriers,
-      carrierChangeHandler,
-      downloadDisabled,
-      docTemplateIsVisible,
-      templates,
-      downloadTemplateHandler,
-      isVisiblePayInvoiceBtn,
-      payDateDialog,
-      savePayDateHandler,
-      payDateFieldData,
-      allowToChangeStatus,
-      statusChangeHandler,
-      statusItems,
-    }
-  },
+const carrierChangeHandler = (val) => {
+  if (!val || carrierAgreements.value.length === 0) state.value.agreement = null
+  else if (carrierAgreements.value.length === 1)
+    state.value.agreement = carrierAgreements.value[0]._id
+
+  if (!carrierAgreementIds.value.includes(state.value.agreement)) state.value.agreement = null
 }
 </script>
+
 <style scoped>
 #form {
   display: flex;

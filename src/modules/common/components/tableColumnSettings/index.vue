@@ -50,7 +50,10 @@ onMounted(() => {
   if (!model.value || model.value.length === 0) {
     const savedHeaders = JSON.parse(localStorage.getItem(props.listSettingsName))
     if (savedHeaders) tmpHeaders.value = savedHeaders
-    else tmpHeaders.value = props.defaultHeaders || []
+    else
+      tmpHeaders.value = props.defaultHeaders?.length
+        ? props.defaultHeaders
+        : props.allHeaders.filter((i) => i.default).map((i) => i.value)
     model.value = tmpHeaders.value
   }
 })

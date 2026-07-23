@@ -28,7 +28,7 @@
       <v-btn :disabled="isInvalidForm || !!templateSelector" @click="templateDialog = true">
         Создать шаблон
       </v-btn>
-      <v-btn icon @click="copyTimestamptsToClipboard">
+      <v-btn icon @click="copyTimestamptsToClipboard" variant="text">
         <v-icon>mdi-clock</v-icon>
       </v-btn>
       <v-btn v-if="showFinalPriceDialog" color="green" icon @click="openPriceDialog">

@@ -1,21 +1,21 @@
 <template>
   <div>
     <buttons-panel
-      panelType="form"
-      showSaveBtn
+      panel-type="form"
+      show-save-btn
       @cancel="cancelHandler"
-      :disabledSubmit="invalidForm"
+      :disabled-submit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
     >
       <download-doc-template-menu
         :templates="docTemplates"
-        :disabledDownloadFiles="disabledDownloadFiles"
+        :disabled-download-files="disabledDownloadFiles"
         @downloadTemplate="downloadHandler"
       />
       <download-doc-template-menu
         :templates="newDocTemplates"
-        :disabledDownloadFiles="disabledDownloadFiles"
+        :disabled-download-files="disabledDownloadFiles"
         @downloadTemplate="newDownloadHandler"
         class="mx-3"
       />
@@ -61,6 +61,8 @@
           label="Статус"
           v-model="state.status"
           :items="statusItems"
+          item-title="text"
+          item-value="value"
           @update:model-value="changeStatusHandler"
         />
         <v-btn v-if="showSendInvoiceBtn" color="primary" @click="sendInvoiceBtnHandler('sendDate')">
@@ -96,12 +98,7 @@
       <v-alert v-if="isNeedSave" type="info" text>
         Для подбора рейсов требуется сохранение документа
       </v-alert>
-      <v-dialog
-        :model-value="showDateDialog"
-        @update:model-value="showDialog = $event"
-        persistent
-        max-width="400"
-      >
+      <v-dialog v-model="showDateDialog" persistent max-width="400">
         <v-card>
           <v-card-title>{{ dateDialogTitle }}</v-card-title>
           <v-card-text />
@@ -127,183 +124,142 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import dayjs from 'dayjs'
-import { computed, watch, ref } from 'vue'
-import router from '@/router'
-import store from '@/store'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { paymentInvoiceStatuses } from '@/shared/constants'
 import { ButtonsPanel, DownloadDocTemplateMenu, DateTimeInput } from '@/shared/ui'
 import usePaymentInvoiceForm from './usePaymentInvoiceForm.js'
 import { usePaymentInvoiceDocTemplates } from './usePaymentInvoiceDocTemplates.js'
 
-export default {
-  name: 'PaymentInvoiceForm',
-  components: {
-    ButtonsPanel,
-    DownloadDocTemplateMenu,
-    DateTimeInput,
+defineOptions({ name: 'PaymentInvoiceForm' })
+
+const props = defineProps({
+  item: Object,
+  disabledPickOrders: {
+    type: Boolean,
   },
-  props: {
-    item: Object,
-    disabledPickOrders: {
-      type: Boolean,
-    },
-    disabledMainFields: {
-      type: Boolean,
-    },
-    disabledDownloadFiles: {
-      type: Boolean,
-      default: true,
-    },
+  disabledMainFields: {
+    type: Boolean,
   },
-  setup(props, ctx) {
-    const showPickOrderDialog = ref(true)
-
-    const {
-      v$,
-      state,
-      invalidForm,
-      clientErrorMessages,
-      agreementErrorMessages,
-      agreementItems,
-      changeClientHandler,
-      setFormState,
-      loaderPath,
-      showSendInvoiceBtn,
-      sendInvoiceBtnHandler,
-      showDateDialog,
-      dateDialogTitle,
-      cancelDialog,
-      dialogFieldData,
-      saveDialogDataHandler,
-      changeStatusHandler,
-      showAcceptedInvoiceBtn,
-      acceptInvoiceBtnHandler,
-      showPaidInvoiceBtn,
-      paidInvoiceBtnHandler,
-      isActDateDisabled,
-    } = usePaymentInvoiceForm(props.item, ctx)
-
-    const { docTemplates, newDocTemplates, newDownloadHandler, updatePrintForms } =
-      usePaymentInvoiceDocTemplates(state, props)
-
-    const showLoaderBtn = computed(() => {
-      if (props.item?.ordersCount > 0) return false
-      return !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
-    })
-    const isInProcess = computed(() => state.value.status === 'inProcess')
-
-    function cancelHandler() {
-      router.go(-1)
-    }
-    function changeAgreementHandler(val) {
-      if (val) updatePrintForms()
-    }
-    function pickOrdersHandler() {
-      ctx.emit('pickOrders')
-    }
-
-    function submitHandler() {
-      ctx.emit('submit', formState.value)
-    }
-
-    function saveHandler() {
-      ctx.emit('save', formState.value)
-    }
-
-    function downloadHandler(filename) {
-      ctx.emit('download', filename)
-    }
-
-    const clientItems = computed(() => store.getters?.partners.filter((i) => i.isClient) || [])
-    const isPaid = computed(() => props.item?.status === 'paid')
-    const hasOrders = computed(() => (props.item.ordersCount || 0) > 0)
-
-    const statusItems = computed(() =>
-      paymentInvoiceStatuses.map((i) => ({
-        ...i,
-        disabled:
-          (isPaid.value && !['accepted'].includes(i.value)) ||
-          (['sended', 'accepted', 'paid'].includes(i.value) && !isPaid.value) ||
-          (i.value === 'prepared' && !hasOrders.value),
-      }))
-    )
-
-    const isNeedSave = computed(() => {
-      return (
-        !props.item?._id ||
-        state?.value.client !== props.item.client ||
-        state?.value.agreement !== props.item.agreementId
-      )
-    })
-
-    const formState = computed(() => {
-      return {
-        ...state.value,
-        date: state.value.date ? dayjs(state.value.date).format() : null,
-      }
-    })
-    watch(
-      () => props.item,
-      () => {
-        setFormState(props.item)
-      },
-      { immediate: true }
-    )
-    return {
-      v$,
-      cancelHandler,
-      clientItems,
-      statusItems,
-      state,
-      invalidForm,
-      clientErrorMessages,
-      submitHandler,
-      saveHandler,
-      agreementErrorMessages,
-      pickOrdersHandler,
-      isNeedSave,
-      changeClientHandler,
-      showPickOrderDialog,
-      downloadHandler,
-      agreementItems,
-      docTemplates,
-      loaderPath,
-      newDocTemplates,
-      newDownloadHandler,
-      showLoaderBtn,
-      showSendInvoiceBtn,
-      sendInvoiceBtnHandler,
-      showDateDialog,
-      dateDialogTitle,
-      cancelDialog,
-      dialogFieldData,
-      saveDialogDataHandler,
-      isInProcess,
-      changeStatusHandler,
-      changeAgreementHandler,
-      showAcceptedInvoiceBtn,
-      acceptInvoiceBtnHandler,
-      showPaidInvoiceBtn,
-      paidInvoiceBtnHandler,
-      isActDateDisabled,
-    }
+  disabledDownloadFiles: {
+    type: Boolean,
+    default: true,
   },
-  methods: {
-    goToLoader() {
-      if (!this.item._id || !this.loaderPath) return
-      this.$router.replace({
-        path: this.$route.path + '/' + this.loaderPath,
-        query: {
-          invoiceDate: this.state.date,
-          client: this.state.client,
-          agreement: this.state.agreement,
-        },
-      })
-    },
-  },
+})
+
+const emit = defineEmits(['submit', 'save', 'cancel', 'pickOrders', 'download', 'setDate'])
+
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
+
+const {
+  v$,
+  state,
+  invalidForm,
+  clientErrorMessages,
+  agreementErrorMessages,
+  agreementItems,
+  changeClientHandler,
+  setFormState,
+  loaderPath,
+  showSendInvoiceBtn,
+  sendInvoiceBtnHandler,
+  showDateDialog,
+  dateDialogTitle,
+  cancelDialog,
+  dialogFieldData,
+  saveDialogDataHandler,
+  changeStatusHandler,
+  showAcceptedInvoiceBtn,
+  acceptInvoiceBtnHandler,
+  showPaidInvoiceBtn,
+  paidInvoiceBtnHandler,
+  isActDateDisabled,
+} = usePaymentInvoiceForm(props.item, { emit })
+
+const { docTemplates, newDocTemplates, newDownloadHandler, updatePrintForms } =
+  usePaymentInvoiceDocTemplates(state, props)
+
+const showLoaderBtn = computed(() => {
+  if (props.item?.ordersCount > 0) return false
+  return !!loaderPath.value && !props.disabledPickOrders && !invalidForm.value
+})
+const isInProcess = computed(() => state.value.status === 'inProcess')
+
+function cancelHandler() {
+  router.go(-1)
 }
+function changeAgreementHandler(val) {
+  if (val) updatePrintForms()
+}
+function pickOrdersHandler() {
+  emit('pickOrders')
+}
+
+function submitHandler() {
+  emit('submit', formState.value)
+}
+
+function saveHandler() {
+  emit('save', formState.value)
+}
+
+function downloadHandler(filename) {
+  emit('download', filename)
+}
+
+const clientItems = computed(() => store.getters?.partners.filter((i) => i.isClient) || [])
+const isPaid = computed(() => props.item?.status === 'paid')
+const hasOrders = computed(() => (props.item.ordersCount || 0) > 0)
+
+const statusItems = computed(() =>
+  paymentInvoiceStatuses.map((i) => ({
+    ...i,
+    disabled:
+      (isPaid.value && !['accepted'].includes(i.value)) ||
+      (['sended', 'accepted', 'paid'].includes(i.value) && !isPaid.value) ||
+      (i.value === 'prepared' && !hasOrders.value),
+  }))
+)
+
+const isNeedSave = computed(() => {
+  return (
+    !props.item?._id ||
+    state?.value.client !== props.item.client ||
+    state?.value.agreement !== props.item.agreementId
+  )
+})
+
+const formState = computed(() => {
+  return {
+    ...state.value,
+    date: state.value.date ? dayjs(state.value.date).format() : null,
+  }
+})
+
+function goToLoader() {
+  if (!props.item._id || !loaderPath.value) return
+  router.replace({
+    path: route.path + '/' + loaderPath.value,
+    query: {
+      invoiceDate: state.value.date,
+      client: state.value.client,
+      agreement: state.value.agreement,
+    },
+  })
+}
+
+watch(
+  () => props.item,
+  () => {
+    setFormState(props.item)
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

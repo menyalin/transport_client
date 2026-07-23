@@ -11,49 +11,47 @@
             :model-value="directoriesProfile"
             :items="companies"
             clearable
-            itemTitle="text"
+            item-title="text"
+            item-value="value"
             label="Профиль компании"
             @update:model-value="changeDirectoriesProfile"
-            max-width="500px"
+            :style="{ 'max-width': '500px' }"
           />
         </div>
       </v-col>
     </v-row>
   </v-container>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+
+<script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import AppCompanyInvites from '@/widgets/companyInvites/index.vue'
 import AppUserInfo from '@/widgets/userInfo/index.vue'
 
-export default {
-  name: 'ProfileSettingsPage',
-  components: {
-    AppCompanyInvites,
-    AppUserInfo,
-  },
-  computed: {
-    ...mapGetters(['myCompanies', 'directoriesProfile', 'companyInvites', 'user']),
-    companies() {
-      return (
-        this.myCompanies
-          // .filter((item) => item.hasOwnDirectories)
-          .map((item) => ({
-            value: item._id,
-            text: item.name,
-          }))
-      )
-    },
-  },
-  methods: {
-    async changeDirectoriesProfile(val) {
-      await this.$store.dispatch('configProfile', { directoriesProfile: val })
-      localStorage.clear()
-      sessionStorage.clear()
-      this.$store.commit('clearDirectories')
-      if (val) await this.$store.dispatch('getUserData')
-    },
-  },
+defineOptions({ name: 'ProfileSettingsPage' })
+
+const store = useStore()
+
+const myCompanies = computed(() => store.getters.myCompanies)
+const directoriesProfile = computed(() => store.getters.directoriesProfile)
+const companyInvites = computed(() => store.getters.companyInvites)
+const user = computed(() => store.getters.user)
+
+const companies = computed(() =>
+  myCompanies.value.map((item) => ({
+    value: item._id,
+    text: item.name,
+  }))
+)
+
+async function changeDirectoriesProfile(val) {
+  await store.dispatch('configProfile', { directoriesProfile: val })
+  localStorage.clear()
+  sessionStorage.clear()
+  store.commit('clearDirectories')
+  if (val) await store.dispatch('getUserData')
 }
 </script>
+
 <style></style>

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="dialog" max-width="800" @update:model-value="closeDialog" persistent>
+  <v-dialog :model-value="dialog" max-width="800" persistent>
     <v-card>
       <v-card-title class="text-h5">{{ dialogTitle }}</v-card-title>
       <form @submit.prevent="submitHandler">
@@ -46,46 +46,37 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
+
+<script setup>
 import { computed } from 'vue'
 import { usePaymentPartForm } from './model/usePaymentPartForm'
-export default {
-  name: 'PaymentPartsDialog',
-  props: {
-    routeDate: { type: String, required: true },
-    dialog: { type: Boolean, default: true },
-  },
-  setup(props, ctx) {
-    const dialogTitle = computed(() => 'Добавить сумму для частичной оплаты')
 
-    function closeDialog() {
-      ctx.emit('close')
-    }
+defineOptions({ name: 'PaymentPartsDialog' })
 
-    const {
-      state,
-      clientItems,
-      agreements,
-      vatCheckboxIsDisabled,
-      sumFieldIsDisabled,
-      submitHandler,
-      invalidForm,
-    } = usePaymentPartForm({ routeDate: props.routeDate }, ctx)
+const props = defineProps({
+  routeDate: { type: String, required: true },
+  dialog: { type: Boolean, default: true },
+})
 
-    return {
-      dialogTitle,
-      closeDialog,
-      state,
-      clientItems,
-      agreements,
-      vatCheckboxIsDisabled,
-      sumFieldIsDisabled,
-      invalidForm,
-      submitHandler,
-    }
-  },
+const emit = defineEmits(['close'])
+
+const dialogTitle = computed(() => 'Добавить сумму для частичной оплаты')
+
+function closeDialog() {
+  emit('close')
 }
+
+const {
+  state,
+  clientItems,
+  agreements,
+  vatCheckboxIsDisabled,
+  sumFieldIsDisabled,
+  submitHandler,
+  invalidForm,
+} = usePaymentPartForm({ routeDate: props.routeDate }, { emit })
 </script>
+
 <style scoped>
 .row-sum {
   display: flex;

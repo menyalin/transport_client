@@ -24,37 +24,31 @@
     </v-card>
   </div>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import { useAddressStore } from '@/entities/address'
-export default {
-  name: 'PlaceTransferDocsItem',
-  props: {
-    value: Object,
-  },
-  setup(props, ctx) {
-    const addressStore = useAddressStore()
-    const address = computed(() => addressStore.addressMap.get(props.value.address))
-    const allowedLoadingPoints = computed(() =>
-      props.value.allowedLoadingPoints.map((i) => addressStore.addressMap.get(i))
-    )
 
-    function deleteHandler() {
-      const res = confirm(`Вы действительно хотите удалить площадку <b>${props.value.title}</b>?`)
-      if (res) ctx.emit('delete', props.value._id)
-    }
+defineOptions({ name: 'PlaceTransferDocsItem' })
 
-    function editHandler() {
-      ctx.emit('edit', props.value._id)
-    }
+const props = defineProps({
+  value: Object,
+})
 
-    return {
-      address,
-      allowedLoadingPoints,
-      deleteHandler,
-      editHandler,
-    }
-  },
+const emit = defineEmits(['delete', 'edit'])
+
+const addressStore = useAddressStore()
+const address = computed(() => addressStore.addressMap.get(props.value.address))
+const allowedLoadingPoints = computed(() =>
+  props.value.allowedLoadingPoints.map((i) => addressStore.addressMap.get(i))
+)
+
+function deleteHandler() {
+  const res = confirm(`Вы действительно хотите удалить площадку <b>${props.value.title}</b>?`)
+  if (res) emit('delete', props.value._id)
+}
+
+function editHandler() {
+  emit('edit', props.value._id)
 }
 </script>
 <style scoped>

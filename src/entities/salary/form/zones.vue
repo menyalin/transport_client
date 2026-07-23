@@ -2,17 +2,11 @@
   <div id="zones-wrapper">
     <app-zone-autocomplete
       ref="loadingEl"
-      :value="zones.loadingZone"
+      v-model="zones.loadingZone"
       label="Зона погрузки"
       hide-details
-      @change="changeHandler($event, 'loadingZone')"
     />
-    <app-zone-autocomplete
-      :value="zones.unloadingZone"
-      label="Зона разгрузки"
-      hide-details
-      @change="changeHandler($event, 'unloadingZone')"
-    />
+    <app-zone-autocomplete v-model="zones.unloadingZone" label="Зона разгрузки" hide-details />
   </div>
 </template>
 
@@ -28,12 +22,9 @@ const focus = () => {
   loadingEl.value?.focus()
 }
 
-function changeHandler(val, field) {
-  zones.value = { ...zones.value, [field]: val }
-}
-
 defineExpose({ focus })
 </script>
+
 <style scoped>
 #zones-wrapper {
   display: flex;

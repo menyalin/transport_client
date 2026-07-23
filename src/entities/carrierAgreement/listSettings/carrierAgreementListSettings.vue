@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-wrapper">
+  <ListSettingsWrapper>
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="carrierAgreementListSettings"
@@ -13,11 +13,11 @@
       hide-details
       :style="{ maxWidth: '400px' }"
     />
-  </div>
+  </ListSettingsWrapper>
 </template>
 <script setup>
 import allHeaders from './allHeaders.js'
-import { AppTableColumnSetting } from '@/shared/ui'
+import { AppTableColumnSetting, ListSettingsWrapper } from '@/shared/ui'
 
 const emit = defineEmits(['updateHeaders'])
 const settings = defineModel('settings')
@@ -26,12 +26,3 @@ function updateHeadersHandler(val) {
   emit('updateHeaders', val)
 }
 </script>
-<style scoped>
-.settings-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 10px;
-  gap: 15px;
-}
-</style>

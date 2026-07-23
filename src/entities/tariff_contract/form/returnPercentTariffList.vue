@@ -17,67 +17,43 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script setup>
 import { computed } from 'vue'
 import store from '@/store'
-import { moneyFormatter } from '@/shared/utils'
 
-/*
-  truckKinds: TRUCK_KINDS_ENUM[]
-  liftCapacities: number[]
-  includedPoints: number
-  price: number
-  orderType: OrderType
-*/
+defineOptions({ name: 'ReturnPercentTariffList' })
 
-export default {
-  props: {
-    items: Array,
-  },
+const props = defineProps({
+  items: Array,
+})
 
-  setup(props, ctx) {
-    const headers = [
-      { text: 'Тип ТС', value: 'truckKinds', sortable: false },
-      { text: 'Грузоподъемность ', value: 'liftCapacities', sortable: false },
+const emit = defineEmits(['deleteByIdx', 'updateByIdx'])
 
-      { text: '%', value: 'percent', sortable: true, align: 'right' },
-      { value: 'actions', align: 'right', sortable: false },
-    ]
-    function formatPrice(price) {
-      return moneyFormatter(price)
-    }
-    function formatTruckKinds(kinds) {
-      return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
-    }
-    function formatLiftCapacities(items) {
-      return items?.join('; ') || ''
-    }
-
-    function deleteHandler(item) {
-      ctx.emit('deleteByIdx', item.idx)
-    }
-    function updateHandler(item) {
-      ctx.emit('updateByIdx', item.idx)
-    }
-
-    const preparedItems = computed(() => {
-      return props.items.map((i) => ({
-        ...i,
-      }))
-    })
-
-    return {
-      headers,
-      formatPrice,
-      formatTruckKinds,
-      formatLiftCapacities,
-
-      deleteHandler,
-      updateHandler,
-      preparedItems,
-    }
-  },
+const headers = [
+  { title: 'Тип ТС', key: 'truckKinds', sortable: false },
+  { title: 'Грузоподъемность ', key: 'liftCapacities', sortable: false },
+  { title: '%', key: 'percent', sortable: true, align: 'end' },
+  { key: 'actions', align: 'end', sortable: false },
+]
+function formatTruckKinds(kinds) {
+  return kinds?.map((i) => store.getters.truckKindsMap.get(i)).join('; ') || ''
 }
+function formatLiftCapacities(items) {
+  return items?.join('; ') || ''
+}
+
+function deleteHandler(item) {
+  emit('deleteByIdx', item.idx)
+}
+function updateHandler(item) {
+  emit('updateByIdx', item.idx)
+}
+
+const preparedItems = computed(() => {
+  return props.items.map((i) => ({
+    ...i,
+  }))
+})
 </script>
 <style scoped>
 .zone-row {

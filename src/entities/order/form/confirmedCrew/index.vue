@@ -29,7 +29,7 @@
         hide-details
         :style="{ minWidth: '200px' }"
       />
-      <v-btn @click="copyHandler"> Скопировать данные </v-btn>
+      <v-btn variant="text" size="small" @click="copyHandler"> Скопировать данные </v-btn>
     </div>
     <v-alert v-if="crewEmptyError" type="error" :style="{ maxWidth: '400px' }">
       Экипаж не задан
@@ -44,7 +44,12 @@
         Соглашение: {{ outsourceAgreementName }}
         {{ model.directiveAgreement ? '(Установлено вручную)' : '' }}
       </small>
-      <v-btn v-if="allowChangeOutsourceAgreement" @click="changeOutsourceAgreementHandler">
+      <v-btn
+        v-if="allowChangeOutsourceAgreement"
+        size="small"
+        variant="text"
+        @click="changeOutsourceAgreementHandler"
+      >
         Изменить соглашение
       </v-btn>
     </div>

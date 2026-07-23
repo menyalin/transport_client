@@ -88,12 +88,7 @@
       />
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn
-        color="primary"
-        variant="outlined"
-        size="small"
-        @click="$emit('openDocsDialog', item[itemIdField])"
-      >
+      <v-btn size="small" @click="$emit('openDocsDialog', item[itemIdField])">
         <v-icon size="small"> mdi-file-document-multiple </v-icon>
       </v-btn>
     </template>

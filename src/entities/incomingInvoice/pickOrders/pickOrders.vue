@@ -11,13 +11,12 @@
       :items="items"
       :headers="headers"
       v-model="selected"
-      item-key="_id"
-      item-value="id"
+      item-value="_id"
       show-select
       checkbox-color="primary"
       @dblclick:row="dblClickRow"
       :style="{ width: '100%' }"
-      :footer-props="{ 'items-per-page-options': [100, 200] }"
+      :items-per-page-options="[100, 200]"
     >
       <template #[`item.docsStatus`]="{ item }">
         <DocStatusCell :status="item.docsStatus" />
@@ -26,56 +25,40 @@
   </div>
 </template>
 
-<script>
-import { getCurrentInstance } from 'vue'
+<script setup>
+import { useRouter } from 'vue-router'
 import { usePickOrdersForIncomingInvoice } from './usePickOrders'
 import PickOrdersSettings from './pickOrdersSettings.vue'
 import DocStatusCell from './docStatusCell.vue'
-export default {
-  name: 'PickOrdersForIncomingInvoice',
-  components: {
-    PickOrdersSettings,
-    DocStatusCell,
-  },
-  props: {
-    invoiceId: String,
-    agreementId: String,
-    carrierId: String,
-  },
 
-  setup(props) {
-    const { proxy } = getCurrentInstance()
+defineOptions({ name: 'PickOrdersForIncomingInvoice' })
 
-    const { items, loading, refresh, headers, selected, selectedIds, settings, addOrderHandler } =
-      usePickOrdersForIncomingInvoice(props)
-    function dblClickRow(_event, { item }) {
-      proxy.$router.push({
-        name: 'DetailsOrder',
-        params: { id: item._id },
-      })
-    }
-    function goBack() {
-      proxy.$router.replace({
-        name: 'IncomingInvoiceDetail',
-        params: { id: props.invoiceId },
-      })
-    }
+const props = defineProps({
+  invoiceId: String,
+  agreementId: String,
+  carrierId: String,
+})
 
-    return {
-      settings,
-      items,
-      loading,
-      refresh,
-      goBack,
-      headers,
-      selected,
-      selectedIds,
-      dblClickRow,
-      addOrderHandler,
-    }
-  },
+const router = useRouter()
+
+const { items, loading, refresh, headers, selected, settings, addOrderHandler } =
+  usePickOrdersForIncomingInvoice(props)
+
+function dblClickRow(_event, { item }) {
+  router.push({
+    name: 'DetailsOrder',
+    params: { id: item._id },
+  })
+}
+
+function goBack() {
+  router.replace({
+    name: 'IncomingInvoiceDetail',
+    params: { id: props.invoiceId },
+  })
 }
 </script>
+
 <style scoped>
 .wrapper {
   display: flex;

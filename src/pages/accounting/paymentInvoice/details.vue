@@ -22,7 +22,7 @@
         :orders="orders"
         :loading="ordersLoading"
         :ordersTotalCount="item.ordersCount"
-        :listOptions.sync="listOptions"
+        v-model:options="listOptions"
         :disabled="disabledPickOrders"
         @delete="deleteOrderFromPaymentInvoice"
         @dblRowClick="dblRowClickHandler"
@@ -30,24 +30,17 @@
       />
     </v-card>
 
-    <v-dialog
-      v-if="item._id"
-      :model-value="showPickOrderDialog"
-      @update:model-value="showPickOrderDialog = $event"
-      fullscreen
-      persistent
-      :scrim="false"
-    >
+    <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent :scrim="false">
       <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>
   </form-wrapper>
 </template>
 
-<script>
+<script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import socket from '@/socket'
-import router from '@/router'
-import store from '@/store'
 import { FormWrapper } from '@/shared/ui'
 import {
   PaymentInvoiceForm,
@@ -59,266 +52,219 @@ import { PaymentInvoiceService } from '@/shared/services'
 import { useDownloadTemplate } from './model/useDownloadTemplate'
 import { usePersistedRef } from '@/shared/hooks'
 
-export default {
-  name: 'PaymentInvoiceDetails',
-  components: {
-    FormWrapper,
-    PaymentInvoiceForm,
-    PickOrders,
-    PaymentInvoiceOrdersList,
-    PaymentInvoiceResult,
-  },
-  props: {
-    id: String,
-  },
-  setup(props) {
-    const item = ref({})
+defineOptions({ name: 'PaymentInvoiceDetails' })
 
-    const listOptions = usePersistedRef({}, 'invoice_orders: ' + props.id)
+const props = defineProps({
+  id: String,
+})
 
-    const orders = ref([])
-    const ordersLoading = ref(false)
+const store = useStore()
+const router = useRouter()
 
-    const ordersError = ref(null)
+const item = ref({})
+const listOptions = usePersistedRef({}, 'invoice_orders: ' + props.id)
 
-    const isExistedItem = computed(() => Boolean(props.id))
+const orders = ref([])
+const ordersLoading = ref(false)
+const ordersError = ref(null)
 
-    const invoiceWithOrders = computed(() => ({
-      ...item.value,
-      orders: orders.value,
-    }))
-    const { downloadHandler } = useDownloadTemplate(invoiceWithOrders)
+const isExistedItem = computed(() => Boolean(props.id))
 
-    const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
-    const showPickOrderDialog = ref(store.getters.storedValue(storedSettingsName) || false)
-    const disabledPickOrders = computed(
-      () => !item.value?._id || item.value?.status !== 'inProcess'
-    )
+const invoiceWithOrders = computed(() => ({
+  ...item.value,
+  orders: orders.value,
+}))
+const { downloadHandler } = useDownloadTemplate(invoiceWithOrders)
 
-    const needUpdateRows = computed(() => {
-      return orders.value?.some((i) => i && i.needUpdate)
-    })
+const storedSettingsName = 'paymentInvoice:showPickOrderDialog'
+const showPickOrderDialog = ref(store.getters.storedValue(storedSettingsName) || false)
+const disabledPickOrders = computed(() => !item.value?._id || item.value?.status !== 'inProcess')
 
-    const disabledDownloadFiles = computed(() => orders.value.length === 0 || needUpdateRows.value)
-    const disabledMainFields = computed(() => {
-      return item.value?.ordersCount > 0
-    })
+const needUpdateRows = computed(() => {
+  return orders.value?.some((i) => i && i.needUpdate)
+})
 
-    const showDeleteBtn = computed(() => {
-      return (
-        !!props?.id &&
-        store.getters.hasPermission('paymentInvoice:delete') &&
-        orders.value.length === 0
-      )
-    })
+const disabledDownloadFiles = computed(() => orders.value.length === 0 || needUpdateRows.value)
+const disabledMainFields = computed(() => {
+  return item.value?.ordersCount > 0
+})
 
-    async function deleteOrderFromPaymentInvoice(orderIds) {
-      if (!orderIds || orderIds.length === 0) return null
-      await PaymentInvoiceService.deleteOrdersFromPaymentInvoice({
-        orderIds,
-        paymentInvoiceId: item.value._id,
-      })
-    }
+const showDeleteBtn = computed(() => {
+  return (
+    !!props?.id && store.getters.hasPermission('paymentInvoice:delete') && orders.value.length === 0
+  )
+})
 
-    function openDialog() {
-      showPickOrderDialog.value = true
-      store.commit('setStoredValue', { name: storedSettingsName, value: true })
-    }
-
-    function closeDialog() {
-      showPickOrderDialog.value = false
-      store.commit('setStoredValue', { name: storedSettingsName, value: false })
-    }
-
-    let loading = ref(false)
-    const showError = ref(false)
-    const errorMessage = ref('')
-
-    // Функция загрузки заказов
-    async function loadInvoiceOrders() {
-      if (!listOptions.value.itemsPerPage) return
-      const invoiceId = props.id
-      if (!invoiceId) {
-        orders.value = []
-
-        return
-      }
-      try {
-        ordersLoading.value = true
-        ordersError.value = null
-        orders.value = []
-        const res = await PaymentInvoiceService.getInvoiceOrders(invoiceId, {
-          limit: listOptions.value.itemsPerPage,
-          skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
-        })
-        orders.value = res.items || []
-      } catch (e) {
-        ordersError.value = e.message
-        store.commit('setError', `Ошибка загрузки заказов: ${e.message}`)
-      } finally {
-        ordersLoading.value = false
-      }
-    }
-
-    async function getItem() {
-      if (!props.id) return null
-      try {
-        loading.value = true
-        const res = await PaymentInvoiceService.getById(props.id)
-        item.value = { ...res }
-
-        // Загружаем заказы ПОСЛЕ того как акт загружен
-      } catch (e) {
-        store.commit('setError', e.message)
-      } finally {
-        loading.value = false
-      }
-    }
-    async function setDateHandler(params) {
-      try {
-        loading.value = true
-        const res = await PaymentInvoiceService.setStatus(props.id, params)
-        item.value = { ...item.value, ...res }
-      } catch (e) {
-        store.commit('setError', e.message)
-      } finally {
-        loading.value = false
-      }
-    }
-
-    async function submit(formState, saveOnly) {
-      let updatedItem
-      const itemId = props.id ? props.id : item.value?._id
-      try {
-        loading.value = true
-        if (itemId) {
-          updatedItem = await PaymentInvoiceService.updateOne(itemId, formState)
-        } else {
-          updatedItem = await PaymentInvoiceService.create(formState)
-          if (saveOnly)
-            router.replace({
-              name: 'PaymentInvoiceDetail',
-              params: { id: updatedItem._id },
-            })
-        }
-        if (!saveOnly) {
-          router.go(-1)
-          //  router.push('/accounting/paymentInvoice')
-        } else {
-          item.value = updatedItem
-          // Загружаем заказы после сохранения нового акта
-        }
-      } catch (e) {
-        showError.value = true
-        errorMessage.value = e.response.data
-        store.commit('setError', e.message)
-      } finally {
-        loading.value = false
-      }
-    }
-
-    async function deleteHandler() {
-      try {
-        if (props.id) {
-          loading.value = true
-          await PaymentInvoiceService.deleteById(props.id)
-          router.push('/accounting/paymentInvoice')
-          loading.value = false
-        } else return null
-      } catch (e) {
-        loading.value = false
-        showError.value = true
-        errorMessage.value = e.response.data
-        store.commit('setError', e.message)
-      }
-    }
-    watch(listOptions, loadInvoiceOrders, { deep: true })
-    watch(() => props.id, getItem, { immediate: true, deep: true })
-
-    function dblRowClickHandler(orderId) {
-      router.push('/orders/' + orderId)
-    }
-
-    function setInvoiceAnalytic(total) {
-      if (!item.value) return
-      item.value = Object.assign(item.value, total)
-    }
-
-    // function addOrders({ paymentInvoiceId, orders: newOrders }) {
-    function addOrders(payload) {
-      if (payload.paymentInvoiceId !== item.value._id) return null
-
-      setInvoiceAnalytic(payload.total)
-      if (!Array.isArray(orders.value)) {
-        orders.value = []
-      }
-      orders.value.push(...payload.orders)
-    }
-
-    function removeOrders({ paymentInvoiceId, orderIds, total }) {
-      if (paymentInvoiceId !== item.value._id) return null
-      setInvoiceAnalytic(total)
-      orders.value = orders.value.filter((i) => !orderIds.includes(i._id))
-    }
-
-    async function updateItemPrice(itemId) {
-      try {
-        ordersLoading.value = true
-        const res = await PaymentInvoiceService.updatePrices(itemId)
-
-        if (!res.order) return
-
-        const orderIdx = orders.value.findIndex((i) => itemId === i._id)
-        if (orderIdx !== -1) {
-          setInvoiceAnalytic(res.total)
-          orders.value.splice(orderIdx, 1, res.order)
-        }
-      } catch (e) {
-        console.log(e)
-      } finally {
-        ordersLoading.value = false
-      }
-    }
-
-    socket.on('orders:addedToPaymentInvoice', addOrders)
-    socket.on('orders:removedFromPaimentInvoice', removeOrders)
-
-    onBeforeUnmount(() => {
-      socket.off('orders:removedFromPaimentInvoice', removeOrders)
-      socket.off('orders:addedToPaymentInvoice', addOrders)
-    })
-
-    return {
-      item,
-      loading,
-      ordersLoading,
-      orders,
-      listOptions,
-      showError,
-      errorMessage,
-      submit,
-      deleteHandler,
-      showPickOrderDialog,
-      openDialog,
-      closeDialog,
-      deleteOrderFromPaymentInvoice,
-      showDeleteBtn,
-      dblRowClickHandler,
-      disabledPickOrders,
-      disabledMainFields,
-      disabledDownloadFiles,
-      updateItemPrice,
-      downloadHandler,
-      setDateHandler,
-      isExistedItem,
-    }
-  },
-  methods: {
-    cancel() {
-      this.$router.go(-1)
-    },
-  },
+async function deleteOrderFromPaymentInvoice(orderIds) {
+  if (!orderIds || orderIds.length === 0) return null
+  await PaymentInvoiceService.deleteOrdersFromPaymentInvoice({
+    orderIds,
+    paymentInvoiceId: item.value._id,
+  })
 }
+
+function openDialog() {
+  showPickOrderDialog.value = true
+  store.commit('setStoredValue', { name: storedSettingsName, value: true })
+}
+
+function closeDialog() {
+  showPickOrderDialog.value = false
+  store.commit('setStoredValue', { name: storedSettingsName, value: false })
+}
+
+const loading = ref(false)
+const showError = ref(false)
+const errorMessage = ref('')
+
+async function loadInvoiceOrders() {
+  if (!listOptions.value.itemsPerPage) return
+  const invoiceId = props.id
+  if (!invoiceId) {
+    orders.value = []
+    return
+  }
+  try {
+    ordersLoading.value = true
+    ordersError.value = null
+    orders.value = []
+    const res = await PaymentInvoiceService.getInvoiceOrders(invoiceId, {
+      limit: listOptions.value.itemsPerPage,
+      skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
+    })
+    orders.value = res.items || []
+  } catch (e) {
+    ordersError.value = e.message
+    store.commit('setError', `Ошибка загрузки заказов: ${e.message}`)
+  } finally {
+    ordersLoading.value = false
+  }
+}
+
+async function getItem() {
+  if (!props.id) return null
+  try {
+    loading.value = true
+    const res = await PaymentInvoiceService.getById(props.id)
+    item.value = { ...res }
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function setDateHandler(params) {
+  try {
+    loading.value = true
+    const res = await PaymentInvoiceService.setStatus(props.id, params)
+    item.value = { ...item.value, ...res }
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function submit(formState, saveOnly) {
+  let updatedItem
+  const itemId = props.id ? props.id : item.value?._id
+  try {
+    loading.value = true
+    if (itemId) {
+      updatedItem = await PaymentInvoiceService.updateOne(itemId, formState)
+    } else {
+      updatedItem = await PaymentInvoiceService.create(formState)
+      if (saveOnly)
+        router.replace({
+          name: 'PaymentInvoiceDetail',
+          params: { id: updatedItem._id },
+        })
+    }
+    if (!saveOnly) {
+      router.go(-1)
+    } else {
+      item.value = updatedItem
+    }
+  } catch (e) {
+    showError.value = true
+    errorMessage.value = e.response.data
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function deleteHandler() {
+  try {
+    if (props.id) {
+      loading.value = true
+      await PaymentInvoiceService.deleteById(props.id)
+      router.push('/accounting/paymentInvoice')
+      loading.value = false
+    } else return null
+  } catch (e) {
+    loading.value = false
+    showError.value = true
+    errorMessage.value = e.response.data
+    store.commit('setError', e.message)
+  }
+}
+
+watch(listOptions, loadInvoiceOrders, { deep: true })
+watch(() => props.id, getItem, { immediate: true, deep: true })
+
+function dblRowClickHandler(orderId) {
+  router.push('/orders/' + orderId)
+}
+
+function setInvoiceAnalytic(total) {
+  if (!item.value) return
+  item.value = Object.assign(item.value, total)
+}
+
+function addOrders(payload) {
+  if (payload.paymentInvoiceId !== item.value._id) return null
+
+  setInvoiceAnalytic(payload.total)
+  if (!Array.isArray(orders.value)) {
+    orders.value = []
+  }
+  orders.value.push(...payload.orders)
+}
+
+function removeOrders({ paymentInvoiceId, orderIds, total }) {
+  if (paymentInvoiceId !== item.value._id) return null
+  setInvoiceAnalytic(total)
+  orders.value = orders.value.filter((i) => !orderIds.includes(i._id))
+}
+
+async function updateItemPrice(itemId) {
+  try {
+    ordersLoading.value = true
+    const res = await PaymentInvoiceService.updatePrices(itemId)
+
+    if (!res.order) return
+
+    const orderIdx = orders.value.findIndex((i) => itemId === i._id)
+    if (orderIdx !== -1) {
+      setInvoiceAnalytic(res.total)
+      orders.value.splice(orderIdx, 1, res.order)
+    }
+  } catch (e) {
+    console.log(e)
+  } finally {
+    ordersLoading.value = false
+  }
+}
+
+socket.on('orders:addedToPaymentInvoice', addOrders)
+socket.on('orders:removedFromPaimentInvoice', removeOrders)
+
+onBeforeUnmount(() => {
+  socket.off('orders:removedFromPaimentInvoice', removeOrders)
+  socket.off('orders:addedToPaymentInvoice', addOrders)
+})
 </script>
 
 <style></style>

@@ -4,6 +4,8 @@
       ref="loadingEl"
       :model-value="points.loading"
       :items="loadingAddressItems"
+      item-title="text"
+      item-value="value"
       label="Погрузка"
       hide-details
       @update:model-value="changeHandler($event, 'loading')"
@@ -11,6 +13,8 @@
     <v-autocomplete
       :model-value="points.unloading"
       :items="unloadingAddressItems"
+      item-title="text"
+      item-value="value"
       label="Разгрузка"
       hide-details
       @update:model-value="changeHandler($event, 'unloading')"

@@ -2,8 +2,8 @@
   <entity-list-wrapper>
     <buttons-panel
       panel-type="list"
-      :disabled-refresh="!$store.getters.directoriesProfile"
-      :disabledSubmit="!$store.getters.hasPermission('paymentInvoice:write')"
+      :disabled-refresh="!store.getters.directoriesProfile"
+      :disabled-submit="!store.getters.hasPermission('paymentInvoice:write')"
       @submit="create"
       @refresh="refresh"
     >
@@ -25,62 +25,42 @@
       :routesCount="routesCount"
       :total="total"
       :headers="headers"
-      :listOptions.sync="listOptions"
+      v-model:options="listOptions"
       :loading="loading"
     />
   </entity-list-wrapper>
 </template>
-<script>
+
+<script setup>
 import { ref } from 'vue'
+import { useStore } from 'vuex'
 import { useListData } from './model/useListData.js'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import { usePartnerStore } from '@/entities/partner'
 import { PaymentInvoicesListSettings, PaymentInvoiceDataTable } from '@/entities/paymentInvoice'
 
-export default {
-  name: 'PaymentInvoiceList',
-  components: {
-    ButtonsPanel,
-    EntityListWrapper,
-    PaymentInvoicesListSettings,
-    PaymentInvoiceDataTable,
-  },
-  setup() {
-    const partnerStore = usePartnerStore()
+defineOptions({ name: 'PaymentInvoiceList' })
 
-    const headers = ref([])
-    function changeHeaders(val) {
-      headers.value = val
-    }
-    const {
-      create,
-      refresh,
-      settings,
-      items,
-      totalCount,
-      routesCount,
-      loading,
-      listOptions,
-      total,
-      downloadHandler,
-    } = useListData()
+const store = useStore()
+const partnerStore = usePartnerStore()
 
-    return {
-      create,
-      refresh,
-      settings,
-      items,
-      totalCount,
-      routesCount,
-      headers,
-      changeHeaders,
-      total,
-      loading,
-      listOptions,
-      downloadHandler,
-      partnerStore,
-    }
-  },
+const headers = ref([])
+function changeHeaders(val) {
+  headers.value = val
 }
+
+const {
+  create,
+  refresh,
+  settings,
+  items,
+  totalCount,
+  routesCount,
+  loading,
+  listOptions,
+  total,
+  downloadHandler,
+} = useListData()
 </script>
+
 <style></style>

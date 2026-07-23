@@ -1,31 +1,33 @@
 <template>
   <v-card>
-    <v-card-title> {{ item ? 'Редактирование' : 'Создание' }} транспортной накладной </v-card-title>
+    <v-card-title>
+      {{ props.item ? 'Редактирование' : 'Создание' }} транспортной накладной
+    </v-card-title>
     <v-card-text class="form-wrapper">
       <v-radio-group
         v-model="form.shipperAddressId"
         @update:model-value="changeShipperAddressHandler"
       >
-        <template v-slot:label>
+        <template #label>
           <div><b>Грузоотправитель</b></div>
         </template>
         <v-radio
-          v-for="item in shipperAddressItems"
-          :key="item.id"
-          :value="item.value"
-          :label="item.text"
+          v-for="addrItem in props.shipperAddressItems"
+          :key="addrItem.id"
+          :value="addrItem.value"
+          :label="addrItem.text"
         />
       </v-radio-group>
 
       <v-radio-group v-model="form.consigneeAddressId">
-        <template v-slot:label>
+        <template #label>
           <div><b>Грузополучатель</b></div>
         </template>
         <v-radio
-          v-for="item in consigneeAddressItems"
-          :key="item.id"
-          :value="item.value"
-          :label="item.text"
+          v-for="addrItem in props.consigneeAddressItems"
+          :key="addrItem.id"
+          :value="addrItem.value"
+          :label="addrItem.text"
         />
       </v-radio-group>
 
@@ -71,109 +73,99 @@
   </v-card>
 </template>
 
-<script>
+<script setup>
 import { ref, watch, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { DateTimeInput } from '@/shared/ui'
 
-export default {
-  name: 'TransportWaybillForm',
-  components: {
-    DateTimeInput,
+defineOptions({ name: 'TransportWaybillForm' })
+
+const props = defineProps({
+  shipperAddressItems: Array,
+  consigneeAddressItems: Array,
+  isVisible: Boolean,
+  item: {
+    type: Object,
+    default: () => null,
   },
-  props: {
-    shipperAddressItems: Array,
-    consigneeAddressItems: Array,
-    isVisible: Boolean,
-    item: {
-      type: Object,
-      default: () => null,
-    },
-  },
-  setup(props, { emit }) {
-    const initialState = {
-      number: null,
-      shipperAddressId: null,
-      consigneeAddressId: null,
-      date: null,
-      docsDescription: null,
-      note: null,
-    }
+})
 
-    const form = ref({})
+const emit = defineEmits(['cancel', 'submit'])
 
-    const rules = computed(() => ({
-      number: { required },
-      date: { required },
-      shipperAddressId: { required },
-      consigneeAddressId: { required },
-      docsDescription: { required },
-      note: {},
-    }))
-
-    const v$ = useVuelidate(rules, form)
-    function resetForm() {
-      form.value = { ...initialState }
-      v$.value.$reset()
-    }
-    function setFormState(args) {
-      const [newState, isVisible] = args
-
-      if (!isVisible) {
-        resetForm()
-        return
-      }
-
-      if (!form.value.shipperAddressId && props.shipperAddressItems?.length === 1)
-        form.value = {
-          ...form.value,
-          shipperAddressId: props.shipperAddressItems[0].value,
-          date: props.shipperAddressItems[0].date,
-        }
-
-      if (!form.value.consigneeAddressId && props.consigneeAddressItems.length === 1) {
-        form.value = {
-          ...form.value,
-          consigneeAddressId: props.consigneeAddressItems[0].value,
-        }
-      }
-
-      form.value = { ...initialState, ...form.value, ...(newState ?? {}) }
-    }
-
-    const getErrorMessage = (field) => {
-      if (!field.$dirty) return []
-      return field.$errors.map((error) => error.$message)
-    }
-
-    const cancel = () => {
-      emit('cancel')
-    }
-
-    const submit = () => emit('submit', { ...form.value })
-
-    function changeShipperAddressHandler(addressId) {
-      const addressItem = props.shipperAddressItems.find((i) => i.value === addressId)
-      if (!addressItem) return
-      form.value = { ...form.value, date: addressItem.date }
-    }
-
-    watch([() => props.item, () => props.isVisible], setFormState, {
-      deep: true,
-      immediate: true,
-    })
-
-    return {
-      form,
-      v$,
-      getErrorMessage,
-      cancel,
-      submit,
-      changeShipperAddressHandler,
-    }
-  },
+const initialState = {
+  number: null,
+  shipperAddressId: null,
+  consigneeAddressId: null,
+  date: null,
+  docsDescription: null,
+  note: null,
 }
+
+const form = ref({})
+
+const rules = computed(() => ({
+  number: { required },
+  date: { required },
+  shipperAddressId: { required },
+  consigneeAddressId: { required },
+  docsDescription: { required },
+  note: {},
+}))
+
+const v$ = useVuelidate(rules, form)
+
+function resetForm() {
+  form.value = { ...initialState }
+  v$.value.$reset()
+}
+
+function setFormState(args) {
+  const [newState, isVisible] = args
+
+  if (!isVisible) {
+    resetForm()
+    return
+  }
+
+  if (!form.value.shipperAddressId && props.shipperAddressItems?.length === 1)
+    form.value = {
+      ...form.value,
+      shipperAddressId: props.shipperAddressItems[0].value,
+      date: props.shipperAddressItems[0].date,
+    }
+
+  if (!form.value.consigneeAddressId && props.consigneeAddressItems.length === 1) {
+    form.value = {
+      ...form.value,
+      consigneeAddressId: props.consigneeAddressItems[0].value,
+    }
+  }
+
+  form.value = { ...initialState, ...form.value, ...(newState ?? {}) }
+}
+
+const getErrorMessage = (field) => {
+  if (!field.$dirty) return []
+  return field.$errors.map((error) => error.$message)
+}
+
+const cancel = () => {
+  emit('cancel')
+}
+
+const submit = () => emit('submit', { ...form.value })
+
+function changeShipperAddressHandler(addressId) {
+  const addressItem = props.shipperAddressItems.find((i) => i.value === addressId)
+  if (!addressItem) return
+  form.value = { ...form.value, date: addressItem.date }
+}
+
+watch([() => props.item, () => props.isVisible], setFormState, {
+  deep: true,
+  immediate: true,
+})
 </script>
 
 <style scoped>

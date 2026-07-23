@@ -2,7 +2,7 @@
   <div>
     <buttons-panel
       panel-type="form"
-      :disabled-submit="!$store.getters.hasPermission('agreement:write') || isInvalidForm"
+      :disabled-submit="!store.getters.hasPermission('agreement:write') || isInvalidForm"
       @cancel="cancelHandler"
       @submit="submitHandler"
     />
@@ -119,49 +119,39 @@
     </v-btn>
   </div>
 </template>
-<script>
+
+<script setup>
+import { useStore } from 'vuex'
 import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
 import AppClients from './clients.vue'
 import { useForm } from './useForm'
 
-export default {
-  name: 'AgreementForm',
-  components: {
-    ButtonsPanel,
-    DateTimeInput,
-    AppClients,
-    VatRateSelect,
-  },
-  props: {
-    agreement: {
-      type: Object,
-    },
-    carrierItems: Array,
-    displayDeleteBtn: {
-      type: Boolean,
-      default: false,
-    },
-    openInModal: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props, ctx) {
-    const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm } = useForm(
-      props,
-      ctx
-    )
+defineOptions({ name: 'AgreementForm' })
 
-    return {
-      state,
-      deleteHandler,
-      submitHandler,
-      cancelHandler,
-      isInvalidForm,
-    }
+const props = defineProps({
+  agreement: {
+    type: Object,
   },
-}
+  carrierItems: Array,
+  displayDeleteBtn: {
+    type: Boolean,
+    default: false,
+  },
+  openInModal: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(['submit', 'cancel', 'delete'])
+
+const store = useStore()
+
+const { state, deleteHandler, submitHandler, cancelHandler, isInvalidForm } = useForm(props, {
+  emit,
+})
 </script>
+
 <style scoped>
 .row-input {
   display: flex;

@@ -19,6 +19,8 @@
           :errorMessages="addressFieldErrors"
           closable-chips
           :items="addressItems"
+          item-title="text"
+          item-value="value"
           clearable
           auto-select-first
         />
@@ -26,6 +28,8 @@
           :items="agreements"
           v-model="v$.agreement.$model"
           label="Соглашение"
+          item-title="text"
+          item-value="value"
           closable-chips
           clearable
           auto-select-first
@@ -77,45 +81,33 @@
     </v-card-actions>
   </v-card>
 </template>
-<script>
+<script setup>
 import { useFormState } from './model/useFormState.js'
-export default {
-  name: 'IdleTruckNotifyForm',
-  props: {
-    partnerId: String,
-    loading: Boolean,
-    initialState: Object,
-    agreements: Array,
-  },
-  setup(props, ctx) {
-    const {
-      state,
-      submit,
-      cancel,
-      addressItems,
-      invalidForm,
-      v$,
-      titleFieldErrors,
-      addressFieldErrors,
-      emailFieldErrors,
-      ccEmailFieldErrors,
-      bccEmailFieldErrors,
-    } = useFormState(props, ctx)
-    return {
-      v$,
-      state,
-      submit,
-      cancel,
-      addressItems,
-      invalidForm,
-      titleFieldErrors,
-      addressFieldErrors,
-      emailFieldErrors,
-      ccEmailFieldErrors,
-      bccEmailFieldErrors,
-    }
-  },
-}
+
+defineOptions({ name: 'IdleTruckNotifyForm' })
+
+const props = defineProps({
+  partnerId: String,
+  loading: Boolean,
+  initialState: Object,
+  agreements: Array,
+})
+
+const emit = defineEmits(['submit', 'cancel'])
+
+const {
+  state,
+  submit,
+  cancel,
+  addressItems,
+  invalidForm,
+  v$,
+  titleFieldErrors,
+  addressFieldErrors,
+  emailFieldErrors,
+  ccEmailFieldErrors,
+  bccEmailFieldErrors,
+} = useFormState(props, { emit })
 </script>
 <style scoped>
 .form_wrapper {

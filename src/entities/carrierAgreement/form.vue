@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
     <buttons-panel
-      panelType="form"
-      showSaveBtn
+      panel-type="form"
+      show-save-btn
       @cancel="cancelHandler"
-      :disabledSubmit="invalidForm"
+      :disabled-submit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
     />
@@ -81,39 +81,26 @@
     </div>
   </div>
 </template>
-<script>
+
+<script setup>
 import { useForm } from './useForm.js'
 
-import { ButtonsPanel, DateTimeInput, VatRateSelect } from '@/shared/ui'
+import { ButtonsPanel, VatRateSelect } from '@/shared/ui'
 
-export default {
-  name: 'IncomingInvoiceForm',
-  components: {
-    DateTimeInput,
-    ButtonsPanel,
-    VatRateSelect,
-  },
-  props: {
-    readonly: Boolean,
-    item: Object,
-    allowUseCustomerRoleCarriers: { type: Array, required: true },
-  },
-  setup(props, ctx) {
-    const { state, v$, submitHandler, cancelHandler, saveHandler, invalidForm, vatRateDisabled } =
-      useForm(props, ctx)
+defineOptions({ name: 'CarrierAgreementForm' })
 
-    return {
-      state,
-      v$,
-      submitHandler,
-      cancelHandler,
-      saveHandler,
-      invalidForm,
-      vatRateDisabled,
-    }
-  },
-}
+const props = defineProps({
+  readonly: Boolean,
+  item: Object,
+  allowUseCustomerRoleCarriers: { type: Array, required: true },
+})
+
+const emit = defineEmits(['submit', 'save', 'cancel'])
+
+const { state, v$, submitHandler, cancelHandler, saveHandler, invalidForm, vatRateDisabled } =
+  useForm(props, { emit })
 </script>
+
 <style scoped>
 #form {
   display: flex;

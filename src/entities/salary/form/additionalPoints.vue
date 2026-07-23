@@ -15,6 +15,8 @@
       :model-value="additionalPoints.orderType"
       label="Тип рейса"
       :items="orderAnalyticTypes"
+      item-title="text"
+      item-value="value"
       hide-details
       @update:model-value="changeHandler($event, 'orderType')"
     />
@@ -23,7 +25,7 @@
       label="Кол-во точек включенных в тариф"
       type="number"
       hide-details
-      @change="changeHandler($event, 'includedPoints')"
+      @update:model-value="changeHandler(Number($event), 'includedPoints')"
     />
   </div>
 </template>

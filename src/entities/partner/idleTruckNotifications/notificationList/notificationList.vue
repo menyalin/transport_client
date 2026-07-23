@@ -2,7 +2,7 @@
   <v-data-table
     :items="filteredItems"
     :headers="headers"
-    :itemsPerPage="-1"
+    :items-per-page="-1"
     :search="listSettings.searchStr"
   >
     <template #top>
@@ -10,6 +10,8 @@
         <v-select
           label="Состояние"
           :items="isActiveComparatorItems"
+          item-title="text"
+          item-value="value"
           v-model="listSettings.isActive"
           :style="{ 'max-width': '250px' }"
         />
@@ -39,52 +41,43 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script setup>
 import { useListData } from './model'
 
 import { headers } from './listHeaders'
 
-export default {
-  name: 'NotificationListFeature',
-  props: {
-    partnerId: String,
-    items: {
-      type: Array,
-    },
+defineOptions({ name: 'NotificationListFeature' })
+
+const props = defineProps({
+  partnerId: String,
+  items: {
+    type: Array,
   },
-  setup(props, ctx) {
-    const {
-      deleteHandler,
-      editHandler,
-      switchStatusHandler,
-      filteredItems,
-      isActiveComparatorItems,
-      listSettings,
-    } = useListData(props, ctx)
-    return {
-      headers,
-      deleteHandler,
-      editHandler,
-      switchStatusHandler,
-      filteredItems,
-      isActiveComparatorItems,
-      listSettings,
-    }
-  },
-  methods: {
-    async switchStatus(id, currentStatus) {
-      if (!currentStatus) this.switchStatusHandler(id)
-      else {
-        const res = confirm('Уверены? Выключение уведомления отменит созданные задачи')
-        if (!res) return
-        this.switchStatusHandler(id)
-      }
-    },
-    async removeItem(id) {
-      const res = confirm('Вы уверены?')
-      if (res) this.deleteHandler(id)
-    },
-  },
+})
+
+const emit = defineEmits(['editNotify', 'change'])
+
+const {
+  deleteHandler,
+  editHandler,
+  switchStatusHandler,
+  filteredItems,
+  isActiveComparatorItems,
+  listSettings,
+} = useListData(props, { emit })
+
+async function switchStatus(id, currentStatus) {
+  if (!currentStatus) switchStatusHandler(id)
+  else {
+    const res = confirm('Уверены? Выключение уведомления отменит созданные задачи')
+    if (!res) return
+    switchStatusHandler(id)
+  }
+}
+
+async function removeItem(id) {
+  const res = confirm('Вы уверены?')
+  if (res) deleteHandler(id)
 }
 </script>
 <style scoped>

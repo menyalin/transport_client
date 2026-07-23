@@ -39,25 +39,25 @@
     </td>
   </tr>
 </template>
-<script>
+
+<script setup>
+import { useRouter } from 'vue-router'
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 
-export default {
-  name: 'CompareItemsTableRow',
-  props: {
-    item: Object,
-    idx: Number,
-  },
-  methods: {
-    moneyFormatter(args) {
-      return moneyFormatter(args)
-    },
-    rowDblClickHandler(item) {
-      this.$router.push('/orders/' + item.orderId)
-    },
-  },
+defineOptions({ name: 'CompareItemsTableRow' })
+
+defineProps({
+  item: Object,
+  idx: Number,
+})
+
+const router = useRouter()
+
+function rowDblClickHandler(item) {
+  router.push('/orders/' + item.orderId)
 }
 </script>
+
 <style scoped>
 .has-diff {
   background-color: rgba(255, 86, 86, 0.459);

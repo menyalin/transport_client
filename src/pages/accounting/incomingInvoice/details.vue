@@ -2,8 +2,8 @@
   <form-wrapper
     :loading="loading"
     :displayDeleteBtn="showDeleteBtn"
-    @delete="deleteHandler"
     :itemIsMissing="item === null"
+    @delete="deleteHandler"
   >
     <IncomingInvoiceForm
       v-if="item"
@@ -20,67 +20,32 @@
   </form-wrapper>
 </template>
 
-<script>
+<script setup>
 import { FormWrapper } from '@/shared/ui'
 import { IncomingInvoiceForm } from '@/entities/incomingInvoice'
 import { useItemData } from './model/useItemData.js'
 import { useCarrierAgreements } from '@/entities/carrierAgreement'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'PaymentInvoiceDetails',
-  components: {
-    FormWrapper,
-    IncomingInvoiceForm,
-  },
-  props: {
-    id: String,
-  },
-  setup(props) {
-    const { items: allCarrierAgreements } = useCarrierAgreements(props)
-    const carrierStore = useCarrierStore()
-    const {
-      item,
-      disabledPickOrders,
-      showDeleteBtn,
-      disabledMainFields,
-      loading,
-      showError,
-      errorMessage,
-      submit,
-      deleteHandler,
-      deleteOrderFromPaymentInvoice,
-      dblRowClickHandler,
-      updateItemPrice,
-      pickOrdersHandler,
-      savePayDateHandler,
-    } = useItemData(props)
+defineOptions({ name: 'PaymentInvoiceDetails' })
 
-    return {
-      item,
-      loading,
-      showError,
-      errorMessage,
-      submit,
-      deleteHandler,
-      deleteOrderFromPaymentInvoice,
-      showDeleteBtn,
-      dblRowClickHandler,
-      disabledPickOrders,
-      disabledMainFields,
-      updateItemPrice,
-      allCarrierAgreements,
-      pickOrdersHandler,
-      savePayDateHandler,
-      carrierStore,
-    }
-  },
-  methods: {
-    cancel() {
-      this.$router.go(-1)
-    },
-  },
-}
+const props = defineProps({
+  id: String,
+})
+
+const { items: allCarrierAgreements } = useCarrierAgreements(props)
+const carrierStore = useCarrierStore()
+const {
+  item,
+  disabledPickOrders,
+  showDeleteBtn,
+  disabledMainFields,
+  loading,
+  submit,
+  deleteHandler,
+  pickOrdersHandler,
+  savePayDateHandler,
+} = useItemData(props)
 </script>
 
 <style></style>

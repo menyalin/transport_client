@@ -3,18 +3,13 @@
     :items="preparedOrders"
     :headers="headers"
     v-model="selected"
-    multiple
-    itemKey="_id"
+    item-value="_id"
     :loading="loading"
     checkbox-color="primary"
-    :showSelect="!disabled"
-    :server-items-length="ordersTotalCount"
-    :itemsPerPage="25"
-    :footerProps="{
-      itemsPerPageOptions: [25, 50, 100],
-    }"
-    :listOptions="listOptions"
-    @update:options="updateListOptionsHandler"
+    :show-select="!disabled"
+    :items-length="ordersTotalCount"
+    :items-per-page-options="[25, 50, 100]"
+    v-model:options="options"
     @dblclick:row="dblclickRowHandler"
   >
     <template v-slot:top>
@@ -62,95 +57,91 @@
     </template>
   </v-data-table-server>
 </template>
-<script>
-import { computed, getCurrentInstance, ref, watch } from 'vue'
+
+<script setup>
+import { computed, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 import { moneyFormatter } from '@/shared/utils'
 import ALL_HEADERS from './headers.js'
 
-export default {
-  name: 'PaymentInvoiceOrdersList',
-  props: {
-    disabled: Boolean,
-    loading: Boolean,
-    ordersTotalCount: { type: Number, default: 0 },
-    orders: {
-      type: Array,
-      default: () => [],
-    },
-    listOptions: Object,
+defineOptions({ name: 'PaymentInvoiceOrdersList' })
+
+const props = defineProps({
+  disabled: Boolean,
+  loading: Boolean,
+  ordersTotalCount: { type: Number, default: 0 },
+  orders: {
+    type: Array,
+    default: () => [],
   },
-  setup(props, ctx) {
-    const { proxy } = getCurrentInstance()
-    const selected = ref([])
+})
 
-    const selectedOrderIds = computed(() => selected.value.map((i) => i._id))
-    const expanded = ref([])
-    const preparedOrders = ref([])
+const emit = defineEmits(['delete', 'dblRowClick', 'updateItemPrice'])
 
-    function prepareItem(item, idx) {
-      return {
-        idx: idx + 1 + (props.listOptions.page - 1) * props.listOptions.itemsPerPage,
-        ...item,
-        plannedDate: new Date(item.plannedDate).toLocaleDateString(),
-        savedTotal: item.savedTotal ? item.savedTotal : { price: 0, priceWOVat: 0 },
-        hasDiffPrice: item.loaderData?.price && item.loaderData?.price !== item.savedTotal?.price,
-        hasDiffPriceWOVat:
-          item.loaderData?.priceWOVat &&
-          item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
-        loadedPrice: item.loaderData?.price || 0,
-        loadedPriceWOVat: item.loaderData?.priceWOVat || 0,
-      }
-    }
+const options = defineModel('options', {
+  type: Object,
+  default: () => ({
+    page: 1,
+    itemsPerPage: 25,
+    sortBy: [],
+    sortDesc: [],
+  }),
+})
 
-    function deleteHandler() {
-      ctx.emit('delete', selectedOrderIds.value)
-      selected.value = []
-    }
+const store = useStore()
 
-    function dblclickRowHandler(_event, { item }) {
-      if (!item.orderId) {
-        proxy.$store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
-        return
-      }
-      ctx.emit('dblRowClick', item.orderId)
-    }
+const selected = ref([])
+const selectedOrderIds = computed(() => selected.value)
+const preparedOrders = ref([])
 
-    function updateItemPrice(itemId) {
-      if (!itemId) {
-        proxy.$store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
-        return
-      }
-      ctx.emit('updateItemPrice', itemId)
-    }
-
-    const headers = computed(() => ALL_HEADERS)
-
-    function updateListOptionsHandler(val) {
-      ctx.emit('update:listOptions', val)
-    }
-
-    watch(
-      () => props.orders,
-      (val) => {
-        preparedOrders.value = [...val.map((item, idx) => prepareItem(item, idx))]
-      },
-      { deep: true }
-    )
-    return {
-      selected,
-      selectedOrderIds,
-      preparedOrders,
-      headers,
-      deleteHandler,
-      dblclickRowHandler,
-      updateItemPrice,
-      moneyFormatter,
-      expanded,
-      updateListOptionsHandler,
-    }
-  },
+function prepareItem(item, idx) {
+  const page = options.value?.page || 1
+  const itemsPerPage = options.value?.itemsPerPage || 25
+  return {
+    idx: idx + 1 + (page - 1) * itemsPerPage,
+    ...item,
+    plannedDate: new Date(item.plannedDate).toLocaleDateString(),
+    savedTotal: item.savedTotal ? item.savedTotal : { price: 0, priceWOVat: 0 },
+    hasDiffPrice: item.loaderData?.price && item.loaderData?.price !== item.savedTotal?.price,
+    hasDiffPriceWOVat:
+      item.loaderData?.priceWOVat && item.loaderData?.priceWOVat !== item.savedTotal?.priceWOVat,
+    loadedPrice: item.loaderData?.price || 0,
+    loadedPriceWOVat: item.loaderData?.priceWOVat || 0,
+  }
 }
+
+function deleteHandler() {
+  emit('delete', selectedOrderIds.value)
+  selected.value = []
+}
+
+function dblclickRowHandler(_event, { item }) {
+  if (!item.orderId) {
+    store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
+    return
+  }
+  emit('dblRowClick', item.orderId)
+}
+
+function updateItemPrice(itemId) {
+  if (!itemId) {
+    store.commit('setError', 'Ссылка отсутствует! Необходимо удалить рейс из акта!')
+    return
+  }
+  emit('updateItemPrice', itemId)
+}
+
+const headers = computed(() => ALL_HEADERS)
+
+watch(
+  () => props.orders,
+  (val) => {
+    preparedOrders.value = [...val.map((item, idx) => prepareItem(item, idx))]
+  },
+  { deep: true }
+)
 </script>
+
 <style scoped>
 .diff-cell {
   border: 1px solid rgb(255, 97, 97);

@@ -2,7 +2,7 @@
   <EntityListWrapper>
     <buttons-panel
       panel-type="list"
-      :disabledSubmit="!$store.getters.hasPermission('carrier:write')"
+      :disabled-submit="!store.getters.hasPermission('carrier:write')"
       @submit="create"
       @refresh="refreshHandler"
     />
@@ -14,10 +14,8 @@
       :search="settings.search"
       fixed-header
       height="72vh"
-      :itemsPerPage="100"
-      :footerProps="{
-        'items-per-page-options': [100, 200, -1],
-      }"
+      :items-per-page="100"
+      :items-per-page-options="[100, 200, -1]"
       @dblclick:row="dblClickRow"
     >
       <template #[`item.outsource`]="{ item }">
@@ -32,6 +30,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { ButtonsPanel, EntityListWrapper } from '@/shared/ui'
 import { useListData } from './useListData'
 import { CarrierListSettings, CarrierListAgreementsCell } from '@/entities/carrier'
@@ -39,6 +38,7 @@ import { CarrierListSettings, CarrierListAgreementsCell } from '@/entities/carri
 defineOptions({ name: 'CarrierList' })
 
 const router = useRouter()
+const store = useStore()
 
 const { carriers, loading, refreshHandler, headers, settings } = useListData()
 

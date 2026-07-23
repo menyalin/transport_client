@@ -15,6 +15,8 @@
       :model-value="item.orderType"
       label="Тип рейса"
       :items="orderAnalyticTypes"
+      item-title="text"
+      item-value="value"
       hide-details
       @update:model-value="changeHandler($event, 'orderType')"
     />
@@ -29,6 +31,8 @@
       :model-value="item.roundByHours"
       label="Округление времени"
       :items="roundingWaitingByHours"
+      item-title="text"
+      item-value="value"
       hide-details
       @update:model-value="changeHandler($event, 'roundByHours')"
     />
@@ -36,6 +40,8 @@
       :model-value="item.tariffBy"
       label="Тариф за"
       :items="waitingTariffByItems"
+      item-title="text"
+      item-value="value"
       hide-details
       @update:model-value="changeHandler($event, 'tariffBy')"
     />

@@ -4,16 +4,14 @@
     :headers="headers"
     :items="preparedItems"
     :loading="loading"
-    item-key="_id"
+    item-value="_id"
     show-select
     checkbox-color="primary"
     @dblclick:row="dblClickRow"
-    :serverItemsLength="total.count"
-    :itemPerPage="50"
-    :footer-props="{
-      'items-per-page-options': [25, 50, 100],
-    }"
-    :options.sync="listOptions"
+    :items-length="total.count"
+    :items-per-page="50"
+    :items-per-page-options="[25, 50, 100]"
+    v-model:options="listOptions"
   >
     <template #[`top`]>
       <v-alert v-if="total.count > 0">
@@ -33,50 +31,28 @@
     </template>
   </v-data-table-server>
 </template>
-<script>
+
+<script setup>
 import { computed } from 'vue'
 import { moneyFormatter } from '@/shared/utils'
 import { useTable } from './useTable'
 
-export default {
-  name: 'IncomingInvoiceFormOrdersTable',
-  props: {
-    invoiceId: String,
-    allowDeleteOrders: { type: Boolean, default: true },
-  },
-  setup(props, ctx) {
-    const {
-      items,
-      total,
-      loading,
-      headers,
-      dblClickRow,
-      listOptions,
-      selected,
-      removeOrdersHandler,
-    } = useTable(props, ctx)
+defineOptions({ name: 'IncomingInvoiceFormOrdersTable' })
 
-    const preparedItems = computed(() => items.value.map((i, idx) => ({ ...i, idx: idx + 1 })))
+const props = defineProps({
+  invoiceId: String,
+  allowDeleteOrders: { type: Boolean, default: true },
+})
 
-    const formattedSum = computed(() => {
-      return {
-        withVat: moneyFormatter(total.value.withVat),
-        woVat: moneyFormatter(total.value.woVat),
-      }
-    })
+const { items, total, loading, headers, dblClickRow, listOptions, selected, removeOrdersHandler } =
+  useTable(props)
 
-    return {
-      preparedItems,
-      total,
-      loading,
-      headers,
-      formattedSum,
-      listOptions,
-      selected,
-      dblClickRow,
-      removeOrdersHandler,
-    }
-  },
-}
+const preparedItems = computed(() => items.value.map((i, idx) => ({ ...i, idx: idx + 1 })))
+
+const formattedSum = computed(() => ({
+  withVat: moneyFormatter(total.value.withVat),
+  woVat: moneyFormatter(total.value.woVat),
+}))
 </script>
+
 <style scoped></style>

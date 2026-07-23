@@ -23,7 +23,8 @@
           label="Статус"
           v-model="state.status"
           :items="statusItems"
-          itemTitle="text"
+          item-value="value"
+          item-title="text"
           :style="{ maxWidth: '200px' }"
         />
         <v-autocomplete
@@ -62,6 +63,7 @@
           required
           clearable
           item-value="address"
+          item-title="address"
           :disabled="!placeItems || placeItems.length === 0 || disabledMainFields"
           :items="placeItems"
           :style="{ maxWidth: '300px' }"
@@ -87,119 +89,93 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
-import router from '@/router'
-import store from '@/store'
-
+<script setup>
 import { computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { ButtonsPanel } from '@/shared/ui'
 import useDocsRegistryForm from './useDocsRegistryForm.js'
 
-export default {
-  name: 'DocsRegistryForm',
-  components: {
-    ButtonsPanel,
+defineOptions({ name: 'DocsRegistryForm' })
+
+const props = defineProps({
+  item: Object,
+  disabledPickOrders: {
+    type: Boolean,
   },
-  props: {
-    item: Object,
-    disabledPickOrders: {
-      type: Boolean,
-    },
-    disabledMainFields: {
-      type: Boolean,
-    },
+  disabledMainFields: {
+    type: Boolean,
   },
-  setup(props, ctx) {
-    const showPickOrderDialog = ref(true)
-    const {
-      v$,
-      state,
-      invalidForm,
-      clientErrorMessages,
-      placeErrorMessages,
-      setFormState,
-      disabledAgreements,
-      loadingAgreements,
-      agreementItems,
-      agreementErrorMessages,
-      changeAgreementHandler,
-    } = useDocsRegistryForm(props.item, ctx)
+})
 
-    function cancelHandler() {
-      router.go(-1)
-    }
+const emit = defineEmits(['cancel', 'submit', 'save', 'pickOrders', 'downloadXlsx'])
 
-    function pickOrdersHandler() {
-      ctx.emit('pickOrders')
-    }
+const router = useRouter()
+const vuexStore = useStore()
 
-    function submitHandler() {
-      ctx.emit('submit', state.value)
-    }
+const {
+  v$,
+  state,
+  invalidForm,
+  clientErrorMessages,
+  placeErrorMessages,
+  setFormState,
+  disabledAgreements,
+  loadingAgreements,
+  agreementItems,
+  agreementErrorMessages,
+  changeAgreementHandler,
+} = useDocsRegistryForm()
 
-    function changeClientHandler() {
-      state.value.placeForTransferDocs = null
-    }
-
-    function saveHandler() {
-      ctx.emit('save', state.value)
-    }
-
-    function downloadXlsx() {
-      ctx.emit('downloadXlsx')
-    }
-
-    const clientItems = computed(() => store.getters?.partners.filter((i) => i.isClient) || [])
-
-    const statusItems = computed(() => store.getters.docsRegistryStatuses)
-
-    const placeItems = computed(() => {
-      if (!state.value?.client) return []
-      const client = store.getters.partners.find((i) => i._id === state.value.client)
-      if (!client) return []
-      return client.placesForTransferDocs
-    })
-    const needSave = computed(() => {
-      return (
-        state.value?.client !== props.item.client ||
-        state.value.placeForTransferDocs !== props.item.placeForTransferDocs
-      )
-    })
-
-    watch(
-      () => props.item,
-      () => {
-        setFormState(props.item)
-      },
-      { immediate: true }
-    )
-    return {
-      v$,
-      cancelHandler,
-      clientItems,
-      statusItems,
-      state,
-      invalidForm,
-      clientErrorMessages,
-      submitHandler,
-      saveHandler,
-      placeItems,
-      placeErrorMessages,
-      pickOrdersHandler,
-      needSave,
-      changeClientHandler,
-      showPickOrderDialog,
-
-      downloadXlsx,
-      disabledAgreements,
-      loadingAgreements,
-      agreementItems,
-      agreementErrorMessages,
-      changeAgreementHandler,
-    }
-  },
+function cancelHandler() {
+  router.go(-1)
 }
+
+function pickOrdersHandler() {
+  emit('pickOrders')
+}
+
+function submitHandler() {
+  emit('submit', state.value)
+}
+
+function changeClientHandler() {
+  state.value.placeForTransferDocs = null
+}
+
+function saveHandler() {
+  emit('save', state.value)
+}
+
+function downloadXlsx() {
+  emit('downloadXlsx')
+}
+
+const clientItems = computed(() => vuexStore.getters?.partners.filter((i) => i.isClient) || [])
+
+const statusItems = computed(() => vuexStore.getters.docsRegistryStatuses)
+
+const placeItems = computed(() => {
+  if (!state.value?.client) return []
+  const client = vuexStore.getters.partners.find((i) => i._id === state.value.client)
+  if (!client) return []
+  return client.placesForTransferDocs
+})
+
+const needSave = computed(() => {
+  return (
+    state.value?.client !== props.item.client ||
+    state.value.placeForTransferDocs !== props.item.placeForTransferDocs
+  )
+})
+
+watch(
+  () => props.item,
+  () => {
+    setFormState(props.item)
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

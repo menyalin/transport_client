@@ -4,7 +4,14 @@
       <v-card-title>{{ formTitle }}</v-card-title>
       <v-card-text>
         <div class="input-fields-row">
-          <v-select label="Тип ТС" :items="truckKindItems" multiple v-model="form.truckKinds" />
+          <v-select
+            label="Тип ТС"
+            :items="truckKindItems"
+            multiple
+            item-title="text"
+            item-value="value"
+            v-model="form.truckKinds"
+          />
           <v-select
             multiple
             label="Грузоподъемность"
@@ -18,6 +25,8 @@
             ref="focusableNodeRef"
             label="Тип рейса"
             :items="orderTypeItems"
+            item-title="text"
+            item-value="value"
             v-model="form.orderTypes"
             :style="{ width: '130px' }"
           />
@@ -28,12 +37,16 @@
           <v-select
             label="Округлять до"
             :items="roundingIntervalItems"
+            item-title="text"
+            item-value="value"
             v-model="form.roundingInterval"
             :style="{ width: '150px' }"
           />
           <v-select
             label="Тариф за"
             :items="tariffByItems"
+            item-title="text"
+            item-value="value"
             v-model="form.tariffBy"
             :style="{ width: '150px' }"
           />
@@ -55,113 +68,95 @@
     </v-card>
   </form>
 </template>
-<script>
+<script setup>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, numeric, minLength } from '@vuelidate/validators'
 import { CardActionButtons } from '@/shared/ui'
 import { useFormHelpers } from './useFormHelpers'
 
-export default {
-  name: 'AdditionalPointsTariffForm',
-  components: {
-    CardActionButtons,
-  },
-  props: {
-    editableMode: Boolean,
-    formTitle: String,
-    initialFormState: Object,
-  },
-  setup(props, ctx) {
-    const {
-      focusableNodeRef,
-      truckKindItems,
-      liftCapacityItems,
-      orderTypeItems,
-      commonRules,
-      tariffByItems,
-      roundingIntervalItems,
-    } = useFormHelpers()
+defineOptions({ name: 'AdditionalPointsTariffForm' })
 
-    const defaultFormState = () => ({
-      truckKinds: [],
-      liftCapacities: [],
-      orderTypes: [],
-      includeHours: null,
-      roundingInterval: null,
-      tariffBy: null,
-      price: null,
-    })
+const props = defineProps({
+  editableMode: Boolean,
+  formTitle: String,
+  initialFormState: Object,
+})
 
-    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
+const emit = defineEmits(['submit', 'add', 'cancel'])
 
-    const rules = {
-      ...commonRules,
-      orderTypes: { required, minLength: minLength(1) },
-      includeHours: { required, numeric },
-      roundingInterval: { required },
-      tariffBy: { required },
-      price: { required, numeric },
-    }
-    const v$ = useVuelidate(rules, form, { $stopPropagation: true })
+const {
+  focusableNodeRef,
+  truckKindItems,
+  liftCapacityItems,
+  orderTypeItems,
+  commonRules,
+  tariffByItems,
+  roundingIntervalItems,
+} = useFormHelpers()
 
-    watch(
-      () => props.initialFormState,
-      (newState) => {
-        if (newState) {
-          form.value = { ...newState }
-          v$.value.$reset()
-        }
-      },
-      { deep: true }
-    )
+const defaultFormState = () => ({
+  truckKinds: [],
+  liftCapacities: [],
+  orderTypes: [],
+  includeHours: null,
+  roundingInterval: null,
+  tariffBy: null,
+  price: null,
+})
 
-    function submitHandler() {
-      ctx.emit('submit', form.value)
-      clearForm()
-    }
+const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
 
-    function clearForm() {
-      form.value = defaultFormState()
-      v$.value.$reset()
-    }
-
-    function submitFormHandler() {
-      ctx.emit('add', form.value)
-      form.value.orderTypes = []
-      form.value.includeHours = null
-      form.value.roundingInterval = null
-      form.value.tariffBy = null
-      form.value.price = null
-      v$.value.$reset()
-    }
-
-    function cancelHandler() {
-      ctx.emit('cancel')
-      clearForm()
-      v$.value.$reset()
-    }
-
-    const isInvalidForm = computed(() => {
-      return v$.value.$invalid
-    })
-
-    return {
-      truckKindItems,
-      liftCapacityItems,
-      orderTypeItems,
-      submitHandler,
-      submitFormHandler,
-      cancelHandler,
-      form,
-      isInvalidForm,
-      v$,
-      focusableNodeRef,
-      tariffByItems,
-      roundingIntervalItems,
-    }
-  },
+const rules = {
+  ...commonRules,
+  orderTypes: { required, minLength: minLength(1) },
+  includeHours: { required, numeric },
+  roundingInterval: { required },
+  tariffBy: { required },
+  price: { required, numeric },
 }
+const v$ = useVuelidate(rules, form, { $stopPropagation: true })
+
+watch(
+  () => props.initialFormState,
+  (newState) => {
+    if (newState) {
+      form.value = { ...newState }
+      v$.value.$reset()
+    }
+  },
+  { deep: true }
+)
+
+function submitHandler() {
+  emit('submit', form.value)
+  clearForm()
+}
+
+function clearForm() {
+  form.value = defaultFormState()
+  v$.value.$reset()
+}
+
+function submitFormHandler() {
+  emit('add', form.value)
+  form.value.orderTypes = []
+  form.value.includeHours = null
+  form.value.roundingInterval = null
+  form.value.tariffBy = null
+  form.value.price = null
+  v$.value.$reset()
+}
+
+function cancelHandler() {
+  emit('cancel')
+  clearForm()
+  v$.value.$reset()
+}
+
+const isInvalidForm = computed(() => {
+  return v$.value.$invalid
+})
 </script>
 <style scoped>
 .input-fields-row {

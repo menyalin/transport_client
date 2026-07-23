@@ -2,8 +2,8 @@
   <FormWrapper
     :loading="loading"
     :displayDeleteBtn="showDeleteBtn"
-    @delete="deleteHandler"
     :itemIsMissing="itemIsMissing"
+    @delete="deleteHandler"
   >
     <CarrierAgreementForm
       :item="item"
@@ -14,46 +14,24 @@
     />
   </FormWrapper>
 </template>
-<script>
+
+<script setup>
+import { computed } from 'vue'
 import { FormWrapper } from '@/shared/ui'
 import { CarrierAgreementForm } from '@/entities/carrierAgreement'
 import { useItemData } from './useItemData'
-import { computed } from 'vue'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
-export default {
-  name: 'CarrierAgreementDetails',
-  components: { FormWrapper, CarrierAgreementForm },
-  props: {
-    id: String,
-  },
-  setup(props, ctx) {
-    const carrierStore = useCarrierStore()
-    const itemIsMissing = computed(() => props.id && item.value === null)
 
-    const {
-      item,
-      showDeleteBtn,
-      loading,
-      showError,
-      errorMessage,
-      submit,
-      deleteHandler,
-      cancelHandler,
-    } = useItemData(props, ctx)
+defineOptions({ name: 'CarrierAgreementDetails' })
 
-    return {
-      item,
-      loading,
-      showError,
-      errorMessage,
-      submit,
-      deleteHandler,
-      showDeleteBtn,
-      cancelHandler,
-      itemIsMissing,
-      carrierStore,
-    }
-  },
-}
+const props = defineProps({
+  id: String,
+})
+
+const carrierStore = useCarrierStore()
+const itemIsMissing = computed(() => props.id && item.value === null)
+
+const { item, showDeleteBtn, loading, submit, deleteHandler, cancelHandler } = useItemData(props)
 </script>
+
 <style></style>

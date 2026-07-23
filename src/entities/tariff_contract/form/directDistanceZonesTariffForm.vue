@@ -4,7 +4,14 @@
       <v-card-title>{{ formTitle }}</v-card-title>
       <v-card-text>
         <div class="input-fields-row">
-          <v-select label="Тип ТС" :items="truckKindItems" multiple v-model="form.truckKinds" />
+          <v-select
+            label="Тип ТС"
+            :items="truckKindItems"
+            multiple
+            item-title="text"
+            item-value="value"
+            v-model="form.truckKinds"
+          />
           <v-select
             multiple
             label="Грузоподъемность"
@@ -61,7 +68,7 @@
     </v-card>
   </form>
 </template>
-<script>
+<script setup>
 import { computed, ref, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, numeric } from '@vuelidate/validators'
@@ -77,110 +84,88 @@ const defaultFormState = () => ({
   pointPrice: 0,
 })
 
-export default {
-  name: 'DirectDistanceZonesTariffForm',
-  components: {
-    CardActionButtons,
-  },
-  props: {
-    editableMode: Boolean,
-    formTitle: String,
-    initialFormState: Object,
-  },
-  setup(props, ctx) {
-    const { focusableNodeRef, truckKindItems, liftCapacityItems, zoneItems, commonRules } =
-      useFormHelpers()
-    const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
+defineOptions({ name: 'DirectDistanceZonesTariffForm' })
 
-    const rules = {
-      ...commonRules,
-      loadingZone: { required },
-      zones: { required, minLength: minLength(1) },
-      includedPoints: { required, numeric },
-      pointPrice: { required, numeric },
-    }
-    const v$ = useVuelidate(rules, form, { $stopPropagation: true })
+const props = defineProps({
+  editableMode: Boolean,
+  formTitle: String,
+  initialFormState: Object,
+})
 
-    watch(
-      () => props.initialFormState,
-      (newState) => {
-        if (newState) {
-          form.value = {
-            ...newState,
-            zones: [...newState.zones.map((zone) => Object.assign({}, zone))],
-          }
-          v$.value.$reset()
-        }
-      },
-      { deep: true }
-    )
+const emit = defineEmits(['submit', 'add', 'cancel'])
 
-    function submitHandler() {
-      ctx.emit('submit', form.value)
-      clearForm()
-    }
-    function clearForm() {
-      form.value = defaultFormState()
+const { truckKindItems, liftCapacityItems, zoneItems, commonRules } = useFormHelpers()
+const form = ref(props.initialFormState ? props.initialFormState : defaultFormState())
+
+const rules = {
+  ...commonRules,
+  loadingZone: { required },
+  zones: { required, minLength: minLength(1) },
+  includedPoints: { required, numeric },
+  pointPrice: { required, numeric },
+}
+const v$ = useVuelidate(rules, form, { $stopPropagation: true })
+
+watch(
+  () => props.initialFormState,
+  (newState) => {
+    if (newState) {
+      form.value = {
+        ...newState,
+        zones: [...newState.zones.map((zone) => Object.assign({}, zone))],
+      }
       v$.value.$reset()
     }
-
-    function submitFormHandler() {
-      ctx.emit('add', form.value)
-      clearForm()
-    }
-
-    function cancelHandler() {
-      ctx.emit('cancel')
-      clearForm()
-      v$.value.$reset()
-    }
-
-    const isInvalidForm = computed(() => {
-      return v$.value.$invalid || invalidZones.value
-    })
-
-    const invalidZones = computed(() => {
-      if (!form.value.zones || form.value.zones.length === 0) return true
-      return form.value.zones.some((i) => !i.distance || !i.price)
-    })
-
-    function showDeleteBtn(idx) {
-      return form.value.zones.length > 1 && form.value.zones.length === idx + 1
-    }
-
-    function showAddBtn(idx) {
-      return form.value.zones.length === idx + 1
-    }
-
-    function addRow() {
-      form.value.zones.push({
-        distance: null,
-        price: null,
-      })
-    }
-
-    function deleteRow() {
-      form.value.zones.pop()
-    }
-
-    return {
-      truckKindItems,
-      liftCapacityItems,
-      zoneItems,
-      submitHandler,
-      submitFormHandler,
-      cancelHandler,
-      form,
-      isInvalidForm,
-      focusableNodeRef,
-      v$,
-      showDeleteBtn,
-      showAddBtn,
-      invalidZones,
-      deleteRow,
-      addRow,
-    }
   },
+  { deep: true }
+)
+
+function submitHandler() {
+  emit('submit', form.value)
+  clearForm()
+}
+function clearForm() {
+  form.value = defaultFormState()
+  v$.value.$reset()
+}
+
+function submitFormHandler() {
+  emit('add', form.value)
+  clearForm()
+}
+
+function cancelHandler() {
+  emit('cancel')
+  clearForm()
+  v$.value.$reset()
+}
+
+const isInvalidForm = computed(() => {
+  return v$.value.$invalid || invalidZones.value
+})
+
+const invalidZones = computed(() => {
+  if (!form.value.zones || form.value.zones.length === 0) return true
+  return form.value.zones.some((i) => !i.distance || !i.price)
+})
+
+function showDeleteBtn(idx) {
+  return form.value.zones.length > 1 && form.value.zones.length === idx + 1
+}
+
+function showAddBtn(idx) {
+  return form.value.zones.length === idx + 1
+}
+
+function addRow() {
+  form.value.zones.push({
+    distance: null,
+    price: null,
+  })
+}
+
+function deleteRow() {
+  form.value.zones.pop()
 }
 </script>
 <style scoped>
@@ -196,4 +181,3 @@ export default {
   align-items: center;
 }
 </style>
-import { numeric } from '@vuelidate/validators'

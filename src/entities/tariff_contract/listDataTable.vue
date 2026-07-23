@@ -3,14 +3,11 @@
     :items="items"
     :headers="headers"
     :loading="loading"
-    :serverItemsLength="count"
+    :items-length="count"
     height="72vh"
     fixed-header
-    :listOptions="listOptions"
-    @update:options="updateListOptions"
-    :footer-props="{
-      'items-per-page-options': [50, 100, 300],
-    }"
+    :items-per-page-options="[50, 100, 300]"
+    v-model:options="options"
     @dblclick:row="dblClickRow"
   >
     <template #[`item.createdAt`]="{ item }">
@@ -30,31 +27,33 @@
     </template>
   </v-data-table-server>
 </template>
-<script>
-import tableHeaders from './listDataTableHeaders'
-import router from '@/router'
 
-export default {
-  name: 'TariffContractDataTable',
-  props: {
-    items: Array,
-    headers: Array,
-    loading: Boolean,
-    listOptions: Object,
-    count: Number,
-  },
-  setup(_props, ctx) {
-    function updateListOptions(val) {
-      ctx.emit('update:listOptions', val)
-    }
-    function dblClickRow(_, { item }) {
-      if (item) router.push(`/accounting/tariff_contracts/${item._id}`)
-    }
-    return {
-      updateListOptions,
-      dblClickRow,
-      headers: tableHeaders,
-    }
-  },
+<script setup>
+import { useRouter } from 'vue-router'
+import tableHeaders from './listDataTableHeaders'
+
+defineOptions({ name: 'TariffContractDataTable' })
+
+defineProps({
+  items: Array,
+  loading: Boolean,
+  count: Number,
+})
+
+const options = defineModel('options', {
+  type: Object,
+  default: () => ({
+    page: 1,
+    itemsPerPage: 50,
+    sortBy: [],
+    sortDesc: [],
+  }),
+})
+
+const router = useRouter()
+const headers = tableHeaders
+
+function dblClickRow(_, { item }) {
+  if (item) router.push(`/accounting/tariff_contracts/${item._id}`)
 }
 </script>

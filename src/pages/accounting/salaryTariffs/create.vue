@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
+        <v-alert v-model="error.show" closable type="error">
           {{ error.message }}
         </v-alert>
         <div class="text-h5 ma-3">Создать группу тарифов</div>
@@ -43,7 +43,11 @@
     </v-row>
   </v-container>
 </template>
-<script>
+
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { LoadSpinner } from '@/shared/ui'
 import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings/index.vue'
 import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList/index.vue'
@@ -53,110 +57,84 @@ import { SalaryTariffService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { SalaryTariffForm } from '@/entities/salary'
 
-export default {
-  name: 'CreateTariff',
-  components: {
-    ButtonsPanel,
-    LoadSpinner,
-    AppSalaryTariffSettings,
-    AppSalaryTariffGroupList,
-    SalaryTariffForm,
-  },
+defineOptions({ name: 'CreateTariff' })
 
-  setup() {
-    const carrierStore = useCarrierStore()
+const router = useRouter()
+const store = useStore()
+const carrierStore = useCarrierStore()
 
-    return {
-      carrierStore,
-    }
-  },
-  data() {
-    return {
-      keyPressListener: null,
-      items: [],
-      editableTariff: {},
-      settings: {},
-      dialog: false,
-      item: null,
-      loading: false,
-      tmpVal: null,
-      error: {
-        message: null,
-        show: false,
-      },
-    }
-  },
-  computed: {
-    allowCreateTariffItem() {
-      return this.settings.date && Array.isArray(this.settings.tks) && this.settings.tks.length
-    },
-    disabledSettings() {
-      return this.items.length > 0
-    },
-    disabledSubmit() {
-      return this.items.length === 0
-    },
-    hasWritePermission() {
-      return this.$store.getters.hasPermission('salaryTariff:write')
-    },
-  },
+const items = ref([])
+const editableTariff = ref({})
+const settings = ref({})
+const dialog = ref(false)
+const loading = ref(false)
+const error = ref({
+  message: null,
+  show: false,
+})
 
-  created() {
-    document.addEventListener('keyup', this.keypressEventHandler)
-  },
-  beforeDestroy() {
-    document.removeEventListener('keyup', this.keypressEventHandler)
-  },
-  methods: {
-    deleteItem(ind) {
-      this.items.splice(ind, 1)
-    },
-    keypressEventHandler(e) {
-      if (e.altKey && (e.key === 'n' || e.key === 'т')) this.addBtnHandler()
-    },
-    addBtnHandler() {
-      if (!this.allowCreateTariffItem) return null
-      this.editableTariff = { ...this.settings }
-      if (this.editableTariff.type === 'additionalPoints') this.editableTariff.includedPoints = 2
-      this.dialog = false
-      this.$nextTick(() => {
-        this.dialog = true
-      })
-    },
-    pushItem(item) {
-      this.items.push(item)
-      this.editableTariff = { ...this.settings }
-    },
-    closeDialog() {
-      this.dialog = false
-    },
-    toggleAlert() {
-      this.error = {
-        show: false,
-        message: null,
-      }
-    },
-    cancel() {
-      this.$router.go(-1)
-    },
+const allowCreateTariffItem = computed(
+  () => settings.value.date && Array.isArray(settings.value.tks) && settings.value.tks.length
+)
+const disabledSettings = computed(() => items.value.length > 0)
+const disabledSubmit = computed(() => items.value.length === 0)
+const hasWritePermission = computed(() => store.getters.hasPermission('salaryTariff:write'))
 
-    async submit() {
-      try {
-        this.loading = true
-        await SalaryTariffService.create(
-          this.items.map((i) => ({
-            ...i,
-            company: this.$store.getters.directoriesProfile,
-          }))
-        )
-        this.loading = false
-        this.$router.push({ name: 'SalaryTariffList' })
-      } catch (e) {
-        this.loading = false
-        this.$store.commit('setError', e.message)
-      }
-    },
-  },
+function deleteItem(ind) {
+  items.value.splice(ind, 1)
 }
+
+function keypressEventHandler(e) {
+  if (e.altKey && (e.key === 'n' || e.key === 'т')) addBtnHandler()
+}
+
+function addBtnHandler() {
+  if (!allowCreateTariffItem.value) return null
+  editableTariff.value = { ...settings.value }
+  if (editableTariff.value.type === 'additionalPoints') editableTariff.value.includedPoints = 2
+  dialog.value = false
+  nextTick(() => {
+    dialog.value = true
+  })
+}
+
+function pushItem(item) {
+  items.value.push(item)
+  editableTariff.value = { ...settings.value }
+}
+
+function closeDialog() {
+  dialog.value = false
+}
+
+function cancel() {
+  router.go(-1)
+}
+
+async function submit() {
+  try {
+    loading.value = true
+    await SalaryTariffService.create(
+      items.value.map((i) => ({
+        ...i,
+        company: store.getters.directoriesProfile,
+      }))
+    )
+    loading.value = false
+    router.push({ name: 'SalaryTariffList' })
+  } catch (e) {
+    loading.value = false
+    store.commit('setError', e.message)
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keyup', keypressEventHandler)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keyup', keypressEventHandler)
+})
 </script>
+
 <style></style>

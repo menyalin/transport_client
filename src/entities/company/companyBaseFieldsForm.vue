@@ -1,10 +1,10 @@
 <template>
   <div>
     <buttons-panel
-      panelType="form"
+      panel-type="form"
       @cancel="cancelHandler"
       @submit="submitHandler"
-      :disabledSubmit="invalidForm"
+      :disabled-submit="invalidForm"
     />
     <div class="form-wrapper">
       <v-text-field
@@ -19,53 +19,44 @@
     </div>
   </div>
 </template>
-<script>
+
+<script setup>
 import { watch } from 'vue'
-import router from '@/router'
+import { useRouter } from 'vue-router'
 import { ButtonsPanel } from '@/shared/ui'
 import { useBaseFieldsForm } from './useBaseFieldsForm.js'
-export default {
-  name: 'CompanyBaseFieldsForm',
-  components: { ButtonsPanel },
-  props: {
-    item: { type: Object, required: true },
-  },
-  setup(props, ctx) {
-    const { v$, state, invalidForm, fullNameErrorMessages, setFormState } = useBaseFieldsForm(
-      props.item
-    )
 
-    function cancelHandler() {
-      router.go(-1)
-    }
+defineOptions({ name: 'CompanyBaseFieldsForm' })
 
-    function submitHandler() {
-      ctx.emit('submit', state.value)
-    }
+const props = defineProps({
+  item: { type: Object, required: true },
+})
 
-    function saveHandler() {
-      ctx.emit('save', state.value)
-    }
+const emit = defineEmits(['submit', 'save'])
 
-    watch(
-      () => props.item,
-      () => {
-        setFormState(props.item)
-      },
-      { immediate: true }
-    )
-    return {
-      v$,
-      cancelHandler,
-      state,
-      invalidForm,
-      fullNameErrorMessages,
-      submitHandler,
-      saveHandler,
-    }
-  },
+const router = useRouter()
+
+const { v$, state, invalidForm, fullNameErrorMessages, setFormState } = useBaseFieldsForm(
+  props.item
+)
+
+function cancelHandler() {
+  router.go(-1)
 }
+
+function submitHandler() {
+  emit('submit', state.value)
+}
+
+watch(
+  () => props.item,
+  () => {
+    setFormState(props.item)
+  },
+  { immediate: true }
+)
 </script>
+
 <style scoped>
 .form-wrapper {
   display: flex;

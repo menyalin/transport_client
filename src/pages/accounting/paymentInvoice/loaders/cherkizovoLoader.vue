@@ -1,9 +1,9 @@
 <template>
   <FormWrapper>
     <ButtonsPanel
-      panelType="form"
-      submitTitle="Загрузить"
-      :disabledSubmit="disabledSubmitBtn"
+      panel-type="form"
+      submit-title="Загрузить"
+      :disabled-submit="disabledSubmitBtn"
       @submit="submitHandler"
       @cancel="cancelHandler"
     >
@@ -17,145 +17,133 @@
   </FormWrapper>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import dayjs from 'dayjs'
 import { PaymentInvoiceService } from '@/shared/services'
 import { FormWrapper, ButtonsPanel } from '@/shared/ui'
 import { XlsxFileInput } from '@/shared/ui/index'
 import { ParsedOrderDTO, usePageData, CompareItem } from './cherkizovoLoader.model'
 import UploadedInfo from './uploadedInfo.vue'
 import CompareItemsTable from './compareItemsTable.vue'
-import dayjs from 'dayjs'
 
-export default {
-  name: 'CherkizovoInvoiceLoaderPage',
-  props: {
-    id: String,
-  },
-  components: {
-    FormWrapper,
-    ButtonsPanel,
-    XlsxFileInput,
-    UploadedInfo,
-    CompareItemsTable,
-  },
-  data() {
-    return {
-      uploadedOrders: [],
-      errors: [],
-      pickedOrders: [],
-      compareItems: [],
-    }
-  },
-  setup() {
-    const { pickOrdersByClientNumbers, getCompareItems } = usePageData()
-    return { pickOrdersByClientNumbers, getCompareItems }
-  },
-  mounted() {
-    if (sessionStorage.getItem(this.id)) {
-      this.uploadedOrders = JSON.parse(sessionStorage.getItem(this.id))?.map(
-        (i) => new ParsedOrderDTO(i)
-      )
-      this.pickOrders()
-    }
-  },
+defineOptions({ name: 'CherkizovoInvoiceLoaderPage' })
 
-  computed: {
-    disabledSubmitBtn() {
-      return this.compareItems.filter((i) => i.isOrderPicked).length === 0
-    },
-    totalPickedSum() {
-      return this.pickedOrders.reduce((sum, order) => (sum += order.total?.price), 0)
-    },
-    orderNumbers() {
-      return this.uploadedOrders.map((i) => i.num)
-    },
-    queryPeriod() {
-      const date = this.$route.query.invoiceDate
-      if (!date || !dayjs(date).isValid()) return null
-      return [dayjs(date).add(-1, 'YEAR').toISOString(), dayjs(date).endOf('day').toISOString()]
-    },
+const props = defineProps({
+  id: String,
+})
 
-    pickOrdersQueryParams() {
-      return {
-        company: this.$store.getters.directoriesProfile,
-        paymentInvoiceId: this.id,
-        period: this.queryPeriod,
-        client: this.$route.query.client,
-        agreement: this.$route.query.agreement,
-        numbers: this.orderNumbers,
-      }
-    },
-    pickedOrderIds() {
-      if (this.pickedOrders.length === 0) return []
-      return this.compareItems.filter((i) => i.isOrderPicked).map((i) => i._id)
-    },
-  },
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
 
-  methods: {
-    clearHandler() {
-      this.clearUploadedOrders()
-    },
-    clearUploadedOrders() {
-      this.pickedOrders = []
-      this.compareItems = []
-      this.uploadedOrders = []
-      this.errors = []
-      sessionStorage.removeItem(this.id)
-    },
-    async submitHandler() {
-      if (this.pickedOrderIds.length === 0) return
-      try {
-        await PaymentInvoiceService.addOrdersToPaymentInvoice({
-          company: this.$store.getters.directoriesProfile,
-          paymentInvoiceId: this.id,
-          orders: this.pickedOrderIds,
-          registryData: this.compareItems.filter((i) => i.isOrderPicked).map((i) => i.exportData()),
-        })
-        this.clearHandler()
-        this.$router.replace({
-          name: 'PaymentInvoiceDetail',
-          params: { id: this.id },
-        })
-      } catch (e) {
-        this.$store.commit('setError', e.message)
-      }
-    },
-    cancelHandler() {
-      if (window.history.length > 2) this.$router.back()
-      else
-        this.$router.replace({
-          name: 'PaymentInvoiceDetail',
-          params: { id: this.id },
-        })
-    },
+const { pickOrdersByClientNumbers } = usePageData()
 
-    async pickOrders() {
-      this.pickedOrders = await this.pickOrdersByClientNumbers(this.pickOrdersQueryParams)
-      this.compareItems = CompareItem.createEntities(this.uploadedOrders, this.pickedOrders)
-    },
+const uploadedOrders = ref([])
+const errors = ref([])
+const pickedOrders = ref([])
+const compareItems = ref([])
 
-    async refetchHandler() {
-      if (this.uploadedOrders.length > 0) this.pickOrders()
-    },
+const disabledSubmitBtn = computed(() => {
+  return compareItems.value.filter((i) => i.isOrderPicked).length === 0
+})
+const totalPickedSum = computed(() => {
+  return pickedOrders.value.reduce((sum, order) => (sum += order.total?.price), 0)
+})
+const orderNumbers = computed(() => uploadedOrders.value.map((i) => i.num))
+const queryPeriod = computed(() => {
+  const date = route.query.invoiceDate
+  if (!date || !dayjs(date).isValid()) return null
+  return [dayjs(date).add(-1, 'YEAR').toISOString(), dayjs(date).endOf('day').toISOString()]
+})
 
-    async uploadHandler(uploadData) {
-      if (!uploadData || !uploadData.length) {
-        this.clearUploadedOrders()
-        return
-      }
-      try {
-        this.errors = []
-        this.uploadedOrders = Object.assign(
-          [],
-          uploadData.map((i) => new ParsedOrderDTO(i))
-        )
-        sessionStorage.setItem(this.id, JSON.stringify(this.uploadedOrders))
-        this.pickOrders()
-      } catch (e) {
-        this.errors.push(e)
-      }
-    },
-  },
+const pickOrdersQueryParams = computed(() => ({
+  company: store.getters.directoriesProfile,
+  paymentInvoiceId: props.id,
+  period: queryPeriod.value,
+  client: route.query.client,
+  agreement: route.query.agreement,
+  numbers: orderNumbers.value,
+}))
+
+const pickedOrderIds = computed(() => {
+  if (pickedOrders.value.length === 0) return []
+  return compareItems.value.filter((i) => i.isOrderPicked).map((i) => i._id)
+})
+
+onMounted(() => {
+  if (sessionStorage.getItem(props.id)) {
+    uploadedOrders.value = JSON.parse(sessionStorage.getItem(props.id))?.map(
+      (i) => new ParsedOrderDTO(i)
+    )
+    pickOrders()
+  }
+})
+
+function clearUploadedOrders() {
+  pickedOrders.value = []
+  compareItems.value = []
+  uploadedOrders.value = []
+  errors.value = []
+  sessionStorage.removeItem(props.id)
+}
+
+async function submitHandler() {
+  if (pickedOrderIds.value.length === 0) return
+  try {
+    await PaymentInvoiceService.addOrdersToPaymentInvoice({
+      company: store.getters.directoriesProfile,
+      paymentInvoiceId: props.id,
+      orders: pickedOrderIds.value,
+      registryData: compareItems.value.filter((i) => i.isOrderPicked).map((i) => i.exportData()),
+    })
+    clearUploadedOrders()
+    router.replace({
+      name: 'PaymentInvoiceDetail',
+      params: { id: props.id },
+    })
+  } catch (e) {
+    store.commit('setError', e.message)
+  }
+}
+
+function cancelHandler() {
+  if (window.history.length > 2) router.back()
+  else
+    router.replace({
+      name: 'PaymentInvoiceDetail',
+      params: { id: props.id },
+    })
+}
+
+async function pickOrders() {
+  pickedOrders.value = await pickOrdersByClientNumbers(pickOrdersQueryParams.value)
+  compareItems.value = CompareItem.createEntities(uploadedOrders.value, pickedOrders.value)
+}
+
+async function refetchHandler() {
+  if (uploadedOrders.value.length > 0) await pickOrders()
+}
+
+async function uploadHandler(uploadData) {
+  if (!uploadData || !uploadData.length) {
+    clearUploadedOrders()
+    return
+  }
+  try {
+    errors.value = []
+    uploadedOrders.value = Object.assign(
+      [],
+      uploadData.map((i) => new ParsedOrderDTO(i))
+    )
+    sessionStorage.setItem(props.id, JSON.stringify(uploadedOrders.value))
+    await pickOrders()
+  } catch (e) {
+    errors.value.push(e)
+  }
 }
 </script>
+
 <style scoped></style>

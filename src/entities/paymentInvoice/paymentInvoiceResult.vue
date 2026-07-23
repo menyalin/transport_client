@@ -11,27 +11,20 @@
     <b>{{ item.ordersCount }}</b>
   </v-alert>
 </template>
-<script>
-import { moneyFormatter } from '@/shared/utils/moneyFormatter'
-import { computed } from 'vue'
-export default {
-  name: 'PaymentInvoiceResult',
-  props: {
-    item: Object,
-  },
-  setup(props) {
-    const total = computed(() => {
-      return moneyFormatter(props.item.priceWithVat)
-    })
-    const totalWOVat = computed(() => {
-      return moneyFormatter(props.item.priceWOVat)
-    })
-    const vatSum = computed(() => {
-      return moneyFormatter(props.item.priceWithVat - props.item.priceWOVat)
-    })
 
-    return { total, totalWOVat, vatSum }
-  },
-}
+<script setup>
+import { computed } from 'vue'
+import { moneyFormatter } from '@/shared/utils/moneyFormatter'
+
+defineOptions({ name: 'PaymentInvoiceResult' })
+
+const props = defineProps({
+  item: Object,
+})
+
+const total = computed(() => moneyFormatter(props.item.priceWithVat))
+const totalWOVat = computed(() => moneyFormatter(props.item.priceWOVat))
+const vatSum = computed(() => moneyFormatter(props.item.priceWithVat - props.item.priceWOVat))
 </script>
+
 <style scoped></style>

@@ -17,48 +17,29 @@
     </v-alert>
   </div>
 </template>
-<script>
+
+<script setup>
 import { computed } from 'vue'
-export default {
-  name: 'LinkedUserInfo',
-  props: {
-    worker: {
-      type: Object,
-    },
-  },
-  setup(props) {
-    const isBlockedUser = computed(() => props.worker.disabled)
-    const isPending = computed(() => props.worker.pending && props.worker.accepted)
-    const isAccepted = computed(() => !props.worker.pending && props.worker.accepted)
-    const isCanceled = computed(() => !props.worker.pending && !props.worker.accepted)
-    const message = computed(() => {
-      if (isBlockedUser.value)
-        return {
-          type: 'error',
-          text: 'Пользователь заблокирован',
-        }
 
-      if (isCanceled.value)
-        return {
-          type: 'warning',
-          text: 'Пользователь отклонил предложение',
-        }
+defineOptions({ name: 'LinkedUserInfo' })
 
-      if (isPending.value)
-        return {
-          type: 'info',
-          text: 'Ожидается подтверждение пользователя',
-        }
-    })
-    return {
-      isBlockedUser,
-      isPending,
-      isAccepted,
-      isCanceled,
-      message,
-    }
+const props = defineProps({
+  worker: {
+    type: Object,
   },
-}
+})
+
+const isBlockedUser = computed(() => props.worker.disabled)
+const isPending = computed(() => props.worker.pending && props.worker.accepted)
+const isAccepted = computed(() => !props.worker.pending && props.worker.accepted)
+const isCanceled = computed(() => !props.worker.pending && !props.worker.accepted)
+
+const message = computed(() => {
+  if (isBlockedUser.value) return { type: 'error', text: 'Пользователь заблокирован' }
+  if (isCanceled.value) return { type: 'warning', text: 'Пользователь отклонил предложение' }
+  if (isPending.value) return { type: 'info', text: 'Ожидается подтверждение пользователя' }
+  return { type: '', text: '' }
+})
 </script>
 
 <style scoped>

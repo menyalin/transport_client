@@ -16,12 +16,14 @@
       :model-value="item.orderType"
       label="Тип рейса"
       :items="orderAnalyticTypes"
+      item-title="text"
+      item-value="value"
       hide-details
       @update:model-value="changeHandler($event, 'orderType')"
     />
     <v-checkbox
       label="Возврат паллет"
-      :value="item.isPltReturn"
+      :model-value="item.isPltReturn"
       color="primary"
       @update:model-value="changeHandler($event, 'isPltReturn')"
     />
