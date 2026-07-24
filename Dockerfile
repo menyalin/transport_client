@@ -10,7 +10,7 @@ ENV VITE_API_WS_URL=https://s4log.ru
 ENV VITE_STATIC_URL=https://s4log.ru
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 RUN npm run build
 
