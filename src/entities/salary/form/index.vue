@@ -47,38 +47,38 @@
           />
           <app-points
             v-if="tmpItem.type === 'points'"
-            ref="points"
+            ref="pointsRef"
             v-model="points"
             :style="{ 'min-width': '550px' }"
           />
           <app-zones
             v-if="tmpItem.type === 'zones'"
-            ref="zones"
+            ref="zonesRef"
             v-model="zones"
             :style="{ 'min-width': '550px' }"
           />
           <app-additional-points
             v-if="tmpItem.type === 'additionalPoints'"
-            ref="additionalPoints"
+            ref="additionalPointsRef"
             v-model="additionalPoints"
             :style="{ 'min-width': '550px' }"
           />
           <app-regions
             v-if="tmpItem.type === 'regions'"
-            ref="regions"
+            ref="regionsRef"
             v-model="regions"
             :style="{ 'min-width': '550px' }"
           />
 
           <app-waiting
             v-if="tmpItem.type === 'waiting'"
-            ref="waiting"
+            ref="waitingRef"
             v-model="waiting"
             :style="{ 'min-width': '550px' }"
           />
           <app-return
             v-if="tmpItem.type === 'return'"
-            ref="return"
+            ref="returnRef"
             v-model="returnTariff"
             :style="{ 'min-width': '550px' }"
           />
@@ -101,16 +101,7 @@
   </div>
 </template>
 <script setup>
-import {
-  ref,
-  reactive,
-  computed,
-  watch,
-  nextTick,
-  onMounted,
-  onBeforeUnmount,
-  getCurrentInstance,
-} from 'vue'
+import { ref, reactive, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
 import AppPoints from './points.vue'
 import AppZones from './zones.vue'
@@ -131,7 +122,22 @@ const props = defineProps({
 const emit = defineEmits(['push', 'update', 'deletedItem', 'cancel'])
 
 const store = useStore()
-const { proxy } = getCurrentInstance()
+
+const pointsRef = ref(null)
+const zonesRef = ref(null)
+const additionalPointsRef = ref(null)
+const regionsRef = ref(null)
+const waitingRef = ref(null)
+const returnRef = ref(null)
+
+const typeRefs = {
+  points: pointsRef,
+  zones: zonesRef,
+  additionalPoints: additionalPointsRef,
+  regions: regionsRef,
+  waiting: waitingRef,
+  return: returnRef,
+}
 
 const tmpDialog = ref(false)
 
@@ -246,7 +252,7 @@ function pushItem() {
   if (!invalidItem.value) {
     emit('push', formState.value)
     nextTick(() => {
-      proxy.$refs[tmpItem.type]?.focus()
+      typeRefs[tmpItem.type]?.value?.focus()
     })
   }
 }

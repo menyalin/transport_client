@@ -26,15 +26,12 @@ export const useListData = () => {
   watch(
     settings,
     () => {
-      updateListOptionsHandler({ page: 1 })
+      listOptions.value = { ...listOptions.value, page: 1 }
     },
     { deep: true }
   )
 
-  async function updateListOptionsHandler(options) {
-    listOptions.value = { ...listOptions.value, ...options }
-    await getData()
-  }
+  watch(listOptions, async () => await getData(), { deep: true })
 
   const queryParams = computed(() => ({
     ...settings.value,
@@ -70,6 +67,5 @@ export const useListData = () => {
     refresh,
     create,
     onDeleteHandler,
-    updateListOptionsHandler,
   }
 }

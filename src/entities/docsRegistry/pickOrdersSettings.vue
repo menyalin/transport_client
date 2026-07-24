@@ -11,6 +11,8 @@
       v-model="settings.docStatus"
       label="Документы"
       :items="docStatuses"
+      item-title="text"
+      item-value="value"
       hide-details
       clearable
       :style="{ 'max-width': '220px' }"

@@ -5,11 +5,9 @@
     :loading="loading"
     height="70vh"
     fixed-header
-    :page="options.page"
-    :items-per-page="options.itemsPerPage"
     :items-length="totalCount"
+    v-model:options="options"
     @dblclick:row="dblClickRow"
-    @update:options="optionsUpdateHandler"
   >
     <template #[`item.createdAt`]="{ item }">
       {{ new Date(item.createdAt).toLocaleString() }}
@@ -25,13 +23,15 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
+defineOptions({ name: 'DocsRegistryDataTable' })
+
 const router = useRouter()
 
-defineOptions({
-  name: 'DocsRegistryDataTable',
+const options = defineModel('options', {
+  type: Object,
+  default: () => ({ page: 1, itemsPerPage: 25 }),
 })
-const options = defineModel('options')
-const emits = defineEmits(['update:options'])
+
 defineProps({
   items: Array,
   headers: Array,
@@ -39,9 +39,6 @@ defineProps({
   loading: Boolean,
 })
 
-function optionsUpdateHandler(val) {
-  emits('update:options', val)
-}
 function dblClickRow(_event, { item }) {
   router.push(`docsRegistry/${item._id}`)
 }

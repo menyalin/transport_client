@@ -79,7 +79,7 @@ export const usePickOrdersForIncomingInvoice = (props, _ctx) => {
     await getData()
   })
 
-  watch(settings.value, async () => {
+  watch(settings, async () => {
     await getData()
   })
 

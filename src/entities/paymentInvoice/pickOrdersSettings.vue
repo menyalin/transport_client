@@ -30,7 +30,7 @@
       hide-details
       label="Поиск по номеру"
       :style="{ 'max-width': '300px' }"
-      @change="changeHandler($event, 'search')"
+      @update:model-value="changeHandler($event, 'search')"
     />
     <order-doc-status-selector
       :value="settings.docStatuses"

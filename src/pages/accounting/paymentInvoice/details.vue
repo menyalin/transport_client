@@ -1,5 +1,5 @@
 <template>
-  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
+  <form-wrapper :loading="loading" :display-delete-btn="showDeleteBtn" @delete="deleteHandler">
     <payment-invoice-form
       :item="item"
       @submit="submit($event, false)"
@@ -66,7 +66,6 @@ const listOptions = usePersistedRef({}, 'invoice_orders: ' + props.id)
 
 const orders = ref([])
 const ordersLoading = ref(false)
-const ordersError = ref(null)
 
 const isExistedItem = computed(() => Boolean(props.id))
 
@@ -114,8 +113,6 @@ function closeDialog() {
 }
 
 const loading = ref(false)
-const showError = ref(false)
-const errorMessage = ref('')
 
 async function loadInvoiceOrders() {
   if (!listOptions.value.itemsPerPage) return
@@ -126,7 +123,6 @@ async function loadInvoiceOrders() {
   }
   try {
     ordersLoading.value = true
-    ordersError.value = null
     orders.value = []
     const res = await PaymentInvoiceService.getInvoiceOrders(invoiceId, {
       limit: listOptions.value.itemsPerPage,
@@ -134,7 +130,6 @@ async function loadInvoiceOrders() {
     })
     orders.value = res.items || []
   } catch (e) {
-    ordersError.value = e.message
     store.commit('setError', `Ошибка загрузки заказов: ${e.message}`)
   } finally {
     ordersLoading.value = false
@@ -187,8 +182,6 @@ async function submit(formState, saveOnly) {
       item.value = updatedItem
     }
   } catch (e) {
-    showError.value = true
-    errorMessage.value = e.response.data
     store.commit('setError', e.message)
   } finally {
     loading.value = false
@@ -205,8 +198,6 @@ async function deleteHandler() {
     } else return null
   } catch (e) {
     loading.value = false
-    showError.value = true
-    errorMessage.value = e.response.data
     store.commit('setError', e.message)
   }
 }

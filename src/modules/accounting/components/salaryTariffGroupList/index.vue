@@ -19,8 +19,11 @@
             </td>
             <td>
               <div v-if="item.type === 'points'">
-                {{ addressMap.get(item.loading).shortName }} >>>
-                {{ addressMap.get(item.unloading).shortName }}
+                {{ addressMap.get(item.loading)?.shortName || addressMap.get(item.loading)?.name }}
+                >>>
+                {{
+                  addressMap.get(item.unloading)?.shortName || addressMap.get(item.unloading)?.name
+                }}
               </div>
 
               <app-direct-distance-zones v-if="item.type === 'directDistanceZones'" :item="item" />

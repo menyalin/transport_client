@@ -22,7 +22,8 @@
     <v-select
       v-model="settings.status"
       label="Статус"
-      itemTitle="text"
+      item-title="text"
+      item-value="value"
       clearable
       hide-details
       :items="statusItems"

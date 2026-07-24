@@ -18,5 +18,6 @@ defineOptions({ name: 'ListSettingsWrapper' })
 }
 .wrapper > div {
   flex: 0 1 1;
+  align-self: start;
 }
 </style>

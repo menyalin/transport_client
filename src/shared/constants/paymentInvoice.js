@@ -9,21 +9,21 @@ export const paymentInvoiceStatuses = [
 export const PAYMENT_INVOICE_TABLE_HEADERS = [
   {
     value: 'number',
-    text: 'Номер',
+    title: 'Номер',
     sortable: true,
     default: true,
     width: '100',
   },
   {
     value: 'numberByClient',
-    text: '№ реестра клиента',
+    title: '№ реестра клиента',
     sortable: false,
     default: true,
     width: '120',
   },
   {
     value: 'date',
-    text: 'Дата документа',
+    title: 'Дата документа',
     sortable: true,
     default: true,
     width: '170',
@@ -31,7 +31,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
   {
     value: 'sendDate',
-    text: 'Дата отправки',
+    title: 'Дата отправки',
     sortable: true,
     default: true,
     width: '170',
@@ -39,7 +39,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
   {
     value: 'plannedPayDate',
-    text: 'План. дата оплаты',
+    title: 'План. дата оплаты',
     sortable: true,
     default: true,
     width: '170',
@@ -47,7 +47,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
   {
     value: 'payDate',
-    text: 'Дата оплаты',
+    title: 'Дата оплаты',
     sortable: true,
     default: true,
     width: '170',
@@ -56,26 +56,26 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
 
   {
     value: 'statusStr',
-    text: 'Статус',
+    title: 'Статус',
     sortable: false,
     default: true,
   },
 
   {
     value: 'clientName',
-    text: 'Клиент',
+    title: 'Клиент',
     sortable: false,
     default: true,
   },
   {
     value: 'agreementName',
-    text: 'Соглашение',
+    title: 'Соглашение',
     sortable: false,
     default: true,
   },
   {
     value: 'ordersCount',
-    text: 'Рейсы',
+    title: 'Рейсы',
     sortable: false,
     default: true,
     align: 'right',
@@ -84,7 +84,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
 
   {
     value: 'priceWOVat',
-    text: 'Сумма без НДС',
+    title: 'Сумма без НДС',
     sortable: true,
     default: true,
     align: 'right',
@@ -92,7 +92,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
   {
     value: 'vatSum',
-    text: 'Сумма НДС',
+    title: 'Сумма НДС',
     sortable: false,
     default: true,
     align: 'right',
@@ -101,7 +101,7 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
 
   {
     value: 'priceWithVat',
-    text: 'Сумма',
+    title: 'Сумма',
     sortable: true,
     default: true,
     align: 'right',
@@ -109,14 +109,14 @@ export const PAYMENT_INVOICE_TABLE_HEADERS = [
   },
   {
     value: 'createdAt',
-    text: 'Дата создания',
+    title: 'Дата создания',
     sortable: true,
     default: true,
     width: '11rem',
   },
   {
     value: 'note',
-    text: 'Примечание',
+    title: 'Примечание',
     sortable: false,
     default: true,
   },

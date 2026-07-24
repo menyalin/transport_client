@@ -1,6 +1,10 @@
 <template>
   <span>
-    {{ `Погрузка: ${addressMap.get(item.loading).shortName}, зоны до ${distances} км.` }}
+    {{
+      `Погрузка: ${
+        addressMap.get(item.loading)?.shortName || addressMap.get(item.loading)?.name
+      }, зоны до ${distances} км.`
+    }}
   </span>
 </template>
 <script setup>
@@ -15,7 +19,7 @@ const props = defineProps({
 
 const addressStore = useAddressStore()
 
-const distances = computed(() => props.item.zones.map((i) => i.distance).join(', '))
+const distances = computed(() => props.item.zones?.map((i) => i.distance).join(', '))
 
 const addressMap = computed(() => addressStore.addressMap)
 </script>

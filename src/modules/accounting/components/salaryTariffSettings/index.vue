@@ -23,14 +23,18 @@
     <v-select
       v-model="tmpSettings.type"
       label="Тип тарифа"
-      :items="$store.getters.salaryTariffTypes"
+      :items="store.getters.salaryTariffTypes"
+      item-title="text"
+      item-value="value"
       hide-details
       :style="{ 'max-width': '220px' }"
     />
     <v-select
       v-model="tmpSettings.consigneeTypes"
       label="Типы грузополучателей"
-      :items="$store.getters.partnerGroups"
+      :items="store.getters.partnerGroups"
+      item-title="text"
+      item-value="value"
       multiple
       clearable
       hide-details
@@ -39,7 +43,9 @@
     <v-select
       v-model="tmpSettings.liftCapacity"
       label="Грузоподъемность"
-      :items="$store.getters.liftCapacityTypes"
+      :items="store.getters.liftCapacityTypes"
+      item-title="text"
+      item-value="value"
       multiple
       hide-details
       :style="{ 'max-width': '220px' }"

@@ -34,16 +34,11 @@
         :carrierItemsMap="carrierStore.carriersMap"
         :headers="headers"
         :loading="loading"
-        :listOptions.sync="listOptions"
+        v-model:options="listOptions"
         @addItem="addOrderToInvoice"
         @openDocsDialog="openDocsDialog"
       />
-      <v-dialog
-        :model-value="docDialog"
-        @update:model-value="showDialog = $event"
-        max-width="1300"
-        persistent
-      >
+      <v-dialog v-model="docDialog" max-width="1300" persistent>
         <order-docs-list
           :orderId="editableOrderId"
           :docs="editableDocs"
@@ -54,9 +49,10 @@
     </v-card-text>
   </v-card>
 </template>
-<script>
-import store from '@/store'
+
+<script setup>
 import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { PickOrdersSettings } from '@/entities/paymentInvoice'
 import { OrdersTable, useOrderDocs, OrderDocsList } from '@/entities/order'
 import { useListData } from './model.js'
@@ -64,94 +60,68 @@ import { PickOrdersForPaymentInvoiceHeaders } from '@/shared/constants'
 import { PaymentInvoiceService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
-export default {
-  name: 'PickOrdersForPaymentInvoiceFeature',
-  components: { PickOrdersSettings, OrdersTable, OrderDocsList },
-  props: {
-    paymentInvoice: {
-      type: Object,
-      required: true,
-    },
+defineOptions({ name: 'PickOrdersForPaymentInvoiceFeature' })
+
+const props = defineProps({
+  paymentInvoice: {
+    type: Object,
+    required: true,
   },
-  setup({ paymentInvoice }, ctx) {
-    const headers = ref([])
-    const selectedOrders = ref([])
-    const { loading, settings, items, refresh, listOptions } = useListData(paymentInvoice)
-    const carrierStore = useCarrierStore()
-    const {
-      editableOrderId,
-      openDocsDialog,
-      docDialog,
-      editableDocs,
-      saveDocDialog,
-      cancelDocDialog,
-    } = useOrderDocs()
+})
 
-    const client = computed(() => store.getters.partnersMap.get(paymentInvoice.clientId))
+const emit = defineEmits(['cancel'])
 
-    const clientName = computed(() => {
-      return client.value.name || '-'
-    })
+const store = useStore()
+const carrierStore = useCarrierStore()
 
-    const selectedOrdersIds = computed(() => selectedOrders.value.map((i) => i._id))
+const headers = ref([])
+const selectedOrders = ref([])
+const { loading, settings, items, refresh, listOptions } = useListData(props.paymentInvoice)
 
-    function updateActiveHeaders(val) {
-      headers.value = val
-    }
+const { editableOrderId, openDocsDialog, docDialog, editableDocs, saveDocDialog, cancelDocDialog } =
+  useOrderDocs()
 
-    function cancelHandler() {
-      selectedOrders.value = []
-      ctx.emit('cancel')
-    }
+const client = computed(() => store.getters.partnersMap.get(props.paymentInvoice.clientId))
 
-    function refreshHandler() {
-      refresh()
-      selectedOrders.value = []
-    }
+const clientName = computed(() => {
+  return client.value?.name || '-'
+})
 
-    async function addOrderToInvoice(orderId) {
-      await PaymentInvoiceService.addOrdersToPaymentInvoice({
-        orders: [orderId],
-        paymentInvoiceId: paymentInvoice._id,
-      })
+const selectedOrdersIds = computed(() => selectedOrders.value.map((i) => i._id))
 
-      selectedOrders.value = selectedOrders.value.filter((i) => i._id !== orderId)
-      refresh()
-    }
-
-    async function addToInvoiceHandler() {
-      await PaymentInvoiceService.addOrdersToPaymentInvoice({
-        orders: selectedOrdersIds.value,
-        paymentInvoiceId: paymentInvoice._id,
-      })
-
-      selectedOrders.value = []
-      refresh()
-    }
-    return {
-      carrierStore,
-      cancelHandler,
-      addToInvoiceHandler,
-      loading,
-      updateActiveHeaders,
-      allHeaders: PickOrdersForPaymentInvoiceHeaders(),
-      settings,
-      listOptions,
-      items,
-      headers,
-      refreshHandler,
-      selectedOrders,
-      selectedOrdersIds,
-      clientName,
-      client,
-      addOrderToInvoice,
-      editableOrderId,
-      openDocsDialog,
-      docDialog,
-      editableDocs,
-      saveDocDialog,
-      cancelDocDialog,
-    }
-  },
+function updateActiveHeaders(val) {
+  headers.value = val
 }
+
+function cancelHandler() {
+  selectedOrders.value = []
+  emit('cancel')
+}
+
+function refreshHandler() {
+  refresh()
+  selectedOrders.value = []
+}
+
+async function addOrderToInvoice(orderId) {
+  await PaymentInvoiceService.addOrdersToPaymentInvoice({
+    orders: [orderId],
+    paymentInvoiceId: props.paymentInvoice._id,
+  })
+
+  selectedOrders.value = selectedOrders.value.filter((i) => i._id !== orderId)
+  refresh()
+}
+
+async function addToInvoiceHandler() {
+  await PaymentInvoiceService.addOrdersToPaymentInvoice({
+    orders: selectedOrdersIds.value,
+    paymentInvoiceId: props.paymentInvoice._id,
+  })
+
+  selectedOrders.value = []
+  refresh()
+}
+
+const allHeaders = PickOrdersForPaymentInvoiceHeaders()
 </script>

@@ -20,16 +20,20 @@
             :disabled="disabledSettings"
             :carriers="carrierStore.carriers"
           />
-          <v-btn
-            color="primary"
-            size="small"
-            class="ma-2"
-            hint="alt + N"
-            :disabled="!allowCreateTariffItem"
-            @click="addBtnHandler"
-          >
-            Добавить тариф alt+N
-          </v-btn>
+          <v-tooltip text="alt + N" location="bottom">
+            <template #activator="{ props }">
+              <v-btn
+                color="primary"
+                size="small"
+                class="ma-2"
+                :disabled="!allowCreateTariffItem"
+                v-bind="props"
+                @click="addBtnHandler"
+              >
+                Добавить тариф alt+N
+              </v-btn>
+            </template>
+          </v-tooltip>
           <SalaryTariffForm
             v-model="editableTariff"
             :dialog="dialog"

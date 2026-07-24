@@ -1,6 +1,6 @@
 <template>
   <tr class="append-row">
-    <td v-for="column in headers" :key="column.value" :style="{ textAlign: column.align }">
+    <td v-for="column in headers" :key="column.value" style="text-align: left">
       <b v-if="column._total === 'sum'">
         {{ new Intl.NumberFormat().format(getSum(column.field || column.value)) }}
       </b>
@@ -9,6 +9,8 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 defineOptions({ name: 'AppAppendPivorRow' })
 
 const props = defineProps({
@@ -16,8 +18,21 @@ const props = defineProps({
   items: Array,
 })
 
+const sumByField = computed(() => {
+  const sums = {}
+  props.headers.forEach((h) => {
+    if (h._total === 'sum') {
+      sums[h.field || h.value] = props.items.reduce(
+        (res, item) => parseFloat(item[h.field || h.value] || 0) + res,
+        0
+      )
+    }
+  })
+  return sums
+})
+
 function getSum(field) {
-  return props.items.reduce((res, item) => parseFloat(item[field] || 0) + res, 0)
+  return sumByField.value[field]
 }
 </script>
 

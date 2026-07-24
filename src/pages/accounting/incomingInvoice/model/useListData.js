@@ -1,11 +1,13 @@
 import { ref, watch, computed } from 'vue'
-import store from '@/store'
-import router from '@/router'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { IncomingInvoiceService } from '@/shared/services'
 import dayjs from 'dayjs'
 import { usePersistedRef } from '@/shared/hooks'
 
 export const useListData = () => {
+  const store = useStore()
+  const router = useRouter()
   const headers = ref([])
   function initialPeriod() {
     const startDate = dayjs().startOf('month').toISOString()

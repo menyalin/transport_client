@@ -1,8 +1,8 @@
 <template>
   <form-wrapper
     :loading="loading"
-    :displayDeleteBtn="showDeleteBtn"
-    :itemIsMissing="item === null"
+    :display-delete-btn="showDeleteBtn"
+    :item-is-missing="item === null"
     @delete="deleteHandler"
   >
     <IncomingInvoiceForm

@@ -1,10 +1,10 @@
 <template>
   <div>
     <buttons-panel
-      panelType="form"
-      showSaveBtn
+      panel-type="form"
+      show-save-btn
       @cancel="cancelHandler"
-      :disabledSubmit="invalidForm"
+      :disabled-submit="invalidForm"
       @submit="submitHandler"
       @save="saveHandler"
     >

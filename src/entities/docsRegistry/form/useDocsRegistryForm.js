@@ -1,5 +1,5 @@
 import { computed, onMounted, ref } from 'vue'
-import store from '@/store'
+import { useStore } from 'vuex'
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { AgreementService } from '@/shared/services/index'
@@ -14,6 +14,7 @@ const getInitialState = (editedItem) => ({
 })
 
 function useDocsRegistryForm() {
+  const store = useStore()
   let state = ref({})
   const allAgreements = ref([])
 

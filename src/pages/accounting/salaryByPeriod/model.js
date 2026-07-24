@@ -20,27 +20,29 @@ export const useDriversSalaryData = ({
       dayjs(period.value).endOf('month').toISOString(),
     ]
   }
-  function setListSettings(newSettings) {
-    listSettings.value = newSettings
-  }
 
   async function getData() {
     isLoading.value = true
-    items.value = []
-    items.value = await SalaryTariffService.getDriversSalaryByPeriod({
-      period: getPeriod(),
-      driver: driver.value,
-      clients: clients.value,
-      consigneeType: consigneeType.value,
-      orderType: orderType.value,
-      options: listSettings.value,
-      tks: tks.value,
-    })
-    isLoading.value = false
+    try {
+      const result = await SalaryTariffService.getDriversSalaryByPeriod({
+        period: getPeriod(),
+        driver: driver.value,
+        clients: clients.value,
+        consigneeType: consigneeType.value,
+        orderType: orderType.value,
+        options: listSettings.value,
+        tks: tks.value,
+      })
+      items.value = result || []
+    } catch (e) {
+      console.error(e)
+    } finally {
+      isLoading.value = false
+    }
   }
 
   watch(
-    [period, driver, clients, consigneeType, orderType, tks],
+    [period, driver, clients, consigneeType, orderType, tks, listSettings],
     async () => {
       if (period.value) await getData()
     },
@@ -61,7 +63,7 @@ export const useDriversSalaryData = ({
   return {
     items,
     isLoading,
-    setListSettings,
+    listSettings,
     downloadReportHandler,
   }
 }

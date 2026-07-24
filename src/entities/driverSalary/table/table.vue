@@ -11,8 +11,8 @@
     @dblclick:row="dblClickRow"
     :style="{ boxSizing: 'border-box' }"
   >
-    <template v-if="preparedItems.length" #[`body.append`]="{ headers, items: tableItems }">
-      <app-append-pivor-row :headers="headers" :items="tableItems" />
+    <template v-if="preparedItems.length" #[`body.append`]="{ items: tableItems }">
+      <app-append-pivor-row :headers="tableHeaders" :items="tableItems" />
     </template>
 
     <template #[`item.totalSum`]="{ item }">
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import AppAppendPivorRow from './appendPivotRow.vue'
@@ -56,19 +56,21 @@ const props = defineProps({
   items: Array,
   loading: Boolean,
   driver: String,
-  listSettings: Object,
-  setListSettings: Function,
 })
 
 const emit = defineEmits(['chooseDriver'])
 
-const headers = PIVOT_HEADERS
-const options = ref({})
-
-watch(options, () => {
-  // props.setListSettings(options.value)
+const options = defineModel('options', {
+  type: Object,
+  default: () => ({
+    page: 1,
+    itemsPerPage: -1,
+    sortBy: [],
+    sortDesc: [],
+  }),
 })
 
+const headers = PIVOT_HEADERS
 const headersForDriverMode = DRIVER_DETAILS_HEADERS
 
 function chooseDriver(driverId) {
@@ -108,4 +110,3 @@ const tableHeaders = computed(() => {
   return props.driver ? headersForDriverMode : headers
 })
 </script>
-<style></style>

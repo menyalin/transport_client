@@ -47,6 +47,8 @@
       clearable
       hide-details
       :items="statusItems"
+      item-title="text"
+      item-value="value"
       :style="{ maxWidth: '300px' }"
       @update:model-value="updateSettings($event, 'statuses')"
     />
@@ -56,7 +58,7 @@
       clearable
       hide-details
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'search')"
+      @update:model-value="updateSettings($event, 'search')"
     />
   </ListSettingsWrapper>
 </template>
@@ -89,10 +91,10 @@ const agreementItems = computed(() =>
 const statusItems = computed(() => paymentInvoiceStatuses)
 
 const periodByItems = [
-  { value: 'date', text: 'Дата акта' },
-  { value: 'sendDate', text: 'Дата отправки' },
-  { value: 'plannedPayDate', text: 'Плановая дата оплаты' },
-  { value: 'payDate', text: 'Дата оплаты' },
+  { value: 'date', title: 'Дата акта' },
+  { value: 'sendDate', title: 'Дата отправки' },
+  { value: 'plannedPayDate', title: 'Плановая дата оплаты' },
+  { value: 'payDate', title: 'Дата оплаты' },
 ]
 
 function updateSettings(value, field) {

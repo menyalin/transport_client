@@ -1,6 +1,6 @@
 <template>
-  <div class="page-wrapper">
-    <div class="filters-wrapper">
+  <EntityListWrapper>
+    <ListSettingsWrapper>
       <app-drivers-salary-period v-model="period" />
       <v-select
         v-model="tks"
@@ -56,44 +56,42 @@
         :style="{ 'max-width': '200px' }"
       />
       <v-btn color="primary" @click="downloadReportHandler"> Скачать в excel </v-btn>
-    </div>
+    </ListSettingsWrapper>
 
     <DriverSalaryTable
       :items="items"
       :loading="isLoading"
       :driver="driver"
-      :set-list-settings="setListSettings"
+      v-model:options="listSettings"
       @chooseDriver="setDriver"
     />
-  </div>
+  </EntityListWrapper>
 </template>
 
 <script setup>
 import dayjs from 'dayjs'
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalaryPeriod/index.vue'
-
-import { useDebouncedRef } from '@/modules/common/helpers/utils'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
+import { usePersistedRef } from '@/shared/hooks'
+import { ListSettingsWrapper, EntityListWrapper } from '@/shared/ui'
 
 defineOptions({ name: 'DriversSalary' })
 
 const store = useStore()
 const carrierStore = useCarrierStore()
 
-const historyState = window.history.state || {}
+const tks = usePersistedRef([], 'salaryByPeriod:tks')
+const driver = usePersistedRef(null, 'salaryByPeriod:driver')
+const clients = usePersistedRef([], 'salaryByPeriod:clients')
+const consigneeType = usePersistedRef(null, 'salaryByPeriod:consigneeType')
+const orderType = usePersistedRef(null, 'salaryByPeriod:orderType')
+const period = ref(new Date().toISOString())
 
-const tks = ref(historyState.tks || [])
-const driver = ref(historyState.driver)
-const clients = ref(historyState.clients || [])
-const consigneeType = ref(historyState.consigneeType)
-const orderType = ref(historyState.orderType)
-const period = useDebouncedRef(historyState.period || new Date().toISOString(), 500)
-
-const { items, isLoading, setListSettings, downloadReportHandler } = useDriversSalaryData({
+const { items, isLoading, listSettings, downloadReportHandler } = useDriversSalaryData({
   period,
   driver,
   clients,
@@ -123,61 +121,4 @@ const clientItems = computed(() => {
 function setDriver(driverId) {
   driver.value = driverId
 }
-
-function pushState() {
-  window.history.pushState(
-    {
-      period: period.value,
-      driver: driver.value,
-      clients: clients.value,
-      consigneeType: consigneeType.value,
-      orderType: orderType.value,
-      tks: tks.value,
-    },
-    ''
-  )
-}
-
-function popStateHandler(e) {
-  period.value = e.state?.period
-  driver.value = e.state?.driver
-  clients.value = e.state?.clients || []
-  orderType.value = e.state?.orderType
-  consigneeType.value = e.state?.consigneeType
-  tks.value = e.state?.tks || []
-}
-
-watch([period, driver, clients, consigneeType, orderType, tks], pushState)
-
-onMounted(() => {
-  window.addEventListener('popstate', popStateHandler)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('popstate', popStateHandler)
-})
 </script>
-
-<style scoped>
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  width: 100%;
-}
-.driver-mode {
-  width: 100%;
-}
-.pivot-mode {
-  min-width: 80%;
-}
-.filters-wrapper {
-  padding-top: 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 30px;
-}
-</style>

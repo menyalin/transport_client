@@ -1,20 +1,17 @@
-import { ref, computed, watch, onBeforeUnmount, getCurrentInstance } from 'vue'
-import store from '@/store'
-import router from '@/router'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import socket from '@/socket'
 import { IncomingInvoiceService } from '@/shared/services'
 
 export const useItemData = (props) => {
-  const { proxy } = getCurrentInstance()
+  const store = useStore()
+  const router = useRouter()
 
   const item = ref({})
-  let loading = ref(false)
-  const showError = ref(false)
-  const errorMessage = ref('')
+  const loading = ref(false)
 
   const disabledPickOrders = computed(() => !item.value?._id)
-
-  const needUpdateRows = computed(() => item.value.orders.some((i) => i.needUpdate))
 
   const disabledMainFields = computed(() => {
     return item.value.orders?.length > 0
@@ -28,6 +25,7 @@ export const useItemData = (props) => {
       item.value?.orders.length === 0
     )
   })
+
   async function deleteOrderFromPaymentInvoice(rowIds) {
     if (!rowIds || rowIds.length === 0) return null
     await IncomingInvoiceService.deleteOrderFromIncomingInvoice({
@@ -35,6 +33,7 @@ export const useItemData = (props) => {
       incomingInvoiceId: item.value._id,
     })
   }
+
   async function getItem() {
     if (!props.id) return null
     try {
@@ -68,11 +67,10 @@ export const useItemData = (props) => {
         item.value = updatedItem
       }
     } catch (e) {
-      showError.value = true
-      errorMessage.value = e.response.data
       store.commit('setError', e.message)
     }
   }
+
   async function deleteHandler() {
     try {
       if (props.id) {
@@ -83,16 +81,16 @@ export const useItemData = (props) => {
       } else return null
     } catch (e) {
       loading.value = false
-      showError.value = true
-      errorMessage.value = e.response.data
       store.commit('setError', e.message)
     }
   }
+
   function dblRowClickHandler(orderId) {
     router.push('/orders/' + orderId)
   }
+
   function pickOrdersHandler() {
-    proxy.$router.push({
+    router.push({
       name: 'PickOrdersForIncomingInvoice',
       params: {
         invoiceId: props.id,
@@ -109,7 +107,7 @@ export const useItemData = (props) => {
       item.value = { ...item.value, ...updatedItem }
     } catch (e) {
       console.log('Ошибка при сохранении даты оплаты: ', e)
-      proxy.$store.commit('setError', `Ошибка при сохранении даты оплаты: ${e.message}`)
+      store.commit('setError', `Ошибка при сохранении даты оплаты: ${e.message}`)
     } finally {
       loading.value = false
     }
@@ -129,11 +127,11 @@ export const useItemData = (props) => {
   }
 
   async function updateItemPrice(itemId) {
-    // Обновить цены по рейсы в акте
     const res = await IncomingInvoiceService.updatePrices(itemId)
     const orderIdx = item.value.orders.findIndex((i) => itemId === i._id)
     item.value.orders.splice(orderIdx, 1, res)
   }
+
   watch(() => props.id, getItem, { immediate: true, deep: true })
   socket.on('orders:addedToIncomingInvoice', addOrders)
   socket.on('orders:removedFromIncomingInvoice', removeOrders)
@@ -142,10 +140,10 @@ export const useItemData = (props) => {
     socket.off('orders:removedFromIncomingInvoice', removeOrders)
     socket.off('orders:addedToIncomingInvoice', addOrders)
   })
+
   return {
     item,
     disabledPickOrders,
-    needUpdateRows,
     disabledMainFields,
     showDeleteBtn,
     deleteOrderFromPaymentInvoice,
@@ -156,5 +154,6 @@ export const useItemData = (props) => {
     updateItemPrice,
     pickOrdersHandler,
     savePayDateHandler,
+    loading,
   }
 }

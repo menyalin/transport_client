@@ -1,88 +1,84 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <buttons-panel
-          panel-type="list"
-          :disabled-submit="!hasPermission"
-          @submit="create"
-          @refresh="refresh"
-        />
-        <div class="filter-wrapper">
-          <app-table-column-settings
-            v-model="activeHeaders"
-            :allHeaders="allHeaders"
-            :listSettingsName="listSettingsName"
-          />
-          <v-text-field
-            v-model="settings.date"
-            type="date"
-            hide-details
-            label="Тарифы на дату"
-            :style="{ 'max-width': '220px' }"
-          />
-          <v-select
-            v-model="settings.tk"
-            label="ТК"
-            :items="carriers"
-            item-title="name"
-            item-value="_id"
-            clearable
-            hide-details
-            :style="{ 'max-width': '220px' }"
-          />
-          <v-select
-            v-model="settings.type"
-            :items="salaryTariffTypes"
-            item-title="text"
-            item-value="value"
-            clearable
-            hide-details
-            label="Тип тарифа"
-            :style="{ 'max-width': '250px' }"
-          />
-          <v-select
-            v-model="settings.liftCapacity"
-            :items="liftCapacityTypes"
-            item-title="text"
-            item-value="value"
-            clearable
-            hide-details
-            label="Грузоподъемность"
-            :style="{ 'max-width': '180px' }"
-          />
-        </div>
+  <EntityListWrapper>
+    <buttons-panel
+      panel-type="list"
+      :disabled-submit="!hasPermission"
+      @submit="create"
+      @refresh="refresh"
+    />
+    <ListSettingsWrapper>
+      <app-table-column-settings
+        v-model="activeHeaders"
+        :allHeaders="allHeaders"
+        :listSettingsName="listSettingsName"
+      />
+      <v-text-field
+        v-model="settings.date"
+        type="date"
+        hide-details
+        label="Тарифы на дату"
+        :style="{ 'max-width': '220px' }"
+      />
+      <v-select
+        v-model="settings.tk"
+        label="ТК"
+        :items="carriers"
+        item-title="name"
+        item-value="_id"
+        clearable
+        hide-details
+        :style="{ 'max-width': '220px' }"
+      />
+      <v-select
+        v-model="settings.type"
+        :items="salaryTariffTypes"
+        item-title="text"
+        item-value="value"
+        clearable
+        hide-details
+        label="Тип тарифа"
+        :style="{ 'max-width': '250px' }"
+      />
+      <v-select
+        v-model="settings.liftCapacity"
+        :items="liftCapacityTypes"
+        item-title="text"
+        item-value="value"
+        clearable
+        hide-details
+        label="Грузоподъемность"
+        :style="{ 'max-width': '180px' }"
+      />
+    </ListSettingsWrapper>
 
-        <v-data-table-server
-          :headers="headers"
-          :items="filteredList"
-          :loading="loading"
-          height="73vh"
-          fixed-header
-          :items-length="count"
-          :items-per-page-options="[50, 100, 200]"
-          v-model:options="settings.listOptions"
-          @dblclick:row="dblClickRow"
-        >
-          <template #[`item._result`]="{ item }">
-            <app-zones-cell v-if="item.type === 'zones'" :item="item" />
-            <app-regions-cell v-else-if="item.type === 'regions'" :item="item" />
-            <app-waiting-cell v-else-if="item.type === 'waiting'" :item="item" />
-            <app-return-cell v-else-if="item.type === 'return'" :item="item" />
-            <div v-else>{{ item._result }}</div>
-          </template>
-        </v-data-table-server>
-        <salary-tariff-form
-          v-model="editableItem"
-          :carrierItems="carriers"
-          :dialog="dialog"
-          @cancel="cancelDialog"
-          @update="updateItem"
-          @deletedItem="deletedItem"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+    <v-data-table-server
+      :headers="headers"
+      :items="filteredList"
+      :loading="loading"
+      height="73vh"
+      fixed-header
+      :items-length="count"
+      :items-per-page-options="[50, 100, 200]"
+      v-model:options="settings.listOptions"
+      @dblclick:row="dblClickRow"
+    >
+      <template #[`item._result`]="{ item }">
+        <app-zones-cell v-if="item.type === 'zones'" :item="item" />
+        <app-regions-cell v-else-if="item.type === 'regions'" :item="item" />
+        <app-waiting-cell v-else-if="item.type === 'waiting'" :item="item" />
+        <app-return-cell v-else-if="item.type === 'return'" :item="item" />
+        <div v-else>{{ item._result }}</div>
+      </template>
+    </v-data-table-server>
+    <salary-tariff-form
+      v-model="editableItem"
+      :carrierItems="carriers"
+      :dialog="dialog"
+      @cancel="cancelDialog"
+      @update="updateItem"
+      @deletedItem="deletedItem"
+    />
+  </EntityListWrapper>
 </template>
 
 <script setup>
@@ -103,7 +99,7 @@ import { useListColumnSetting, usePersistedRef } from '@/shared/hooks'
 import { useAddressStore } from '@/entities/address'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { ALL_LIST_HEADERS, DEFAULT_HEADERS } from './constants'
-
+import { ListSettingsWrapper, EntityListWrapper } from '@/shared/ui'
 defineOptions({ name: 'SalaryTariffList' })
 
 const router = useRouter()
@@ -159,8 +155,11 @@ function getResultStrByType(item) {
       const unloadingStr = unloadingAddr?.shortName || unloadingAddr?.name
       return loadingStr + '  >>>  ' + unloadingStr
     }
-    case 'directDistanceZones':
-      return `Погрузка: ${addressMap.value.get(item.loading).shortName}, до ${item.maxDistance}км`
+    case 'directDistanceZones': {
+      const loadingAddr = addressMap.value.get(item.loading)
+      const loadingStr = loadingAddr?.shortName || loadingAddr?.name
+      return `Погрузка: ${loadingStr}, до ${item.maxDistance}км`
+    }
     default:
       return '-'
   }

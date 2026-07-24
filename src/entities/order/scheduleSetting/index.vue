@@ -3,7 +3,13 @@
     <v-btn icon size="small" :disabled="isMinDate" @click="incDate(-1)">
       <v-icon>mdi-arrow-left-bold</v-icon>
     </v-btn>
-    <DateTimeInput :model-value="date" hide-details :min="minDate" @update:model-value="setDate" />
+    <DateTimeInput
+      :model-value="date"
+      hide-details
+      :min="minDate"
+      @update:model-value="setDate"
+      density="compact"
+    />
     <v-btn icon size="small" @click="incDate(1)">
       <v-icon>mdi-arrow-right-bold</v-icon>
     </v-btn>

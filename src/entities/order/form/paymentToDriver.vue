@@ -1,14 +1,13 @@
 <template>
-  <div>
-    <div class="title-row">
-      <BlockTitle>Доплата водителю</BlockTitle>
-      <v-spacer />
-      <v-btn v-if="!showDataRow && hasWritePermission" @click="add"> Добавить </v-btn>
-    </div>
+  <CardSection title="Доплата водителю">
+    <template #header>
+      <v-btn v-if="!showDataRow && hasWritePermission" @click="add" size="small"> Добавить </v-btn>
+    </template>
+
     <div v-if="showDataRow" class="data-row">
       <div><i>Сумма:</i> {{ new Intl.NumberFormat().format(value.sum) }}</div>
       <div :style="{ maxWidth: '340px' }"><i>Примечание:</i> {{ value.note }}</div>
-      <div>
+      <div v-if="value.worker">
         <i>Отв:</i>
         <WorkerAutocomplete labelOnly v-model="value.worker" />
       </div>
@@ -27,7 +26,6 @@
             :style="{ maxWidth: '200px' }"
           />
           <v-text-field v-model.trim="tmpVal.note" label="Примечание" />
-          {{ tmpVal }}
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -36,15 +34,16 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
+  </CardSection>
 </template>
 <script setup>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import { BlockTitle } from '@/entities/order'
+
 import WorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { CardSection } from '@/shared/ui'
 
 defineOptions({ name: 'PaymentToDriver' })
 

@@ -41,10 +41,9 @@ function dblclickRowHandler(_event, { item }) {
     :items="preparedOrders"
     :headers="ALL_HEADERS"
     v-model="selected"
-    multiple
     show-select
     item-value="order._id"
-    :itemsPerPage="-1"
+    :items-per-page="-1"
     @dblclick:row="dblclickRowHandler"
   >
     <template v-slot:top>

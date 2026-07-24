@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-wrapper">
+  <ListSettingsWrapper>
     <app-table-column-setting
       :allHeaders="allHeaders"
       listSettingsName="paymentInvoiceListSettings"
@@ -9,6 +9,8 @@
       label="Период по"
       :model-value="settings.periodBy"
       :items="periodByItems"
+      item-title="text"
+      item-value="value"
       :style="{ maxWidth: '300px' }"
       @update:model-value="updateSettings($event, 'periodBy')"
     />
@@ -32,7 +34,8 @@
     <v-select
       :model-value="settings.statuses"
       label="Статус"
-      itemTitle="text"
+      item-title="text"
+      item-value="value"
       multiple
       clearable
       hide-details
@@ -59,15 +62,15 @@
       clearable
       hide-details
       :style="{ maxWidth: '200px' }"
-      @change="updateSettings($event, 'search')"
+      @update:model-value="updateSettings($event, 'search')"
     />
-  </div>
+  </ListSettingsWrapper>
 </template>
 <script setup>
 import { computed } from 'vue'
 import { incomingInvoiceStatuses } from '../config.js'
 import allHeaders from './allHeaders.js'
-import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
+import { AppTableColumnSetting, DateRangeInput, ListSettingsWrapper } from '@/shared/ui'
 
 defineOptions({ name: 'IncomingInvoiceListSettings' })
 

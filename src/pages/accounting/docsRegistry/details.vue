@@ -1,5 +1,5 @@
 <template>
-  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
+  <form-wrapper :loading="loading" :display-delete-btn="showDeleteBtn" @delete="deleteHandler">
     <docs-registry-form
       :item="item"
       :disabledPickOrders="disabledPickOrders"
@@ -75,9 +75,7 @@ function closeDialog() {
   showPickOrderDialog.value = false
 }
 
-let loading = ref(false)
-const showError = ref(false)
-const errorMessage = ref('')
+const loading = ref(false)
 
 async function getItem() {
   if (!props.id) return null
@@ -113,8 +111,6 @@ const submit = async (formState, saveOnly) => {
       item.value = updatedItem
     }
   } catch (e) {
-    showError.value = true
-    errorMessage.value = e.response.data
     vuexStore.commit('setError', e.message)
   } finally {
     loading.value = false
@@ -129,8 +125,6 @@ async function deleteHandler() {
       router.push('/accounting/docsRegistry')
     } else return null
   } catch (e) {
-    showError.value = true
-    errorMessage.value = e.response.data
     vuexStore.commit('setError', e.message)
   } finally {
     loading.value = false
