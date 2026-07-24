@@ -1,4 +1,4 @@
-FROM node:lts-alpine as build
+FROM node:22-alpine AS build
 WORKDIR /app
 
 ENV VUE_APP_API_URL=https://s4log.ru/api

@@ -1,4 +1,4 @@
-FROM node:24-alpine as build
+FROM node:22-alpine AS build
 WORKDIR /app
 
 ENV VUE_APP_API_URL=https://carrier.logicore.ru/api
