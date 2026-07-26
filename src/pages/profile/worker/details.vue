@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { FormWrapper } from '@/shared/ui'
 import { WorkerService } from '@/shared/services'
-import { WorkerForm } from '@/entities/worker'
+import { WorkerForm } from '@/features/worker'
 import { LinkedUser } from '@/widgets/worker'
 
 const props = defineProps({

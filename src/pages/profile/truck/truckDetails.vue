@@ -22,7 +22,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { TruckService } from '@/shared/services'
-import { TruckForm } from '@/entities/truck'
+import { TruckForm } from '@/features/truck'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'TruckDetails' })

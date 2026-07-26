@@ -24,7 +24,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { FineForm } from '@/entities/fine'
+import { FineForm } from '@/features/fine'
 import { LoadSpinner } from '@/shared/ui'
 import { FineService } from '@/shared/services'
 

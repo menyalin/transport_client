@@ -12,7 +12,7 @@
   </FormWrapper>
 </template>
 <script setup>
-import { ZoneForm } from '@/entities/zone'
+import { ZoneForm } from '@/features/zone'
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { ZoneService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'

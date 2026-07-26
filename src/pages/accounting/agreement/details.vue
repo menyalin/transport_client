@@ -22,7 +22,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { AgreementForm } from '@/entities/agreement'
+import { AgreementForm } from '@/features/agreement'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { AgreementService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'

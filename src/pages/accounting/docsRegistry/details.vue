@@ -28,8 +28,13 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { DocsRegistryService } from '@/shared/services'
 import { FormWrapper } from '@/shared/ui'
-import { PickOrders, docsRegistryWordReport, DocsRegistryReportData } from '@/features/docsRegistry'
-import { DocsRegistryForm, DocsRegistryOrdersList } from '@/entities/docsRegistry'
+import {
+  PickOrders,
+  docsRegistryWordReport,
+  DocsRegistryReportData,
+  DocsRegistryForm,
+} from '@/features/docsRegistry'
+import { DocsRegistryOrdersList } from '@/entities/docsRegistry'
 import { usePersistedRef } from '@/shared/hooks'
 
 defineOptions({ name: 'DocsRegistryDetail' })

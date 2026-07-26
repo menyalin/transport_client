@@ -21,7 +21,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { CrewService } from '@/shared/services'
-import { CrewForm } from '@/entities/crew'
+import { CrewForm } from '@/features/crew'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'CrewDetails' })

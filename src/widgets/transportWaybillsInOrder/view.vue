@@ -33,11 +33,8 @@
 import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { CardSection } from '@/shared/ui'
-import {
-  TransportWaybillForm,
-  TransportWaybillList,
-  TransportWaybillService,
-} from '@/entities/transport_waybill'
+import { TransportWaybillForm } from '@/features/transportWaybill'
+import { TransportWaybillList, TransportWaybillService } from '@/entities/transport_waybill'
 import { useOrderRouteData } from './useOrderRouteData'
 import { useAddressStore } from '@/entities/address'
 import { usePartnerStore } from '@/entities/partner'

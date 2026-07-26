@@ -7,5 +7,5 @@ import { ORDER_DOC_STATUSES } from '@/shared/constants'
 
 defineOptions({ name: 'OrderDocStatusSelector' })
 const items = ref(ORDER_DOC_STATUSES)
-const value = defineModel<string>()
+const value = defineModel<string | string[]>()
 </script>

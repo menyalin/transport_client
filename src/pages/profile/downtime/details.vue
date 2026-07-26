@@ -18,7 +18,7 @@
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { DowntimeService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
-import { DowntimeForm } from '@/entities/downtime'
+import { DowntimeForm } from '@/features/downtime'
 
 defineOptions({ name: 'DowntimeDetails' })
 

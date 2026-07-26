@@ -88,7 +88,7 @@ import { useStore } from 'vuex'
 
 import { ButtonsPanel } from '@/shared/ui'
 import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
-import { SalaryTariffForm } from '@/entities/salary'
+import { SalaryTariffForm } from '@/features/salary'
 import AppZonesCell from '@/entities/salary/salaryTariffGroupList/zones.vue'
 import AppRegionsCell from '@/entities/salary/salaryTariffGroupList/regions.vue'
 import AppWaitingCell from '@/entities/salary/salaryTariffGroupList/waiting.vue'

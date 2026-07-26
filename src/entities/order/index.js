@@ -7,19 +7,12 @@ import PaymentInvoiceLinks from './paymentInvoiceLinks.vue'
 import IncomingInvoiceLink from './incomingInvoiceLink.vue'
 import OrdersTableSettings from './ordersTableSettings/ordersTableSettings.vue'
 import ReqTransport from './reqTransport.vue'
-import { BlockTitle } from '@/shared/ui'
 import CargoParams from './cargoParams.vue'
-import ClientBlock from './form/clientBlock/clientBlock.vue'
 import { OrderModel } from './model/orderModel.js'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 import { useOrderListUtils } from './hooks/useOrderListUtils'
 import { useOrderValidations } from './hooks/useOrderValidations'
 import { useOrderPrintForms } from './hooks/useOrderPrintForms'
-import { OrderRoute } from './form/orderRoute/index.js'
-import PriceBlock from './form/priceBlock/index.vue'
-
-import AnalyticBlock from './form/analyticBlock.vue'
-import OrderForm from './form/orderForm.vue'
 import ScheduleSettings from './scheduleSetting/index.vue'
 import ScheduleTable from './scheduleTable/index.vue'
 
@@ -27,22 +20,16 @@ export {
   OrdersTable,
   DocsRegistryLink,
   OrderDocsListForm,
+  OrderDocsList,
   OrderModel,
   useOrderDocs,
   useOrderListUtils,
   useOrderValidations,
   PaymentInvoiceLinks,
   IncomingInvoiceLink,
-  OrderDocsList,
   OrdersTableSettings,
   ReqTransport,
-  BlockTitle,
-  ClientBlock,
   CargoParams,
-  OrderRoute,
-  PriceBlock,
-  AnalyticBlock,
-  OrderForm,
   ScheduleSettings,
   ScheduleTable,
   useOrderPrintForms,

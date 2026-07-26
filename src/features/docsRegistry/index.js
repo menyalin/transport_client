@@ -3,3 +3,4 @@ import { docsRegistryWordReport } from './docsRegistryWordReport.js'
 import DocsRegistryReportData from './ReportData.js'
 
 export { PickOrders, DocsRegistryReportData, docsRegistryWordReport }
+export { default as DocsRegistryForm } from './form/DocsRegistryForm.vue'

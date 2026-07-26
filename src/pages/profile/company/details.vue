@@ -14,7 +14,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { FormWrapper } from '@/shared/ui'
 import { CompanyService } from '@/shared/services'
-import { CompanySettings, CompanyBaseFieldsForm } from '@/entities/company'
+import { CompanySettings } from '@/features/company'
+import { CompanyBaseFieldsForm } from '@/features/company'
 
 defineOptions({ name: 'CompanyDetails' })
 

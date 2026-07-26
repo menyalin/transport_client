@@ -17,7 +17,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { DriverForm } from '@/entities/driver'
+import { DriverForm } from '@/features/driver'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'DriverCreate' })

@@ -59,7 +59,7 @@ import AppSalaryTariffGroupList from '@/entities/salary/salaryTariffGroupList/in
 import { ButtonsPanel } from '@/shared/ui'
 import { SalaryTariffService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
-import { SalaryTariffForm } from '@/entities/salary'
+import { SalaryTariffForm } from '@/features/salary'
 
 defineOptions({ name: 'CreateTariff' })
 
