@@ -22,7 +22,7 @@
 import { LoadSpinner } from '@/shared/ui'
 import { ScheduleNoteService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
-import { ScheduleNoteForm } from '@/entities/scheduleNote'
+import { ScheduleNoteForm } from '@/features/scheduleNote'
 
 defineOptions({ name: 'ScheduleNoteDetails' })
 

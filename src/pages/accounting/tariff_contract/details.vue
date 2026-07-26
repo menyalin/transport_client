@@ -14,7 +14,8 @@ import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { FormWrapper } from '@/shared/ui'
-import { TariffContractForm, useTariffContract } from '@/entities/tariff_contract'
+import { TariffContractForm } from '@/features/tariffContract'
+import { useTariffContract } from '@/entities/tariff_contract'
 import { useAgreements } from '@/entities/agreement'
 
 defineOptions({ name: 'TariffContractDetail' })

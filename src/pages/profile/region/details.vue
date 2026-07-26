@@ -15,7 +15,7 @@
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { RegionService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
-import { RegionForm } from '@/entities/region'
+import { RegionForm } from '@/features/region'
 
 defineOptions({ name: 'RegionDetails' })
 

@@ -22,7 +22,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { AddressService } from '@/shared/services'
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
-import { AddressForm } from '@/entities/address'
+import { AddressForm } from '@/features/address'
 import { usePartners } from '@/entities/partner'
 
 defineOptions({ name: 'AddressDetailsPage' })

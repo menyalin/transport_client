@@ -42,12 +42,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import socket from '@/socket'
 import { FormWrapper } from '@/shared/ui'
-import {
-  PaymentInvoiceForm,
-  PaymentInvoiceOrdersList,
-  PaymentInvoiceResult,
-} from '@/entities/paymentInvoice'
-import { PickOrders } from '@/features/paymentInvoice'
+import { PickOrders, PaymentInvoiceForm } from '@/features/paymentInvoice'
+import { PaymentInvoiceOrdersList, PaymentInvoiceResult } from '@/entities/paymentInvoice'
 import { PaymentInvoiceService } from '@/shared/services'
 import { useDownloadTemplate } from './model/useDownloadTemplate'
 import { usePersistedRef } from '@/shared/hooks'

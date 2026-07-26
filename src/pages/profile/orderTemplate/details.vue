@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { OrderTemplateForm } from '@/entities/orderTemplate'
+import { OrderTemplateForm } from '@/features/orderTemplate'
 import { LoadSpinner } from '@/shared/ui'
 import { OrderTemplateService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'

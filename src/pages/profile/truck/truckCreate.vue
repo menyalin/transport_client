@@ -17,7 +17,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
-import { TruckForm } from '@/entities/truck'
+import { TruckForm } from '@/features/truck'
 
 defineOptions({ name: 'TruckCreate' })
 

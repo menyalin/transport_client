@@ -16,7 +16,7 @@
 <script setup>
 defineOptions({ name: 'GroupBySettings' })
 
-const modelValue = defineModel({ type: Object })
+const modelValue = defineModel({ type: String })
 
 defineProps({
   items: { type: Array, required: true },

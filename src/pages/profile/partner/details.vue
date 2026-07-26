@@ -18,7 +18,7 @@ import { useStore } from 'vuex'
 import { create, updateById, deleteById, getById } from '@/entities/partner/api'
 import { usePartnerStore } from '@/entities/partner'
 import { FormWrapper } from '@/shared/ui'
-import { PartnerForm } from '@/entities/partner'
+import { PartnerForm } from '@/features/partner'
 import { useAgreements } from '@/entities/agreement/useAgreements'
 
 defineOptions({ name: 'PartnerDetails' })

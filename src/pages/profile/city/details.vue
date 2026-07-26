@@ -15,7 +15,7 @@
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { CityService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
-import { CityForm } from '@/entities/city'
+import { CityForm } from '@/features/city'
 defineOptions({ name: 'CityDetails' })
 
 const props = defineProps({

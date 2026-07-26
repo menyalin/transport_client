@@ -22,7 +22,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { DriverService } from '@/shared/services'
-import { DriverForm } from '@/entities/driver'
+import { DriverForm } from '@/features/driver'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'DriverDetails' })

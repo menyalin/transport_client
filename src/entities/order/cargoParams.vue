@@ -26,7 +26,7 @@
   </div>
 </template>
 <script setup>
-import { BlockTitle } from '@/entities/order'
+import { BlockTitle } from '@/shared/ui'
 
 defineOptions({ name: 'CargoParams' })
 

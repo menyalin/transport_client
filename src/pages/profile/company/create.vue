@@ -11,7 +11,7 @@
   </v-container>
 </template>
 <script setup>
-import { CompanyForm } from '@/entities/company'
+import { CompanyForm } from '@/features/company'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 

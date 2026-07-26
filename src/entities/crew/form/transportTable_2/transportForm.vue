@@ -66,7 +66,7 @@
 import { ref, watch, computed } from 'vue'
 import { DateTimeInput } from '@/shared/ui'
 import { useTransportFormValidation } from './useTransportFormValidation'
-import CrewMessage from '../crewMessage.vue'
+import CrewMessage from '@/features/crew/form/CrewMessage.vue'
 
 defineOptions({ name: 'CrewTransportForm' })
 

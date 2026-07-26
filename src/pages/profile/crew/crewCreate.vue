@@ -18,7 +18,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
-import { CrewForm } from '@/entities/crew'
+import { CrewForm } from '@/features/crew'
 
 defineOptions({ name: 'CrewCreate' })
 
