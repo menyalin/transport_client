@@ -31,14 +31,14 @@
 </template>
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 defineOptions({ name: 'SettingsCell' })
 
 const settingsModel = defineModel({ type: Object })
 
 const settingsName = 'ScheduleSettingsCell'
-const store = useStore()
+const orderStore = useOrderStore()
 
 const onlyTrucksWithRoutes = ref(true)
 const onlyPlannedDates = ref(false)
@@ -70,16 +70,16 @@ watch(
 )
 
 function changeOnlyTrucksWithRoutes() {
-  store.commit('changeOnlyTrucksWithRoutes')
+  orderStore.changeOnlyTrucksWithRoutes()
 }
 
 function changeOnlyPlannedDates() {
-  store.commit('changeOnlyPlannedDates')
+  orderStore.changeOnlyPlannedDates()
 }
 
 onMounted(() => {
-  onlyTrucksWithRoutes.value = store.getters.onlyTrucksWithRoutes
-  onlyPlannedDates.value = store.getters.onlyPlannedDates
+  onlyTrucksWithRoutes.value = orderStore.onlyTrucksWithRoutes
+  onlyPlannedDates.value = orderStore.onlyPlannedDates
 })
 </script>
 <style scoped></style>

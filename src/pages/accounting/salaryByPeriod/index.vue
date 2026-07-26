@@ -47,7 +47,7 @@
       />
       <v-select
         v-model="orderType"
-        :items="store.getters.orderAnalyticTypes"
+        :items="orderStore.orderAnalyticTypes"
         item-title="text"
         item-value="value"
         label="Тип рейса"
@@ -72,6 +72,7 @@
 import dayjs from 'dayjs'
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import AppDriversSalaryPeriod from './ui/driversSalaryPeriod.vue'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
@@ -82,6 +83,7 @@ import { ListSettingsWrapper, EntityListWrapper } from '@/shared/ui'
 defineOptions({ name: 'DriversSalary' })
 
 const store = useStore()
+const orderStore = useOrderStore()
 const carrierStore = useCarrierStore()
 
 const tks = usePersistedRef([], 'salaryByPeriod:tks')

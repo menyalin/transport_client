@@ -32,6 +32,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useRouter } from 'vue-router'
 import { ALL_ORDER_TABLE_HEADERS } from './model/constants.js'
 import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
@@ -51,6 +52,7 @@ const props = defineProps({
 })
 
 const store = useStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 const carrierStore = useCarrierStore()
 const addressStore = useAddressStore()
@@ -85,13 +87,13 @@ const preparedItems = computed(() => {
   if (!Array.isArray(items.value)) return []
   return items.value.map((i) => ({
     ...i,
-    status: store.getters.orderStatusesMap.get(i.status),
+    status: orderStore.orderStatusesMap.get(i.status),
     orderDate: new Date(i.orderDate).toLocaleString(),
     client: store.getters.partnersMap.get(i.client)?.name || '-',
     truck: store.getters.trucksMap.get(i.truckId)?.regNum || '-',
     driver: store.getters.driversMap.get(i.driverId)?.fullName || '-',
     carrierId: carrierStore.carriersMap.get(i.carrierId)?.name || '-',
-    orderType: store.getters.orderAnalyticTypesMap.get(i.orderType),
+    orderType: orderStore.orderAnalyticTypesMap.get(i.orderType),
     addressesLoading: i.loadingAddressIds
       ?.map((a) => addressStore.addressMap.get(a)?.shortName)
       .join(', '),

@@ -20,13 +20,13 @@
         v-model.trim="model.num"
         label="Номер заказа клиента"
         :errorMessages="numErrorMessages"
-        :style="{ maxWidth: '150px' }"
+        :style="{ maxWidth: '250px' }"
       />
       <v-text-field
         v-model.trim="model.auctionNum"
         label="Номер аукциона"
         :errorMessages="auctionNumErrorMessages"
-        :style="{ maxWidth: '150px' }"
+        :style="{ maxWidth: '250px' }"
       />
     </div>
 
@@ -34,6 +34,7 @@
       v-if="showChangeAgreementBtn"
       color="primary"
       size="small"
+      variant="text"
       class="mb-3 ml-5"
       @click="changeAgreementHandler"
     >

@@ -17,7 +17,6 @@
             v-model="state.isMainLoadingPoint"
             label="Основной пункт погрузки"
             hide-details
-            color="primary"
             class="ml-4"
             @update:model-value="setField($event, 'isMainLoadingPoint')"
           />
@@ -141,7 +140,7 @@
             label="Факт прибытия"
             showPrependIcon
             hide-details
-            :disabled="!confirmed || point.arrivalDateDisabled"
+            :disabled="!confirmed || !!state?.arrivalDateDisabled"
             @update:model-value="setField($event, 'arrivalDate')"
           />
           <DateTimeInput
@@ -150,7 +149,7 @@
             label="Факт убытия"
             showPrependIcon
             hide-details
-            :disabled="!confirmed || point.departureDateDisabled"
+            :disabled="!confirmed || !!state?.departureDateDisabled"
             :minDate="state.arrivalDate"
             :errorMessages="departureDateErrors"
             @update:model-value="setField($event, 'departureDate')"
@@ -284,6 +283,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['delete', 'changePoint'])
+
+
 
 const {
   state,

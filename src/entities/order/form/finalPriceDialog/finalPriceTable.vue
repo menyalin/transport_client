@@ -94,7 +94,7 @@
 
 <script setup>
 import { ref, computed, inject, nextTick, reactive } from 'vue'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { Price } from '../priceBlock/Price.class'
 
 defineOptions({ name: 'FinalPriceTable' })
@@ -110,12 +110,12 @@ const props = defineProps({
   agreementVatRate: { type: Number, required: true },
 })
 
-const store = useStore()
+const orderStore = useOrderStore()
 
 const editableRowType = ref(null)
 const inputRefs = reactive({})
 
-const orderPriceTypes = computed(() => store.getters.orderPriceTypes)
+const orderPriceTypes = computed(() => orderStore.orderPriceTypes)
 
 const prePricesMap = computed(() => {
   if (!props.prePrices) return new Map()

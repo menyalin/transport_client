@@ -47,9 +47,9 @@
 <script setup>
 import { computed } from 'vue'
 import { BlockTitle } from '@/entities/order'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
-const vuexStore = useStore()
+const orderStore = useOrderStore()
 
 defineOptions({ name: 'RouteState' })
 const model = defineModel('model-value', {
@@ -83,7 +83,7 @@ const STATUSES = {
   NOT_CONFIRMED_BY_CLIENT: 'notСonfirmedByClient',
 }
 
-const orderStatuses = computed(() => vuexStore.getters.orderStatuses)
+const orderStatuses = computed(() => orderStore.orderStatuses)
 
 // Lookup-таблица: [текущий статус + условия] → доступные статусы
 function getAllowedStatuses() {

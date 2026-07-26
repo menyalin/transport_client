@@ -6,7 +6,7 @@
           {{ error.message }}
         </v-alert>
         <LoadSpinner v-if="loading" />
-        <AppOrderTemplateForm
+        <OrderTemplateForm
           v-else
           v-model="item"
           :displayDeleteBtn="!!props.id && store.getters.hasPermission('orderTemplate:delete')"
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import AppOrderTemplateForm from '@/modules/profile/components/orderTemplateForm/index.vue'
+import { OrderTemplateForm } from '@/entities/orderTemplate'
 import { LoadSpinner } from '@/shared/ui'
 import { OrderTemplateService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'
@@ -41,5 +41,3 @@ const { item, loading, error, submit, cancel, deleteHandler } = usePageDetails(
   { emit }
 )
 </script>
-
-<style></style>

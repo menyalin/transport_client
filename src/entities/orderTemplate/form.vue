@@ -22,7 +22,7 @@
         <v-select
           v-model="analytics.type"
           label="Тип рейса"
-          :items="store.getters.orderAnalyticTypes"
+          :items="orderStore.orderAnalyticTypes"
           item-title="text"
           item-value="value"
           clearable
@@ -58,6 +58,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
@@ -85,6 +86,7 @@ const model = defineModel({
 })
 
 const store = useStore()
+const orderStore = useOrderStore()
 
 const route = ref([{ type: 'loading', isMainLoadingPoint: true }, { type: 'unloading' }])
 const cargoParams = ref({})

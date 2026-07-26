@@ -6,7 +6,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 defineOptions({ name: 'ReturnColumn' })
 
@@ -14,7 +14,7 @@ const props = defineProps({
   item: Object,
 })
 
-const store = useStore()
+const orderStore = useOrderStore()
 
-const orderTypeStr = computed(() => store.getters.orderAnalyticTypesMap.get(props.item.orderType))
+const orderTypeStr = computed(() => orderStore.orderAnalyticTypesMap.get(props.item.orderType))
 </script>

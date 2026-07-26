@@ -1,6 +1,8 @@
 import { useAddressStore } from '@/entities/address'
+import { useOrderStore } from '@/entities/order/orderStore'
 import store from '@/store/index.js'
 const getAddressStore = () => useAddressStore()
+const getOrderStore = () => useOrderStore()
 
 const getOrderNotes = (item) => {
   const pointNotes = item.route.map((i) => i.note).filter((i) => !!i)
@@ -14,7 +16,7 @@ const getOrderNotes = (item) => {
 
 const getPriceFields = () => {
   const prices = ['prePrices', 'prices', 'finalPrices']
-  const fields = [...store.getters.orderPriceTypes.map((i) => i.value), 'note']
+  const fields = [...getOrderStore().orderPriceTypes.value.map((i) => i.value), 'note']
   return prices.reduce(
     (res, current) => [
       ...res,
@@ -145,7 +147,7 @@ export default (items) => {
       deliveryPlannedDate: getDeliveryPlannedDate(row),
       plannedDate: new Date(row.route[0].plannedDate).toLocaleDateString(),
       plannedTime: new Date(row.route[0].plannedDate).toLocaleTimeString(),
-      orderType: store.getters.orderAnalyticTypesMap.get(row.analytics.type),
+      orderType: getOrderStore().orderAnalyticTypesMap.value.get(row.analytics.type),
       clientName: store.getters.partnersMap.get(row.client.client)?.name,
       regNum: store.getters.trucksMap.get(row.confirmedCrew.truck)?.regNum,
       truckKind: _getTruckKind(row?.reqTransport),

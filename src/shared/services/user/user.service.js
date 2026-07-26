@@ -2,6 +2,7 @@ import api from '@/api'
 import store from '@/store'
 import socket from '@/socket'
 import router from '@/router'
+import { useOrderStore } from '@/entities/order/orderStore'
 const BASE_PATH = '/auth'
 
 class UserService {
@@ -15,7 +16,7 @@ class UserService {
       store.commit('deleteCompany', companyId)
       if (store.getters.directoriesProfile === companyId) {
         store.commit('setError', 'Доступ к данным компании заблокирован!')
-        store.commit('clearDirectories')
+        useOrderStore().clearDirectories()
         router.push('/')
       }
     })

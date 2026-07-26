@@ -1,8 +1,9 @@
-import store from '@/store'
+import { usePartnerStore } from './usePartnerStore'
 
 export const usePartners = () => {
+  const store = usePartnerStore()
   return {
-    allPartners: store.getters.partners,
-    clients: store.getters.partners.filter((i) => i.isClient),
+    allPartners: store.allPartners,
+    clients: store.clients,
   }
 }

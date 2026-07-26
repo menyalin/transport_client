@@ -46,6 +46,7 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { usePartnerStore } from '@/entities/partner'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 
@@ -99,7 +100,7 @@ function create() {
 }
 
 function refresh() {
-  store.dispatch('getPartners', true)
+  usePartnerStore().load({ force: true })
 }
 
 function dblClickRow(_, { item }) {
@@ -107,7 +108,7 @@ function dblClickRow(_, { item }) {
 }
 
 onMounted(() => {
-  store.dispatch('getPartners')
+  usePartnerStore().load()
 })
 </script>
 <style scoped>

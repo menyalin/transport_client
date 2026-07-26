@@ -38,6 +38,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { OrderService } from '@/shared/services'
 import appFinalPriceTable from './finalPriceTable.vue'
 
@@ -59,11 +60,12 @@ const props = defineProps({
 const emit = defineEmits(['update:dialog'])
 
 const store = useStore()
+const orderStore = useOrderStore()
 
 const loading = ref(false)
 const priceWithVat = ref(false)
 
-const orderPriceTypes = computed(() => store.getters.orderPriceTypes)
+const orderPriceTypes = computed(() => orderStore.orderPriceTypes)
 
 const saveBtnDisabled = computed(
   () => loading.value || !store.getters.hasPermission('order:writeFinalPrices')

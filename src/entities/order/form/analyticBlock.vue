@@ -7,7 +7,7 @@
       <v-select
         v-model="item.type"
         label="Тип рейса"
-        :items="$store.getters.orderAnalyticTypes"
+        :items="orderStore.orderAnalyticTypes"
         clearable
         itemTitle="text"
         hide-details
@@ -45,6 +45,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { BlockTitle } from '@/entities/order'
 import { OrderService } from '@/shared/services'
 
@@ -58,6 +59,7 @@ const props = defineProps({
 const item = defineModel({ type: Object })
 
 const store = useStore()
+const orderStore = useOrderStore()
 
 const distanceLoading = ref(false)
 

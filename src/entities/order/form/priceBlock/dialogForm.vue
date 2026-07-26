@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useVuelidate } from '@vuelidate/core'
 import { required, decimal } from '@vuelidate/validators'
 
@@ -63,7 +63,7 @@ const props = defineProps({
 
 const emit = defineEmits(['save'])
 
-const store = useStore()
+const orderStore = useOrderStore()
 
 const state = ref({
   price: 0,
@@ -81,7 +81,7 @@ const v$ = useVuelidate(rules, state)
 
 const availablePriceTypes = computed(() => {
   return props.availibleTypes
-    ? store.getters.orderPriceTypes.slice().filter((t) => props.availibleTypes.includes(t.value))
+    ? orderStore.orderPriceTypes.slice().filter((t) => props.availibleTypes.includes(t.value))
     : []
 })
 

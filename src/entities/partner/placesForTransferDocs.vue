@@ -41,7 +41,11 @@ import { ref } from 'vue'
 import store from '@/store'
 import PlaceItem from './placeItem.vue'
 import PlaceForTransferDocsForm from './placeForTransferDocsForm.vue'
-import { PartnerService } from '@/shared/services'
+import {
+  updatePlaceForTransferDocs,
+  addPlaceForTransferDocs,
+  deletePlaceForTransferDocs,
+} from './api'
 
 defineOptions({ name: 'PlacesForTransferDocs' })
 
@@ -64,13 +68,9 @@ async function formSubmitHandler(formState) {
   try {
     let updatedPartner
     if (formState._id) {
-      updatedPartner = await PartnerService.updatePlaceForTransferDocs(
-        props.partnerId,
-        formState._id,
-        formState
-      )
+      updatedPartner = await updatePlaceForTransferDocs(props.partnerId, formState._id, formState)
     } else {
-      updatedPartner = await PartnerService.addPlaceForTransferDocs(props.partnerId, formState)
+      updatedPartner = await addPlaceForTransferDocs(props.partnerId, formState)
     }
     places.value = updatedPartner.placesForTransferDocs
     placeForm.value.clear()
@@ -95,7 +95,7 @@ async function editPlaceHandler(placeId) {
 async function deletePlaceHandler(placeId) {
   if (!props.partnerId || !placeId) return null
   try {
-    const updatedPartner = await PartnerService.deletePlaceForTransferDocs(props.partnerId, placeId)
+    const updatedPartner = await deletePlaceForTransferDocs(props.partnerId, placeId)
     places.value = updatedPartner.placesForTransferDocs
   } catch (e) {
     store.commit('setError', e)

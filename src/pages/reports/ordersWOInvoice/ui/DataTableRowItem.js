@@ -3,6 +3,7 @@ import store from '@/store'
 import { utils } from './utis'
 import { moneyFormatter } from '@/shared/utils/moneyFormatter'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 export class DataTableRow {
   constructor(props) {
@@ -13,7 +14,7 @@ export class DataTableRow {
     this.orderId = props.orderId
     this.plannedDate = new Date(props.plannedDate)
     this.plannedDateStr = new Date(props.plannedDate).toLocaleString()
-    this.orderTypeStr = store.getters.orderAnalyticTypesMap.get(props.analytics.type)
+    this.orderTypeStr = useOrderStore().orderAnalyticTypesMap.get(props.analytics.type)
     this.tkNameStr =
       carrierStore.carriersMap.get(props.confirmedCrew.tkName)?.name || '__name not found__'
 

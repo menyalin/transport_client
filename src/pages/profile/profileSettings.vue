@@ -26,12 +26,14 @@
 <script setup>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import AppCompanyInvites from '@/widgets/companyInvites/index.vue'
 import AppUserInfo from '@/widgets/userInfo/index.vue'
 
 defineOptions({ name: 'ProfileSettingsPage' })
 
 const store = useStore()
+const orderStore = useOrderStore()
 
 const myCompanies = computed(() => store.getters.myCompanies)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
@@ -49,7 +51,7 @@ async function changeDirectoriesProfile(val) {
   await store.dispatch('configProfile', { directoriesProfile: val })
   localStorage.clear()
   sessionStorage.clear()
-  store.commit('clearDirectories')
+  orderStore.clearDirectories()
   if (val) await store.dispatch('getUserData')
 }
 </script>

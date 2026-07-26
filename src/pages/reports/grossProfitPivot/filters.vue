@@ -37,6 +37,7 @@
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 defineOptions({ name: 'MainFilters' })
 
@@ -48,6 +49,7 @@ const props = defineProps({
 })
 
 const store = useStore()
+const orderStore = useOrderStore()
 const carrierStore = useCarrierStore()
 
 const tmpFilters = ref({})
@@ -87,7 +89,7 @@ const drivers = computed(() =>
 )
 
 const orderTypes = computed(() =>
-  store.getters.orderAnalyticTypes.map((i) => ({ value: i.value, title: i.text }))
+  orderStore.orderAnalyticTypes.map((i) => ({ value: i.value, title: i.text }))
 )
 
 const regions = computed(() =>

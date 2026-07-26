@@ -30,7 +30,7 @@
 </template>
 <script setup>
 import { ref, computed, nextTick } from 'vue'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { CardSection } from '@/shared/ui'
 import AppCostsTable from './costsTable.vue'
 import AppDialogForm from './dialogForm.vue'
@@ -55,7 +55,7 @@ const props = defineProps({
   },
 })
 
-const store = useStore()
+const orderStore = useOrderStore()
 
 const dialog = ref(false)
 const editedItem = ref({
@@ -66,7 +66,7 @@ const editedItem = ref({
 const availibleTypes = computed(() => {
   if (editedItem.value.type) return [editedItem.value.type]
   const usedTypes = modelValue.value.map((i) => i.type)
-  return store.getters.orderPriceTypes.map((t) => t.value).filter((t) => !usedTypes.includes(t))
+  return orderStore.orderPriceTypes.map((t) => t.value).filter((t) => !usedTypes.includes(t))
 })
 
 const basePrePrice = computed(() => {

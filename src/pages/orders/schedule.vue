@@ -10,18 +10,20 @@
 import { computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { ScheduleTable } from '@/entities/order'
 import { OrderService as service } from '@/shared/services'
-import periodDifferernce from '@/modules/order/utils/periodDifference'
+import periodDifference from '@/shared/utils/periodDifference'
 
 defineOptions({ name: 'OrdersSchedule' })
 
 const store = useStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
 const scheduleRows = computed(() => {
   const trucksInOrdersSet = new Set(
-    store.getters.ordersForSchedule.map((i) => i.truckId).filter((i) => !!i)
+    orderStore.ordersForSchedule.map((i) => i.truckId).filter((i) => !!i)
   )
 
   store.getters.downtimesForSchedule.forEach((i) => trucksInOrdersSet.add(i.truck))
@@ -35,7 +37,7 @@ const scheduleRows = computed(() => {
     )
       return true
 
-    if (store.getters.onlyTrucksWithRoutes || truck.endServiceDate) return false
+    if (orderStore.onlyTrucksWithRoutes || truck.endServiceDate) return false
     return true
   }
 
@@ -53,19 +55,20 @@ function getData(period) {
   store.dispatch('getNotesForSchedule')
 }
 
-const schedulePeriod = computed(() => store.getters.schedulePeriod)
-
-watch(schedulePeriod, (newPeriod, oldPeriod) => {
-  if (!newPeriod) return
-  if (!oldPeriod) getData()
-  else {
-    const { added } = periodDifferernce(newPeriod, oldPeriod)
-    getData(added)
+watch(
+  () => orderStore.schedulePeriod,
+  (newPeriod, oldPeriod) => {
+    if (!newPeriod) return
+    if (!oldPeriod) getData()
+    else {
+      const { added } = periodDifference(newPeriod, oldPeriod)
+      getData(added)
+    }
   }
-})
+)
 
 onMounted(() => {
-  if (store.getters.ordersForSchedule.length === 0) {
+  if (orderStore.ordersForSchedule.length === 0) {
     getData()
   }
 })

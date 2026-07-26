@@ -1,3 +1,4 @@
+import { useOrderStore } from '@/entities/order/orderStore'
 import CrewModule from './crew'
 import TruckModule from './truck'
 import DriverModule from './driver'
@@ -11,6 +12,7 @@ import RegionModule from './region'
 import CityModule from './city'
 import { UserService, CompanyService } from '@/shared/services'
 import { useAddressStore } from '@/entities/address'
+import { usePartnerStore } from '@/entities/partner'
 
 export default {
   state: {
@@ -111,7 +113,6 @@ export default {
         addresses,
         drivers,
         trucks,
-
         partners,
         partnerGroups,
         orderStatuses,
@@ -143,11 +144,11 @@ export default {
       if (drivers?.length) commit('setDrivers', drivers)
       if (trucks?.length) commit('setTrucks', trucks)
 
-      if (partners?.length) commit('setPartners', partners)
-      if (orderStatuses?.length) commit('setOrderStatuses', orderStatuses)
+      if (partners?.length) usePartnerStore().setPartners(partners)
+      if (orderStatuses?.length) useOrderStore().setOrderStatuses(orderStatuses)
       if (orderTemplates?.length) commit('setOrderTemplates', orderTemplates)
-      if (orderAnalyticTypes?.length) commit('setOrderAnalyticTypes', orderAnalyticTypes)
-      if (orderPriceTypes?.length) commit('setOrderPriceTypes', orderPriceTypes)
+      if (orderAnalyticTypes?.length) useOrderStore().setOrderAnalyticTypes(orderAnalyticTypes)
+      if (orderPriceTypes?.length) useOrderStore().setOrderPriceTypes(orderPriceTypes)
       if (documentTypes?.length) commit('setDocumentTypes', documentTypes)
       if (documentStatuses?.length) commit('setDocumentStatuses', documentStatuses)
       if (staffRoles?.length) commit('setStaffRoles', staffRoles)
@@ -161,7 +162,7 @@ export default {
       if (zones?.length) commit('setZones', zones)
       if (regions?.length) commit('setRegions', regions)
       if (cities?.length) commit('setCities', cities)
-      if (partnerGroups?.length) commit('setPartnerGroups', partnerGroups)
+      if (partnerGroups?.length) usePartnerStore().setPartnerGroups(partnerGroups)
       if (fineCategories?.length) commit('setFineCategories', fineCategories)
       if (salaryTariffTypes.length) commit('setSalaryTariffTypes', salaryTariffTypes)
       if (companyInvites?.length) commit('setCompanyInvites', companyInvites)
@@ -194,7 +195,7 @@ export default {
     async configProfile({ commit }, payload) {
       try {
         commit('setLoading', true)
-        commit('clearDirectories')
+        useOrderStore().clearDirectories()
         commit('clearCache')
         await UserService.configProfile(payload)
         commit('updateUser', payload)
