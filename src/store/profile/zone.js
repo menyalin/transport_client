@@ -27,7 +27,7 @@ export default {
   getters: {
     zones: ({ zones }) => zones,
     zonesForAutocomplete: ({ zones }) =>
-      zones.map((i) => ({ value: i._id, text: i.name, name: i.name })),
+      zones.map((i) => ({ value: i._id, text: i.name, name: i.name, title: i.name })),
     zonesMap: ({ zones }) => new Map(zones.map((item) => [item._id, item])),
   },
 }
