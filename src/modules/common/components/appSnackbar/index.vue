@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-snackbar v-model="showSnackbar" vertical :timeout="timeout">
-      <div class="text-body-1">
+      <div class="text-body-large">
         {{ errorMessage }}
       </div>
       <template #actions="{ attrs }">

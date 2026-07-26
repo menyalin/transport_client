@@ -1,10 +1,11 @@
 <template>
-  <page-layout title="Admin panel" :nav-items="navButtons">
+  <PageLayout title="Admin panel" :nav-items="navButtons">
     <router-view />
-  </page-layout>
+  </PageLayout>
 </template>
 
 <script setup>
+defineOptions({ name: 'AdminLayout' })
 import { PageLayout } from '@/shared/ui'
 
 const navButtons = [

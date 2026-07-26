@@ -27,7 +27,7 @@ defineProps({
   labelOnly: { type: Boolean, default: false },
 })
 
-const value = defineModel()
+const value = defineModel({ type: Object })
 
 const itemSelected = ref(!!value.value)
 const loading = ref(false)

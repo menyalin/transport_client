@@ -14,13 +14,13 @@
       </v-btn>
     </div>
     <div v-if="loading">Загружаю...</div>
-    <payment-parts-table
+    <PaymentPartsTable
       v-else
       :items="preparedItems"
       :hideDelete="readonly || loading"
       @deleteRow="deleteRowHandler"
     />
-    <payment-part-form-dialog
+    <PaymentPartFormDialog
       :routeDate="routeDate"
       :dialog="dialog"
       @submit="submitHandler"

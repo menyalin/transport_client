@@ -36,6 +36,7 @@ import { watch } from 'vue'
 export default {
   name: 'AllowedAgreementForm',
   components: { DateTimeInput },
+  emits: ['cancel', 'save', 'remove'],
   props: {
     item: Object,
     title: String,

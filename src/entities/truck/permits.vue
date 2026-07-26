@@ -1,8 +1,8 @@
 <template>
   <div>
-    <app-block-title>
+    <AppBlockTitle>
       {{ title }}
-    </app-block-title>
+    </AppBlockTitle>
     <div class="fields-row">
       <v-text-field
         v-model="item.dayPermitNumber"
@@ -49,7 +49,7 @@ import { watch } from 'vue'
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
-defineOptions({ name: 'Permits' })
+defineOptions({ name: 'TruckPermits' })
 
 const item = defineModel({ type: Object, default: () => ({}) })
 

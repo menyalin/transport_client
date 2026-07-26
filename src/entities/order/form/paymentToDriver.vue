@@ -47,7 +47,7 @@ import { CardSection } from '@/shared/ui'
 
 defineOptions({ name: 'PaymentToDriver' })
 
-const value = defineModel()
+const value = defineModel({ type: Object })
 
 const store = useStore()
 

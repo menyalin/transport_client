@@ -7,7 +7,7 @@
     </v-row>
   </v-container>
 </template>
-<script setup>
+<script setup lang="ts">
 defineOptions({ name: 'LoadSpinner' })
 </script>
 <style></style>

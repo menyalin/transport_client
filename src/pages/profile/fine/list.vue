@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabled-submit="!store.getters.hasPermission('fine:write')"
@@ -8,7 +8,7 @@
       @refresh="refetch"
     />
     <ListSettingsWrapper>
-      <app-table-column-settings
+      <AppTableColumnSettings
         v-model="activeHeaders"
         :allHeaders="allHeaders"
         :defaultHeaders="defaultHeaders"
@@ -21,7 +21,7 @@
         label="Период по"
         :style="{ maxWidth: '300px' }"
       />
-      <date-range-input v-model="settings.period" />
+      <DateRangeInput v-model="settings.period" />
 
       <v-select
         v-model="settings.status"
@@ -113,7 +113,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ButtonsPanel, DateRangeInput, ListSettingsWrapper, EntityListWrapper } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import { useItemsForAutocomplete } from '@/entities/worker'
 import { FineListAnalitics } from '@/entities/fine'
 import { useFineList } from './useList'
@@ -190,7 +190,7 @@ function create() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`fines/${item._id}`)
+  router.push({ name: 'FineDetails', params: { id: item._id } })
 }
 </script>
 

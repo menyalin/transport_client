@@ -79,7 +79,7 @@
       />
     </template>
     <template #[`footer.prepend`] v-if="statisticData && statisticData.count">
-      <order-list-footer-details
+      <OrderListFooterDetails
         :total="statisticData.count"
         :accepted="statisticData.acceptedDocs"
         :needFix="statisticData.needFixDocs"
@@ -113,8 +113,8 @@ import { useRouter } from 'vue-router'
 const addressStore = useAddressStore()
 
 defineOptions({ name: 'OrdersTable' })
-const selected = defineModel()
-const options = defineModel('options')
+const selected = defineModel({ type: Array })
+const options = defineModel('options', { type: Object })
 
 const props = defineProps({
   headers: { type: Array, required: true },

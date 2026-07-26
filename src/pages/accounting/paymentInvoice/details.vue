@@ -1,6 +1,6 @@
 <template>
-  <form-wrapper :loading="loading" :display-delete-btn="showDeleteBtn" @delete="deleteHandler">
-    <payment-invoice-form
+  <FormWrapper :loading="loading" :display-delete-btn="showDeleteBtn" @delete="deleteHandler">
+    <PaymentInvoiceForm
       :item="item"
       @submit="submit($event, false)"
       :disabledPickOrders="disabledPickOrders"
@@ -16,9 +16,9 @@
     <v-card v-if="!loading" elevation="0" :loading="ordersLoading">
       <v-progress-linear v-if="ordersLoading" indeterminate color="primary" />
 
-      <payment-invoice-result v-if="isExistedItem" :item="item" />
+      <PaymentInvoiceResult v-if="isExistedItem" :item="item" />
 
-      <payment-invoice-orders-list
+      <PaymentInvoiceOrdersList
         :orders="orders"
         :loading="ordersLoading"
         :ordersTotalCount="item.ordersCount"
@@ -31,9 +31,9 @@
     </v-card>
 
     <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent :scrim="false">
-      <pick-orders :paymentInvoice="item" @cancel="closeDialog" />
+      <PickOrders :paymentInvoice="item" @cancel="closeDialog" />
     </v-dialog>
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script setup>

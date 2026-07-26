@@ -1,6 +1,6 @@
 <template>
   <div class="top-panel">
-    <buttons-panel
+    <ButtonsPanel
       :disabled-submit="disabledSubmitForm"
       show-save-btn
       panel-type="form"
@@ -15,7 +15,7 @@
         @downloadTemplate="downloadTemplateHandler"
       />
       <PaymentInvoiceLinks :items="form.paymentInvoices" />
-    </buttons-panel>
+    </ButtonsPanel>
     <div class="template-panel">
       <v-autocomplete
         v-model="templateSelector"
@@ -59,7 +59,7 @@
 
   <div class="wrapper">
     <div class="left-panel">
-      <app-route-state
+      <AppRouteState
         v-model="state"
         :enableConfirm="enableConfirmOrder"
         :routeCompleted="routeCompleted"
@@ -70,7 +70,7 @@
         title="Статус рейса"
       />
 
-      <app-grade-block
+      <AppGradeBlock
         v-if="showGradeBlock"
         v-model="grade"
         :disabled="state.status === 'completed'"
@@ -118,14 +118,14 @@
       class="route-points"
     />
     <div class="price">
-      <app-analytic-block
+      <AppAnalyticBlock
         v-model="analytics"
         :isValidRoute="isValidRoute"
         :coords="coords"
         title="Аналитика"
       />
 
-      <app-payment-to-driver v-if="showPaymentToDriver || true" v-model="paymentToDriver" />
+      <AppPaymentToDriver v-if="showPaymentToDriver || true" v-model="paymentToDriver" />
 
       <PriceBlock
         :isValidPrices="isValidPrices(agreement, prices, state)"
@@ -166,15 +166,15 @@
         docType="order"
         class="order-files"
       />
-      <order-docs-list-form
+      <OrderDocsListForm
         v-if="isShowDocs"
         class="docs"
         v-model="docs"
         :isValid="isValidDocs(docs)"
         :readonly="isReadonlyDocs"
       >
-        <docs-registry-link :docsRegistry="form.docsRegistry" />
-      </order-docs-list-form>
+        <DocsRegistryLink :docsRegistry="form.docsRegistry" />
+      </OrderDocsListForm>
       <div class="transport-waybills">
         <slot name="transport_waybills" />
       </div>
@@ -505,6 +505,7 @@ watch(
 .route-points {
   grid-column: 2/4;
   grid-row: 4/5;
+  margin-top: 20px;
 }
 
 .price {

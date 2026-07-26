@@ -5,8 +5,8 @@
         <v-alert v-model="error.show" closable type="error">
           {{ error.message }}
         </v-alert>
-        <load-spinner v-if="loading" />
-        <app-order-template-form
+        <LoadSpinner v-if="loading" />
+        <AppOrderTemplateForm
           v-else
           v-model="item"
           :displayDeleteBtn="!!props.id && store.getters.hasPermission('orderTemplate:delete')"

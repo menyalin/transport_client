@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
-    <div class="text-h6">Контакты:</div>
+    <div class="text-headline-small">Контакты:</div>
     <v-btn color="primary" size="small" @click="addItem"> Добавить контакт </v-btn>
-    <div v-if="emptyContacts" class="text-subtitle-2">Контакты отсутствуют</div>
+    <div v-if="emptyContacts" class="text-label-large">Контакты отсутствуют</div>
     <ItemCard
       v-for="(item, idx) of items"
       :item="item"

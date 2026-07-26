@@ -1,22 +1,22 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!store.getters.directoriesProfile"
       :disabled-submit="!store.getters.hasPermission('docsRegistry:write')"
       @submit="create"
       @refresh="refresh"
     />
-    <docs-registry-list-settings v-model:settings="settings" @update:headers="changeHeaders" />
+    <DocsRegistryListSettings v-model:settings="settings" @update:headers="changeHeaders" />
 
-    <docs-registry-data-table
+    <DocsRegistryDataTable
       :items="items"
       :headers="headers"
       :totalCount="totalCount"
       v-model:options="listOptions"
       :loading="loading"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script setup>
 import { ref, onBeforeUnmount } from 'vue'

@@ -49,6 +49,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'SalaryWaiting' })
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 

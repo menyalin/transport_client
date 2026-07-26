@@ -1,8 +1,8 @@
 <template>
   <v-card>
-    <v-card-title class="text-h6"> Список документов </v-card-title>
+    <v-card-title class="text-headline-small"> Список документов </v-card-title>
     <v-card-text>
-      <order-docs-list-form
+      <OrderDocsListForm
         v-model="tmpDocs"
         :isValid="isValidDocs(tmpDocs)"
         :readonly="isReadonlyDocs"

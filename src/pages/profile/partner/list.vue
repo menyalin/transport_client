@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!canWrite"
@@ -103,7 +103,7 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`partners/${item._id}`)
+  router.push({ name: 'PartnerDetails', params: { id: item._id } })
 }
 
 onMounted(() => {

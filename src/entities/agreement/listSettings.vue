@@ -43,7 +43,7 @@
 <script setup>
 import { ListSettingsWrapper } from '@/shared/ui'
 
-const settings = defineModel('settings')
+const settings = defineModel('settings', { type: Object })
 
 defineProps({
   clientItems: {

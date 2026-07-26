@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <form>
-      <buttons-panel
+      <ButtonsPanel
         panel-type="form"
         :disabled-submit="v.form.$invalid"
         @cancel="cancel"

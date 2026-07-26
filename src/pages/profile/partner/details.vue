@@ -1,5 +1,5 @@
 <template>
-  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
+  <FormWrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
     <PartnerForm
       :item="item"
       :clientAgreements="allClientAgreements"
@@ -8,7 +8,7 @@
       @save="submit($event, true)"
       @changeNotifications="changeNotificationsHandler"
     />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script setup>

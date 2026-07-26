@@ -8,7 +8,7 @@
           <v-btn icon variant="text" @click.stop="getPivotData">
             <v-icon>mdi-cached</v-icon>
           </v-btn>
-          <date-range-input v-model="settings.dateRange" />
+          <DateRangeInput v-model="settings.dateRange" />
           <v-checkbox v-model="usePriceWithVat" label="Цены с НДС" hide-details density="compact" />
           <v-checkbox
             v-model="showOutsourceCosts"
@@ -18,15 +18,15 @@
           />
           <v-checkbox v-model="withRound" label="Округление" hide-details density="compact" />
         </div>
-        <app-group-by-settings v-model="settings.groupBy" :items="groupItems" />
+        <AppGroupBySettings v-model="settings.groupBy" :items="groupItems" />
       </v-col>
 
       <v-col>
-        <app-filters v-model="mainFilters" title="Основной отбор" :agreements="agreements" />
+        <AppFilters v-model="mainFilters" title="Основной отбор" :agreements="agreements" />
       </v-col>
 
       <v-col>
-        <app-filters
+        <AppFilters
           v-model="additionalFilters"
           title="Дополнительный отбор"
           :agreements="agreements"
@@ -37,7 +37,7 @@
     <v-progress-linear v-if="loading" indeterminate color="primary" striped rounded class="mt-3" />
 
     <div class="mt-3">
-      <app-pivot-table
+      <AppPivotTable
         :groupItems="groupItems"
         :groupBy="settings.groupBy"
         :pivotData="pivotData"
@@ -52,7 +52,7 @@
     </div>
     <v-divider class="mt-3" />
     <div class="mt-3" style="width: 100%">
-      <app-orders-table
+      <AppOrdersTable
         :mainFilters="mainFilters"
         :additionalFilters="additionalFilters"
         :priceWithVat="usePriceWithVat"

@@ -1,7 +1,7 @@
 <template>
   <div class="invite-wrapper">
     <h4>Приглашения:</h4>
-    <app-invites-table :invites="invites" />
+    <AppInvitesTable :invites="invites" />
   </div>
 </template>
 <script setup>

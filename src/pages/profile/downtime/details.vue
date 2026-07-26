@@ -3,7 +3,7 @@
     <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
       {{ error.message }}
     </v-alert>
-    <load-spinner v-if="loading" />
+    <LoadSpinner v-if="loading" />
     <DowntimeForm
       v-else
       :downtime="item"

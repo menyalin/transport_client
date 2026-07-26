@@ -1,6 +1,6 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="DOCS_REGISTRY_TABLE_HEADERS"
       listSettingsName="docsRegistrySettings"
       @change="updateHeadersHandler"

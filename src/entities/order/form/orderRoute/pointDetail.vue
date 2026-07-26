@@ -257,7 +257,7 @@ import { usePointDetail } from './usePointDetail'
 
 defineOptions({ name: 'PointDetail' })
 
-const pointModel = defineModel()
+const pointModel = defineModel({ type: Object })
 
 const props = defineProps({
   confirmed: Boolean,

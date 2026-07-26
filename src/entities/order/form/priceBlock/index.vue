@@ -1,6 +1,6 @@
 <template>
   <div v-if="!!clientVatRateInfo">
-    <app-price-wrapper
+    <AppPriceWrapper
       v-if="showPriceBlock"
       v-model="prices"
       title="Стоимость рейса"
@@ -10,7 +10,7 @@
       :prePrices="prePrices"
       :vatRateInfo="clientVatRateInfo"
     />
-    <app-price-wrapper
+    <AppPriceWrapper
       v-if="showOutsourceBlock"
       v-model="outsourceCosts"
       title="Затраты на привлеченного перевозчика"
@@ -45,8 +45,8 @@ const props = defineProps({
   carrierAgreement: Object,
 })
 
-const prices = defineModel('prices')
-const outsourceCosts = defineModel('outsourceCosts')
+const prices = defineModel('prices', { type: Array })
+const outsourceCosts = defineModel('outsourceCosts', { type: Array })
 
 const store = useStore()
 

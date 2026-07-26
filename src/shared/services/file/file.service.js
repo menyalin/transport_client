@@ -61,7 +61,7 @@ class FileService {
         params: { key },
       })
       return url
-    } catch (e) {
+    } catch {
       console.log('Ошибка получения presigned url')
     }
   }

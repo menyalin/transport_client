@@ -1,11 +1,11 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click="$emit('refresh')" />
+    <RefreshBtn @click="$emit('refresh')" />
     <DateRangeInput v-model="settings.period" />
 
     <v-autocomplete
@@ -38,7 +38,7 @@ import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'ReportSettings' })
 
-const settings = defineModel()
+const settings = defineModel({ type: Object })
 
 defineProps({
   agreementItems: Array,

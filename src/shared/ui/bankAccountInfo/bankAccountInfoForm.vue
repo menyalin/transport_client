@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div v-if="showTitle" class="text-h6">Банковские реквизиты:</div>
+    <div v-if="showTitle" class="text-headline-small">Банковские реквизиты:</div>
     <v-text-field label="Расчетный счет" v-model="state.accountNumber" />
     <v-text-field label="Банк" v-model="state.bankName" />
     <v-text-field label="БИК" v-model="state.bankCode" />

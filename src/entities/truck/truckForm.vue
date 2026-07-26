@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       :disabledSubmit="
         !store.getters.hasPermission('truck:write') || isInvalidForm || props.loading
       "
@@ -92,11 +92,11 @@
         <v-text-field v-model.trim="form.pts" label="ПТС" class="field-md" />
       </div>
 
-      <app-insurance v-model="form.insurance" title="Страховка" :truckType="form.type" />
+      <AppInsurance v-model="form.insurance" title="Страховка" :truckType="form.type" />
 
-      <app-permits v-if="form.type === 'truck'" v-model="form.permits" title="Разрешения" />
+      <AppPermits v-if="form.type === 'truck'" v-model="form.permits" title="Разрешения" />
 
-      <app-additional-details
+      <AppAdditionalDetails
         v-if="form.type === 'truck'"
         v-model="form.additionalDetails"
         title="Доп.реквизиты"
@@ -145,14 +145,14 @@
         />
       </div>
 
-      <additional-notifications v-model="form.additionalNotifications" />
+      <AdditionalNotifications v-model="form.additionalNotifications" />
 
       <div class="fields-row">
         <v-textarea v-model.trim="form.note" rows="3" label="Примечание" class="field-fluid" />
       </div>
 
       <div v-if="!!form.tkName && form.type === 'truck'">
-        <app-allowed-drivers
+        <AppAllowedDrivers
           v-model="form.allowedDrivers"
           :tkName="typeof form.tkName === 'object' ? form.tkName._id : form.tkName"
         />

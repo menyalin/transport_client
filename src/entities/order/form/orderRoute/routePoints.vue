@@ -1,7 +1,7 @@
 <template>
   <CardSection :title="title" :valid="isValid">
     <table class="route-table">
-      <app-point-detail
+      <AppPointDetail
         v-for="(point, ind) of model"
         :key="ind"
         v-model="model[ind]"
@@ -51,7 +51,7 @@ import { useStore } from 'vuex'
 const vuexStore = useStore()
 
 defineOptions({ name: 'RoutePoints' })
-const model = defineModel()
+const model = defineModel({ type: Object })
 
 const props = defineProps({
   driverId: String,

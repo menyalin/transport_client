@@ -6,7 +6,7 @@
           {{ errorMessage }}
         </v-alert>
         <v-alert type="error" v-if="itemIsMissing && !loading"> Запись не найдена </v-alert>
-        <load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <div v-else class="slot-wrapper">
           <slot />
           <v-btn v-if="displayDeleteBtn" color="error" @click="deleteHandler" class="ma-3">

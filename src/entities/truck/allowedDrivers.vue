@@ -1,6 +1,6 @@
 <template>
   <CardSection title="Водители" :style="{ maxWidth: '800px' }">
-    <div v-if="!driverList || !driverList.length" class="text-caption pl-6 my-2">нет данных</div>
+    <div v-if="!driverList || !driverList.length" class="text-body-small pl-6 my-2">нет данных</div>
     <v-list v-else>
       <v-list-item v-for="item in driverList" :key="item.driver">
         <template #prepend>

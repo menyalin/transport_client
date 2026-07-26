@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       show-save-btn
       @cancel="cancelHandler"
@@ -9,7 +9,7 @@
       @save="saveHandler"
     >
       <v-btn size="small" @click="downloadXlsx" class="mx-2">Скачать DOCX</v-btn>
-    </buttons-panel>
+    </ButtonsPanel>
     <div id="form">
       <div id="fields-row">
         <v-text-field

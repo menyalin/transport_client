@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabled-submit="!store.getters.hasPermission('driver:write')"
@@ -8,7 +8,7 @@
       @refresh="refresh"
     />
     <ListSettingsWrapper>
-      <app-table-column-settings
+      <AppTableColumnSettings
         v-model="activeHeaders"
         :allHeaders="allHeaders"
         :defaultHeaders="defaultHeaders"
@@ -66,7 +66,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useDriverList } from './useDriverList'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'DriverList' })
@@ -108,7 +108,7 @@ function createDriver() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`drivers/${item._id}`)
+  router.push({ name: 'DriverDetails', params: { id: item._id } })
 }
 </script>
 

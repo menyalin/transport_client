@@ -1,5 +1,5 @@
 <template>
-  <div class="field-hint text-caption px-6">
+  <div class="field-hint text-body-small px-6">
     {{ `${text} ${crewDateStr}` }}
     <span class="link-text" @click="goto"> Перейти </span>
 
@@ -13,7 +13,7 @@
     >
       Закрыть
     </span>
-    <div class="text-caption text-red" v-if="!isValidNewDate">
+    <div class="text-body-small text-red" v-if="!isValidNewDate">
       <b>Дата начала должна быть больше {{ crewLastDateStr }}</b>
     </div>
     <div>

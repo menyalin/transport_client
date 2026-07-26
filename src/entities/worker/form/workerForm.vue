@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!store.getters.hasPermission('worker:write') || isInvalidForm"
       class="mb-4"
@@ -22,13 +22,13 @@
       />
     </div>
     <div class="input-row">
-      <date-time-input
+      <DateTimeInput
         v-model="form.employmentDate"
         label="Дата приема на работу"
         :style="{ 'max-width': '260px' }"
       />
 
-      <date-time-input
+      <DateTimeInput
         v-model="form.dismissalDate"
         type="date"
         label="Дата увольнения"
@@ -40,7 +40,7 @@
 
     <v-text-field v-model.trim="form.note" label="Примечание" />
 
-    <div v-if="!item._id" class="text-caption mx-3">
+    <div v-if="!item._id" class="text-body-small mx-3">
       *Для сопоставления сотрудника с пользователем, запись необходимо сохранить
     </div>
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">

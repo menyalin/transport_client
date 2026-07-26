@@ -55,7 +55,7 @@ const props = defineProps({
   coords: Array,
 })
 
-const item = defineModel()
+const item = defineModel({ type: Object })
 
 const store = useStore()
 

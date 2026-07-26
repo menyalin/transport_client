@@ -5,8 +5,8 @@
         <v-alert v-model="showError" type="error" closable>
           {{ errorMessage }}
         </v-alert>
-        <load-spinner v-if="loading" />
-        <fine-form
+        <LoadSpinner v-if="loading" />
+        <FineForm
           v-else
           v-model="item"
           :displayDeleteBtn="!!id && store.getters.hasPermission('fine:delete')"

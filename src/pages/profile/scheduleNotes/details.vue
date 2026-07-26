@@ -5,7 +5,7 @@
         <v-alert v-model="error.show" closable type="error" @update:model-value="toggleAlert">
           {{ error.message }}
         </v-alert>
-        <load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <ScheduleNoteForm
           v-else
           :scheduleNote="item"

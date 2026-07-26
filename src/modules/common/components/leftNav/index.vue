@@ -6,7 +6,7 @@
   >
     <v-list v-if="!collapsed">
       <v-list-item>
-        <v-list-item-title class="text-h6 center">
+        <v-list-item-title class="text-headline-small center">
           {{ user ? user.name : null }}
         </v-list-item-title>
         <v-list-item-subtitle>

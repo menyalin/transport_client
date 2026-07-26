@@ -87,7 +87,7 @@ const router = useRouter()
 const selected = usePersistedRef([], 'selectedInvoicesInList')
 
 function dblClickRow(_event, { item }) {
-  router.push(`paymentInvoice/${item._id}`)
+  router.push({ name: 'PaymentInvoiceDetail', params: { id: item._id } })
 }
 
 const selectedIds = computed(() => selected.value)

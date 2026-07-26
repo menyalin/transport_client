@@ -1,8 +1,10 @@
 <template>
   <div class="my-2">
-    <div class="text-h6">
+    <div class="text-headline-small">
       Клиенты:
-      <div v-if="!clientList || !clientList.length" class="text-caption pl-6 my-2">нет данных</div>
+      <div v-if="!clientList || !clientList.length" class="text-body-small pl-6 my-2">
+        нет данных
+      </div>
       <v-list v-else>
         <v-list-item v-for="item in clientList" :key="item">
           <v-list-item-title>
@@ -22,6 +24,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'AgreementClients' })
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 

@@ -4,7 +4,7 @@
       <h4>Оценки водителей</h4>
     </div>
     <div id="settings">
-      <date-range-input v-model="dateRange" />
+      <DateRangeInput v-model="dateRange" />
       <v-btn size="small" color="primary" @click="getReportHandler">
         <v-icon start> mdi-download </v-icon> Скачать отчет
       </v-btn>

@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!store.getters.hasPermission('address:write')"
@@ -8,7 +8,7 @@
       @refresh="refresh"
     />
     <ListSettingsWrapper>
-      <app-table-column-settings
+      <AppTableColumnSettings
         v-model="activeHeaders"
         :allHeaders="allHeaders"
         :listSettingsName="listSettingsName"
@@ -77,14 +77,14 @@
         {{ new Date(item.updatedAt).toLocaleString() }}
       </template>
     </v-data-table>
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script setup>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import { useAddressStore } from '@/entities/address'
 import { usePersistedRef } from '@/shared/hooks'
 
@@ -152,6 +152,6 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`address/${item._id}`)
+  router.push({ name: 'AddressDetails', params: { id: item._id } })
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-submit="!hasPermission"
       @submit="create"
       @refresh="refresh"
     />
     <ListSettingsWrapper>
-      <app-table-column-settings
+      <AppTableColumnSettings
         v-model="activeHeaders"
         :allHeaders="allHeaders"
         :listSettingsName="listSettingsName"
@@ -63,14 +63,14 @@
       @dblclick:row="dblClickRow"
     >
       <template #[`item._result`]="{ item }">
-        <app-zones-cell v-if="item.type === 'zones'" :item="item" />
-        <app-regions-cell v-else-if="item.type === 'regions'" :item="item" />
-        <app-waiting-cell v-else-if="item.type === 'waiting'" :item="item" />
-        <app-return-cell v-else-if="item.type === 'return'" :item="item" />
+        <AppZonesCell v-if="item.type === 'zones'" :item="item" />
+        <AppRegionsCell v-else-if="item.type === 'regions'" :item="item" />
+        <AppWaitingCell v-else-if="item.type === 'waiting'" :item="item" />
+        <AppReturnCell v-else-if="item.type === 'return'" :item="item" />
         <div v-else>{{ item._result }}</div>
       </template>
     </v-data-table-server>
-    <salary-tariff-form
+    <SalaryTariffForm
       v-model="editableItem"
       :carrierItems="carriers"
       :dialog="dialog"
@@ -87,12 +87,12 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 import { ButtonsPanel } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import { SalaryTariffForm } from '@/entities/salary'
-import AppZonesCell from '@/modules/accounting/components/salaryTariffGroupList/zones.vue'
-import AppRegionsCell from '@/modules/accounting/components/salaryTariffGroupList/regions.vue'
-import AppWaitingCell from '@/modules/accounting/components/salaryTariffGroupList/waiting.vue'
-import AppReturnCell from '@/modules/accounting/components/salaryTariffGroupList/return.vue'
+import AppZonesCell from '@/entities/salary/salaryTariffGroupList/zones.vue'
+import AppRegionsCell from '@/entities/salary/salaryTariffGroupList/regions.vue'
+import AppWaitingCell from '@/entities/salary/salaryTariffGroupList/waiting.vue'
+import AppReturnCell from '@/entities/salary/salaryTariffGroupList/return.vue'
 
 import { SalaryTariffService } from '@/shared/services'
 import { useListColumnSetting, usePersistedRef } from '@/shared/hooks'

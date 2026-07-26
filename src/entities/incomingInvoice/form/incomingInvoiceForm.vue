@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       show-save-btn
       @cancel="cancelHandler"
@@ -14,7 +14,7 @@
         :disabledDownloadFiles="downloadDisabled"
         @downloadTemplate="downloadTemplateHandler"
       />
-    </buttons-panel>
+    </ButtonsPanel>
     <div id="form">
       <div class="fields-row">
         <v-autocomplete

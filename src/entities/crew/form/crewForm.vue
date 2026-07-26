@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="disabledSubmitForm"
       @cancel="cancelHandler"
@@ -60,7 +60,7 @@
       </v-btn>
     </div>
 
-    <app-crew-message
+    <AppCrewMessage
       v-if="!!actualDriverCrew"
       :date="state.startDate"
       :crew="actualDriverCrew"
@@ -81,7 +81,7 @@
     </CardSection>
 
     <v-text-field v-model="state.note" label="Примечание" class="mt-6" />
-    <div v-if="crew && crew.manager" class="pb-4 text-caption">
+    <div v-if="crew && crew.manager" class="pb-4 text-body-small">
       Отв.пользователь: {{ crew.manager.name }},
       {{ crew.manager.email }}
       <br />

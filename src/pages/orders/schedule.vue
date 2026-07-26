@@ -14,7 +14,7 @@ import { ScheduleTable } from '@/entities/order'
 import { OrderService as service } from '@/shared/services'
 import periodDifferernce from '@/modules/order/utils/periodDifference'
 
-defineOptions({ name: 'Schedule' })
+defineOptions({ name: 'OrdersSchedule' })
 
 const store = useStore()
 const router = useRouter()
@@ -74,7 +74,6 @@ async function startDragOrder(orderId) {
   try {
     await service.disable({ orderId, state: true })
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.error(e)
   }
 }
@@ -83,7 +82,6 @@ async function endDragOrder(orderId) {
   try {
     await service.disable({ orderId, state: false })
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.error(e)
   }
 }
@@ -96,7 +94,6 @@ async function updateOrderHandler({ orderId, truckId, startDate }) {
       startPositionDate: startDate,
     })
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.error(e)
   }
 }

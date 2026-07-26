@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <report-title title="Отчет по рейсам, не включенным в акты" />
+    <ReportTitle title="Отчет по рейсам, не включенным в акты" />
     <ReportSettings
       v-model="settings"
       :agreementItems="agreementItems"

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch, useAttrs } from 'vue'
 import dayjs from 'dayjs'
-import { usePasteDateInput } from './usePasteDateInput.js'
+import { usePasteDateInput } from './usePasteDateInput'
 
 const props = defineProps({
   modelValue: {

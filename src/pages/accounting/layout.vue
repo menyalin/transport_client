@@ -1,11 +1,15 @@
 <template>
-  <page-layout title="Учет" :nav-items="navButtons">
+  <PageLayout title="Учет" :nav-items="navButtons">
     <router-view />
-  </page-layout>
+  </PageLayout>
 </template>
 
 <script setup>
 import { PageLayout } from '@/shared/ui'
+
+defineOptions({
+  name: 'AccountingLayout',
+})
 
 const navButtons = [
   {

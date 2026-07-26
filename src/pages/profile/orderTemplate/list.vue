@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-submit="!store.getters.hasPermission('orderTemplate:write')"
       @submit="create"
@@ -20,7 +20,7 @@
       v-model:options="settings.listOptions"
       @dblclick:row="dblClickRow"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 
 <script setup>
@@ -67,7 +67,7 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`order_templates/${item._id}`)
+  router.push({ name: 'OrderTemplateDetails', params: { id: item._id } })
 }
 </script>
 

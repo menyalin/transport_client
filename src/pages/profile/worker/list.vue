@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!hasWritePermission"
@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'WorkerList' })
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -79,7 +80,7 @@ const prepareDocuments = computed(() =>
 
 const rowProps = ({ item }) => ({
   style: { cursor: 'pointer' },
-  onDblclick: () => router.push(`workers/${item._id}`),
+  onDblclick: () => router.push({ name: 'WorkerDetails', params: { id: item._id } }),
 })
 
 function create() {

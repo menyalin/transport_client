@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       show-save-btn
       @cancel="cancelHandler"
@@ -8,12 +8,12 @@
       @submit="submitHandler"
       @save="saveHandler"
     >
-      <download-doc-template-menu
+      <DownloadDocTemplateMenu
         :templates="docTemplates"
         :disabled-download-files="disabledDownloadFiles"
         @downloadTemplate="downloadHandler"
       />
-      <download-doc-template-menu
+      <DownloadDocTemplateMenu
         :templates="newDocTemplates"
         :disabled-download-files="disabledDownloadFiles"
         @downloadTemplate="newDownloadHandler"
@@ -22,10 +22,10 @@
       <v-btn v-if="showLoaderBtn" class="mx-3" @click="goToLoader" color="primary">
         Загрузить из реестра
       </v-btn>
-      <span v-else-if="loaderPath" class="text-caption mx-3">
+      <span v-else-if="loaderPath" class="text-body-small mx-3">
         Для использования загрузчика необходимо очистить список рейсов.
       </span>
-    </buttons-panel>
+    </ButtonsPanel>
     <div id="form">
       <div class="fields-row">
         <v-autocomplete

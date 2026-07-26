@@ -2,7 +2,7 @@
   <v-dialog :model-value="dialog" max-width="800" @update:model-value="inputDialog">
     <v-card>
       <v-card-title>
-        <div class="text-h6">Итоговые цены рейса</div>
+        <div class="text-headline-small">Итоговые цены рейса</div>
 
         <v-spacer />
         <v-switch v-model="priceWithVat" class="mt-0 pt-0" label="Цены с НДС" hide-details />

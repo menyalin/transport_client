@@ -17,7 +17,7 @@
     />
     <v-dialog v-model="dialog" max-width="700" persistent>
       <v-card>
-        <app-details-zone
+        <AppDetailsZone
           :id="modelValue"
           openInModal
           @cancel="cancelDialog"
@@ -34,6 +34,10 @@ import { useStore } from 'vuex'
 import AppDetailsZone from '@/pages/profile/zone/details.vue'
 
 const modelValue = defineModel({ type: [String, Array] })
+
+defineOptions({
+  name: 'ZoneAutocomplete',
+})
 
 defineProps({
   label: String,

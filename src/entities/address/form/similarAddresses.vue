@@ -1,7 +1,7 @@
 <template>
   <v-table>
     <template>
-      <caption class="text-left text-subtitle-2">
+      <caption class="text-left text-label-large">
         Похожие адреса
       </caption>
       <thead>

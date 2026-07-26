@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <truck-form
+        <TruckForm
           :loading="loading"
           :carrierItems="carrierStore.carriers"
           @submit="submit"

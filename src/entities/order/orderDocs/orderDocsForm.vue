@@ -55,7 +55,7 @@
                 />
               </td>
               <td>
-                <date-time-input v-model="item.date" hide-details :disabled="readonly" />
+                <DateTimeInput v-model="item.date" hide-details :disabled="readonly" />
               </td>
               <td>
                 <v-icon size="small" :disabled="readonly" @click="deleteRow(idx)">
@@ -87,7 +87,7 @@ import { useStore } from 'vuex'
 const vuexStore = useStore()
 
 defineOptions({ name: 'DocListForm' })
-const value = defineModel()
+const value = defineModel({ type: Array })
 const groupDialog = ref(false)
 defineProps({
   isValid: {

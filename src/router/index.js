@@ -16,14 +16,14 @@ import AccessDeniedPage from '@/pages/accessDenied.vue'
 import PermissionService from '@/shared/services/permission.service'
 import TestVue3Page from '@/test-vue3.vue'
 
-const _checkPermissions = async (permissions, next, to, from) => {
-  if (!permissions.length) next()
-  else if (!PermissionService.check({ permissions })) {
-    next({
+const _checkPermissions = (permissions, from) => {
+  if (!permissions.length) return
+  if (!PermissionService.check({ permissions })) {
+    return {
       path: '/accessDenied',
       query: { redirect: from.fullPath || '/', message: 'Access is denied' },
-    })
-  } else next()
+    }
+  }
 }
 
 const routes = [
@@ -60,7 +60,7 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
   if (!!localStorage.getItem('token') && !store.getters.isLoggedIn)
     await store.dispatch('getUserData')
 
@@ -75,12 +75,14 @@ router.beforeEach(async (to, from, next) => {
   const permissions = to.matched.map((r) => r.meta.permission).filter((p) => !!p)
 
   if (to.matched.some((record) => record.meta.authRequired && !store.getters.isLoggedIn))
-    next({
+    return {
       path: '/auth/login',
       query: { redirect: to.fullPath },
-    })
-  else if (store.getters.user && permissions.length) _checkPermissions(permissions, next, to, from)
-  else next()
+    }
+  else if (store.getters.user && permissions.length) {
+    const redirect = _checkPermissions(permissions, from)
+    if (redirect) return redirect
+  }
 })
 
 export default router

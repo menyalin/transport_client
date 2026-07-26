@@ -1,16 +1,17 @@
 <template>
   <div id="zones-wrapper">
-    <app-zone-autocomplete
+    <AppZoneAutocomplete
       ref="loadingEl"
       v-model="zones.loadingZone"
       label="Зона погрузки"
       hide-details
     />
-    <app-zone-autocomplete v-model="zones.unloadingZone" label="Зона разгрузки" hide-details />
+    <AppZoneAutocomplete v-model="zones.unloadingZone" label="Зона разгрузки" hide-details />
   </div>
 </template>
 
 <script setup>
+defineOptions({ name: 'SalaryZones' })
 import { ref } from 'vue'
 import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
 

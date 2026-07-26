@@ -15,6 +15,7 @@
 import { computed } from 'vue'
 export default {
   name: 'DownloadDocTemplateMenu',
+  emits: ['downloadTemplate'],
   props: {
     templates: {
       type: Array,

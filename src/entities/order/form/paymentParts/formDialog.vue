@@ -1,7 +1,7 @@
 <template>
   <v-dialog :model-value="dialog" max-width="800" persistent>
     <v-card>
-      <v-card-title class="text-h5">{{ dialogTitle }}</v-card-title>
+      <v-card-title class="text-headline-medium">{{ dialogTitle }}</v-card-title>
       <form @submit.prevent="submitHandler">
         <v-card-text class="form-wrapper">
           <v-autocomplete

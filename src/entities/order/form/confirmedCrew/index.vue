@@ -61,7 +61,7 @@ import { BlockTitle } from '@/entities/order'
 import { useConfirmedCrew } from './useConfirmedCrew'
 
 defineOptions({ name: 'ConfirmedCrew' })
-const model = defineModel()
+const model = defineModel({ type: Object })
 
 const props = defineProps({
   confirmed: Boolean,

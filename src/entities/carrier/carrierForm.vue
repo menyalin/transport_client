@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!$store.getters.hasPermission('carrier:write') || isInvalidForm || loading"
       @cancel="cancelHandler"

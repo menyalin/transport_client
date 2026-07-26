@@ -6,7 +6,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
-defineOptions({ name: 'Note' })
+defineOptions({ name: 'ScheduleNote' })
 
 const props = defineProps({
   styles: {

@@ -53,6 +53,7 @@ const vuexStore = useStore()
 
 defineOptions({ name: 'RouteState' })
 const model = defineModel('model-value', {
+  type: Object,
   default: () => ({
     status: 'needGet',
     warning: false,

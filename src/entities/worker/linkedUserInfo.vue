@@ -6,9 +6,9 @@
       <v-icon v-else-if="isAccepted" color="green" icon="mdi-account-check" />
       <v-icon v-else-if="isCanceled" color="grey" icon="mdi-account-cancel" />
     </div>
-    <div class="text-h6">
+    <div class="text-headline-small">
       {{ worker.user.name }}
-      <div class="text-subtitle-1">
+      <div class="text-body-large">
         {{ worker.user.email }}
       </div>
     </div>

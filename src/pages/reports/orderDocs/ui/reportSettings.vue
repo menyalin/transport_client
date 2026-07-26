@@ -1,12 +1,12 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       :listSettingsName="listSettingsName"
       @change="updateActiveHeaders"
     />
-    <refresh-btn @click="$emit('refresh')" />
-    <date-time-input v-model="settings.date" label="Дата (конец периода)" hide-details />
+    <RefreshBtn @click="$emit('refresh')" />
+    <DateTimeInput v-model="settings.date" label="Дата (конец периода)" hide-details />
 
     <v-select
       v-model="settings.state"
@@ -93,7 +93,7 @@ import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'ReportSettings' })
 
-const settings = defineModel()
+const settings = defineModel({ type: Object })
 
 defineProps({
   allHeaders: {

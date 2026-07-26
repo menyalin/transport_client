@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabledSubmit="!hasPermission"
       @submit="create"
@@ -91,7 +91,7 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`schedule_notes/${item._id}`)
+  router.push({ name: 'ScheduleNoteDetails', params: { id: item._id } })
 }
 
 async function getData() {
@@ -124,12 +124,11 @@ if (store.getters.formSettingsMap.has(formName)) {
   settings.value = store.getters.formSettingsMap.get(formName)
 }
 
-onBeforeRouteLeave((_to, _from, next) => {
+onBeforeRouteLeave(() => {
   store.commit('setFormSettings', {
     formName,
     settings: { ...settings.value },
   })
-  next()
 })
 
 watch(

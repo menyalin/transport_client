@@ -1,6 +1,6 @@
 <template>
   <FormWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!store.getters.hasPermission('scheduleNote:write') || isInvalidForm"
       @cancel="cancel"

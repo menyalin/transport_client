@@ -1,9 +1,9 @@
 <template>
   <v-file-input
-    v-model="file"
-    :rules="rules"
-    accept=".xlsx"
     :label="label"
+    v-model="file"
+    accept=".xlsx"
+    :rules="rules"
     prepend-icon="mdi-microsoft-excel"
     @update:model-value="fileInputChanged"
   />
@@ -21,7 +21,7 @@ defineProps({
   },
 })
 
-const modelValue = defineModel()
+const modelValue = defineModel({ type: Object })
 
 const file = ref(null)
 

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="800px" persistent scrollable>
     <v-card>
       <v-card-title class="bg-primary text-white">
-        <span class="text-h5">
+        <span class="text-headline-medium">
           {{ isEdit ? 'Редактировать напоминание' : 'Новое напоминание' }}
         </span>
       </v-card-title>

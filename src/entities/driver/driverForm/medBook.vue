@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-block-title>{{ title }}</app-block-title>
+    <AppBlockTitle>{{ title }}</AppBlockTitle>
     <div class="fields-row">
       <v-text-field
         label="Номер"

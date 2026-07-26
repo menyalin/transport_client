@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!store.getters.hasPermission('city:write') || isInvalidForm || !formChanged"
       @cancel="cancel"
@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'CityForm' })
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
