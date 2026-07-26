@@ -1,9 +1,10 @@
-import store from '@/store'
 import { ref, computed } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useStore } from 'vuex'
 
 export const useForm = (props, emit) => {
+  const vuexStore = useStore()
   const validCoordinates = (val) => {
     if (!val) return true
     const arr = val.split(',')
@@ -64,7 +65,7 @@ export const useForm = (props, emit) => {
   function submit() {
     const address = {
       ...state.value,
-      company: store.getters.directoriesProfile,
+      company: vuexStore.getters.directoriesProfile,
     }
     emit('submit', address)
     resetForm()
@@ -89,6 +90,7 @@ export const useForm = (props, emit) => {
   return {
     state,
     v$,
+    zoneItems: vuexStore.getters.zonesForAutocomplete,
     nameErrors,
     geoErrors,
     resetForm,
