@@ -1,7 +1,7 @@
 <template>
   <FormWrapper>
-    <load-spinner v-if="loading" />
-    <region-form
+    <LoadSpinner v-if="loading" />
+    <RegionForm
       v-else
       :region="item"
       :displayDeleteBtn="!!props.id && $store.getters.hasPermission('region:delete')"

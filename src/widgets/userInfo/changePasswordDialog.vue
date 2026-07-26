@@ -1,7 +1,7 @@
 <template>
   <v-dialog :model-value="dialog" max-width="600" persistent>
     <v-card>
-      <v-card-title class="text-h5"> Изменение пароля </v-card-title>
+      <v-card-title class="text-headline-medium"> Изменение пароля </v-card-title>
       <v-card-text>
         <form @submit.prevent>
           <v-text-field v-model="password" type="password" label="Действующий пароль" />

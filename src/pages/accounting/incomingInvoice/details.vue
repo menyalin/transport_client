@@ -1,5 +1,5 @@
 <template>
-  <form-wrapper
+  <FormWrapper
     :loading="loading"
     :display-delete-btn="showDeleteBtn"
     :item-is-missing="item === null"
@@ -17,7 +17,7 @@
       @pickOrders="pickOrdersHandler"
       @savePayDate="savePayDateHandler"
     />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script setup>

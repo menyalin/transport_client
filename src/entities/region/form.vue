@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="
         !store.getters.hasPermission('region:write') || isInvalidForm || !formChanged
@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'RegionForm' })
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'

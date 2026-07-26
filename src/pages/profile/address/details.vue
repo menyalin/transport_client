@@ -1,9 +1,9 @@
 <template>
-  <form-wrapper>
+  <FormWrapper>
     <v-alert v-model="error.show" closable type="error" @change="toggleAlert">
       {{ error.message }}
     </v-alert>
-    <load-spinner v-if="loading" />
+    <LoadSpinner v-if="loading" />
     <AddressForm
       v-else
       :address="item"
@@ -14,7 +14,7 @@
       @submit="submit"
       @delete="deleteHandler"
     />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 <script setup>
 import { watch, ref, computed } from 'vue'

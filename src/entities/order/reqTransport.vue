@@ -46,6 +46,7 @@ defineOptions({ name: 'ReqTransport' })
 defineProps({ title: String })
 
 const model = defineModel('model-value', {
+  type: Object,
   default: () => ({
     kind: null,
     liftCapacity: null,

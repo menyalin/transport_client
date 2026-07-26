@@ -12,7 +12,7 @@
     >
       Добавить площадку
     </v-btn>
-    <place-item
+    <PlaceItem
       v-for="place of places"
       :key="place._id"
       :value="place"
@@ -25,7 +25,7 @@
       max-width="1200"
       persistent
     >
-      <place-for-transfer-docs-form
+      <PlaceForTransferDocsForm
         ref="placeForm"
         :item="editableItem"
         :partnerId="partnerId"

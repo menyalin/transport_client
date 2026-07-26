@@ -102,7 +102,7 @@ export default {
     ],
     orderStatuses: [],
     scheduleDate: dayjs().format('YYYY-MM-DD'),
-    onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') === 'true' ?? false,
+    onlyPlannedDates: localStorage.getItem('orders:onlyPlannedDates') === 'true',
     orderAnalyticTypes: [],
     orderPriceTypes: [],
     onlyTrucksWithRoutes: localStorage.getItem('orders:onlyTrucksWithRoutes') !== 'false',

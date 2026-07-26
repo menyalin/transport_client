@@ -12,7 +12,7 @@
     :style="{ boxSizing: 'border-box' }"
   >
     <template v-if="preparedItems.length" #[`body.append`]="{ items: tableItems }">
-      <app-append-pivor-row :headers="tableHeaders" :items="tableItems" />
+      <AppAppendPivorRow :headers="tableHeaders" :items="tableItems" />
     </template>
 
     <template #[`item.totalSum`]="{ item }">

@@ -103,7 +103,7 @@ export const useListData = () => {
     router.push({ name: 'CrewCreate' })
   }
   function dblClickRowHandler(_, { item }) {
-    if (item) router.push(`crews/${item._id}`)
+    if (item) router.push({ name: 'CrewDetails', params: { id: item._id } })
   }
 
   async function refreshHandler() {

@@ -40,6 +40,6 @@ defineProps({
 })
 
 function dblClickRow(_event, { item }) {
-  router.push(`docsRegistry/${item._id}`)
+  router.push({ name: 'DocsRegistryDetail', params: { id: item._id } })
 }
 </script>

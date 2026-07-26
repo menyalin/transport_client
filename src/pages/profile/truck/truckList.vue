@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabled-submit="!store.getters.hasPermission('truck:write')"
@@ -8,7 +8,7 @@
       @refresh="refresh"
     />
     <ListSettingsWrapper>
-      <app-table-column-settings
+      <AppTableColumnSettings
         v-model="activeHeaders"
         :allHeaders="allHeaders"
         :listSettingsName="listSettingsName"
@@ -66,7 +66,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { CrewService } from '@/shared/services'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 import { allHeaders } from './listHeaders'
 
@@ -190,7 +190,7 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`trucks/${item._id}`)
+  router.push({ name: 'TruckDetails', params: { id: item._id } })
 }
 
 onMounted(() => {

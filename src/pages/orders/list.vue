@@ -1,12 +1,12 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabledSubmit="!$store.getters.hasPermission('order:create')"
       @submit="create"
       @refresh="refresh"
     />
-    <orders-table-settings
+    <OrdersTableSettings
       v-model="settings"
       :minDate="minDate"
       @putTableToClipboard="putOrdersTableToClipboard(items)"
@@ -15,7 +15,7 @@
       @updateHeaders="updateActiveHeaders"
     />
 
-    <orders-table
+    <OrdersTable
       :items="items"
       :headers="headers"
       :loading="loading"
@@ -25,14 +25,14 @@
       @openDocsDialog="openDocsDialog"
     />
     <v-dialog v-model="docDialog" max-width="1300" persistent>
-      <order-docs-list
+      <OrderDocsList
         :orderId="editableOrderId"
         :docs="editableDocs"
         @save="saveDocDialog"
         @cancel="cancelDocDialog"
       />
     </v-dialog>
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script setup>
 import { ref } from 'vue'

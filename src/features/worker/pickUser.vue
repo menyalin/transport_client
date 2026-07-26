@@ -9,14 +9,16 @@
       :errorMessages="errorMessages"
       @change="changeHandler"
     />
-    <div v-if="candidate.name" class="text-h5 mb-5"><small>Имя:</small> {{ candidate.name }}</div>
+    <div v-if="candidate.name" class="text-headline-medium mb-5">
+      <small>Имя:</small> {{ candidate.name }}
+    </div>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
 import { WorkerService } from '@/shared/services'
 
-const model = defineModel()
+const model = defineModel({ type: Object })
 
 const emailStr = ref('')
 const loading = ref(false)
@@ -45,7 +47,7 @@ async function searchUser(value) {
     } else {
       setCandidate(candidate)
     }
-  } catch (e) {
+  } catch {
     loading.value = false
   }
 }

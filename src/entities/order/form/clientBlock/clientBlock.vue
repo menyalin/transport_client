@@ -47,7 +47,7 @@ import { useClientBlock } from './useClientBlock'
 import { computed } from 'vue'
 
 defineOptions({ name: 'ClientBlock' })
-const model = defineModel()
+const model = defineModel({ type: Object })
 
 const props = defineProps({
   title: String,

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       show-save-btn
       @cancel="cancelHandler"

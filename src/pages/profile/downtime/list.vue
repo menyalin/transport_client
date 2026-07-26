@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!store.getters.hasPermission('downtime:write')"
@@ -62,7 +62,7 @@
         <span>{{ new Date(item.endPositionDate).toLocaleString() }}</span>
       </template>
     </v-data-table-server>
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script setup>
 import dayjs from 'dayjs'
@@ -155,7 +155,7 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`downtimes/${item._id}`)
+  router.push({ name: 'DowntimeDetails', params: { id: item._id } })
 }
 </script>
 <style scoped></style>

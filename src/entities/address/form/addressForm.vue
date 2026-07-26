@@ -1,12 +1,12 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!$store.getters.hasPermission('address:write') || v$.$invalid"
       @cancel="cancel"
       @submit="submit"
     />
-    <address-suggestion class="mt-3" @change="getParsedAddress" />
+    <AddressSuggestion class="mt-3" @change="getParsedAddress" />
 
     <v-text-field v-model.trim="v$.name.$model" label="Наименование" :errorMessages="nameErrors" />
 

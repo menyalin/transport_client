@@ -7,7 +7,7 @@
       <div>{{ ordersCount['18-24'] }}</div>
     </div>
 
-    <div v-if="ordersCount" class="second-row text-center text-subtitle-2">
+    <div v-if="ordersCount" class="second-row text-center text-label-large">
       {{ ordersCount.totalInDay }}
     </div>
   </div>

@@ -45,38 +45,38 @@
             hide-details
             v-model="tmpItem.consigneeTypes"
           />
-          <app-points
+          <AppPoints
             v-if="tmpItem.type === 'points'"
             ref="pointsRef"
             v-model="points"
             :style="{ 'min-width': '550px' }"
           />
-          <app-zones
+          <AppZones
             v-if="tmpItem.type === 'zones'"
             ref="zonesRef"
             v-model="zones"
             :style="{ 'min-width': '550px' }"
           />
-          <app-additional-points
+          <AppAdditionalPoints
             v-if="tmpItem.type === 'additionalPoints'"
             ref="additionalPointsRef"
             v-model="additionalPoints"
             :style="{ 'min-width': '550px' }"
           />
-          <app-regions
+          <AppRegions
             v-if="tmpItem.type === 'regions'"
             ref="regionsRef"
             v-model="regions"
             :style="{ 'min-width': '550px' }"
           />
 
-          <app-waiting
+          <AppWaiting
             v-if="tmpItem.type === 'waiting'"
             ref="waitingRef"
             v-model="waiting"
             :style="{ 'min-width': '550px' }"
           />
-          <app-return
+          <AppReturn
             v-if="tmpItem.type === 'return'"
             ref="returnRef"
             v-model="returnTariff"
@@ -101,6 +101,7 @@
   </div>
 </template>
 <script setup>
+defineOptions({ name: 'SalaryFormIndex' })
 import { ref, reactive, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
 import AppPoints from './points.vue'

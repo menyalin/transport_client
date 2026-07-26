@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!store.getters.hasPermission('city:write')"
@@ -18,16 +18,17 @@
       fixed-header
       height="73vh"
       :items-per-page-options="[50, 100, 200]"
-      v-model:options="settings.listOptions"
+      v-model:options="listOptions"
       @dblclick:row="dblClickRow"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script setup>
-import { computed, reactive, onMounted } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
+import usePersistedRef from '@/shared/hooks/usePersistedRef'
 
 defineOptions({ name: 'CityList' })
 
@@ -36,30 +37,14 @@ const store = useStore()
 
 const formName = 'CityList'
 
-const settings = reactive({
-  search: null,
-  listOptions: {},
-})
+const settings = usePersistedRef({ search: null }, formName + ':settings')
+const listOptions = usePersistedRef({}, formName + ':listOptions')
 
 const headers = [{ value: 'name', title: 'Наименование' }]
 
 const cities = computed(() => store.getters.cities)
 const loading = computed(() => store.getters.loading)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
-
-onMounted(() => {
-  if (store.getters.formSettingsMap.has(formName))
-    Object.assign(settings, store.getters.formSettingsMap.get(formName))
-  store.dispatch('getCities')
-})
-
-onBeforeRouteLeave((_to, _from, next) => {
-  store.commit('setFormSettings', {
-    formName,
-    settings: { ...settings },
-  })
-  next()
-})
 
 function create() {
   router.push({ name: 'CityCreate' })
@@ -70,14 +55,6 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`cities/${item._id}`)
+  router.push({ name: 'CityDetails', params: { id: item._id } })
 }
 </script>
-<style scoped>
-#settings-wrapper {
-  display: grid;
-  grid-template-columns: 400px;
-  gap: 10px;
-  margin: 15px;
-}
-</style>

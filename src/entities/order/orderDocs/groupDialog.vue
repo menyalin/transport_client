@@ -1,7 +1,7 @@
 <template>
   <v-dialog :model-value="dialog" max-width="800" @update:model-value="closeDialog">
     <v-card>
-      <v-card-title class="text-h5"> Добавить группу документов </v-card-title>
+      <v-card-title class="text-headline-medium"> Добавить группу документов </v-card-title>
 
       <form @submit.prevent="addHandler">
         <v-card-text class="form-wrapper">

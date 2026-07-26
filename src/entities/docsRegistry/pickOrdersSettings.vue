@@ -1,12 +1,12 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       listSettingsName="pickOrdersTable"
       @change="$emit('update-headers', $event)"
     />
     <v-btn @click="$emit('refresh')" icon size="small"> <v-icon>mdi-refresh</v-icon></v-btn>
-    <date-range-input v-model="settings.period" class="mx-2" />
+    <DateRangeInput v-model="settings.period" class="mx-2" />
     <v-select
       v-model="settings.docStatus"
       label="Документы"
@@ -60,7 +60,7 @@ import { AppTableColumnSetting, DateRangeInput } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 
 defineOptions({ name: 'PickOrdersSettings' })
-const settings = defineModel('settings')
+const settings = defineModel('settings', { type: Object })
 
 defineProps({
   allHeaders: Array,

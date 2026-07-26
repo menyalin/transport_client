@@ -22,7 +22,7 @@
       <v-icon start> mdi-truck-fast </v-icon>
       Рейсы
     </v-btn>
-    <app-reports-menu v-if="isLoggedIn && directoriesProfile" />
+    <AppReportsMenu v-if="isLoggedIn && directoriesProfile" />
     <v-btn v-if="isLoggedIn" to="/profile" variant="text">
       <v-icon start> mdi-account-outline </v-icon>
       Профиль
@@ -47,6 +47,7 @@ import AppReportsMenu from './reportsMenu.vue'
 import ScheduleSettings from '@/entities/order/scheduleSetting/index.vue'
 
 export default {
+  name: 'AppBarIndex',
   components: {
     AppReportsMenu,
     ScheduleSettings,

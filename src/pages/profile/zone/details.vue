@@ -1,7 +1,7 @@
 <template>
   <FormWrapper>
-    <load-spinner v-if="loading" />
-    <zone-form
+    <LoadSpinner v-if="loading" />
+    <ZoneForm
       v-else
       :zone="item"
       :displayDeleteBtn="!!props.id && $store.getters.hasPermission('zone:delete')"

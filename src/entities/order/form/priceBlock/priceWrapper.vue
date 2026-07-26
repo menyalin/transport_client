@@ -10,7 +10,7 @@
         Добавить сумму
       </v-btn>
     </template>
-    <app-costs-table
+    <AppCostsTable
       :items="modelValue"
       :readonly="readonly"
       :basePrePrice="basePrePrice"
@@ -19,7 +19,7 @@
       @editPrice="editPrice"
       @deletePrice="deletePrice"
     />
-    <app-dialog-form
+    <AppDialogForm
       v-model:dialog="dialog"
       :item="editedItem"
       :vatRateInfo="vatRateInfo"
@@ -38,7 +38,7 @@ import { Price } from './Price.class'
 
 defineOptions({ name: 'PriceWrapper' })
 
-const modelValue = defineModel()
+const modelValue = defineModel({ type: Object })
 
 const props = defineProps({
   title: String,

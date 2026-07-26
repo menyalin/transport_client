@@ -1,6 +1,6 @@
 <template>
   <div class="pb-4">
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!store.getters.hasPermission('partner:write') || isInvalidForm"
       @cancel="cancelHandler"
@@ -62,7 +62,7 @@
           <b> Площадки для приема документов</b>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <places-for-transfer-docs v-model="state.placesForTransferDocs" :partnerId="item._id" />
+          <PlacesForTransferDocs v-model="state.placesForTransferDocs" :partnerId="item._id" />
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel v-if="state.isClient">

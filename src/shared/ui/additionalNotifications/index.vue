@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'AdditionalNotificationsIndex' })
 import AdditionalNotificationsContainer from './AdditionalNotificationsContainer.vue'
 
 const items = defineModel({ type: Array, default: () => [] })

@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-progress-circular v-if="loading" indeterminate class="ma-4" />
-        <truck-form
+        <TruckForm
           v-else
           v-model="truck"
           :carrierItems="carrierStore.carriers"
@@ -59,7 +59,7 @@ async function submit(val) {
       truck.value = data
       router.go(-1)
     }
-  } catch (e) {
+  } catch {
     loading.value = false
   }
 }

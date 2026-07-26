@@ -1,10 +1,11 @@
 <template>
-  <page-layout title="Профиль" :nav-items="navButtonsWithBadges">
+  <PageLayout title="Профиль" :nav-items="navButtonsWithBadges">
     <router-view />
-  </page-layout>
+  </PageLayout>
 </template>
 
 <script setup>
+defineOptions({ name: 'ProfileLayout' })
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { PageLayout } from '@/shared/ui'

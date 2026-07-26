@@ -1,11 +1,11 @@
 <template>
-  <form-wrapper>
-    <div class="text-h4">{{ company.name }}</div>
-    <div class="text-caption">ИНН: {{ company.inn }}</div>
+  <FormWrapper>
+    <div class="text-headline-large">{{ company.name }}</div>
+    <div class="text-body-small">ИНН: {{ company.inn }}</div>
     <v-divider />
-    <company-base-fields-form :item="company" @submit="submitHandler" />
-    <company-settings :company-id="id" />
-  </form-wrapper>
+    <CompanyBaseFieldsForm :item="company" @submit="submitHandler" />
+    <CompanySettings :company-id="id" />
+  </FormWrapper>
 </template>
 
 <script setup>

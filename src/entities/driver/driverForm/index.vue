@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="disabledSubmitForm"
       @cancel="cancel"
@@ -96,7 +96,7 @@
         <v-text-field v-model.trim="form.phone2" label="Телефон 2" hide-details class="field-md" />
       </div>
 
-      <app-med-book v-model="form.medBook" title="Мед.книжка" class="mb-5" />
+      <AppMedBook v-model="form.medBook" title="Мед.книжка" class="mb-5" />
 
       <div class="fields-row">
         <v-checkbox v-model="form.isBrigadier" label="Бригадир" hide-details />
@@ -115,7 +115,7 @@
         />
       </div>
 
-      <additional-notifications v-model="form.additionalNotifications" />
+      <AdditionalNotifications v-model="form.additionalNotifications" />
 
       <div class="fields-row">
         <v-checkbox v-model="form.hasScans" label="Есть сканы документов" />
@@ -133,6 +133,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'DriverFormIndex' })
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'

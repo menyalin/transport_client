@@ -19,14 +19,14 @@
       </v-btn>
     </v-card-actions>
     <v-card-text>
-      <pick-orders-settings
+      <PickOrdersSettings
         v-model="settings"
         :allHeaders="allHeaders"
         @updateHeaders="updateActiveHeaders"
         @refresh="refreshHandler"
       />
 
-      <orders-table
+      <OrdersTable
         v-model="selectedOrders"
         show-select
         itemIdField="orderId"
@@ -39,7 +39,7 @@
         @openDocsDialog="openDocsDialog"
       />
       <v-dialog v-model="docDialog" max-width="1300" persistent>
-        <order-docs-list
+        <OrderDocsList
           :orderId="editableOrderId"
           :docs="editableDocs"
           @save="saveDocDialog"

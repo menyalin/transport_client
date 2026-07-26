@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-caption text-secondary mb-2">Роли пользователя</div>
+    <div class="text-body-small text-secondary mb-2">Роли пользователя</div>
     <v-checkbox
       v-for="role in allRoles"
       :key="role.value"

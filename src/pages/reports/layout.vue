@@ -1,10 +1,11 @@
 <template>
-  <page-layout title="Отчеты">
+  <PageLayout title="Отчеты">
     <router-view />
-  </page-layout>
+  </PageLayout>
 </template>
 
 <script setup>
+defineOptions({ name: 'ReportsLayout' })
 import { PageLayout } from '@/shared/ui'
 </script>
 

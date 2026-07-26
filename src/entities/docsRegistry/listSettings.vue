@@ -1,6 +1,6 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="DOCS_REGISTRY_TABLE_HEADERS"
       listSettingsName="docsRegistryHeadersList"
       @change="updateHeadersHandler"
@@ -42,7 +42,7 @@ const vuexStore = useStore()
 
 defineOptions({ name: 'DocsRegistryListSettingsWidget' })
 
-const settings = defineModel('settings')
+const settings = defineModel('settings', { type: Object })
 const emits = defineEmits(['update:headers'])
 
 const clientItems = computed(() => vuexStore.getters.partners.filter((i) => i.isClient))

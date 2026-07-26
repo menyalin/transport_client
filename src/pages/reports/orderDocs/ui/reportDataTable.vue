@@ -25,7 +25,7 @@
       <b :style="{ color: item._docsStatusObj.color }">{{ item._docsStatusObj.text }}</b>
     </template>
     <template #[`footer.prepend`]>
-      <order-list-footer-details
+      <OrderListFooterDetails
         :total="statisticData.totalCount"
         :needFix="statisticData.correctionCount"
         :onCheck="statisticData.reviewCount"

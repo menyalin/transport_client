@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <buttons-panel
+        <ButtonsPanel
           panel-type="list"
           :disabled-refresh="!user || !user.emailConfirmed"
           :disabled-submit="!user || !user.emailConfirmed"

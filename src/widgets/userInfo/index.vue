@@ -37,7 +37,7 @@
       </v-list-item>
     </v-list>
     <v-btn color="secondary" @click="showChangePasswordDialog = true"> Изменить пароль </v-btn>
-    <app-change-password-dialog :dialog="showChangePasswordDialog" @cancel="cancelHandler" />
+    <AppChangePasswordDialog :dialog="showChangePasswordDialog" @cancel="cancelHandler" />
   </div>
 </template>
 <script>

@@ -1,10 +1,11 @@
 <template>
-  <page-layout :title="title">
+  <PageLayout :title="title">
     <router-view />
-  </page-layout>
+  </PageLayout>
 </template>
 
 <script setup>
+defineOptions({ name: 'OrdersLayout' })
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { PageLayout } from '@/shared/ui'

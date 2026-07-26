@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <driver-form
+        <DriverForm
           v-model="driver"
           :carrierItems="carrierStore.carriers"
           :loading="loading"

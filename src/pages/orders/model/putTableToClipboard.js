@@ -196,7 +196,6 @@ export default (items) => {
   // type = 'text/plain'
   navigator.clipboard
     .write([
-      // eslint-disable-next-line no-undef
       new ClipboardItem({
         'text/html': new Blob([table], { type: 'text/html' }),
       }),

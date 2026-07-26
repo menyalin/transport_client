@@ -1,13 +1,13 @@
 <template>
   <div class="page-wrapper">
-    <report-title title="Отчет по не сданным документам" />
-    <report-settings
+    <ReportTitle title="Отчет по не сданным документам" />
+    <ReportSettings
       @refresh="refresh"
       v-model="settings"
       :allHeaders="allHeaders"
       @changeHeaders="changeHeaders"
     />
-    <report-data-table
+    <ReportDataTable
       :items="items"
       :headers="headers"
       :loading="loading"

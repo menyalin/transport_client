@@ -1,6 +1,6 @@
 <template>
-  <form-wrapper :loading="loading" :display-delete-btn="showDeleteBtn" @delete="deleteHandler">
-    <docs-registry-form
+  <FormWrapper :loading="loading" :display-delete-btn="showDeleteBtn" @delete="deleteHandler">
+    <DocsRegistryForm
       :item="item"
       :disabledPickOrders="disabledPickOrders"
       :disabledMainFields="disabledMainFields"
@@ -10,15 +10,15 @@
       @pickOrders="openDialog"
       @downloadXlsx="downloadWordHandler"
     />
-    <docs-registry-orders-list
+    <DocsRegistryOrdersList
       :orders="item.orders"
       @delete="deleteOrderFromRegistry"
       @dblRowClick="dblRowClickHandler"
     />
     <v-dialog v-if="item._id" v-model="showPickOrderDialog" fullscreen persistent :scrim="false">
-      <pick-orders :docsRegistry="item" :client="item.client" @cancel="closeDialog" />
+      <PickOrders :docsRegistry="item" :client="item.client" @cancel="closeDialog" />
     </v-dialog>
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script setup>

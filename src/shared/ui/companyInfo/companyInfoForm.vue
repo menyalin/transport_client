@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div v-if="showTitle" class="text-h6">Общая информация о компании:</div>
+    <div v-if="showTitle" class="text-headline-small">Общая информация о компании:</div>
     <v-select label="Тип" :items="legalFormItems" v-model="state.legalForm" clearable />
     <v-text-field label="Полное наименование" v-model="state.fullName" />
     <v-textarea label="Почтовый адрес" v-model="state.postalAddress" rows="4" />

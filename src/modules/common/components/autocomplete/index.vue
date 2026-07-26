@@ -19,7 +19,7 @@ import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
-defineOptions({ name: 'Autocomplete' })
+defineOptions({ name: 'AppAutocomplete' })
 
 const model = defineModel({ type: String })
 

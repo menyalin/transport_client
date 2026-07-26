@@ -5,17 +5,17 @@
         <v-alert v-model="error.show" closable type="error">
           {{ error.message }}
         </v-alert>
-        <div class="text-h5 ma-3">Создать группу тарифов</div>
+        <div class="text-headline-medium ma-3">Создать группу тарифов</div>
 
-        <load-spinner v-if="loading" />
+        <LoadSpinner v-if="loading" />
         <div v-else class="pt-2">
-          <buttons-panel
+          <ButtonsPanel
             panel-type="form"
             :disabled-submit="!hasWritePermission || disabledSubmit"
             @cancel="cancel"
             @submit="submit"
           />
-          <app-salary-tariff-settings
+          <AppSalaryTariffSettings
             v-model="settings"
             :disabled="disabledSettings"
             :carriers="carrierStore.carriers"
@@ -41,7 +41,7 @@
             @cancel="closeDialog"
             @push="pushItem"
           />
-          <app-salary-tariff-group-list v-model="items" @removeItem="deleteItem" />
+          <AppSalaryTariffGroupList v-model="items" @removeItem="deleteItem" />
         </div>
       </v-col>
     </v-row>
@@ -53,8 +53,8 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { LoadSpinner } from '@/shared/ui'
-import AppSalaryTariffSettings from '@/modules/accounting/components/salaryTariffSettings/index.vue'
-import AppSalaryTariffGroupList from '@/modules/accounting/components/salaryTariffGroupList/index.vue'
+import AppSalaryTariffSettings from '@/entities/salary/salaryTariffSettings/index.vue'
+import AppSalaryTariffGroupList from '@/entities/salary/salaryTariffGroupList/index.vue'
 
 import { ButtonsPanel } from '@/shared/ui'
 import { SalaryTariffService } from '@/shared/services'

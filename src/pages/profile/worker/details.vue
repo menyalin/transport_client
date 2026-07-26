@@ -1,11 +1,12 @@
 <template>
-  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="!!id && canDelete">
-    <worker-form :item="worker" @cancel="cancel" @submit="submit" />
-    <linked-user v-if="id" :worker="worker" @updateWorker="updateWorkerHandler" />
-  </form-wrapper>
+  <FormWrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="!!id && canDelete">
+    <WorkerForm :item="worker" @cancel="cancel" @submit="submit" />
+    <LinkedUser v-if="id" :worker="worker" @updateWorker="updateWorkerHandler" />
+  </FormWrapper>
 </template>
 
 <script setup>
+defineOptions({ name: 'WorkerDetails' })
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'

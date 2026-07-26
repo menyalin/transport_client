@@ -92,14 +92,14 @@ async function addToRegistryHandler() {
           Добавить в опись
         </v-btn>
       </div>
-      <pick-orders-settings
+      <PickOrdersSettings
         v-model:settings="settings"
         :allHeaders="PickOrdersForDocsRegistryHeaders()"
         @updateHeaders="updateActiveHeaders"
         @refresh="refreshHandler"
       />
 
-      <orders-table
+      <OrdersTable
         v-model="selectedOrders"
         show-select
         :items
@@ -111,7 +111,7 @@ async function addToRegistryHandler() {
         @openDocsDialog="openDocsDialog"
       />
       <v-dialog v-model="docDialog" max-width="1300" persistent>
-        <order-docs-list
+        <OrderDocsList
           :orderId="editableOrderId"
           :docs="editableDocs"
           @save="saveDocDialog"

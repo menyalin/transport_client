@@ -1,7 +1,7 @@
 <template>
   <EntityListWrapper>
     <ListSettingsWrapper>
-      <app-drivers-salary-period v-model="period" />
+      <AppDriversSalaryPeriod v-model="period" />
       <v-select
         v-model="tks"
         :items="carrierStore.carriers"
@@ -72,7 +72,7 @@
 import dayjs from 'dayjs'
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import AppDriversSalaryPeriod from '@/modules/accounting/components/driversSalaryPeriod/index.vue'
+import AppDriversSalaryPeriod from './ui/driversSalaryPeriod.vue'
 import { DriverSalaryTable } from '@/entities/driverSalary'
 import { useDriversSalaryData } from './model'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'

@@ -1,13 +1,13 @@
 <template>
   <div class="settings-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       listSettingsName="pickOrdersForPaymentInvoiceTable"
       @change="updateHeadersHandler"
     />
     <v-btn @click="refreshHandler" icon> <v-icon>mdi-refresh</v-icon></v-btn>
 
-    <date-range-input
+    <DateRangeInput
       :value="settings.period"
       class="mx-2"
       @change="changeHandler($event, 'period')"
@@ -32,7 +32,7 @@
       :style="{ 'max-width': '300px' }"
       @update:model-value="changeHandler($event, 'search')"
     />
-    <order-doc-status-selector
+    <OrderDocStatusSelector
       :value="settings.docStatuses"
       multiple
       label="Документы"

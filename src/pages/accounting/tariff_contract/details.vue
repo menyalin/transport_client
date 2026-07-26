@@ -1,12 +1,12 @@
 <template>
-  <form-wrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
+  <FormWrapper :loading="loading" @delete="deleteHandler" :displayDeleteBtn="showDeleteBtn">
     <TariffContractForm
       :item="item"
       :agreements="agreementItems"
       @cancel="cancelHandler"
       @submit="submitHandler"
     />
-  </form-wrapper>
+  </FormWrapper>
 </template>
 
 <script setup>

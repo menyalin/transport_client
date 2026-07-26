@@ -2,7 +2,7 @@
   <div class="text-title-medium mb-4">{{ title }}</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineOptions({ name: 'ReportTitle' })
 
 defineProps({

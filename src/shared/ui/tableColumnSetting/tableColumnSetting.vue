@@ -44,7 +44,7 @@ watch(
   () => {
     try {
       localStorage.setItem(props.listSettingsName, JSON.stringify(activeFields.value))
-    } catch (e) {
+    } catch {
       console.log('localStorage недоступен!')
     } finally {
       emit('change', activeHeaders.value)

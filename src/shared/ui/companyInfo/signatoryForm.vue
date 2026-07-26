@@ -1,6 +1,6 @@
 <template lang="">
   <div class="signatory-form-wrapper">
-    <div class="text-subtitle-2 pb-3">Подписант:</div>
+    <div class="text-label-large pb-3">Подписант:</div>
     <v-text-field
       label="Должность"
       :model-value="modelValue.position"

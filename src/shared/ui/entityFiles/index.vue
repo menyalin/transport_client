@@ -32,8 +32,8 @@
           />
           <SelectedFiles v-model="selectedFiles" :uploadProgress="uploadProgress" />
           <div v-if="uploadErrors.length" class="mt-4">
-            <div class="text-error text-subtitle-2 mb-1">Ошибки загрузки:</div>
-            <div v-for="err in uploadErrors" :key="err.name" class="text-error text-caption">
+            <div class="text-error text-label-large mb-1">Ошибки загрузки:</div>
+            <div v-for="err in uploadErrors" :key="err.name" class="text-error text-body-small">
               {{ err.name }} — {{ err.error }}
             </div>
           </div>

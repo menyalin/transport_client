@@ -49,7 +49,7 @@ import { required, decimal } from '@vuelidate/validators'
 
 defineOptions({ name: 'DialogForm' })
 
-const dialog = defineModel('dialog')
+const dialog = defineModel('dialog', { type: Boolean })
 
 const props = defineProps({
   item: Object,

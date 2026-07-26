@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-submit="!store.getters.hasPermission('agreement:write')"
       @submit="create"
@@ -112,7 +112,7 @@ function create() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`agreements/${item._id}`)
+  router.push({ name: 'AgreementDetails', params: { id: item._id } })
 }
 
 watch(

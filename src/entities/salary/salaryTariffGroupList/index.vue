@@ -1,0 +1,89 @@
+<template>
+  <div>
+    <v-table>
+      <template #default>
+        <thead>
+          <tr>
+            <th>Тип</th>
+            <th class="text-center" />
+            <th class="text-center">Грузоподъемность</th>
+            <th class="text-right">Тариф</th>
+            <th class="text-left">Примечание</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, ind) of items" :key="ind">
+            <td>
+              {{ tariffTypesMap.get(item.type) }}
+            </td>
+            <td>
+              <div v-if="item.type === 'points'">
+                {{ addressMap.get(item.loading)?.shortName || addressMap.get(item.loading)?.name }}
+                >>>
+                {{
+                  addressMap.get(item.unloading)?.shortName || addressMap.get(item.unloading)?.name
+                }}
+              </div>
+
+              <AppDirectDistanceZones v-if="item.type === 'directDistanceZones'" :item="item" />
+              <AppAdditionalPointsCell v-if="item.type === 'additionalPoints'" :item="item" />
+              <AppWaitingCell v-if="item.type === 'waiting'" :item="item" />
+              <AppRegionsCell v-if="item.type === 'regions'" :item="item" />
+              <AppZonesCell v-if="item.type === 'zones'" :item="item" />
+              <AppReturnCell v-if="item.type === 'return'" :item="item" />
+            </td>
+
+            <td class="text-center">
+              {{
+                Array.isArray(item.liftCapacity) ? item.liftCapacity.join(', ') : item.liftCapacity
+              }}
+            </td>
+            <td class="text-right">
+              {{ Intl.NumberFormat().format(item.sum) }}
+            </td>
+
+            <td>{{ item.note }}</td>
+            <td class="text-right">
+              <v-btn size="small" icon @click="removeHandler(ind)">
+                <v-icon size="small" color="red"> mdi-delete </v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-table>
+  </div>
+</template>
+<script setup>
+defineOptions({ name: 'SalaryTariffGroupListIndex' })
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import AppWaitingCell from './waiting.vue'
+import AppAdditionalPointsCell from './additionalPoints.vue'
+import AppReturnCell from './return.vue'
+import AppZonesCell from './zones.vue'
+import AppRegionsCell from './regions.vue'
+import AppDirectDistanceZones from './directDistanceZones.vue'
+import { useAddressStore } from '@/entities/address'
+
+const items = defineModel({ type: Array, default: () => [] })
+
+const emit = defineEmits(['removeItem'])
+
+const store = useStore()
+const addressStore = useAddressStore()
+
+const addressMap = computed(() => {
+  return addressStore.addressMap
+})
+
+const tariffTypesMap = computed(() => {
+  return store.getters.salaryTariffTypesMap
+})
+
+function removeHandler(ind) {
+  emit('removeItem', ind)
+}
+</script>
+<style scoped></style>

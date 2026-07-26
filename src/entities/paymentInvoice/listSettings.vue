@@ -1,6 +1,6 @@
 <template>
   <ListSettingsWrapper>
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="PAYMENT_INVOICE_TABLE_HEADERS"
       listSettingsName="paymentInvoiceListSettings"
       @change="updateHeadersHandler"

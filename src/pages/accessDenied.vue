@@ -1,5 +1,5 @@
 <template>
-  <error-page
+  <ErrorPage
     alert-type="error"
     message="Доступ к запрашиваемой странице запрещён"
     :redirect-path="route.query.redirect || '/'"

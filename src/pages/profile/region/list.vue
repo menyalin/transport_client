@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!directoriesProfile"
       :disabledSubmit="!store.getters.hasPermission('region:write')"
@@ -21,7 +21,7 @@
       v-model:options="settings.listOptions"
       @dblclick:row="dblClickRow"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 <script setup>
 import { computed, reactive, onMounted } from 'vue'
@@ -53,12 +53,11 @@ onMounted(() => {
   store.dispatch('getRegions')
 })
 
-onBeforeRouteLeave((_to, _from, next) => {
+onBeforeRouteLeave(() => {
   store.commit('setFormSettings', {
     formName,
     settings: { ...settings },
   })
-  next()
 })
 
 function create() {
@@ -70,7 +69,7 @@ function refresh() {
 }
 
 function dblClickRow(_, { item }) {
-  router.push(`regions/${item._id}`)
+  router.push({ name: 'RegionDetails', params: { id: item._id } })
 }
 </script>
 <style scoped>

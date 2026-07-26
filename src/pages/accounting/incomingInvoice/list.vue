@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!store.getters.directoriesProfile"
       :disabled-submit="!store.getters.hasPermission('incomingInvoice:write')"
@@ -22,7 +22,7 @@
       v-model:options="listOptions"
       :loading="loading"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 
 <script setup>

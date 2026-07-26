@@ -17,7 +17,7 @@ defineOptions({
   name: 'CarrierAgreementList',
 })
 
-const options = defineModel('options')
+const options = defineModel('options', { type: Object })
 
 defineProps({
   items: Array,
@@ -26,7 +26,7 @@ defineProps({
   loading: Boolean,
 })
 
-const emits = defineEmits(['dblClickRow'])
+const emits = defineEmits(['dblClickRow', 'update:options'])
 const dblClickRow = (_, { item }) => {
   emits('dblClickRow', item)
 }

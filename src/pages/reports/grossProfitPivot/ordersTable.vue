@@ -19,7 +19,7 @@
     >
       <template #top>
         <div class="settings-wrapper">
-          <app-table-column-settings
+          <AppTableColumnSettings
             v-model="activeHeaders"
             :allHeaders="allHeaders"
             :listSettingsName="listSettingsName"
@@ -30,11 +30,11 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ALL_ORDER_TABLE_HEADERS, DEFAULT_HEADERS } from './model/constants.js'
-import AppTableColumnSettings from '@/modules/common/components/tableColumnSettings/index.vue'
+import { useRouter } from 'vue-router'
+import { ALL_ORDER_TABLE_HEADERS } from './model/constants.js'
+import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 import { ReportService } from '@/shared/services'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
@@ -60,12 +60,12 @@ const listOptions = usePersistedRef({}, 'orders_table_list_options')
 const loading = ref(false)
 const items = ref([])
 const totalCount = ref(0)
-const formName = 'ordersDetailReport'
+
 const listSettingsName = 'ordersDetailReportFields'
-const settings = ref({})
+// const settings = usePersistedRef({}, listSettingsName)
+// const defaultHeaders = DEFAULT_HEADERS
 const activeHeaders = ref([])
 const allHeaders = ALL_ORDER_TABLE_HEADERS
-const defaultHeaders = DEFAULT_HEADERS
 
 function getBasePrice(order, type, withVat) {
   if (!['prices', 'prePrices'].includes(type))
@@ -154,23 +154,6 @@ watch(
   },
   { deep: true }
 )
-
-onMounted(() => {
-  const fields = JSON.parse(localStorage.getItem(listSettingsName))
-  if (!fields || fields.length === 0) activeHeaders.value = [...defaultHeaders]
-  else activeHeaders.value = fields
-
-  if (store.getters.formSettingsMap.has(formName))
-    settings.value = store.getters.formSettingsMap.get(formName)
-})
-
-onBeforeRouteLeave((to, from, next) => {
-  store.commit('setFormSettings', {
-    formName,
-    settings: { ...settings.value },
-  })
-  next()
-})
 
 function clearItems() {
   items.value = []

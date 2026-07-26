@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'SalaryPoints' })
 import { ref, computed } from 'vue'
 import { useAddressStore } from '@/entities/address'
 

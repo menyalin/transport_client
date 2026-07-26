@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabled-submit="!store.getters.hasPermission('fine:write') || isInvalidForm"
       class="mb-4"
@@ -116,7 +116,7 @@
         @paste="pasteDate"
       />
 
-      <app-worker-autocomplete
+      <AppWorkerAutocomplete
         v-model="form.payingByWorker"
         label="Кто оплатил"
         :style="{ maxWidth: '350px' }"

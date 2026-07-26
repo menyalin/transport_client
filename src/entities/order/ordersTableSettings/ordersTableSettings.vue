@@ -1,11 +1,11 @@
 <template>
   <div class="filter-wrapper">
-    <app-table-column-setting
+    <AppTableColumnSetting
       :allHeaders="allHeaders"
       listSettingsName="ordersTableHeaders"
       @change="updateHeadersHandler"
     />
-    <date-range-input v-model="settings.period" :min="minDate" class="mx-3" />
+    <DateRangeInput v-model="settings.period" :min="minDate" class="mx-3" />
     <v-select
       v-if="!accountingMode"
       v-model="settings.statuses"
@@ -29,7 +29,7 @@
       :style="{ 'min-width': '200px' }"
     />
 
-    <order-doc-status-selector
+    <OrderDocStatusSelector
       v-model="settings.docStatuses"
       multiple
       label="Документы"
@@ -169,7 +169,7 @@ const vuexStore = useStore()
 
 defineOptions({ name: 'OrdersTableSettings' })
 
-const settings = defineModel()
+const settings = defineModel({ type: Object })
 
 defineProps({
   settings: Object,

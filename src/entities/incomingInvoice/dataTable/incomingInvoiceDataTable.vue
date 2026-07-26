@@ -99,7 +99,7 @@ const analytics = computed(() => {
 })
 
 function dblClickRow(_event, { item }) {
-  router.push(`incomingInvoice/${item._id}`)
+  router.push({ name: 'IncomingInvoiceDetail', params: { id: item._id } })
 }
 
 function onSelectedChange(value) {

@@ -17,6 +17,7 @@
   </v-card>
 </template>
 <script setup>
+defineOptions({ name: 'ContactsInfoCard' })
 defineModel({ type: Object })
 
 const emit = defineEmits(['edit', 'remove'])

@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabled-submit="!store.getters.hasPermission('carrierAgreement:write')"
       @submit="createHandler"
@@ -48,7 +48,7 @@ const {
 } = useListData()
 
 function dblClickRow(item) {
-  router.push(`carrierAgreements/${item._id}`)
+  router.push({ name: 'CarrierAgreementDetails', params: { id: item._id } })
 }
 </script>
 

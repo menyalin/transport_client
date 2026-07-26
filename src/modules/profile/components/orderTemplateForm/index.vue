@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabled-submit="!store.getters.hasPermission('orderTemplate:write') || isInvalidForm"
       @cancel="cancel"

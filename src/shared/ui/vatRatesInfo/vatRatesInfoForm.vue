@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="bg-primary text-white">
-      <span class="text-h5">{{ title }}</span>
+      <span class="text-headline-medium">{{ title }}</span>
     </v-card-title>
 
     <v-card-text class="pa-6">

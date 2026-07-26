@@ -31,6 +31,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'SalaryReturn' })
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 

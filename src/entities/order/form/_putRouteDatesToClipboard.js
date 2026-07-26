@@ -17,7 +17,6 @@ export default (route) => {
 
   resStr += '</tr></table>'
   var data = [
-    // eslint-disable-next-line no-undef
     new ClipboardItem({
       'text/html': new Blob([resStr], { type: 'text/html' }),
     }),

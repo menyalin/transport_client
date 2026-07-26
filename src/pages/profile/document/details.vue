@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <load-spinner v-if="loading" />
-        <app-document-form
+        <LoadSpinner v-if="loading" />
+        <AppDocumentForm
           v-else
           :document="item"
           :displayDeleteBtn="!!props.id && $store.getters.hasPermission('document:delete')"

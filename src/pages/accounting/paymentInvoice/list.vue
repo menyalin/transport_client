@@ -1,6 +1,6 @@
 <template>
-  <entity-list-wrapper>
-    <buttons-panel
+  <EntityListWrapper>
+    <ButtonsPanel
       panel-type="list"
       :disabled-refresh="!store.getters.directoriesProfile"
       :disabled-submit="!store.getters.hasPermission('paymentInvoice:write')"
@@ -11,14 +11,14 @@
         <v-icon>mdi-download</v-icon>
         Скачать отчет
       </v-btn>
-    </buttons-panel>
+    </ButtonsPanel>
 
-    <payment-invoices-list-settings
+    <PaymentInvoicesListSettings
       v-model="settings"
       :clientItems="partnerStore.clients"
       @updateHeaders="changeHeaders"
     />
-    <payment-invoice-data-table
+    <PaymentInvoiceDataTable
       v-model="settings"
       :items="items"
       :totalCount="totalCount"
@@ -28,7 +28,7 @@
       v-model:options="listOptions"
       :loading="loading"
     />
-  </entity-list-wrapper>
+  </EntityListWrapper>
 </template>
 
 <script setup>

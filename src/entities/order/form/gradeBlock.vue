@@ -21,7 +21,7 @@
 import { BlockTitle } from '@/entities/order'
 
 defineOptions({ name: 'GradeBlock' })
-const model = defineModel()
+const model = defineModel({ type: Object })
 defineProps({
   title: String,
   disabled: {

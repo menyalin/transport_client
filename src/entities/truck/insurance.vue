@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-block-title>{{ title }}</app-block-title>
+    <AppBlockTitle>{{ title }}</AppBlockTitle>
     <div class="fields-row">
       <template v-if="truckType === 'truck'">
         <v-text-field v-model="item.osagoNum" label="Осаго №" class="field-md" />
@@ -19,7 +19,7 @@
 import { BlockTitle as AppBlockTitle } from '@/shared/ui'
 import { DateTimeInput } from '@/shared/ui'
 
-defineOptions({ name: 'Insurance' })
+defineOptions({ name: 'TruckInsurance' })
 
 const item = defineModel({ type: Object, default: () => ({}) })
 

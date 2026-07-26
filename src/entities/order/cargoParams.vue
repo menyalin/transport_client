@@ -30,7 +30,7 @@ import { BlockTitle } from '@/entities/order'
 
 defineOptions({ name: 'CargoParams' })
 
-const cargoParams = defineModel()
+const cargoParams = defineModel({ type: Object })
 
 defineProps({ title: String })
 </script>

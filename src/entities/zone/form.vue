@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabledSubmit="!store.getters.hasPermission('zone:write') || isInvalidForm || !formChanged"
       @cancel="cancel"
@@ -23,6 +23,9 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 
+defineOptions({
+  name: 'ZoneForm',
+})
 const props = defineProps({
   zone: {
     type: Object,

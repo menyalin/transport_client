@@ -1,6 +1,6 @@
 <template>
   <div>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="form"
       :disabled-submit="!store.getters.hasPermission('agreement:write') || isInvalidForm"
       @cancel="cancelHandler"
@@ -50,7 +50,7 @@
           v-model="state.contract"
           :style="{ width: '500px' }"
         />
-        <app-clients v-model="state.clients" :style="{ 'max-width': '400px' }" />
+        <AppClients v-model="state.clients" :style="{ 'max-width': '400px' }" />
         <v-divider />
 
         <v-checkbox v-model="state.usePriceWithVAT" label="Клиент оперирует ценами с НДС" />

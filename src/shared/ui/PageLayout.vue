@@ -1,20 +1,20 @@
 <template>
-  <app-bar :title="title">
+  <AppBar :title="title">
     <template v-if="hasLeftNav" #prepend>
       <v-btn icon @click="layoutStore.toggleLeftNav">
         <v-icon>{{ layoutStore.isLeftNavCollapsed ? 'mdi-menu' : 'mdi-menu-open' }}</v-icon>
       </v-btn>
     </template>
     <template #toolbar />
-  </app-bar>
+  </AppBar>
   <v-main>
-    <app-left-nav v-if="hasLeftNav" :items="navItems" :collapsed="layoutStore.isLeftNavCollapsed" />
+    <AppLeftNav v-if="hasLeftNav" :items="navItems" :collapsed="layoutStore.isLeftNavCollapsed" />
 
     <div class="layout-content" :class="{ 'nav-collapsed': layoutStore.isLeftNavCollapsed }">
       <slot />
     </div>
 
-    <app-snackbar />
+    <AppSnackbar />
   </v-main>
 </template>
 

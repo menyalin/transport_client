@@ -50,6 +50,7 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
+  name: 'AuthLogin',
   data: () => ({
     formTitle: 'Войти в систему',
     loading: false,

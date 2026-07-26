@@ -1,6 +1,6 @@
 <template>
   <EntityListWrapper>
-    <buttons-panel
+    <ButtonsPanel
       panel-type="list"
       :disabledSubmit="!canWrite"
       @submit="createHandler"
@@ -9,9 +9,9 @@
       <v-btn color="primary" prepend-icon="mdi-download" @click="downloadHandler">
         Скачать отчет
       </v-btn>
-    </buttons-panel>
+    </ButtonsPanel>
     <ListSettingsWrapper>
-      <date-range-input v-model="settings.period" class="mx-3" :style="{ 'max-width': '300px' }" />
+      <DateRangeInput v-model="settings.period" class="mx-3" :style="{ 'max-width': '300px' }" />
       <v-autocomplete
         v-model="settings.tkName"
         hide-details
