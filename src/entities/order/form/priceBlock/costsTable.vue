@@ -27,8 +27,8 @@
         <tr v-for="(item, idx) in sortedItems" :key="idx">
           <td class="text-start">
             {{
-              store.getters.orderPriceTypesMap.has(item.type)
-                ? store.getters.orderPriceTypesMap.get(item.type)
+              orderStore.orderPriceTypesMap.has(item.type)
+                ? orderStore.orderPriceTypesMap.get(item.type)
                 : '-'
             }}
           </td>
@@ -59,7 +59,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 defineOptions({ name: 'CostsTable' })
 
@@ -76,7 +76,7 @@ const props = defineProps({
 
 const emit = defineEmits(['editPrice', 'deletePrice'])
 
-const store = useStore()
+const orderStore = useOrderStore()
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
   minimumFractionDigits: 0,
@@ -84,7 +84,7 @@ const moneyFormatter = new Intl.NumberFormat('ru-RU', {
 })
 
 const sortedItems = computed(() => {
-  const typesOrder = store.getters.orderPriceTypes.map((i) => i.value)
+  const typesOrder = orderStore.orderPriceTypes.map((i) => i.value)
   return props.items
     ?.slice()
     ?.sort(

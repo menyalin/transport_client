@@ -2,11 +2,12 @@ import { ref, computed, watch } from 'vue'
 import { isLaterThan } from '@/modules/common/helpers/dateValidators'
 import { useVuelidate } from '@vuelidate/core'
 import { useAddressStore } from '@/entities/address'
+import { useOrderStore } from '../../orderStore'
 import store from '@/store'
 
 export const usePointDetail = ({ modelRef, emit, ind: _ind }) => {
   const addressStore = useAddressStore()
-
+  const orderStore = useOrderStore()
   const initialState = {
     type: null,
     waybills: null,
@@ -47,7 +48,7 @@ export const usePointDetail = ({ modelRef, emit, ind: _ind }) => {
     const contacts = addressStore.addressMap.get(state.value.address)?.contacts
     return contacts ? `Контакты: ${contacts}` : null
   })
-  const pointTypes = computed(() => store.getters.pointTypes)
+  const pointTypes = computed(() => orderStore.pointTypes)
   const addressItems = computed(() => addressStore.addressesForAutocomplete.filter(addressFilter))
   const departureDateErrors = computed(() => {
     let errors = []

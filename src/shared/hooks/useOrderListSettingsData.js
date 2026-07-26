@@ -2,17 +2,19 @@ import { computed, onMounted, ref } from 'vue'
 
 import { AgreementService } from '@/shared/services'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useAddressStore } from '@/entities/address'
 
 export default (settings) => {
   const vuexStore = useStore()
+  const orderStore = useOrderStore()
   const addressStore = useAddressStore()
   const agreements = ref([])
   async function getAgreements() {
     const res = await AgreementService.getActiveAgreements()
     agreements.value = res
   }
-  const orderStatuses = computed(() => vuexStore.getters.orderStatuses)
+  const orderStatuses = computed(() => orderStore.orderStatuses)
   const invoiceStatusItems = [
     { title: 'Включен', value: 'included' },
     { title: 'Не включен', value: 'notIncluded' },

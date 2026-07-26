@@ -34,14 +34,16 @@
 defineOptions({ name: 'SalaryReturn' })
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 const item = defineModel({ type: Object })
 
 const store = useStore()
+const orderStore = useOrderStore()
 
 const clientItems = computed(() => store.getters.partners?.filter((i) => i.isClient) || [])
 
-const orderAnalyticTypes = computed(() => store.getters.orderAnalyticTypes || [])
+const orderAnalyticTypes = computed(() => orderStore.orderAnalyticTypes)
 
 const firstField = ref(null)
 

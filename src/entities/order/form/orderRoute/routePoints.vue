@@ -51,7 +51,7 @@ import { useStore } from 'vuex'
 const vuexStore = useStore()
 
 defineOptions({ name: 'RoutePoints' })
-const model = defineModel({ type: Object })
+const model = defineModel({ type: Array, default: () => [] })
 
 const props = defineProps({
   driverId: String,

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { PartnerService } from '@/shared/services'
+import { updateIdleTruckNotify, addIdleTruckNotify } from '../api'
 
 export const useWidgetModel = (props, idleTruckNotificationsModel) => {
   let editableItem = ref({})
@@ -29,12 +29,8 @@ export const useWidgetModel = (props, idleTruckNotificationsModel) => {
     loading.value = true
     let updatedPartner
     if (formState._id)
-      updatedPartner = await PartnerService.updateIdleTruckNotify(
-        props.partner._id,
-        formState._id,
-        formState
-      )
-    else updatedPartner = await PartnerService.addIdleTruckNotify(props.partner._id, formState)
+      updatedPartner = await updateIdleTruckNotify(props.partner._id, formState._id, formState)
+    else updatedPartner = await addIdleTruckNotify(props.partner._id, formState)
 
     idleTruckNotificationsModel.value = updatedPartner.idleTruckNotifications
     cancelHandler()

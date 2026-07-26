@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import api from '@/api'
 import socket from '@/socket'
 import store from '@/store'
+import { useOrderStore } from '@/entities/order/orderStore'
 import FileSaver from 'file-saver'
 import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
 
@@ -11,21 +12,21 @@ const BASE_PATH = '/orders'
 class OrderService {
   constructor() {
     socket.on('order:created', (data) => {
-      store.commit('addOrder', data)
+      useOrderStore().addOrder(data)
       store.commit('addToCache', data)
     })
 
     socket.on('ordersForSchedule', (orders) => {
-      store.commit('addOrdersToSchedule', orders)
+      useOrderStore().addOrdersToSchedule(orders)
     })
 
     socket.on('order:updated', (data) => {
-      store.commit('updateOrder', data)
+      useOrderStore().updateOrder(data)
       store.commit('addToCache', data)
     })
 
     socket.on('order:deleted', (id) => {
-      store.commit('deleteOrder', id)
+      useOrderStore().deleteOrder(id)
       store.commit('deleteFromCache', id)
     })
   }
@@ -61,13 +62,14 @@ class OrderService {
   }
 
   async getListForSchedule(startDate, endDate) {
-    if (!startDate && !store.getters.schedulePeriod) return null
+    const orderStore = useOrderStore()
+    if (!startDate && !orderStore.schedulePeriod) return null
     socket.emit('ordersForSchedule', {
       profile: store.getters.directoriesProfile,
-      startDate: dayjs(startDate || store.getters.schedulePeriod[0])
+      startDate: dayjs(startDate || orderStore.schedulePeriod[0])
         .add(-1, 'd')
         .toISOString(),
-      endDate: dayjs(endDate || store.getters.schedulePeriod[1])
+      endDate: dayjs(endDate || orderStore.schedulePeriod[1])
         .endOf('day')
         .toISOString(),
     })

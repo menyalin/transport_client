@@ -136,6 +136,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import dayjs from 'dayjs'
 
+import { useOrderStore } from '@/entities/order/orderStore'
 import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
 import getSecInPx from '@/modules/common/helpers/getSecInPx'
 import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
@@ -167,6 +168,7 @@ const props = defineProps({
 const emit = defineEmits(['startDragOrder', 'endDragOrder', 'updateOrder'])
 
 const store = useStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
 const tableBody = ref(null)
@@ -182,7 +184,7 @@ const {
   getOrderWidth: _getOrderWidth,
 } = useScheduleLayout(tableBody, rowTitleColumn)
 
-const date = computed(() => store.getters.scheduleDate)
+const date = computed(() => orderStore.scheduleDate)
 
 const period = computed(() => {
   return getPeriodByWidthAndDate({
@@ -200,7 +202,7 @@ const secInPx = computed(() =>
   })
 )
 
-const onlyPlannedDates = computed(() => store.getters.onlyPlannedDates)
+const onlyPlannedDates = computed(() => orderStore.onlyPlannedDates)
 
 const draggableMode = computed(
   () =>
@@ -365,7 +367,7 @@ function dblclickHandler(e, isBuffer) {
 }
 
 watch(period, (val) => {
-  if (val) store.commit('setPeriod', val)
+  if (val) orderStore.setPeriod(val)
 })
 </script>
 <style scoped>

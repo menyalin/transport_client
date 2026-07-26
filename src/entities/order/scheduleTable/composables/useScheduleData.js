@@ -1,11 +1,13 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 export function useScheduleData(settings) {
   const store = useStore()
+  const orderStore = useOrderStore()
 
   const filteredOrders = computed(() => {
-    const orders = store.getters.ordersForSchedule
+    const orders = orderStore.ordersForSchedule
     if (!settings.value?.controlOnly) return orders
     return orders.filter((i) => i.state.warning)
   })

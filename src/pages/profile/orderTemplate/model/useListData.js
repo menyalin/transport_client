@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 function templatesSorting(a, b) {
   return a.name > b.name ? 1 : -1
@@ -12,7 +13,7 @@ export const useListData = () => {
     return [...store.getters.orderTemplates].sort(templatesSorting).map((item) => ({
       ...item,
       clientName: store.getters.partnersMap.get(item.client)?.name || '(__не найден__)',
-      routeType: store.getters.orderAnalyticTypesMap.get(item?.analytics?.type),
+      routeType: useOrderStore().orderAnalyticTypesMap.get(item?.analytics?.type),
       truckKind: store.getters.truckKindsMap.get(item?.reqTransport?.kind) || ' - ',
     }))
   })

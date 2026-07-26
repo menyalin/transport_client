@@ -15,7 +15,8 @@
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { PartnerService as service } from '@/shared/services'
+import { create, updateById, deleteById, getById } from '@/entities/partner/api'
+import { usePartnerStore } from '@/entities/partner'
 import { FormWrapper } from '@/shared/ui'
 import { PartnerForm } from '@/entities/partner'
 import { useAgreements } from '@/entities/agreement/useAgreements'
@@ -40,8 +41,11 @@ const showDeleteBtn = computed(() => !!props?.id && store.getters.hasPermission(
 async function submit(val, saveOnly) {
   try {
     loading.value = true
-    if (props.id) item.value = await service.updateOne(props.id, val)
-    else item.value = await service.create(val)
+    if (props.id) item.value = await updateById(props.id, val)
+    else {
+      item.value = await create(val)
+      usePartnerStore().addPartnerLocally(item.value)
+    }
 
     if (saveOnly && !props.id) router.replace(`/profile/partners/${item.value._id}`)
     else if (!saveOnly) router.go(-1)
@@ -68,7 +72,7 @@ function changeNotificationsHandler(items) {
 async function deleteHandler() {
   try {
     loading.value = true
-    await service.deleteById(props.id)
+    await deleteById(props.id)
     loading.value = false
     router.push('/profile/partners')
   } catch (e) {
@@ -82,7 +86,7 @@ watch(
   async (newVal, oldVal) => {
     if (newVal && newVal !== oldVal) {
       loading.value = true
-      item.value = await service.getById(newVal)
+      item.value = await getById(newVal)
       loading.value = false
     }
   },

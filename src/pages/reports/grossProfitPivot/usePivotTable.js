@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 function formatNumber(value) {
@@ -14,6 +15,7 @@ const percentFormatter = new Intl.NumberFormat('ru-RU', {
 
 export const usePivotTable = (props) => {
   const store = useStore()
+  const orderStore = useOrderStore()
   const carrierStore = useCarrierStore()
 
   const groupName = computed(() => {
@@ -61,7 +63,7 @@ export const usePivotTable = (props) => {
         })
         break
       case 'orderType':
-        store.getters.orderAnalyticTypes.forEach((p) => {
+        orderStore.orderAnalyticTypes.forEach((p) => {
           res.set(p.value, p.text)
         })
         break

@@ -28,8 +28,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import dayjs from 'dayjs'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useAddressStore } from '@/entities/address'
 import { roundingHours } from './helpers'
 
@@ -42,12 +42,12 @@ const props = defineProps({
   },
 })
 
-const store = useStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 const addressStore = useAddressStore()
 
 const order = computed(() => {
-  return store.getters.ordersMap.get(props.orderId)
+  return orderStore.ordersMap.get(props.orderId)
 })
 
 const breakingSchedule = computed(() => {

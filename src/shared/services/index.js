@@ -1,6 +1,5 @@
 import AddressService from './address/address.service.js'
 import DocsRegistryService from './doscRegistry/docsRegistry.service.js'
-import PartnerService from './partner/partner.service.js'
 import OrderService from './order/order.service.js'
 import AgreementService from './agreement/agreement.service.js'
 import PermissionService from './permission.service'
@@ -29,7 +28,6 @@ import FileService from './file/file.service.js'
 export {
   AddressService,
   DocsRegistryService,
-  PartnerService,
   OrderService,
   AgreementService,
   CarrierAgreementService,

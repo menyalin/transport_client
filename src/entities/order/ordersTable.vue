@@ -108,6 +108,7 @@ import { computed } from 'vue'
 import { OrderService } from '@/shared/services'
 import { OrderListFooterDetails } from '@/shared/ui'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { useAddressStore } from '@/entities/address'
 import { useRouter } from 'vue-router'
 const addressStore = useAddressStore()
@@ -136,16 +137,17 @@ const props = defineProps({
 const emits = defineEmits(['addItem', 'update:options', 'openDocsDialog'])
 
 const vuexStore = useStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
-const orderAnalyticTypeMap = computed(() => vuexStore.getters.orderAnalyticTypesMap)
+const orderAnalyticTypeMap = computed(() => orderStore.orderAnalyticTypesMap)
 
 const partnersMap = computed(() => vuexStore.getters.partnersMap)
 
 const trucksMap = computed(() => vuexStore.getters.trucksMap)
 
 function getStatusText(status) {
-  return vuexStore.getters.orderStatusesMap.get(status) || ' --- '
+  return orderStore.orderStatusesMap.get(status) || ' --- '
 }
 
 function updateListOptionsHandler(value) {

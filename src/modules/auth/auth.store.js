@@ -2,6 +2,7 @@ import api from '@/api'
 import router from '@/router'
 import socket from '@/socket'
 import { UserService } from '@/shared/services'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 export default {
   state: () => ({
@@ -52,7 +53,7 @@ export default {
     async logOut({ commit }) {
       await UserService.logout()
       localStorage.clear()
-      commit('clearDirectories')
+      useOrderStore().clearDirectories()
       commit('logOut')
       socket.disconnect()
       router.push('/auth/login')

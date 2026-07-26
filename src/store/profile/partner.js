@@ -1,4 +1,6 @@
-import service from '@/shared/services/partner/partner.service'
+// TODO: удалить после миграции всех потребителей на usePartnerStore из @/entities/partner
+// Данные теперь хранятся в Pinia (usePartnerStore), этот Vuex-модуль — мост для обратной совместимости.
+// Мутации вызываются из Pinia-стора для синхронизации с кешем (cacheDirectories).
 
 export default {
   state: {
@@ -28,22 +30,22 @@ export default {
       state.partners = state.partners.filter((item) => item._id !== id)
     },
   },
-  actions: {
-    async getPartners({ commit, getters }, directiveUpdate) {
-      try {
-        commit('setLoading', true)
-        if (directiveUpdate || (getters.partners.length === 0 && getters.directoriesProfile)) {
-          commit('setPartners', [])
-          const data = await service.getByDirectoriesProfile(getters.directoriesProfile)
-          commit('setPartners', data)
-        }
-        commit('setLoading', false)
-      } catch (e) {
-        commit('setLoading', false)
-        commit('setError', e.response?.data?.message)
-      }
-    },
-  },
+  // actions: {
+  //   async getPartners({ commit, getters }, directiveUpdate) {
+  //     try {
+  //       commit('setLoading', true)
+  //       if (directiveUpdate || (getters.partners.length === 0 && getters.directoriesProfile)) {
+  //         commit('setPartners', [])
+  //         const data = await service.getByDirectoriesProfile(getters.directoriesProfile)
+  //         commit('setPartners', data)
+  //       }
+  //       commit('setLoading', false)
+  //     } catch (e) {
+  //       commit('setLoading', false)
+  //       commit('setError', e.response?.data?.message)
+  //     }
+  //   },
+  // },
   getters: {
     partnersMap: ({ partners }) => new Map(partners.map((item) => [item._id, item])),
     partners: ({ partners }, { directoriesProfile }) =>

@@ -17,16 +17,16 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 import dayjs from 'dayjs'
+import { useOrderStore } from '@/entities/order/orderStore'
 import { PermissionService } from '@/shared/services'
 import { DateTimeInput } from '@/shared/ui'
 
 defineOptions({ name: 'ScheduleSettings' })
 
-const store = useStore()
+const orderStore = useOrderStore()
 
-const date = computed(() => store.getters.scheduleDate)
+const date = computed(() => orderStore.scheduleDate)
 
 const minDate = computed(() =>
   PermissionService.minAllowedDate({
@@ -37,13 +37,13 @@ const minDate = computed(() =>
 const isMinDate = computed(() => dayjs(date.value).isSameOrBefore(minDate.value, 'day'))
 
 function incDate(count) {
-  store.commit('incScheduleDate', count)
+  orderStore.incScheduleDate(count)
 }
 
 function setDate(val) {
   if (!val || dayjs(val).isBefore(minDate.value))
-    store.commit('setScheduleDate', dayjs().format('YYYY-MM-DD'))
-  else store.commit('setScheduleDate', val)
+    orderStore.setScheduleDate(dayjs().format('YYYY-MM-DD'))
+  else orderStore.setScheduleDate(val)
 }
 </script>
 <style scoped>

@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
-import { PartnerService } from '@/shared/services'
+import { updateIdleTruckNotify, deleteIdleTruckNotify } from '../../api'
 import { useAgreements } from '@/entities/agreement'
 import { useAddressStore } from '@/entities/address'
 
@@ -46,7 +46,7 @@ export const useListData = (props, { emit }) => {
   async function switchStatusHandler(notificationId) {
     const item = props.items.find((i) => i._id === notificationId)
     if (!item) return
-    const partner = await PartnerService.updateIdleTruckNotify(props.partnerId, notificationId, {
+    const partner = await updateIdleTruckNotify(props.partnerId, notificationId, {
       ...item,
       isActive: !item.isActive,
     })
@@ -54,7 +54,7 @@ export const useListData = (props, { emit }) => {
   }
 
   async function deleteHandler(id) {
-    const partner = await PartnerService.deleteIdleTruckNotify(props.partnerId, id)
+    const partner = await deleteIdleTruckNotify(props.partnerId, id)
     emit('change', partner.idleTruckNotifications)
   }
   return {

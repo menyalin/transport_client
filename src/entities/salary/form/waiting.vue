@@ -52,15 +52,17 @@
 defineOptions({ name: 'SalaryWaiting' })
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 const item = defineModel({ type: Object })
 
 const firstField = ref(null)
 const store = useStore()
+const orderStore = useOrderStore()
 
 const clientItems = computed(() => store.getters.partners?.filter((i) => i.isClient) || [])
 
-const orderAnalyticTypes = computed(() => store.getters.orderAnalyticTypes || [])
+const orderAnalyticTypes = computed(() => orderStore.orderAnalyticTypes)
 const roundingWaitingByHours = computed(() => store.getters.roundingWaitingByHours || [])
 const waitingTariffByItems = computed(() => store.getters.waitingTariffByItems || [])
 

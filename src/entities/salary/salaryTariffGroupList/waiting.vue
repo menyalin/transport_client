@@ -6,6 +6,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 defineOptions({ name: 'WaitingColumn' })
 
@@ -14,8 +15,9 @@ const props = defineProps({
 })
 
 const store = useStore()
+const orderStore = useOrderStore()
 
-const orderTypeStr = computed(() => store.getters.orderAnalyticTypesMap.get(props.item.orderType))
+const orderTypeStr = computed(() => orderStore.orderAnalyticTypesMap.get(props.item.orderType))
 
 const waitingTariffBy = computed(() =>
   store.getters.waitingTariffByItemsMap.get(props.item.tariffBy)

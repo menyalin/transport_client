@@ -14,8 +14,8 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 import dayjs from 'dayjs'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 defineOptions({ name: 'ResultCell' })
 
@@ -26,13 +26,13 @@ const props = defineProps({
   },
 })
 
-const store = useStore()
+const orderStore = useOrderStore()
 
 const ordersCount = computed(() => {
   if (!props.date) return null
   const dateStr = dayjs(props.date).format('YYYY-MM-DD')
-  if (!store.getters.orderCountByDates.has(dateStr)) return null
-  return store.getters.orderCountByDates.get(dateStr)
+  if (!orderStore.orderCountByDates.has(dateStr)) return null
+  return orderStore.orderCountByDates.get(dateStr)
 })
 </script>
 <style scoped>
