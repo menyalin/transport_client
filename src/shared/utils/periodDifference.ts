@@ -1,4 +1,4 @@
-import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
+import getDaysFromPeriod from '@/shared/utils/getDaysFromPeriod'
 import dayjs from 'dayjs'
 
 export const diffSets = (a: Set<string>, b: Set<string>): Set<string> => {

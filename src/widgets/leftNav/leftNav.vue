@@ -40,44 +40,49 @@
   </v-navigation-drawer>
 </template>
 
-<script>
-import { mapState } from 'vuex'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'LeftAdminNav',
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    collapsed: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data: () => ({
-    selectedItem: 0,
-  }),
-  computed: {
-    ...mapState({
-      user: (state) => state.AuthModule.user,
-    }),
-    menuItems() {
-      return this.items
-        .filter((i) => !i.onlyWithDirectoriesProfile || !!this.$store.getters.directoriesProfile)
-        .filter((i) =>
-          i.permission
-            ? this.$store.getters.userRoles.includes('admin') ||
-              this.$store.getters.permissionsMap.get(i.permission)
-            : true
-        )
-    },
-  },
+defineOptions({ name: 'AppLeftNav' })
+
+interface MenuItem {
+  link: string
+  icon: string
+  text: string
+  badge?: number
+  onlyWithDirectoriesProfile?: boolean
+  permission?: string
 }
+
+interface Props {
+  items?: MenuItem[]
+  collapsed?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  items: () => [],
+  collapsed: false,
+})
+
+const store = useStore()
+
+const user = computed(() => store.state.AuthModule.user as { name: string; email: string } | null)
+const selectedItem = ref<string>('')
+
+const menuItems = computed(() => {
+  return props.items
+    .filter((i: MenuItem) => !i.onlyWithDirectoriesProfile || !!store.getters.directoriesProfile)
+    .filter((i: MenuItem) =>
+      i.permission
+        ? store.getters.userRoles.includes('admin') ||
+          store.getters.permissionsMap.get(i.permission)
+        : true
+    )
+})
 </script>
 
 <style scoped>
-/* При сворачивании скрываем текст, оставляем только иконки */
 .v-navigation-drawer :deep(.v-list-item-title) {
   transition: opacity 0.2s;
 }

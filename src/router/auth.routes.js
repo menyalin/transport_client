@@ -1,6 +1,6 @@
-import AuthLayout from './pages/layout.vue'
-import loginPage from './pages/login.vue'
-import registrationPage from './pages/registration.vue'
+import AuthLayout from '@/pages/auth/layout.vue'
+import loginPage from '@/pages/auth/login.vue'
+import registrationPage from '@/pages/auth/registration.vue'
 
 export default [
   {
@@ -16,19 +16,19 @@ export default [
       {
         path: 'forgot_password',
         name: 'ForgotPassword',
-        component: () => import('./pages/forgotPassword.vue'),
+        component: () => import('@/pages/auth/forgotPassword.vue'),
       },
       {
         path: 'restore_password/:token',
         name: 'RestorePassword',
         props: true,
-        component: () => import('./pages/restorePassword.vue'),
+        component: () => import('@/pages/auth/restorePassword.vue'),
       },
       {
         path: 'confirm_email/:token',
         name: 'ConfirmEmail',
         props: true,
-        component: () => import('./pages/confirmEmail.vue'),
+        component: () => import('@/pages/auth/confirmEmail.vue'),
       },
     ],
   },

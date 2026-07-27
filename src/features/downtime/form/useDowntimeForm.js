@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
+import { isLaterThan } from '@/shared/utils/dateValidators'
 import { required } from '@vuelidate/validators'
 import { useAddressStore } from '@/entities/address'
 import store from '@/store'

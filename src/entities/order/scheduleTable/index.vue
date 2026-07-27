@@ -138,8 +138,8 @@ import dayjs from 'dayjs'
 
 import { useOrderStore } from '@/entities/order/orderStore'
 import { LINE_HEIGHT, ROW_TITLE_COLUMN_WIDTH } from './constants'
-import getSecInPx from '@/modules/common/helpers/getSecInPx'
-import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
+import getSecInPx from '@/shared/utils/getSecInPx'
+import getDaysFromPeriod from '@/shared/utils/getDaysFromPeriod'
 import getPeriodByWidthAndDate from './utils/getPeriodByWidthAndDate.js'
 
 import appTruckTitleCell from './truckTitleCell.vue'

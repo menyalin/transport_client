@@ -16,7 +16,7 @@
   />
   <span v-else> {{ title }} </span>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { WorkerService } from '@/shared/services'
 

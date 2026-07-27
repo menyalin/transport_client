@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import ProfileModule from '@/store/profile/index.js'
-import AuthModule from '@/modules/auth/auth.store'
+import AuthModule from '@/entities/auth/authStore'
 import AccountingModule from '@/store/accounting/index.js'
 
 export default createStore({

@@ -16,7 +16,7 @@
   </v-container>
 </template>
 <script setup>
-import AppDocumentForm from '@/modules/profile/components/documentForm/index.vue'
+// TODO: AppDocumentForm не найден в проекте
 import { LoadSpinner } from '@/shared/ui'
 import { DocumentService } from '@/shared/services'
 import { usePageDetails } from '@/shared/hooks'

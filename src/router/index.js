@@ -5,7 +5,7 @@ import store from '@/store'
 import profileRoutes from './profile/index.js'
 import accountingRoutes from './accounting/index.js'
 
-import authRoutes from '@/modules/auth/auth.routes'
+import authRoutes from '@/router/auth.routes'
 import adminRoutes from '@/router/admin.routes.js'
 import orderRoutes from '@/router/orders/index.js'
 import reportsRoutes from '@/router/reports.routes.js'

@@ -63,6 +63,8 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
 import { UserService } from '@/shared/services'
 
+defineOptions({ name: 'RestorePassword' })
+
 const router = useRouter()
 
 const store = useStore()

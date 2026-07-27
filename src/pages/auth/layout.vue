@@ -5,6 +5,6 @@
     </v-main>
   </v-app>
 </template>
-<script>
-export default { name: 'AuthLayout' }
+<script setup lang="ts">
+defineOptions({ name: 'AuthLayout' })
 </script>

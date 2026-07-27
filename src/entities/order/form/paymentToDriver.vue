@@ -40,7 +40,7 @@
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 
-import WorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
+import WorkerAutocomplete from '@/entities/worker/ui/workerAutocomplete.vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { CardSection } from '@/shared/ui'

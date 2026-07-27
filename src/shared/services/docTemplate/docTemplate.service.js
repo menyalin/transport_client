@@ -1,7 +1,7 @@
 import api from '@/api'
 import store from '@/store'
 const BASE_PATH = '/doc_templates'
-import { EventObserver } from '@/modules/common/helpers/EventObserver.class'
+import { EventObserver } from '@/shared/utils/EventObserver'
 
 class DocTemplateService {
   constructor() {

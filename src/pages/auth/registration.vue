@@ -74,12 +74,13 @@
 </template>
 
 <script setup>
-defineOptions({ name: 'AuthRegistration' })
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, sameAs, email } from '@vuelidate/validators'
+
+defineOptions({ name: 'AuthRegistration' })
 
 const router = useRouter()
 

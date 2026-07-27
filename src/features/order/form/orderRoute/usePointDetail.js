@@ -1,5 +1,5 @@
 import { ref, computed, watch } from 'vue'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators'
+import { isLaterThan } from '@/shared/utils/dateValidators'
 import { useVuelidate } from '@vuelidate/core'
 import { useAddressStore } from '@/entities/address'
 import { useOrderStore } from '@/entities/order/orderStore'

@@ -5,7 +5,7 @@
       :label="label"
       :items="items"
       :disabled="disabled"
-      :hideDetails="hideDetails"
+      :hide-details="hideDetails"
       clearable
       :search="search"
       :append-icon="appendIcon"
@@ -14,34 +14,41 @@
     />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 defineOptions({ name: 'AppAutocomplete' })
 
-const model = defineModel({ type: String })
+const model = defineModel<string>({ type: String })
 
-const props = defineProps({
-  hideDetails: { type: Boolean, default: false },
-  disabled: { type: Boolean, default: false },
-  label: String,
-  itemsGetter: String,
-  formName: String,
-  createRouteName: String,
-  updateRouteName: String,
-  fieldName: String,
+interface Props {
+  hideDetails?: boolean
+  disabled?: boolean
+  label?: string
+  itemsGetter?: string
+  formName?: string
+  createRouteName?: string
+  updateRouteName?: string
+  fieldName?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  hideDetails: false,
+  disabled: false,
 })
 
-const emit = defineEmits(['changeSearch'])
+const emit = defineEmits<{
+  changeSearch: [value: string | null]
+}>()
 
 const store = useStore()
 const router = useRouter()
 
-const search = ref(null)
+const search = ref<string | null>(null)
 
-const items = computed(() => store.getters[props.itemsGetter])
+const items = computed(() => store.getters[props.itemsGetter as string])
 
 const appendIcon = computed(() => {
   if (!props.createRouteName || !props.updateRouteName) return null

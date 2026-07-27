@@ -5,7 +5,7 @@ import socket from '@/socket'
 import store from '@/store'
 import { useOrderStore } from '@/entities/order/orderStore'
 import FileSaver from 'file-saver'
-import getMaxDistance from '@/modules/common/helpers/getMaxDistance.js'
+import getMaxDistance from '@/shared/utils/getMaxDistance'
 
 const BASE_PATH = '/orders'
 

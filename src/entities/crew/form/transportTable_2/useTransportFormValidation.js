@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { required, requiredIf } from '@vuelidate/validators'
-import { isLaterThan } from '@/modules/common/helpers/dateValidators.js'
+import { isLaterThan } from '@/shared/utils/dateValidators'
 import { CrewService } from '@/shared/services/index'
 
 export const useTransportFormValidation = (state, props) => {

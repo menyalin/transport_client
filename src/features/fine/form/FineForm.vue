@@ -159,7 +159,7 @@ import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
-import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
+import AppWorkerAutocomplete from '@/entities/worker/ui/workerAutocomplete.vue'
 import { CrewService } from '@/shared/services'
 import { usePasteDateInput } from '@/shared/ui/DateInputs/usePasteDateInput'
 

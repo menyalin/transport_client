@@ -13,7 +13,7 @@
 <script setup>
 defineOptions({ name: 'SalaryZones' })
 import { ref } from 'vue'
-import AppZoneAutocomplete from '@/modules/common/components/zoneAutocomplete/index.vue'
+import AppZoneAutocomplete from '@/entities/zone/ui/zoneAutocomplete.vue'
 
 const zones = defineModel({ type: Object })
 

@@ -1,16 +1,7 @@
-// поиск прямого расстояния между точками в маршруте
+type Coord = [number, number]
 
-export default (coordArray) => {
-  if (!coordArray || coordArray.length < 2) return null
-  let dist = 0
-  for (let i = 1; i < coordArray.length; i++) {
-    dist += _distBetweenPoints(coordArray[i - 1], coordArray[i])
-  }
-  return Math.round(dist / 10) / 100
-}
-
-const _distBetweenPoints = (a, b) => {
-  const RAD = 6372795 // радиус земли
+const _distBetweenPoints = (a: Coord, b: Coord): number => {
+  const RAD = 6372795
   const lat1 = (a[1] * Math.PI) / 180
   const lat2 = (b[1] * Math.PI) / 180
   const long1 = (a[0] * Math.PI) / 180
@@ -28,4 +19,13 @@ const _distBetweenPoints = (a, b) => {
   const x = sl1 * sl2 + cl1 * cl2 * cdelta
   const ad = Math.atan2(y, x)
   return ad * RAD
+}
+
+export default function getDistanceBetweenPoints(coordArray: Coord[] | null): number | null {
+  if (!coordArray || coordArray.length < 2) return null
+  let dist = 0
+  for (let i = 1; i < coordArray.length; i++) {
+    dist += _distBetweenPoints(coordArray[i - 1], coordArray[i])
+  }
+  return Math.round(dist / 10) / 100
 }

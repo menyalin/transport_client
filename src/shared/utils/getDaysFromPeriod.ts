@@ -1,8 +1,6 @@
 import dayjs from 'dayjs'
 
-const TITLE_FORMAT = 'DD.MM.YY, dd'
-
-export default (period) => {
+export default function getDaysFromPeriod(period: string[]) {
   if (!period || period.length !== 2) throw new Error('function expected "period" data')
   if (isNaN(Date.parse(period[0])) || isNaN(Date.parse(period[1])))
     throw new Error('wrong date format')
@@ -12,7 +10,8 @@ export default (period) => {
 
   if (startDate > endDate) throw new Error('wrong period')
 
-  let res = []
+  const res: { date: string; title: string; isToday: boolean }[] = []
+  const TITLE_FORMAT = 'DD.MM.YY, dd'
   while (startDate.isSameOrBefore(endDate, 'day')) {
     res.push({
       date: startDate.toISOString(),

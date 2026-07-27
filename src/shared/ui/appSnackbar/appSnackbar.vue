@@ -10,7 +10,7 @@
     </v-snackbar>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
@@ -21,13 +21,13 @@ const store = useStore()
 const timeout = 3000
 const showSnackbar = ref(false)
 const errorMessage = ref('')
-const timeoutInstance = ref(null)
+const timeoutInstance = ref<ReturnType<typeof setTimeout> | null>(null)
 
 const error = computed(() => store.getters.error)
 
 watch(
   error,
-  (val) => {
+  (val: string | null) => {
     if (val) {
       errorMessage.value = val
       showSnackbar.value = true
@@ -44,7 +44,7 @@ watch(
 )
 
 function closeFn() {
-  clearTimeout(timeoutInstance.value)
+  clearTimeout(timeoutInstance.value as ReturnType<typeof setTimeout>)
   timeoutInstance.value = null
   store.commit('clearError')
 }
