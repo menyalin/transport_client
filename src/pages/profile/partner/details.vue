@@ -13,13 +13,14 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { create, updateById, deleteById, getById } from '@/entities/partner/api'
+import * as api from '@/entities/partner/api'
 import { usePartnerStore } from '@/entities/partner'
 import { FormWrapper } from '@/shared/ui'
 import { PartnerForm } from '@/features/partner'
 import { useAgreements } from '@/entities/agreement/useAgreements'
+import { popContext } from '@/shared/composables/useReturnContext'
 
 defineOptions({ name: 'PartnerDetails' })
 
@@ -28,27 +29,42 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
 
 const { allClientAgreements } = useAgreements()
+const partnerStore = usePartnerStore()
 
 const item = ref(null)
 const loading = ref(false)
 const error = ref({ message: null, show: false })
+
+const ctxId = route.query.ctx
 
 const showDeleteBtn = computed(() => !!props?.id && store.getters.hasPermission('partner:delete'))
 
 async function submit(val, saveOnly) {
   try {
     loading.value = true
-    if (props.id) item.value = await updateById(props.id, val)
+    if (props.id) item.value = await api.updateById(props.id, val)
     else {
-      item.value = await create(val)
-      usePartnerStore().addPartnerLocally(item.value)
+      item.value = await api.create(val)
+      partnerStore.addPartnerLocally(item.value)
+    }
+
+    if (ctxId) {
+      const ctx = popContext(ctxId)
+      if (ctx) {
+        router.push({
+          path: ctx.from,
+          query: { newPartnerId: item.value?._id, ...ctx.params },
+        })
+        return
+      }
     }
 
     if (saveOnly && !props.id) router.replace(`/profile/partners/${item.value._id}`)
-    else if (!saveOnly) router.go(-1)
+    else router.go(-1)
   } catch (e) {
     if (e.response?.status === 400 || e.response?.status === 403) {
       error.value = { message: e.response.data, show: true }
@@ -59,6 +75,7 @@ async function submit(val, saveOnly) {
 }
 
 function cancel() {
+  if (ctxId) popContext(ctxId)
   router.go(-1)
 }
 
@@ -72,8 +89,19 @@ function changeNotificationsHandler(items) {
 async function deleteHandler() {
   try {
     loading.value = true
-    await deleteById(props.id)
+    await api.deleteById(props.id)
     loading.value = false
+
+    if (ctxId) {
+      const ctx = popContext(ctxId)
+      if (ctx) {
+        router.push({
+          path: ctx.from,
+          query: { clearedPartner: true, ...ctx.params },
+        })
+        return
+      }
+    }
     router.push('/profile/partners')
   } catch (e) {
     loading.value = false
@@ -86,7 +114,7 @@ watch(
   async (newVal, oldVal) => {
     if (newVal && newVal !== oldVal) {
       loading.value = true
-      item.value = await getById(newVal)
+      item.value = await api.getById(newVal)
       loading.value = false
     }
   },

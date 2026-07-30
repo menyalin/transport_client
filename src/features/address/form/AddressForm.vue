@@ -20,13 +20,12 @@
       label="Сокращенное наименование адреса"
       :style="{ minWidth: '800px' }"
     />
-    <v-autocomplete
+    <PartnerAutocomplete
       v-model="v$.partner.$model"
-      item-value="_id"
-      :items="partnerItems"
-      item-title="name"
       label="Партнер"
       :style="{ minWidth: '800px' }"
+      @create="$emit('need-create-partner')"
+      @edit="$emit('need-edit-partner', $event)"
     />
 
     <RegionAutocomplete
@@ -58,13 +57,13 @@
       :style="{ minWidth: '800px' }"
     />
 
-    <v-autocomplete
+    <ZoneAutocomplete
       v-model="v$.zones.$model"
-      :items="zoneItems"
       label="Зоны"
       multiple
-      item-title="title"
       :style="{ minWidth: '800px' }"
+      @create="$emit('need-create-zone')"
+      @edit="$emit('need-edit-zone', $event)"
     />
 
     <v-text-field v-model="v$.contacts.$model" label="Контакты" :style="{ minWidth: '800px' }" />
@@ -85,6 +84,8 @@
 import AddressSuggestion from '@/entities/address/addressSuggestion.vue'
 import { RegionAutocomplete } from '@/entities/region'
 import { CityAutocomplete } from '@/entities/city'
+import { PartnerAutocomplete } from '@/entities/partner'
+import { ZoneAutocomplete } from '@/entities/zone'
 import { ButtonsPanel, FormWrapper } from '@/shared/ui'
 import { useForm, type AddressFormData } from './useAddressForm'
 
@@ -95,7 +96,6 @@ const props = withDefaults(
     address?: AddressFormData
     displayDeleteBtn?: boolean
     formName?: string
-    partnerItems?: any[]
     isDraftEnabled?: boolean
   }>(),
   {
@@ -112,10 +112,11 @@ const emit = defineEmits<{
   'need-edit-region': [id: string | null]
   'need-create-city': []
   'need-edit-city': [id: string | null]
+  'need-create-partner': []
+  'need-edit-partner': [id: string | null]
+  'need-create-zone': []
+  'need-edit-zone': [id: string | null]
 }>()
 
-const { v$, nameErrors, geoErrors, submit, cancel, getParsedAddress, zoneItems } = useForm(
-  props,
-  emit
-)
+const { v$, nameErrors, geoErrors, submit, cancel, getParsedAddress } = useForm(props, emit)
 </script>
