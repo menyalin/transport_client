@@ -25,13 +25,13 @@
 <script setup>
 defineOptions({ name: 'SalaryRegions' })
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useRegionStore } from '@/entities/region/regionStore'
 
 const regions = defineModel({ type: Object })
 
-const store = useStore()
+const regionStore = useRegionStore()
 
-const regionItems = computed(() => store.getters.regions || [])
+const regionItems = computed(() => regionStore.regions || [])
 
 const loadingEl = ref(null)
 

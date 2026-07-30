@@ -104,7 +104,7 @@
       v-model="settings.loadingZones"
       multiple
       label="Зона погрузки"
-      :items="$store.getters.zones"
+      :items="zoneStore.zones"
       item-value="_id"
       item-title="name"
       hide-details
@@ -162,10 +162,12 @@
 <script setup>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { AppTableColumnSetting, DateRangeInput, OrderDocStatusSelector } from '@/shared/ui'
 import { useOrderListSettingsData } from '@/shared/hooks'
 
 const vuexStore = useStore()
+const zoneStore = useZoneStore()
 
 defineOptions({ name: 'OrdersTableSettings' })
 

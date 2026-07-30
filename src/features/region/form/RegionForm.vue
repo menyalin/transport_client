@@ -2,14 +2,12 @@
   <div>
     <ButtonsPanel
       panel-type="form"
-      :disabledSubmit="
-        !store.getters.hasPermission('region:write') || isInvalidForm || !formChanged
-      "
+      :disabledSubmit="!canSubmit"
       @cancel="cancel"
       @submit="submit"
       class="mb-5"
     />
-    <v-text-field v-model.trim="form.name" :error-messages="nameErrors" label="Название" />
+    <v-text-field v-model.trim="state.name" :error-messages="nameErrors" label="Название" />
 
     <v-btn v-if="displayDeleteBtn" color="error" @click="$emit('delete')">
       <v-icon start> mdi-delete </v-icon>
@@ -19,13 +17,13 @@
 </template>
 
 <script setup>
-defineOptions({ name: 'RegionForm' })
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
 
+defineOptions({ name: 'RegionForm' })
 const props = defineProps({
   region: {
     type: Object,
@@ -41,49 +39,37 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['submit', 'cancel', 'delete'])
-
 const store = useStore()
 
-const initialFormState = ref(null)
-const form = ref({
-  name: null,
-})
+const initialState = { name: '' }
+const state = ref(initialState)
 
 const rules = {
-  form: {
-    name: { required },
-  },
+  name: { required },
 }
 
-const v = useVuelidate(rules, form)
+const v$ = useVuelidate(rules, state)
 
-// const myCompanies = computed(() => store.getters.myCompanies)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
-
-const isInvalidForm = computed(() => {
-  if (!directoriesProfile.value) return true
-  return v.value.$invalid
-})
-
-// const directoriesProfileName = computed(() => {
-//   if (!directoriesProfile.value) return null
-//   return myCompanies.value.find((item) => item._id === directoriesProfile.value)?.name
-// })
 
 const nameErrors = computed(() => {
   const errors = []
-  if (v.value.form.name.$dirty && v.value.form.name.$invalid)
-    errors.push('Название не может быть пустым')
+  if (v$.value.name.$dirty && v$.value.name.$invalid) errors.push('Название не может быть пустым')
   return errors
 })
 
 const formState = computed(() => ({
-  ...form.value,
+  ...state.value,
   company: directoriesProfile.value,
 }))
 
+const canSubmit = computed(
+  () => store.getters.hasPermission('region:write') && !v$.value.$invalid && formChanged.value
+)
+
 const formChanged = computed(() => {
-  return JSON.stringify(formState.value) !== initialFormState.value
+  if (!props.region) return !!state.value.name
+  return state.value.name !== initialState.name
 })
 
 const submit = () => {
@@ -96,29 +82,15 @@ const cancel = () => {
   emit('cancel')
 }
 
-const setFormFields = (val) => {
-  const keys = Object.keys(form.value)
-  keys.forEach((key) => {
-    form.value[key] = val[key]
-  })
-}
-
 const resetForm = () => {
-  const keys = Object.keys(form.value)
-  keys.forEach((key) => {
-    form.value[key] = null
-  })
+  state.value = initialState
 }
 
 watch(
   () => props.region,
   (val) => {
-    if (val) setFormFields(val)
+    state.value = val || initialState
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
-
-onMounted(() => {
-  initialFormState.value = JSON.stringify(formState.value)
-})
 </script>

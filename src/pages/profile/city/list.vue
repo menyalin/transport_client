@@ -27,6 +27,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { useCityStore } from '@/entities/city/cityStore'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 import usePersistedRef from '@/shared/hooks/usePersistedRef'
 
@@ -34,6 +35,7 @@ defineOptions({ name: 'CityList' })
 
 const router = useRouter()
 const store = useStore()
+const cityStore = useCityStore()
 
 const formName = 'CityList'
 
@@ -42,7 +44,7 @@ const listOptions = usePersistedRef({}, formName + ':listOptions')
 
 const headers = [{ value: 'name', title: 'Наименование' }]
 
-const cities = computed(() => store.getters.cities)
+const cities = computed(() => cityStore.cities)
 const loading = computed(() => store.getters.loading)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
 
@@ -51,7 +53,7 @@ function create() {
 }
 
 function refresh() {
-  store.dispatch('getCities', true)
+  cityStore.fetchCities(directoriesProfile.value)
 }
 
 function dblClickRow(_, { item }) {

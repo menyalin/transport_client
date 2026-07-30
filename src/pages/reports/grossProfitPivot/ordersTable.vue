@@ -32,6 +32,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useCityStore } from '@/entities/city/cityStore'
+import { useRegionStore } from '@/entities/region/regionStore'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { useOrderStore } from '@/entities/order/orderStore'
 import { useRouter } from 'vue-router'
 import { ALL_ORDER_TABLE_HEADERS } from './model/constants.js'
@@ -52,6 +55,9 @@ const props = defineProps({
 })
 
 const store = useStore()
+const cityStore = useCityStore()
+const regionStore = useRegionStore()
+const zoneStore = useZoneStore()
 const orderStore = useOrderStore()
 const router = useRouter()
 const carrierStore = useCarrierStore()
@@ -100,14 +106,14 @@ const preparedItems = computed(() => {
     addressesUnloading: i.unloadingAddressIds
       ?.map((a) => addressStore.addressMap.get(a)?.shortName)
       .join(', '),
-    regionsLoading: i.loadingRegions?.map((r) => store.getters.regionsMap.get(r)?.name).join(', '),
+    regionsLoading: i.loadingRegions?.map((r) => regionStore.regionsMap.get(r)?.name).join(', '),
     regionsUnloading: i.unloadingRegions
-      ?.map((r) => store.getters.regionsMap.get(r)?.name)
+      ?.map((r) => regionStore.regionsMap.get(r)?.name)
       .join(', '),
-    zonesLoading: i.loadingZones?.map((r) => store.getters.zonesMap.get(r)?.name).join(', '),
-    zonesUnloading: i.unloadingZones?.map((r) => store.getters.zonesMap.get(r)?.name).join(', '),
-    citiesLoading: i.loadingCities?.map((r) => store.getters.citiesMap.get(r)?.name).join(', '),
-    citiesUnloading: i.unloadingCities?.map((r) => store.getters.citiesMap.get(r)?.name).join(', '),
+    zonesLoading: i.loadingZones?.map((r) => zoneStore.zonesMap.get(r)?.name).join(', '),
+    zonesUnloading: i.unloadingZones?.map((r) => zoneStore.zonesMap.get(r)?.name).join(', '),
+    citiesLoading: i.loadingCities?.map((r) => cityStore.citiesMap.get(r)?.name).join(', '),
+    citiesUnloading: i.unloadingCities?.map((r) => cityStore.citiesMap.get(r)?.name).join(', '),
     capacityType: i.capacityType,
     truckKind: store.getters.truckKindsMap.get(i.truckKind),
     outsourceCostsWithVat: Intl.NumberFormat().format(i.outsourceCostsWithVat),

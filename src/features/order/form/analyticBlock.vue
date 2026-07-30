@@ -45,6 +45,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { useOrderStore } from '@/entities/order/orderStore'
 import { BlockTitle } from '@/shared/ui'
 import { OrderService } from '@/shared/services'
@@ -59,6 +60,7 @@ const props = defineProps({
 const item = defineModel({ type: Object })
 
 const store = useStore()
+const zoneStore = useZoneStore()
 const orderStore = useOrderStore()
 
 const distanceLoading = ref(false)
@@ -66,11 +68,11 @@ const distanceLoading = ref(false)
 const showDebugInfo = computed(() => store.getters.hasPermission('fullAccess'))
 
 const loadingZones = computed(
-  () => item.value?.loadingZones?.map((i) => store.getters.zonesMap.get(i)?.name) || null
+  () => item.value?.loadingZones?.map((i) => zoneStore.zonesMap.get(i)?.name) || null
 )
 
 const unloadingZones = computed(
-  () => item.value?.unloadingZones?.map((i) => store.getters.zonesMap.get(i)?.name) || null
+  () => item.value?.unloadingZones?.map((i) => zoneStore.zonesMap.get(i)?.name) || null
 )
 
 async function getRoadDistance() {

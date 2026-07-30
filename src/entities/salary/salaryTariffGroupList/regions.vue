@@ -7,7 +7,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useRegionStore } from '@/entities/region/regionStore'
 
 defineOptions({ name: 'RegionColumn' })
 
@@ -15,7 +15,7 @@ defineProps({
   item: Object,
 })
 
-const store = useStore()
+const regionStore = useRegionStore()
 
-const regionsMap = computed(() => store.getters.regionsMap)
+const regionsMap = computed(() => regionStore.regionsMap)
 </script>

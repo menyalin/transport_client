@@ -1,4 +1,7 @@
 import { useOrderStore } from '@/entities/order/orderStore'
+import { useZoneStore } from '@/entities/zone/zoneStore'
+import { useRegionStore } from '@/entities/region/regionStore'
+import { useCityStore } from '@/entities/city/cityStore'
 import CrewModule from './crew'
 import TruckModule from './truck'
 import DriverModule from './driver'
@@ -7,9 +10,6 @@ import DowntimeModule from './downtime'
 import OrderTemplateModule from './orderTemplate'
 import ScheduleNotes from './scheduleNote'
 import AgreementModule from './agreement'
-import ZoneModule from './zone'
-import RegionModule from './region'
-import CityModule from './city'
 import { UserService, CompanyService } from '@/shared/services'
 import { useAddressStore } from '@/entities/address'
 import { usePartnerStore } from '@/entities/partner'
@@ -159,9 +159,9 @@ export default {
       if (idleTimeRoundingIntervals)
         commit('setIdleTimeRoundingIntervals', idleTimeRoundingIntervals)
       if (documents?.length) commit('setDocuments', documents)
-      if (zones?.length) commit('setZones', zones)
-      if (regions?.length) commit('setRegions', regions)
-      if (cities?.length) commit('setCities', cities)
+      if (zones?.length) useZoneStore().setZones(zones)
+      if (regions?.length) useRegionStore().setRegions(regions)
+      if (cities?.length) useCityStore().setCities(cities)
       if (partnerGroups?.length) usePartnerStore().setPartnerGroups(partnerGroups)
       if (fineCategories?.length) commit('setFineCategories', fineCategories)
       if (salaryTariffTypes.length) commit('setSalaryTariffTypes', salaryTariffTypes)
@@ -235,8 +235,5 @@ export default {
     OrderTemplateModule,
     ScheduleNotes,
     AgreementModule,
-    ZoneModule,
-    RegionModule,
-    CityModule,
   },
 }

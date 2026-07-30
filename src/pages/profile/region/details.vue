@@ -14,8 +14,8 @@
 <script setup>
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { RegionService } from '@/shared/services'
-import { usePageDetails } from '@/shared/hooks'
 import { RegionForm } from '@/features/region'
+import { useReturnContextPage } from '@/shared/composables/useReturnContextPage'
 
 defineOptions({ name: 'RegionDetails' })
 
@@ -23,12 +23,13 @@ const props = defineProps({
   id: String,
 })
 
-const emit = defineEmits(['submit', 'cancel'])
-
-const { item, loading, submit, cancel, deleteHandler } = usePageDetails(
+const { item, loading, submit, cancel, deleteHandler } = useReturnContextPage(
   RegionService,
   () => props.id,
-  { emit }
+  {
+    returnContextField: 'newRegionId',
+    returnContextClearField: 'clearedRegion',
+  }
 )
 </script>
 <style></style>

@@ -7,10 +7,7 @@
     <div v-if="showDataRow" class="data-row">
       <div><i>Сумма:</i> {{ new Intl.NumberFormat().format(value.sum) }}</div>
       <div :style="{ maxWidth: '340px' }"><i>Примечание:</i> {{ value.note }}</div>
-      <div v-if="value.worker">
-        <i>Отв:</i>
-        <WorkerAutocomplete labelOnly v-model="value.worker" />
-      </div>
+
       <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment" variant="text">
         <v-icon color="red" size="small">mdi-delete</v-icon>
       </v-btn>
@@ -36,11 +33,10 @@
     </v-dialog>
   </CardSection>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 
-import WorkerAutocomplete from '@/entities/worker/ui/workerAutocomplete.vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { CardSection } from '@/shared/ui'
@@ -48,13 +44,11 @@ import { CardSection } from '@/shared/ui'
 defineOptions({ name: 'PaymentToDriver' })
 
 const value = defineModel({ type: Object })
-
 const store = useStore()
-
 const hasWritePermission = computed(() => store.getters.hasPermission('order:writePaymentToDriver'))
-
-const initialState = { sum: 0, note: null, worker: null }
+const initialState = { sum: 0, note: null }
 const tmpVal = ref(initialState)
+
 const dialog = ref(false)
 
 function add() {

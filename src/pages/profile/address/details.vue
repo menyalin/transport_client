@@ -9,21 +9,26 @@
       :address="item"
       :partnerItems="partnerApi.allPartners"
       :displayDeleteBtn="!!id && $store.getters.hasPermission('address:delete')"
-      :cityItems="cityItems || []"
+      :is-draft-enabled="isDraftEnabled"
       @cancel="cancel"
       @submit="submit"
       @delete="deleteHandler"
+      @need-create-region="onNeedCreateRegion"
+      @need-edit-region="onNeedEditRegion"
+      @need-create-city="onNeedCreateCity"
+      @need-edit-city="onNeedEditCity"
     />
   </FormWrapper>
 </template>
 <script setup>
-import { watch, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { watch, ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { AddressService } from '@/shared/services'
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { AddressForm } from '@/features/address'
 import { usePartners } from '@/entities/partner'
+import { pushContext } from '@/shared/composables/useReturnContext'
 
 defineOptions({ name: 'AddressDetailsPage' })
 
@@ -35,6 +40,7 @@ const props = defineProps({
 const emit = defineEmits(['submit'])
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
 
 const item = ref(null)
@@ -46,13 +52,7 @@ const error = ref({
 const loading = ref(false)
 const partnerApi = usePartners()
 
-const cityItems = computed(() => {
-  return store.getters.cities
-    ?.map((i) => {
-      return { title: i.name, value: i._id }
-    })
-    .sort((a, b) => a.title - b.title)
-})
+const isDraftEnabled = computed(() => !props.id)
 
 function toggleAlert() {
   error.value = {
@@ -101,6 +101,26 @@ async function deleteHandler() {
   }
 }
 
+function onNeedCreateRegion() {
+  const ctxId = pushContext(route.path, 'pick-region', { fieldName: 'region' })
+  router.push({ name: 'RegionCreate', query: { ctx: ctxId } })
+}
+
+function onNeedEditRegion(id) {
+  const ctxId = pushContext(route.path, 'edit-region', { fieldName: 'region', id })
+  router.push({ name: 'RegionDetails', params: { id }, query: { ctx: ctxId } })
+}
+
+function onNeedCreateCity() {
+  const ctxId = pushContext(route.path, 'pick-city', { fieldName: 'city' })
+  router.push({ name: 'CityCreate', query: { ctx: ctxId } })
+}
+
+function onNeedEditCity(id) {
+  const ctxId = pushContext(route.path, 'edit-city', { fieldName: 'city', id })
+  router.push({ name: 'CityDetails', params: { id }, query: { ctx: ctxId } })
+}
+
 watch(
   () => props.id,
   async (newVal, oldVal) => {
@@ -112,5 +132,15 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(() => {
+  const query = { ...route.query }
+  const hasReturnQuery = ['newRegionId', 'newCityId', 'clearedRegion', 'clearedCity'].some(
+    (k) => query[k]
+  )
+  if (hasReturnQuery) {
+    router.replace({ query: {} })
+  }
+})
 </script>
 <style></style>

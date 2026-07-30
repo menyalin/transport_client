@@ -1,4 +1,5 @@
 import store from '@/store'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { useOrderStore } from '@/entities/order/orderStore'
 import { ref, computed } from 'vue'
 import { required, minLength } from '@vuelidate/validators'
@@ -10,7 +11,7 @@ export const useFormHelpers = () => {
     truckKinds: { required, minLength: minLength(1) },
     liftCapacities: { required, minLength: minLength(1) },
   }
-  const zoneItems = computed(() => store.getters.zones)
+  const zoneItems = computed(() => useZoneStore().zones)
   const truckKindItems = computed(() => store.getters.truckKinds)
   const liftCapacityItems = computed(() => store.getters.liftCapacityTypes)
   const orderTypeItems = computed(() => orderStore.orderAnalyticTypes)

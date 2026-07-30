@@ -57,11 +57,11 @@ export default createVuetify({
         colors: {
           primary: '#0b3769e0', // GitHub's accent blue for primary elements
           secondary: '#b1b2b3', // Neutral gray for secondary elements
-          accent: '#52dafc', // Accent color
+          accent: '#4ddbff', // Accent color
           error: '#d1242f', // Danger red
           warning: '#ff9361', // Attention yellow/orange
-          info: '#2581eb', // Info blue
-          success: '#24aa4a', // Success green
+          info: '#80bbff', // Info blue
+          success: '#2dca59', // Success green
           background: '#f9f9f9', // Main background
           surface: '#ffffff', // Subtle surfaces like cards or panels
           'on-primary': '#ffffff', // Text on primary
@@ -75,7 +75,7 @@ export default createVuetify({
         },
         variables: {
           'border-color': '#d0d7de', // Border color
-          'medium-emphasis-opacity': 0.6, // For muted text
+          'medium-emphasis-opacity': 0.8, // For muted text
         },
       },
     },

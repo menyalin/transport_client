@@ -27,12 +27,14 @@
 import { computed, reactive, onMounted } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from 'vuex'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 
 defineOptions({ name: 'ZoneList' })
 
 const router = useRouter()
 const store = useStore()
+const zoneStore = useZoneStore()
 
 const formName = 'ZoneList'
 
@@ -43,14 +45,14 @@ const settings = reactive({
 
 const headers = [{ value: 'name', title: 'Наименование' }]
 
-const zones = computed(() => store.getters.zones)
+const zones = computed(() => zoneStore.zones)
 const loading = computed(() => store.getters.loading)
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
 
 onMounted(() => {
   if (store.getters.formSettingsMap.has(formName))
     Object.assign(settings, store.getters.formSettingsMap.get(formName))
-  store.dispatch('getZones')
+  zoneStore.fetchZones(directoriesProfile.value)
 })
 
 onBeforeRouteLeave(() => {
@@ -65,7 +67,7 @@ function create() {
 }
 
 function refresh() {
-  store.dispatch('getZones', true)
+  zoneStore.fetchZones(directoriesProfile.value)
 }
 
 function dblClickRow(_, { item }) {
