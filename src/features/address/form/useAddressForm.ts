@@ -3,7 +3,6 @@ import { useRoute } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useStore } from 'vuex'
-import { useZoneStore } from '@/entities/zone/zoneStore'
 import { useFormDraft } from '@/shared/composables/useFormDraft'
 
 export interface AddressFormData {
@@ -50,7 +49,6 @@ export interface AddressFormProps {
 
 export function useForm(props: AddressFormProps, emit: (...args: any[]) => void) {
   const vuexStore = useStore()
-  const zoneStore = useZoneStore()
   const route = useRoute()
 
   const validCoordinates = (val: string | null) => {
@@ -162,6 +160,17 @@ export function useForm(props: AddressFormProps, emit: (...args: any[]) => void)
     if (clearedRegion) state.value.region = null
     if (newCityId) state.value.city = newCityId as string
     if (clearedCity) state.value.city = null
+
+    const { newPartnerId, clearedPartner, newZoneId, clearedZone } = route.query
+    if (newPartnerId) state.value.partner = newPartnerId as string
+    if (clearedPartner) state.value.partner = null
+    if (newZoneId) {
+      const currentZones = state.value.zones || []
+      if (!currentZones.includes(newZoneId as string)) {
+        state.value.zones = [...currentZones, newZoneId as string]
+      }
+    }
+    if (clearedZone) state.value.zones = []
   })
 
   watch(
@@ -175,7 +184,6 @@ export function useForm(props: AddressFormProps, emit: (...args: any[]) => void)
   return {
     state,
     v$,
-    zoneItems: computed(() => zoneStore.zonesForAutocomplete),
     nameErrors,
     geoErrors,
     resetForm,

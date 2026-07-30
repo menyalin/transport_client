@@ -58,6 +58,7 @@ const canSubmit = computed(
 )
 
 const formChanged = computed(() => {
+  if (!props.zone) return !!state.value.name
   return state.value.name !== initialState.name
 })
 

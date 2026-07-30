@@ -12,10 +12,10 @@
   </FormWrapper>
 </template>
 <script setup>
-import { ZoneForm } from '@/features/zone'
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { ZoneService } from '@/shared/services'
-import { usePageDetails } from '@/shared/hooks'
+import { ZoneForm } from '@/features/zone'
+import { useReturnContextPage } from '@/shared/composables/useReturnContextPage'
 
 defineOptions({ name: 'ZoneDetails' })
 
@@ -23,12 +23,13 @@ const props = defineProps({
   id: String,
 })
 
-const emit = defineEmits(['submit', 'cancel'])
-
-const { item, loading, submit, cancel, deleteHandler } = usePageDetails(
+const { item, loading, submit, cancel, deleteHandler } = useReturnContextPage(
   ZoneService,
   () => props.id,
-  { emit }
+  {
+    returnContextField: 'newZoneId',
+    returnContextClearField: 'clearedZone',
+  }
 )
 </script>
 <style></style>

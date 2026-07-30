@@ -7,7 +7,6 @@
     <AddressForm
       v-else
       :address="item"
-      :partnerItems="partnerApi.allPartners"
       :displayDeleteBtn="!!id && $store.getters.hasPermission('address:delete')"
       :is-draft-enabled="isDraftEnabled"
       @cancel="cancel"
@@ -17,6 +16,10 @@
       @need-edit-region="onNeedEditRegion"
       @need-create-city="onNeedCreateCity"
       @need-edit-city="onNeedEditCity"
+      @need-create-partner="onNeedCreatePartner"
+      @need-edit-partner="onNeedEditPartner"
+      @need-create-zone="onNeedCreateZone"
+      @need-edit-zone="onNeedEditZone"
     />
   </FormWrapper>
 </template>
@@ -27,17 +30,13 @@ import { useStore } from 'vuex'
 import { AddressService } from '@/shared/services'
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { AddressForm } from '@/features/address'
-import { usePartners } from '@/entities/partner'
-import { pushContext } from '@/shared/composables/useReturnContext'
+import { pushContext, popContext } from '@/shared/composables/useReturnContext'
 
 defineOptions({ name: 'AddressDetailsPage' })
 
 const props = defineProps({
   id: String,
-  openInModal: Boolean,
 })
-
-const emit = defineEmits(['submit'])
 
 const router = useRouter()
 const route = useRoute()
@@ -50,7 +49,6 @@ const error = ref({
   show: false,
 })
 const loading = ref(false)
-const partnerApi = usePartners()
 
 const isDraftEnabled = computed(() => !props.id)
 
@@ -69,8 +67,23 @@ async function submit(val) {
       item.value = await AddressService.updateOne(props.id, val)
     } else item.value = await AddressService.create(val)
     tmpVal.value = null
-    if (props.openInModal) emit('submit', item.value._id)
-    else router.back()
+
+    if (props.id) {
+      router.back()
+    } else {
+      const ctxId = route.query.ctx
+      if (ctxId) {
+        const ctx = popContext(ctxId)
+        if (ctx) {
+          router.push({
+            path: ctx.from,
+            query: { newAddressId: item.value?._id, ...ctx.params },
+          })
+          return
+        }
+      }
+      router.push({ name: 'AddressList' })
+    }
   } catch (e) {
     item.value = tmpVal.value
     if (e.response.status === 400 || e.response.status === 403) {
@@ -121,6 +134,26 @@ function onNeedEditCity(id) {
   router.push({ name: 'CityDetails', params: { id }, query: { ctx: ctxId } })
 }
 
+function onNeedCreatePartner() {
+  const ctxId = pushContext(route.path, 'pick-partner', { fieldName: 'partner' })
+  router.push({ name: 'PartnerCreate', query: { ctx: ctxId } })
+}
+
+function onNeedEditPartner(id) {
+  const ctxId = pushContext(route.path, 'edit-partner', { fieldName: 'partner', id })
+  router.push({ name: 'PartnerDetails', params: { id }, query: { ctx: ctxId } })
+}
+
+function onNeedCreateZone() {
+  const ctxId = pushContext(route.path, 'pick-zone', { fieldName: 'zone' })
+  router.push({ name: 'ZoneCreate', query: { ctx: ctxId } })
+}
+
+function onNeedEditZone(id) {
+  const ctxId = pushContext(route.path, 'edit-zone', { fieldName: 'zone', id })
+  router.push({ name: 'ZoneDetails', params: { id }, query: { ctx: ctxId } })
+}
+
 watch(
   () => props.id,
   async (newVal, oldVal) => {
@@ -135,9 +168,16 @@ watch(
 
 onMounted(() => {
   const query = { ...route.query }
-  const hasReturnQuery = ['newRegionId', 'newCityId', 'clearedRegion', 'clearedCity'].some(
-    (k) => query[k]
-  )
+  const hasReturnQuery = [
+    'newRegionId',
+    'newCityId',
+    'clearedRegion',
+    'clearedCity',
+    'newPartnerId',
+    'clearedPartner',
+    'newZoneId',
+    'clearedZone',
+  ].some((k) => query[k])
   if (hasReturnQuery) {
     router.replace({ query: {} })
   }

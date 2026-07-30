@@ -11,6 +11,7 @@
     :item-value="itemValue"
     :loading="loading"
     :disabled="disabled"
+    :readonly="readonly"
     :hide-details="hideDetails"
     :multiple="multiple"
     :clearable="clearable"
@@ -49,6 +50,7 @@ const props = withDefaults(
     labelOnly?: boolean
     multiple?: boolean
     disabled?: boolean
+    readonly?: boolean
     clearable?: boolean
     hideDetails?: boolean
     noDataText?: string
@@ -61,6 +63,7 @@ const props = withDefaults(
     labelOnly: false,
     multiple: false,
     disabled: false,
+    readonly: false,
     showAction: false,
     noDataText: '',
   }
@@ -93,8 +96,16 @@ const resolvedItems = computed<Item[]>(() => {
 const currentModel = computed(() => props.modelValue)
 
 const actionIcon = computed(() => {
+  if (props.disabled || props.readonly) return undefined
   if (!props.showAction && !props.createRoute && !props.editRoute) return undefined
-  return currentModel.value ? 'mdi-pencil' : 'mdi-plus-circle'
+
+  const val = currentModel.value
+  if (props.multiple) {
+    if (Array.isArray(val) && val.length > 1) return undefined
+    if (Array.isArray(val) && val.length === 1) return 'mdi-pencil'
+    return 'mdi-plus-circle'
+  }
+  return val ? 'mdi-pencil' : 'mdi-plus-circle'
 })
 
 const serverModeAttrs = computed(() => {
@@ -141,14 +152,27 @@ async function fetchFromServer(query: string) {
 }
 
 function onActionClick() {
-  const id = Array.isArray(currentModel.value) ? null : currentModel.value
-  if (currentModel.value && props.editRoute) {
+  const val = currentModel.value
+
+  if (props.multiple) {
+    if (Array.isArray(val) && val.length === 1) {
+      emit('edit', val[0])
+      if (props.editRoute) router.push(props.editRoute)
+      return
+    }
+    emit('create')
+    if (props.createRoute) router.push(props.createRoute)
+    return
+  }
+
+  const id = typeof val === 'string' ? val : null
+  if (val && props.editRoute) {
     emit('edit', id)
     router.push(props.editRoute)
-  } else if (props.createRoute) {
+  } else if (!val && props.createRoute) {
     emit('create')
     router.push(props.createRoute)
-  } else if (currentModel.value) {
+  } else if (val) {
     emit('edit', id)
   } else {
     emit('create')

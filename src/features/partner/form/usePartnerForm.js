@@ -22,6 +22,7 @@ export const usePartnerForm = (props, { emit }) => {
   const state = ref(initialState())
   const rules = computed(() => ({ name: { required } }))
   const v$ = useVuelidate(rules, state, { scope: false })
+  const directoriesProfile = computed(() => store.getters.directoriesProfile)
   const isAdmin = computed(() => store.getters.user?.isAdmin)
   const isInvalidForm = computed(() => v$.value.$invalid)
   const nameFieldErrors = computed(() => {
@@ -36,12 +37,18 @@ export const usePartnerForm = (props, { emit }) => {
   function bankAccountInfoChangedHandler(val) {
     state.value = { ...state.value, bankAccountInfo: val }
   }
+
+  const formState = computed(() => ({
+    ...state.value,
+    company: directoriesProfile.value,
+  }))
+
   function submitHandler() {
-    emit('submit', state.value)
+    emit('submit', formState.value)
   }
 
   function saveHandler() {
-    emit('save', state.value)
+    emit('save', formState.value)
   }
 
   function cancelHandler() {
