@@ -42,23 +42,19 @@
       </template>
       <template #[`item.region`]="{ item }">
         {{
-          store.getters.regionsMap.has(item.region)
-            ? store.getters.regionsMap.get(item.region).name
+          regionStore.regionsMap.has(item.region)
+            ? regionStore.regionsMap.get(item.region).name
             : null
         }}
       </template>
       <template #[`item.city`]="{ item }">
-        {{
-          store.getters.citiesMap.has(item.city)
-            ? store.getters.citiesMap.get(item.city).name
-            : null
-        }}
+        {{ cityStore.citiesMap.has(item.city) ? cityStore.citiesMap.get(item.city).name : null }}
       </template>
 
       <template #[`item.zones`]="{ item }">
         <span v-if="Array.isArray(item.zones)">{{
           item.zones
-            .map((i) => (store.getters.zonesMap.has(i) ? store.getters.zonesMap.get(i).name : null))
+            .map((i) => (zoneStore.zonesMap.has(i) ? zoneStore.zonesMap.get(i).name : null))
             .filter((i) => !!i)
             .join(', ')
         }}</span>
@@ -86,6 +82,9 @@ import { useStore } from 'vuex'
 import { ButtonsPanel, EntityListWrapper, ListSettingsWrapper } from '@/shared/ui'
 import AppTableColumnSettings from '@/shared/ui/tableColumnSettings/tableColumnSettings.vue'
 import { useAddressStore } from '@/entities/address'
+import { useCityStore } from '@/entities/city/cityStore'
+import { useRegionStore } from '@/entities/region/regionStore'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { usePersistedRef } from '@/shared/hooks'
 
 defineOptions({ name: 'AddressList' })
@@ -93,6 +92,9 @@ defineOptions({ name: 'AddressList' })
 const router = useRouter()
 const store = useStore()
 const addressStore = useAddressStore()
+const cityStore = useCityStore()
+const regionStore = useRegionStore()
+const zoneStore = useZoneStore()
 const listSettingsName = 'AddressList:settings'
 const settings = usePersistedRef({ search: null }, listSettingsName)
 

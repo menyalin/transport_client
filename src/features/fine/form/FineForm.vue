@@ -116,9 +116,10 @@
         @paste="pasteDate"
       />
 
-      <AppWorkerAutocomplete
+      <AppAutocomplete
         v-model="form.payingByWorker"
         label="Кто оплатил"
+        :fetch-items="fetchWorkers"
         :style="{ maxWidth: '350px' }"
       />
       <v-select
@@ -159,8 +160,8 @@ import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
-import AppWorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
-import { CrewService } from '@/shared/services'
+import AppAutocomplete from '@/shared/ui/AppAutocomplete/AppAutocomplete.vue'
+import { CrewService, WorkerService } from '@/shared/services'
 import { usePasteDateInput } from '@/shared/ui/DateInputs/usePasteDateInput'
 
 defineOptions({ name: 'FineForm' })
@@ -176,6 +177,11 @@ const emit = defineEmits(['submit', 'cancel', 'delete', 'fineNumberUpdated'])
 
 const { pasteDate } = usePasteDateInput()
 const store = useStore()
+
+async function fetchWorkers(query) {
+  const items = (await WorkerService.getForAutocomplete({ searchStr: query })) || []
+  return items.map((i) => ({ value: i._id, text: i.fullName || i.name }))
+}
 
 const dateFields = ['date', 'paymentDate', 'expiryDateOfDiscount']
 const dateTimeFields = ['violationDate']

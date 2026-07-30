@@ -21,8 +21,8 @@
 <script setup>
 import { computed } from 'vue'
 import AppBar from '@/shared/ui/appBar/index.vue'
-import AppSnackbar from '@/modules/common/components/appSnackbar/index.vue'
-import AppLeftNav from '@/modules/common/components/leftNav/index.vue'
+import AppSnackbar from '@/shared/ui/appSnackbar/appSnackbar.vue'
+import AppLeftNav from '@/widgets/leftNav/leftNav.vue'
 import { useLayoutStore } from '@/shared/stores/useLayoutStore'
 
 const props = defineProps({

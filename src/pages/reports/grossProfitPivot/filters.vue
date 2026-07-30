@@ -35,6 +35,8 @@
 
 <script setup>
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
+import { useRegionStore } from '@/entities/region/regionStore'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useOrderStore } from '@/entities/order/orderStore'
@@ -51,6 +53,8 @@ const props = defineProps({
 const store = useStore()
 const orderStore = useOrderStore()
 const carrierStore = useCarrierStore()
+const regionStore = useRegionStore()
+const zoneStore = useZoneStore()
 
 const tmpFilters = ref({})
 const condItems = [
@@ -93,14 +97,14 @@ const orderTypes = computed(() =>
 )
 
 const regions = computed(() =>
-  store.getters.regions.map((i) => ({
+  regionStore.regions.map((i) => ({
     value: i._id,
     title: i.name,
   }))
 )
 
 const zones = computed(() =>
-  store.getters.zones.map((i) => ({
+  zoneStore.zones.map((i) => ({
     value: i._id,
     title: i.name,
   }))

@@ -64,7 +64,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import getDaysFromPeriod from '@/modules/common/helpers/getDaysFromPeriod'
+import getDaysFromPeriod from '@/shared/utils/getDaysFromPeriod'
 import { OrderService } from '@/shared/services'
 import { DateRangeInput } from '@/shared/ui'
 

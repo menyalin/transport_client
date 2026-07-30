@@ -1,5 +1,5 @@
 import api from '@/api'
-import { EventObserver } from '@/modules/common/helpers/EventObserver.class'
+import { EventObserver } from '@/shared/utils/EventObserver'
 import socket from '@/socket'
 import store from '@/store'
 import z from 'zod'

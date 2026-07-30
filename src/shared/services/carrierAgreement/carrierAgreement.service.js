@@ -1,5 +1,5 @@
 import api from '@/api'
-import { EventObserver } from '@/modules/common/helpers/EventObserver.class'
+import { EventObserver } from '@/shared/utils/EventObserver'
 import z from 'zod'
 import store from '@/store'
 const BASE_PATH = '/carrier_agreements'

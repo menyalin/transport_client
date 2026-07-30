@@ -14,20 +14,22 @@
 <script setup>
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { CityService } from '@/shared/services'
-import { usePageDetails } from '@/shared/hooks'
 import { CityForm } from '@/features/city'
+import { useReturnContextPage } from '@/shared/composables/useReturnContextPage'
+
 defineOptions({ name: 'CityDetails' })
 
 const props = defineProps({
   id: String,
 })
 
-const emit = defineEmits(['submit', 'cancel'])
-
-const { item, loading, submit, cancel, deleteHandler } = usePageDetails(
+const { item, loading, submit, cancel, deleteHandler } = useReturnContextPage(
   CityService,
   () => props.id,
-  { emit }
+  {
+    returnContextField: 'newCityId',
+    returnContextClearField: 'clearedCity',
+  }
 )
 </script>
 <style></style>

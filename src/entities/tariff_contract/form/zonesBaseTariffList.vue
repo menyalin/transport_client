@@ -25,9 +25,12 @@
 <script setup>
 import { computed } from 'vue'
 import store from '@/store'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 import { moneyFormatter } from '@/shared/utils'
 
 defineOptions({ name: 'ZoneBaseTariffList' })
+
+const zoneStore = useZoneStore()
 
 const props = defineProps({
   items: Array,
@@ -65,7 +68,7 @@ function formatLiftCapacities(items) {
   return items.join('; ')
 }
 function formatZone(zoneId) {
-  return store.getters.zonesMap.get(zoneId)?.name || '-'
+  return zoneStore.zonesMap.get(zoneId)?.name || '-'
 }
 function deleteHandler(item) {
   emit('deleteByIdx', item.idx)

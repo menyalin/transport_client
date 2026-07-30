@@ -28,19 +28,21 @@
       label="Партнер"
       :style="{ minWidth: '800px' }"
     />
-    <v-autocomplete
+
+    <RegionAutocomplete
       v-model="v$.region.$model"
-      :items="$store.getters.regionsForAutocomplete"
       label="Регион"
       :style="{ minWidth: '800px' }"
+      @create="$emit('need-create-region')"
+      @edit="$emit('need-edit-region', $event)"
     />
 
-    <v-autocomplete
+    <CityAutocomplete
       v-model="v$.city.$model"
-      :items="cityItems"
       label="Город"
-      item-title="title"
       :style="{ minWidth: '800px' }"
+      @create="$emit('need-create-city')"
+      @edit="$emit('need-edit-city', $event)"
     />
 
     <v-text-field
@@ -79,25 +81,38 @@
   </FormWrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AddressSuggestion from '@/entities/address/addressSuggestion.vue'
+import { RegionAutocomplete } from '@/entities/region'
+import { CityAutocomplete } from '@/entities/city'
 import { ButtonsPanel, FormWrapper } from '@/shared/ui'
-import { useForm } from './useAddressForm.js'
+import { useForm, type AddressFormData } from './useAddressForm'
 
 defineOptions({ name: 'AddressForm' })
 
-const props = defineProps({
-  address: Object,
-  cityItems: { type: Array, required: true },
-  displayDeleteBtn: {
-    type: Boolean,
-    default: false,
-  },
-  formName: String,
-  partnerItems: Array,
-})
+const props = withDefaults(
+  defineProps<{
+    address?: AddressFormData
+    displayDeleteBtn?: boolean
+    formName?: string
+    partnerItems?: any[]
+    isDraftEnabled?: boolean
+  }>(),
+  {
+    displayDeleteBtn: false,
+    isDraftEnabled: false,
+  }
+)
 
-const emit = defineEmits(['delete', 'submit', 'cancel'])
+const emit = defineEmits<{
+  delete: []
+  submit: [address: any]
+  cancel: []
+  'need-create-region': []
+  'need-edit-region': [id: string | null]
+  'need-create-city': []
+  'need-edit-city': [id: string | null]
+}>()
 
 const { v$, nameErrors, geoErrors, submit, cancel, getParsedAddress, zoneItems } = useForm(
   props,

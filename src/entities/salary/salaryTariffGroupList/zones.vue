@@ -7,7 +7,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useZoneStore } from '@/entities/zone/zoneStore'
 
 defineOptions({ name: 'ZonesColumn' })
 
@@ -15,7 +15,7 @@ defineProps({
   item: Object,
 })
 
-const store = useStore()
+const zoneStore = useZoneStore()
 
-const zonesMap = computed(() => store.getters.zonesMap)
+const zonesMap = computed(() => zoneStore.zonesMap)
 </script>

@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useRegionStore } from '@/entities/region/regionStore'
 import { useOrderStore } from '@/entities/order/orderStore'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
@@ -83,7 +84,7 @@ export const usePivotTable = (props) => {
         })
         break
       case 'loadingRegion':
-        store.getters.regions.forEach((p) => {
+        useRegionStore().regions.forEach((p) => {
           res.set(p._id, p.name)
         })
         break

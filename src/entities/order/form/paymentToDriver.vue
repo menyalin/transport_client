@@ -9,7 +9,12 @@
       <div :style="{ maxWidth: '340px' }"><i>Примечание:</i> {{ value.note }}</div>
       <div v-if="value.worker">
         <i>Отв:</i>
-        <WorkerAutocomplete labelOnly v-model="value.worker" />
+        <AppAutocomplete
+          label-only
+          v-model="value.worker"
+          :fetch-items="fetchWorkers"
+          :fetch-by-id="fetchWorkerById"
+        />
       </div>
       <v-btn v-if="hasWritePermission" icon size="small" @click="deletePayment" variant="text">
         <v-icon color="red" size="small">mdi-delete</v-icon>
@@ -36,11 +41,12 @@
     </v-dialog>
   </CardSection>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 
-import WorkerAutocomplete from '@/modules/common/components/workerAutocomplete/index.vue'
+import AppAutocomplete from '@/shared/ui/AppAutocomplete/AppAutocomplete.vue'
+import { WorkerService } from '@/shared/services'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { CardSection } from '@/shared/ui'
@@ -55,6 +61,18 @@ const hasWritePermission = computed(() => store.getters.hasPermission('order:wri
 
 const initialState = { sum: 0, note: null, worker: null }
 const tmpVal = ref(initialState)
+
+async function fetchWorkers(query: string) {
+  const items = (await WorkerService.getForAutocomplete({ searchStr: query })) || []
+  return items.map((i: any) => ({ value: i._id, text: i.fullName || i.name }))
+}
+
+async function fetchWorkerById(id: string) {
+  const items = (await WorkerService.getForAutocomplete({ id })) || []
+  if (!items.length) return null
+  const i = items[0]
+  return { value: i._id, text: i.fullName || i.name }
+}
 const dialog = ref(false)
 
 function add() {
