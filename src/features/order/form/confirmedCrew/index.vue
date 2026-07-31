@@ -58,7 +58,7 @@
 <script setup>
 import { computed } from 'vue'
 import { BlockTitle } from '@/shared/ui'
-import { useConfirmedCrew } from './useConfirmedCrew'
+import { useConfirmedCrew } from '@/entities/order/form/confirmedCrew/useConfirmedCrew'
 
 defineOptions({ name: 'ConfirmedCrew' })
 const model = defineModel({ type: Object })

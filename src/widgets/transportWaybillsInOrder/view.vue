@@ -100,7 +100,7 @@ async function downloadHandler(itemId) {
       templateName: 'common_transport_waybill',
     })
   } catch (e) {
-    const { message } = JSON.parse(await e.response.data.text())
+    const { message } = JSON.parse(await e.response?.data.text())
     store.commit('setError', message || e?.message || e)
   } finally {
     loading.value = false

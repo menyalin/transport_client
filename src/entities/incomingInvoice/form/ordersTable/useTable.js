@@ -39,7 +39,7 @@ export const useTable = (props, _ctx) => {
         woVat: data.totalPriceWOVat,
       }
     } catch (e) {
-      proxy.$store.commit('setError', e.response.data || e.message)
+      proxy.$store.commit('setError', e.response?.data || e.message)
     } finally {
       loading.value = false
     }
@@ -58,7 +58,7 @@ export const useTable = (props, _ctx) => {
       await IncomingInvoiceService.removeOrders(props.invoiceId, selectedIds.value)
       await getData(props.invoiceId)
     } catch (e) {
-      proxy.$store.commit('setError', e.response.data || e.message)
+      proxy.$store.commit('setError', e.response?.data || e.message)
     } finally {
       loading.value = false
     }

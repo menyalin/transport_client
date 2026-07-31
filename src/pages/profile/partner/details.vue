@@ -67,7 +67,7 @@ async function submit(val, saveOnly) {
     else router.go(-1)
   } catch (e) {
     if (e.response?.status === 400 || e.response?.status === 403) {
-      error.value = { message: e.response.data, show: true }
+      error.value = { message: e.response?.data, show: true }
     }
   } finally {
     loading.value = false

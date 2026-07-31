@@ -68,7 +68,7 @@ export function useOrderRoute(initialRoute) {
   }
 
   function setRoute(val) {
-    route.value = val
+    route.value = Array.isArray(val) ? [...val] : val
   }
 
   function resetRoute() {

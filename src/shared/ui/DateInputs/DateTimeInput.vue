@@ -26,7 +26,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:model-value'])
 
-const { readonly } = useAttrs()
+const attrs = useAttrs()
 
 const { pasteDate } = usePasteDateInput()
 
@@ -63,50 +63,19 @@ function emitValue(dateStr) {
 }
 
 const setCurrentDate = () => {
-  if (readonly) return
+  if (attrs.readonly || !props.showPrependIcon) return
   emitValue(dayjs())
 }
-
-// const validateAndEmit = (dateStr) => {
-//   if (!dateStr) {
-//     emit('update:model-value', null)
-//     tmpDate.value = null
-//     return
-//   }
-
-//   const parsed = dayjs(dateStr)
-//   if (!parsed.isValid()) {
-//     return
-//   }
-
-//   if (min?.value && parsed.isBefore(dayjs(min.value))) {
-//     innerErrorMessage.value = [
-//       `Дата должна быть больше ${dayjs(min.value).format(dateFormat.value)}`,
-//     ]
-//     return
-//   }
-
-//   if (max?.value && parsed.isAfter(dayjs(max.value))) {
-//     innerErrorMessage.value = [
-//       `Дата должна быть меньше ${dayjs(max.value).format(dateFormat.value)}`,
-//     ]
-//     return
-//   }
-
-//   innerErrorMessage.value = []
-//   const iso = parsed.toISOString()
-//   tmpDate.value = parsed.format(dateFormat.value)
-//   emit('update:model-value', iso)
-// }
 </script>
 
 <template>
   <v-text-field
     v-bind="$attrs"
-    class="d-inline-flex align-self-start px-0"
+    class="d-inline-flex align-self-start px-3"
+    :class="{ 'prepend-icon-hidden': !showPrependIcon }"
     :type
-    :hide-details="!errors.length && $attrs['hide-details']"
-    :prependInnerIcon="showPrependIcon && false ? 'mdi-chevron-right' : null"
+    :hide-details="!errors.length && props.hideDetails"
+    prepend-inner-icon="mdi-chevron-right"
     :model-value="tmpDate"
     :error="!!errors.length"
     :error-messages="errors"
@@ -115,3 +84,10 @@ const setCurrentDate = () => {
     @click:prepend-inner="setCurrentDate"
   />
 </template>
+
+<style scoped>
+.prepend-icon-hidden :deep(.v-field__prepend-inner) {
+  opacity: 0;
+  pointer-events: none;
+}
+</style>

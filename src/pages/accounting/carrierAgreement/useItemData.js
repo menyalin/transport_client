@@ -55,7 +55,7 @@ export const useItemData = (props) => {
       }
     } catch (e) {
       showError.value = true
-      errorMessage.value = e.response.data
+      errorMessage.value = e.response?.data
       proxy.$store.commit('setError', e.message)
     }
   }
@@ -70,7 +70,7 @@ export const useItemData = (props) => {
     } catch (e) {
       loading.value = false
       showError.value = true
-      errorMessage.value = e.response.data
+      errorMessage.value = e.response?.data
       proxy.$store.commit('setError', e.message)
     }
   }

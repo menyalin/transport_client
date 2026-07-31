@@ -44,7 +44,7 @@
 </template>
 <script setup>
 import { BlockTitle } from '@/shared/ui'
-import { useClientBlock } from './useClientBlock'
+import { useClientBlock } from '@/entities/order/form/clientBlock/useClientBlock'
 import { computed } from 'vue'
 
 defineOptions({ name: 'ClientBlock' })

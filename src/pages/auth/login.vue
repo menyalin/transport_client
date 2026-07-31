@@ -93,7 +93,7 @@ export default {
           this.$router.push(this.$route.query.redirect || '/')
         })
         .catch((e) => {
-          if (e.response.status === 404) {
+          if (e.response?.status === 404) {
             this.showMessage('User not found', 'error')
           } else {
             this.showMessage(e.message, 'error')

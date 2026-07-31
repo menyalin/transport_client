@@ -62,7 +62,7 @@ import { useOrderStore } from '@/entities/order/orderStore'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { ButtonsPanel } from '@/shared/ui'
-import OrderRoute from '@/features/order/form/orderRoute/index.js'
+import { OrderRoute } from '@/features/order/form/orderRoute'
 import { ReqTransport, CargoParams } from '@/entities/order'
 
 defineOptions({ name: 'OrderTemplateForm' })

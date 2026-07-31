@@ -31,7 +31,7 @@ class TruckService {
       store.commit('addToCache', data)
       return data
     } catch (e) {
-      store.commit('setError', e.response.data)
+      store.commit('setError', e.response?.data)
       return null
     }
   }

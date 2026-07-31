@@ -6,6 +6,7 @@ export interface PeriodItem {
 export const periodItems: PeriodItem[] = [
   { value: 'today', label: 'Сегодня' },
   { value: 'yesterday', label: 'Вчера' },
+  { value: 'dayBeforeYesterday', label: 'Позавчера' },
   { value: 'this-week', label: 'Эта неделя' },
   { value: 'last-week', label: 'Прошлая неделя' },
   { value: 'this-month', label: 'Этот месяц' },

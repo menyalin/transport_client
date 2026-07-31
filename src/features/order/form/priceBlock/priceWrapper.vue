@@ -34,7 +34,7 @@ import { useOrderStore } from '@/entities/order/orderStore'
 import { CardSection } from '@/shared/ui'
 import AppCostsTable from './costsTable.vue'
 import AppDialogForm from './dialogForm.vue'
-import { Price } from './Price.class'
+import { Price } from '@/entities/order/form/priceBlock/Price.class'
 
 defineOptions({ name: 'PriceWrapper' })
 
