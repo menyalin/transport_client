@@ -315,7 +315,7 @@ const {
   width: 100%;
 }
 .col-dates {
-  width: 250px;
+  width: 275px;
 }
 .col-remove {
   width: 50px;

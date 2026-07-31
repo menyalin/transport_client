@@ -139,24 +139,27 @@ export default {
       }
 
       this.tmpVal = val
+      const isCreate = !this.id
       let res
       try {
         this.loading = true
-        if (this.id) res = await this.service.updateOne(this.id, val)
-        else {
+        if (isCreate) {
           res = await this.service.create(val)
+          this.item = res
           this.$router.replace({
             name: 'DetailsOrder',
             params: { id: res._id },
           })
+        } else {
+          res = await this.service.updateOne(this.id, val)
+          this.item = Object.assign(this.item, res)
         }
-        this.item = Object.assign(this.item, res)
         this.tmpVal = null
-        if (!saveOnly) this.$router.go(-1)
+        if (!isCreate && !saveOnly) this.$router.go(-1)
       } catch (e) {
         this.item = this.tmpVal
-        if (e.response.status === 400 || e.response.status === 403) {
-          this.error.message = e.response.data
+        if (e.response?.status === 400 || e.response?.status === 403) {
+          this.error.message = e.response?.data
           this.error.show = true
         } else this.$store.commit('setError', e)
       } finally {

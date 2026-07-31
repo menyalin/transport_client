@@ -198,13 +198,13 @@ import AppRouteState from './routeState.vue'
 import ConfirmedCrew from './confirmedCrew/index.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from '@/features/order/form/analyticBlock.vue'
-import _putRouteDatesToClipboard from './_putRouteDatesToClipboard.js'
+import _putRouteDatesToClipboard from '@/entities/order/form/_putRouteDatesToClipboard.js'
 
-import OrderRoute from './orderRoute/index.js'
+import { OrderRoute } from './orderRoute'
 import ClientBlock from './clientBlock/clientBlock.vue'
 import PriceBlock from './priceBlock/index.vue'
-import FinalPriceDialog from './finalPriceDialog/index.vue'
-import AppPaymentToDriver from './paymentToDriver.vue'
+import FinalPriceDialog from '@/entities/order/form/finalPriceDialog/index.vue'
+import AppPaymentToDriver from '@/entities/order/form/paymentToDriver.vue'
 import {
   DocsRegistryLink,
   OrderDocsListForm,
@@ -218,7 +218,7 @@ import {
   useOrderPrintForms,
 } from '@/entities/order'
 
-import { useOrderForm } from './composables/useOrderForm'
+import { useOrderForm } from '@/entities/order/form/composables/useOrderForm'
 
 defineOptions({ name: 'OrderForm' })
 

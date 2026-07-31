@@ -4,7 +4,8 @@
       <AppPointDetail
         v-for="(point, ind) of model"
         :key="ind"
-        v-model="model[ind]"
+        :model-value="model[ind]"
+        @update:model-value="onPointUpdate(ind, $event)"
         :ind="ind"
         :readonly="readonly"
         :confirmed="confirmed"
@@ -46,7 +47,7 @@
 import { computed, watch } from 'vue'
 import AppPointDetail from './pointDetail'
 import { CardSection } from '@/shared/ui'
-import putRouteForDriverToClipboard from './model/putRouteForDriverToClipboard'
+import putRouteForDriverToClipboard from '@/entities/order/form/orderRoute/model/putRouteForDriverToClipboard'
 import { useStore } from 'vuex'
 const vuexStore = useStore()
 
@@ -132,6 +133,12 @@ function addReturn() {
 
 function deleteHandler(ind) {
   model.value = [...model.value.slice(0, ind), ...model.value.slice(ind + 1)]
+}
+
+function onPointUpdate(ind, newVal) {
+  const updated = [...model.value]
+  updated[ind] = newVal
+  model.value = updated
 }
 </script>
 <style scoped>

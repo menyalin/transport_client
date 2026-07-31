@@ -86,8 +86,8 @@ async function submit(val) {
     }
   } catch (e) {
     item.value = tmpVal.value
-    if (e.response.status === 400 || e.response.status === 403) {
-      error.value.message = e.response.data
+    if (e.response?.status === 400 || e.response?.status === 403) {
+      error.value.message = e.response?.data
       error.value.show = true
     }
   } finally {

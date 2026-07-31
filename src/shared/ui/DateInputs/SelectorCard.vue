@@ -24,6 +24,11 @@ function setPeriod(value) {
       endDate = now.subtract(1, 'day').endOf('day')
       break
 
+    case 'dayBeforeYesterday':
+      startDate = now.subtract(2, 'day').startOf('day')
+      endDate = now.subtract(2, 'day').endOf('day')
+      break
+
     case 'this-week':
       startDate = now.startOf('week')
       endDate = now.endOf('week')

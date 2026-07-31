@@ -44,49 +44,54 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { BlockTitle } from '@/shared/ui'
 import { useOrderStore } from '@/entities/order/orderStore'
 
-const orderStore = useOrderStore()
-
 defineOptions({ name: 'RouteState' })
-const model = defineModel('model-value', {
-  type: Object,
+
+enum STATUSES {
+  NEED_GET = 'needGet',
+  GETTED = 'getted',
+  IN_PROGRESS = 'inProgress',
+  COMPLETED = 'completed',
+  WE_REFUSED = 'weRefused',
+  CLIENT_REFUSED = 'clientRefused',
+  NOT_CONFIRMED_BY_CLIENT = 'notСonfirmedByClient',
+}
+
+interface OrderState {
+  status: STATUSES
+  warning: boolean
+  driverNotified: boolean
+  clientNotified: boolean
+}
+
+const model = defineModel<OrderState>('model-value', {
   default: () => ({
-    status: 'needGet',
+    status: STATUSES.NEED_GET,
     warning: false,
     driverNotified: false,
     clientNotified: false,
   }),
 })
 
-const props = defineProps({
-  title: String,
-  enableConfirm: Boolean,
-  routeCompleted: Boolean,
-  enableRefuse: Boolean,
-  isExistFirstArrivalDate: Boolean,
-  isValidGrade: Boolean,
-  readonly: Boolean,
-})
+const props = defineProps<{
+  title?: string
+  enableConfirm?: boolean
+  routeCompleted?: boolean
+  enableRefuse?: boolean
+  isExistFirstArrivalDate?: boolean
+  isValidGrade?: boolean
+  readonly?: boolean
+}>()
 
-// Константы статусов для читаемости
-const STATUSES = {
-  NEED_GET: 'needGet',
-  GETTED: 'getted',
-  IN_PROGRESS: 'inProgress',
-  COMPLETED: 'completed',
-  WE_REFUSED: 'weRefused',
-  CLIENT_REFUSED: 'clientRefused',
-  NOT_CONFIRMED_BY_CLIENT: 'notСonfirmedByClient',
-}
+const orderStore = useOrderStore()
 
 const orderStatuses = computed(() => orderStore.orderStatuses)
 
-// Lookup-таблица: [текущий статус + условия] → доступные статусы
-function getAllowedStatuses() {
+function getAllowedStatuses(): STATUSES[] {
   const { status, driverNotified, clientNotified } = model.value
   const { enableRefuse, routeCompleted, isExistFirstArrivalDate, isValidGrade } = props
 
@@ -107,6 +112,9 @@ function getAllowedStatuses() {
     if (driverNotified && clientNotified) {
       return [STATUSES.GETTED, STATUSES.IN_PROGRESS]
     }
+    return enableRefuse
+      ? [STATUSES.NEED_GET, STATUSES.GETTED, STATUSES.WE_REFUSED, STATUSES.CLIENT_REFUSED]
+      : [STATUSES.NEED_GET, STATUSES.GETTED]
   }
 
   // inProgress
@@ -148,12 +156,11 @@ function getAllowedStatuses() {
   return []
 }
 
-const disabledNotification = computed(() => [STATUSES.GETTED].includes(model.value.status))
+const disabledNotification = computed(() => [STATUSES.NEED_GET].includes(model.value.status))
 
-// Простая проверка через lookup-таблицу
-function disabledStatus(statusValue) {
+function disabledStatus(statusValue: string): boolean {
   const allowed = getAllowedStatuses()
-  return !allowed.includes(statusValue)
+  return !allowed.includes(statusValue as STATUSES)
 }
 </script>
 

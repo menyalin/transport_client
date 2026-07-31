@@ -74,7 +74,7 @@ export function useReturnContextPage(service, id, options = {}) {
       loading.value = false
       item.value = tmpVal.value
       if (e.response?.status === 400 || e.response?.status === 403) {
-        error.value = { message: e.response.data, show: true }
+        error.value = { message: e.response?.data, show: true }
       } else {
         store.commit('setError', e)
       }
