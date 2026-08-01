@@ -71,7 +71,7 @@ const setCurrentDate = () => {
 <template>
   <v-text-field
     v-bind="$attrs"
-    class="d-inline-flex align-self-start px-3"
+    class="d-inline-flex align-self-start"
     :class="{ 'prepend-icon-hidden': !showPrependIcon }"
     :type
     :hide-details="!errors.length && props.hideDetails"

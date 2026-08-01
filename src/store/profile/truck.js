@@ -126,9 +126,11 @@ export default {
       })),
 
     truckKinds: ({ allTruckParams }, { companySettings }) => {
-      return allTruckParams.truckKinds.filter((i) =>
-        companySettings.truckKinds.length ? companySettings.truckKinds.includes(i.value) : true
-      )
+      return allTruckParams.truckKinds
+        .filter((i) =>
+          companySettings.truckKinds.length ? companySettings.truckKinds.includes(i.value) : true
+        )
+        .map((i) => ({ ...i, title: i.text }))
     },
 
     allTruckKinds: ({ allTruckParams }) => allTruckParams.truckKinds,

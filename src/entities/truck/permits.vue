@@ -4,43 +4,14 @@
       {{ title }}
     </AppBlockTitle>
     <div class="fields-row">
-      <v-text-field
-        v-model="item.dayPermitNumber"
-        label="Пропуск ДЕНЬ, №"
-        hide-details
-        class="field-md"
-      />
-      <DateTimeInput
-        v-model="item.dayPermitExpDate"
-        label="Действует до"
-        hide-details
-        class="field-date"
-      />
-      <v-text-field
-        v-model="item.dayPermitZone"
-        label="Зона действия"
-        hide-details
-        class="field-lg"
-      />
-
-      <v-text-field
-        v-model="item.nightPermitNumber"
-        label="Пропуск НОЧЬ, №"
-        hide-details
-        class="field-md"
-      />
-      <DateTimeInput
-        v-model="item.nightPermitExpDate"
-        label="Действует до"
-        hide-details
-        class="field-date"
-      />
-      <v-text-field
-        v-model="item.nightPermitZone"
-        label="Зона действия"
-        hide-details
-        class="field-lg"
-      />
+      <v-text-field v-model="item.dayPermitNumber" label="Пропуск ДЕНЬ, №" class="field-md" />
+      <v-text-field v-model="item.dayPermitZone" label="Зона действия" class="field-lg" />
+      <DateTimeInput v-model="item.dayPermitExpDate" label="Действует до" class="field-date" />
+    </div>
+    <div class="fields-row">
+      <v-text-field v-model="item.nightPermitNumber" label="Пропуск НОЧЬ, №" class="field-md" />
+      <v-text-field v-model="item.nightPermitZone" label="Зона действия" class="field-lg" />
+      <DateTimeInput v-model="item.nightPermitExpDate" label="Действует до" class="_field-date" />
     </div>
   </div>
 </template>
@@ -99,8 +70,8 @@ watch(
 }
 
 .field-date {
-  flex: 0 0 220px;
-  min-width: 220px;
-  max-width: 220px;
+  flex: 0 0 250px;
+  min-width: 250px;
+  max-width: 250px;
 }
 </style>

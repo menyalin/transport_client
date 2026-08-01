@@ -1,23 +1,28 @@
 <template>
   <div>
-    <AppBlockTitle>{{ title }}</AppBlockTitle>
-    <div class="fields-row">
-      <template v-if="truckType === 'truck'">
-        <v-text-field v-model="item.osagoNum" label="Осаго №" class="field-md" />
-        <DateTimeInput v-model="item.osagoExpDate" label="Дата окончания" class="field-date" />
-        <v-text-field v-model="item.osagoCompany" label="Страховая компания" class="field-lg" />
-      </template>
-      <v-text-field v-model="item.kaskoNum" label="Каско №" class="field-md" />
-      <DateTimeInput v-model="item.kaskoExpDate" label="Дата окончания" class="field-date" />
-      <v-text-field v-model="item.kaskoCompany" label="Страховая компания" class="field-lg" />
-      <v-text-field v-model="item.leasingСompany" label="Лизинговая компания" class="field-lg" />
+    <BlockTitle>
+      {{ title }}
+    </BlockTitle>
+    <div v-if="truckType === 'truck'" class="fields-row">
+      <v-text-field v-model="item.osagoNum" label="Осаго №" class="field-md" />
+      <v-text-field v-model="item.osagoCompany" label="Страховая компания" class="field-lg" />
+      <DateTimeInput v-model="item.osagoExpDate" label="Дата окончания" class="field-date" />
     </div>
+    <div class="fields-row">
+      <v-text-field v-model="item.kaskoNum" label="Каско №" class="field-md" />
+      <v-text-field v-model="item.kaskoCompany" label="Страховая компания" class="field-lg" />
+      <DateTimeInput v-model="item.kaskoExpDate" label="Дата окончания" class="field-date" />
+    </div>
+    <v-text-field
+      v-model="item.leasingСompany"
+      label="Лизинговая компания"
+      class="field-lg"
+      single-line
+    />
   </div>
 </template>
 <script setup>
-// import { watch } from 'vue'
-import { BlockTitle as AppBlockTitle } from '@/shared/ui'
-import { DateTimeInput } from '@/shared/ui'
+import { BlockTitle, DateTimeInput } from '@/shared/ui'
 
 defineOptions({ name: 'TruckInsurance' })
 
@@ -27,34 +32,11 @@ defineProps({
   title: String,
   truckType: String,
 })
-
-// const defaults = {
-//   osagoNum: null,
-//   osagoExpDate: null,
-//   osagoCompany: null,
-//   kaskoNum: null,
-//   kaskoExpDate: null,
-//   kaskoCompany: null,
-//   leasingСompany: null,
-// }
-
-// watch(
-//   item,
-//   (val) => {
-//     if (!val) item.value = {}
-//     Object.keys(defaults).forEach((key) => {
-//       if (!(key in item.value)) item.value[key] = defaults[key]
-//     })
-//   },
-//   { immediate: true }
-// )
 </script>
 <style scoped>
 .fields-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 15px;
+  gap: 10px;
 }
 
 .field-md {
@@ -70,8 +52,8 @@ defineProps({
 }
 
 .field-date {
-  flex: 0 0 220px;
-  min-width: 220px;
-  max-width: 220px;
+  flex: 0 0 250px;
+  min-width: 250px;
+  max-width: 250px;
 }
 </style>
