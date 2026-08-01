@@ -21,7 +21,7 @@
       <DateTimeInput v-model="item.transponderDate" label="Дата выдачи" class="field-date" />
     </div>
     <div class="fields-row">
-      <v-text-field v-model="item.fuelCardNumber" label="Топливная карта" class="field-md" />
+      <v-text-field v-model="item.fuelCardNumber" label="Топливная карта" class="field-xl" />
       <DateTimeInput v-model="item.fuelCardDate" label="Дата выдачи карты" class="field-date" />
       <v-text-field
         v-model="item.fuelCardNote"
@@ -33,8 +33,7 @@
 </template>
 <script setup>
 import { watch } from 'vue'
-import { BlockTitle as AppBlockTitle } from '@/shared/ui'
-import { DateTimeInput } from '@/shared/ui'
+import { BlockTitle as AppBlockTitle, DateTimeInput } from '@/shared/ui'
 
 defineOptions({ name: 'AdditionalDetails' })
 
@@ -95,9 +94,15 @@ watch(
   max-width: 450px;
 }
 
+.field-xl {
+  flex: 1 1 600px;
+  min-width: 600px;
+  max-width: 600px;
+}
+
 .field-date {
-  flex: 0 0 220px;
-  min-width: 220px;
-  max-width: 220px;
+  flex: 0 0 250px;
+  min-width: 250px;
+  max-width: 250px;
 }
 </style>

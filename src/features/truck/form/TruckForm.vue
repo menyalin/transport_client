@@ -1,83 +1,89 @@
 <template>
   <div>
     <ButtonsPanel
-      :disabledSubmit="
-        !store.getters.hasPermission('truck:write') || isInvalidForm || props.loading
-      "
+      :disabledSubmit="!store.getters.hasPermission('truck:write') || v$.$invalid || loading"
       panel-type="form"
       @cancel="cancel"
       @submit="submit"
     />
-    <div id="form">
+    <div class="truck-form">
       <div class="fields-row">
-        <v-autocomplete
-          v-model="form.tkName"
-          :items="carrierItems"
-          item-title="name"
-          item-value="_id"
-          label="ТК"
-          class="field-autocomplete"
-        />
-        <v-select
-          v-model="form.type"
-          label="Тип ТС"
-          :items="truckTypes"
-          :error-messages="typeErrors"
-          class="field-select"
-        />
-        <v-select
-          v-model="form.liftCapacityType"
-          label="Грузоподъемность, тн"
-          :items="liftCapacityTypes"
-          class="field-select"
-        />
-        <template v-if="form.type === 'trailer' || form.liftCapacityType !== 20">
-          <v-select v-model="form.kind" label="Вид ТС" :items="truckKinds" class="field-select" />
-          <v-text-field
-            v-model.number="form.pltCount"
-            label="Макс.кол-во плт"
-            type="number"
-            class="field-xs"
+        <div class="fields-row">
+          <v-autocomplete
+            v-model="v$.tkName.$model"
+            :items="carrierItems"
+            item-title="name"
+            item-value="_id"
+            label="ТК"
+            :style="{ minWidth: '250px' }"
           />
-        </template>
-        <DateTimeInput
-          v-model="form.startServiceDate"
-          label="Дата ввода в эксплуатацию"
-          hide-details
-          class="field-date"
-        />
-        <DateTimeInput
-          v-model="form.endServiceDate"
-          label="Дата вывода из эксплуатации"
-          hide-details
-          class="field-date"
-        />
+          <v-select
+            v-model="form.type"
+            label="Тип ТС"
+            :items="truckTypes"
+            :error-messages="typeErrors"
+            :style="{ minWidth: '150px' }"
+          />
+          <v-select
+            v-model="form.liftCapacityType"
+            label="Грузоподъемность, тн"
+            :items="liftCapacityTypes"
+            :style="{ minWidth: '150px' }"
+          />
+          <template v-if="form.type === 'trailer' || form.liftCapacityType !== 20">
+            <v-select
+              v-model="form.kind"
+              label="Вид ТС"
+              :items="truckKinds"
+              :style="{ minWidth: '150px' }"
+            />
+            <v-text-field
+              v-model.number="v$.pltCount.$model"
+              label="Макс.кол-во плт"
+              type="number"
+              :style="{ minWidth: '150px' }"
+            />
+          </template>
+        </div>
+        <v-spacer />
+        <div class="fields-row">
+          <DateTimeInput
+            v-model="form.startServiceDate"
+            label="Дата ввода в эксплуатацию"
+            hide-details
+          />
+          <DateTimeInput
+            v-model="form.endServiceDate"
+            label="Дата вывода из эксплуатации"
+            hide-details
+          />
+        </div>
       </div>
 
       <div class="fields-row">
         <v-text-field
-          v-model.trim="form.regNum"
+          v-model.trim="v$.regNum.$model"
           label="Гос.номер"
           :error-messages="regNumErrors"
-          class="field-md"
+          :style="{ minWidth: '230px', maxWidth: '230px' }"
         />
         <v-text-field v-model.trim="form.brand" label="Марка" class="field-lg" />
         <v-text-field v-model.trim="form.model" label="Модель" class="field-lg" />
         <v-text-field v-model.trim="form.issueYear" label="Год выпуска" class="field-xs" />
         <v-text-field
-          v-model.number="form.order"
+          v-model.number="v$.order.$model"
           label="Индекс в списке"
           type="number"
           class="field-xs"
         />
         <v-text-field
-          v-model.number="form.volumeFuel"
-          label="Объем топливного бака"
+          v-model.number="v$.volumeFuel.$model"
+          label="Объем топл. бака"
           type="number"
           class="field-sm"
         />
         <v-text-field
-          v-model.number="form.volumeRef"
+          v-model.number="v$.volumeRef.$model"
           label="Объем бака рефа"
           type="number"
           class="field-sm"
@@ -151,10 +157,10 @@
         <v-textarea v-model.trim="form.note" rows="3" label="Примечание" class="field-fluid" />
       </div>
 
-      <div v-if="!!form.tkName && form.type === 'truck'">
+      <div v-if="form.tkName != null && form.type === 'truck'">
         <AppAllowedDrivers
           v-model="form.allowedDrivers"
-          :tkName="typeof form.tkName === 'object' ? form.tkName._id : form.tkName"
+          :tkName="typeof form.tkName === 'object' ? (form.tkName as any)._id : form.tkName"
         />
       </div>
 
@@ -163,15 +169,16 @@
         <v-checkbox v-model="form.hideInFines" label="Не показывать в штрафах" />
         <v-checkbox v-model="form.hasScans" label="Есть сканы документов" />
       </div>
-      <v-divider />
-    </div>
-    <EntityFiles v-if="truck?._id" :itemId="truck._id" docType="truck" />
 
-    <div class="delete-btn-row mt-3">
+      <v-divider />
+
+      <EntityFiles v-if="truck?._id" :itemId="truck._id" docType="truck" class="mt-3" />
+
       <v-btn
         v-if="displayDeleteBtn"
         color="error"
         prepend-icon="mdi-delete"
+        class="mt-3"
         @click="emit('delete')"
       >
         Удалить
@@ -180,7 +187,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useVuelidate } from '@vuelidate/core'
@@ -192,28 +199,67 @@ import AppInsurance from '@/entities/truck/insurance.vue'
 import AppPermits from '@/entities/truck/permits.vue'
 import AppAdditionalDetails from './TruckAdditionalDetails.vue'
 
-const props = defineProps({
-  displayDeleteBtn: {
-    type: Boolean,
-    default: false,
-  },
-  carrierItems: {
-    type: Array,
-    required: true,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-})
+interface TruckState {
+  brigadier: string | null
+  mechanic: string | null
+  sanitaryPassportExpDate: string | null
+  sanitaryPassportNote: string | null
+  brand: string | null
+  model: string | null
+  issueYear: string | null
+  startServiceDate: string | null
+  endServiceDate: string | null
+  tkName: string | null
+  type: string
+  kind: string | null
+  liftCapacityType: number | null
+  regNum: string | null
+  win: string | null
+  sts: string | null
+  stsDate: string | null
+  pts: string | null
+  owner: string | null
+  volumeFuel: number | null
+  volumeRef: number | null
+  liftCapacity: number | null
+  pltCount: number | null
+  note: string | null
+  allowedDrivers: string[]
+  order: number
+  alwaysInSchedule: boolean
+  hideInFines: boolean
+  hasScans: boolean
+  insurance: Record<string, any>
+  permits: Record<string, any>
+  additionalDetails: Record<string, any>
+  additionalNotifications: any[]
+}
 
-const truck = defineModel({ type: Object })
+defineOptions({ name: 'TruckForm' })
 
-const emit = defineEmits(['submit', 'cancel', 'delete'])
+withDefaults(
+  defineProps<{
+    displayDeleteBtn?: boolean
+    carrierItems: any[]
+    loading?: boolean
+  }>(),
+  {
+    displayDeleteBtn: false,
+    loading: false,
+  }
+)
+
+const truck = defineModel<Record<string, any> | null>({ default: null })
+
+const emit = defineEmits<{
+  submit: [truck: TruckState & { company: string }]
+  cancel: []
+  delete: []
+}>()
 
 const store = useStore()
 
-const defaultTruck = {
+const defaultTruck: TruckState = {
   brigadier: null,
   mechanic: null,
   sanitaryPassportExpDate: null,
@@ -249,50 +295,33 @@ const defaultTruck = {
   additionalNotifications: [],
 }
 
-const form = ref({ ...defaultTruck })
+const form = ref<TruckState>({ ...defaultTruck })
 
 watch(
   truck,
   (val) => {
-    if (!val) return
-    const keys = Object.keys(defaultTruck)
-    keys.forEach((key) => {
-      form.value[key] = val[key] ?? defaultTruck[key]
-    })
+    if (!val) form.value = defaultTruck
+    else {
+      form.value = val as TruckState
+      form.value.tkName = (val.tkName?._id || val.tkName) as string
+    }
   },
   { immediate: true }
 )
 
 const rules = {
-  form: {
-    brand: {},
-    model: {},
-    issueYear: {},
-    startServiceDate: {},
-    endServiceDate: {},
-    tkName: { required },
-    type: { required },
-    kind: {},
-    liftCapacity: { numeric },
-    liftCapacityType: { required },
-    regNum: { required },
-    win: {},
-    sts: {},
-    stsDate: {},
-    pts: {},
-    owner: {},
-    volumeFuel: { numeric },
-    volumeRef: { numeric },
-    pltCount: { numeric },
-    note: {},
-    allowedDrivers: {},
-    order: { numeric },
-    alwaysInSchedule: {},
-    hasScans: {},
-  },
+  tkName: { required },
+  type: { required },
+  liftCapacityType: { required },
+  regNum: { required },
+  liftCapacity: { numeric },
+  volumeFuel: { numeric },
+  volumeRef: { numeric },
+  pltCount: { numeric },
+  order: { numeric },
 }
 
-const v = useVuelidate(rules, form)
+const v$ = useVuelidate(rules, form, { $scope: false })
 
 const directoriesProfile = computed(() => store.getters.directoriesProfile)
 const truckTypes = computed(() => store.getters.truckTypes)
@@ -301,22 +330,16 @@ const liftCapacityTypes = computed(() => store.getters.liftCapacityTypes)
 const brigadiers = computed(() => store.getters.brigadiersForSelect)
 const mechanics = computed(() => store.getters.mechanicsForSelect)
 
-const isInvalidForm = computed(() => {
-  if (!directoriesProfile.value) return true
-  return v.value.$invalid
-})
-
 const regNumErrors = computed(() => {
-  const errors = []
-  if (v.value.form.regNum.$dirty && v.value.form.regNum.$invalid && !props.loading)
+  const errors: string[] = []
+  if (v$.value.regNum.$dirty && v$.value.regNum.$invalid)
     errors.push('Гос. номер должен быть заполнен')
   return errors
 })
 
 const typeErrors = computed(() => {
-  const errors = []
-  if (v.value.form.type.$dirty && v.value.form.type.$invalid && !props.loading)
-    errors.push('Тип должен быть заполнен')
+  const errors: string[] = []
+  if (v$.value.type.$dirty && v$.value.type.$invalid) errors.push('Тип должен быть заполнен')
   return errors
 })
 
@@ -330,11 +353,10 @@ const cancel = () => {
 </script>
 
 <style scoped>
-#form {
+.truck-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 1400px;
 }
 
 .fields-row {
@@ -381,20 +403,14 @@ const cancel = () => {
 }
 
 .field-date {
-  flex: 0 0 220px;
-  min-width: 220px;
-  max-width: 220px;
+  flex: 0 0 250px;
+  min-width: 250px;
+  max-width: 250px;
 }
 
 .field-fluid {
   flex: 1 1 100%;
   min-width: 100%;
   max-width: none;
-}
-
-.delete-btn-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
 }
 </style>
