@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { DowntimeService } from '@/shared/services'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 export default {
   state: {
@@ -30,15 +31,17 @@ export default {
   },
   actions: {
     async getDowntimesForSchedule({ commit, getters }) {
-      if (!getters.schedulePeriod) return null
+      const orderStore = useOrderStore()
+      const schedulePeriod = orderStore.schedulePeriod
+      if (!schedulePeriod) return null
       if (!getters.directoriesProfile) {
         commit('setError', 'Профиль настроек не установлен')
         return null
       }
       DowntimeService.getListForSchedule({
         company: getters.directoriesProfile,
-        startDate: new Date(getters.schedulePeriod[0]).toISOString(),
-        endDate: new Date(getters.schedulePeriod[1]).toISOString(),
+        startDate: new Date(schedulePeriod[0]).toISOString(),
+        endDate: new Date(schedulePeriod[1]).toISOString(),
       })
     },
   },
@@ -52,8 +55,10 @@ export default {
         return hash
       }, {}),
 
-    downtimesForSchedule: ({ downtimes }, { schedulePeriod, hiddenTruckIds }) =>
-      downtimes.filter((d) => {
+    downtimesForSchedule: ({ downtimes }, { hiddenTruckIds }) => {
+      const orderStore = useOrderStore()
+      const schedulePeriod = orderStore.schedulePeriod
+      return downtimes.filter((d) => {
         const sP = dayjs(schedulePeriod[0])
         const eP = dayjs(schedulePeriod[1])
         return (
@@ -61,6 +66,7 @@ export default {
           sP.isSameOrBefore(d.endPositionDate) &&
           !hiddenTruckIds.includes(d.truck)
         )
-      }),
+      })
+    },
   },
 }

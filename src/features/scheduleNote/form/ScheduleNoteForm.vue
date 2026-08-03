@@ -7,9 +7,21 @@
       @submit="submit"
     />
 
-    <v-autocomplete v-model="form.truck" label="Грузовик" :items="trucks" />
-    <v-text-field v-model.trim="form.text" label="Текст" :style="{ minWidth: '300px' }" />
-    <v-select v-model="form.priority" label="Приоритет" :items="priorityItems" />
+    <v-autocomplete
+      v-model="form.truck"
+      label="Грузовик"
+      :items="trucks"
+      item-title="regNum"
+      item-value="_id"
+      :style="{ minWidth: '300px' }"
+    />
+    <v-text-field v-model.trim="form.text" label="Текст" :style="{ minWidth: '600px' }" />
+    <v-select
+      v-model="form.priority"
+      label="Приоритет"
+      :items="priorityItems"
+      :style="{ minWidth: '300px' }"
+    />
 
     <DateTimeInput
       v-model="form.startPositionDate"
@@ -59,11 +71,9 @@ const form = ref({
 })
 
 const rules = {
-  form: {
-    text: { required },
-    truck: { required },
-    startPositionDate: { required },
-  },
+  text: { required },
+  truck: { required },
+  startPositionDate: { required },
 }
 
 const v = useVuelidate(rules, form)
@@ -84,9 +94,7 @@ const isInvalidForm = computed(() => {
 const formState = computed(() => ({ ...form.value, company: directoriesProfile.value }))
 
 const trucks = computed(() => {
-  return store.getters.trucks
-    .filter((item) => item.type === 'truck')
-    .map((item) => ({ value: item._id, title: item.regNum }))
+  return store.getters.trucks.filter((item) => item.type === 'truck')
 })
 
 const submit = () => {

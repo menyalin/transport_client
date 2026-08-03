@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { ScheduleNoteService } from '@/shared/services'
+import { useOrderStore } from '@/entities/order/orderStore'
 
 export default {
   state: {
@@ -26,15 +27,17 @@ export default {
   },
   actions: {
     async getNotesForSchedule({ commit, getters }) {
-      if (!getters.schedulePeriod) return null
+      const orderStore = useOrderStore()
+      const schedulePeriod = orderStore.schedulePeriod
+      if (!schedulePeriod) return null
       if (!getters.directoriesProfile) {
         commit('setError', 'Профиль настроек не установлен')
         return null
       }
       ScheduleNoteService.getListForSchedule({
         company: getters.directoriesProfile,
-        startDate: new Date(getters.schedulePeriod[0]).toISOString(),
-        endDate: new Date(getters.schedulePeriod[1]).toISOString(),
+        startDate: new Date(schedulePeriod[0]).toISOString(),
+        endDate: new Date(schedulePeriod[1]).toISOString(),
       })
     },
   },
@@ -43,7 +46,9 @@ export default {
 
     scheduleNotes: ({ notes }) => notes,
 
-    notesForSchedule: ({ notes }, { schedulePeriod }) => {
+    notesForSchedule: ({ notes }) => {
+      const orderStore = useOrderStore()
+      const schedulePeriod = orderStore.schedulePeriod
       if (!schedulePeriod) return []
       return notes.filter((n) => {
         const sP = dayjs(schedulePeriod[0])
