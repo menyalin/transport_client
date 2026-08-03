@@ -2,7 +2,7 @@
   <EntityListWrapper>
     <ButtonsPanel
       panel-type="list"
-      :disabledSubmit="!$store.getters.hasPermission('order:create')"
+      :disabledSubmit="!canCreate"
       @submit="create"
       @refresh="refresh"
     />
@@ -35,7 +35,8 @@
   </EntityListWrapper>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { EntityListWrapper, ButtonsPanel } from '@/shared/ui'
 import { OrdersTable, OrderDocsList, useOrderDocs, OrdersTableSettings } from '@/entities/order'
 import { useListData, putOrdersTableToClipboard } from './model'
@@ -43,6 +44,10 @@ import { ORDERS_TABLE_HEADERS } from '@/shared/constants'
 import { useCarrierStore } from '@/entities/carrier/useCarrierStore'
 
 defineOptions({ name: 'OrdersListPage' })
+
+const vuexStore = useStore()
+
+const canCreate = computed(() => vuexStore.getters.hasPermission('order:create'))
 
 const carrierStore = useCarrierStore()
 const allHeaders = ORDERS_TABLE_HEADERS

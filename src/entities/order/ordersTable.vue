@@ -194,11 +194,13 @@ const preparedItems = computed(() => {
     loadingPoints:
       order.route
         .filter((p) => p.type === 'loading')
-        .map((p) => addressStore.addressMap.get(p.address)?.shortName) || null,
+        .map((p) => addressStore.addressMap.get(p.address)?.shortName)
+        .join(', ') || null,
     unloadingPoints:
       order.route
         .filter((p) => p.type === 'unloading')
-        .map((p) => addressStore.addressMap.get(p.address)?.shortName) || null,
+        .map((p) => addressStore.addressMap.get(p.address)?.shortName)
+        .join(', ') || null,
   }))
 })
 </script>

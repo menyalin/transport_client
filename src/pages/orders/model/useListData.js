@@ -66,7 +66,6 @@ export const useListData = () => {
     accountingMode: settings.value.accountingMode || null,
     skip: listOptions.value.itemsPerPage * (listOptions.value.page - 1),
     limit: listOptions.value.itemsPerPage,
-    // TODO: Переделать на новое API сортировки (на сервере)
     sortBy: sortingAdapterForOldApi(listOptions.value.sortBy).sortBy,
     sortDesc: sortingAdapterForOldApi(listOptions.value.sortBy).sortDesc,
   }))
@@ -76,11 +75,12 @@ export const useListData = () => {
     try {
       loading.value = true
       const data = await OrderService.getList(queryParams.value)
-      loading.value = false
       items.value = data.items
       statisticData.value = { ...data, items: null }
     } catch (e) {
       store.commit('setError', e.message)
+    } finally {
+      loading.value = false
     }
   }
   function updateItems(data) {

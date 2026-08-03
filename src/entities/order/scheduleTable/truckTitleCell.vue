@@ -37,6 +37,13 @@ const baseUrl = '/profile/trucks/'
 }
 .router-link {
   text-decoration: none;
+  color: inherit;
+}
+
+.router-link:visited,
+.router-link:hover,
+.router-link:active {
+  color: inherit;
 }
 .row-number {
   width: 1rem;
