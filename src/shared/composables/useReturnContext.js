@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid'
 const STORAGE_KEY = 'return-context-stack'
 const TTL = 30 * 60 * 1000
 
+const storage = () => sessionStorage
+
 /**
  * @typedef {Object} ReturnContext
  * @property {string} id
@@ -14,14 +16,14 @@ const TTL = 30 * 60 * 1000
 
 function readStack() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    return JSON.parse(storage().getItem(STORAGE_KEY) || '[]')
   } catch {
     return []
   }
 }
 
 function writeStack(stack) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(stack))
+  storage().setItem(STORAGE_KEY, JSON.stringify(stack))
 }
 
 function clearExpired(stack) {

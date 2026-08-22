@@ -1,6 +1,7 @@
 <template>
   <div>
     <BlockTitle class="mt-2">{{ title }}</BlockTitle>
+    <pre>{{ model }} </pre>
     <div class="confirmed-crew-block">
       <v-autocomplete
         :model-value="model.truck"

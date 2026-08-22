@@ -1,10 +1,23 @@
 import { ref, computed } from 'vue'
 
-export function useOrderClient() {
-  const agreement = ref(null)
-  const carrierAgreement = ref(null)
+export interface ClientVatRateInfo {
+  date: string
+  usePriceWithVat: boolean
+  vatRate: number
+}
 
-  const client = ref({
+export interface ClientInfo {
+  client?: any
+  agreement?: any
+  clientVatRateInfo?: ClientVatRateInfo
+  [key: string]: any
+}
+
+export function useOrderClient() {
+  const agreement = ref<Record<string, any> | null>(null)
+  const carrierAgreement = ref<Record<string, any> | null>(null)
+
+  const client = ref<ClientInfo>({
     client: null,
     agreement: null,
     clientVatRateInfo: {
@@ -22,16 +35,16 @@ export function useOrderClient() {
     return client.value?.agreement
   })
 
-  function setClient(val) {
+  function setClient(val: Record<string, any>) {
     if (val.client) client.value = val.client
     if (val.agreement) agreement.value = val.agreement
   }
 
-  function updateAgreement(agreementVal) {
+  function updateAgreement(agreementVal: Record<string, any>) {
     agreement.value = { ...agreementVal }
   }
 
-  function updateCarrierAgreement(val) {
+  function updateCarrierAgreement(val: Record<string, any> | null) {
     carrierAgreement.value = val
   }
 

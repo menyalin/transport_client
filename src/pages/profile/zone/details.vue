@@ -29,6 +29,7 @@ const { item, loading, submit, cancel, deleteHandler } = useReturnContextPage(
   {
     returnContextField: 'newZoneId',
     returnContextClearField: 'clearedZone',
+    detailsRouteName: 'ZoneDetails',
   }
 )
 </script>

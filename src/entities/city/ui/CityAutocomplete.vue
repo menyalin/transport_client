@@ -4,7 +4,8 @@
     :label="label"
     :disabled="disabled"
     :hide-details="hideDetails"
-    :items="items"
+    :fetch-items="fetchItems"
+    :fetch-by-id="fetchById"
     show-action
     v-bind="$attrs"
     @create="$emit('create')"
@@ -13,7 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { onMounted, computed } from 'vue'
+import { useStore } from 'vuex'
 import { useCityStore } from '@/entities/city/cityStore'
 import AppAutocomplete from '@/shared/ui/AppAutocomplete/AppAutocomplete.vue'
 
@@ -33,12 +35,24 @@ defineEmits<{
   edit: [id: string | null]
 }>()
 
+const store = useStore()
 const cityStore = useCityStore()
 
 const model = defineModel<string | null>()
 
-const items = computed(() => {
-  const cities = cityStore.cities || []
-  return cities.map((i: any) => ({ value: i._id, text: i.name }))
+const items = computed(() => cityStore.citiesForAutocomplete || [])
+
+onMounted(() => {
+  const profile = store.getters.directoriesProfile
+  if (profile) cityStore.fetchCities(profile)
 })
+
+async function fetchItems(query: string) {
+  const search = query.toLowerCase()
+  return items.value.filter((i) => i.text.toLowerCase().includes(search))
+}
+
+async function fetchById(id: string) {
+  return items.value.find((i) => i.value === id) || null
+}
 </script>

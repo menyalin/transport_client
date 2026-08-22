@@ -116,6 +116,8 @@
       :confirmed="orderInProgress"
       :isValid="isValidRoute"
       class="route-points"
+      @need-create-address="$emit('need-create-address', $event)"
+      @need-edit-address="$emit('need-edit-address', $event)"
     />
     <div class="price">
       <AppAnalyticBlock
@@ -212,7 +214,7 @@ import {
   IncomingInvoiceLink,
   ReqTransport,
   CargoParams,
-  OrderModel,
+  fillRouteFromTemplate,
   useOrderDocs,
   useOrderValidations,
   useOrderPrintForms,
@@ -245,7 +247,15 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delete', 'cancel', 'save', 'submit', 'change'])
+const emit = defineEmits([
+  'delete',
+  'cancel',
+  'save',
+  'submit',
+  'change',
+  'need-create-address',
+  'need-edit-address',
+])
 const vuexStore = useStore()
 
 // Используем новый composable
@@ -416,7 +426,9 @@ watch(templateSelector, (value) => {
   reqTransport.value = { ...reqTransport.value, ...template.reqTransport }
   const plannedDate = route.value[0]?.plannedDate
   analytics.value = { ...template.analytics }
-  setRoute(OrderModel.fillRouteFromTemplate(template, plannedDate))
+  if (plannedDate) {
+    setRoute(fillRouteFromTemplate(template, plannedDate))
+  }
   cargoParams.value = { ...cargoParams.value, ...template.cargoParams }
 })
 

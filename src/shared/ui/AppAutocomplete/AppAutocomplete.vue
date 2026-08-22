@@ -15,8 +15,10 @@
     :hide-details="hideDetails"
     :multiple="multiple"
     :clearable="clearable"
+    :hint="hint"
+    :persistent-hint="persistentHint"
     :append-inner-icon="actionIcon"
-    v-bind="serverModeAttrs"
+    v-bind="autocompleteAttrs"
     @click:append-inner="onActionClick"
   >
     <template v-if="noDataText && !loading && !resolvedItems.length" #no-data>
@@ -26,8 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, type Ref } from 'vue'
-import { useRouter, type RouteLocationRaw } from 'vue-router'
+import { ref, computed, watch, onMounted, useAttrs, type Ref } from 'vue'
 
 defineOptions({ name: 'AppAutocomplete' })
 
@@ -44,8 +45,6 @@ const props = withDefaults(
     fetchById?: (_id: string) => Promise<Item | null>
     itemTitle?: string
     itemValue?: string
-    createRoute?: RouteLocationRaw
-    editRoute?: RouteLocationRaw
     showAction?: boolean
     labelOnly?: boolean
     multiple?: boolean
@@ -53,6 +52,8 @@ const props = withDefaults(
     readonly?: boolean
     clearable?: boolean
     hideDetails?: boolean
+    hint?: string
+    persistentHint?: boolean
     noDataText?: string
   }>(),
   {
@@ -65,6 +66,7 @@ const props = withDefaults(
     disabled: false,
     readonly: false,
     showAction: false,
+    persistentHint: false,
     noDataText: '',
   }
 )
@@ -74,11 +76,11 @@ const emit = defineEmits<{
   create: []
   edit: [id: string | null]
   'update:search': [value: string | null]
+  error: [error: unknown]
 }>()
 
-const router = useRouter()
-
 const inputRef = ref<{ focus: () => void } | null>(null)
+const attrs = useAttrs()
 
 const isServerMode = computed(() => !!props.fetchItems)
 
@@ -97,7 +99,7 @@ const currentModel = computed(() => props.modelValue)
 
 const actionIcon = computed(() => {
   if (props.disabled || props.readonly) return undefined
-  if (!props.showAction && !props.createRoute && !props.editRoute) return undefined
+  if (!props.showAction) return undefined
 
   const val = currentModel.value
   if (props.multiple) {
@@ -118,11 +120,16 @@ const serverModeAttrs = computed(() => {
   }
 })
 
+const autocompleteAttrs = computed(() => ({
+  ...serverModeAttrs.value,
+  ...attrs,
+}))
+
 const displayText = computed(() => {
   if (!currentModel.value) return ''
   const val = currentModel.value
   if (Array.isArray(val)) return ''
-  const found = (props.items || []).find((i) => i[props.itemValue] === val)
+  const found = (resolvedItems.value || []).find((i) => i[props.itemValue] === val)
   return found ? String(found[props.itemTitle] || '') : ''
 })
 
@@ -146,6 +153,8 @@ async function fetchFromServer(query: string) {
   loading.value = true
   try {
     fetchedItems.value = (await props.fetchItems(query)) || []
+  } catch (e) {
+    emit('error', e)
   } finally {
     loading.value = false
   }
@@ -157,50 +166,52 @@ function onActionClick() {
   if (props.multiple) {
     if (Array.isArray(val) && val.length === 1) {
       emit('edit', val[0])
-      if (props.editRoute) router.push(props.editRoute)
       return
     }
     emit('create')
-    if (props.createRoute) router.push(props.createRoute)
     return
   }
 
   const id = typeof val === 'string' ? val : null
-  if (val && props.editRoute) {
-    emit('edit', id)
-    router.push(props.editRoute)
-  } else if (!val && props.createRoute) {
-    emit('create')
-    router.push(props.createRoute)
-  } else if (val) {
+  if (val) {
     emit('edit', id)
   } else {
     emit('create')
   }
 }
 
-async function loadInitialItem() {
+async function loadInitialItems() {
   const val = currentModel.value
   if (!val || !props.fetchById || !props.fetchItems) return
-  if (Array.isArray(val)) return
+  const ids = Array.isArray(val) ? val : [val]
+  if (!ids.length) return
   loading.value = true
   try {
-    const item = await props.fetchById(val)
-    if (item) fetchedItems.value = [item]
+    const items: Item[] = []
+    for (const id of ids) {
+      const item = await props.fetchById(id)
+      if (item) items.push(item)
+    }
+    fetchedItems.value = items
+  } catch (e) {
+    emit('error', e)
   } finally {
     loading.value = false
   }
 }
 
 onMounted(() => {
-  if (isServerMode.value && currentModel.value) {
-    loadInitialItem()
+  if (isServerMode.value) {
+    fetchFromServer('')
+    if (currentModel.value) {
+      loadInitialItems()
+    }
   }
 })
 
 watch(currentModel, (val) => {
   if (val && props.fetchById && isServerMode.value) {
-    loadInitialItem()
+    loadInitialItems()
   }
 })
 

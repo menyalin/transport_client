@@ -38,10 +38,6 @@ export const usePointDetail = ({ modelRef, emit, ind: _ind }) => {
     },
   }
   const v$ = useVuelidate(rules, state)
-  function addressFilter(item) {
-    if (!state.value.type) return true
-    return item[state.value.type]
-  }
   // #region computeds
   const addressContactsHint = computed(() => {
     if (!state.value.address) return null
@@ -49,7 +45,6 @@ export const usePointDetail = ({ modelRef, emit, ind: _ind }) => {
     return contacts ? `Контакты: ${contacts}` : null
   })
   const pointTypes = computed(() => orderStore.pointTypes)
-  const addressItems = computed(() => addressStore.addressesForAutocomplete.filter(addressFilter))
   const departureDateErrors = computed(() => {
     let errors = []
     if (v$.value.departureDate.isLaterThan.$invalid) errors.push('Дата не корректна')
@@ -79,7 +74,6 @@ export const usePointDetail = ({ modelRef, emit, ind: _ind }) => {
     isShowDocDates,
     readonlyDocDates,
     pointTypes,
-    addressItems,
     setField,
     addressContactsHint,
   }

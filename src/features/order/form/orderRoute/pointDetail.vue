@@ -67,19 +67,17 @@
             @update:model-value="setField($event, 'waitsForWaybills')"
           />
         </div>
-        <v-autocomplete
+        <AddressAutocomplete
+          v-model="state.address"
           auto-select-first
-          :model-value="state.address"
-          :items="addressItems"
           :pointType="!state.isReturn ? state.type : null"
           :disabled="!state.type"
-          label="Адрес"
-          :readonly="readonly"
           :style="{ 'min-width': '550px' }"
           :hint="addressContactsHint"
           :persistentHint="!!addressContactsHint"
-          :hideDetails="!addressContactsHint"
           @update:model-value="setField($event, 'address')"
+          @create="$emit('need-create-address', ind)"
+          @edit="$emit('need-edit-address', $event)"
         />
         <v-text-field
           v-if="state.type === 'unloading'"
@@ -252,6 +250,7 @@
 </template>
 <script setup>
 import { BorderedBlock, DateTimeInput } from '@/shared/ui'
+import { AddressAutocomplete } from '@/entities/address'
 import { usePointDetail } from './usePointDetail'
 
 defineOptions({ name: 'PointDetail' })
@@ -282,7 +281,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delete', 'changePoint'])
+const emit = defineEmits(['delete', 'changePoint', 'need-create-address', 'need-edit-address'])
 
 const {
   state,
@@ -291,7 +290,6 @@ const {
   readonlyDocDates,
   pointTypes,
   setField,
-  addressItems,
   addressContactsHint,
 } = usePointDetail({
   modelRef: pointModel,

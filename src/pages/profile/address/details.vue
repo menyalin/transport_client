@@ -24,7 +24,7 @@
   </FormWrapper>
 </template>
 <script setup>
-import { watch, ref, computed, onMounted } from 'vue'
+import { watch, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { AddressService } from '@/shared/services'
@@ -51,6 +51,7 @@ const error = ref({
 const loading = ref(false)
 
 const isDraftEnabled = computed(() => !props.id)
+const ctxId = computed(() => route.query.ctx)
 
 function toggleAlert() {
   error.value = {
@@ -65,30 +66,31 @@ async function submit(val) {
     loading.value = true
     if (props.id) {
       item.value = await AddressService.updateOne(props.id, val)
-    } else item.value = await AddressService.create(val)
+    } else {
+      item.value = await AddressService.create(val)
+    }
     tmpVal.value = null
 
-    if (props.id) {
-      router.back()
-    } else {
-      const ctxId = route.query.ctx
-      if (ctxId) {
-        const ctx = popContext(ctxId)
-        if (ctx) {
-          router.push({
-            path: ctx.from,
-            query: { newAddressId: item.value?._id, ...ctx.params },
-          })
-          return
-        }
+    if (ctxId.value) {
+      const ctx = popContext(ctxId.value)
+      if (ctx) {
+        router.replace({
+          path: ctx.from,
+          query: { newAddressId: item.value?._id, ...ctx.params },
+        })
+        return
       }
-      router.push({ name: 'AddressList' })
     }
+
+    if (props.id) router.go(-1)
+    else router.push({ name: 'AddressList' })
   } catch (e) {
     item.value = tmpVal.value
     if (e.response?.status === 400 || e.response?.status === 403) {
       error.value.message = e.response?.data
       error.value.show = true
+    } else {
+      store.commit('setError', e.message)
     }
   } finally {
     loading.value = false
@@ -96,21 +98,32 @@ async function submit(val) {
 }
 
 function cancel() {
-  router.back()
+  if (ctxId.value) {
+    popContext(ctxId.value)
+  }
+  router.go(-1)
 }
 
 async function deleteHandler() {
-  const res = confirm('Вы действительно хотите удалить запись? ')
-  if (res) {
-    try {
-      loading.value = true
-      await AddressService.deleteById(props.id)
-      router.back()
-    } catch (e) {
-      store.commit('setError', e.message)
-    } finally {
-      loading.value = false
+  try {
+    loading.value = true
+    await AddressService.deleteById(props.id)
+
+    if (ctxId.value) {
+      const ctx = popContext(ctxId.value)
+      if (ctx) {
+        router.replace({
+          path: ctx.from,
+          query: { clearedAddress: true, ...ctx.params },
+        })
+        return
+      }
     }
+    router.go(-1)
+  } catch (e) {
+    store.commit('setError', e.message)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -165,22 +178,5 @@ watch(
   },
   { immediate: true }
 )
-
-onMounted(() => {
-  const query = { ...route.query }
-  const hasReturnQuery = [
-    'newRegionId',
-    'newCityId',
-    'clearedRegion',
-    'clearedCity',
-    'newPartnerId',
-    'clearedPartner',
-    'newZoneId',
-    'clearedZone',
-  ].some((k) => query[k])
-  if (hasReturnQuery) {
-    router.replace({ query: {} })
-  }
-})
 </script>
 <style></style>

@@ -1,12 +1,12 @@
 import { ref } from 'vue'
 
 export function useOrderPricing() {
-  const prices = ref([])
-  const prePrices = ref([])
-  const finalPrices = ref([])
-  const outsourceCosts = ref([])
+  const prices = ref<any[]>([])
+  const prePrices = ref<any[]>([])
+  const finalPrices = ref<any[]>([])
+  const outsourceCosts = ref<any[]>([])
 
-  function setPricing(val) {
+  function setPricing(val: Record<string, any>) {
     if (val.prices) prices.value = val.prices
     if (val.prePrices) prePrices.value = val.prePrices
     if (val.finalPrices) finalPrices.value = val.finalPrices
