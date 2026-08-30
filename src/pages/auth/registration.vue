@@ -1,6 +1,6 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row class="align-center justify-center">
+  <v-container class="h-screen" fluid>
+    <v-row class="align-center justify-center fill-height">
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-4">
           <v-toolbar color="primary" dark flat>
@@ -9,17 +9,15 @@
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
-              <transition name="fade">
-                <v-alert v-if="!!message" :type="messageType">
-                  {{ message }}
-                </v-alert>
-              </transition>
+              <v-alert v-if="!!message" :type="messageType" class="mb-4">
+                {{ message }}
+              </v-alert>
               <v-text-field
                 v-model.trim="form.name"
                 label="Имя"
+                name="name"
+                autocomplete="name"
                 prepend-icon="mdi-account"
-                type="text"
-                required
                 :error-messages="nameErrors"
                 @update:model-value="v.form.name.$touch()"
                 @blur="v.form.name.$touch()"
@@ -27,10 +25,11 @@
               <v-text-field
                 v-model.trim="form.email"
                 label="Email"
+                name="email"
+                autocomplete="email"
                 prepend-icon="mdi-at"
                 type="email"
                 :error-messages="emailErrors"
-                required
                 @update:model-value="v.form.email.$touch()"
                 @blur="v.form.email.$touch()"
               />
@@ -38,21 +37,27 @@
                 id="password"
                 v-model="form.password"
                 label="Пароль"
+                name="password"
+                autocomplete="new-password"
                 prepend-icon="mdi-lock"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :error-messages="passwordErrors"
-                required
+                @click:append-inner="showPassword = !showPassword"
                 @update:model-value="v.form.password.$touch()"
                 @blur="v.form.password.$touch()"
               />
               <v-text-field
-                id="password"
+                id="confirm-password"
                 v-model="form.confirmPassword"
                 label="Повторите пароль"
+                name="confirm-password"
+                autocomplete="new-password"
                 prepend-icon="mdi-lock"
-                type="password"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :error-messages="confirmPasswordErrors"
-                required
+                @click:append-inner="showConfirmPassword = !showConfirmPassword"
                 @update:model-value="v.form.confirmPassword.$touch()"
                 @blur="v.form.confirmPassword.$touch()"
               />
@@ -94,6 +99,8 @@ onMounted(() => {
 
 const formTitle = ref('Форма регистрации')
 const loading = ref(false)
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const form = ref({
   email: '',
   name: '',
@@ -191,14 +198,3 @@ const submit = async () => {
   }
 }
 </script>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

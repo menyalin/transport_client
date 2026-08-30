@@ -29,7 +29,6 @@
         :items="trailers"
         readonly
         hide-details
-        :clearable="false"
         :style="{ minWidth: '200px' }"
       />
       <v-btn variant="text" size="small" @click="copyHandler"> Скопировать данные </v-btn>
@@ -63,7 +62,7 @@ import { computed } from 'vue'
 import { BlockTitle } from '@/shared/ui'
 import { useConfirmedCrew } from '@/entities/order/form/confirmedCrew/useConfirmedCrew'
 
-defineOptions({ name: 'ConfirmedCrew' })
+defineOptions({ name: 'CrewBlock' })
 const model = defineModel({ type: Object })
 
 const props = defineProps({

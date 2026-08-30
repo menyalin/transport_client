@@ -9,27 +9,34 @@
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
-              <transition name="fade">
-                <v-alert v-if="!!message" :type="messageType">
-                  {{ message }}
-                </v-alert>
-              </transition>
+              <v-alert v-if="!!message" :type="messageType" class="mb-4">
+                {{ message }}
+              </v-alert>
               <v-text-field
+                id="password"
                 v-model="form.password"
                 label="Пароль"
+                name="password"
+                autocomplete="new-password"
                 prepend-icon="mdi-lock"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :error-messages="passwordErrors"
+                @click:append-inner="showPassword = !showPassword"
                 @update:model-value="v.form.password.$touch()"
                 @blur="v.form.password.$touch()"
               />
               <v-text-field
-                id="password"
+                id="confirm-password"
                 v-model="form.confirmPassword"
                 label="Повторите пароль"
+                name="confirm-password"
+                autocomplete="new-password"
                 prepend-icon="mdi-lock"
-                type="password"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :error-messages="confirmPasswordErrors"
+                @click:append-inner="showConfirmPassword = !showConfirmPassword"
                 @update:model-value="v.form.confirmPassword.$touch()"
                 @blur="v.form.confirmPassword.$touch()"
               />
@@ -86,6 +93,8 @@ const loading = ref(false)
 const message = ref(null)
 const messageType = ref(null)
 const errorTimeoutMs = 5000
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const form = ref({
   password: '',
   confirmPassword: '',

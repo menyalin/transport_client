@@ -134,10 +134,14 @@ async function submit(val, saveOnly) {
     if (isCreate) {
       res = await OrderService.create(val)
       item.value = res
-      router.replace({
-        name: 'DetailsOrder',
-        params: { id: res._id },
-      })
+      if (saveOnly) {
+        router.replace({
+          name: 'DetailsOrder',
+          params: { id: res._id },
+        })
+      } else {
+        router.go(-1)
+      }
     } else {
       res = await OrderService.updateOne(props.id, val)
       item.value = Object.assign(item.value, res)

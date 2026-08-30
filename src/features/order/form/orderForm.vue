@@ -94,7 +94,7 @@
       <ReqTransport v-model="reqTransport" title="Требования к транспорту" />
       <CargoParams v-model="cargoParams" title="Параметры груза" />
 
-      <ConfirmedCrew
+      <CrewBlock
         v-model="confirmedCrew"
         title="Экипаж"
         :date="dateForCrew"
@@ -127,7 +127,7 @@
         title="Аналитика"
       />
 
-      <AppPaymentToDriver v-if="showPaymentToDriver || true" v-model="paymentToDriver" />
+      <AppPaymentToDriver v-if="showPaymentToDriver" v-model="paymentToDriver" />
 
       <PriceBlock
         :isValidPrices="isValidPrices(agreement, prices, state)"
@@ -197,7 +197,7 @@ const addressStore = useAddressStore()
 import { OrderService, OrderTemplateService } from '@/shared/services'
 import { ButtonsPanel, CardSection, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
-import ConfirmedCrew from './confirmedCrew/index.vue'
+import CrewBlock from './crewBlock/crewBlock.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from '@/features/order/form/analyticBlock.vue'
 import _putRouteDatesToClipboard from '@/entities/order/form/_putRouteDatesToClipboard.js'

@@ -178,7 +178,7 @@
         v-if="displayDeleteBtn"
         color="error"
         prepend-icon="mdi-delete"
-        class="mt-3"
+        class="mt-3 delete-btn"
         @click="emit('delete')"
       >
         Удалить
@@ -300,10 +300,17 @@ const form = ref<TruckState>({ ...defaultTruck })
 watch(
   truck,
   (val) => {
-    if (!val) form.value = defaultTruck
-    else {
-      form.value = val as TruckState
-      form.value.tkName = (val.tkName?._id || val.tkName) as string
+    if (!val) {
+      form.value = { ...defaultTruck, insurance: {}, permits: {}, additionalDetails: {} }
+    } else {
+      form.value = {
+        ...defaultTruck,
+        ...val,
+        insurance: { ...(val.insurance || {}) },
+        permits: { ...(val.permits || {}) },
+        additionalDetails: { ...(val.additionalDetails || {}) },
+        tkName: (val.tkName?._id || val.tkName) as string,
+      }
     }
   },
   { immediate: true }
@@ -357,6 +364,10 @@ const cancel = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.delete-btn {
+  align-self: flex-start;
 }
 
 .fields-row {

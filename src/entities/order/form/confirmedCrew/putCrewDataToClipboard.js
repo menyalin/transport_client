@@ -23,5 +23,5 @@ export default ({ truck, trailer, driver }) => {
     d.licenseDate ? new Date(d.licenseDate).toLocaleDateString() : '-'
   }\n`
   resStr += `тел: ${d.phone || ''}  ${d.phone2 || ''}`
-  navigator.clipboard.writeText(resStr).then()
+  navigator.clipboard.writeText(resStr).catch(() => {})
 }
