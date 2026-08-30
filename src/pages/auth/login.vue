@@ -56,7 +56,20 @@
   </v-container>
 </template>
 <script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
 defineOptions({ name: 'AuthLogin' })
+
+const router = useRouter()
+const store = useStore()
+
+onMounted(() => {
+  if (store.getters.isLoggedIn) {
+    router.push('/')
+  }
+})
 </script>
 <script>
 import { mapActions } from 'vuex'

@@ -42,7 +42,20 @@
   </v-container>
 </template>
 <script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
 defineOptions({ name: 'ForgotPassword' })
+
+const router = useRouter()
+const store = useStore()
+
+onMounted(() => {
+  if (store.getters.isLoggedIn) {
+    router.push('/')
+  }
+})
 </script>
 <script>
 import { UserService } from '@/shared/services'
@@ -56,13 +69,6 @@ export default {
     messageType: null,
     errorTimeoutMs: 5000,
   }),
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (vm.$store.getters.isLoggedIn) {
-        vm.$router.push('/')
-      }
-    })
-  },
   computed: {
     isFormValid() {
       return !!this.email
