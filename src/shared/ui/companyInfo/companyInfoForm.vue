@@ -152,7 +152,15 @@ watch(
   () => modelValue.value,
   (newVal, oldVal) => {
     if (!newVal) state.value = initialState()
-    else if (newVal !== oldVal) state.value = newVal
+    else if (newVal !== oldVal) {
+      state.value = {
+        ...initialState(),
+        ...newVal,
+        director: { ...directorDefaultState(), ...(newVal.director || {}) },
+        signatory: { ...defaultSignatoryState(), ...(newVal.signatory || {}) },
+        accountant: { ...accountantDefaultState(), ...(newVal.accountant || {}) },
+      }
+    }
   },
   { deep: true, immediate: true }
 )

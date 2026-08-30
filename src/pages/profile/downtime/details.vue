@@ -17,7 +17,6 @@
   </FormWrapper>
 </template>
 <script setup>
-import { watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { LoadSpinner, FormWrapper } from '@/shared/ui'
 import { DowntimeService } from '@/shared/services'
@@ -60,25 +59,5 @@ function onNeedEditPartner(id) {
   const ctxId = pushContext(route.path, 'edit-partner', { fieldName: 'partner', id })
   router.push({ name: 'PartnerDetails', params: { id }, query: { ctx: ctxId } })
 }
-
-let processingReturn = false
-
-watch(
-  () => route.query,
-  async (query) => {
-    const hasReturnQuery = ['newPartnerId', 'clearedPartner'].some((k) => query[k])
-    if (!hasReturnQuery || processingReturn) return
-
-    processingReturn = true
-    const srcQuery = { ...query }
-    // Возвращаемся на исходную страницу downtime (минуя partner и downtime_return в истории)
-    await router.go(-2)
-    // Передаём параметры возврата, чтобы форма восстановила выбранного партнёра
-    await router.replace({ query: srcQuery })
-    nextTick(() => {
-      processingReturn = false
-    })
-  }
-)
 </script>
 <style></style>

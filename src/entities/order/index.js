@@ -8,7 +8,7 @@ import IncomingInvoiceLink from './incomingInvoiceLink.vue'
 import OrdersTableSettings from './ordersTableSettings/ordersTableSettings.vue'
 import ReqTransport from './reqTransport.vue'
 import CargoParams from './cargoParams.vue'
-import { OrderModel } from './model/orderModel.js'
+import { fillRouteFromTemplate } from './model/orderModel'
 import { useOrderDocs } from './orderDocs/model/useOrderDocs.js'
 import { useOrderListUtils } from './hooks/useOrderListUtils'
 import { useOrderValidations } from './hooks/useOrderValidations'
@@ -21,7 +21,7 @@ export {
   DocsRegistryLink,
   OrderDocsListForm,
   OrderDocsList,
-  OrderModel,
+  fillRouteFromTemplate,
   useOrderDocs,
   useOrderListUtils,
   useOrderValidations,

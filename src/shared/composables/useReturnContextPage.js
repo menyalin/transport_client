@@ -12,6 +12,7 @@ import { popContext, getContext } from './useReturnContext'
  * @param {Object} options
  * @param {string} options.returnContextField - имя query-параметра при создании/сохранении
  * @param {string} options.returnContextClearField - имя query-параметра при удалении
+ * @param {string} [options.detailsRouteName] - имя роута для редиректа после create в режиме saveOnly
  */
 export function useReturnContextPage(service, id, options = {}) {
   const route = useRoute()
@@ -44,7 +45,7 @@ export function useReturnContextPage(service, id, options = {}) {
     error.value = { show: false, message: null }
   }
 
-  async function submit(val) {
+  async function submit(val, saveOnly = false) {
     tmpVal.value = val
     try {
       loading.value = true
@@ -59,7 +60,7 @@ export function useReturnContextPage(service, id, options = {}) {
       if (ctxId) {
         const ctx = popContext(ctxId)
         if (ctx && options.returnContextField) {
-          router.push({
+          router.replace({
             path: ctx.from,
             query: {
               [options.returnContextField]: item.value?._id,
@@ -69,6 +70,17 @@ export function useReturnContextPage(service, id, options = {}) {
           return
         }
       }
+
+      if (saveOnly) {
+        if (!getId() && options.detailsRouteName) {
+          router.replace({
+            name: options.detailsRouteName,
+            params: { id: item.value?._id },
+          })
+        }
+        return
+      }
+
       router.go(-1)
     } catch (e) {
       loading.value = false
@@ -76,14 +88,12 @@ export function useReturnContextPage(service, id, options = {}) {
       if (e.response?.status === 400 || e.response?.status === 403) {
         error.value = { message: e.response?.data, show: true }
       } else {
-        store.commit('setError', e)
+        store.commit('setError', e.message)
       }
     }
   }
 
   async function deleteHandler() {
-    const res = confirm('Вы действительно хотите удалить запись?')
-    if (!res) return
     try {
       loading.value = true
       await service.deleteById(getId())
@@ -92,7 +102,7 @@ export function useReturnContextPage(service, id, options = {}) {
       if (ctxId) {
         const ctx = popContext(ctxId)
         if (ctx && options.returnContextClearField) {
-          router.push({
+          router.replace({
             path: ctx.from,
             query: { [options.returnContextClearField]: true, ...ctx.params },
           })

@@ -1,5 +1,5 @@
 import { ref, computed, watch, type Ref, type ComputedRef } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { isLaterThan } from '@/shared/utils/dateValidators'
 import { required } from '@vuelidate/validators'
@@ -45,6 +45,7 @@ interface UseFormReturn {
 export const useForm = (props: UseFormProps, emit: UseFormEmit): UseFormReturn => {
   const addressStore = useAddressStore()
   const route = useRoute()
+  const router = useRouter()
 
   const initialState: DowntimeFormState = {
     title: null,
@@ -58,24 +59,23 @@ export const useForm = (props: UseFormProps, emit: UseFormEmit): UseFormReturn =
     inOrderTime: false,
   }
 
-  let initialData: DowntimeFormState = props.downtime ? { ...props.downtime } : { ...initialState }
-
-  const { newPartnerId, clearedPartner } = route.query
-  if (newPartnerId || clearedPartner) {
+  function loadDraft() {
     const raw = sessionStorage.getItem(DRAFT_KEY)
-    if (raw) {
-      try {
-        initialData = { ...initialState, ...JSON.parse(raw) }
-      } catch {
-        /* игнорируем ошибки парсинга */
-      }
+    if (!raw) return null
+    try {
+      return JSON.parse(raw)
+    } catch {
+      sessionStorage.removeItem(DRAFT_KEY)
+      return null
     }
   }
 
-  const state = ref<DowntimeFormState>(initialData)
+  const draft = props.downtime ? null : loadDraft()
+  const initialData: DowntimeFormState = props.downtime
+    ? { ...initialState, ...props.downtime }
+    : { ...initialState, ...(draft || {}) }
 
-  if (newPartnerId) state.value.partner = newPartnerId as string
-  if (clearedPartner) state.value.partner = null
+  const state = ref<DowntimeFormState>(initialData)
 
   const rules = {
     title: { required },
@@ -129,12 +129,33 @@ export const useForm = (props: UseFormProps, emit: UseFormEmit): UseFormReturn =
     { deep: true }
   )
 
+  const RETURN_QUERY_KEYS = ['newPartnerId', 'clearedPartner']
+  let returnQueryApplied = false
+  const returnPatch: Partial<DowntimeFormState> = {}
+
+  function applyReturnQuery() {
+    if (returnQueryApplied) return
+    const query = route.query
+    const hasReturnQuery = RETURN_QUERY_KEYS.some((k) => query[k])
+    if (!hasReturnQuery) return
+
+    if (query.newPartnerId) returnPatch.partner = query.newPartnerId as string
+    if (query.clearedPartner) returnPatch.partner = null
+
+    state.value = { ...state.value, ...returnPatch }
+
+    returnQueryApplied = true
+    const cleanedQuery = { ...query }
+    RETURN_QUERY_KEYS.forEach((k) => delete cleanedQuery[k])
+    router.replace({ query: cleanedQuery })
+  }
+
   watch(
     () => route.query,
-    (query) => {
-      if (query.newPartnerId) state.value.partner = query.newPartnerId as string
-      if (query.clearedPartner) state.value.partner = null
-    }
+    () => {
+      applyReturnQuery()
+    },
+    { immediate: true }
   )
 
   function clearDraft() {

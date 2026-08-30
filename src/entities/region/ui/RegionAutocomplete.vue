@@ -4,7 +4,8 @@
     :label="label"
     :disabled="disabled"
     :hide-details="hideDetails"
-    :items="items"
+    :fetch-items="fetchItems"
+    :fetch-by-id="fetchById"
     show-action
     v-bind="$attrs"
     @create="$emit('create')"
@@ -13,7 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { computed } from 'vue'
+import { useStore } from 'vuex'
 import { useRegionStore } from '@/entities/region/regionStore'
 import AppAutocomplete from '@/shared/ui/AppAutocomplete/AppAutocomplete.vue'
 
@@ -33,9 +36,24 @@ defineEmits<{
   edit: [id: string | null]
 }>()
 
+const store = useStore()
 const regionStore = useRegionStore()
 
 const model = defineModel<string | null>()
 
 const items = computed(() => regionStore.regionsForAutocomplete || [])
+
+onMounted(() => {
+  const profile = store.getters.directoriesProfile
+  if (profile) regionStore.fetchRegions(profile)
+})
+
+async function fetchItems(query: string) {
+  const search = query.toLowerCase()
+  return items.value.filter((i) => i.text.toLowerCase().includes(search))
+}
+
+async function fetchById(id: string) {
+  return items.value.find((i) => i.value === id) || null
+}
 </script>

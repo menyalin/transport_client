@@ -1,8 +1,19 @@
 import { ref, computed } from 'vue'
 
-export function useOrderRoute(initialRoute) {
+export interface RoutePoint {
+  type?: string
+  address?: string | null
+  plannedDate?: string
+  arrivalDate?: string
+  departureDate?: string
+  note?: string
+  isReturn?: boolean
+  [key: string]: any
+}
+
+export function useOrderRoute(initialRoute?: RoutePoint[]) {
   // Создаём ref для маршрута
-  const route = ref(
+  const route = ref<RoutePoint[]>(
     initialRoute || [
       { type: 'loading', address: null, plannedDate: '', note: '' },
       { type: 'unloading', address: null, plannedDate: '', note: '' },
@@ -27,7 +38,7 @@ export function useOrderRoute(initialRoute) {
 
   // Оптимизированная версия - один проход с проверкой
   const isValidDatesInRoute = computed(() => {
-    let lastDate = null
+    let lastDate: number | null = null
     for (const p of route.value) {
       for (const d of [p.arrivalDate, p.departureDate]) {
         if (!d) continue
@@ -48,26 +59,26 @@ export function useOrderRoute(initialRoute) {
     return length && firstPoint && lastPoint && hasAddresses && isValidDatesInRoute.value
   })
 
-  function getMinArrivalDate(ind) {
+  function getMinArrivalDate(ind: number): string | null {
     if (!ind) return null
     if (ind > 0 && !!route.value[ind - 1].departureDate) return route.value[ind - 1].departureDate
     return null
   }
 
-  function isDisabledArrivalDate(ind) {
+  function isDisabledArrivalDate(ind: number): boolean {
     if (currentPointInd.value === ind && !!route.value[ind].departureDate) return true
     if (currentPointInd.value !== ind) return true
     return false
   }
 
-  function isDisabledDepartureDate(ind) {
+  function isDisabledDepartureDate(ind: number): boolean {
     if (currentPointInd.value === ind && !route.value[ind].arrivalDate) return true
     if (currentPointInd.value !== -1 && !route.value[ind].arrivalDate) return true
     if (ind + 1 <= route.value.length - 1 && !!route.value[ind + 1].arrivalDate) return true
     return false
   }
 
-  function setRoute(val) {
+  function setRoute(val: RoutePoint[]) {
     route.value = Array.isArray(val) ? [...val] : val
   }
 

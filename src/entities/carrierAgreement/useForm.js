@@ -18,7 +18,7 @@ export const useForm = (props, ctx) => {
     actDesription: '',
     paymentBillDescription: '',
   }
-  const state = ref(props?.item ?? initialState)
+  const state = ref(props?.item ?? { ...initialState })
   const rules = computed(() => {
     return {
       name: { required },
@@ -44,7 +44,7 @@ export const useForm = (props, ctx) => {
     () => props.item,
     (val) => {
       if (!val) return null
-      state.value = val
+      state.value = { ...initialState, ...val }
     },
     { deep: true, immediate: true }
   )

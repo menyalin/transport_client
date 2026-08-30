@@ -1,11 +1,45 @@
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
+
 import { useAddressStore } from '@/entities/address'
+
 import { useOrderRoute } from './useOrderRoute'
 import { useOrderPricing } from './useOrderPricing'
 import { useOrderClient } from './useOrderClient'
 
-export function useOrderForm(props) {
+export interface OrderFormProps {
+  order?: Record<string, any> | null
+  loading?: boolean
+  getCarrierAgreementById?: (id: string) => Promise<Record<string, any> | null>
+}
+
+interface CargoParams {
+  weight?: number | null
+  places?: number | null
+  note?: string | null
+  tRegime?: string | null
+}
+
+interface Grade {
+  grade?: number | null
+  note?: string | null
+}
+
+interface OrderState {
+  status?: string
+  [key: string]: any
+}
+
+interface OrderFormData {
+  startPositionDate: string | null
+  note: string | null
+  noteAccountant: string | null
+  docsRegistry: any
+  paymentInvoices: any[] | null
+  [key: string]: any
+}
+
+export function useOrderForm(props: OrderFormProps) {
   const store = useStore()
   const addressStore = useAddressStore()
 
@@ -46,38 +80,38 @@ export function useOrderForm(props) {
 
   // Остальное состояние
   const processingBeforeSubmit = ref(false)
-  const docs = ref([])
-  const paymentToDriver = ref({})
+  const docs = ref<any[]>([])
+  const paymentToDriver = ref<Record<string, any>>({})
   const priceDialog = ref(false)
   const createTemplateLoading = ref(false)
   const templateDialog = ref(false)
-  const templateName = ref(null)
-  const templateSelector = ref(null)
-  const orderId = ref(null)
+  const templateName = ref<string | null>(null)
+  const templateSelector = ref<string | null>(null)
+  const orderId = ref<string | null>(null)
 
-  const cargoParams = ref({
+  const cargoParams = ref<CargoParams>({
     weight: null,
     places: null,
     note: null,
     tRegime: null,
   })
 
-  const grade = ref({
+  const grade = ref<Grade>({
     grade: null,
     note: null,
   })
 
-  const analytics = ref({})
+  const analytics = ref<Record<string, any>>({})
 
-  const state = ref({
+  const state = ref<OrderState>({
     status: 'needGet',
   })
 
-  const reqTransport = ref({})
+  const reqTransport = ref<Record<string, any>>({})
 
-  const confirmedCrew = ref({})
+  const confirmedCrew = ref<Record<string, any>>({})
 
-  const form = reactive({
+  const form = reactive<OrderFormData>({
     startPositionDate: null,
     note: null,
     noteAccountant: null,
@@ -173,16 +207,16 @@ export function useOrderForm(props) {
   })
 
   const coords = computed(() => {
-    let tmp = []
+    const tmp: number[][] = []
     route.value
-      .filter((p) => !p.isReturn)
-      .forEach((point) => {
+      .filter((point: any) => !point.isReturn)
+      .forEach((point: any) => {
         if (addressMap.value.has(point.address)) {
           tmp.push(
             addressMap.value
               .get(point.address)
-              ?.geo.split(', ')
-              .map((s) => parseFloat(s))
+              ?.geo?.split(', ')
+              .map((s: string) => parseFloat(s))
               .reverse()
           )
         }
@@ -192,7 +226,7 @@ export function useOrderForm(props) {
 
   const preparedRoute = computed({
     get: () => {
-      return route.value.map((point, ind) => ({
+      return route.value.map((point: any, ind: number) => ({
         ...point,
         arrivalDateDisabled: isDisabledArrivalDate(ind),
         departureDateDisabled: isDisabledDepartureDate(ind),
@@ -214,15 +248,15 @@ export function useOrderForm(props) {
     templateName.value = null
   }
 
-  async function changeCrewHandler(newValue) {
-    if (newValue.outsourceAgreement && props.getCarrierAgreementById)
+  async function changeCrewHandler(newValue: Record<string, any>) {
+    if (newValue?.outsourceAgreement && props.getCarrierAgreementById)
       updateCarrierAgreement(await props.getCarrierAgreementById(newValue.outsourceAgreement))
   }
 
   // Упрощённая версия setFormFields
-  function setFormFields(val) {
+  function setFormFields(val: Record<string, any>) {
     // Список полей для обновления
-    const fieldMap = {
+    const fieldMap: Record<string, any> = {
       grade,
       client,
       confirmedCrew,
@@ -236,8 +270,8 @@ export function useOrderForm(props) {
     }
 
     // Обновляем поля через map
-    Object.entries(fieldMap).forEach(([key, ref]) => {
-      if (val[key] !== undefined) ref.value = val[key]
+    Object.entries(fieldMap).forEach(([key, field]) => {
+      if (val[key] !== undefined) field.value = val[key]
     })
 
     // Цены через специальный метод

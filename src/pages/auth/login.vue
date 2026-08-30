@@ -1,6 +1,6 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row class="align-center justify-center">
+  <v-container class="h-screen" fluid>
+    <v-row class="align-center justify-center fill-height">
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-4">
           <v-toolbar color="primary" dark flat>
@@ -9,19 +9,27 @@
           </v-toolbar>
           <v-form @submit.prevent="submit">
             <v-card-text>
-              <transition name="fade">
-                <v-alert v-if="!!message" :type="messageType">
-                  {{ message }}
-                </v-alert>
-              </transition>
-              <v-text-field v-model="email" label="Email" prepend-icon="mdi-at" type="email" />
+              <v-alert v-if="!!message" :type="messageType" class="mb-4">
+                {{ message }}
+              </v-alert>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                name="email"
+                autocomplete="email"
+                prepend-icon="mdi-at"
+                type="email"
+              />
               <v-text-field
                 id="password"
                 v-model="password"
                 label="Пароль"
                 name="password"
+                autocomplete="current-password"
                 prepend-icon="mdi-lock"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="showPassword = !showPassword"
               />
             </v-card-text>
             <v-card-actions>
@@ -58,17 +66,11 @@ export default {
     loading: false,
     email: '',
     password: '',
+    showPassword: false,
     message: null,
     messageType: null,
     errorTimeoutMs: 5000,
   }),
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      if (vm.$store.getters.isLoggedIn) {
-        vm.$router.push('/')
-      }
-    })
-  },
   computed: {
     isFormValid() {
       return !!this.email && this.password
@@ -104,14 +106,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

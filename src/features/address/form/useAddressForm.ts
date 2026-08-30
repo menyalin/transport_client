@@ -1,5 +1,5 @@
-import { ref, computed, watch, onMounted, type Ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, watch, type Ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useStore } from 'vuex'
@@ -50,6 +50,7 @@ export interface AddressFormProps {
 export function useForm(props: AddressFormProps, emit: (...args: any[]) => void) {
   const vuexStore = useStore()
   const route = useRoute()
+  const router = useRouter()
 
   const validCoordinates = (val: string | null) => {
     if (!val) return true
@@ -153,30 +154,77 @@ export function useForm(props: AddressFormProps, emit: (...args: any[]) => void)
     }
   }
 
-  onMounted(() => {
-    if (!draftEnabled.value) return
-    const { newRegionId, newCityId, clearedRegion, clearedCity } = route.query
-    if (newRegionId) state.value.region = newRegionId as string
-    if (clearedRegion) state.value.region = null
-    if (newCityId) state.value.city = newCityId as string
-    if (clearedCity) state.value.city = null
+  const RETURN_QUERY_KEYS = [
+    'newRegionId',
+    'newCityId',
+    'clearedRegion',
+    'clearedCity',
+    'newPartnerId',
+    'clearedPartner',
+    'newZoneId',
+    'clearedZone',
+    'newAddressId',
+    'clearedAddress',
+  ]
 
-    const { newPartnerId, clearedPartner, newZoneId, clearedZone } = route.query
-    if (newPartnerId) state.value.partner = newPartnerId as string
-    if (clearedPartner) state.value.partner = null
+  let returnQueryApplied = false
+  const returnPatch: Partial<AddressFormState> = {}
+
+  function applyReturnQuery() {
+    if (returnQueryApplied) return
+    const query = route.query
+    const hasReturnQuery = RETURN_QUERY_KEYS.some((k) => query[k])
+    if (!hasReturnQuery) return
+
+    const {
+      newRegionId,
+      newCityId,
+      clearedRegion,
+      clearedCity,
+      newPartnerId,
+      clearedPartner,
+      newZoneId,
+      clearedZone,
+      newAddressId,
+      clearedAddress,
+    } = query
+
+    if (newRegionId) returnPatch.region = newRegionId as string
+    if (clearedRegion) returnPatch.region = null
+    if (newCityId) returnPatch.city = newCityId as string
+    if (clearedCity) returnPatch.city = null
+    if (newPartnerId) returnPatch.partner = newPartnerId as string
+    if (clearedPartner) returnPatch.partner = null
+    if (newAddressId) returnPatch._id = newAddressId as string
+    if (clearedAddress) returnPatch._id = null
     if (newZoneId) {
       const currentZones = state.value.zones || []
       if (!currentZones.includes(newZoneId as string)) {
-        state.value.zones = [...currentZones, newZoneId as string]
+        returnPatch.zones = [...currentZones, newZoneId as string]
       }
     }
-    if (clearedZone) state.value.zones = []
-  })
+    if (clearedZone) returnPatch.zones = []
+
+    state.value = { ...state.value, ...returnPatch }
+
+    returnQueryApplied = true
+    const cleanedQuery = { ...query }
+    RETURN_QUERY_KEYS.forEach((k) => delete cleanedQuery[k])
+    router.replace({ query: cleanedQuery })
+  }
+
+  watch(
+    () => route.query,
+    () => {
+      applyReturnQuery()
+    },
+    { immediate: true }
+  )
 
   watch(
     () => props.address,
     (val) => {
-      state.value = { ...initialState, ...(val || {}) }
+      state.value = { ...initialState, ...(val || {}), ...returnPatch }
     },
     { deep: true }
   )

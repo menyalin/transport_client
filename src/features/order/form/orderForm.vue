@@ -94,7 +94,7 @@
       <ReqTransport v-model="reqTransport" title="Требования к транспорту" />
       <CargoParams v-model="cargoParams" title="Параметры груза" />
 
-      <ConfirmedCrew
+      <CrewBlock
         v-model="confirmedCrew"
         title="Экипаж"
         :date="dateForCrew"
@@ -116,6 +116,8 @@
       :confirmed="orderInProgress"
       :isValid="isValidRoute"
       class="route-points"
+      @need-create-address="$emit('need-create-address', $event)"
+      @need-edit-address="$emit('need-edit-address', $event)"
     />
     <div class="price">
       <AppAnalyticBlock
@@ -125,7 +127,7 @@
         title="Аналитика"
       />
 
-      <AppPaymentToDriver v-if="showPaymentToDriver || true" v-model="paymentToDriver" />
+      <AppPaymentToDriver v-if="showPaymentToDriver" v-model="paymentToDriver" />
 
       <PriceBlock
         :isValidPrices="isValidPrices(agreement, prices, state)"
@@ -195,7 +197,7 @@ const addressStore = useAddressStore()
 import { OrderService, OrderTemplateService } from '@/shared/services'
 import { ButtonsPanel, CardSection, DownloadDocTemplateMenu, EntityFiles } from '@/shared/ui'
 import AppRouteState from './routeState.vue'
-import ConfirmedCrew from './confirmedCrew/index.vue'
+import CrewBlock from './crewBlock/crewBlock.vue'
 import AppGradeBlock from './gradeBlock.vue'
 import AppAnalyticBlock from '@/features/order/form/analyticBlock.vue'
 import _putRouteDatesToClipboard from '@/entities/order/form/_putRouteDatesToClipboard.js'
@@ -212,7 +214,7 @@ import {
   IncomingInvoiceLink,
   ReqTransport,
   CargoParams,
-  OrderModel,
+  fillRouteFromTemplate,
   useOrderDocs,
   useOrderValidations,
   useOrderPrintForms,
@@ -245,7 +247,15 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delete', 'cancel', 'save', 'submit', 'change'])
+const emit = defineEmits([
+  'delete',
+  'cancel',
+  'save',
+  'submit',
+  'change',
+  'need-create-address',
+  'need-edit-address',
+])
 const vuexStore = useStore()
 
 // Используем новый composable
@@ -416,7 +426,9 @@ watch(templateSelector, (value) => {
   reqTransport.value = { ...reqTransport.value, ...template.reqTransport }
   const plannedDate = route.value[0]?.plannedDate
   analytics.value = { ...template.analytics }
-  setRoute(OrderModel.fillRouteFromTemplate(template, plannedDate))
+  if (plannedDate) {
+    setRoute(fillRouteFromTemplate(template, plannedDate))
+  }
   cargoParams.value = { ...cargoParams.value, ...template.cargoParams }
 })
 

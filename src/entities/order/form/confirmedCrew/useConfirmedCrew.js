@@ -20,6 +20,7 @@ export const useConfirmedCrew = (model, props, emits) => {
   const crewEmptyError = ref(false)
   const allowedAgreements = ref([])
   const outsourceAgreement = ref(null)
+  let crewRequestSeq = 0
   // #region computeds
   const showOutsourceAgreementRow = computed(() => !!outsourceAgreement.value)
 
@@ -36,7 +37,7 @@ export const useConfirmedCrew = (model, props, emits) => {
       text: item.fullName,
     }))
   )
-  const executorAndCustomerMissmatch = computed(() => {
+  const executorAndCustomerMismatch = computed(() => {
     if (!outsourceAgreement.value) return false
     return props.executorIdInClientAgreement !== outsourceAgreement.value.customer
   })
@@ -48,10 +49,7 @@ export const useConfirmedCrew = (model, props, emits) => {
 
   const isNeedUpdateCrew = computed(() => props.date && model.value.truck && !props.confirmed)
 
-  const truckReadOnly = computed(
-    () => props.confirmed
-    // &&       !proxy.$store.getters.hasPermission('fake permission. only for admin!')
-  )
+  const truckReadOnly = computed(() => props.confirmed)
   // #endregion
 
   function setState(val) {
@@ -66,13 +64,17 @@ export const useConfirmedCrew = (model, props, emits) => {
   }
 
   async function getCrew() {
+    const seq = ++crewRequestSeq
+
     if (!model.value.truck) {
       allowedAgreements.value = []
       return
     }
     let crew = null
+    let crewFetched = false
 
     if (isNeedUpdateCrew.value || !model.value?.driver) {
+      crewFetched = true
       try {
         loading.value = true
 
@@ -81,9 +83,11 @@ export const useConfirmedCrew = (model, props, emits) => {
           date: props.date,
         })
 
+        if (seq !== crewRequestSeq) return
+
         crewEmptyError.value = !crew
       } finally {
-        loading.value = false
+        if (seq === crewRequestSeq) loading.value = false
       }
     }
 
@@ -97,18 +101,22 @@ export const useConfirmedCrew = (model, props, emits) => {
         agreementId: model.value.outsourceAgreement,
       })
 
+      if (seq !== crewRequestSeq) return
+
       outsourceAgreement.value = carrierAgreementSelector({
         crewState: model.value,
         allowedAgreements: allowedAgreements.value,
-        executorInCLientAgreement: props.executorInCLientAgreement,
+        executorInClientAgreement: props.executorIdInClientAgreement,
       })
     }
+
+    if (seq !== crewRequestSeq) return
 
     setState({
       truck: model.value.truck,
       directiveAgreement: model.value.directiveAgreement,
-      trailer: crew?.transport?.trailer || null,
-      driver: crew?.driver || null,
+      trailer: crewFetched ? crew?.transport?.trailer || null : model.value.trailer,
+      driver: crewFetched ? crew?.driver || null : model.value.driver,
       tkName: carrierId,
       outsourceAgreement: outsourceAgreement.value?._id || null,
     })
@@ -156,8 +164,7 @@ export const useConfirmedCrew = (model, props, emits) => {
   watch(crewEmptyError, (val) => {
     if (val) {
       outsourceAgreement.value = null
-      model.value.outsourceAgreement = null
-      model.value.tkName = null
+      setState({ ...model.value, outsourceAgreement: null, tkName: null })
     }
   })
 
@@ -180,6 +187,6 @@ export const useConfirmedCrew = (model, props, emits) => {
     crewEmptyError,
     allowChangeOutsourceAgreement,
     changeOutsourceAgreementHandler,
-    executorAndCustomerMissmatch,
+    executorAndCustomerMismatch,
   }
 }

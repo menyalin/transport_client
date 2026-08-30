@@ -42,7 +42,7 @@ const emit = defineEmits(['submit', 'cancel', 'delete'])
 const store = useStore()
 
 const initialState = { name: '' }
-const state = ref(initialState)
+const state = ref({ ...initialState })
 
 const rules = {
   name: { required },
@@ -83,13 +83,13 @@ const cancel = () => {
 }
 
 const resetForm = () => {
-  state.value = initialState
+  state.value = { ...initialState }
 }
 
 watch(
   () => props.region,
   (val) => {
-    state.value = val || initialState
+    state.value = { ...initialState, ...(val || {}) }
   },
   { immediate: true, deep: true }
 )

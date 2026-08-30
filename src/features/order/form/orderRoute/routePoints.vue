@@ -17,6 +17,8 @@
         :isTemplate="isTemplate"
         @changePoint="change(ind)"
         @delete="deleteHandler"
+        @need-create-address="$emit('need-create-address', ind)"
+        @need-edit-address="(id) => $emit('need-edit-address', id, ind)"
       />
     </table>
 
@@ -52,6 +54,7 @@ import { useStore } from 'vuex'
 const vuexStore = useStore()
 
 defineOptions({ name: 'RoutePoints' })
+defineEmits(['need-create-address', 'need-edit-address'])
 const model = defineModel({ type: Array, default: () => [] })
 
 const props = defineProps({
